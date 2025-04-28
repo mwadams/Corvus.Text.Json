@@ -1235,6 +1235,11 @@ namespace Corvus.Text.Json
             }
         }
 
+        public static void EnsurePropertyMap(in JsonElement element)
+        {
+            element._parent.EnsurePropertyMap(element._idx);
+        }
+
         /// <summary>
         /// Determines if a value is a multiple of the given divisor.
         /// </summary>

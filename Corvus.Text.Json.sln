@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.Tests", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtilities", "Common\tests\TestUtilities\TestUtilities.csproj", "{C17D7348-533D-1D6E-88EA-DBF44A5DA46D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.Benchmarks", "benchmarks\Corvus.Text.Json.Benchmarks\Corvus.Text.Json.Benchmarks.csproj", "{A86618F0-D580-4534-BDB1-84A4489663B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C17D7348-533D-1D6E-88EA-DBF44A5DA46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C17D7348-533D-1D6E-88EA-DBF44A5DA46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C17D7348-533D-1D6E-88EA-DBF44A5DA46D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A86618F0-D580-4534-BDB1-84A4489663B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A86618F0-D580-4534-BDB1-84A4489663B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A86618F0-D580-4534-BDB1-84A4489663B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A86618F0-D580-4534-BDB1-84A4489663B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

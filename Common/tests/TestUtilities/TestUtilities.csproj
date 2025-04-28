@@ -148,7 +148,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25225.104" />
-    <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25225.102" />
+    <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25225.104" />
     <PackageReference Include="xunit" Version="2.9.3" ExcludeAssets="build" />
   </ItemGroup>
 

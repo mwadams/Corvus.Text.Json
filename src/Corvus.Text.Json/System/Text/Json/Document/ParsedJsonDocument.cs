@@ -70,6 +70,48 @@ namespace Corvus.Text.Json
             _parsedData.Dispose();
             _utf8Json = ReadOnlyMemory<byte>.Empty;
 
+            if (_propertyMapBacking != null)
+            {
+                // The property map is a rented array, so we need to return it to the pool.
+                byte[]? propertyMapBacking = Interlocked.Exchange(ref _propertyMapBacking, null);
+                if (propertyMapBacking != null)
+                {
+                    // It does not need to be cleared as it contains no sensitive data
+                    ArrayPool<byte>.Shared.Return(propertyMapBacking);
+                }
+            }
+
+            if (_bucketsBacking != null)
+            {
+                // The buckets are a rented array, so we need to return it to the pool.
+                int[]? bucketsBacking = Interlocked.Exchange(ref _bucketsBacking, null);
+                if (bucketsBacking != null)
+                {
+                    // It does not need to be cleared as it contains no sensitive data
+                    ArrayPool<int>.Shared.Return(bucketsBacking);
+                }
+            }
+
+            if (_entriesBacking != null)
+            {
+                byte[]? entriesBacking = Interlocked.Exchange(ref _entriesBacking, null);
+                if (entriesBacking != null)
+                {
+                    // It does not need to be cleared as it contains no sensitive data
+                    ArrayPool<byte>.Shared.Return(entriesBacking);
+                }
+            }
+
+            if (_valueBacking != null)
+            {
+                byte[]? valueBacking = Interlocked.Exchange(ref _valueBacking, null);
+                if (valueBacking != null)
+                {
+                    valueBacking.AsSpan(0, _valueOffset).Clear();
+                    ArrayPool<byte>.Shared.Return(valueBacking);
+                }
+            }
+
             if (_extraRentedArrayPoolBytes != null)
             {
                 byte[]? extraRentedBytes = Interlocked.Exchange<byte[]?>(ref _extraRentedArrayPoolBytes, null);

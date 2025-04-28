@@ -16,11 +16,11 @@ namespace Corvus.Text.Json
         private byte[]? _propertyMapBacking;
         private int[]? _bucketsBacking;
         private byte[]? _entriesBacking;
-        private byte[]? _valueBuffer;
+        private byte[]? _valueBacking;
         private int _propertyMapOffset;
         private int _bucketOffset;
         private int _entryOffset;
-        private int _valueBufferOffset;
+        private int _valueOffset;
 
         void IJsonDocument.EnsurePropertyMap(int index)
         {
@@ -213,26 +213,26 @@ namespace Corvus.Text.Json
             int index = escapedPropertyName.IndexOf(JsonConstants.BackSlash);
             Debug.Assert(index >= 0);
             int maxRequiredLength = escapedPropertyName.Length + 4;
-            if (_valueBuffer is null)
+            if (_valueBacking is null)
             {
-                _valueBuffer = ArrayPool<byte>.Shared.Rent(maxRequiredLength);
+                _valueBacking = ArrayPool<byte>.Shared.Rent(maxRequiredLength);
             }
             else
             {
-                Enlarge(maxRequiredLength, ref _valueBuffer);
+                Enlarge(maxRequiredLength, ref _valueBacking);
             }
 
-            int offset = _valueBufferOffset;
+            int offset = _valueOffset;
             int length = index;
             int valueOffset = offset + 4;
             if (index > 0)
             {
                 // Copy the unescaped portion
-                escapedPropertyName.CopyTo(_valueBuffer.AsSpan(valueOffset));
+                escapedPropertyName.CopyTo(_valueBacking.AsSpan(valueOffset));
             }
 
             // Unescape the rest into the destination
-            JsonReaderHelper.Unescape(escapedPropertyName.Slice(index), _valueBuffer.AsSpan(valueOffset + index), 0, out int written);
+            JsonReaderHelper.Unescape(escapedPropertyName.Slice(index), _valueBacking.AsSpan(valueOffset + index), 0, out int written);
             length += written;
 
             if (length > 0x0FFFFFFF)
@@ -241,28 +241,28 @@ namespace Corvus.Text.Json
             }
 
 #if NET
-            BitConverter.TryWriteBytes(_valueBuffer.AsSpan(), (uint)(length << 4) | (uint)DynamicValueType.Utf8String);
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(), (uint)(length << 4) | (uint)DynamicValueType.Utf8String);
 #else
-            BitConverterEx.TryWriteBytes(_valueBuffer.AsSpan(), (uint)(length << 4) | (uint)DynamicValueType.Utf8String);
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(), (uint)(length << 4) | (uint)DynamicValueType.Utf8String);
 #endif
-            _valueBufferOffset += length;
+            _valueOffset += length;
             dynamicValueOffset = offset;
-            return _valueBuffer.AsSpan(valueOffset, length);
+            return _valueBacking.AsSpan(valueOffset, length);
         }
 
         private int WriteDynamicValue(ReadOnlySpan<byte> unescapedPropertyName)
         {
-            int offset = _valueBufferOffset;
+            int offset = _valueOffset;
             // We write the value buffer offset here, to save doing it again later.
-            _valueBufferOffset += unescapedPropertyName.Length + 4;
+            _valueOffset += unescapedPropertyName.Length + 4;
 
-            if (_valueBuffer is null)
+            if (_valueBacking is null)
             {
-                _valueBuffer = ArrayPool<byte>.Shared.Rent(_valueBufferOffset);
+                _valueBacking = ArrayPool<byte>.Shared.Rent(_valueOffset);
             }
             else
             {
-                Enlarge(_valueBufferOffset, ref _valueBuffer);
+                Enlarge(_valueOffset, ref _valueBacking);
             }
 
             uint length = (uint)unescapedPropertyName.Length;
@@ -276,11 +276,11 @@ namespace Corvus.Text.Json
             length |= (uint)DynamicValueType.Utf8String;
 
 #if NET
-            BitConverter.TryWriteBytes(_valueBuffer.AsSpan(offset), length);
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
 #else
-            BitConverterEx.TryWriteBytes(_valueBuffer.AsSpan(offset), length);
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
 #endif
-            unescapedPropertyName.CopyTo(_valueBuffer.AsSpan(offset + 4));
+            unescapedPropertyName.CopyTo(_valueBacking.AsSpan(offset + 4));
 
             return offset;
         }
@@ -288,13 +288,13 @@ namespace Corvus.Text.Json
         internal ReadOnlySpan<byte> ReadDynamicUnescapedUtf8String(int offset)
         {
             // The first 4 bytes are the type and length
-            uint length = BitConverter.ToUInt32(_valueBuffer!, offset);
+            uint length = BitConverter.ToUInt32(_valueBacking!, offset);
 
             Debug.Assert((DynamicValueType)(length & 0xF) == DynamicValueType.Utf8String, $"Expected UTF8 string at {offset}");
 
             length >>= 4;
 
-            return _valueBuffer.AsSpan(offset + 4, (int)length);
+            return _valueBacking.AsSpan(offset + 4, (int)length);
         }
 
         private void Enlarge(int v, ref byte[] byteArray)

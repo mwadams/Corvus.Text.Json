@@ -44,12 +44,6 @@
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\NullableAttributes.cs" Link="System\Diagnostics\CodeAnalysis\NullableAttributes.cs" />
   </ItemGroup>
 
-  <!-- Adds BitConverter on non-.NETCoreApp builds-->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Compile Include="System\BitConverter.cs" />
-  </ItemGroup>
-
-
   <!-- Adds polyfills on non-.NETCoreApp builds -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Compile Include="$(CoreLibSharedDir)System\Runtime\CompilerServices\CallerArgumentExpressionAttribute.cs" />
@@ -86,7 +80,6 @@
   <!-- Include files under StringResourcesPath by convention unless OmitResources is set. -->
   <ItemGroup>    
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />    
-    <Compile Include="System\BitConverter.cs" />     
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="System\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
   </ItemGroup>
@@ -151,6 +144,7 @@
     <Compile Include="System\Text\Json\JsonHelpers.Date.cs" />
     <Compile Include="System\Text\Json\JsonHelpers.Escaping.cs" />
     <Compile Include="System\Text\Json\JsonTokenType.cs" />
+    <Compile Include="System\BitConverterEx.cs" />
     <!--<Compile Include="System\Text\Json\Nodes\JsonArray.cs" />
     <Compile Include="System\Text\Json\Nodes\JsonArray.IList.cs" />
     <Compile Include="System\Text\Json\Nodes\JsonValueOfElement.cs" />

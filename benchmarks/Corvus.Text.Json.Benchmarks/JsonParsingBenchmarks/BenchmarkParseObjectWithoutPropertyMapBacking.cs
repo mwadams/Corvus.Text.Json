@@ -1,0 +1,47 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using BenchmarkDotNet.Attributes;
+
+namespace RentedPropertyMapBenchmarks;
+
+/// <summary>
+/// Construct elements from a JSON element.
+/// </summary>
+[MemoryDiagnoser]
+public class BenchmarkParseObjectWithoutPropertyMapBacking
+{
+    [Benchmark(Baseline = true)]
+    public System.Text.Json.JsonValueKind ParseObjectToJsonElement()
+    {
+        using var document = System.Text.Json.JsonDocument.Parse(
+            """
+            {
+                "name": "John",
+                "age": 30,
+                "city": "New York",
+                "slightlyLonger": true,
+                "1": 1
+            }
+            """);
+
+        return document.RootElement.ValueKind;
+    }
+
+    [Benchmark]
+    public Corvus.Text.Json.JsonValueKind ParseObjectToCorvusJsonElement()
+    {
+        using var document = Corvus.Text.Json.ParsedJsonDocument.Parse(
+            """
+            {
+                "name": "John",
+                "age": 30,
+                "city": "New York",
+                "slightlyLonger": true,
+                "1": 1
+            }
+            """);
+
+        return document.RootElement.ValueKind;
+    }
+}
