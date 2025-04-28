@@ -52,17 +52,42 @@ namespace Corvus.Text.Json
 
             internal const int UnknownSize = -1;
 
-            internal DbRow(JsonTokenType jsonTokenType, int location, int sizeOrLength)
+            /// <summary>
+            /// Creates an instance of a DBRow.
+            /// </summary>
+            /// <param name="jsonTokenType">The <see cref="JsonTokenType"/>.</param>
+            /// <param name="location">The location of the value in the UTF8 backing.</param>
+            /// <param name="sizeOrLength">The size or length of the entity.</param>
+            /// <param name="parentDocumentIndex">The index of the parent document in the workspace.</param>
+            internal DbRow(JsonTokenType jsonTokenType, int location, int sizeOrLength, int parentDocumentIndex)
             {
-                Debug.Assert(jsonTokenType > JsonTokenType.None && jsonTokenType <= JsonTokenType.Null);
-                Debug.Assert((byte)jsonTokenType < 1 << 4);
-                Debug.Assert(location >= 0);
-                Debug.Assert(sizeOrLength >= UnknownSize);
-                Debug.Assert(Unsafe.SizeOf<DbRow>() == Size);
+                Debug.Assert(jsonTokenType > JsonTokenType.None && jsonTokenType <= JsonTokenType.Null, "The token type is out of the valid range.");
+                Debug.Assert((byte)jsonTokenType < 1 << 4, "The token type is out of the valid range");
+                Debug.Assert(location >= 0, "The location must be >= 0");
+                Debug.Assert(sizeOrLength >= UnknownSize, "The size or length must be >= 0, or UnknownSize");
+                Debug.Assert(parentDocumentIndex >= -1, "The parent document index must be >= -1");
 
                 _location = location;
                 _sizeOrLengthUnion = sizeOrLength;
-                _numberOfRowsAndTypeUnion = (int)jsonTokenType << 28;
+                _numberOfRowsAndTypeUnion = (int)(unchecked((uint)jsonTokenType << 28) + (unchecked((uint)parentDocumentIndex) & 0x0FFFFFFF));
+            }
+
+            /// <summary>
+            /// Creates an instance of a DBRow.
+            /// </summary>
+            /// <param name="jsonTokenType">The <see cref="JsonTokenType"/>.</param>
+            /// <param name="location">The location of the value in the UTF8 backing.</param>
+            /// <param name="sizeOrLength">The size or length of the entity.</param>
+            internal DbRow(JsonTokenType jsonTokenType, int location, int sizeOrLength)
+            {
+                Debug.Assert(jsonTokenType > JsonTokenType.None && jsonTokenType <= JsonTokenType.Null, "The token type is out of the valid range.");
+                Debug.Assert((byte)jsonTokenType < 1 << 4, "The token type is out of the valid range");
+                Debug.Assert(location >= 0, "The location must be >= 0");
+                Debug.Assert(sizeOrLength >= UnknownSize, "The size or length must be >= 0, or UnknownSize");
+
+                _location = location;
+                _sizeOrLengthUnion = sizeOrLength;
+                _numberOfRowsAndTypeUnion = (int)unchecked((uint)jsonTokenType << 28);
             }
 
             internal bool IsSimpleValue => TokenType >= JsonTokenType.PropertyName;

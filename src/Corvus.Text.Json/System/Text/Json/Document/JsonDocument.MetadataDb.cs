@@ -240,6 +240,25 @@ namespace Corvus.Text.Json
                 Length += DbRow.Size;
             }
 
+            internal void Append(JsonTokenType tokenType, int startLocation, int length, int parentDocumentIndex)
+            {
+                // StartArray or StartObject should have length -1, otherwise the length should not be -1.
+                Debug.Assert(
+                    (tokenType == JsonTokenType.StartArray || tokenType == JsonTokenType.StartObject) ==
+                    (length == DbRow.UnknownSize));
+
+                Debug.Assert(parentDocumentIndex >= 0);
+
+                if (Length >= _data.Length - DbRow.Size)
+                {
+                    Enlarge();
+                }
+
+                DbRow row = new DbRow(tokenType, startLocation, length, parentDocumentIndex);
+                MemoryMarshal.Write(_data.AsSpan(Length), ref row);
+                Length += DbRow.Size;
+            }
+
             private void Enlarge()
             {
                 Debug.Assert(!_isLocked, "Appending to a locked database");

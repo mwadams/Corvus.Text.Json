@@ -112,6 +112,7 @@
     <Compile Include="System\Runtime\InteropServices\JsonMarshal.cs" />
     <Compile Include="System\Text\Json\AppContextSwitchHelper.cs" />
     <Compile Include="System\Text\Json\BitStack.cs" />
+    <Compile Include="System\Text\Json\Document\JsonDocument.PropertyMap.cs" />
     <Compile Include="System\Text\Json\Document\IJsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.DbRow.cs" />
