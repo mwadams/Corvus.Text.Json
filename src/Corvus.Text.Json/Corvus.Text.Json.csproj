@@ -40,6 +40,12 @@
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\NullableAttributes.cs" Link="System\Diagnostics\CodeAnalysis\NullableAttributes.cs" />
   </ItemGroup>
 
+  <!-- Adds BitConverter on non-.NETCoreApp builds-->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Compile Include="System\BitConverter.cs" />
+  </ItemGroup>
+
+
   <!-- Adds polyfills on non-.NETCoreApp builds -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Compile Include="$(CoreLibSharedDir)System\Runtime\CompilerServices\CallerArgumentExpressionAttribute.cs" />
@@ -75,12 +81,15 @@
 
   <!-- Include files under StringResourcesPath by convention unless OmitResources is set. -->
   <ItemGroup>    
-    <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />     
+    <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />    
+    <Compile Include="System\BitConverter.cs" />     
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="System\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
   </ItemGroup>
-  
+
+
   <ItemGroup>
+    <Compile Include="$(CoreLibSharedDir)System\Collections\HashHelpers.cs" Link="Common\System\Collections\HashHelpers.cs" />
     <Compile Include="$(CommonPath)System\HexConverter.cs" Link="Common\System\HexConverter.cs" />
     <Compile Include="$(CommonPath)System\Net\ArrayBuffer.cs" Link="Common\System\Net\ArrayBuffer.cs" />
     <Compile Include="$(CommonPath)System\Text\ValueStringBuilder.cs" Link="Common\ValueStringBuilder.cs" />
@@ -112,6 +121,7 @@
     <Compile Include="System\Runtime\InteropServices\JsonMarshal.cs" />
     <Compile Include="System\Text\Json\AppContextSwitchHelper.cs" />
     <Compile Include="System\Text\Json\BitStack.cs" />
+    <Compile Include="System\Text\Json\Document\DynamicValueType.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.PropertyMap.cs" />
     <Compile Include="System\Text\Json\Document\IJsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.cs" />
@@ -120,6 +130,7 @@
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.Parse.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.StackRow.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.StackRowStack.cs" />
+    <Compile Include="System\Text\Json\Document\ParsedJsonDocument.PropertyMap.cs" />
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.TryGetProperty.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocumentOptions.cs" />
@@ -423,7 +434,6 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <!-- Dependencies for System.Collections.Generic.OrderedDictionary -->
-    <Compile Include="$(CoreLibSharedDir)System\Collections\HashHelpers.cs" Link="Common\System\Collections\HashHelpers.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\DebugViewDictionaryItem.cs" Link="Common\System\Collections\Generic\DebugViewDictionaryItem.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ICollectionDebugView.cs" Link="Common\System\Collections\Generic\ICollectionDebugView.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\IDictionaryDebugView.cs" Link="Common\System\Collections\Generic\IDictionaryDebugView.cs" />

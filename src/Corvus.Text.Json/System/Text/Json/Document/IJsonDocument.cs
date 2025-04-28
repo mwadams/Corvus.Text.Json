@@ -16,6 +16,8 @@ namespace Corvus.Text.Json
 
         void WriteTo(Utf8JsonWriter writer);
 
+        void EnsurePropertyMap(int index);
+
         bool IsDisposable { get; }
 
         JsonTokenType GetJsonTokenType(int index);

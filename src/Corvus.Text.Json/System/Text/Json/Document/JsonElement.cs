@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Buffers;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1341,7 +1342,7 @@ namespace Corvus.Text.Json
                         if (!NameEquals(prop1, prop2))
                         {
                             // We have our first mismatch, fall back to unordered comparison.
-                            return UnorderedObjectDeepEquals(objectEnumerator1, objectEnumerator2, remainingProps: count);
+                            return UnorderedObjectDeepEquals(element1, objectEnumerator2, remainingProps: count);
                         }
 
                         if (!DeepEquals(prop1.Value, prop2.Value))
@@ -1355,48 +1356,68 @@ namespace Corvus.Text.Json
                     Debug.Assert(!objectEnumerator2.MoveNext());
                     return true;
 
-                    static bool UnorderedObjectDeepEquals(ObjectEnumerator objectEnumerator1, ObjectEnumerator objectEnumerator2, int remainingProps)
+                    static bool UnorderedObjectDeepEquals(JsonElement element1, ObjectEnumerator objectEnumerator2, int remainingProps)
                     {
                         // JsonElement objects allow duplicate property names, which is optional per the JSON RFC.
                         // Even though this implementation of equality does not take property ordering into account,
-                        // repeated property names must be specified in the same order (although they may be interleaved).
-                        // This is to preserve a degree of coherence with JSON serialization, where either the first
-                        // or last occurrence of a repeated property name is used. It also simplifies the implementation
-                        // and keeps it at O(n + m) complexity.
+                        // duplicate, out of order properties resolve the value in the second instance to the last value
+                        // in the first instance. This differs from the JsonElement implementation, which supports duplicate
+                        // property names, if they are in order.
+                        // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
+                        element1._parent.EnsurePropertyMap(element1._idx);
 
-                        Dictionary<string, ValueQueue<JsonElement>> properties2 = new(capacity: remainingProps, StringComparer.Ordinal);
+                        Span<byte> buffer = stackalloc byte[JsonConstants.StackallocByteThreshold];
+
                         do
                         {
-                            JsonProperty prop2 = objectEnumerator2.Current;
-#if NET
-                            ref ValueQueue<JsonElement> values = ref CollectionsMarshal.GetValueRefOrAddDefault(properties2, prop2.Name, out bool _);
-#else
-                            properties2.TryGetValue(prop2.Name, out ValueQueue<JsonElement> values);
-#endif
-                            values.Enqueue(prop2.Value);
-#if !NET
-                            properties2[prop2.Name] = values;
-#endif
+                            JsonProperty right = objectEnumerator2.Current;
+                            JsonElement leftValue;
+                            if (right.NameIsEscaped)
+                            {
+                                ReadOnlySpan<byte> rightNameSpan = right.NameSpan;
+                                int index = rightNameSpan.IndexOf(JsonConstants.BackSlash);
+                                Debug.Assert(index >= 0, "the name is not escaped");
+
+                                byte[]? unescapedRightNameArray = null;
+
+                                Span<byte> unescapedRightNameSpan = rightNameSpan.Length <= JsonConstants.StackallocByteThreshold ?
+                                    buffer :
+                                    (unescapedRightNameArray = ArrayPool<byte>.Shared.Rent(rightNameSpan.Length));
+
+                                JsonReaderHelper.Unescape(rightNameSpan, unescapedRightNameSpan, index, out int written);
+                                unescapedRightNameSpan = unescapedRightNameSpan.Slice(0, written);
+                                Debug.Assert(!unescapedRightNameSpan.IsEmpty);
+
+
+                                try
+                                {
+                                    if (!element1.TryGetProperty(objectEnumerator2.Current.NameSpan, out leftValue) ||
+                                        !DeepEquals(leftValue, right.Value))
+                                    {
+                                        return false;
+                                    }
+                                }
+                                finally
+                                {
+                                    if (unescapedRightNameArray != null)
+                                    {
+                                        unescapedRightNameSpan.Clear();
+                                        ArrayPool<byte>.Shared.Return(unescapedRightNameArray);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!element1.TryGetProperty(objectEnumerator2.Current.NameSpan, out leftValue) ||
+                                    !DeepEquals(leftValue, right.Value))
+                                {
+                                    return false;
+                                }
+                            }
+
+                                
                         }
                         while (objectEnumerator2.MoveNext());
-
-                        do
-                        {
-                            JsonProperty prop = objectEnumerator1.Current;
-#if NET
-                            ref ValueQueue<JsonElement> values = ref CollectionsMarshal.GetValueRefOrAddDefault(properties2, prop.Name, out bool exists);
-#else
-                            bool exists = properties2.TryGetValue(prop.Name, out ValueQueue<JsonElement> values);
-#endif
-                            if (!exists || !values.TryDequeue(out JsonElement value) || !DeepEquals(prop.Value, value))
-                            {
-                                return false;
-                            }
-#if !NET
-                            properties2[prop.Name] = values;
-#endif
-                        }
-                        while (objectEnumerator1.MoveNext());
 
                         return true;
                     }

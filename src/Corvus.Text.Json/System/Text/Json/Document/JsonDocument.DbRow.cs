@@ -3,7 +3,6 @@
 
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json
 {
@@ -91,6 +90,7 @@ namespace Corvus.Text.Json
             }
 
             internal bool IsSimpleValue => TokenType >= JsonTokenType.PropertyName;
+            internal bool HasPropertyMap => this._sizeOrLengthUnion <= 0;
         }
     }
 }

@@ -199,13 +199,12 @@ namespace Corvus.Text.Json
 
         int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
         {
+            CheckNotDisposed();
             return GetEndIndexCore(index, includeEndElement);
         }
 
         private int GetEndIndexCore(int index, bool includeEndElement)
         {
-            CheckNotDisposed();
-
             DbRow row = _parsedData.Get(index);
 
             if (row.IsSimpleValue)
@@ -223,19 +222,14 @@ namespace Corvus.Text.Json
             return endIndex;
         }
 
-        internal ReadOnlyMemory<byte> GetRootRawValue()
-        {
-            return GetRawValueCore(0, includeQuotes: true);
-        }
-
         ReadOnlyMemory<byte> IJsonDocument.GetRawValue(int index, bool includeQuotes)
         {
+            CheckNotDisposed();
             return GetRawValueCore(index, includeQuotes);
         }
 
         private ReadOnlyMemory<byte> GetRawValueCore(int index, bool includeQuotes)
         {
-            CheckNotDisposed();
 
             DbRow row = _parsedData.Get(index);
 
@@ -782,6 +776,8 @@ namespace Corvus.Text.Json
 
         string IJsonDocument.GetRawValueAsString(int index)
         {
+            CheckNotDisposed();
+
             ReadOnlyMemory<byte> segment = GetRawValueCore(index, includeQuotes: true);
             return JsonReaderHelper.TranscodeHelper(segment.Span);
         }
@@ -794,6 +790,8 @@ namespace Corvus.Text.Json
 
         JsonElement IJsonDocument.CloneElement(int index)
         {
+            CheckNotDisposed();
+
             int endIndex = GetEndIndexCore(index, true);
             MetadataDb newDb = _parsedData.CopySegment(index, endIndex);
             ReadOnlyMemory<byte> segmentCopy = GetRawValueCore(index, includeQuotes: true).ToArray();

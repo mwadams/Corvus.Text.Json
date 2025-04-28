@@ -321,6 +321,16 @@ namespace Corvus.Text.Json
                 MemoryMarshal.Write(dataPos, ref value);
             }
 
+            internal void SetPropertyMapIndex(int index, int propertyMapIndex)
+            {
+                this.AssertValidIndex(index);
+                uint pmi = (uint)propertyMapIndex | 0x8000_0000U;
+
+                Span<byte> destination = _data.AsSpan(index + SizeOrLengthOffset);
+
+                MemoryMarshal.Write(destination, ref pmi);
+            }
+
             internal void SetHasComplexChildren(int index)
             {
                 AssertValidIndex(index);
