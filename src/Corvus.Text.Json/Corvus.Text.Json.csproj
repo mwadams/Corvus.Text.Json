@@ -24,6 +24,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Corvus.Text.Json.Tests" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <Using Include="System" />
     <Using Include="System.Text" />
     <Using Include="SR = Corvus.Text.Json.Resources.Strings" />

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace Corvus.Text.Json
 {
@@ -1232,6 +1233,71 @@ namespace Corvus.Text.Json
 
                 return _parent.GetRawValue(_idx, includeQuotes: false).Span;
             }
+        }
+
+        /// <summary>
+        /// Determines if a value is a multiple of the given divisor.
+        /// </summary>
+        /// <param name="element">The element to test.</param>
+        /// <param name="divisor">The integer value of the divisor.</param>
+        /// <param name="divisorExponent">The exponent of the divisor (+ve or -ve).</param>
+        /// <returns><see langword="true"/> if the value is an exact multiple of <c>divisor * 10^divisorExponent</c>.</returns>
+        /// <remarks>
+        /// This will always return <see langword="false"/> if the <paramref name="divisor"/> is <c>0</c> and <see langword="true"/>
+        /// if the value is zero.
+        /// </remarks>
+        [CLSCompliant(false)]
+        public static bool IsMultipleOf(in JsonElement element, ulong divisor, int divisorExponent)
+        {
+            element.CheckValidInstance();
+            Debug.Assert(element.ValueKind == JsonValueKind.Number);
+            if (element.ValueKind != JsonValueKind.Number)
+            {
+                return false;
+            }
+
+            return JsonHelpers.IsMultipleOf(element.GetRawValue().Span, divisor, divisorExponent);
+        }
+
+        /// <summary>
+        /// Determines if a value is a multiple of the given divisor.
+        /// </summary>
+        /// <param name="element">The element to test.</param>
+        /// <param name="divisor">The integer value of the divisor.</param>
+        /// <param name="divisorExponent">The exponent of the divisor (+ve or -ve).</param>
+        /// <returns><see langword="true"/> if the value is an exact multiple of <c>divisor * 10^divisorExponent</c>.</returns>
+        /// <remarks>
+        /// This will always return <see langword="false"/> if the <paramref name="divisor"/> is <c>0</c> and <see langword="true"/>
+        /// if the value is zero.
+        /// </remarks>
+        public static bool IsMultipleOf(in JsonElement element, System.Numerics.BigInteger divisor, int divisorExponent)
+        {
+            element.CheckValidInstance();
+            Debug.Assert(element.ValueKind == JsonValueKind.Number);
+
+            if (element.ValueKind != JsonValueKind.Number)
+            {
+                return false;
+            }
+
+            return JsonHelpers.IsMultipleOf(element.GetRawValue().Span, divisor, divisorExponent);
+        }
+
+        /// <summary>
+        /// Determines if a value is a multiple of the given divisor.
+        /// </summary>
+        /// <param name="lhs">The first <see cref="Element"/> to compare.</param>
+        /// <param name="rhs">The second <see cref="Element"/> to compare.</param>
+        /// <returns>-1 if <paramref name="lhs"/> is less than <paramref name="rhs"/>, 0 if they are equal, and 1 if <paramref name="lhs"/> is greater than <paramref name="rhs"/>.</returns>
+        public static int Compare(in JsonElement lhs, in JsonElement rhs)
+        {
+            lhs.CheckValidInstance();
+            rhs.CheckValidInstance();
+
+            Debug.Assert(lhs.ValueKind == JsonValueKind.Number);
+            Debug.Assert(rhs.ValueKind == JsonValueKind.Number);
+
+            return JsonHelpers.CompareJsonNumbers(lhs.GetRawValue().Span, rhs.GetRawValue().Span);
         }
 
         /// <summary>

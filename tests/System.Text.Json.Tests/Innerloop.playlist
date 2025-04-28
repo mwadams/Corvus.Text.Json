@@ -3998,6 +3998,29 @@
                     </Rule>
                   </Rule>
                 </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonElementNumberTest" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.CompareNormalizedJsonNumbersTests" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.CompareNormalizedJsonNumbersTests" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisors_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisors_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisor_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisor_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
               </Rule>
             </Rule>
           </Rule>
@@ -8003,6 +8026,41 @@
                     </Rule>
                   </Rule>
                 </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonElementNumberTest" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.CompareNormalizedJsonNumbersTests" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.CompareNormalizedJsonNumbersTests" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisors_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisors_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisor_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisor_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisorsBigInt_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisorsBigInt_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisorBigInt_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisorBigInt_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
               </Rule>
             </Rule>
           </Rule>
@@ -12004,6 +12062,41 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.Utf8JsonWriterTests.WritingTooDeepProperty" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.Utf8JsonWriterTests.WritingTooDeepProperty" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonElementNumberTest" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.CompareNormalizedJsonNumbersTests" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.CompareNormalizedJsonNumbersTests" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisors_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisors_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisor_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisor_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisorsBigInt_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_FastPathDivisorsBigInt_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisorBigInt_ReturnsExpected" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisorBigInt_ReturnsExpected" />
                       </Rule>
                     </Rule>
                   </Rule>

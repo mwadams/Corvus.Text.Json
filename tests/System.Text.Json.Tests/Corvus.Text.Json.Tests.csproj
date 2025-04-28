@@ -57,6 +57,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />
+    <Compile Include="JsonElementNumberTest.cs" />
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="System\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
   </ItemGroup>
@@ -314,8 +315,6 @@
     <Compile Include="Utf8JsonWriterTests.Values.StringSegment.cs" />
     <Compile Include="Utf8JsonWriterTests.cs" />
     <Compile Include="Utf8JsonWriterTests.WriteRaw.cs" />
-
-    <Compile Include="..\..\src\Corvus.Text.Json\System\Text\Json\BitStack.cs" Link="BitStack.cs" />
   </ItemGroup>
 
   <!--<ItemGroup Condition="'$(TargetFramework)' != 'net481'">
