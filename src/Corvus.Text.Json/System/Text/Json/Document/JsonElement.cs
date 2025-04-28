@@ -1673,7 +1673,7 @@ namespace Corvus.Text.Json
                 ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartArray, tokenType);
             }
 
-            return new ArrayEnumerator(this);
+            return new ArrayEnumerator(_parent, _idx);
         }
 
         /// <summary>
@@ -1699,7 +1699,7 @@ namespace Corvus.Text.Json
                 ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartObject, tokenType);
             }
 
-            return new ObjectEnumerator(this);
+            return new ObjectEnumerator(_parent, _idx);
         }
 
         /// <summary>

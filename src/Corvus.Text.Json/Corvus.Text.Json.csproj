@@ -121,6 +121,8 @@
     <Compile Include="System\Text\Json\Document\DynamicValueType.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.PropertyMap.cs" />
     <Compile Include="System\Text\Json\Document\IJsonDocument.cs" />
+    <Compile Include="System\Text\Json\Document\ArrayEnumerator.cs" />
+    <Compile Include="System\Text\Json\Document\ObjectEnumerator.cs" />
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.DbRow.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.MetadataDb.cs" />
@@ -131,9 +133,7 @@
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.TryGetProperty.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocumentOptions.cs" />
-    <Compile Include="System\Text\Json\Document\JsonElement.ArrayEnumerator.cs" />
     <Compile Include="System\Text\Json\Document\JsonElement.cs" />
-    <Compile Include="System\Text\Json\Document\JsonElement.ObjectEnumerator.cs" />
     <Compile Include="System\Text\Json\Document\JsonElement.Parse.cs" />
     <Compile Include="System\Text\Json\Document\JsonProperty.cs" />
     <Compile Include="System\Text\Json\Document\JsonValueKind.cs" />

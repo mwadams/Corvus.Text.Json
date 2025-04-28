@@ -103,8 +103,8 @@ namespace Corvus.Text.Json
                     }
                     break;
                 case JsonValueKind.Array:
-                    JsonElement.ArrayEnumerator expectedEnumerator = expected.EnumerateArray();
-                    JsonElement.ArrayEnumerator actualEnumerator = actual.EnumerateArray();
+                    ArrayEnumerator expectedEnumerator = expected.EnumerateArray();
+                    ArrayEnumerator actualEnumerator = actual.EnumerateArray();
 
                     int i = 0;
                     while (expectedEnumerator.MoveNext())

@@ -2457,7 +2457,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
             {
                 Assert.Equal(6, doc.RootElement.GetPropertyCount());
-                JsonElement.ObjectEnumerator enumerator = doc.RootElement.EnumerateObject();
+                ObjectEnumerator enumerator = doc.RootElement.EnumerateObject();
                 Assert.True(enumerator.MoveNext(), "Move to first property");
                 JsonProperty property = enumerator.Current;
 
@@ -2540,11 +2540,11 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("[0, 1, 2, 3, 4, 5]"))
             {
                 JsonElement root = doc.RootElement;
-                JsonElement.ArrayEnumerator structEnumerable = root.EnumerateArray();
+                ArrayEnumerator structEnumerable = root.EnumerateArray();
                 IEnumerable<JsonElement> strongBoxedEnumerable = root.EnumerateArray();
                 IEnumerable weakBoxedEnumerable = root.EnumerateArray();
 
-                JsonElement.ArrayEnumerator structEnumerator = structEnumerable.GetEnumerator();
+                ArrayEnumerator structEnumerator = structEnumerable.GetEnumerator();
                 IEnumerator<JsonElement> strongBoxedEnumerator = strongBoxedEnumerable.GetEnumerator();
                 IEnumerator weakBoxedEnumerator = weakBoxedEnumerable.GetEnumerator();
 
@@ -2671,9 +2671,9 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void DefaultArrayEnumeratorDoesNotThrow()
         {
-            JsonElement.ArrayEnumerator enumerable = default;
-            JsonElement.ArrayEnumerator enumerator = enumerable.GetEnumerator();
-            JsonElement.ArrayEnumerator defaultEnumerator = default;
+            ArrayEnumerator enumerable = default;
+            ArrayEnumerator enumerator = enumerable.GetEnumerator();
+            ArrayEnumerator defaultEnumerator = default;
 
             Assert.Equal(JsonValueKind.Undefined, enumerable.Current.ValueKind);
             Assert.Equal(JsonValueKind.Undefined, enumerator.Current.ValueKind);
@@ -2698,11 +2698,11 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
             {
                 JsonElement root = doc.RootElement;
-                JsonElement.ObjectEnumerator structEnumerable = root.EnumerateObject();
+                ObjectEnumerator structEnumerable = root.EnumerateObject();
                 IEnumerable<JsonProperty> strongBoxedEnumerable = root.EnumerateObject();
                 IEnumerable weakBoxedEnumerable = root.EnumerateObject();
 
-                JsonElement.ObjectEnumerator structEnumerator = structEnumerable.GetEnumerator();
+                ObjectEnumerator structEnumerator = structEnumerable.GetEnumerator();
                 IEnumerator<JsonProperty> strongBoxedEnumerator = strongBoxedEnumerable.GetEnumerator();
                 IEnumerator weakBoxedEnumerator = weakBoxedEnumerable.GetEnumerator();
 
@@ -2857,9 +2857,9 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void DefaultObjectEnumeratorDoesNotThrow()
         {
-            JsonElement.ObjectEnumerator enumerable = default;
-            JsonElement.ObjectEnumerator enumerator = enumerable.GetEnumerator();
-            JsonElement.ObjectEnumerator defaultEnumerator = default;
+            ObjectEnumerator enumerable = default;
+            ObjectEnumerator enumerator = enumerable.GetEnumerator();
+            ObjectEnumerator defaultEnumerator = default;
 
             Assert.Equal(JsonValueKind.Undefined, enumerable.Current.Value.ValueKind);
             Assert.Equal(JsonValueKind.Undefined, enumerator.Current.Value.ValueKind);

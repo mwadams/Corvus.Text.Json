@@ -2167,7 +2167,7 @@ namespace Corvus.Text.Json.Serialization.Tests
             Assert.IsType<JsonElement>(Object);
             JsonElement jsonObject = (JsonElement)Object;
             Assert.Equal(JsonValueKind.Object, jsonObject.ValueKind);
-            JsonElement.ObjectEnumerator enumerator = jsonObject.EnumerateObject();
+            ObjectEnumerator enumerator = jsonObject.EnumerateObject();
             JsonProperty property = enumerator.First();
             Assert.Equal("NestedArray", property.Name);
             Assert.True(property.NameEquals("NestedArray"));
