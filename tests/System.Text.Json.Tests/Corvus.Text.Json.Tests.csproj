@@ -45,6 +45,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ILLink.Descriptors.xml" />
+    <None Remove="Innerloop.playlist" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="System" />
     <Using Include="System.Text" />
     <Using Include="SR = Corvus.Text.Json.Tests.Resources.Strings" />
@@ -382,9 +387,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(CommonTestPath)xunit.runner.json"
-          CopyToOutputDirectory="PreserveNewest"
-          Visible="false" />
+    <None Include="$(CommonTestPath)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 
 </Project>
