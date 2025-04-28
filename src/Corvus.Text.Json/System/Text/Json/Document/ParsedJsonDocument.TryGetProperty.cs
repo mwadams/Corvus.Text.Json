@@ -124,7 +124,7 @@ namespace Corvus.Text.Json
             }
 
             int endIndex = checked(row.NumberOfRows * DbRow.Size + index);
-
+            
             return TryGetNamedPropertyValue(
                 index + DbRow.Size,
                 endIndex,
@@ -138,6 +138,14 @@ namespace Corvus.Text.Json
             ReadOnlySpan<byte> propertyName,
             out JsonElement value)
         {
+            DbRow endObjectRow = _parsedData.Get(endIndex);
+            int propertyMapIndex = endObjectRow.SizeOrLength;
+
+            if (endObjectRow.HasPropertyMap)
+            {
+                return TryGetNamedPropertyValueFromPropertyMap(endObjectRow.SizeOrLength, propertyName, out value);
+            }
+
             ReadOnlySpan<byte> documentSpan = _utf8Json.Span;
             Span<byte> utf8UnescapedStack = stackalloc byte[JsonConstants.StackallocByteThreshold];
 

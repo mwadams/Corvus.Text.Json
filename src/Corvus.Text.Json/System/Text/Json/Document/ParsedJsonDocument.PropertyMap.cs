@@ -4,15 +4,15 @@
 using System.Buffers;
 using System.Collections;
 using System.Diagnostics;
-
-#if !NET
-using BitConverter = Corvus.BitConverterEx;
-#endif
+using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json
 {
     public sealed partial class ParsedJsonDocument
     {
+        private const ulong HashMask = 0xFFUL << 56;
+        private const int HashLength = 8;
+
         private byte[]? _propertyMapBacking;
         private int[]? _bucketsBacking;
         private byte[]? _entriesBacking;
@@ -149,6 +149,65 @@ namespace Corvus.Text.Json
             return propertyMapIndex;
         }
 
+        private bool TryGetNamedPropertyValueFromPropertyMap(int propertyMapBufferIndex, ReadOnlySpan<byte> unescapedUtf8Name, out JsonElement value)
+        {
+            PropertyMap propertyMap = MemoryMarshal.Read<PropertyMap>(_propertyMapBacking.AsSpan(propertyMapBufferIndex, PropertyMap.Size));
+            Span<int> buckets = _bucketsBacking.AsSpan(propertyMap.BucketOffset, propertyMap.BucketCount);
+            Span<byte> entries = _entriesBacking.AsSpan(propertyMap.EntryOffset, propertyMap.Count * PropertyMap.Entry.Size);
+
+            ulong hashCode = PropertyMap.GetHashCode(unescapedUtf8Name);
+            int i = PropertyMap.GetBucket(buckets, hashCode, propertyMap.BucketCount);
+            uint collisionCount = 0;
+            PropertyMap.Entry entry;
+
+            i--; // Value in _buckets is 1-based; subtract 1 from i. We do it here so it fuses with the following conditional.
+            do
+            {
+                int offset = i * PropertyMap.Entry.Size;
+
+                // Test in if to drop range check for following array access
+                if ((uint)offset >= (uint)entries.Length)
+                {
+                    goto ReturnNotFound;
+                }
+
+                entry = MemoryMarshal.Read<PropertyMap.Entry>(entries.Slice(offset));
+                if (entry.HashCode == hashCode &&
+                        (((unescapedUtf8Name.Length < HashLength) &&
+                            ((hashCode & HashMask) == 0)) ||
+                        GetKey(ref entry).SequenceEqual(unescapedUtf8Name)))
+                {
+                    goto ReturnFound;
+                }
+
+                i = entry.Next;
+
+                collisionCount++;
+            }
+            while (collisionCount <= propertyMap.Count);
+
+            Debug.Fail("Possible infinite loop in PropertyMap.FindValue.");
+
+        ReturnFound:
+            value = new JsonElement(this, entry.ValueIndex);
+            return true;
+        ReturnNotFound:
+            value = default;
+            return false;
+        }
+
+        private ReadOnlySpan<byte> GetKey(ref PropertyMap.Entry entry)
+        {
+            if (entry.HasDynamicUnescapedKey)
+            {
+                return ReadDynamicUnescapedUtf8String(entry.KeyOffset);
+            }
+            else
+            {
+                return GetRawValueCore(entry.ValueIndex - DbRow.Size, false).Span;
+            }
+        }
+
         private ReadOnlySpan<byte> UnescapeAndWriteDynamicValue(ReadOnlySpan<byte> escapedPropertyName, out int dynamicValueOffset)
         {
             int index = escapedPropertyName.IndexOf(JsonConstants.BackSlash);
@@ -181,7 +240,11 @@ namespace Corvus.Text.Json
                 throw new InvalidOperationException("String too long");
             }
 
+#if NET
             BitConverter.TryWriteBytes(_valueBuffer.AsSpan(), (uint)(length << 4) | (uint)DynamicValueType.Utf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBuffer.AsSpan(), (uint)(length << 4) | (uint)DynamicValueType.Utf8String);
+#endif
             _valueBufferOffset += length;
             dynamicValueOffset = offset;
             return _valueBuffer.AsSpan(valueOffset, length);
@@ -212,10 +275,26 @@ namespace Corvus.Text.Json
             length <<= 4;
             length |= (uint)DynamicValueType.Utf8String;
 
+#if NET
             BitConverter.TryWriteBytes(_valueBuffer.AsSpan(offset), length);
+#else
+            BitConverterEx.TryWriteBytes(_valueBuffer.AsSpan(offset), length);
+#endif
             unescapedPropertyName.CopyTo(_valueBuffer.AsSpan(offset + 4));
 
             return offset;
+        }
+
+        internal ReadOnlySpan<byte> ReadDynamicUnescapedUtf8String(int offset)
+        {
+            // The first 4 bytes are the type and length
+            uint length = BitConverter.ToUInt32(_valueBuffer!, offset);
+
+            Debug.Assert((DynamicValueType)(length & 0xF) == DynamicValueType.Utf8String, $"Expected UTF8 string at {offset}");
+
+            length >>= 4;
+
+            return _valueBuffer.AsSpan(offset + 4, (int)length);
         }
 
         private void Enlarge(int v, ref byte[] byteArray)
