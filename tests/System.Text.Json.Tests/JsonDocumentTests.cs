@@ -2069,7 +2069,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData(">a>")]
         public static void TryGetDateTimeAndOffset_InvalidPropertyValue(string testData)
         {
-            string jsonString = JsonSerializer.Serialize(new { DateTimeProperty = testData });
+            string jsonString = System.Text.Json.JsonSerializer.Serialize(new { DateTimeProperty = testData });
 
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
@@ -3460,7 +3460,8 @@ namespace Corvus.Text.Json.Tests
         [InlineData("""{ "foo" : {"nested:" : {"nested": 1, "bla": [1, 2, {"bla": 3}] } }, "test": true, "foo2" : {"nested:" : {"nested": 1, "bla": [1, 2, {"bla": 3}] } }}""", 3)]
         public static void TestGetPropertyCount(string json, int expectedCount)
         {
-            JsonElement element = JsonSerializer.Deserialize<JsonElement>(json);
+            using var doc = JsonDocument.Parse(json);
+            JsonElement element = doc.RootElement;
             Assert.Equal(expectedCount, element.GetPropertyCount());
         }
 
@@ -3831,7 +3832,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void DeserializeNullAsNullLiteral()
         {
-            var jsonDocument = JsonSerializer.Deserialize<JsonDocument>("null");
+            var jsonDocument = JsonDocument.Parse("null");
             Assert.NotNull(jsonDocument);
             Assert.Equal(JsonValueKind.Null, jsonDocument.RootElement.ValueKind);
         }

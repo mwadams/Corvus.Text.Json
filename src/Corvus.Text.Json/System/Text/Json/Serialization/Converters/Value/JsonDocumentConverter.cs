@@ -1,8 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Corvus.Text.Json.Schema;
-using Corvus.Text.Json.Nodes;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Corvus.Text.Json.Serialization.Converters
 {
@@ -10,7 +10,7 @@ namespace Corvus.Text.Json.Serialization.Converters
     {
         public override bool HandleNull => true;
 
-        public override JsonDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override JsonDocument Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return JsonDocument.ParseValue(ref reader);
         }

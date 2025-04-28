@@ -187,7 +187,7 @@
     <Compile Include="JsonElementWriteTests.cs" />
     <Compile Include="JsonEncodedTextTests.cs" />
     <Compile Include="JsonGuidTestData.cs" />
-    <Compile Include="JsonNode\Common.cs" />
+    <!--<Compile Include="JsonNode\Common.cs" />
     <Compile Include="JsonNode\JsonArrayTests.cs" />
     <Compile Include="JsonNode\JsonNodeTests.cs" />
     <Compile Include="JsonNode\JsonNodeOperatorTests.cs" />
@@ -195,17 +195,17 @@
     <Compile Include="JsonNode\JsonValueTests.cs" />
     <Compile Include="JsonNode\ParseTests.cs" />
     <Compile Include="JsonNode\ParentPathRootTests.cs" />
-    <Compile Include="JsonNode\ToStringTests.cs" />
+    <Compile Include="JsonNode\ToStringTests.cs" />-->
     <Compile Include="JsonPropertyTests.cs" />
     <Compile Include="JsonReaderStateAndOptionsTests.cs" />
     <Compile Include="JsonTestHelper.cs" />
     <Compile Include="JsonWriterOptionsTests.cs" />
-    <Compile Include="NewtonsoftTests\CamelCaseTests.cs" />
+    <!--<Compile Include="NewtonsoftTests\CamelCaseTests.cs" />
     <Compile Include="NewtonsoftTests\CustomObjectConverterTests.cs" />
     <Compile Include="NewtonsoftTests\DateTimeConverterTests.cs" />
     <Compile Include="NewtonsoftTests\EnumConverterTests.cs" />
     <Compile Include="NewtonsoftTests\ImmutableCollectionsTests.cs" />
-    <!--<Compile Include="NewtonsoftTests\JsonSerializerTests.cs" />
+    <Compile Include="NewtonsoftTests\JsonSerializerTests.cs" />
     <Compile Include="Serialization\Array.ReadTests.cs" />
     <Compile Include="Serialization\Array.WriteTests.cs" />
     <Compile Include="Serialization\CacheTests.cs" />
@@ -313,9 +313,9 @@
     <Compile Include="..\..\src\Corvus.Text.Json\System\Text\Json\BitStack.cs" Link="BitStack.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net481'">
+  <!--<ItemGroup Condition="'$(TargetFramework)' != 'net481'">
     <Compile Include="Serialization\ConvertersForUnsupportedTypesFunctionalTests.cs" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <Compile Include="$(CommonPath)System\Buffers\ArrayBufferWriter.cs" Link="CommonTest\System\Buffers\ArrayBufferWriter.cs" />

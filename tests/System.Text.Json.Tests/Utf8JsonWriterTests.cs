@@ -6461,7 +6461,16 @@ namespace Corvus.Text.Json.Tests
         public void WriteDateTime_TrimsFractionCorrectly_SerializerRoundtrip()
         {
             DateTime utcNow = DateTimeTestHelpers.FixedDateTimeValue;
-            Assert.Equal(utcNow, JsonSerializer.Deserialize(JsonSerializer.SerializeToUtf8Bytes(utcNow), typeof(DateTime)));
+
+
+            var output = new ArrayBufferWriter<byte>(1024);
+            using var jsonUtf8 = new Utf8JsonWriter(output);
+
+            jsonUtf8.WriteStringValue(utcNow);
+            jsonUtf8.Flush();
+
+            using JsonDocument doc = JsonDocument.Parse(output.WrittenMemory);            
+            Assert.Equal(utcNow, doc.RootElement.GetDateTime());
         }
 
         private static void WriteTooLargeHelper(JsonWriterOptions options, ReadOnlySpan<byte> key, ReadOnlySpan<byte> value, bool noThrow = false)

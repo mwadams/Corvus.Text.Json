@@ -26,7 +26,7 @@
   <ItemGroup>
     <Using Include="System" />
     <Using Include="System.Text" />
-    <Using Include="SR = Corvus.Text.Json.Resources.Strings"/>
+    <Using Include="SR = Corvus.Text.Json.Resources.Strings" />
   </ItemGroup>
 
   <ItemGroup>
@@ -85,13 +85,13 @@
     <Compile Include="$(CommonPath)System\Net\ArrayBuffer.cs" Link="Common\System\Net\ArrayBuffer.cs" />
     <Compile Include="$(CommonPath)System\Text\ValueStringBuilder.cs" Link="Common\ValueStringBuilder.cs" />
     <Compile Include="$(CommonPath)System\Text\Json\PooledByteBufferWriter.cs" Link="Common\System\Text\Json\PooledByteBufferWriter.cs" />
-    <Compile Include="..\Common\JsonCamelCaseNamingPolicy.cs" Link="Common\System\Text\Json\JsonCamelCaseNamingPolicy.cs" />
+    <!--<Compile Include="..\Common\JsonCamelCaseNamingPolicy.cs" Link="Common\System\Text\Json\JsonCamelCaseNamingPolicy.cs" />
     <Compile Include="..\Common\JsonNamingPolicy.cs" Link="Common\System\Text\Json\JsonNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonAttribute.cs" Link="Common\System\Text\Json\Serialization\JsonAttribute.cs" />
+    <Compile Include="..\Common\JsonAttribute.cs" Link="Common\System\Text\Json\Serialization\JsonAttribute.cs" />-->
     <Compile Include="..\Common\JsonCommentHandling.cs" Link="Common\System\Text\Json\JsonCommentHandling.cs" />
     <Compile Include="..\Common\JsonConstants.cs" Link="Common\System\Text\Json\JsonConstants.cs" />
     <Compile Include="..\Common\JsonHelpers.cs" Link="Common\System\Text\Json\JsonHelpers.cs" />
-    <Compile Include="..\Common\JsonIgnoreCondition.cs" Link="Common\System\Text\Json\Serialization\JsonIgnoreCondition.cs" />
+    <!--<Compile Include="..\Common\JsonIgnoreCondition.cs" Link="Common\System\Text\Json\Serialization\JsonIgnoreCondition.cs" />
     <Compile Include="..\Common\JsonKebabCaseLowerNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonKebabCaseLowerNamingPolicy.cs" />
     <Compile Include="..\Common\JsonKebabCaseUpperNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonKebabCaseUpperNamingPolicy.cs" />
     <Compile Include="..\Common\JsonKnownNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonKnownNamingPolicy.cs" />
@@ -107,7 +107,7 @@
     <Compile Include="..\Common\JsonSourceGenerationOptionsAttribute.cs" Link="Common\System\Text\Json\Serialization\JsonSourceGenerationOptionsAttribute.cs" />
     <Compile Include="..\Common\JsonUnknownTypeHandling.cs" Link="Common\System\Text\Json\Serialization\JsonUnknownTypeHandling.cs" />
     <Compile Include="..\Common\JsonUnmappedMemberHandling.cs" Link="Common\System\Text\Json\Serialization\JsonUnmappedMemberHandling.cs" />
-    <Compile Include="..\Common\ReflectionExtensions.cs" Link="Common\System\Text\Json\Serialization\ReflectionExtensions.cs" />
+    <Compile Include="..\Common\ReflectionExtensions.cs" Link="Common\System\Text\Json\Serialization\ReflectionExtensions.cs" />-->
     <Compile Include="..\Common\ThrowHelper.cs" Link="Common\System\Text\Json\ThrowHelper.cs" />
     <Compile Include="System\Runtime\InteropServices\JsonMarshal.cs" />
     <Compile Include="System\Text\Json\AppContextSwitchHelper.cs" />
@@ -133,7 +133,7 @@
     <Compile Include="System\Text\Json\JsonHelpers.Date.cs" />
     <Compile Include="System\Text\Json\JsonHelpers.Escaping.cs" />
     <Compile Include="System\Text\Json\JsonTokenType.cs" />
-    <Compile Include="System\Text\Json\Nodes\JsonArray.cs" />
+    <!--<Compile Include="System\Text\Json\Nodes\JsonArray.cs" />
     <Compile Include="System\Text\Json\Nodes\JsonArray.IList.cs" />
     <Compile Include="System\Text\Json\Nodes\JsonValueOfElement.cs" />
     <Compile Include="System\Text\Json\Nodes\JsonNode.cs" />
@@ -148,7 +148,7 @@
     <Compile Include="System\Text\Json\Nodes\JsonValue.cs" />
     <Compile Include="System\Text\Json\Nodes\JsonValueOfTCustomized.cs" />
     <Compile Include="System\Text\Json\Nodes\JsonValueOfT.cs" />
-    <Compile Include="System\Text\Json\Nodes\JsonValueOfTPrimitive.cs" />
+    <Compile Include="System\Text\Json\Nodes\JsonValueOfTPrimitive.cs" />-->
     <Compile Include="System\Text\Json\Reader\ConsumeNumberResult.cs" />
     <Compile Include="System\Text\Json\Reader\ConsumeTokenResult.cs" />
     <Compile Include="System\Text\Json\Reader\JsonReaderException.cs" />
@@ -159,7 +159,7 @@
     <Compile Include="System\Text\Json\Reader\Utf8JsonReader.cs" />
     <Compile Include="System\Text\Json\Reader\Utf8JsonReader.MultiSegment.cs" />
     <Compile Include="System\Text\Json\Reader\Utf8JsonReader.TryGet.cs" />
-    <Compile Include="System\Text\Json\Schema\JsonSchema.cs" />
+    <!--<Compile Include="System\Text\Json\Schema\JsonSchema.cs" />
     <Compile Include="System\Text\Json\Schema\JsonSchemaExporter.cs" />
     <Compile Include="System\Text\Json\Schema\JsonSchemaExporterOptions.cs" />
     <Compile Include="System\Text\Json\Schema\JsonSchemaExporterContext.cs" />
@@ -219,12 +219,12 @@
     <Compile Include="System\Text\Json\Serialization\Metadata\JsonTypeInfoResolverChain.cs" />
     <Compile Include="System\Text\Json\Serialization\Metadata\JsonTypeInfoResolverWithAddedModifiers.cs" />
     <Compile Include="System\Text\Json\Serialization\Metadata\PropertyRefCacheBuilder.cs" />
-    <Compile Include="System\Text\Json\Serialization\PolymorphicSerializationState.cs" />
+    <Compile Include="System\Text\Json\Serialization\PolymorphicSerializationState.cs" />-->
     <Compile Include="System\Text\Json\StackHelper.cs" />
     <Compile Include="System\Text\Json\ValueQueue.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriter.WriteValues.StringSegment.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriterCache.cs" />
-    <Compile Include="System\Text\Json\Serialization\ReferenceEqualsWrapper.cs" />
+    <!--<Compile Include="System\Text\Json\Serialization\ReferenceEqualsWrapper.cs" />
     <Compile Include="System\Text\Json\Serialization\ConverterStrategy.cs" />
     <Compile Include="System\Text\Json\Serialization\ConfigurationList.cs" />
     <Compile Include="System\Text\Json\Serialization\Converters\Collection\ArrayConverter.cs" />
@@ -363,10 +363,10 @@
     <Compile Include="System\Text\Json\Serialization\StackFrameObjectState.cs" />
     <Compile Include="System\Text\Json\Serialization\StackFramePropertyState.cs" />
     <Compile Include="System\Text\Json\Serialization\WriteStack.cs" />
-    <Compile Include="System\Text\Json\Serialization\WriteStackFrame.cs" />
+    <Compile Include="System\Text\Json\Serialization\WriteStackFrame.cs" />-->
     <Compile Include="System\Text\Json\ThrowHelper.cs" />
-    <Compile Include="System\Text\Json\ThrowHelper.Node.cs" />
-    <Compile Include="System\Text\Json\ThrowHelper.Serialization.cs" />
+    <!--<Compile Include="System\Text\Json\ThrowHelper.Node.cs" />
+    <Compile Include="System\Text\Json\ThrowHelper.Serialization.cs" />-->
     <Compile Include="System\Text\Json\Writer\JsonWriterHelper.cs" />
     <Compile Include="System\Text\Json\Writer\JsonWriterHelper.Date.cs" />
     <Compile Include="System\Text\Json\Writer\JsonWriterHelper.Escaping.cs" />
@@ -400,7 +400,7 @@
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriter.WriteValues.SignedNumber.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriter.WriteValues.String.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriter.WriteValues.UnsignedNumber.cs" />
-    <Compile Include="System\ReflectionExtensions.cs" />
+    <!--<Compile Include="System\ReflectionExtensions.cs" />-->
     <Compile Include="$(CommonPath)System\Obsoletions.cs" Link="Common\System\Obsoletions.cs" />
     <Compile Include="System\ThrowHelper.cs" />
   </ItemGroup>
@@ -434,12 +434,12 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
     <!--<Compile Include="Corvus.Text.Json.Typeforwards.netcoreapp.cs" />-->
     <Compile Include="System\Text\Json\Reader\JsonReaderHelper.net8.cs" />
-    <Compile Include="System\Text\Json\Serialization\Converters\Value\DateOnlyConverter.cs" />
+    <!--<Compile Include="System\Text\Json\Serialization\Converters\Value\DateOnlyConverter.cs" />
     <Compile Include="System\Text\Json\Serialization\Converters\Value\HalfConverter.cs" />
     <Compile Include="System\Text\Json\Serialization\Converters\Value\Int128Converter.cs" />
     <Compile Include="System\Text\Json\Serialization\Converters\Value\TimeOnlyConverter.cs" />
     <Compile Include="System\Text\Json\Serialization\Converters\Value\UInt128Converter.cs" />
-    <Compile Include="System\Text\Json\Serialization\JsonSerializerOptionsUpdateHandler.cs" />
+    <Compile Include="System\Text\Json\Serialization\JsonSerializerOptionsUpdateHandler.cs" />-->
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -482,6 +482,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="10.0.0-preview.3.25171.5" />
   </ItemGroup>
   
 </Project>

@@ -172,8 +172,9 @@ namespace Corvus.Text.Json.Tests
 
             Assert.Equal(dataUtf8.Length, json.BytesConsumed);
 
-            // Test upstream serializer.
-            Assert.Equal(DateTime.Parse(expectedString), JsonSerializer.Deserialize<DateTime>(jsonString));
+            // Test upstream
+            using var doc = JsonDocument.Parse(jsonString);
+            Assert.Equal(DateTime.Parse(expectedString), doc.RootElement.GetDateTime());
         }
 
         [Fact]
@@ -199,8 +200,8 @@ namespace Corvus.Text.Json.Tests
 
             Assert.Equal(dataUtf8.Length, json.BytesConsumed);
 
-            // Test upstream serializer.
-            Assert.Equal(DateTime.Parse(expectedString), JsonSerializer.Deserialize<DateTime>(jsonString));
+            using var doc = JsonDocument.Parse(jsonString);
+            Assert.Equal(DateTime.Parse(expectedString), doc.RootElement.GetDateTime());
         }
 
         [Theory]

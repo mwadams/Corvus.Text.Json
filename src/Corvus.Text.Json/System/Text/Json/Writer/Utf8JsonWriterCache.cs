@@ -14,8 +14,8 @@ namespace Corvus.Text.Json
         [ThreadStatic]
         private static ThreadLocalState? t_threadLocalState;
 
-        public static Utf8JsonWriter RentWriterAndBuffer(JsonSerializerOptions options, out PooledByteBufferWriter bufferWriter) =>
-            RentWriterAndBuffer(options.GetWriterOptions(), options.DefaultBufferSize, out bufferWriter);
+        ////public static Utf8JsonWriter RentWriterAndBuffer(JsonSerializerOptions options, out PooledByteBufferWriter bufferWriter) =>
+        ////    RentWriterAndBuffer(options.GetWriterOptions(), options.DefaultBufferSize, out bufferWriter);
 
         public static Utf8JsonWriter RentWriterAndBuffer(JsonWriterOptions options, int defaultBufferSize, out PooledByteBufferWriter bufferWriter)
         {
@@ -41,21 +41,21 @@ namespace Corvus.Text.Json
             return writer;
         }
 
-        public static Utf8JsonWriter RentWriter(JsonSerializerOptions options, IBufferWriter<byte> bufferWriter)
+        public static Utf8JsonWriter RentWriter(JsonWriterOptions options, IBufferWriter<byte> bufferWriter)
         {
             ThreadLocalState state = t_threadLocalState ??= new();
             Utf8JsonWriter writer;
 
             if (state.RentedWriters++ == 0)
             {
-                // First JsonSerializer call in the stack -- initialize & return the cached instance.
+                // First call in the stack -- initialize & return the cached instance.
                 writer = state.Writer;
-                writer.Reset(bufferWriter, options.GetWriterOptions());
+                writer.Reset(bufferWriter, options);
             }
             else
             {
-                // We're in a recursive JsonSerializer call -- return a fresh instance.
-                writer = new Utf8JsonWriter(bufferWriter, options.GetWriterOptions());
+                // We're in a recursive call -- return a fresh instance.
+                writer = new Utf8JsonWriter(bufferWriter, options);
             }
 
             return writer;

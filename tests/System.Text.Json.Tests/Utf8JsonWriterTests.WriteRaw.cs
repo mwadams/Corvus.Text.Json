@@ -40,7 +40,7 @@ namespace Corvus.Text.Json.Tests
                 verifyWithDeserialize(ms.ToArray());
 
                 // string
-                
+
                 writer.Reset();
                 ms.SetLength(0);
                 WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.String, skipInputValidation);
@@ -67,22 +67,54 @@ namespace Corvus.Text.Json.Tests
         {
             Action<byte[]> validate;
 
-            validate = (data) => Assert.Equal(123456789, JsonSerializer.Deserialize<long>(data));
+
+            validate = (data) =>
+            {
+                using var doc = JsonDocument.Parse(data);
+                Assert.Equal(123456789, doc.RootElement.GetInt64());
+            };
+
             yield return new object[] { "123456789"u8.ToArray(), validate };
 
-            validate = (data) => Assert.Equal(1234.56789, JsonSerializer.Deserialize<double>(data));
+            validate = (data) =>
+            {
+                using var doc = JsonDocument.Parse(data);
+                Assert.Equal(1234.56789, doc.RootElement.GetDouble());
+            };
+
             yield return new object[] { "1234.56789"u8.ToArray(), validate };
 
-            validate = (data) => Assert.Equal(1234.56789, JsonSerializer.Deserialize<double>(data));
+            validate = (data) =>
+            {
+                using var doc = JsonDocument.Parse(data);
+                Assert.Equal(1234.56789, doc.RootElement.GetDouble());
+            };
+
             yield return new object[] { " 1234.56789 "u8.ToArray(), validate };
 
-            validate = (data) => Assert.Equal(@"Hello", JsonSerializer.Deserialize<string>(data));
+            validate = (data) =>
+            {
+                using var doc = JsonDocument.Parse(data);
+                Assert.Equal(@"Hello", doc.RootElement.GetString());
+            };
+
             yield return new object[] { Encoding.UTF8.GetBytes(@"""Hello"""), validate };
 
-            validate = (data) => Assert.Equal(@"Hello", JsonSerializer.Deserialize<string>(data));
+            validate = (data) =>
+            {
+                using var doc = JsonDocument.Parse(data);
+                Assert.Equal(@"Hello", doc.RootElement.GetString());
+            };
+
             yield return new object[] { Encoding.UTF8.GetBytes(@"  ""Hello""  "), validate };
 
-            validate = (data) => Assert.Equal(s_guid, JsonSerializer.Deserialize<Guid>(data));
+            validate = (data) =>
+            {
+                using var doc = JsonDocument.Parse(data);
+
+                Assert.Equal(s_guid, doc.RootElement.GetGuid());
+            };
+
             byte[] guidAsJson = WrapInQuotes(Encoding.UTF8.GetBytes(TestGuidAsStr));
             yield return new object[] { guidAsJson, validate };
         }
@@ -91,30 +123,36 @@ namespace Corvus.Text.Json.Tests
         {
             Action<byte[]> validate;
 
-            byte[] json = JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat(1234.56789, 4));
+            byte[] json = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat(1234.56789, 4));
             validate = (data) =>
             {
-                foreach (double d in JsonSerializer.Deserialize<double[]>(data))
+                using var doc = JsonDocument.Parse(data);
+
+                foreach (double d in doc.RootElement.EnumerateArray().Select(e => e.GetDouble()))
                 {
                     Assert.Equal(1234.56789, d);
                 }
             };
             yield return new object[] { json, validate };
 
-            json = JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat("Hello", 4));
+            json = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat("Hello", 4));
             validate = (data) =>
             {
-                foreach (string str in JsonSerializer.Deserialize<string[]>(data))
+                using var doc = JsonDocument.Parse(data);
+
+                foreach (string str in doc.RootElement.EnumerateArray().Select(e => e.GetString()))
                 {
                     Assert.Equal("Hello", str);
                 }
             };
             yield return new object[] { json, validate };
 
-            json = JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat("Hello", 4));
+            json = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat("Hello", 4));
             validate = (data) =>
             {
-                foreach (string str in JsonSerializer.Deserialize<string[]>(data))
+                using var doc = JsonDocument.Parse(data);
+
+                foreach (string str in doc.RootElement.EnumerateArray().Select(e => e.GetString()))
                 {
                     Assert.Equal("Hello", str);
                 }
@@ -124,7 +162,9 @@ namespace Corvus.Text.Json.Tests
             json = "[ 1, 1,1,1,1 ] "u8.ToArray();
             validate = (data) =>
             {
-                foreach (int val in JsonSerializer.Deserialize<int[]>(data))
+                using var doc = JsonDocument.Parse(data);
+
+                foreach (int val in doc.RootElement.EnumerateArray().Select(e => e.GetInt32()))
                 {
                     Assert.Equal(1, val);
                 }
@@ -139,7 +179,8 @@ namespace Corvus.Text.Json.Tests
             byte[] json = Encoding.UTF8.GetBytes(@"{""Hello"":""World""}"); ;
             validate = (data) =>
             {
-                KeyValuePair<string, string> kvp = JsonSerializer.Deserialize<Dictionary<string, string>>(data).Single();
+                using var doc = JsonDocument.Parse(data);
+                KeyValuePair<string, string> kvp = doc.RootElement.EnumerateObject().Select(p => new KeyValuePair<string, string>(p.Name, p.Value.GetString())).Single();
                 Assert.Equal("Hello", kvp.Key);
                 Assert.Equal("World", kvp.Value);
             };
@@ -148,7 +189,8 @@ namespace Corvus.Text.Json.Tests
             json = Encoding.UTF8.GetBytes(@" {  ""Hello""    :""World""  }   "); ;
             validate = (data) =>
             {
-                KeyValuePair<string, string> kvp = JsonSerializer.Deserialize<Dictionary<string, string>>(data).Single();
+                using var doc = JsonDocument.Parse(data);
+                KeyValuePair<string, string> kvp = doc.RootElement.EnumerateObject().Select(p => new KeyValuePair<string, string>(p.Name, p.Value.GetString())).Single();
                 Assert.Equal("Hello", kvp.Key);
                 Assert.Equal("World", kvp.Value);
             };
@@ -277,7 +319,7 @@ namespace Corvus.Text.Json.Tests
                 {
                     writer.WriteRawValue(@"{}", skipInputValidation);
                     writer.Flush();
-                    Assert.True(ms.ToArray().SequenceEqual(new byte[] { (byte)'{',  (byte)'{', (byte)'}' }));
+                    Assert.True(ms.ToArray().SequenceEqual(new byte[] { (byte)'{', (byte)'{', (byte)'}' }));
                 }
                 else
                 {

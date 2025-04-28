@@ -456,25 +456,27 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Verify()
         {
-            int count = 0;
-            foreach (object data in MyData)
-            {
-                if (data is JsonElement element)
-                {
-#if BUILDING_SOURCE_GENERATOR_TESTS
-                    SimpleTestClass obj = JsonSerializer.Deserialize(element, Corvus.Text.Json.SourceGeneration.Tests.CollectionTests_Default.CollectionTestsContext_Default.Default.SimpleTestClass);
-#else
-                    SimpleTestClass obj = JsonSerializer.Deserialize<SimpleTestClass>(element);
-#endif
-                    obj.Verify();
-                }
-                else
-                {
-                    ((SimpleTestClass)data).Verify();
-                }
-                count++;
-            }
-            Assert.Equal(2, count);
+            ////            int count = 0;
+            ////            foreach (object data in MyData)
+            ////            {
+            ////                if (data is JsonElement element)
+            ////                {
+            ////#if BUILDING_SOURCE_GENERATOR_TESTS
+            ////                    SimpleTestClass obj = JsonSerializer.Deserialize(element, Corvus.Text.Json.SourceGeneration.Tests.CollectionTests_Default.CollectionTestsContext_Default.Default.SimpleTestClass);
+            ////#else
+            ////                    SimpleTestClass obj = JsonSerializer.Deserialize<SimpleTestClass>(element);
+            ////#endif
+            ////                    obj.Verify();
+            ////                }
+            ////                else
+            ////                {
+            ////                    ((SimpleTestClass)data).Verify();
+            ////                }
+            ////                count++;
+            ////            }
+            ////            Assert.Equal(2, count);
+
+            Assert.Fail();
         }
     }
 
@@ -509,25 +511,26 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Verify()
         {
-            int count = 0;
-            foreach (object data in MyData)
-            {
-                if (data is JsonElement element)
-                {
-#if BUILDING_SOURCE_GENERATOR_TESTS
-                    SimpleTestClass obj = JsonSerializer.Deserialize(element, Corvus.Text.Json.SourceGeneration.Tests.CollectionTests_Default.CollectionTestsContext_Default.Default.SimpleTestClass);
-#else
-                    SimpleTestClass obj = JsonSerializer.Deserialize<SimpleTestClass>(element);
-#endif
-                    obj.Verify();
-                }
-                else
-                {
-                    ((SimpleTestClass)data).Verify();
-                }
-                count++;
-            }
-            Assert.Equal(2, count);
+            ////            int count = 0;
+            ////            foreach (object data in MyData)
+            ////            {
+            ////                if (data is JsonElement element)
+            ////                {
+            ////#if BUILDING_SOURCE_GENERATOR_TESTS
+            ////                    SimpleTestClass obj = JsonSerializer.Deserialize(element, Corvus.Text.Json.SourceGeneration.Tests.CollectionTests_Default.CollectionTestsContext_Default.Default.SimpleTestClass);
+            ////#else
+            ////                    SimpleTestClass obj = JsonSerializer.Deserialize<SimpleTestClass>(element);
+            ////#endif
+            ////                    obj.Verify();
+            ////                }
+            ////                else
+            ////                {
+            ////                    ((SimpleTestClass)data).Verify();
+            ////                }
+            ////                count++;
+            ////            }
+            ////            Assert.Equal(2, count);
+            Assert.Fail();
         }
     }
 
@@ -564,25 +567,26 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Verify()
         {
-            int count = 0;
-            foreach (object data in MyData)
-            {
-                if (data is JsonElement element)
-                {
-#if BUILDING_SOURCE_GENERATOR_TESTS
-                    SimpleTestClass obj = JsonSerializer.Deserialize(element, Corvus.Text.Json.SourceGeneration.Tests.CollectionTests_Default.CollectionTestsContext_Default.Default.SimpleTestClass);
-#else
-                    SimpleTestClass obj = JsonSerializer.Deserialize<SimpleTestClass>(element);
-#endif
-                    obj.Verify();
-                }
-                else
-                {
-                    ((SimpleTestClass)data).Verify();
-                }
-                count++;
-            }
-            Assert.Equal(2, count);
+            ////            int count = 0;
+            ////            foreach (object data in MyData)
+            ////            {
+            ////                if (data is JsonElement element)
+            ////                {
+            ////#if BUILDING_SOURCE_GENERATOR_TESTS
+            ////                    SimpleTestClass obj = JsonSerializer.Deserialize(element, Corvus.Text.Json.SourceGeneration.Tests.CollectionTests_Default.CollectionTestsContext_Default.Default.SimpleTestClass);
+            ////#else
+            ////                    SimpleTestClass obj = JsonSerializer.Deserialize<SimpleTestClass>(element);
+            ////#endif
+            ////                    obj.Verify();
+            ////                }
+            ////                else
+            ////                {
+            ////                    ((SimpleTestClass)data).Verify();
+            ////                }
+            ////                count++;
+            ////            }
+            ////            Assert.Equal(2, count);
+            Assert.Fail();
         }
     }
 
@@ -1815,7 +1819,7 @@ namespace Corvus.Text.Json.Serialization.Tests
         public SimpleTestClass? MyNestedClass { get; set; }
         public int MyInt { get; set; }
 
-        [JsonExtensionData]
+        ////[JsonExtensionData]
         public IDictionary<string, JsonElement> MyOverflow { get; set; }
     }
 
@@ -1824,8 +1828,8 @@ namespace Corvus.Text.Json.Serialization.Tests
         public SimpleTestClass? MyNestedClass { get; set; }
         public int MyInt { get; set; }
 
-        [JsonInclude]
-        [JsonExtensionData]
+        ////[JsonInclude]
+        ////[JsonExtensionData]
         public IDictionary<string, JsonElement> MyOverflow;
     }
 
@@ -1883,27 +1887,27 @@ namespace Corvus.Text.Json.Serialization.Tests
         public T Prop { get; set; }
     }
 
-    public class ConverterForInt32 : JsonConverter<int>
-    {
-        public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            return 25;
-        }
+////    public class ConverterForInt32 : JsonConverter<int>
+////    {
+////        public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+////        {
+////            return 25;
+////        }
 
-        public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException("Converter was called");
-        }
+////        public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
+////        {
+////            throw new NotImplementedException("Converter was called");
+////        }
 
-        // In source-gen, internal converters are not used as fallbacks when custom converters don't provide an implementation.
-#if BUILDING_SOURCE_GENERATOR_TESTS
-        public override int ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            => int.Parse(reader.GetString());
+////        // In source-gen, internal converters are not used as fallbacks when custom converters don't provide an implementation.
+////#if BUILDING_SOURCE_GENERATOR_TESTS
+////        public override int ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+////            => int.Parse(reader.GetString());
 
-        public override void WriteAsPropertyName(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
-            => writer.WritePropertyName(value.ToString());
-#endif
-    }
+////        public override void WriteAsPropertyName(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
+////            => writer.WritePropertyName(value.ToString());
+////#endif
+////    }
 
     public static class ReflectionExtensions
     {
@@ -1993,21 +1997,21 @@ namespace Corvus.Text.Json.Serialization.Tests
         public int Id { get; set; }
     }
 
-    public class UppercaseNamingPolicy : JsonNamingPolicy
-    {
-        public override string ConvertName(string name)
-        {
-            return name.ToUpperInvariant();
-        }
-    }
+    ////public class UppercaseNamingPolicy : JsonNamingPolicy
+    ////{
+    ////    public override string ConvertName(string name)
+    ////    {
+    ////        return name.ToUpperInvariant();
+    ////    }
+    ////}
 
-    public class NullNamingPolicy : JsonNamingPolicy
-    {
-        public override string ConvertName(string name)
-        {
-            return null;
-        }
-    }
+    ////public class NullNamingPolicy : JsonNamingPolicy
+    ////{
+    ////    public override string ConvertName(string name)
+    ////    {
+    ////        return null;
+    ////    }
+    ////}
 
     public class PersonReference
     {
