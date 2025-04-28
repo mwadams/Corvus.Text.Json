@@ -11,9 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class JsonDocument
+    public abstract partial class JsonDocument
     {
-        private struct StackRowStack : IDisposable
+        protected struct StackRowStack : IDisposable
         {
             private byte[] _rentedBuffer;
             private int _topOfStack;

@@ -70,7 +70,7 @@ namespace Corvus.Text.Json.Tests
 
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
                 Assert.Equal(123456789, doc.RootElement.GetInt64());
             };
 
@@ -78,7 +78,7 @@ namespace Corvus.Text.Json.Tests
 
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
                 Assert.Equal(1234.56789, doc.RootElement.GetDouble());
             };
 
@@ -86,7 +86,7 @@ namespace Corvus.Text.Json.Tests
 
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
                 Assert.Equal(1234.56789, doc.RootElement.GetDouble());
             };
 
@@ -94,7 +94,7 @@ namespace Corvus.Text.Json.Tests
 
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
                 Assert.Equal(@"Hello", doc.RootElement.GetString());
             };
 
@@ -102,7 +102,7 @@ namespace Corvus.Text.Json.Tests
 
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
                 Assert.Equal(@"Hello", doc.RootElement.GetString());
             };
 
@@ -110,7 +110,7 @@ namespace Corvus.Text.Json.Tests
 
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
 
                 Assert.Equal(s_guid, doc.RootElement.GetGuid());
             };
@@ -126,7 +126,7 @@ namespace Corvus.Text.Json.Tests
             byte[] json = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat(1234.56789, 4));
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
 
                 foreach (double d in doc.RootElement.EnumerateArray().Select(e => e.GetDouble()))
                 {
@@ -138,7 +138,7 @@ namespace Corvus.Text.Json.Tests
             json = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat("Hello", 4));
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
 
                 foreach (string str in doc.RootElement.EnumerateArray().Select(e => e.GetString()))
                 {
@@ -150,7 +150,7 @@ namespace Corvus.Text.Json.Tests
             json = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(Enumerable.Repeat("Hello", 4));
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
 
                 foreach (string str in doc.RootElement.EnumerateArray().Select(e => e.GetString()))
                 {
@@ -162,7 +162,7 @@ namespace Corvus.Text.Json.Tests
             json = "[ 1, 1,1,1,1 ] "u8.ToArray();
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
 
                 foreach (int val in doc.RootElement.EnumerateArray().Select(e => e.GetInt32()))
                 {
@@ -179,7 +179,7 @@ namespace Corvus.Text.Json.Tests
             byte[] json = Encoding.UTF8.GetBytes(@"{""Hello"":""World""}"); ;
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
                 KeyValuePair<string, string> kvp = doc.RootElement.EnumerateObject().Select(p => new KeyValuePair<string, string>(p.Name, p.Value.GetString())).Single();
                 Assert.Equal("Hello", kvp.Key);
                 Assert.Equal("World", kvp.Value);
@@ -189,7 +189,7 @@ namespace Corvus.Text.Json.Tests
             json = Encoding.UTF8.GetBytes(@" {  ""Hello""    :""World""  }   "); ;
             validate = (data) =>
             {
-                using var doc = JsonDocument.Parse(data);
+                using var doc = ParsedJsonDocument.Parse(data);
                 KeyValuePair<string, string> kvp = doc.RootElement.EnumerateObject().Select(p => new KeyValuePair<string, string>(p.Name, p.Value.GetString())).Single();
                 Assert.Equal("Hello", kvp.Key);
                 Assert.Equal("World", kvp.Value);

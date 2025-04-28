@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class JsonDocument
+    public abstract partial class JsonDocument
     {
         [StructLayout(LayoutKind.Sequential)]
         internal readonly struct DbRow

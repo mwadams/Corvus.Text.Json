@@ -173,7 +173,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(dataUtf8.Length, json.BytesConsumed);
 
             // Test upstream
-            using var doc = JsonDocument.Parse(jsonString);
+            using var doc = ParsedJsonDocument.Parse(jsonString);
             Assert.Equal(DateTime.Parse(expectedString), doc.RootElement.GetDateTime());
         }
 
@@ -200,7 +200,7 @@ namespace Corvus.Text.Json.Tests
 
             Assert.Equal(dataUtf8.Length, json.BytesConsumed);
 
-            using var doc = JsonDocument.Parse(jsonString);
+            using var doc = ParsedJsonDocument.Parse(jsonString);
             Assert.Equal(DateTime.Parse(expectedString), doc.RootElement.GetDateTime());
         }
 

@@ -251,7 +251,7 @@ namespace Corvus.Text.Json.Tests
         public static void JsonMarshal_GetRawUtf8Value_RootValue_ReturnsFullValue(string json)
         {
             JsonDocumentOptions options = new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip };
-            using JsonDocument jDoc = JsonDocument.Parse(json, options);
+            using ParsedJsonDocument jDoc = ParsedJsonDocument.Parse(json, options);
             JsonElement element = jDoc.RootElement;
 
             ReadOnlySpan<byte> rawValue = JsonMarshal.GetRawUtf8Value(element);
@@ -291,7 +291,7 @@ namespace Corvus.Text.Json.Tests
                 """;
 
             JsonDocumentOptions options = new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip };
-            using JsonDocument jDoc = JsonDocument.Parse(json, options);
+            using ParsedJsonDocument jDoc = ParsedJsonDocument.Parse(json, options);
             JsonElement element = jDoc.RootElement;
 
             AssertGetRawValue(json, element);
@@ -349,7 +349,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void JsonMarshal_GetRawUtf8Value_DisposedDocument_ThrowsObjectDisposedException()
         {
-            JsonDocument jDoc = JsonDocument.Parse("{}");
+            ParsedJsonDocument jDoc = ParsedJsonDocument.Parse("{}");
             JsonElement element = jDoc.RootElement;
             jDoc.Dispose();
 

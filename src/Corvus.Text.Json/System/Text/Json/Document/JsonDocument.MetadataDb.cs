@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class JsonDocument
+    public abstract partial class JsonDocument
     {
         // The database for the parsed structure of a JSON document.
         //
@@ -20,25 +20,25 @@ namespace Corvus.Text.Json
         //
         // Number
         // * First int
-        //   * Top bit is unassigned / always clear
-        //   * 31 bits for token offset
+        //   * Top bit is 0 if this is the token offset in the target document, 1 if it is a dynamic number
+        //   * 31 bits for token offset if the top bit is zero, or the dynamic value offset if the top bit is 1
         // * Second int
         //   * Top bit is set if the number uses scientific notation
         //   * 31 bits for the token length
         // * Third int
         //   * 4 bits JsonTokenType
-        //   * 28 bits unassigned / always clear
+        //   * 28 bits for the index of the workspace document in the workspace for this row
         //
         // String, PropertyName
         // * First int
-        //   * Top bit is unassigned / always clear
-        //   * 31 bits for token offset
+        //   * Top bit is 0 if this is the token offset in the target document, or 1 if this is a dynamic value
+        //   * 31 bits for token offset if the top bit is zero, or the dynamic value offset if the top bit is 1
         // * Second int
         //   * Top bit is set if the string requires unescaping
         //   * 31 bits for the token length
         // * Third int
         //   * 4 bits JsonTokenType
-        //   * 28 bits unassigned / always clear
+        //   * 28 bits for the index of the workspace document in the workspace for this row
         //
         // Other value types (True, False, Null)
         // * First int
@@ -49,15 +49,25 @@ namespace Corvus.Text.Json
         //   * 31 bits for the token length
         // * Third int
         //   * 4 bits JsonTokenType
-        //   * 28 bits unassigned / always clear
+        //   * 28 bits for the index of the workspace document in the workspace for this row
         //
-        // EndObject / EndArray
+        // EndObject
         // * First int
-        //   * Top bit is unassigned / always clear
+        //   * Top bit is 0 if there are no external or dynamic property values, otherwise 1
         //   * 31 bits for token offset
         // * Second int
-        //   * Top bit is unassigned / always clear
-        //   * 31 bits for the token length (always 1, effectively unassigned)
+        //   * Top bit is 1 if this object has a property map, otherwise 0
+        //   * 31 bits - index into the property map buffer if this has a property map backing, otherwise the length of the token
+        // * Third int
+        //   * 4 bits JsonTokenType
+        //   * 28 bits for the number of rows until the previous value (never 0)
+        //
+        // EndArray
+        // * First int
+        //   * Top bit is 0 if there are no external or dynamic property values, otherwise 1
+        //   * 31 bits for token offset
+        // * Second int
+        //   * Unassigned / always clear
         // * Third int
         //   * 4 bits JsonTokenType
         //   * 28 bits for the number of rows until the previous value (never 0)
@@ -83,7 +93,7 @@ namespace Corvus.Text.Json
         // * Third int
         //   * 4 bits JsonTokenType
         //   * 28 bits for the number of rows until the next value (never 0)
-        private struct MetadataDb : IDisposable
+        protected struct MetadataDb : IDisposable
         {
             private const int SizeOrLengthOffset = 4;
             private const int NumberOfRowsOffset = 8;

@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class JsonDocument
+    public abstract partial class JsonDocument
     {
         // SizeOrLength - offset - 0 - size - 4
         // NumberOfRows - offset - 4 - size - 4
         [StructLayout(LayoutKind.Sequential)]
-        private readonly struct StackRow
+        protected readonly struct StackRow
         {
             internal const int Size = 8;
 

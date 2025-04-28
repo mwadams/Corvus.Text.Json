@@ -16,10 +16,10 @@ namespace Corvus.Text.Json
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly partial struct JsonElement
     {
-        private readonly JsonDocument _parent;
+        private readonly IJsonDocument _parent;
         private readonly int _idx;
 
-        internal JsonElement(JsonDocument parent, int idx)
+        internal JsonElement(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
             // on the enumerators (when initialized as `default`) can

@@ -6,9 +6,9 @@ using System.Diagnostics;
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class JsonDocument
+    public sealed partial class ParsedJsonDocument
     {
-        internal bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value)
+        bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value)
         {
             CheckNotDisposed();
 
@@ -108,7 +108,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
-        internal bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value)
+        bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value)
         {
             CheckNotDisposed();
 

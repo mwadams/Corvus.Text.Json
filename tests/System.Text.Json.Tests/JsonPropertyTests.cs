@@ -14,7 +14,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void CheckByPassingNullWriter()
         {
-            using (JsonDocument doc = JsonDocument.Parse("{\"First\":1}", default))
+            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("{\"First\":1}", default))
             {
                 foreach (JsonProperty property in doc.RootElement.EnumerateObject())
                 {
@@ -29,7 +29,7 @@ namespace Corvus.Text.Json.Tests
         public static void WriteObjectValidations(bool skipValidation)
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
-            using (JsonDocument doc = JsonDocument.Parse("{\"First\":1}", default))
+            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("{\"First\":1}", default))
             {
                 JsonElement root = doc.RootElement;
                 var options = new JsonWriterOptions
@@ -65,7 +65,7 @@ namespace Corvus.Text.Json.Tests
         public static void WriteSimpleObject()
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
-            using (JsonDocument doc = JsonDocument.Parse("{\"First\":1, \"Number\":1e400}"))
+            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("{\"First\":1, \"Number\":1e400}"))
             {
                 using var writer = new Utf8JsonWriter(buffer);
                 writer.WriteStartObject();
@@ -122,7 +122,7 @@ namespace Corvus.Text.Json.Tests
         public static void NameEquals_UseGoodMatches_True(string propertyName, string otherText)
         {
             string jsonString = $"{{ \"{propertyName}\" : \"itsValue\" }}";
-            using (JsonDocument doc = JsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 JsonProperty property = jElement.EnumerateObject().First();
@@ -141,7 +141,7 @@ namespace Corvus.Text.Json.Tests
         public static void JsonMarshal_GetRawUtf8PropertyName_UseGoodMatches_True(string propertyName, string otherText)
         {
             string jsonString = $"{{ \"{propertyName}\" : \"itsValue\" }}";
-            using (JsonDocument doc = JsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 JsonProperty property = jElement.EnumerateObject().First();
@@ -154,7 +154,7 @@ namespace Corvus.Text.Json.Tests
         public static void NameEquals_GivenPropertyAndValue_TrueForPropertyName()
         {
             string jsonString = $"{{ \"aPropertyName\" : \"itsValue\" }}";
-            using (JsonDocument doc = JsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 JsonProperty property = jElement.EnumerateObject().First();
