@@ -42,7 +42,7 @@ namespace Corvus.Text.Json
 #if NET
                 return new JsonProperty<TValue>(TValue.CreateInstance(_targetDocument, _curIdx));
 #else
-                return new JsonProperty<TValue>((TValue)Activator.CreateInstance(typeof(TValue), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, binder: null, [_targetDocument, _curIdx], culture: null));
+                return new JsonProperty<TValue>(JsonElementHelpers.CreateInstance<TValue>(_targetDocument, _curIdx));
 #endif
             }
         }

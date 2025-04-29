@@ -827,4 +827,7 @@
   <data name="CannotMixEncodings" xml:space="preserve">
     <value>Mixing UTF encodings in a single multi-segment JSON string is not supported. The previous segment's encoding was '{0}' and the current segment's encoding is '{1}'.</value>
   </data>
+  <data name="TypeDoesNotHaveAConstructorWithTheRequiredSignature" xml:space="preserve">
+    <value>The type '{0}' does not have a constructor that takes the parent document instance and parent document index.</value>
+  </data>
 </root>

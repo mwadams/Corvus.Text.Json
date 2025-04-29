@@ -4,7 +4,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 
 namespace Corvus.Text.Json
 {
@@ -43,7 +42,7 @@ namespace Corvus.Text.Json
 #if NET
                 return TItem.CreateInstance(_targetDocument, _curIdx);
 #else
-                return (TItem)Activator.CreateInstance(typeof(TItem), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, binder: null, [_targetDocument, _curIdx], culture: null);
+                return JsonElementHelpers.CreateInstance<TItem>(_targetDocument, _curIdx);
 #endif
             }
         }

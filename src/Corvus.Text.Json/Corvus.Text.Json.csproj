@@ -39,6 +39,11 @@
     </AssemblyAttribute>
   </ItemGroup>
 
+  <!-- Adds System.Reflection.Emit.Lightweight to non .NETCoreApp builds. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+  </ItemGroup>
+  
   <!-- Adds Nullable annotation attributes to C# non .NETCoreApp builds. -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\NullableAttributes.cs" Link="System\Diagnostics\CodeAnalysis\NullableAttributes.cs" />

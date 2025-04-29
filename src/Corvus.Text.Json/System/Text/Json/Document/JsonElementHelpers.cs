@@ -2,7 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
+
+#if !NET
+using System.Collections.Concurrent;
+#endif
+
 using System.Diagnostics;
+
+#if !NET
+using System.Reflection;
+using System.Reflection.Emit;
+#endif
 
 namespace Corvus.Text.Json
 {
@@ -11,6 +21,43 @@ namespace Corvus.Text.Json
     /// </summary>
     public static class JsonElementHelpers
     {
+#if !NET
+        // Creation delegate
+        private delegate T CreateJsonElementInstance<T>(IJsonDocument document, int index) where T : struct, IJsonElement<T>;
+
+        private static readonly ConcurrentDictionary<Type, object> Creators = [];
+
+        [CLSCompliant(false)]
+        public static T CreateInstance<T>(IJsonDocument parentDocument, int parentDocumentIndex)
+            where T : struct, IJsonElement<T>
+        {
+            CreateJsonElementInstance<T> creator = (CreateJsonElementInstance<T>)Creators.GetOrAdd(typeof(T), BuildCreator);
+            return creator(parentDocument, parentDocumentIndex);
+
+            static CreateJsonElementInstance<T> BuildCreator(Type type)
+            {
+                Type[] parameters = [typeof(IJsonDocument), typeof(int)];
+                ConstructorInfo constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, parameters, null)
+                    ??  throw new InvalidOperationException(SR.Format(SR.TypeDoesNotHaveAConstructorWithTheRequiredSignature, type));
+
+                var dynamic = new DynamicMethod(
+                    $"Corvus.Text.Json.IJsonElement.Create_{type.FullName}",
+                    typeof(T),
+                    parameters,
+                    true);
+
+                ILGenerator il = dynamic.GetILGenerator();
+
+                // Emit code to call the WriteNumberValue method
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Newobj, constructor);
+                il.Emit(OpCodes.Ret);
+
+                return (CreateJsonElementInstance<T>)dynamic.CreateDelegate(typeof(CreateJsonElementInstance<T>));
+            }
+        }
+#endif
         /// <summary>
         /// Compares the values of two <see cref="JsonElement"/> values for equality, including the values of all descendant elements.
         /// </summary>
