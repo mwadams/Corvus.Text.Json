@@ -35,7 +35,7 @@ namespace Corvus.Text.Json
                 if (!row.HasPropertyMap)
                 {
                     int propertyMapIndex = CreatePropertyMap(index);
-                    _parsedData.SetPropertyMapIndex(index, propertyMapIndex);
+                    _parsedData.SetPropertyMapIndex(endIndex, propertyMapIndex);
                 }
             }
         }
@@ -97,9 +97,8 @@ namespace Corvus.Text.Json
             while (index < endIndex)
             {
                 DbRow propertyRow = _parsedData.Get(index);
-                index += DbRow.Size;
-                DbRow row = _parsedData.Get(index);
-
+                int valueIndex = index + DbRow.Size;
+                DbRow row = _parsedData.Get(valueIndex);
                 Debug.Assert(propertyRow.TokenType == JsonTokenType.PropertyName, "The row must be a property name");
 
                 if (propertyRow.HasComplexChildren)
@@ -111,7 +110,7 @@ namespace Corvus.Text.Json
                     ulong hashCode = PropertyMap.GetHashCode(unescapedName);
                     ref int bucket = ref PropertyMap.GetBucket(buckets, hashCode, size);
                     int entryIndex = propertyIndex * PropertyMap.Entry.Size;
-                    PropertyMap.Entry.Write(entries.Slice(entryIndex, PropertyMap.Entry.Size), hashCode, bucket - 1, index, dynamicValueOffset);
+                    PropertyMap.Entry.Write(entries.Slice(entryIndex, PropertyMap.Entry.Size), hashCode, bucket - 1, valueIndex, dynamicValueOffset);
                     propertyIndex++;
                     bucket = propertyIndex; // Value in buckets is 1-based
                 }
@@ -121,19 +120,19 @@ namespace Corvus.Text.Json
                     ulong hashCode = PropertyMap.GetHashCode(rawName.Span);
                     ref int bucket = ref PropertyMap.GetBucket(buckets, hashCode, size);
                     int entryIndex = propertyIndex * PropertyMap.Entry.Size;
-                    PropertyMap.Entry.Write(entries.Slice(entryIndex, PropertyMap.Entry.Size), hashCode, bucket - 1, index);
+                    PropertyMap.Entry.Write(entries.Slice(entryIndex, PropertyMap.Entry.Size), hashCode, bucket - 1, valueIndex);
                     propertyIndex++;
                     bucket = propertyIndex; // Value in buckets is 1-based
                 }
 
                 if (row.IsSimpleValue)
                 {
-                    index += DbRow.Size;
+                    index = valueIndex + DbRow.Size;
                 }
                 else
                 {
                     Debug.Assert(row.NumberOfRows > 0, "There must be at least one row in a non-simple value.");
-                    index += DbRow.Size * (row.NumberOfRows + 1);
+                    index = valueIndex + (DbRow.Size * (row.NumberOfRows + 1));
                 }
             }
 

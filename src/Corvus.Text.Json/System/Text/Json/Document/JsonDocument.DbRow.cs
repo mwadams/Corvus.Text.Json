@@ -17,6 +17,7 @@ namespace Corvus.Text.Json
             private readonly int _location;
 
             // Sign bit is used for "HasComplexChildren" (StartArray)
+            // And for propertyMap index
             private readonly int _sizeOrLengthUnion;
 
             // Top nybble is JsonTokenType

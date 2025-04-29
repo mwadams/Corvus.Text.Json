@@ -16,7 +16,7 @@ namespace Corvus.Text.Json
     ///   Represents a specific JSON value within a <see cref="JsonDocument"/>.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public readonly partial struct JsonElement
+    public readonly partial struct JsonElement : IJsonElement
     {
         private readonly IJsonDocument _parent;
         private readonly int _idx;
@@ -1801,7 +1801,14 @@ namespace Corvus.Text.Json
             }
         }
 
+        void IJsonElement.CheckValidInstance() => CheckValidInstance();
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => $"ValueKind = {ValueKind} : \"{ToString()}\"";
+
+        IJsonDocument IJsonElement.ParentDocument => _parent;
+        int IJsonElement.ParentDocumentHandle => _idx;
+        JsonTokenType IJsonElement.TokenType => TokenType;
+        JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
 }

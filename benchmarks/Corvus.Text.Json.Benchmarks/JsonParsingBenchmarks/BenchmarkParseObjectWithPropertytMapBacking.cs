@@ -3,7 +3,7 @@
 
 using BenchmarkDotNet.Attributes;
 
-namespace RentedPropertyMapBenchmarks;
+namespace JsonParsingBenchmarks;
 
 /// <summary>
 /// Construct elements from a JSON element.

@@ -133,6 +133,8 @@
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.TryGetProperty.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocumentOptions.cs" />
+    <Compile Include="System\Text\Json\Document\IJsonElement.cs" />
+    <Compile Include="System\Text\Json\Document\JsonElementHelpers.cs" />
     <Compile Include="System\Text\Json\Document\JsonElement.cs" />
     <Compile Include="System\Text\Json\Document\JsonElement.Parse.cs" />
     <Compile Include="System\Text\Json\Document\JsonProperty.cs" />
