@@ -143,7 +143,7 @@ namespace Corvus.Text.Json
                         if (!NameEquals(prop1, prop2))
                         {
                             // We have our first mismatch, fall back to unordered comparison.
-                            return UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentHandle, objectEnumerator2);
+                            return UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentHandle, ref objectEnumerator2);
                         }
 
                         if (!DeepEquals(prop1.Value, prop2.Value))
@@ -156,89 +156,89 @@ namespace Corvus.Text.Json
 
                     Debug.Assert(!objectEnumerator2.MoveNext());
                     return true;
+            }
 
-                    static bool UnorderedObjectDeepEquals(IJsonDocument element1ParentDocument, int element1ParentDocumentHandle, ObjectEnumerator objectEnumerator2)
+            static bool UnorderedObjectDeepEquals(IJsonDocument element1ParentDocument, int element1ParentDocumentHandle, ref ObjectEnumerator objectEnumerator2)
+            {
+                // JsonElement objects allow duplicate property names, which is optional per the JSON RFC.
+                // Even though this implementation of equality does not take property ordering into account,
+                // duplicate, out of order properties resolve the value in the second instance to the last value
+                // in the first instance. This differs from the JsonElement implementation, which supports duplicate
+                // property names, if they are in order.
+                // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
+                element1ParentDocument.EnsurePropertyMap(element1ParentDocumentHandle);
+
+                Span<byte> buffer = stackalloc byte[JsonConstants.StackallocByteThreshold];
+
+                do
+                {
+                    JsonProperty right = objectEnumerator2.Current;
+                    JsonElement leftValue;
+                    if (right.NameIsEscaped)
                     {
-                        // JsonElement objects allow duplicate property names, which is optional per the JSON RFC.
-                        // Even though this implementation of equality does not take property ordering into account,
-                        // duplicate, out of order properties resolve the value in the second instance to the last value
-                        // in the first instance. This differs from the JsonElement implementation, which supports duplicate
-                        // property names, if they are in order.
-                        // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
-                        element1ParentDocument.EnsurePropertyMap(element1ParentDocumentHandle);
+                        ReadOnlySpan<byte> rightNameSpan = right.NameSpan;
+                        int index = rightNameSpan.IndexOf(JsonConstants.BackSlash);
+                        Debug.Assert(index >= 0, "the name is not escaped");
 
-                        Span<byte> buffer = stackalloc byte[JsonConstants.StackallocByteThreshold];
+                        byte[]? unescapedRightNameArray = null;
 
-                        do
+                        Span<byte> unescapedRightNameSpan = rightNameSpan.Length <= JsonConstants.StackallocByteThreshold ?
+                            buffer :
+                            (unescapedRightNameArray = ArrayPool<byte>.Shared.Rent(rightNameSpan.Length));
+
+                        JsonReaderHelper.Unescape(rightNameSpan, unescapedRightNameSpan, index, out int written);
+                        unescapedRightNameSpan = unescapedRightNameSpan.Slice(0, written);
+                        Debug.Assert(!unescapedRightNameSpan.IsEmpty);
+
+
+                        try
                         {
-                            JsonProperty right = objectEnumerator2.Current;
-                            JsonElement leftValue;
-                            if (right.NameIsEscaped)
+                            if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentHandle, unescapedRightNameSpan, out leftValue) ||
+                                !DeepEquals(leftValue, right.Value))
                             {
-                                ReadOnlySpan<byte> rightNameSpan = right.NameSpan;
-                                int index = rightNameSpan.IndexOf(JsonConstants.BackSlash);
-                                Debug.Assert(index >= 0, "the name is not escaped");
-
-                                byte[]? unescapedRightNameArray = null;
-
-                                Span<byte> unescapedRightNameSpan = rightNameSpan.Length <= JsonConstants.StackallocByteThreshold ?
-                                    buffer :
-                                    (unescapedRightNameArray = ArrayPool<byte>.Shared.Rent(rightNameSpan.Length));
-
-                                JsonReaderHelper.Unescape(rightNameSpan, unescapedRightNameSpan, index, out int written);
-                                unescapedRightNameSpan = unescapedRightNameSpan.Slice(0, written);
-                                Debug.Assert(!unescapedRightNameSpan.IsEmpty);
-
-
-                                try
-                                {
-                                    if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentHandle, unescapedRightNameSpan, out leftValue) ||
-                                        !DeepEquals(leftValue, right.Value))
-                                    {
-                                        return false;
-                                    }
-                                }
-                                finally
-                                {
-                                    if (unescapedRightNameArray != null)
-                                    {
-                                        unescapedRightNameSpan.Clear();
-                                        ArrayPool<byte>.Shared.Return(unescapedRightNameArray);
-                                    }
-                                }
+                                return false;
                             }
-                            else
-                            {
-                                if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentHandle, objectEnumerator2.Current.NameSpan, out leftValue) ||
-                                    !DeepEquals(leftValue, right.Value))
-                                {
-                                    return false;
-                                }
-                            }
-
-
                         }
-                        while (objectEnumerator2.MoveNext());
-
-                        return true;
+                        finally
+                        {
+                            if (unescapedRightNameArray != null)
+                            {
+                                unescapedRightNameSpan.Clear();
+                                ArrayPool<byte>.Shared.Return(unescapedRightNameArray);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentHandle, right.NameSpan, out leftValue) ||
+                            !DeepEquals(leftValue, right.Value))
+                        {
+                            return false;
+                        }
                     }
 
-                    static bool NameEquals(JsonProperty left, JsonProperty right)
+
+                }
+                while (objectEnumerator2.MoveNext());
+
+                return true;
+            }
+
+            static bool NameEquals(JsonProperty left, JsonProperty right)
+            {
+                if (right.NameIsEscaped)
+                {
+                    if (left.NameIsEscaped)
                     {
-                        if (right.NameIsEscaped)
-                        {
-                            if (left.NameIsEscaped)
-                            {
-                                // Need to unescape and compare both inputs.
-                                return JsonReaderHelper.UnescapeAndCompareBothInputs(left.NameSpan, right.NameSpan);
-                            }
-
-                            // Swap values so that unescaping is handled by the LHS
-                            (left, right) = (right, left);
-                        }
-
-                        return left.NameEquals(right.NameSpan);
+                        // Need to unescape and compare both inputs.
+                        return JsonReaderHelper.UnescapeAndCompareBothInputs(left.NameSpan, right.NameSpan);
                     }
+
+                    // Swap values so that unescaping is handled by the LHS
+                    (left, right) = (right, left);
+                }
+
+                return left.NameEquals(right.NameSpan);
             }
         }
     }
