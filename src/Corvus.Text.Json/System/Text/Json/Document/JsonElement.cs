@@ -16,7 +16,7 @@ namespace Corvus.Text.Json
     ///   Represents a specific JSON value within a <see cref="JsonDocument"/>.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public readonly partial struct JsonElement : IJsonElement
+    public readonly partial struct JsonElement : IJsonElement<JsonElement>
     {
         private readonly IJsonDocument _parent;
         private readonly int _idx;
@@ -1455,7 +1455,8 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public ArrayEnumerator EnumerateArray()
+        [CLSCompliant(false)]
+        public ArrayEnumerator<JsonElement> EnumerateArray()
         {
             CheckValidInstance();
 
@@ -1466,7 +1467,7 @@ namespace Corvus.Text.Json
                 ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartArray, tokenType);
             }
 
-            return new ArrayEnumerator(_parent, _idx);
+            return new ArrayEnumerator<JsonElement>(_parent, _idx);
         }
 
         /// <summary>
@@ -1481,7 +1482,8 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public ObjectEnumerator EnumerateObject()
+        [CLSCompliant(false)]
+        public ObjectEnumerator<JsonElement> EnumerateObject()
         {
             CheckValidInstance();
 
@@ -1492,7 +1494,7 @@ namespace Corvus.Text.Json
                 ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartObject, tokenType);
             }
 
-            return new ObjectEnumerator(_parent, _idx);
+            return new ObjectEnumerator<JsonElement>(_parent, _idx);
         }
 
         /// <summary>
@@ -1596,11 +1598,15 @@ namespace Corvus.Text.Json
 
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
+#if NET
+        static JsonElement IJsonElement<JsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElement(parentDocument, parentDocumentIndex);
+#endif
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => $"ValueKind = {ValueKind} : \"{ToString()}\"";
 
         IJsonDocument IJsonElement.ParentDocument => _parent;
-        int IJsonElement.ParentDocumentHandle => _idx;
+        int IJsonElement.ParentDocumentIndex => _idx;
         JsonTokenType IJsonElement.TokenType => TokenType;
         JsonValueKind IJsonElement.ValueKind => ValueKind;
     }

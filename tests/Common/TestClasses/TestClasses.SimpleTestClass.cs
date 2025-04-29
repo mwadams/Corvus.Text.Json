@@ -445,7 +445,7 @@ namespace Corvus.Text.Json.Serialization.Tests
                     IEnumerator jsonEnumerator = currentJsonElement.EnumerateObject();
                     jsonEnumerator.MoveNext();
 
-                    JsonProperty property = (JsonProperty)jsonEnumerator.Current;
+                    JsonProperty<JsonElement> property = (JsonProperty<JsonElement>)jsonEnumerator.Current;
 
                     Assert.Equal("key", property.Name);
                     Assert.Equal("value", property.Value.GetString());

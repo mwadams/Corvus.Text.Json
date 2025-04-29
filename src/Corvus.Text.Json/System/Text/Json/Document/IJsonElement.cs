@@ -18,7 +18,7 @@ namespace Corvus.Text.Json
         /// The handle identifying the IJsonElement in
         /// its parent document.
         /// </summary>
-        int ParentDocumentHandle { get; }
+        int ParentDocumentIndex { get; }
 
         /// <summary>
         /// The JSON Token type of the element.

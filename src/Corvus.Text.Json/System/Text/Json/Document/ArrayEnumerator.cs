@@ -4,6 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Corvus.Text.Json
 {
@@ -11,7 +12,9 @@ namespace Corvus.Text.Json
     ///   An enumerable and enumerator for the contents of a JSON array.
     /// </summary>
     [DebuggerDisplay("{Current,nq}")]
-    public struct ArrayEnumerator : IEnumerable<JsonElement>, IEnumerator<JsonElement>
+    [CLSCompliant(false)]
+    public struct ArrayEnumerator<TItem> : IEnumerable<TItem>, IEnumerator<TItem>
+        where TItem : struct, IJsonElement<TItem>
     {
         private readonly IJsonDocument _targetDocument;
         private readonly int _initialIndex;
@@ -28,7 +31,7 @@ namespace Corvus.Text.Json
         }
 
         /// <inheritdoc />
-        public JsonElement Current
+        public TItem Current
         {
             get
             {
@@ -37,7 +40,11 @@ namespace Corvus.Text.Json
                     return default;
                 }
 
-                return new JsonElement(_targetDocument, _curIdx);
+#if NET
+                return TItem.CreateInstance(_targetDocument, _curIdx);
+#else
+                return (TItem)Activator.CreateInstance(typeof(TItem), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, binder: null, [_targetDocument, _curIdx], culture: null);
+#endif
             }
         }
 
@@ -48,9 +55,9 @@ namespace Corvus.Text.Json
         ///   An <see cref="ArrayEnumerator"/> value that can be used to iterate
         ///   through the array.
         /// </returns>
-        public ArrayEnumerator GetEnumerator()
+        public ArrayEnumerator<TItem> GetEnumerator()
         {
-            ArrayEnumerator ator = this;
+            ArrayEnumerator<TItem> ator = this;
             ator._curIdx = -1;
             return ator;
         }
@@ -59,7 +66,7 @@ namespace Corvus.Text.Json
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <inheritdoc />
-        IEnumerator<JsonElement> IEnumerable<JsonElement>.GetEnumerator() => GetEnumerator();
+        IEnumerator<TItem> IEnumerable<TItem>.GetEnumerator() => GetEnumerator();
 
         /// <inheritdoc />
         public void Dispose()

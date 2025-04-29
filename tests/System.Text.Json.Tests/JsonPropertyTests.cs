@@ -16,7 +16,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("{\"First\":1}", default))
             {
-                foreach (JsonProperty property in doc.RootElement.EnumerateObject())
+                foreach (JsonProperty<JsonElement> property in doc.RootElement.EnumerateObject())
                 {
                     AssertExtensions.Throws<ArgumentNullException>("writer", () => property.WriteTo(null));
                 }
@@ -39,7 +39,7 @@ namespace Corvus.Text.Json.Tests
                 using var writer = new Utf8JsonWriter(buffer, options);
                 if (skipValidation)
                 {
-                    foreach (JsonProperty property in root.EnumerateObject())
+                    foreach (JsonProperty<JsonElement> property in root.EnumerateObject())
                     {
                         property.WriteTo(writer);
                     }
@@ -48,7 +48,7 @@ namespace Corvus.Text.Json.Tests
                 }
                 else
                 {
-                    foreach (JsonProperty property in root.EnumerateObject())
+                    foreach (JsonProperty<JsonElement> property in root.EnumerateObject())
                     {
                         Assert.Throws<InvalidOperationException>(() =>
                         {
@@ -69,7 +69,7 @@ namespace Corvus.Text.Json.Tests
             {
                 using var writer = new Utf8JsonWriter(buffer);
                 writer.WriteStartObject();
-                foreach (JsonProperty prop in doc.RootElement.EnumerateObject())
+                foreach (JsonProperty<JsonElement> prop in doc.RootElement.EnumerateObject())
                 {
                     prop.WriteTo(writer);
                 }
@@ -99,7 +99,7 @@ namespace Corvus.Text.Json.Tests
         public static void NameEquals_InvalidInstance_Throws(string text)
         {
             string ErrorMessage = new InvalidOperationException().Message;
-            JsonProperty prop = default;
+            JsonProperty<JsonElement> prop = default;
             AssertExtensions.Throws<InvalidOperationException>(() => prop.NameEquals(text), ErrorMessage);
             AssertExtensions.Throws<InvalidOperationException>(() => prop.NameEquals(text.AsSpan()), ErrorMessage);
             byte[] expectedGetBytes = text == null ? null : Encoding.UTF8.GetBytes(text);
@@ -110,7 +110,7 @@ namespace Corvus.Text.Json.Tests
         public static void JsonMarshal_GetRawUtf8PropertyName_InvalidInstance_Throws()
         {
             string ErrorMessage = new InvalidOperationException().Message;
-            JsonProperty prop = default;
+            JsonProperty<JsonElement> prop = default;
             AssertExtensions.Throws<InvalidOperationException>(() => JsonMarshal.GetRawUtf8PropertyName(prop), ErrorMessage);
         }
 
@@ -125,7 +125,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
-                JsonProperty property = jElement.EnumerateObject().First();
+                JsonProperty<JsonElement> property = jElement.EnumerateObject().First();
                 byte[] expectedGetBytes = Encoding.UTF8.GetBytes(otherText);
                 Assert.True(property.NameEquals(otherText));
                 Assert.True(property.NameEquals(otherText.AsSpan()));
@@ -144,7 +144,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
-                JsonProperty property = jElement.EnumerateObject().First();
+                JsonProperty<JsonElement> property = jElement.EnumerateObject().First();
                 byte[] expectedGetBytes = Encoding.UTF8.GetBytes(otherText);
                 Assert.True(JsonMarshal.GetRawUtf8PropertyName(property).SequenceEqual(expectedGetBytes));
             }
@@ -157,7 +157,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
-                JsonProperty property = jElement.EnumerateObject().First();
+                JsonProperty<JsonElement> property = jElement.EnumerateObject().First();
 
                 string text = "aPropertyName";
                 byte[] expectedGetBytes = Encoding.UTF8.GetBytes(text);

@@ -11,7 +11,9 @@ namespace Corvus.Text.Json
     ///   An enumerable and enumerator for the properties of a JSON object.
     /// </summary>
     [DebuggerDisplay("{Current,nq}")]
-    public struct ObjectEnumerator : IEnumerable<JsonProperty>, IEnumerator<JsonProperty>
+    [CLSCompliant(false)]
+    public struct ObjectEnumerator<TValue> : IEnumerable<JsonProperty<TValue>>, IEnumerator<JsonProperty<TValue>>
+        where TValue : struct, IJsonElement<TValue>
     {
         private readonly IJsonDocument _targetDocument;
         private readonly int _initialIndex;
@@ -28,7 +30,7 @@ namespace Corvus.Text.Json
         }
 
         /// <inheritdoc />
-        public JsonProperty Current
+        public JsonProperty<TValue> Current
         {
             get
             {
@@ -37,7 +39,11 @@ namespace Corvus.Text.Json
                     return default;
                 }
 
-                return new JsonProperty(new JsonElement(_targetDocument, _curIdx));
+#if NET
+                return new JsonProperty<TValue>(TValue.CreateInstance(_targetDocument, _curIdx));
+#else
+                return new JsonProperty<TValue>((TValue)Activator.CreateInstance(typeof(TValue), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, binder: null, [_targetDocument, _curIdx], culture: null));
+#endif
             }
         }
 
@@ -54,9 +60,9 @@ namespace Corvus.Text.Json
         ///   property they will all individually be returned (each in the order
         ///   they appear in the content).
         /// </remarks>
-        public ObjectEnumerator GetEnumerator()
+        public ObjectEnumerator<TValue> GetEnumerator()
         {
-            ObjectEnumerator ator = this;
+            ObjectEnumerator<TValue> ator = this;
             ator._curIdx = -1;
             return ator;
         }
@@ -65,7 +71,7 @@ namespace Corvus.Text.Json
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <inheritdoc />
-        IEnumerator<JsonProperty> IEnumerable<JsonProperty>.GetEnumerator() => GetEnumerator();
+        IEnumerator<JsonProperty<TValue>> IEnumerable<JsonProperty<TValue>>.GetEnumerator() => GetEnumerator();
 
         /// <inheritdoc />
         public void Dispose()

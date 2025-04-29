@@ -56,8 +56,8 @@ namespace Corvus.Text.Json
 
             IJsonDocument element1ParentDocument = element1.ParentDocument;
             IJsonDocument element2ParentDocument = element2.ParentDocument;
-            int element1ParentDocumentHandle = element1.ParentDocumentHandle;
-            int element2ParentDocumentHandle = element2.ParentDocumentHandle;
+            int element1ParentDocumentIndex = element1.ParentDocumentIndex;
+            int element2ParentDocumentIndex = element2.ParentDocumentIndex;
             switch (kind)
             {
                 case JsonValueKind.Null or JsonValueKind.False or JsonValueKind.True:
@@ -65,44 +65,44 @@ namespace Corvus.Text.Json
 
                 case JsonValueKind.Number:
                     return JsonHelpers.AreEqualJsonNumbers(
-                        element1ParentDocument.GetRawValue(element1ParentDocumentHandle, includeQuotes: false).Span,
-                        element2ParentDocument.GetRawValue(element2ParentDocumentHandle, includeQuotes: false).Span);
+                        element1ParentDocument.GetRawValue(element1ParentDocumentIndex, includeQuotes: false).Span,
+                        element2ParentDocument.GetRawValue(element2ParentDocumentIndex, includeQuotes: false).Span);
 
                 case JsonValueKind.String:
-                    if (element2ParentDocument.ValueIsEscaped(element2ParentDocumentHandle, isPropertyName: false))
+                    if (element2ParentDocument.ValueIsEscaped(element2ParentDocumentIndex, isPropertyName: false))
                     {
-                        if (element1ParentDocument.ValueIsEscaped(element1ParentDocumentHandle, isPropertyName: false))
+                        if (element1ParentDocument.ValueIsEscaped(element1ParentDocumentIndex, isPropertyName: false))
                         {
                             // Need to unescape and compare both inputs.
                             return JsonReaderHelper.UnescapeAndCompareBothInputs(
-                                element1ParentDocument.GetRawValue(element1ParentDocumentHandle, includeQuotes: false).Span,
-                                element2ParentDocument.GetRawValue(element2ParentDocumentHandle, includeQuotes: false).Span);
+                                element1ParentDocument.GetRawValue(element1ParentDocumentIndex, includeQuotes: false).Span,
+                                element2ParentDocument.GetRawValue(element2ParentDocumentIndex, includeQuotes: false).Span);
                         }
 
                         // Note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
                         // Swap values so that unescaping is handled by the LHS.
                         return element2ParentDocument.TextEquals(
-                            element2ParentDocumentHandle,
-                            element1ParentDocument.GetRawValue(element1ParentDocumentHandle, includeQuotes: false).Span,
+                            element2ParentDocumentIndex,
+                            element1ParentDocument.GetRawValue(element1ParentDocumentIndex, includeQuotes: false).Span,
                             isPropertyName: false,
                             shouldUnescape: true);                            
                     }
 
                     // As above, note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
                     return element1ParentDocument.TextEquals(
-                        element1ParentDocumentHandle,
-                        element2ParentDocument.GetRawValue(element2ParentDocumentHandle, includeQuotes: false).Span,
+                        element1ParentDocumentIndex,
+                        element2ParentDocument.GetRawValue(element2ParentDocumentIndex, includeQuotes: false).Span,
                         isPropertyName: false,
                         shouldUnescape: true);
 
                 case JsonValueKind.Array:
-                    if (element1ParentDocument.GetArrayLength(element1ParentDocumentHandle) != element2ParentDocument.GetArrayLength(element2ParentDocumentHandle))
+                    if (element1ParentDocument.GetArrayLength(element1ParentDocumentIndex) != element2ParentDocument.GetArrayLength(element2ParentDocumentIndex))
                     {
                         return false;
                     }
 
-                    ArrayEnumerator arrayEnumerator2 = new(element2ParentDocument, element2ParentDocumentHandle);
-                    foreach (JsonElement e1 in new ArrayEnumerator(element1ParentDocument, element1ParentDocumentHandle))
+                    ArrayEnumerator<JsonElement> arrayEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
+                    foreach (JsonElement e1 in new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex))
                     {
                         bool success = arrayEnumerator2.MoveNext();
                         Debug.Assert(success, "enumerators must have matching length");
@@ -119,14 +119,14 @@ namespace Corvus.Text.Json
                 default:
                     Debug.Assert(kind is JsonValueKind.Object);
 
-                    int count = element1ParentDocument.GetPropertyCount(element1ParentDocumentHandle);
-                    if (count != element2ParentDocument.GetPropertyCount(element2ParentDocumentHandle))
+                    int count = element1ParentDocument.GetPropertyCount(element1ParentDocumentIndex);
+                    if (count != element2ParentDocument.GetPropertyCount(element2ParentDocumentIndex))
                     {
                         return false;
                     }
 
-                    ObjectEnumerator objectEnumerator1 = new (element1ParentDocument, element1ParentDocumentHandle);
-                    ObjectEnumerator objectEnumerator2 = new (element2ParentDocument, element2ParentDocumentHandle);
+                    ObjectEnumerator<JsonElement> objectEnumerator1 = new (element1ParentDocument, element1ParentDocumentIndex);
+                    ObjectEnumerator<JsonElement> objectEnumerator2 = new (element2ParentDocument, element2ParentDocumentIndex);
 
                     // Two JSON objects are considered equal if they define the same set of properties.
                     // Start optimistically with pairwise comparison, but fall back to unordered
@@ -137,13 +137,13 @@ namespace Corvus.Text.Json
                         bool success = objectEnumerator2.MoveNext();
                         Debug.Assert(success, "enumerators should have matching lengths");
 
-                        JsonProperty prop1 = objectEnumerator1.Current;
-                        JsonProperty prop2 = objectEnumerator2.Current;
+                        JsonProperty<JsonElement> prop1 = objectEnumerator1.Current;
+                        JsonProperty<JsonElement> prop2 = objectEnumerator2.Current;
 
                         if (!NameEquals(prop1, prop2))
                         {
                             // We have our first mismatch, fall back to unordered comparison.
-                            return UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentHandle, ref objectEnumerator2);
+                            return UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentIndex, ref objectEnumerator2);
                         }
 
                         if (!DeepEquals(prop1.Value, prop2.Value))
@@ -158,7 +158,7 @@ namespace Corvus.Text.Json
                     return true;
             }
 
-            static bool UnorderedObjectDeepEquals(IJsonDocument element1ParentDocument, int element1ParentDocumentHandle, ref ObjectEnumerator objectEnumerator2)
+            static bool UnorderedObjectDeepEquals(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, ref ObjectEnumerator<JsonElement> objectEnumerator2)
             {
                 // JsonElement objects allow duplicate property names, which is optional per the JSON RFC.
                 // Even though this implementation of equality does not take property ordering into account,
@@ -166,13 +166,13 @@ namespace Corvus.Text.Json
                 // in the first instance. This differs from the JsonElement implementation, which supports duplicate
                 // property names, if they are in order.
                 // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
-                element1ParentDocument.EnsurePropertyMap(element1ParentDocumentHandle);
+                element1ParentDocument.EnsurePropertyMap(element1ParentDocumentIndex);
 
                 Span<byte> buffer = stackalloc byte[JsonConstants.StackallocByteThreshold];
 
                 do
                 {
-                    JsonProperty right = objectEnumerator2.Current;
+                    JsonProperty<JsonElement> right = objectEnumerator2.Current;
                     JsonElement leftValue;
                     if (right.NameIsEscaped)
                     {
@@ -193,7 +193,7 @@ namespace Corvus.Text.Json
 
                         try
                         {
-                            if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentHandle, unescapedRightNameSpan, out leftValue) ||
+                            if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentIndex, unescapedRightNameSpan, out leftValue) ||
                                 !DeepEquals(leftValue, right.Value))
                             {
                                 return false;
@@ -210,7 +210,7 @@ namespace Corvus.Text.Json
                     }
                     else
                     {
-                        if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentHandle, right.NameSpan, out leftValue) ||
+                        if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentIndex, right.NameSpan, out leftValue) ||
                             !DeepEquals(leftValue, right.Value))
                         {
                             return false;
@@ -224,7 +224,7 @@ namespace Corvus.Text.Json
                 return true;
             }
 
-            static bool NameEquals(JsonProperty left, JsonProperty right)
+            static bool NameEquals(JsonProperty<JsonElement> left, JsonProperty<JsonElement> right)
             {
                 if (right.NameIsEscaped)
                 {

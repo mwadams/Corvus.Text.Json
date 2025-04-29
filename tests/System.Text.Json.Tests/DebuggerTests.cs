@@ -21,7 +21,7 @@ namespace Corvus.Text.Json.Tests
         public void DefaultJsonProperty()
         {
             // Validating that we don't throw on default
-            JsonProperty property = default;
+            JsonProperty<JsonElement> property = default;
             GetDebuggerDisplayProperty(property);
         }
 

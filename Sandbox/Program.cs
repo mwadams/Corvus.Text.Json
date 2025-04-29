@@ -64,10 +64,8 @@ documentB2 = Corvus.Text.Json.ParsedJsonDocument.Parse(
 
 try
 {
-    bool de = Corvus.Text.Json.JsonElement.DeepEquals(documentB1!.RootElement, documentB2!.RootElement);
     bool gde = Corvus.Text.Json.JsonElementHelpers.DeepEquals(documentB1!.RootElement, documentB2!.RootElement);
 
-    Console.WriteLine($"DeepEquals: {de}");
     Console.WriteLine($"GenericDeepEquals: {gde}");
 }
 finally

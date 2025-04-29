@@ -3,21 +3,25 @@
 
 using System;
 using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Corvus.Text.Json
 {
     /// <summary>
     ///   Represents a single property for a JSON object.
     /// </summary>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public readonly struct JsonProperty
+    [CLSCompliant(false)]
+    public readonly struct JsonProperty<TValue>
+        where TValue : struct, IJsonElement<TValue>
     {
         /// <summary>
         ///   The value of this property.
         /// </summary>
-        public JsonElement Value { get; }
+        public TValue Value { get; }
 
-        internal JsonProperty(JsonElement value)
+        internal JsonProperty(TValue value)
         {
             Value = value;
         }
@@ -25,7 +29,15 @@ namespace Corvus.Text.Json
         /// <summary>
         ///   The name of this property.
         /// </summary>
-        public string Name => Value.GetPropertyName();
+        public string Name
+        {
+            get
+            {
+                Value.CheckValidInstance();
+                return Value.ParentDocument.GetNameOfPropertyValue(Value.ParentDocumentIndex);
+
+            }
+        }
 
         /// <summary>
         ///   Compares <paramref name="text" /> to the name of this property.
@@ -64,7 +76,8 @@ namespace Corvus.Text.Json
         /// </remarks>
         public bool NameEquals(ReadOnlySpan<byte> utf8Text)
         {
-            return Value.TextEqualsHelper(utf8Text, isPropertyName: true, shouldUnescape: true);
+            Value.CheckValidInstance();
+            return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, utf8Text, isPropertyName: true, shouldUnescape: true);
         }
 
         /// <summary>
@@ -84,16 +97,25 @@ namespace Corvus.Text.Json
         /// </remarks>
         public bool NameEquals(ReadOnlySpan<char> text)
         {
-            return Value.TextEqualsHelper(text, isPropertyName: true);
+            Value.CheckValidInstance();
+            return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, text, isPropertyName: true);
         }
 
         internal bool EscapedNameEquals(ReadOnlySpan<byte> utf8Text)
         {
-            return Value.TextEqualsHelper(utf8Text, isPropertyName: true, shouldUnescape: false);
+            return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, utf8Text, isPropertyName: true, shouldUnescape: false);
         }
 
-        internal bool NameIsEscaped => Value.ValueIsEscapedHelper(isPropertyName: true);
-        internal ReadOnlySpan<byte> NameSpan => Value.GetPropertyNameRaw();
+        internal bool NameIsEscaped => Value.ParentDocument.ValueIsEscaped(Value.ParentDocumentIndex, isPropertyName: true);
+
+        internal ReadOnlySpan<byte> NameSpan
+        {
+            get
+            {
+                Value.CheckValidInstance();
+                return Value.ParentDocument.GetPropertyNameRaw(Value.ParentDocumentIndex);
+            }
+        }
 
         /// <summary>
         ///   Write the property into the provided writer as a named JSON object property.
@@ -115,9 +137,10 @@ namespace Corvus.Text.Json
         {
             ArgumentNullException.ThrowIfNull(writer);
 
-            Value.WritePropertyNameTo(writer);
+            Value.CheckValidInstance();
 
-            Value.WriteTo(writer);
+            Value.ParentDocument.WritePropertyName(Value.ParentDocumentIndex, writer);
+            Value.ParentDocument.WriteElementTo(Value.ParentDocumentIndex, writer);
         }
 
         /// <summary>
@@ -131,7 +154,8 @@ namespace Corvus.Text.Json
         /// </returns>
         public override string ToString()
         {
-            return Value.GetPropertyRawText();
+            Value.CheckValidInstance();
+            return Value.ParentDocument.GetPropertyRawValueAsString(Value.ParentDocumentIndex);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

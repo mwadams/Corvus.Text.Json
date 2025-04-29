@@ -119,6 +119,7 @@
     <Compile Include="System\Text\Json\AppContextSwitchHelper.cs" />
     <Compile Include="System\Text\Json\BitStack.cs" />
     <Compile Include="System\Text\Json\Document\DynamicValueType.cs" />
+    <Compile Include="System\Text\Json\Document\IJsonElement{T}.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocument.PropertyMap.cs" />
     <Compile Include="System\Text\Json\Document\IJsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\ArrayEnumerator.cs" />
@@ -495,7 +496,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="10.0.0-preview.3.25171.5" />
   </ItemGroup>
   
 </Project>

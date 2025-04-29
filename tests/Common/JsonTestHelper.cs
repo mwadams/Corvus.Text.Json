@@ -74,13 +74,13 @@ namespace Corvus.Text.Json
             {
                 case JsonValueKind.Object:
                     var expectedProperties = new List<string>();
-                    foreach (JsonProperty property in expected.EnumerateObject())
+                    foreach (JsonProperty<JsonElement> property in expected.EnumerateObject())
                     {
                         expectedProperties.Add(property.Name);
                     }
 
                     var actualProperties = new List<string>();
-                    foreach (JsonProperty property in actual.EnumerateObject())
+                    foreach (JsonProperty<JsonElement> property in actual.EnumerateObject())
                     {
                         actualProperties.Add(property.Name);
                     }
@@ -103,8 +103,8 @@ namespace Corvus.Text.Json
                     }
                     break;
                 case JsonValueKind.Array:
-                    ArrayEnumerator expectedEnumerator = expected.EnumerateArray();
-                    ArrayEnumerator actualEnumerator = actual.EnumerateArray();
+                    ArrayEnumerator<JsonElement> expectedEnumerator = expected.EnumerateArray();
+                    ArrayEnumerator<JsonElement> actualEnumerator = actual.EnumerateArray();
 
                     int i = 0;
                     while (expectedEnumerator.MoveNext())
