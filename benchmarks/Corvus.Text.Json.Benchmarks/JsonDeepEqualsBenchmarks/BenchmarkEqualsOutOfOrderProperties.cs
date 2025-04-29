@@ -155,12 +155,6 @@ public class BenchmarkEqualsOutOfOrderProperties
     [Benchmark]
     public bool CorvusJsonElementDeepEqualsOutOfOrder()
     {
-        return Corvus.Text.Json.JsonElement.DeepEquals(this.documentB1!.RootElement, this.documentB2!.RootElement);
-    }
-
-    [Benchmark]
-    public bool GenericCorvusJsonElementDeepEqualsOutOfOrder()
-    {
         return Corvus.Text.Json.JsonElementHelpers.DeepEquals(this.documentB1!.RootElement, this.documentB2!.RootElement);
     }
 }
