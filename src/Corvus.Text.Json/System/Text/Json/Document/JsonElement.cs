@@ -1201,7 +1201,7 @@ namespace Corvus.Text.Json
             return _parent.GetRawValueAsString(_idx);
         }
 
-        internal ReadOnlyMemory<byte> GetRawValue()
+        internal RawUtf8JsonString GetRawValue()
         {
             CheckValidInstance();
 

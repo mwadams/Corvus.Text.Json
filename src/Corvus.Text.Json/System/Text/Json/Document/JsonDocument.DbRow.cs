@@ -50,8 +50,13 @@ namespace Corvus.Text.Json
             /// </summary>
             internal bool HasComplexChildren => _sizeOrLengthUnion < 0;
 
+            internal bool HasDynamicValue => (unchecked((uint)_location) & 0x8000_0000UL) != 0;
+
             internal int NumberOfRows =>
                 _numberOfRowsAndTypeUnion & 0x0FFFFFFF; // Number of rows that the current JSON element occupies within the database
+
+            internal int WorkspaceDocumentId =>
+                _numberOfRowsAndTypeUnion & 0x0FFFFFFF; // The workspace document ID, if this simple value is from an external document.
 
             internal JsonTokenType TokenType => (JsonTokenType)(unchecked((uint)_numberOfRowsAndTypeUnion) >> 28);
 

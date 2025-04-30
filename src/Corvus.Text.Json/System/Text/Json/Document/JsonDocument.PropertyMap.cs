@@ -169,6 +169,7 @@ namespace Corvus.Text.Json
         protected void EnsurePropertyMapUnsafe(int index)
         {
             DbRow row = _parsedData.Get(index);
+            Debug.Assert(row.TokenType != JsonTokenType.StartObject);
             int endIndex = checked((row.NumberOfRows * DbRow.Size) + index);
             row = _parsedData.Get(endIndex);
 
@@ -244,7 +245,7 @@ namespace Corvus.Text.Json
                 {
                     Debug.Assert(propertyRow.Location >= 0, "The property must be local if it has complex children");
 
-                    ReadOnlyMemory<byte> rawName = GetRawValueUnsafe(index, false);
+                    ReadOnlyMemory<byte> rawName = GetRawSimpleValueUnsafe(index, false);
                     ReadOnlySpan<byte> unescapedName = UnescapeAndWriteUnescapedStringValue(rawName.Span, out int dynamicValueOffset);
                     ulong hashCode = PropertyMap.GetHashCode(unescapedName);
                     ref int bucket = ref PropertyMap.GetBucket(buckets, hashCode, size);
@@ -255,7 +256,7 @@ namespace Corvus.Text.Json
                 }
                 else
                 {
-                    ReadOnlyMemory<byte> rawName = GetRawValueUnsafe(index, false);
+                    ReadOnlyMemory<byte> rawName = GetRawSimpleValueUnsafe(index, false);
                     ulong hashCode = PropertyMap.GetHashCode(rawName.Span);
                     ref int bucket = ref PropertyMap.GetBucket(buckets, hashCode, size);
                     int entryIndex = propertyIndex * PropertyMap.Entry.Size;
@@ -338,11 +339,11 @@ namespace Corvus.Text.Json
         {
             if (entry.HasDynamicUnescapedKey)
             {
-                return ReadDynamicUnescapedUtf8String(entry.KeyOffset);
+                return ReadDynamicUnescapedUtf8String(entry.KeyOffset).Span;
             }
             else
             {
-                return GetRawValueUnsafe(entry.ValueIndex - DbRow.Size, false).Span;
+                return GetRawSimpleValueUnsafe(entry.ValueIndex - DbRow.Size, false).Span;
             }
         }
     }

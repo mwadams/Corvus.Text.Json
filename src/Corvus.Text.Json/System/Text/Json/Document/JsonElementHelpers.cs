@@ -112,8 +112,8 @@ namespace Corvus.Text.Json
 
                 case JsonValueKind.Number:
                     return JsonHelpers.AreEqualJsonNumbers(
-                        element1ParentDocument.GetRawValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-                        element2ParentDocument.GetRawValue(element2ParentDocumentIndex, includeQuotes: false).Span);
+                        element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
+                        element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
 
                 case JsonValueKind.String:
                     if (element2ParentDocument.ValueIsEscaped(element2ParentDocumentIndex, isPropertyName: false))
@@ -122,15 +122,15 @@ namespace Corvus.Text.Json
                         {
                             // Need to unescape and compare both inputs.
                             return JsonReaderHelper.UnescapeAndCompareBothInputs(
-                                element1ParentDocument.GetRawValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-                                element2ParentDocument.GetRawValue(element2ParentDocumentIndex, includeQuotes: false).Span);
+                                element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
+                                element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
                         }
 
                         // Note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
                         // Swap values so that unescaping is handled by the LHS.
                         return element2ParentDocument.TextEquals(
                             element2ParentDocumentIndex,
-                            element1ParentDocument.GetRawValue(element1ParentDocumentIndex, includeQuotes: false).Span,
+                            element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
                             isPropertyName: false,
                             shouldUnescape: true);                            
                     }
@@ -138,7 +138,7 @@ namespace Corvus.Text.Json
                     // As above, note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
                     return element1ParentDocument.TextEquals(
                         element1ParentDocumentIndex,
-                        element2ParentDocument.GetRawValue(element2ParentDocumentIndex, includeQuotes: false).Span,
+                        element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span,
                         isPropertyName: false,
                         shouldUnescape: true);
 

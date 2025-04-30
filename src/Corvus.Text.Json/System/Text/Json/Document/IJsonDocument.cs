@@ -46,7 +46,8 @@ namespace Corvus.Text.Json
         ReadOnlySpan<byte> GetPropertyNameRaw(int index);
         string GetRawValueAsString(int index);
         string GetPropertyRawValueAsString(int valueIndex);
-        ReadOnlyMemory<byte> GetRawValue(int index, bool includeQuotes);
+        RawUtf8JsonString GetRawValue(int index, bool includeQuotes);
+        ReadOnlyMemory<byte> GetRawSimpleValue(int index, bool includeQuotes);
         bool ValueIsEscaped(int index, bool isPropertyName);
         bool TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName);
         bool TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape);

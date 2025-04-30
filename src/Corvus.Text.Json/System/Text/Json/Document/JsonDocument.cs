@@ -36,7 +36,7 @@ namespace Corvus.Text.Json
 
         public abstract JsonElement RootElement { get; }
 
-        protected abstract ReadOnlyMemory<byte> GetRawValueUnsafe(int index, bool includeQuotes);
+        protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes);
 
         /// <summary>
         ///  Write the document into the provided writer as a JSON value.
@@ -56,6 +56,88 @@ namespace Corvus.Text.Json
             ArgumentNullException.ThrowIfNull(writer);
 
             RootElement.WriteTo(writer);
+        }
+
+        protected static void CheckExpectedType(JsonTokenType expected, JsonTokenType actual)
+        {
+            if (expected != actual)
+            {
+                ThrowHelper.ThrowJsonElementWrongTypeException(expected, actual);
+            }
+        }
+
+        protected int GetEndIndexUnsafe(int index, bool includeEndElement)
+        {
+            DbRow row = _parsedData.Get(index);
+
+            if (row.IsSimpleValue)
+            {
+                return index + DbRow.Size;
+            }
+
+            int endIndex = index + DbRow.Size * row.NumberOfRows;
+
+            if (includeEndElement)
+            {
+                endIndex += DbRow.Size;
+            }
+
+            return endIndex;
+        }
+
+        protected int GetArrayIndexElementUnsafe(int currentIndex, int arrayIndex)
+        {
+            DbRow row = _parsedData.Get(currentIndex);
+
+            CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
+
+            int arrayLength = row.SizeOrLength;
+
+            if ((uint)arrayIndex >= (uint)arrayLength)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            if (!row.HasComplexChildren)
+            {
+                // Since we wouldn't be here without having completed the document parse, and we
+                // already vetted the index against the length, this new index will always be
+                // within the table.
+                return currentIndex + ((arrayIndex + 1) * DbRow.Size);
+            }
+
+            int elementCount = 0;
+            int objectOffset = currentIndex + DbRow.Size;
+
+            for (; objectOffset < _parsedData.Length; objectOffset += DbRow.Size)
+            {
+                if (arrayIndex == elementCount)
+                {
+                    return objectOffset;
+                }
+
+                row = _parsedData.Get(objectOffset);
+
+                if (!row.IsSimpleValue)
+                {
+                    objectOffset += DbRow.Size * row.NumberOfRows;
+                }
+
+                elementCount++;
+            }
+
+            Debug.Fail(
+                $"Ran out of database searching for array index {arrayIndex} from {currentIndex} when length was {arrayLength}");
+            throw new IndexOutOfRangeException();
+        }
+
+        protected bool ValueIsEscapedUnsafe(int index, bool isPropertyName)
+        {
+            int matchIndex = isPropertyName ? index - DbRow.Size : index;
+            DbRow row = _parsedData.Get(matchIndex);
+            Debug.Assert(!isPropertyName || row.TokenType is JsonTokenType.PropertyName);
+
+            return row.HasComplexChildren;
         }
 
         protected void Enlarge(int v, ref byte[] byteArray)
@@ -255,7 +337,7 @@ namespace Corvus.Text.Json
             return offset;
         }
 
-        protected ReadOnlySpan<byte> ReadDynamicUnescapedUtf8String(int offset)
+        protected ReadOnlyMemory<byte> ReadDynamicUnescapedUtf8String(int offset)
         {
             // The first 4 bytes are the type and length
             uint length = BitConverter.ToUInt32(_valueBacking!, offset);
@@ -264,7 +346,31 @@ namespace Corvus.Text.Json
 
             length >>= 4;
 
-            return _valueBacking.AsSpan(offset + 4, (int)length);
+            return _valueBacking.AsMemory(offset + 4, (int)length);
+        }
+
+        protected ReadOnlyMemory<byte> ReadRawSimpleDynamicValue(int offset, bool includeQuotes)
+        {
+            // The first 4 bytes are the type and length
+            uint length = BitConverter.ToUInt32(_valueBacking!, offset);
+
+            DynamicValueType valueType = (DynamicValueType)(length & 0xF);
+            Debug.Assert(valueType == DynamicValueType.QuotedUtf8String || valueType == DynamicValueType.Number, $"Expected Unescaped UTF8 string at {offset}");
+
+            length >>= 4;
+
+            int start;
+            if (!includeQuotes && valueType == DynamicValueType.QuotedUtf8String)
+            {
+                start = offset + 5;
+                length -= 2;
+            }
+            else
+            {
+                start = offset + 4;
+            }
+
+            return _valueBacking.AsMemory(start, (int)length);
         }
 
         public virtual void Dispose()

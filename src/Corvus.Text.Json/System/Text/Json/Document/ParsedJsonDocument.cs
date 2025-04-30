@@ -66,7 +66,7 @@ namespace Corvus.Text.Json
 
             base.Dispose();
 
-            _utf8Json = ReadOnlyMemory<byte>.Empty;           
+            _utf8Json = ReadOnlyMemory<byte>.Empty;
 
             if (_extraRentedArrayPoolBytes != null)
             {
@@ -108,11 +108,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            int matchIndex = isPropertyName ? index - DbRow.Size : index;
-            DbRow row = _parsedData.Get(matchIndex);
-            Debug.Assert(!isPropertyName || row.TokenType is JsonTokenType.PropertyName);
-
-            return row.HasComplexChildren;
+            return ValueIsEscapedUnsafe(index, isPropertyName);
         }
 
         int IJsonDocument.GetArrayLength(int index)
@@ -141,82 +137,22 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            DbRow row = _parsedData.Get(currentIndex);
-
-            CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
-
-            int arrayLength = row.SizeOrLength;
-
-            if ((uint)arrayIndex >= (uint)arrayLength)
-            {
-                throw new IndexOutOfRangeException();
-            }
-
-            if (!row.HasComplexChildren)
-            {
-                // Since we wouldn't be here without having completed the document parse, and we
-                // already vetted the index against the length, this new index will always be
-                // within the table.
-                return new JsonElement(this, currentIndex + ((arrayIndex + 1) * DbRow.Size));
-            }
-
-            int elementCount = 0;
-            int objectOffset = currentIndex + DbRow.Size;
-
-            for (; objectOffset < _parsedData.Length; objectOffset += DbRow.Size)
-            {
-                if (arrayIndex == elementCount)
-                {
-                    return new JsonElement(this, objectOffset);
-                }
-
-                row = _parsedData.Get(objectOffset);
-
-                if (!row.IsSimpleValue)
-                {
-                    objectOffset += DbRow.Size * row.NumberOfRows;
-                }
-
-                elementCount++;
-            }
-
-            Debug.Fail(
-                $"Ran out of database searching for array index {arrayIndex} from {currentIndex} when length was {arrayLength}");
-            throw new IndexOutOfRangeException();
+            return new JsonElement(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
         }
 
         int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
         {
             CheckNotDisposed();
-            return GetEndIndexCore(index, includeEndElement);
+            return GetEndIndexUnsafe(index, includeEndElement);
         }
 
-        private int GetEndIndexCore(int index, bool includeEndElement)
-        {
-            DbRow row = _parsedData.Get(index);
-
-            if (row.IsSimpleValue)
-            {
-                return index + DbRow.Size;
-            }
-
-            int endIndex = index + DbRow.Size * row.NumberOfRows;
-
-            if (includeEndElement)
-            {
-                endIndex += DbRow.Size;
-            }
-
-            return endIndex;
-        }
-
-        ReadOnlyMemory<byte> IJsonDocument.GetRawValue(int index, bool includeQuotes)
+        RawUtf8JsonString IJsonDocument.GetRawValue(int index, bool includeQuotes)
         {
             CheckNotDisposed();
-            return GetRawValueUnsafe(index, includeQuotes);
+            return new(GetRawValueUnsafe(index, includeQuotes));
         }
 
-        protected override ReadOnlyMemory<byte> GetRawValueUnsafe(int index, bool includeQuotes)
+        private ReadOnlyMemory<byte> GetRawValueUnsafe(int index, bool includeQuotes)
         {
             DbRow row = _parsedData.Get(index);
 
@@ -232,10 +168,32 @@ namespace Corvus.Text.Json
                 return _utf8Json.Slice(row.Location, row.SizeOrLength);
             }
 
-            int endElementIdx = GetEndIndexCore(index, includeEndElement: false);
+            int endElementIdx = GetEndIndexUnsafe(index, includeEndElement: false);
             int start = row.Location;
             row = _parsedData.Get(endElementIdx);
             return _utf8Json.Slice(start, row.Location - start + row.SizeOrLength);
+        }
+
+        ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index, bool includeQuotes)
+        {
+            CheckNotDisposed();
+
+            return GetRawSimpleValueUnsafe(index, includeQuotes);
+        }
+
+        protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes)
+        {
+            DbRow row = _parsedData.Get(index);
+            Debug.Assert(row.IsSimpleValue);
+
+            if (includeQuotes && row.TokenType == JsonTokenType.String)
+            {
+                // Start one character earlier than the value (the open quote)
+                // End one character after the value (the close quote)
+                return _utf8Json.Slice(row.Location - 1, row.SizeOrLength + 2);
+            }
+
+            return _utf8Json.Slice(row.Location, row.SizeOrLength);
         }
 
         private ReadOnlyMemory<byte> GetPropertyRawValue(int valueIndex)
@@ -265,7 +223,7 @@ namespace Corvus.Text.Json
                 return _utf8Json.Slice(start, end - start);
             }
 
-            int endElementIdx = GetEndIndexCore(valueIndex, includeEndElement: false);
+            int endElementIdx = GetEndIndexUnsafe(valueIndex, includeEndElement: false);
             row = _parsedData.Get(endElementIdx);
             end = row.Location + row.SizeOrLength;
             return _utf8Json.Slice(start, end - start);
@@ -779,9 +737,9 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            int endIndex = GetEndIndexCore(index, true);
+            int endIndex = GetEndIndexUnsafe(index, true);
             MetadataDb newDb = _parsedData.CopySegment(index, endIndex);
-            ReadOnlyMemory<byte> segmentCopy = GetRawValueUnsafe(index, includeQuotes: true).ToArray();
+            ReadOnlyMemory<byte> segmentCopy = GetRawSimpleValueUnsafe(index, includeQuotes: true).ToArray();
 
             ParsedJsonDocument newDocument =
                 new ParsedJsonDocument(
@@ -834,7 +792,7 @@ namespace Corvus.Text.Json
 
         private void WriteComplexElement(int index, Utf8JsonWriter writer)
         {
-            int endIndex = GetEndIndexCore(index, true);
+            int endIndex = GetEndIndexUnsafe(index, true);
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {
@@ -1108,14 +1066,6 @@ namespace Corvus.Text.Json
             }
         }
 
-        private static void CheckExpectedType(JsonTokenType expected, JsonTokenType actual)
-        {
-            if (expected != actual)
-            {
-                ThrowHelper.ThrowJsonElementWrongTypeException(expected, actual);
-            }
-        }
-
         private static void CheckSupportedOptions(
             JsonReaderOptions readerOptions,
             string paramName)
@@ -1183,7 +1133,7 @@ namespace Corvus.Text.Json
             DbRow complexObjectRow = _parsedData.Get(index);
             db.Append(complexObjectRow.TokenType, complexObjectRow.Location, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
 
-            int endIndex = GetEndIndexCore(index, true);
+            int endIndex = GetEndIndexUnsafe(index, true);
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {

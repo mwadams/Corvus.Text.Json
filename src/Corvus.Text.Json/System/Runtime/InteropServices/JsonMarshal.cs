@@ -24,11 +24,11 @@ namespace Corvus.Runtime.InteropServices
         /// extra care to make sure that such a scenario isn't possible to avoid potential data corruption.
         /// </remarks>
         [CLSCompliant(false)]
-        public static ReadOnlySpan<byte> GetRawUtf8Value<T>(T element)
+        public static RawUtf8JsonString GetRawUtf8Value<T>(T element)
             where T : struct, IJsonElement
         {
             element.CheckValidInstance();
-            return element.ParentDocument.GetRawValue(element.ParentDocumentIndex, includeQuotes: true).Span;
+            return element.ParentDocument.GetRawValue(element.ParentDocumentIndex, includeQuotes: true);
         }
 
         /// <summary>

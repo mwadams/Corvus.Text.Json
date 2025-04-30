@@ -254,8 +254,8 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument jDoc = ParsedJsonDocument.Parse(json, options);
             JsonElement element = jDoc.RootElement;
 
-            ReadOnlySpan<byte> rawValue = JsonMarshal.GetRawUtf8Value(element);
-            Assert.Equal(json.Trim(), Encoding.UTF8.GetString(rawValue.ToArray()));
+            using RawUtf8JsonString rawValue = JsonMarshal.GetRawUtf8Value(element);
+            Assert.Equal(json.Trim(), Encoding.UTF8.GetString(rawValue.Memory.ToArray()));
         }
 
         [Fact]
@@ -341,8 +341,8 @@ namespace Corvus.Text.Json.Tests
 
             static void AssertGetRawValue(string expectedJson, JsonElement element)
             {
-                ReadOnlySpan<byte> rawValue = JsonMarshal.GetRawUtf8Value(element);
-                Assert.Equal(expectedJson.Trim(), Encoding.UTF8.GetString(rawValue.ToArray()));
+                using RawUtf8JsonString rawValue = JsonMarshal.GetRawUtf8Value(element);
+                Assert.Equal(expectedJson.Trim(), Encoding.UTF8.GetString(rawValue.Memory.ToArray()));
             }
         }
 
