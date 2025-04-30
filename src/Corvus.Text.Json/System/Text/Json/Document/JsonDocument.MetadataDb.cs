@@ -3,6 +3,8 @@
 
 using System.Buffers;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -109,12 +111,12 @@ namespace Corvus.Text.Json
             // false     true   Used by JsonElement.ParseValue() for arrays and objects. Renting used until size is known.
             // true      true   not valid
 
-            private MetadataDb(byte[] initialDb, bool isLocked, bool convertToAlloc)
+            private MetadataDb(byte[] initialDb, bool isLocked, bool convertToAlloc, int length = 0)
             {
                 _data = initialDb;
                 _isLocked = isLocked;
                 _convertToAlloc = convertToAlloc;
-                Length = 0;
+                Length = length;
             }
 
             internal MetadataDb(byte[] completeDb)
@@ -125,7 +127,29 @@ namespace Corvus.Text.Json
                 Length = completeDb.Length;
             }
 
+            internal static MetadataDb CreateForBuilder([NotNull] ref byte[]? data, int initialRowCount)
+            {
+                // This API is for the public end where we do not want to expose MetadataDb outside of
+                // the internals
+                data = ArrayPool<byte>.Shared.Rent(initialRowCount * DbRow.Size);
+                return new MetadataDb(data, isLocked: false, convertToAlloc: false);
+            }
+
+            internal static MetadataDb CreateRented(byte[] data, int length, bool convertToAlloc)
+            {
+                return new MetadataDb(data, isLocked: false, convertToAlloc, length);
+            }
+
             internal static MetadataDb CreateRented(int payloadLength, bool convertToAlloc)
+            {
+                int initialSize = CalculateInitialSize(payloadLength);
+
+                byte[] data = ArrayPool<byte>.Shared.Rent(initialSize);
+                return new MetadataDb(data, isLocked: false, convertToAlloc);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static int CalculateInitialSize(int payloadLength)
             {
                 // Assume that a token happens approximately every 12 bytes.
                 // int estimatedTokens = payloadLength / 12
@@ -145,8 +169,7 @@ namespace Corvus.Text.Json
                     initialSize = OneMegabyte;
                 }
 
-                byte[] data = ArrayPool<byte>.Shared.Rent(initialSize);
-                return new MetadataDb(data, isLocked: false, convertToAlloc);
+                return initialSize;
             }
 
             internal static MetadataDb CreateLocked(int payloadLength)
@@ -240,21 +263,21 @@ namespace Corvus.Text.Json
                 Length += DbRow.Size;
             }
 
-            internal void Append(JsonTokenType tokenType, int startLocation, int length, int parentDocumentIndex)
+            internal void Append(JsonTokenType tokenType, int startLocation, int length, int workspaceDocumentIndex)
             {
                 // StartArray or StartObject should have length -1, otherwise the length should not be -1.
                 Debug.Assert(
                     (tokenType == JsonTokenType.StartArray || tokenType == JsonTokenType.StartObject) ==
                     (length == DbRow.UnknownSize));
 
-                Debug.Assert(parentDocumentIndex >= 0);
+                Debug.Assert(workspaceDocumentIndex >= 0);
 
                 if (Length >= _data.Length - DbRow.Size)
                 {
                     Enlarge();
                 }
 
-                DbRow row = new DbRow(tokenType, startLocation, length, parentDocumentIndex);
+                DbRow row = new DbRow(tokenType, startLocation, length, workspaceDocumentIndex);
                 MemoryMarshal.Write(_data.AsSpan(Length), ref row);
                 Length += DbRow.Size;
             }

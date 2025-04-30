@@ -5,6 +5,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 using System.Buffers;
+using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -162,6 +163,186 @@ namespace Corvus.Text.Json
 
                     MemoryMarshal.Write(destination, ref entry);
                 }
+            }
+        }
+
+        protected void EnsurePropertyMapUnsafe(int index)
+        {
+            DbRow row = _parsedData.Get(index);
+            int endIndex = checked((row.NumberOfRows * DbRow.Size) + index);
+            row = _parsedData.Get(endIndex);
+
+            if (!row.HasPropertyMap)
+            {
+                int propertyMapIndex = CreatePropertyMap(index);
+                _parsedData.SetPropertyMapIndex(endIndex, propertyMapIndex);
+            }
+        }
+
+        private int CreatePropertyMap(int startObjectIndex)
+        {
+            DbRow startObjectRow = _parsedData.Get(startObjectIndex);
+            int endIndex = checked((startObjectRow.NumberOfRows * DbRow.Size) + startObjectIndex);
+            DbRow endObjectRow = _parsedData.Get(endIndex);
+
+            int lengthOfEnd = endObjectRow.SizeOrLength;
+            int propertyCount = startObjectRow.SizeOrLength;
+            int size = HashHelpers.GetPrime(propertyCount);
+            int entriesSize = size * PropertyMap.Entry.Size;
+
+            // Make sure we have space for the buckets
+            if (_bucketsBacking is null)
+            {
+                _bucketsBacking = ArrayPool<int>.Shared.Rent(size);
+            }
+            else
+            {
+                Enlarge(_bucketOffset + size, ref _bucketsBacking);
+            }
+
+            // Make sure we have space for the property map
+            if (_propertyMapBacking is null)
+            {
+                // We will start with 10
+                _propertyMapBacking = ArrayPool<byte>.Shared.Rent(PropertyMap.Size * 10);
+            }
+            else
+            {
+                Enlarge(_propertyMapOffset + PropertyMap.Size, ref _propertyMapBacking);
+            }
+
+            // Make sure we have space for the entries
+            if (_entriesBacking is null)
+            {
+                _entriesBacking = ArrayPool<byte>.Shared.Rent(entriesSize);
+            }
+            else
+            {
+                Enlarge(_entryOffset + entriesSize, ref _entriesBacking);
+            }
+
+            Span<int> buckets = _bucketsBacking.AsSpan(_bucketOffset, size);
+            Span<byte> entries = _entriesBacking.AsSpan(_entryOffset, entriesSize);
+            buckets.Clear();
+            entries.Clear();
+
+            Span<byte> buffer = stackalloc byte[JsonConstants.StackallocByteThreshold];
+
+            int propertyIndex = 0;
+
+            // Move to the row before the EndObject
+            int index = startObjectIndex + DbRow.Size;
+
+            while (index < endIndex)
+            {
+                DbRow propertyRow = _parsedData.Get(index);
+                int valueIndex = index + DbRow.Size;
+                DbRow row = _parsedData.Get(valueIndex);
+                Debug.Assert(propertyRow.TokenType == JsonTokenType.PropertyName, "The row must be a property name");
+
+                if (propertyRow.HasComplexChildren)
+                {
+                    Debug.Assert(propertyRow.Location >= 0, "The property must be local if it has complex children");
+
+                    ReadOnlyMemory<byte> rawName = GetRawValueUnsafe(index, false);
+                    ReadOnlySpan<byte> unescapedName = UnescapeAndWriteUnescapedStringValue(rawName.Span, out int dynamicValueOffset);
+                    ulong hashCode = PropertyMap.GetHashCode(unescapedName);
+                    ref int bucket = ref PropertyMap.GetBucket(buckets, hashCode, size);
+                    int entryIndex = propertyIndex * PropertyMap.Entry.Size;
+                    PropertyMap.Entry.Write(entries.Slice(entryIndex, PropertyMap.Entry.Size), hashCode, bucket - 1, valueIndex, dynamicValueOffset);
+                    propertyIndex++;
+                    bucket = propertyIndex; // Value in buckets is 1-based
+                }
+                else
+                {
+                    ReadOnlyMemory<byte> rawName = GetRawValueUnsafe(index, false);
+                    ulong hashCode = PropertyMap.GetHashCode(rawName.Span);
+                    ref int bucket = ref PropertyMap.GetBucket(buckets, hashCode, size);
+                    int entryIndex = propertyIndex * PropertyMap.Entry.Size;
+                    PropertyMap.Entry.Write(entries.Slice(entryIndex, PropertyMap.Entry.Size), hashCode, bucket - 1, valueIndex);
+                    propertyIndex++;
+                    bucket = propertyIndex; // Value in buckets is 1-based
+                }
+
+                if (row.IsSimpleValue)
+                {
+                    index = valueIndex + DbRow.Size;
+                }
+                else
+                {
+                    Debug.Assert(row.NumberOfRows > 0, "There must be at least one row in a non-simple value.");
+                    index = valueIndex + (DbRow.Size * (row.NumberOfRows + 1));
+                }
+            }
+
+            PropertyMap.Write(_bucketOffset, _entryOffset, size, propertyCount, _propertyMapBacking.AsSpan(_propertyMapOffset), lengthOfEnd);
+
+            int propertyMapIndex = _propertyMapOffset;
+
+            // Move the pointers for the next property map.
+            _propertyMapOffset += PropertyMap.Size;
+            _bucketOffset += size;
+            _entryOffset += entriesSize;
+
+            return propertyMapIndex;
+        }
+
+        protected bool TryGetNamedPropertyValueFromPropertyMap(int propertyMapBufferIndex, ReadOnlySpan<byte> unescapedUtf8Name, out int valueIndex)
+        {
+            PropertyMap propertyMap = MemoryMarshal.Read<PropertyMap>(_propertyMapBacking.AsSpan(propertyMapBufferIndex, PropertyMap.Size));
+            Span<int> buckets = _bucketsBacking.AsSpan(propertyMap.BucketOffset, propertyMap.BucketCount);
+            Span<byte> entries = _entriesBacking.AsSpan(propertyMap.EntryOffset, propertyMap.Count * PropertyMap.Entry.Size);
+
+            ulong hashCode = PropertyMap.GetHashCode(unescapedUtf8Name);
+            int i = PropertyMap.GetBucket(buckets, hashCode, propertyMap.BucketCount);
+            uint collisionCount = 0;
+            PropertyMap.Entry entry;
+
+            i--; // Value in _buckets is 1-based; subtract 1 from i. We do it here so it fuses with the following conditional.
+            do
+            {
+                int offset = i * PropertyMap.Entry.Size;
+
+                // Test in if to drop range check for following array access
+                if ((uint)offset >= (uint)entries.Length)
+                {
+                    goto ReturnNotFound;
+                }
+
+                entry = MemoryMarshal.Read<PropertyMap.Entry>(entries.Slice(offset));
+                if (entry.HashCode == hashCode &&
+                        (((unescapedUtf8Name.Length < HashLength) &&
+                            ((hashCode & HashMask) == 0)) ||
+                        GetKey(ref entry).SequenceEqual(unescapedUtf8Name)))
+                {
+                    goto ReturnFound;
+                }
+
+                i = entry.Next;
+
+                collisionCount++;
+            }
+            while (collisionCount <= propertyMap.Count);
+
+            Debug.Fail("Possible infinite loop in PropertyMap.FindValue.");
+
+        ReturnFound:
+            valueIndex = entry.ValueIndex;
+            return true;
+        ReturnNotFound:
+            valueIndex = -1;
+            return false;
+        }
+
+        private ReadOnlySpan<byte> GetKey(ref PropertyMap.Entry entry)
+        {
+            if (entry.HasDynamicUnescapedKey)
+            {
+                return ReadDynamicUnescapedUtf8String(entry.KeyOffset);
+            }
+            else
+            {
+                return GetRawValueUnsafe(entry.ValueIndex - DbRow.Size, false).Span;
             }
         }
     }

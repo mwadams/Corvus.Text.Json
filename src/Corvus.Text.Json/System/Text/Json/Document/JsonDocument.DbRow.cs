@@ -39,6 +39,11 @@ namespace Corvus.Text.Json
             internal bool IsUnknownSize => _sizeOrLengthUnion == UnknownSize;
 
             /// <summary>
+            /// The raw size or length union
+            /// </summary>
+            internal int RawSizeOrLength => _sizeOrLengthUnion;
+
+            /// <summary>
             /// String/PropertyName: Unescaping is required.
             /// Array: At least one element is an object/array.
             /// Otherwise; false
@@ -58,18 +63,18 @@ namespace Corvus.Text.Json
             /// <param name="jsonTokenType">The <see cref="JsonTokenType"/>.</param>
             /// <param name="location">The location of the value in the UTF8 backing.</param>
             /// <param name="sizeOrLength">The size or length of the entity.</param>
-            /// <param name="parentDocumentIndex">The index of the parent document in the workspace.</param>
-            internal DbRow(JsonTokenType jsonTokenType, int location, int sizeOrLength, int parentDocumentIndex)
+            /// <param name="workspaceDocumentIndex">The index of the parent document in the workspace.</param>
+            internal DbRow(JsonTokenType jsonTokenType, int location, int sizeOrLength, int workspaceDocumentIndex)
             {
                 Debug.Assert(jsonTokenType > JsonTokenType.None && jsonTokenType <= JsonTokenType.Null, "The token type is out of the valid range.");
                 Debug.Assert((byte)jsonTokenType < 1 << 4, "The token type is out of the valid range");
                 Debug.Assert(location >= 0, "The location must be >= 0");
                 Debug.Assert(sizeOrLength >= UnknownSize, "The size or length must be >= 0, or UnknownSize");
-                Debug.Assert(parentDocumentIndex >= -1, "The parent document index must be >= -1");
+                Debug.Assert(workspaceDocumentIndex >= -1, "The parent document index must be >= -1");
 
                 _location = location;
                 _sizeOrLengthUnion = sizeOrLength;
-                _numberOfRowsAndTypeUnion = (int)(unchecked((uint)jsonTokenType << 28) + (unchecked((uint)parentDocumentIndex) & 0x0FFFFFFF));
+                _numberOfRowsAndTypeUnion = (int)(unchecked((uint)jsonTokenType << 28) + (unchecked((uint)workspaceDocumentIndex) & 0x0FFFFFFF));
             }
 
             /// <summary>

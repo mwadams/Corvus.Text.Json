@@ -1,12 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Corvus.Text.Json
@@ -23,7 +21,6 @@ namespace Corvus.Text.Json
     public sealed partial class ParsedJsonDocument : JsonDocument, IJsonDocument
     {
         private ReadOnlyMemory<byte> _utf8Json;
-        private MetadataDb _parsedData;
         private bool _isDisposable;
         private byte[]? _extraRentedArrayPoolBytes;
         private PooledByteBufferWriter? _extraPooledByteBufferWriter;
@@ -59,7 +56,7 @@ namespace Corvus.Text.Json
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public override void Dispose()
         {
             int length = _utf8Json.Length;
             if (length == 0 || !_isDisposable)
@@ -67,50 +64,9 @@ namespace Corvus.Text.Json
                 return;
             }
 
-            _parsedData.Dispose();
-            _utf8Json = ReadOnlyMemory<byte>.Empty;
+            base.Dispose();
 
-            if (_propertyMapBacking != null)
-            {
-                // The property map is a rented array, so we need to return it to the pool.
-                byte[]? propertyMapBacking = Interlocked.Exchange(ref _propertyMapBacking, null);
-                if (propertyMapBacking != null)
-                {
-                    // It does not need to be cleared as it contains no sensitive data
-                    ArrayPool<byte>.Shared.Return(propertyMapBacking);
-                }
-            }
-
-            if (_bucketsBacking != null)
-            {
-                // The buckets are a rented array, so we need to return it to the pool.
-                int[]? bucketsBacking = Interlocked.Exchange(ref _bucketsBacking, null);
-                if (bucketsBacking != null)
-                {
-                    // It does not need to be cleared as it contains no sensitive data
-                    ArrayPool<int>.Shared.Return(bucketsBacking);
-                }
-            }
-
-            if (_entriesBacking != null)
-            {
-                byte[]? entriesBacking = Interlocked.Exchange(ref _entriesBacking, null);
-                if (entriesBacking != null)
-                {
-                    // It does not need to be cleared as it contains no sensitive data
-                    ArrayPool<byte>.Shared.Return(entriesBacking);
-                }
-            }
-
-            if (_valueBacking != null)
-            {
-                byte[]? valueBacking = Interlocked.Exchange(ref _valueBacking, null);
-                if (valueBacking != null)
-                {
-                    valueBacking.AsSpan(0, _valueOffset).Clear();
-                    ArrayPool<byte>.Shared.Return(valueBacking);
-                }
-            }
+            _utf8Json = ReadOnlyMemory<byte>.Empty;           
 
             if (_extraRentedArrayPoolBytes != null)
             {
@@ -131,31 +87,21 @@ namespace Corvus.Text.Json
             }
         }
 
-        /// <summary>
-        ///  Write the document into the provided writer as a JSON value.
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <exception cref="ArgumentNullException">
-        ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///   This <see cref="RootElement"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        public override void WriteTo(Utf8JsonWriter writer)
-        {
-            ArgumentNullException.ThrowIfNull(writer);
-
-            RootElement.WriteTo(writer);
-        }
-
         JsonTokenType IJsonDocument.GetJsonTokenType(int index)
         {
             CheckNotDisposed();
 
             return _parsedData.GetJsonTokenType(index);
+        }
+
+        void IJsonDocument.EnsurePropertyMap(int index)
+        {
+            if (_isDisposable)
+            {
+                CheckNotDisposed();
+
+                EnsurePropertyMapUnsafe(index);
+            }
         }
 
         bool IJsonDocument.ValueIsEscaped(int index, bool isPropertyName)
@@ -267,12 +213,11 @@ namespace Corvus.Text.Json
         ReadOnlyMemory<byte> IJsonDocument.GetRawValue(int index, bool includeQuotes)
         {
             CheckNotDisposed();
-            return GetRawValueCore(index, includeQuotes);
+            return GetRawValueUnsafe(index, includeQuotes);
         }
 
-        private ReadOnlyMemory<byte> GetRawValueCore(int index, bool includeQuotes)
+        protected override ReadOnlyMemory<byte> GetRawValueUnsafe(int index, bool includeQuotes)
         {
-
             DbRow row = _parsedData.Get(index);
 
             if (row.IsSimpleValue)
@@ -820,7 +765,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            ReadOnlyMemory<byte> segment = GetRawValueCore(index, includeQuotes: true);
+            ReadOnlyMemory<byte> segment = GetRawValueUnsafe(index, includeQuotes: true);
             return JsonReaderHelper.TranscodeHelper(segment.Span);
         }
 
@@ -836,7 +781,7 @@ namespace Corvus.Text.Json
 
             int endIndex = GetEndIndexCore(index, true);
             MetadataDb newDb = _parsedData.CopySegment(index, endIndex);
-            ReadOnlyMemory<byte> segmentCopy = GetRawValueCore(index, includeQuotes: true).ToArray();
+            ReadOnlyMemory<byte> segmentCopy = GetRawValueUnsafe(index, includeQuotes: true).ToArray();
 
             ParsedJsonDocument newDocument =
                 new ParsedJsonDocument(
@@ -1182,6 +1127,71 @@ namespace Corvus.Text.Json
             {
                 throw new ArgumentException(SR.JsonDocumentDoesNotSupportComments, paramName);
             }
+        }
+
+        int IJsonDocument.BuildRentedMetadataDb(int index, JsonWorkspace workspace, ref byte[]? backing)
+        {
+            CheckNotDisposed();
+
+            int workspaceDocumentIndex = workspace.AddDocument(this);
+
+            DbRow row = _parsedData.Get(index);
+            int estimatedRowCount;
+            if (row.IsSimpleValue)
+            {
+                // Simple values are a single row.
+                estimatedRowCount = 1;
+            }
+            else
+            {
+                // Number of rows + end row.
+                estimatedRowCount = row.NumberOfRows + 1;
+            }
+
+            MetadataDb db = MetadataDb.CreateForBuilder(ref backing, estimatedRowCount);
+            AppendRowFromSource(index, ref db, workspaceDocumentIndex);
+            // Note we just orphan this db instance, as we are passing the underlying
+            // byte array off to the dynamically created document that wants it.
+            return db.Length;
+        }
+
+        private void AppendRowFromSource(int index, ref MetadataDb db, int workspaceDocumentIndex)
+        {
+            switch (_parsedData.GetJsonTokenType(index))
+            {
+                case JsonTokenType.True:
+                case JsonTokenType.False:
+                case JsonTokenType.Null:
+                case JsonTokenType.Number:
+                case JsonTokenType.String:
+                case JsonTokenType.PropertyName:
+                    DbRow row = _parsedData.Get(index);
+                    db.Append(row.TokenType, row.Location, row.RawSizeOrLength, workspaceDocumentIndex);
+                    return;
+
+                case JsonTokenType.StartObject:
+                case JsonTokenType.StartArray:
+                    ProcessComplexObject(index, ref db, workspaceDocumentIndex);
+                    return;
+            }
+
+            Debug.Fail($"Unexpected encounter with JsonTokenType {_parsedData.GetJsonTokenType(index)}");
+        }
+
+        private void ProcessComplexObject(int index, ref MetadataDb db, int workspaceDocumentIndex)
+        {
+            DbRow complexObjectRow = _parsedData.Get(index);
+            db.Append(complexObjectRow.TokenType, complexObjectRow.Location, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
+
+            int endIndex = GetEndIndexCore(index, true);
+
+            for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
+            {
+                AppendRowFromSource(i, ref db, workspaceDocumentIndex);
+            }
+
+            complexObjectRow = _parsedData.Get(endIndex);
+            db.Append(complexObjectRow.TokenType, complexObjectRow.Location, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
         }
     }
 }

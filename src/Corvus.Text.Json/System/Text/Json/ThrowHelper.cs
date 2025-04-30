@@ -757,6 +757,12 @@ namespace Corvus.Text.Json
         }
 
         [DoesNotReturn]
+        public static void ThrowObjectDisposedException_JsonWorkspace()
+        {
+            throw new ObjectDisposedException(nameof(JsonWorkspace));
+        }
+
+        [DoesNotReturn]
         public static void ThrowInsufficientExecutionStackException_JsonElementDeepEqualsInsufficientExecutionStack()
         {
             throw new InsufficientExecutionStackException(SR.JsonElementDeepEqualsInsufficientExecutionStack);

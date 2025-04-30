@@ -143,7 +143,14 @@ namespace Corvus.Text.Json
 
             if (endObjectRow.HasPropertyMap)
             {
-                return TryGetNamedPropertyValueFromPropertyMap(endObjectRow.SizeOrLength, propertyName, out value);
+                if (TryGetNamedPropertyValueFromPropertyMap(endObjectRow.SizeOrLength, propertyName, out int valueIndex))
+                {
+                    value = new JsonElement(this, valueIndex);
+                    return true;
+                }
+
+                value = default;
+                return false;
             }
 
             ReadOnlySpan<byte> documentSpan = _utf8Json.Span;

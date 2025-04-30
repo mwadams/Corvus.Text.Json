@@ -54,5 +54,6 @@ namespace Corvus.Text.Json
         void WritePropertyName(int index, Utf8JsonWriter writer);
         JsonElement CloneElement(int index);
         int GetEndIndex(int index, bool includeEndElement);
+        int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, ref byte[]? backing);
     }
 }
