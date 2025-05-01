@@ -739,7 +739,7 @@ namespace Corvus.Text.Json
 
             int endIndex = GetEndIndexUnsafe(index, true);
             MetadataDb newDb = _parsedData.CopySegment(index, endIndex);
-            ReadOnlyMemory<byte> segmentCopy = GetRawSimpleValueUnsafe(index, includeQuotes: true).ToArray();
+            ReadOnlyMemory<byte> segmentCopy = GetRawValueUnsafe(index, includeQuotes: true).ToArray();
 
             ParsedJsonDocument newDocument =
                 new ParsedJsonDocument(

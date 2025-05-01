@@ -125,8 +125,8 @@ namespace Corvus.Text.Json
                 return new(ReadRawSimpleDynamicValue(row.Location, includeQuotes));
             }
 
-            // We have a situation where we have a complex value and it is not a simple slice of a parent
-            // buffer somewhere, so we have to render it out.
+            // We have a complex value and it is not a simple slice of a parent
+            // buffer somewhere, so we have to render it out to return it.
             // The length of our parsed data is a good guess at the initial size for the buffer (on the usual 12 bytes per token,
             // 12 bytes per row heuristic). It will reallocate if needs be, anyway.
             // In an ideal world, you are not doing this too often; in general you will be acquiring simple values
