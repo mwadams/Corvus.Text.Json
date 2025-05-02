@@ -29,6 +29,12 @@ namespace Corvus.Text.Json
             _extraRentedArrayPoolBytes = extraRentedArrayPoolBytes;
         }
 
+        public ReadOnlyMemory<byte> TakeOwnership(out byte[]? extraRentedArrayPoolBytes)
+        {
+            extraRentedArrayPoolBytes = Interlocked.Exchange(ref _extraRentedArrayPoolBytes, null);
+            return _utf8Bytes;
+        }
+
         public void Dispose()
         {
             if (_extraRentedArrayPoolBytes != null)

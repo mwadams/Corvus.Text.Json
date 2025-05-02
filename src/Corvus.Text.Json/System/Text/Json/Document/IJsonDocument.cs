@@ -14,8 +14,6 @@ namespace Corvus.Text.Json
     {
         JsonElement RootElement { get; }
 
-        void WriteTo(Utf8JsonWriter writer);
-
         void EnsurePropertyMap(int index);
 
         bool IsDisposable { get; }
@@ -55,6 +53,7 @@ namespace Corvus.Text.Json
         void WritePropertyName(int index, Utf8JsonWriter writer);
         JsonElement CloneElement(int index);
         int GetEndIndex(int index, bool includeEndElement);
-        int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, ref byte[]? backing);
+        int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking);
+        void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref byte[] data, ref int length);
     }
 }

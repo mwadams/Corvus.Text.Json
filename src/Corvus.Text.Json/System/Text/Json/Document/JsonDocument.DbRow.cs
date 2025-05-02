@@ -13,52 +13,52 @@ namespace Corvus.Text.Json
         {
             internal const int Size = 12;
 
-            // Sign bit is currently unassigned
-            private readonly int _location;
+            // Sign bit indicates whether this is from an external document.
+            private readonly uint _locationAndFromExternalDocumentUnion;
 
             // Sign bit is used for "HasComplexChildren" (StartArray)
             // And for propertyMap index
-            private readonly int _sizeOrLengthUnion;
+            private readonly int _sizeLengthOrPropertyMapIndexUnion;
 
             // Top nybble is JsonTokenType
             // remaining nybbles are the number of rows to skip to get to the next value
             // This isn't limiting on the number of rows, since Span.MaxLength / sizeof(DbRow) can't
             // exceed that range.
-            private readonly int _numberOfRowsAndTypeUnion;
+            private readonly uint _numberOfRowsAndTypeUnion;
 
             /// <summary>
             /// Index into the payload
             /// </summary>
-            internal int Location => _location;
+            internal int LocationOrIndex => (int)(_locationAndFromExternalDocumentUnion & 0x0FFFFFFFU);
 
             /// <summary>
             /// length of text in JSON payload (or number of elements if its a JSON array)
             /// </summary>
-            internal int SizeOrLength => _sizeOrLengthUnion & int.MaxValue;
+            internal int SizeOrLengthOrPropertyMapIndex => _sizeLengthOrPropertyMapIndexUnion & int.MaxValue;
 
-            internal bool IsUnknownSize => _sizeOrLengthUnion == UnknownSize;
+            internal bool IsUnknownSize => _sizeLengthOrPropertyMapIndexUnion == UnknownSize;
 
             /// <summary>
-            /// The raw size or length union
+            /// The raw size, length or property map index union
             /// </summary>
-            internal int RawSizeOrLength => _sizeOrLengthUnion;
+            internal int RawSizeOrLength => _sizeLengthOrPropertyMapIndexUnion;
 
             /// <summary>
             /// String/PropertyName: Unescaping is required.
             /// Array: At least one element is an object/array.
             /// Otherwise; false
             /// </summary>
-            internal bool HasComplexChildren => _sizeOrLengthUnion < 0;
+            internal bool HasComplexChildren => _sizeLengthOrPropertyMapIndexUnion < 0;
 
-            internal bool HasDynamicValue => (unchecked((uint)_location) & 0x8000_0000UL) != 0;
+            internal bool FromExternalDocument => (unchecked(_locationAndFromExternalDocumentUnion) & 0x8000_0000U) != 0;
 
             internal int NumberOfRows =>
-                _numberOfRowsAndTypeUnion & 0x0FFFFFFF; // Number of rows that the current JSON element occupies within the database
+                (int)(_numberOfRowsAndTypeUnion & 0x0FFFFFFFU); // Number of rows that the current JSON element occupies within the database
 
             internal int WorkspaceDocumentId =>
-                _numberOfRowsAndTypeUnion & 0x0FFFFFFF; // The workspace document ID, if this simple value is from an external document.
+                (int)(_numberOfRowsAndTypeUnion & 0x0FFFFFFFU); // The workspace document ID, if this simple value is from an external document.
 
-            internal JsonTokenType TokenType => (JsonTokenType)(unchecked((uint)_numberOfRowsAndTypeUnion) >> 28);
+            internal JsonTokenType TokenType => (JsonTokenType)(_numberOfRowsAndTypeUnion >> 28);
 
             internal const int UnknownSize = -1;
 
@@ -66,20 +66,20 @@ namespace Corvus.Text.Json
             /// Creates an instance of a DBRow.
             /// </summary>
             /// <param name="jsonTokenType">The <see cref="JsonTokenType"/>.</param>
-            /// <param name="location">The location of the value in the UTF8 backing.</param>
+            /// <param name="externalIndex">The index of the value in the external document.</param>
             /// <param name="sizeOrLength">The size or length of the entity.</param>
             /// <param name="workspaceDocumentIndex">The index of the parent document in the workspace.</param>
-            internal DbRow(JsonTokenType jsonTokenType, int location, int sizeOrLength, int workspaceDocumentIndex)
+            internal DbRow(JsonTokenType jsonTokenType, int externalIndex, int sizeOrLength, int workspaceDocumentIndex)
             {
                 Debug.Assert(jsonTokenType > JsonTokenType.None && jsonTokenType <= JsonTokenType.Null, "The token type is out of the valid range.");
                 Debug.Assert((byte)jsonTokenType < 1 << 4, "The token type is out of the valid range");
-                Debug.Assert(location >= 0, "The location must be >= 0");
+                Debug.Assert(externalIndex >= 0, "The location must be >= 0");
                 Debug.Assert(sizeOrLength >= UnknownSize, "The size or length must be >= 0, or UnknownSize");
-                Debug.Assert(workspaceDocumentIndex >= -1, "The parent document index must be >= -1");
+                Debug.Assert(workspaceDocumentIndex >= 0, "The parent document index must be >= 0");
 
-                _location = location;
-                _sizeOrLengthUnion = sizeOrLength;
-                _numberOfRowsAndTypeUnion = (int)(unchecked((uint)jsonTokenType << 28) + (unchecked((uint)workspaceDocumentIndex) & 0x0FFFFFFF));
+                _locationAndFromExternalDocumentUnion = (uint)externalIndex | 0x8000_0000U; // Add the sign bit to indicate that this is from an external document.
+                _sizeLengthOrPropertyMapIndexUnion = sizeOrLength;
+                _numberOfRowsAndTypeUnion = (unchecked((uint)jsonTokenType << 28) + (unchecked((uint)workspaceDocumentIndex) & 0x0FFFFFFFU));
             }
 
             /// <summary>
@@ -95,13 +95,13 @@ namespace Corvus.Text.Json
                 Debug.Assert(location >= 0, "The location must be >= 0");
                 Debug.Assert(sizeOrLength >= UnknownSize, "The size or length must be >= 0, or UnknownSize");
 
-                _location = location;
-                _sizeOrLengthUnion = sizeOrLength;
-                _numberOfRowsAndTypeUnion = (int)unchecked((uint)jsonTokenType << 28);
+                _locationAndFromExternalDocumentUnion = (uint)location;
+                _sizeLengthOrPropertyMapIndexUnion = sizeOrLength;
+                _numberOfRowsAndTypeUnion = unchecked((uint)jsonTokenType << 28);
             }
 
             internal bool IsSimpleValue => TokenType >= JsonTokenType.PropertyName;
-            internal bool HasPropertyMap => this._sizeOrLengthUnion <= 0;
+            internal bool HasPropertyMap => this._sizeLengthOrPropertyMapIndexUnion <= 0;
         }
     }
 }

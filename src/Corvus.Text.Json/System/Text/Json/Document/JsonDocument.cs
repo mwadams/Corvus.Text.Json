@@ -51,7 +51,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public virtual void WriteTo(Utf8JsonWriter writer)
+        public void WriteTo(Utf8JsonWriter writer)
         {
             ArgumentNullException.ThrowIfNull(writer);
 
@@ -85,13 +85,82 @@ namespace Corvus.Text.Json
             return endIndex;
         }
 
+        protected bool TextEqualsUnsafe(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
+        {
+            byte[]? otherUtf8TextArray = null;
+
+            int length = checked(otherText.Length * JsonConstants.MaxExpansionFactorWhileTranscoding);
+            Span<byte> otherUtf8Text = length <= JsonConstants.StackallocByteThreshold ?
+                stackalloc byte[JsonConstants.StackallocByteThreshold] :
+                (otherUtf8TextArray = ArrayPool<byte>.Shared.Rent(length));
+
+            OperationStatus status = JsonWriterHelper.ToUtf8(otherText, otherUtf8Text, out int written);
+            Debug.Assert(status != OperationStatus.DestinationTooSmall);
+            bool result;
+            if (status == OperationStatus.InvalidData)
+            {
+                result = false;
+            }
+            else
+            {
+                Debug.Assert(status == OperationStatus.Done);
+                result = TextEqualsUnsafe(index, otherUtf8Text.Slice(0, written), isPropertyName, shouldUnescape: true);
+            }
+
+            if (otherUtf8TextArray != null)
+            {
+                otherUtf8Text.Slice(0, written).Clear();
+                ArrayPool<byte>.Shared.Return(otherUtf8TextArray);
+            }
+
+            return result;
+        }
+
+        protected bool TextEqualsUnsafe(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
+        {
+            int matchIndex = isPropertyName ? index - DbRow.Size : index;
+
+            DbRow row = _parsedData.Get(matchIndex);
+
+            CheckExpectedType(
+                isPropertyName ? JsonTokenType.PropertyName : JsonTokenType.String,
+                row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(matchIndex, includeQuotes: false).Span;
+
+            if (otherUtf8Text.Length > segment.Length || (!shouldUnescape && otherUtf8Text.Length != segment.Length))
+            {
+                return false;
+            }
+
+            if (row.HasComplexChildren && shouldUnescape)
+            {
+                if (otherUtf8Text.Length < segment.Length / JsonConstants.MaxExpansionFactorWhileEscaping)
+                {
+                    return false;
+                }
+
+                int idx = segment.IndexOf(JsonConstants.BackSlash);
+                Debug.Assert(idx != -1);
+
+                if (!otherUtf8Text.StartsWith(segment.Slice(0, idx)))
+                {
+                    return false;
+                }
+
+                return JsonReaderHelper.UnescapeAndCompare(segment.Slice(idx), otherUtf8Text.Slice(idx));
+            }
+
+            return segment.SequenceEqual(otherUtf8Text);
+        }
+
         protected int GetArrayIndexElementUnsafe(int currentIndex, int arrayIndex)
         {
             DbRow row = _parsedData.Get(currentIndex);
 
             CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
 
-            int arrayLength = row.SizeOrLength;
+            int arrayLength = row.SizeOrLengthOrPropertyMapIndex;
 
             if ((uint)arrayIndex >= (uint)arrayLength)
             {
@@ -372,6 +441,162 @@ namespace Corvus.Text.Json
 
             return _valueBacking.AsMemory(start, (int)length);
         }
+
+        protected bool TryGetNamedPropertyValueUnsafe(int index, ReadOnlySpan<char> propertyName, out int valueIndex)
+        {
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.StartObject, row.TokenType);
+
+            // Only one row means it was EndObject.
+            if (row.NumberOfRows == 1)
+            {
+                valueIndex = -1;
+                return false;
+            }
+
+            int maxBytes = JsonReaderHelper.s_utf8Encoding.GetMaxByteCount(propertyName.Length);
+
+
+            byte[]? byteBuffer = null;
+
+            Span<byte> utf8Name =
+                maxBytes < JsonConstants.StackallocByteThreshold
+                    ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+                    : (byteBuffer = ArrayPool<byte>.Shared.Rent(maxBytes)).AsSpan();
+
+            try
+            {
+                int len = JsonReaderHelper.GetUtf8FromText(propertyName, utf8Name);
+                utf8Name = utf8Name.Slice(0, len);
+
+                return TryGetNamedPropertyValueUnsafe(
+                    index,
+                    utf8Name,
+                    out valueIndex);
+            }
+            finally
+            {
+                if (byteBuffer is byte[] b)
+                {
+                    ArrayPool<byte>.Shared.Return(b, clearArray: true);
+                }
+            }
+        }
+
+        protected bool TryGetNamedPropertyValueUnsafe(
+            int startIndex,
+            ReadOnlySpan<byte> propertyName,
+            out int valueIndex)
+        {
+            DbRow row = _parsedData.Get(startIndex);
+
+            CheckExpectedType(JsonTokenType.StartObject, row.TokenType);
+
+            // Only one row means it was EndObject.
+            if (row.NumberOfRows == 1)
+            {
+                valueIndex = -1;
+                return false;
+            }
+
+            int endIndex = checked(row.NumberOfRows * DbRow.Size + startIndex);
+
+            DbRow endObjectRow = _parsedData.Get(endIndex);
+            int propertyMapIndex = endObjectRow.SizeOrLengthOrPropertyMapIndex;
+
+            if (endObjectRow.HasPropertyMap)
+            {
+                return TryGetNamedPropertyValueFromPropertyMap(endObjectRow.SizeOrLengthOrPropertyMapIndex, propertyName, out valueIndex);
+            }
+
+            Span<byte> utf8UnescapedStack = stackalloc byte[JsonConstants.StackallocByteThreshold];
+
+            // Move to the row before the EndObject
+            int index = endIndex - DbRow.Size;
+
+            while (index > startIndex)
+            {
+                row = _parsedData.Get(index);
+                Debug.Assert(row.TokenType != JsonTokenType.PropertyName);
+
+                // Move before the value
+                if (row.IsSimpleValue)
+                {
+                    index -= DbRow.Size;
+                }
+                else
+                {
+                    Debug.Assert(row.NumberOfRows > 0);
+                    index -= DbRow.Size * (row.NumberOfRows + 1);
+                }
+
+                row = _parsedData.Get(index);
+
+                Debug.Assert(row.TokenType == JsonTokenType.PropertyName);
+
+                ReadOnlySpan<byte> currentPropertyName = GetRawSimpleValueUnsafe(index, false).Span;
+
+                if (row.HasComplexChildren)
+                {
+                    // An escaped property name will be longer than an unescaped candidate, so only unescape
+                    // when the lengths are compatible.
+                    if (currentPropertyName.Length > propertyName.Length)
+                    {
+                        int idx = currentPropertyName.IndexOf(JsonConstants.BackSlash);
+                        Debug.Assert(idx >= 0);
+
+                        // If everything up to where the property name has a backslash matches, keep going.
+                        if (propertyName.Length > idx &&
+                            currentPropertyName.Slice(0, idx).SequenceEqual(propertyName.Slice(0, idx)))
+                        {
+                            int remaining = currentPropertyName.Length - idx;
+                            int written = 0;
+                            byte[]? rented = null;
+
+                            try
+                            {
+                                Span<byte> utf8Unescaped = remaining <= utf8UnescapedStack.Length ?
+                                    utf8UnescapedStack :
+                                    (rented = ArrayPool<byte>.Shared.Rent(remaining));
+
+                                // Only unescape the part we haven't processed.
+                                JsonReaderHelper.Unescape(currentPropertyName.Slice(idx), utf8Unescaped, 0, out written);
+
+                                // If the unescaped remainder matches the input remainder, it's a match.
+                                if (utf8Unescaped.Slice(0, written).SequenceEqual(propertyName.Slice(idx)))
+                                {
+                                    // If the property name is a match, the answer is the next element.
+                                    valueIndex = index + DbRow.Size;
+                                    return true;
+                                }
+                            }
+                            finally
+                            {
+                                if (rented != null)
+                                {
+                                    rented.AsSpan(0, written).Clear();
+                                    ArrayPool<byte>.Shared.Return(rented);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (currentPropertyName.SequenceEqual(propertyName))
+                {
+                    // If the property name is a match, the answer is the next element.
+                    valueIndex = index + DbRow.Size;
+                    return true;
+                }
+
+                // Move to the previous value
+                index -= DbRow.Size;
+            }
+
+            valueIndex = -1;
+            return false;
+        }
+
 
         public virtual void Dispose()
         {

@@ -54,7 +54,7 @@ namespace Corvus.Text.Json
             _extraPooledByteBufferWriter = extraPooledByteBufferWriter;
             _isDisposable = isDisposable;
         }
-
+        
         /// <inheritdoc />
         public override void Dispose()
         {
@@ -119,7 +119,7 @@ namespace Corvus.Text.Json
 
             CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
 
-            return row.SizeOrLength;
+            return row.SizeOrLengthOrPropertyMapIndex;
         }
 
         int IJsonDocument.GetPropertyCount(int index)
@@ -130,7 +130,7 @@ namespace Corvus.Text.Json
 
             CheckExpectedType(JsonTokenType.StartObject, row.TokenType);
 
-            return row.SizeOrLength;
+            return row.SizeOrLengthOrPropertyMapIndex;
         }
 
         JsonElement IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex)
@@ -162,16 +162,16 @@ namespace Corvus.Text.Json
                 {
                     // Start one character earlier than the value (the open quote)
                     // End one character after the value (the close quote)
-                    return _utf8Json.Slice(row.Location - 1, row.SizeOrLength + 2);
+                    return _utf8Json.Slice(row.LocationOrIndex - 1, row.SizeOrLengthOrPropertyMapIndex + 2);
                 }
 
-                return _utf8Json.Slice(row.Location, row.SizeOrLength);
+                return _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
             }
 
             int endElementIdx = GetEndIndexUnsafe(index, includeEndElement: false);
-            int start = row.Location;
+            int start = row.LocationOrIndex;
             row = _parsedData.Get(endElementIdx);
-            return _utf8Json.Slice(start, row.Location - start + row.SizeOrLength);
+            return _utf8Json.Slice(start, row.LocationOrIndex - start + row.SizeOrLengthOrPropertyMapIndex);
         }
 
         ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index, bool includeQuotes)
@@ -190,54 +190,20 @@ namespace Corvus.Text.Json
             {
                 // Start one character earlier than the value (the open quote)
                 // End one character after the value (the close quote)
-                return _utf8Json.Slice(row.Location - 1, row.SizeOrLength + 2);
+                return _utf8Json.Slice(row.LocationOrIndex - 1, row.SizeOrLengthOrPropertyMapIndex + 2);
             }
 
-            return _utf8Json.Slice(row.Location, row.SizeOrLength);
-        }
-
-        private ReadOnlyMemory<byte> GetPropertyRawValue(int valueIndex)
-        {
-            CheckNotDisposed();
-
-            // The property name is stored one row before the value
-            DbRow row = _parsedData.Get(valueIndex - DbRow.Size);
-            Debug.Assert(row.TokenType == JsonTokenType.PropertyName);
-
-            // Subtract one for the open quote.
-            int start = row.Location - 1;
-            int end;
-
-            row = _parsedData.Get(valueIndex);
-
-            if (row.IsSimpleValue)
-            {
-                end = row.Location + row.SizeOrLength;
-
-                // If the value was a string, pick up the terminating quote.
-                if (row.TokenType == JsonTokenType.String)
-                {
-                    end++;
-                }
-
-                return _utf8Json.Slice(start, end - start);
-            }
-
-            int endElementIdx = GetEndIndexUnsafe(valueIndex, includeEndElement: false);
-            row = _parsedData.Get(endElementIdx);
-            end = row.Location + row.SizeOrLength;
-            return _utf8Json.Slice(start, end - start);
+            return _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
         }
 
         string? IJsonDocument.GetString(int index, JsonTokenType expectedType)
         {
-            return GetStringCore(index, expectedType);
+            CheckNotDisposed();
+            return GetStringUnsafe(index, expectedType);
         }
 
-        private string? GetStringCore(int index, JsonTokenType expectedType)
+        private string? GetStringUnsafe(int index, JsonTokenType expectedType)
         {
-            CheckNotDisposed();
-
             DbRow row = _parsedData.Get(index);
 
             JsonTokenType tokenType = row.TokenType;
@@ -250,7 +216,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(expectedType, tokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             return row.HasComplexChildren
                 ? JsonReaderHelper.GetUnescapedString(segment)
@@ -260,106 +226,40 @@ namespace Corvus.Text.Json
         bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
         {
             CheckNotDisposed();
-
-            byte[]? otherUtf8TextArray = null;
-
-            int length = checked(otherText.Length * JsonConstants.MaxExpansionFactorWhileTranscoding);
-            Span<byte> otherUtf8Text = length <= JsonConstants.StackallocByteThreshold ?
-                stackalloc byte[JsonConstants.StackallocByteThreshold] :
-                (otherUtf8TextArray = ArrayPool<byte>.Shared.Rent(length));
-
-            OperationStatus status = JsonWriterHelper.ToUtf8(otherText, otherUtf8Text, out int written);
-            Debug.Assert(status != OperationStatus.DestinationTooSmall);
-            bool result;
-            if (status == OperationStatus.InvalidData)
-            {
-                result = false;
-            }
-            else
-            {
-                Debug.Assert(status == OperationStatus.Done);
-                result = TextEqualsCore(index, otherUtf8Text.Slice(0, written), isPropertyName, shouldUnescape: true);
-            }
-
-            if (otherUtf8TextArray != null)
-            {
-                otherUtf8Text.Slice(0, written).Clear();
-                ArrayPool<byte>.Shared.Return(otherUtf8TextArray);
-            }
-
-            return result;
+            return TextEqualsUnsafe(index, otherText, isPropertyName);
         }
+
         bool IJsonDocument.TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
         {
-            return TextEqualsCore(index, otherUtf8Text, isPropertyName, shouldUnescape);
-        }
-        private bool TextEqualsCore(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
-        {
             CheckNotDisposed();
-
-            int matchIndex = isPropertyName ? index - DbRow.Size : index;
-
-            DbRow row = _parsedData.Get(matchIndex);
-
-            CheckExpectedType(
-                isPropertyName ? JsonTokenType.PropertyName : JsonTokenType.String,
-                row.TokenType);
-
-            ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
-
-            if (otherUtf8Text.Length > segment.Length || (!shouldUnescape && otherUtf8Text.Length != segment.Length))
-            {
-                return false;
-            }
-
-            if (row.HasComplexChildren && shouldUnescape)
-            {
-                if (otherUtf8Text.Length < segment.Length / JsonConstants.MaxExpansionFactorWhileEscaping)
-                {
-                    return false;
-                }
-
-                int idx = segment.IndexOf(JsonConstants.BackSlash);
-                Debug.Assert(idx != -1);
-
-                if (!otherUtf8Text.StartsWith(segment.Slice(0, idx)))
-                {
-                    return false;
-                }
-
-                return JsonReaderHelper.UnescapeAndCompare(segment.Slice(idx), otherUtf8Text.Slice(idx));
-            }
-
-            return segment.SequenceEqual(otherUtf8Text);
+            return TextEqualsUnsafe(index, otherUtf8Text, isPropertyName, shouldUnescape);
         }
 
         string IJsonDocument.GetNameOfPropertyValue(int index)
         {
+            CheckNotDisposed();
             // The property name is one row before the property value
-            return GetStringCore(index - DbRow.Size, JsonTokenType.PropertyName)!;
+            return GetStringUnsafe(index - DbRow.Size, JsonTokenType.PropertyName)!;
         }
 
         ReadOnlySpan<byte> IJsonDocument.GetPropertyNameRaw(int index)
         {
             CheckNotDisposed();
+            Debug.Assert(_parsedData.Get(index - DbRow.Size).TokenType is JsonTokenType.PropertyName);
 
-            DbRow row = _parsedData.Get(index - DbRow.Size);
-            Debug.Assert(row.TokenType is JsonTokenType.PropertyName);
-
-            return _utf8Json.Span.Slice(row.Location, row.SizeOrLength);
+            return GetRawSimpleValueUnsafe(index - DbRow.Size, false).Span;
         }
 
         bool IJsonDocument.TryGetValue(int index, [NotNullWhen(true)] out byte[]? value)
         {
             CheckNotDisposed();
-
+            
             DbRow row = _parsedData.Get(index);
 
             CheckExpectedType(JsonTokenType.String, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             // Segment needs to be unescaped
             if (row.HasComplexChildren)
@@ -380,7 +280,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out sbyte tmp, out int consumed) &&
                 consumed == segment.Length)
@@ -402,7 +302,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out byte tmp, out int consumed) &&
                 consumed == segment.Length)
@@ -424,7 +324,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out short tmp, out int consumed) &&
                 consumed == segment.Length)
@@ -446,7 +346,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out ushort tmp, out int consumed) &&
                 consumed == segment.Length)
@@ -468,7 +368,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out int tmp, out int consumed) &&
                 consumed == segment.Length)
@@ -490,7 +390,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out uint tmp, out int consumed) &&
                 consumed == segment.Length)
@@ -512,7 +412,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out long tmp, out int consumed) &&
                 consumed == segment.Length)
@@ -534,7 +434,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out ulong tmp, out int consumed) &&
                 consumed == segment.Length)
@@ -556,7 +456,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out double tmp, out int bytesConsumed) &&
                 segment.Length == bytesConsumed)
@@ -578,7 +478,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out float tmp, out int bytesConsumed) &&
                 segment.Length == bytesConsumed)
@@ -600,7 +500,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (Utf8Parser.TryParse(segment, out decimal tmp, out int bytesConsumed) &&
                 segment.Length == bytesConsumed)
@@ -622,7 +522,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.String, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (!JsonHelpers.IsValidDateTimeOffsetParseLength(segment.Length))
             {
@@ -657,7 +557,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.String, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (!JsonHelpers.IsValidDateTimeOffsetParseLength(segment.Length))
             {
@@ -692,7 +592,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.String, row.TokenType);
 
             ReadOnlySpan<byte> data = _utf8Json.Span;
-            ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
             if (segment.Length > JsonConstants.MaximumEscapedGuidLength)
             {
@@ -729,8 +629,34 @@ namespace Corvus.Text.Json
 
         string IJsonDocument.GetPropertyRawValueAsString(int valueIndex)
         {
-            ReadOnlyMemory<byte> segment = GetPropertyRawValue(valueIndex);
-            return JsonReaderHelper.TranscodeHelper(segment.Span);
+            CheckNotDisposed();
+            // The property name is stored one row before the value
+            DbRow row = _parsedData.Get(valueIndex - DbRow.Size);
+            Debug.Assert(row.TokenType == JsonTokenType.PropertyName);
+
+            // Subtract one for the open quote.
+            int start = row.LocationOrIndex - 1;
+            int end;
+
+            row = _parsedData.Get(valueIndex);
+
+            if (row.IsSimpleValue)
+            {
+                end = row.LocationOrIndex + row.SizeOrLengthOrPropertyMapIndex;
+
+                // If the value was a string, pick up the terminating quote.
+                if (row.TokenType == JsonTokenType.String)
+                {
+                    end++;
+                }
+
+                return JsonReaderHelper.TranscodeHelper(_utf8Json.Slice(start, end - start).Span);
+            }
+
+            int endElementIdx = GetEndIndexUnsafe(valueIndex, includeEndElement: false);
+            row = _parsedData.Get(endElementIdx);
+            end = row.LocationOrIndex + row.SizeOrLengthOrPropertyMapIndex;
+            return JsonReaderHelper.TranscodeHelper(_utf8Json.Slice(start, end - start).Span);
         }
 
         JsonElement IJsonDocument.CloneElement(int index)
@@ -774,7 +700,7 @@ namespace Corvus.Text.Json
                     WriteString(row, writer);
                     return;
                 case JsonTokenType.Number:
-                    writer.WriteNumberValue(_utf8Json.Slice(row.Location, row.SizeOrLength).Span);
+                    writer.WriteNumberValue(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
                     return;
                 case JsonTokenType.True:
                     writer.WriteBooleanValue(value: true);
@@ -805,7 +731,7 @@ namespace Corvus.Text.Json
                         WriteString(row, writer);
                         continue;
                     case JsonTokenType.Number:
-                        writer.WriteNumberValue(_utf8Json.Slice(row.Location, row.SizeOrLength).Span);
+                        writer.WriteNumberValue(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
                         continue;
                     case JsonTokenType.True:
                         writer.WriteBooleanValue(value: true);
@@ -840,8 +766,8 @@ namespace Corvus.Text.Json
         private ReadOnlySpan<byte> UnescapeString(in DbRow row, out ArraySegment<byte> rented)
         {
             Debug.Assert(row.TokenType == JsonTokenType.String || row.TokenType == JsonTokenType.PropertyName);
-            int loc = row.Location;
-            int length = row.SizeOrLength;
+            int loc = row.LocationOrIndex;
+            int length = row.SizeOrLengthOrPropertyMapIndex;
             ReadOnlySpan<byte> text = _utf8Json.Slice(loc, length).Span;
 
             if (!row.HasComplexChildren)
@@ -1079,11 +1005,11 @@ namespace Corvus.Text.Json
             }
         }
 
-        int IJsonDocument.BuildRentedMetadataDb(int index, JsonWorkspace workspace, ref byte[]? backing)
+        int IJsonDocument.BuildRentedMetadataDb(int index, JsonWorkspace workspace, out byte[] rentedBacking)
         {
             CheckNotDisposed();
 
-            int workspaceDocumentIndex = workspace.AddDocument(this);
+            int workspaceDocumentIndex = workspace.GetDocumentIndex(this);
 
             DbRow row = _parsedData.Get(index);
             int estimatedRowCount;
@@ -1098,14 +1024,24 @@ namespace Corvus.Text.Json
                 estimatedRowCount = row.NumberOfRows + 1;
             }
 
-            MetadataDb db = MetadataDb.CreateForBuilder(ref backing, estimatedRowCount);
-            AppendRowFromSource(index, ref db, workspaceDocumentIndex);
+            MetadataDb db = MetadataDb.CreateRented(estimatedRowCount * DbRow.Size, false);
+            AppendElement(index, ref db, workspaceDocumentIndex);
             // Note we just orphan this db instance, as we are passing the underlying
             // byte array off to the dynamically created document that wants it.
-            return db.Length;
+            return db.TakeOwnership(out rentedBacking);
         }
 
-        private void AppendRowFromSource(int index, ref MetadataDb db, int workspaceDocumentIndex)
+        void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref byte[] data, ref int length)
+        {
+            CheckNotDisposed();
+
+            int workspaceDocumentIndex = workspace.GetDocumentIndex(this);
+            MetadataDb db = MetadataDb.WrapForBuilder(data, length);
+            AppendElement(index, ref db, workspaceDocumentIndex);
+            length = db.TakeOwnership(out data);
+        }
+
+        private void AppendElement(int index, ref MetadataDb db, int workspaceDocumentIndex)
         {
             switch (_parsedData.GetJsonTokenType(index))
             {
@@ -1116,7 +1052,7 @@ namespace Corvus.Text.Json
                 case JsonTokenType.String:
                 case JsonTokenType.PropertyName:
                     DbRow row = _parsedData.Get(index);
-                    db.Append(row.TokenType, row.Location, row.RawSizeOrLength, workspaceDocumentIndex);
+                    db.AppendExternal(row.TokenType, index, 1, workspaceDocumentIndex);
                     return;
 
                 case JsonTokenType.StartObject:
@@ -1131,17 +1067,17 @@ namespace Corvus.Text.Json
         private void ProcessComplexObject(int index, ref MetadataDb db, int workspaceDocumentIndex)
         {
             DbRow complexObjectRow = _parsedData.Get(index);
-            db.Append(complexObjectRow.TokenType, complexObjectRow.Location, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
+            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
 
             int endIndex = GetEndIndexUnsafe(index, true);
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {
-                AppendRowFromSource(i, ref db, workspaceDocumentIndex);
+                AppendElement(i, ref db, workspaceDocumentIndex);
             }
 
             complexObjectRow = _parsedData.Get(endIndex);
-            db.Append(complexObjectRow.TokenType, complexObjectRow.Location, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
+            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
         }
     }
 }

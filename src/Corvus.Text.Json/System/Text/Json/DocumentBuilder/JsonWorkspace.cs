@@ -49,7 +49,7 @@ namespace Corvus.Text.Json
             where TElement : struct, IJsonElement<TElement>
         {
             JsonDocumentBuilder result = new(this);
-            int index = AddDocument(result);
+            int index = GetDocumentIndex(result);
             result.Initialize(sourceElement, index, convertToAlloc: false);
             return result;
         }
@@ -58,12 +58,12 @@ namespace Corvus.Text.Json
         public JsonDocumentBuilder CreateBuilder(int initialCapacity = 30)
         {
             JsonDocumentBuilder result = new(this);
-            int index = AddDocument(result);
+            int index = GetDocumentIndex(result);
             result.Initialize(index, initialCapacity);
             return result;
         }
 
-        internal int AddDocument(IJsonDocument document)
+        internal int GetDocumentIndex(IJsonDocument document)
         {
             if (_documentIndices.TryGetValue(document, out int index))
             {

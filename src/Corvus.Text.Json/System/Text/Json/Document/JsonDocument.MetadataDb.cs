@@ -127,11 +127,10 @@ namespace Corvus.Text.Json
                 Length = completeDb.Length;
             }
 
-            internal static MetadataDb CreateForBuilder([NotNull] ref byte[]? data, int initialRowCount)
+            internal static MetadataDb WrapForBuilder([NotNull] byte[] data, int currentLength)
             {
                 // This API is for the public end where we do not want to expose MetadataDb outside of
                 // the internals
-                data = ArrayPool<byte>.Shared.Rent(initialRowCount * DbRow.Size);
                 return new MetadataDb(data, isLocked: false, convertToAlloc: false);
             }
 
@@ -263,13 +262,9 @@ namespace Corvus.Text.Json
                 Length += DbRow.Size;
             }
 
-            internal void Append(JsonTokenType tokenType, int startLocation, int length, int workspaceDocumentIndex)
+            internal void AppendExternal(JsonTokenType tokenType, int externalIndex, int sizeOrLength, int workspaceDocumentIndex)
             {
                 // StartArray or StartObject should have length -1, otherwise the length should not be -1.
-                Debug.Assert(
-                    (tokenType == JsonTokenType.StartArray || tokenType == JsonTokenType.StartObject) ==
-                    (length == DbRow.UnknownSize));
-
                 Debug.Assert(workspaceDocumentIndex >= 0);
 
                 if (Length >= _data.Length - DbRow.Size)
@@ -277,7 +272,7 @@ namespace Corvus.Text.Json
                     Enlarge();
                 }
 
-                DbRow row = new DbRow(tokenType, startLocation, length, workspaceDocumentIndex);
+                DbRow row = new DbRow(tokenType, externalIndex, sizeOrLength, workspaceDocumentIndex);
                 MemoryMarshal.Write(_data.AsSpan(Length), ref row);
                 Length += DbRow.Size;
             }
@@ -459,6 +454,16 @@ namespace Corvus.Text.Json
                 }
 
                 return new MetadataDb(newDatabase);
+            }
+
+            internal int TakeOwnership(out byte[] rentedBacking)
+            {
+                byte[]? data = Interlocked.Exchange(ref _data, null!);
+                Debug.Assert(data != null);
+                rentedBacking = data;
+                int length = Length;
+                Length = 0;
+                return length;
             }
         }
     }

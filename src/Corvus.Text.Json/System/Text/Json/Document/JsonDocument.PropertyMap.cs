@@ -186,8 +186,8 @@ namespace Corvus.Text.Json
             int endIndex = checked((startObjectRow.NumberOfRows * DbRow.Size) + startObjectIndex);
             DbRow endObjectRow = _parsedData.Get(endIndex);
 
-            int lengthOfEnd = endObjectRow.SizeOrLength;
-            int propertyCount = startObjectRow.SizeOrLength;
+            int lengthOfEnd = endObjectRow.SizeOrLengthOrPropertyMapIndex;
+            int propertyCount = startObjectRow.SizeOrLengthOrPropertyMapIndex;
             int size = HashHelpers.GetPrime(propertyCount);
             int entriesSize = size * PropertyMap.Entry.Size;
 
@@ -243,7 +243,7 @@ namespace Corvus.Text.Json
 
                 if (propertyRow.HasComplexChildren)
                 {
-                    Debug.Assert(propertyRow.Location >= 0, "The property must be local if it has complex children");
+                    Debug.Assert(propertyRow.LocationOrIndex >= 0, "The property must be local if it has complex children");
 
                     ReadOnlyMemory<byte> rawName = GetRawSimpleValueUnsafe(index, false);
                     ReadOnlySpan<byte> unescapedName = UnescapeAndWriteUnescapedStringValue(rawName.Span, out int dynamicValueOffset);
