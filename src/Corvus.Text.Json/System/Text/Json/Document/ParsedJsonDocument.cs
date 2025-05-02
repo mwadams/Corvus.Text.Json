@@ -18,7 +18,7 @@ namespace Corvus.Text.Json
     ///   the memory not being returned to the pool, which will cause an increase in GC impact across
     ///   various parts of the framework.
     /// </remarks>
-    public sealed partial class ParsedJsonDocument : JsonDocument, IJsonDocument
+    public sealed partial class ParsedJsonDocument : JsonDocument, IJsonDocument, IDisposable
     {
         private ReadOnlyMemory<byte> _utf8Json;
         private bool _isDisposable;
@@ -56,7 +56,7 @@ namespace Corvus.Text.Json
         }
         
         /// <inheritdoc />
-        public override void Dispose()
+        public void Dispose()
         {
             int length = _utf8Json.Length;
             if (length == 0 || !_isDisposable)
@@ -64,7 +64,7 @@ namespace Corvus.Text.Json
                 return;
             }
 
-            base.Dispose();
+            DisposeCore();
 
             _utf8Json = ReadOnlyMemory<byte>.Empty;
 

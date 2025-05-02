@@ -39,13 +39,13 @@ namespace Corvus.Text.Json
             {
                 ArrayPool<IJsonDocument>.Shared.Return(_documents);
                _length = -1;
+                return;
             }
 
             ThrowHelper.ThrowObjectDisposedException_JsonWorkspace();
         }
 
-        [CLSCompliant(false)]
-        public JsonDocumentBuilder CreateBuilder<TElement>(TElement sourceElement)
+        internal JsonDocumentBuilder CreateBuilder<TElement>(TElement sourceElement)
             where TElement : struct, IJsonElement<TElement>
         {
             JsonDocumentBuilder result = new(this);
@@ -54,7 +54,6 @@ namespace Corvus.Text.Json
             return result;
         }
 
-        [CLSCompliant(false)]
         public JsonDocumentBuilder CreateBuilder(int initialCapacity = 30)
         {
             JsonDocumentBuilder result = new(this);

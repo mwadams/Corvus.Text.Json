@@ -124,6 +124,7 @@
     <Compile Include="System\Text\Json\AppContextSwitchHelper.cs" />
     <Compile Include="System\Text\Json\BitStack.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonDocumentBuilder.cs" />
+    <Compile Include="System\Text\Json\DocumentBuilder\JsonElementExtensions.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonWorkspace.cs" />
     <Compile Include="System\Text\Json\Document\DynamicValueType.cs" />
     <Compile Include="System\Text\Json\Document\IJsonElement{T}.cs" />

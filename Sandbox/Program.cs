@@ -3,10 +3,8 @@
 
 using Corvus.Text.Json;
 
-ParsedJsonDocument? documentB1;
-ParsedJsonDocument? documentB2;
-
-documentB1 = ParsedJsonDocument.Parse(
+// Parse a document in the usual way
+using ParsedJsonDocument documentB1 = ParsedJsonDocument.Parse(
         """
         {
             "name": "John",
@@ -35,36 +33,14 @@ documentB1 = ParsedJsonDocument.Parse(
         }
         """);
 
-documentB2 = ParsedJsonDocument.Parse(
-        """
-        {
-            "age": 30,
-            "city": "New York",
-            "slightlyLonger": true,
-            "1": 1,
-            "2": 1,
-            "3": 1,
-            "4": 1,
-            "5": 1,
-            "6": 1,
-            "7": 1,
-            "8": 1,
-            "9": 1,
-            "10": 1,
-            "11": 1,
-            "12": 1,
-            "13": 1,
-            "14": 1,
-            "15": 1,
-            "16": 1,
-            "17": 1,
-            "18": 1,
-            "19": 1,
-            "name": "John"
-        }
-        """);
+// Create a workspace for manipulating documents
+using JsonWorkspace workspace = new();
 
-JsonWorkspace workspace = new();
-JsonDocumentBuilder builder = workspace.CreateBuilder(documentB1.RootElement);
+// Create a builder for our root element
+using JsonDocumentBuilder builder = documentB1.RootElement.CreateBuilder(workspace);
 
+// Validate that we can write the document back out again
 Console.WriteLine(builder.RootElement.ToString());
+
+// Compare the values in "age" and "1" (30 > 1 => result is 1)
+Console.WriteLine(JsonElement.Compare(builder.RootElement.GetProperty("age"u8), documentB1.RootElement.GetProperty("1"u8)));

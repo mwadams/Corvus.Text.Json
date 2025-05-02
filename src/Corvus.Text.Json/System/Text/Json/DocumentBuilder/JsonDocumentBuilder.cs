@@ -47,7 +47,7 @@ namespace Corvus.Text.Json
                 return;
             }
 
-            base.Dispose();
+            base.DisposeCore();
 
             this._parentWorkspaceIndex = -1;
         }
@@ -638,7 +638,7 @@ namespace Corvus.Text.Json
             return CloneElement(index, false);
         }
 
-        public JsonElement CloneElement(int index, bool addDocumentToWorkspace)
+        private JsonElement CloneElement(int index, bool addDocumentToWorkspace)
         {
             CheckNotDisposed();
 

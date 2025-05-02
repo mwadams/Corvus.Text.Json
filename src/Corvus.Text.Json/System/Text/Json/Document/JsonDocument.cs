@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Corvus.Text.Json
 {
-    public abstract partial class JsonDocument : IDisposable
+    public abstract partial class JsonDocument
     {
         [CLSCompliant(false)]
         protected const ulong HashMask = 0xFFUL << 56;
@@ -598,7 +598,7 @@ namespace Corvus.Text.Json
         }
 
 
-        public virtual void Dispose()
+        protected void DisposeCore()
         {
             _parsedData.Dispose();
 
