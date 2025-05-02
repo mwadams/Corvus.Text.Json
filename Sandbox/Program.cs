@@ -1,10 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-Corvus.Text.Json.ParsedJsonDocument? documentB1;
-Corvus.Text.Json.ParsedJsonDocument? documentB2;
+using Corvus.Text.Json;
 
-documentB1 = Corvus.Text.Json.ParsedJsonDocument.Parse(
+ParsedJsonDocument? documentB1;
+ParsedJsonDocument? documentB2;
+
+documentB1 = ParsedJsonDocument.Parse(
         """
         {
             "name": "John",
@@ -33,7 +35,7 @@ documentB1 = Corvus.Text.Json.ParsedJsonDocument.Parse(
         }
         """);
 
-documentB2 = Corvus.Text.Json.ParsedJsonDocument.Parse(
+documentB2 = ParsedJsonDocument.Parse(
         """
         {
             "age": 30,
@@ -62,14 +64,7 @@ documentB2 = Corvus.Text.Json.ParsedJsonDocument.Parse(
         }
         """);
 
-try
-{
-    bool gde = Corvus.Text.Json.JsonElementHelpers.DeepEquals(documentB1!.RootElement, documentB2!.RootElement);
+JsonWorkspace workspace = new();
+JsonDocumentBuilder builder = workspace.CreateBuilder(documentB1.RootElement);
 
-    Console.WriteLine($"GenericDeepEquals: {gde}");
-}
-finally
-{
-    documentB1?.Dispose();
-    documentB2?.Dispose();
-}
+Console.WriteLine(builder.RootElement.ToString());

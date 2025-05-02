@@ -875,7 +875,7 @@ namespace Corvus.Text.Json
             DbRow complexObjectRow = _parsedData.Get(index);
             db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
 
-            int endIndex = GetEndIndexUnsafe(index, true);
+            int endIndex = GetEndIndexUnsafe(index, false);
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {
