@@ -39,7 +39,7 @@ namespace Corvus.Text.Json
         {
             if (_extraRentedArrayPoolBytes != null)
             {
-                byte[]? extraRentedBytes = Interlocked.Exchange<byte[]?>(ref _extraRentedArrayPoolBytes, null);
+                byte[]? extraRentedBytes = Interlocked.Exchange(ref _extraRentedArrayPoolBytes, null);
 
                 if (extraRentedBytes != null)
                 {

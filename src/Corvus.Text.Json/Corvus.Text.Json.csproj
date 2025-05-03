@@ -149,7 +149,7 @@
     <Compile Include="System\Text\Json\Document\JsonElement.Parse.cs" />
     <Compile Include="System\Text\Json\Document\JsonProperty.cs" />
     <Compile Include="System\Text\Json\Document\JsonValueKind.cs" />
-    <Compile Include="System\Text\Json\Document\RawUtf8JsonString.cs" />
+    <Compile Include="System\Text\Json\RawUtf8JsonString.cs" />
     <Compile Include="System\Text\Json\JsonConstants.cs" />
     <Compile Include="System\Text\Json\JsonEncodedText.cs" />
     <Compile Include="System\Text\Json\JsonException.cs" />
