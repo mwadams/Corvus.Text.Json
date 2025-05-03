@@ -25,12 +25,13 @@ namespace Corvus.Text.Json
         private byte[]? _extraRentedArrayPoolBytes;
         private PooledByteBufferWriter? _extraPooledByteBufferWriter;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IJsonDocument.IsDisposable => _isDisposable;
 
         /// <summary>
         ///   The <see cref="JsonElement"/> representing the value of the document.
         /// </summary>
-        public override JsonElement RootElement => new JsonElement(this, 0);
+        public JsonElement RootElement => new JsonElement(this, 0);
 
         private ParsedJsonDocument(
             ReadOnlyMemory<byte> utf8Json,
@@ -85,6 +86,26 @@ namespace Corvus.Text.Json
                 PooledByteBufferWriter? extraBufferWriter = Interlocked.Exchange<PooledByteBufferWriter?>(ref _extraPooledByteBufferWriter, null);
                 extraBufferWriter?.Dispose();
             }
+        }
+
+        /// <summary>
+        ///  Write the document into the provided writer as a JSON value.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <exception cref="ArgumentNullException">
+        ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///   This <see cref="RootElement"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        public void WriteTo(Utf8JsonWriter writer)
+        {
+            ArgumentNullException.ThrowIfNull(writer);
+
+            RootElement.WriteTo(writer);
         }
 
         JsonTokenType IJsonDocument.GetJsonTokenType(int index)

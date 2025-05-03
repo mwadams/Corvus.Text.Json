@@ -1,16 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class JsonDocumentBuilder : JsonDocument, IJsonDocument
+    public sealed partial class JsonDocumentBuilder : JsonDocument, IMutableJsonDocument
     {
         private static readonly JsonWriterOptions InternalWriterOptions = new() { Indented = false };
         private readonly JsonWorkspace _workspace;
@@ -21,9 +19,30 @@ namespace Corvus.Text.Json
             _workspace = workspace;
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IJsonDocument.IsDisposable => true;
 
-        public override JsonElement RootElement => new JsonElement(this, 0);
+        public MutableJsonElement RootElement => new MutableJsonElement(this, 0);
+
+        /// <summary>
+        ///  Write the document into the provided writer as a JSON value.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <exception cref="ArgumentNullException">
+        ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///   This <see cref="RootElement"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        public void WriteTo(Utf8JsonWriter writer)
+        {
+            ArgumentNullException.ThrowIfNull(writer);
+
+            RootElement.WriteTo(writer);
+        }
 
         internal void Initialize<TElement>(TElement sourceElement, int parentWorkspaceIndex, bool convertToAlloc)
             where TElement : struct, IJsonElement<TElement>
@@ -99,6 +118,13 @@ namespace Corvus.Text.Json
             CheckNotDisposed();
 
             return new JsonElement(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
+        }
+
+        MutableJsonElement IMutableJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex)
+        {
+            CheckNotDisposed();
+
+            return new MutableJsonElement(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
         }
 
         int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
@@ -800,6 +826,53 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out MutableJsonElement value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            // With a mutable element, we don't go direct to the parent document;
+            // we indirect through this document so we get the correct index/mutability.
+
+            if (TryGetNamedPropertyValueUnsafe(
+                index,
+                propertyName,
+                out int valueIndex))
+            {
+                value = new MutableJsonElement(this, valueIndex);
+                return true;
+            }
+
+            value = default;
+            return false;
+
+        }
+
+        // TODO: figure out how to bridge from the non-mutable to mutable document in this deferral case
+        bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out MutableJsonElement value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            // With a mutable element, we don't go direct to the parent document;
+            // we indirect through this document so we get the correct index/mutability.
+
+            if (TryGetNamedPropertyValueUnsafe(
+                index,
+                propertyName,
+                out int valueIndex))
+            {
+                value = new MutableJsonElement(this, valueIndex);
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+
         int IJsonDocument.BuildRentedMetadataDb(int index, JsonWorkspace workspace, out byte[] rentedBacking)
         {
             CheckNotDisposed();
@@ -834,7 +907,15 @@ namespace Corvus.Text.Json
             return db.TakeOwnership(out rentedBacking);
         }
 
-        void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref byte[] data, ref int length) => throw new NotImplementedException();
+        void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref byte[] data, ref int length)
+        {
+            CheckNotDisposed();
+
+            int workspaceDocumentIndex = workspace.GetDocumentIndex(this);
+            MetadataDb db = MetadataDb.WrapForBuilder(data, length);
+            AppendElement(index, workspace, ref db, workspaceDocumentIndex);
+            length = db.TakeOwnership(out data);
+        }
 
 
         private void AppendElement(int index, JsonWorkspace workspace, ref MetadataDb db, int workspaceDocumentIndex)

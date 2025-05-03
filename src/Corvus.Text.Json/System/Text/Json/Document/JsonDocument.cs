@@ -34,29 +34,7 @@ namespace Corvus.Text.Json
         [CLSCompliant(false)]
         protected MetadataDb _parsedData;
 
-        public abstract JsonElement RootElement { get; }
-
         protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes);
-
-        /// <summary>
-        ///  Write the document into the provided writer as a JSON value.
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <exception cref="ArgumentNullException">
-        ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///   This <see cref="RootElement"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        public void WriteTo(Utf8JsonWriter writer)
-        {
-            ArgumentNullException.ThrowIfNull(writer);
-
-            RootElement.WriteTo(writer);
-        }
 
         protected static void CheckExpectedType(JsonTokenType expected, JsonTokenType actual)
         {

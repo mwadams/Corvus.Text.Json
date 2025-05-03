@@ -8,22 +8,24 @@ using System.Diagnostics.CodeAnalysis;
 namespace Corvus.Text.Json
 {
     /// <summary>
-    ///   Represents a specific JSON value within a <see cref="JsonDocument"/>.
+    ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public readonly partial struct JsonElement : IJsonElement<JsonElement>
+    public readonly partial struct MutableJsonElement : IJsonElement<MutableJsonElement>
     {
-        private readonly IJsonDocument _parent;
+        private readonly IMutableJsonDocument _parent;
         private readonly int _idx;
 
-        internal JsonElement(IJsonDocument parent, int idx)
+        internal MutableJsonElement(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
             // on the enumerators (when initialized as `default`) can
             // get here with a null.
             Debug.Assert(idx >= 0);
 
-            _parent = parent;
+            Debug.Assert(parent is IMutableJsonDocument, "The parent must be a mutable JSON document");
+
+            _parent = (IMutableJsonDocument)parent;
             _idx = idx;
         }
 
@@ -57,7 +59,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public JsonElement this[int index]
+        public MutableJsonElement this[int index]
         {
             get
             {
@@ -68,7 +70,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonElement From<T>(in T instance)
+        public static MutableJsonElement From<T>(in T instance)
             where T : struct, IJsonElement<T>
         {
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
@@ -109,7 +111,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   Gets a <see cref="JsonElement"/> representing the value of a required property identified
+        ///   Gets a <see cref="MutableJsonElement"/> representing the value of a required property identified
         ///   by <paramref name="propertyName"/>.
         /// </summary>
         /// <remarks>
@@ -120,7 +122,7 @@ namespace Corvus.Text.Json
         /// </remarks>
         /// <param name="propertyName">Name of the property whose value to return.</param>
         /// <returns>
-        ///   A <see cref="JsonElement"/> representing the value of the requested property.
+        ///   A <see cref="MutableJsonElement"/> representing the value of the requested property.
         /// </returns>
         /// <seealso cref="EnumerateObject"/>
         /// <exception cref="InvalidOperationException">
@@ -135,11 +137,11 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public JsonElement GetProperty(string propertyName)
+        public MutableJsonElement GetProperty(string propertyName)
         {
             ArgumentNullException.ThrowIfNull(propertyName);
 
-            if (TryGetProperty(propertyName, out JsonElement property))
+            if (TryGetProperty(propertyName, out MutableJsonElement property))
             {
                 return property;
             }
@@ -148,7 +150,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   Gets a <see cref="JsonElement"/> representing the value of a required property identified
+        ///   Gets a <see cref="MutableJsonElement"/> representing the value of a required property identified
         ///   by <paramref name="propertyName"/>.
         /// </summary>
         /// <remarks>
@@ -163,7 +165,7 @@ namespace Corvus.Text.Json
         /// </remarks>
         /// <param name="propertyName">Name of the property whose value to return.</param>
         /// <returns>
-        ///   A <see cref="JsonElement"/> representing the value of the requested property.
+        ///   A <see cref="MutableJsonElement"/> representing the value of the requested property.
         /// </returns>
         /// <seealso cref="EnumerateObject"/>
         /// <exception cref="InvalidOperationException">
@@ -175,9 +177,9 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public JsonElement GetProperty(ReadOnlySpan<char> propertyName)
+        public MutableJsonElement GetProperty(ReadOnlySpan<char> propertyName)
         {
-            if (TryGetProperty(propertyName, out JsonElement property))
+            if (TryGetProperty(propertyName, out MutableJsonElement property))
             {
                 return property;
             }
@@ -186,7 +188,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   Gets a <see cref="JsonElement"/> representing the value of a required property identified
+        ///   Gets a <see cref="MutableJsonElement"/> representing the value of a required property identified
         ///   by <paramref name="utf8PropertyName"/>.
         /// </summary>
         /// <remarks>
@@ -203,7 +205,7 @@ namespace Corvus.Text.Json
         ///   The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property to return.
         /// </param>
         /// <returns>
-        ///   A <see cref="JsonElement"/> representing the value of the requested property.
+        ///   A <see cref="MutableJsonElement"/> representing the value of the requested property.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
@@ -215,9 +217,9 @@ namespace Corvus.Text.Json
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="EnumerateObject"/>
-        public JsonElement GetProperty(ReadOnlySpan<byte> utf8PropertyName)
+        public MutableJsonElement GetProperty(ReadOnlySpan<byte> utf8PropertyName)
         {
-            if (TryGetProperty(utf8PropertyName, out JsonElement property))
+            if (TryGetProperty(utf8PropertyName, out MutableJsonElement property))
             {
                 return property;
             }
@@ -255,7 +257,7 @@ namespace Corvus.Text.Json
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="EnumerateObject"/>
-        public bool TryGetProperty(string propertyName, out JsonElement value)
+        public bool TryGetProperty(string propertyName, out MutableJsonElement value)
         {
             ArgumentNullException.ThrowIfNull(propertyName);
 
@@ -289,7 +291,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public bool TryGetProperty(ReadOnlySpan<char> propertyName, out JsonElement value)
+        public bool TryGetProperty(ReadOnlySpan<char> propertyName, out MutableJsonElement value)
         {
             CheckValidInstance();
 
@@ -325,7 +327,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, out JsonElement value)
+        public bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, out MutableJsonElement value)
         {
             CheckValidInstance();
 
@@ -1238,7 +1240,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        public static void EnsurePropertyMap(in JsonElement element)
+        public static void EnsurePropertyMap(in MutableJsonElement element)
         {
             element._parent.EnsurePropertyMap(element._idx);
         }
@@ -1382,10 +1384,10 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   Get an enumerator to enumerate the values in the JSON array represented by this JsonElement.
+        ///   Get an enumerator to enumerate the values in the JSON array represented by this MutableJsonElement.
         /// </summary>
         /// <returns>
-        ///   An enumerator to enumerate the values in the JSON array represented by this JsonElement.
+        ///   An enumerator to enumerate the values in the JSON array represented by this MutableJsonElement.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
@@ -1394,7 +1396,7 @@ namespace Corvus.Text.Json
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
-        public ArrayEnumerator<JsonElement> EnumerateArray()
+        public ArrayEnumerator<MutableJsonElement> EnumerateArray()
         {
             CheckValidInstance();
 
@@ -1405,14 +1407,14 @@ namespace Corvus.Text.Json
                 ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartArray, tokenType);
             }
 
-            return new ArrayEnumerator<JsonElement>(_parent, _idx);
+            return new ArrayEnumerator<MutableJsonElement>(_parent, _idx);
         }
 
         /// <summary>
-        ///   Get an enumerator to enumerate the properties in the JSON object represented by this JsonElement.
+        ///   Get an enumerator to enumerate the properties in the JSON object represented by this MutableJsonElement.
         /// </summary>
         /// <returns>
-        ///   An enumerator to enumerate the properties in the JSON object represented by this JsonElement.
+        ///   An enumerator to enumerate the properties in the JSON object represented by this MutableJsonElement.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
@@ -1421,7 +1423,7 @@ namespace Corvus.Text.Json
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
-        public ObjectEnumerator<JsonElement> EnumerateObject()
+        public ObjectEnumerator<MutableJsonElement> EnumerateObject()
         {
             CheckValidInstance();
 
@@ -1432,7 +1434,7 @@ namespace Corvus.Text.Json
                 ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartObject, tokenType);
             }
 
-            return new ObjectEnumerator<JsonElement>(_parent, _idx);
+            return new ObjectEnumerator<MutableJsonElement>(_parent, _idx);
         }
 
         /// <summary>
@@ -1440,7 +1442,7 @@ namespace Corvus.Text.Json
         /// </summary>
         /// <remarks>
         ///   <para>
-        ///     For JsonElement built from <see cref="JsonDocument"/>:
+        ///     For MutableJsonElement built from <see cref="IMutableJsonDocument"/>:
         ///   </para>
         ///
         ///   <para>
@@ -1501,27 +1503,15 @@ namespace Corvus.Text.Json
 
         /// <summary>
         ///   Get a JsonElement which can be safely stored beyond the lifetime of the
-        ///   original <see cref="JsonDocument"/>.
+        ///   original <see cref="IMutableJsonDocument"/>.
         /// </summary>
         /// <returns>
         ///   A JsonElement which can be safely stored beyond the lifetime of the
-        ///   original <see cref="JsonDocument"/>.
+        ///   original <see cref="IMutableJsonDocument"/>.
         /// </returns>
-        /// <remarks>
-        ///   <para>
-        ///     If this JsonElement is itself the output of a previous call to Clone, or
-        ///     a value contained within another JsonElement which was the output of a previous
-        ///     call to Clone, this method results in no additional memory allocation.
-        ///   </para>
-        /// </remarks>
         public JsonElement Clone()
         {
             CheckValidInstance();
-
-            if (!_parent.IsDisposable)
-            {
-                return this;
-            }
 
             return _parent.CloneElement(_idx);
         }
@@ -1537,7 +1527,7 @@ namespace Corvus.Text.Json
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-        static JsonElement IJsonElement<JsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElement(parentDocument, parentDocumentIndex);
+        static MutableJsonElement IJsonElement<MutableJsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new MutableJsonElement(parentDocument, parentDocumentIndex);
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

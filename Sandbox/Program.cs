@@ -41,6 +41,3 @@ using JsonDocumentBuilder builder = documentB1.RootElement.CreateBuilder(workspa
 
 // Validate that we can write the document back out again
 Console.WriteLine(builder.RootElement.ToString());
-
-// Compare the values in "age" and "1" (30 > 1 => result is 1)
-Console.WriteLine(JsonElement.Compare(builder.RootElement.GetProperty("age"u8), documentB1.RootElement.GetProperty("1"u8)));

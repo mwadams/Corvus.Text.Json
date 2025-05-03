@@ -12,8 +12,6 @@ namespace Corvus.Text.Json
     [CLSCompliant(false)]
     public interface IJsonDocument : IDisposable
     {
-        JsonElement RootElement { get; }
-
         void EnsurePropertyMap(int index);
 
         bool IsDisposable { get; }

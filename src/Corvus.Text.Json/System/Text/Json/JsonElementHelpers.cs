@@ -59,7 +59,7 @@ namespace Corvus.Text.Json
         }
 #endif
         /// <summary>
-        /// Compares the values of two <see cref="JsonElement"/> values for equality, including the values of all descendant elements.
+        /// Compares the values of two <see cref="IJsonElement"/> values for equality, including the values of all descendant elements.
         /// </summary>
         /// <typeparam name="TLeft">The type of the first <see cref="IJsonElement"/>.</typeparam>
         /// <typeparam name="TLeft">The type of the first <see cref="IJsonElement"/>.</typeparam>
@@ -77,7 +77,8 @@ namespace Corvus.Text.Json
         /// <item>
         ///     JSON objects are equal if and only if they have the same number of properties and each property in the first object
         ///     has a corresponding property in the second object with the same name and equal value. The order of properties is not
-        ///     significant, with the exception of repeated properties that must be specified in the same order (with interleaving allowed).
+        ///     significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
+        ///     last value in the first instance.
         /// </item>
         /// </list>
         /// </remarks>
@@ -210,8 +211,9 @@ namespace Corvus.Text.Json
                 // JsonElement objects allow duplicate property names, which is optional per the JSON RFC.
                 // Even though this implementation of equality does not take property ordering into account,
                 // duplicate, out of order properties resolve the value in the second instance to the last value
-                // in the first instance. This differs from the JsonElement implementation, which supports duplicate
+                // in the first instance. This differs from the System.Text.Json.JsonElement implementation, which supports duplicate
                 // property names, if they are in order.
+                //
                 // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
                 element1ParentDocument.EnsurePropertyMap(element1ParentDocumentIndex);
 
