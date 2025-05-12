@@ -31,7 +31,7 @@ public class BenchmarkParseObjectWithoutPropertyMapBacking
     [Benchmark]
     public Corvus.Text.Json.JsonValueKind ParseObjectToCorvusJsonElement()
     {
-        using var document = Corvus.Text.Json.ParsedJsonDocument.Parse(
+        using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(
             """
             {
                 "name": "John",

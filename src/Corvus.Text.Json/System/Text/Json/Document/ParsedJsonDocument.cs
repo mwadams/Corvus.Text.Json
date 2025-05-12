@@ -1,11 +1,13 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace Corvus.Text.Json
 {
@@ -18,7 +20,8 @@ namespace Corvus.Text.Json
     ///   the memory not being returned to the pool, which will cause an increase in GC impact across
     ///   various parts of the framework.
     /// </remarks>
-    public sealed partial class ParsedJsonDocument : JsonDocument, IJsonDocument, IDisposable
+    public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument, IDisposable
+        where T : struct, IJsonElement<T>
     {
         private ReadOnlyMemory<byte> _utf8Json;
         private bool _isDisposable;
@@ -29,9 +32,14 @@ namespace Corvus.Text.Json
         bool IJsonDocument.IsDisposable => _isDisposable;
 
         /// <summary>
-        ///   The <see cref="JsonElement"/> representing the value of the document.
+        ///   The <see cref="IJsonElement"/> representing the value of the document.
         /// </summary>
-        public JsonElement RootElement => new JsonElement(this, 0);
+
+#if NET
+        public T RootElement => T.CreateInstance(this, 0);
+#else
+        public T RootElement => JsonElementHelpers.CreateInstance<T>(this, 0);
+#endif
 
         private ParsedJsonDocument(
             ReadOnlyMemory<byte> utf8Json,
@@ -680,7 +688,8 @@ namespace Corvus.Text.Json
             return JsonReaderHelper.TranscodeHelper(_utf8Json.Slice(start, end - start).Span);
         }
 
-        JsonElement IJsonDocument.CloneElement(int index)
+
+        public T CloneElement(int index)
         {
             CheckNotDisposed();
 
@@ -688,8 +697,8 @@ namespace Corvus.Text.Json
             MetadataDb newDb = _parsedData.CopySegment(index, endIndex);
             ReadOnlyMemory<byte> segmentCopy = GetRawValueUnsafe(index, includeQuotes: true).ToArray();
 
-            ParsedJsonDocument newDocument =
-                new ParsedJsonDocument(
+            ParsedJsonDocument<T> newDocument =
+                new ParsedJsonDocument<T>(
                     segmentCopy,
                     newDb,
                     extraRentedArrayPoolBytes: null,
@@ -697,6 +706,22 @@ namespace Corvus.Text.Json
                     isDisposable: false);
 
             return newDocument.RootElement;
+        }
+
+        JsonElement IJsonDocument.CloneElement(int index)
+        {
+            return JsonElement.From(CloneElement(index));
+        }
+
+        TElement IJsonDocument.CloneElement<TElement>(int index)
+        {
+            T element = CloneElement(index);
+#if NET
+            return TElement.CreateInstance(element.ParentDocument, element.ParentDocumentIndex);
+#else
+            return JsonElementHelpers.CreateInstance<TElement>(element.ParentDocument, element.ParentDocumentIndex);
+#endif
+
         }
 
         void IJsonDocument.WriteElementTo(
@@ -849,7 +874,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        private static void Parse(
+        internal static void Parse(
             ReadOnlySpan<byte> utf8JsonSpan,
             JsonReaderOptions readerOptions,
             ref MetadataDb database,

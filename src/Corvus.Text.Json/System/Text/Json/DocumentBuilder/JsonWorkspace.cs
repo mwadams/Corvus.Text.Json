@@ -45,18 +45,22 @@ namespace Corvus.Text.Json
             ThrowHelper.ThrowObjectDisposedException_JsonWorkspace();
         }
 
-        internal JsonDocumentBuilder CreateBuilder<TElement>(TElement sourceElement)
+        [CLSCompliant(false)]
+        public JsonDocumentBuilder<TMutableElement> CreateDocument<TElement, TMutableElement>(TElement sourceElement)
             where TElement : struct, IJsonElement<TElement>
+            where TMutableElement : struct, IMutableJsonElement<TMutableElement>
         {
-            JsonDocumentBuilder result = new(this);
+            JsonDocumentBuilder<TMutableElement> result = new(this);
             int index = GetDocumentIndex(result);
             result.Initialize(sourceElement, index, convertToAlloc: false);
             return result;
         }
 
-        public JsonDocumentBuilder CreateBuilder(int initialCapacity = 30)
+        [CLSCompliant(false)]
+        public JsonDocumentBuilder<TElement> CreateDocument<TElement>(int initialCapacity = 30)
+            where TElement : struct, IMutableJsonElement<TElement>
         {
-            JsonDocumentBuilder result = new(this);
+            JsonDocumentBuilder<TElement> result = new(this);
             int index = GetDocumentIndex(result);
             result.Initialize(index, initialCapacity);
             return result;

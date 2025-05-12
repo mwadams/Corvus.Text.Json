@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net9.0;net10.0;netstandard2.0</TargetFrameworks>
@@ -123,10 +123,13 @@
     <Compile Include="System\Runtime\InteropServices\JsonMarshal.cs" />
     <Compile Include="System\Text\Json\AppContextSwitchHelper.cs" />
     <Compile Include="System\Text\Json\BitStack.cs" />
+    <Compile Include="System\Text\Json\DocumentBuilder\IMutableJsonElement{T}.cs" />
+    <Compile Include="System\Text\Json\DocumentBuilder\Internal\ComplexValueBuilder.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\IMutableJsonDocument.cs" />
+    <Compile Include="System\Text\Json\DocumentBuilder\JsonArrayBuilder.cs" />
+    <Compile Include="System\Text\Json\DocumentBuilder\JsonObjectBuilder.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonDocumentBuilder.cs" />
-    <Compile Include="System\Text\Json\DocumentBuilder\MutableJsonElement.cs" />
-    <Compile Include="System\Text\Json\DocumentBuilder\JsonElementExtensions.cs" />
+    <Compile Include="System\Text\Json\DocumentBuilder\JsonElement.Mutable.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonWorkspace.cs" />
     <Compile Include="System\Text\Json\Document\DynamicValueType.cs" />
     <Compile Include="System\Text\Json\Document\IJsonElement{T}.cs" />

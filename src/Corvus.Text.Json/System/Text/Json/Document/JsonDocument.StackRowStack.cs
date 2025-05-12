@@ -13,7 +13,7 @@ namespace Corvus.Text.Json
 {
     public abstract partial class JsonDocument
     {
-        protected struct StackRowStack : IDisposable
+        internal struct StackRowStack : IDisposable
         {
             private byte[] _rentedBuffer;
             private int _topOfStack;

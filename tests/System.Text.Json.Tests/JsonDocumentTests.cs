@@ -239,7 +239,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => Task.FromResult(ParsedJsonDocument.Parse(bytes.AsMemory())));
+                bytes => Task.FromResult(ParsedJsonDocument<JsonElement>.Parse(bytes.AsMemory())));
         }
 
         [Theory]
@@ -250,7 +250,7 @@ namespace Corvus.Text.Json.Tests
                 compactData,
                 type,
                 jsonString,
-                str => Task.FromResult(ParsedJsonDocument.Parse(str)),
+                str => Task.FromResult(ParsedJsonDocument<JsonElement>.Parse(str)),
                 null);
         }
 
@@ -263,7 +263,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => Task.FromResult(ParsedJsonDocument.Parse(new MemoryStream(bytes))));
+                bytes => Task.FromResult(ParsedJsonDocument<JsonElement>.Parse(new MemoryStream(bytes))));
         }
 
         [Theory]
@@ -275,7 +275,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => ParsedJsonDocument.ParseAsync(new MemoryStream(bytes)));
+                bytes => ParsedJsonDocument<JsonElement>.ParseAsync(new MemoryStream(bytes)));
         }
 
         [Theory]
@@ -287,7 +287,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => ParsedJsonDocument.ParseAsync(
+                bytes => ParsedJsonDocument<JsonElement>.ParseAsync(
                     new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, bytes)));
         }
 
@@ -300,7 +300,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => ParsedJsonDocument.ParseAsync(new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, bytes)));
+                bytes => ParsedJsonDocument<JsonElement>.ParseAsync(new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, bytes)));
         }
 
 
@@ -309,7 +309,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] data = { (byte)'1', (byte)'1' };
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(new MemoryStream(data)))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(new MemoryStream(data)))
             {
                 JsonElement root = doc.RootElement;
                 Assert.Equal(JsonValueKind.Number, root.ValueKind);
@@ -322,8 +322,8 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] data = { (byte)'1', (byte)'1' };
 
-            using (ParsedJsonDocument doc =
-                ParsedJsonDocument.Parse(new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data: data)))
+            using (ParsedJsonDocument<JsonElement> doc =
+                ParsedJsonDocument<JsonElement>.Parse(new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data: data)))
             {
                 JsonElement root = doc.RootElement;
                 Assert.Equal(JsonValueKind.Number, root.ValueKind);
@@ -336,7 +336,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] data = { (byte)'1', (byte)'1' };
 
-            using (ParsedJsonDocument doc = await ParsedJsonDocument.ParseAsync(new MemoryStream(data)))
+            using (ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(new MemoryStream(data)))
             {
                 JsonElement root = doc.RootElement;
                 Assert.Equal(JsonValueKind.Number, root.ValueKind);
@@ -349,7 +349,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] data = { (byte)'1', (byte)'1' };
 
-            using (ParsedJsonDocument doc = await ParsedJsonDocument.ParseAsync(
+            using (ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(
                 new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data: data)))
             {
                 JsonElement root = doc.RootElement;
@@ -367,7 +367,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => Task.FromResult(ParsedJsonDocument.Parse(new MemoryStream(Utf8Bom.Concat(bytes).ToArray()))));
+                bytes => Task.FromResult(ParsedJsonDocument<JsonElement>.Parse(new MemoryStream(Utf8Bom.Concat(bytes).ToArray()))));
         }
 
         [Theory]
@@ -379,7 +379,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => ParsedJsonDocument.ParseAsync(new MemoryStream(Utf8Bom.Concat(bytes).ToArray())));
+                bytes => ParsedJsonDocument<JsonElement>.ParseAsync(new MemoryStream(Utf8Bom.Concat(bytes).ToArray())));
         }
 
         [Theory]
@@ -391,7 +391,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => Task.FromResult(ParsedJsonDocument.Parse(
+                bytes => Task.FromResult(ParsedJsonDocument<JsonElement>.Parse(
                     new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, Utf8Bom.Concat(bytes).ToArray()))));
         }
 
@@ -404,7 +404,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => ParsedJsonDocument.ParseAsync(
+                bytes => ParsedJsonDocument<JsonElement>.ParseAsync(
                         new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, Utf8Bom.Concat(bytes).ToArray())));
         }
 
@@ -413,7 +413,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (Stream stream = new ThrowOnReadStream(new byte[] { 1 }))
             {
-                Assert.Throws<EndOfStreamException>(() => ParsedJsonDocument.Parse(stream));
+                Assert.Throws<EndOfStreamException>(() => ParsedJsonDocument<JsonElement>.Parse(stream));
             }
         }
 
@@ -422,7 +422,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (Stream stream = new ThrowOnReadStream(new byte[] { 1 }))
             {
-                await Assert.ThrowsAsync<EndOfStreamException>(async () => await ParsedJsonDocument.ParseAsync(stream));
+                await Assert.ThrowsAsync<EndOfStreamException>(async () => await ParsedJsonDocument<JsonElement>.ParseAsync(stream));
             }
         }
 
@@ -431,7 +431,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (Stream stream = new ThrowOnCanSeekStream(new byte[] { 1 }))
             {
-                Assert.Throws<InsufficientMemoryException>(() => ParsedJsonDocument.Parse(stream));
+                Assert.Throws<InsufficientMemoryException>(() => ParsedJsonDocument<JsonElement>.Parse(stream));
             }
         }
 
@@ -440,7 +440,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (Stream stream = new ThrowOnCanSeekStream(new byte[] { 1 }))
             {
-                await Assert.ThrowsAsync<InsufficientMemoryException>(async () => await ParsedJsonDocument.ParseAsync(stream));
+                await Assert.ThrowsAsync<InsufficientMemoryException>(async () => await ParsedJsonDocument<JsonElement>.ParseAsync(stream));
             }
         }
 
@@ -449,7 +449,7 @@ namespace Corvus.Text.Json.Tests
         public static void ParseJson_SeekableStream_BadBOM(string json)
         {
             byte[] data = Encoding.UTF8.GetBytes(json);
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(new MemoryStream(data)));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(new MemoryStream(data)));
         }
 
         [Theory]
@@ -457,7 +457,7 @@ namespace Corvus.Text.Json.Tests
         public static Task ParseJson_SeekableStream_Async_BadBOM(string json)
         {
             byte[] data = Encoding.UTF8.GetBytes(json);
-            return Assert.ThrowsAnyAsync<JsonException>(() => ParsedJsonDocument.ParseAsync(new MemoryStream(data)));
+            return Assert.ThrowsAnyAsync<JsonException>(() => ParsedJsonDocument<JsonElement>.ParseAsync(new MemoryStream(data)));
         }
 
         [Theory]
@@ -467,7 +467,7 @@ namespace Corvus.Text.Json.Tests
             byte[] data = Encoding.UTF8.GetBytes(json);
 
             Assert.ThrowsAny<JsonException>(
-                () => ParsedJsonDocument.Parse(
+                () => ParsedJsonDocument<JsonElement>.Parse(
                     new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data)));
         }
 
@@ -479,7 +479,7 @@ namespace Corvus.Text.Json.Tests
             byte[] data = Encoding.UTF8.GetBytes(json);
 
             return Assert.ThrowsAnyAsync<JsonException>(
-                () => ParsedJsonDocument.ParseAsync(
+                () => ParsedJsonDocument<JsonElement>.ParseAsync(
                     new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data)));
         }
 
@@ -492,7 +492,7 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => Task.FromResult(ParsedJsonDocument.Parse(new ReadOnlySequence<byte>(bytes))));
+                bytes => Task.FromResult(ParsedJsonDocument<JsonElement>.Parse(new ReadOnlySequence<byte>(bytes))));
         }
 
         [Theory]
@@ -504,15 +504,15 @@ namespace Corvus.Text.Json.Tests
                 type,
                 jsonString,
                 null,
-                bytes => Task.FromResult(ParsedJsonDocument.Parse(JsonTestHelper.SegmentInto(bytes, 31))));
+                bytes => Task.FromResult(ParsedJsonDocument<JsonElement>.Parse(JsonTestHelper.SegmentInto(bytes, 31))));
         }
 
         private static async Task ParseJsonAsync(
             bool compactData,
             TestCaseType type,
             string jsonString,
-            Func<string, Task<ParsedJsonDocument>> stringDocBuilder,
-            Func<byte[], Task<ParsedJsonDocument>> bytesDocBuilder)
+            Func<string, Task<ParsedJsonDocument<JsonElement>>> stringDocBuilder,
+            Func<byte[], Task<ParsedJsonDocument<JsonElement>>> bytesDocBuilder)
         {
             // One, but not both, must be null.
             if ((stringDocBuilder == null) == (bytesDocBuilder == null))
@@ -526,7 +526,7 @@ namespace Corvus.Text.Json.Tests
 
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-            using (ParsedJsonDocument doc = await (stringDocBuilder?.Invoke(jsonString) ?? bytesDocBuilder?.Invoke(dataUtf8)))
+            using (ParsedJsonDocument<JsonElement> doc = await (stringDocBuilder?.Invoke(jsonString) ?? bytesDocBuilder?.Invoke(dataUtf8)))
             {
                 Assert.NotNull(doc);
 
@@ -574,7 +574,7 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-        private static string PrintJson(this ParsedJsonDocument document, int sizeHint = 0)
+        private static string PrintJson(this ParsedJsonDocument<JsonElement> document, int sizeHint = 0)
         {
             return PrintJson(document.RootElement, sizeHint);
         }
@@ -635,7 +635,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8, default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
             {
                 string actual = doc.PrintJson();
 
@@ -649,7 +649,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ParseArray()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(SR.SimpleArrayJson))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleArrayJson))
             {
                 JsonElement root = doc.RootElement;
 
@@ -668,7 +668,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ParseSimpleObject()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(SR.SimpleObjectJson))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
             {
                 JsonElement parsedObject = doc.RootElement;
 
@@ -699,7 +699,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ParseNestedJson()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(SR.ParseJson))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
             {
                 JsonElement parsedObject = doc.RootElement;
 
@@ -746,7 +746,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ParseBoolean()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("[true,false]"))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("[true,false]"))
             {
                 JsonElement parsedObject = doc.RootElement;
                 bool first = parsedObject[0].GetBoolean();
@@ -759,7 +759,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void JsonArrayToString()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(SR.ParseJson))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
             {
                 JsonElement root = doc.RootElement;
 
@@ -771,7 +771,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void JsonObjectToString()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(SR.BasicJson))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.BasicJson))
             {
                 JsonElement root = doc.RootElement;
 
@@ -792,7 +792,7 @@ namespace Corvus.Text.Json.Tests
             // Within root[2] the array has only simple values, so it uses a different indexing algorithm.
             const string json = " [ 6, { \"hi\": \"mom\" }, [ \"425-214-3151\", 25 ], null ] ";
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 JsonElement root = doc.RootElement;
                 JsonElement target = root[2];
@@ -820,7 +820,7 @@ namespace Corvus.Text.Json.Tests
             float expectedFloat = value;
             decimal expectedDecimal = value;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("    " + value + "  "))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
                 JsonElement root = doc.RootElement;
 
@@ -921,7 +921,7 @@ namespace Corvus.Text.Json.Tests
             float expectedFloat = value;
             decimal expectedDecimal = value;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("    " + value + "  "))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1019,7 +1019,7 @@ namespace Corvus.Text.Json.Tests
             float expectedFloat = value;
             decimal expectedDecimal = value;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("    " + value + "  "))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1114,7 +1114,7 @@ namespace Corvus.Text.Json.Tests
             float expectedFloat = value;
             decimal expectedDecimal = value;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("    " + value + "  "))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1215,7 +1215,7 @@ namespace Corvus.Text.Json.Tests
             float expectedFloat = value;
             decimal expectedDecimal = value;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("    " + value + "  "))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1290,7 +1290,7 @@ namespace Corvus.Text.Json.Tests
             expectedFloat *= 10;
             expectedDecimal *= 10;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("    " + ulong.MaxValue + "0  ", default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + ulong.MaxValue + "0  ", default))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1360,7 +1360,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8, default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1400,7 +1400,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8, default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1426,7 +1426,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8, default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1449,7 +1449,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] dataUtf8 = Encoding.UTF8.GetBytes($"\"{jsonString}\"");
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8, default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1484,7 +1484,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] dataUtf8 = Encoding.UTF8.GetBytes($"\"{jsonString}\"");
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8, default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1513,7 +1513,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(NonIntegerCases))]
         public static void ReadNonInteger(string str, double expectedDouble, float expectedFloat, decimal expectedDecimal)
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("    " + str + "  "))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + str + "  "))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1584,7 +1584,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ReadTooPreciseDouble()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("    1e+100000002"))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    1e+100000002"))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1680,7 +1680,7 @@ namespace Corvus.Text.Json.Tests
                 CommentHandling = JsonCommentHandling.Skip,
             };
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
                 "[ 0, 1, 2, 3/*.14159*/           , /* 42, 11, hut, hut, hike! */ 4 ]",
                 options))
             {
@@ -1739,7 +1739,7 @@ namespace Corvus.Text.Json.Tests
         public static void CheckUseAfterDispose()
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("{\"First\":1}", default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{\"First\":1}", default))
             {
                 JsonElement root = doc.RootElement;
                 JsonProperty<JsonElement> property = root.EnumerateObject().First();
@@ -1851,7 +1851,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void CheckInvalidString()
         {
-            Assert.Throws<ArgumentException>(() => ParsedJsonDocument.Parse("{ \"unpaired\uDFFE\": true }"));
+            Assert.Throws<ArgumentException>(() => ParsedJsonDocument<JsonElement>.Parse("{ \"unpaired\uDFFE\": true }"));
         }
 
         [Theory]
@@ -1860,7 +1860,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"\\u0033\\u0031\"", "31")]
         public static void ReadString(string json, string expectedValue)
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 Assert.Equal(expectedValue, doc.RootElement.GetString());
             }
@@ -1872,7 +1872,7 @@ namespace Corvus.Text.Json.Tests
             // The Arabic ligature Lam-Alef (U+FEFB) (which happens to, as a standalone, mean "no" in English)
             // is UTF-8 EF BB BB.  So let's leave out a BB and put it in quotes.
             byte[] badUtf8 = new byte[] { 0x22, 0xEF, 0xBB, 0x22 };
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(badUtf8))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(badUtf8))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1893,7 +1893,7 @@ namespace Corvus.Text.Json.Tests
         {
             // The Arabic ligature Lam-Alef (U+FEFB) (which happens to, as a standalone, mean "no" in English)
             // is UTF-8 EF BB BB.  So let's leave out a BB and put it in quotes.
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(new byte[] { 0x22, 0xEF, 0xBB, 0x22 }))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(new byte[] { 0x22, 0xEF, 0xBB, 0x22 }))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1911,7 +1911,7 @@ namespace Corvus.Text.Json.Tests
 
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8))
             {
                 byte[] expected = Convert.FromBase64String("1234"); // new byte[3] { 215, 109, 248 }
 
@@ -1928,7 +1928,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] expected = Convert.FromBase64String(jsonString.AsSpan(1, jsonString.Length - 2).ToString());
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
             {
                 Assert.Equal(expected, doc.RootElement.GetBytesFromBase64());
 
@@ -1943,7 +1943,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8))
             {
                 Assert.False(doc.RootElement.TryGetBytesFromBase64(out byte[] value));
                 Assert.Null(value);
@@ -1958,7 +1958,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData(" { \"outer\": { \"inner\": [ 1, 2, 3 ] }, \"secondOuter\": [ 2, 4, 6, 0, 1 ] }")]
         public static void TryGetProperty_NoProperty(string json)
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 JsonElement root = doc.RootElement;
 
@@ -1992,7 +1992,7 @@ namespace Corvus.Text.Json.Tests
 
             string json = $"{{ \"{PascalString}\": \"no\", \"{CamelString}\": 42, \"{OddString}\": false }}";
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 JsonElement root = doc.RootElement;
 
@@ -2073,7 +2073,7 @@ namespace Corvus.Text.Json.Tests
 
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(dataUtf8, default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
             {
                 JsonElement root = doc.RootElement;
 
@@ -2094,22 +2094,22 @@ namespace Corvus.Text.Json.Tests
         [InlineData("[ 1")]
         public static Task CheckUnparsable(string json)
         {
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(json));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(json));
 
             byte[] utf8 = Encoding.UTF8.GetBytes(json);
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(utf8));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(utf8));
 
             ReadOnlySequence<byte> singleSeq = new ReadOnlySequence<byte>(utf8);
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(singleSeq));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(singleSeq));
 
             ReadOnlySequence<byte> multiSegment = JsonTestHelper.SegmentInto(utf8, 6);
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(multiSegment));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(multiSegment));
 
             Stream stream = new MemoryStream(utf8);
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(stream));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(stream));
 
             stream.Seek(0, SeekOrigin.Begin);
-            return Assert.ThrowsAnyAsync<JsonException>(() => ParsedJsonDocument.ParseAsync(stream));
+            return Assert.ThrowsAnyAsync<JsonException>(() => ParsedJsonDocument<JsonElement>.ParseAsync(stream));
         }
 
         [Fact]
@@ -2119,7 +2119,7 @@ namespace Corvus.Text.Json.Tests
             string okayJson = new string('[', OkayCount) + "2" + new string(']', OkayCount);
             int depth = 0;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(okayJson))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(okayJson))
             {
                 JsonElement root = doc.RootElement;
                 Assert.Equal(JsonValueKind.Array, root.ValueKind);
@@ -2140,7 +2140,7 @@ namespace Corvus.Text.Json.Tests
 
             string badJson = $"[{okayJson}]";
 
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(badJson));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(badJson));
         }
 
         [Fact]
@@ -2150,7 +2150,7 @@ namespace Corvus.Text.Json.Tests
             string okayJson = new string('[', OkayCount) + "2" + new string(']', OkayCount);
             int depth = 0;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(okayJson, new JsonDocumentOptions { MaxDepth = OkayCount }))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(okayJson, new JsonDocumentOptions { MaxDepth = OkayCount }))
             {
                 JsonElement root = doc.RootElement;
                 Assert.Equal(JsonValueKind.Array, root.ValueKind);
@@ -2169,10 +2169,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Equal(OkayCount, depth);
             }
 
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(okayJson, new JsonDocumentOptions { MaxDepth = 32 }));
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(okayJson));
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(okayJson, new JsonDocumentOptions { MaxDepth = 0 }));
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(okayJson, new JsonDocumentOptions { MaxDepth = 64 }));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(okayJson, new JsonDocumentOptions { MaxDepth = 32 }));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(okayJson));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(okayJson, new JsonDocumentOptions { MaxDepth = 0 }));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(okayJson, new JsonDocumentOptions { MaxDepth = 64 }));
         }
 
         [Fact]
@@ -2183,13 +2183,13 @@ namespace Corvus.Text.Json.Tests
 
             string okayJson = "[]";
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(okayJson, new JsonDocumentOptions { MaxDepth = MaxDepthOverflow }))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(okayJson, new JsonDocumentOptions { MaxDepth = MaxDepthOverflow }))
             {
                 JsonElement root = doc.RootElement;
                 Assert.Equal(JsonValueKind.Array, root.ValueKind);
             }
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(okayJson, new JsonDocumentOptions { MaxDepth = int.MaxValue }))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(okayJson, new JsonDocumentOptions { MaxDepth = int.MaxValue }))
             {
                 JsonElement root = doc.RootElement;
                 Assert.Equal(JsonValueKind.Array, root.ValueKind);
@@ -2213,7 +2213,7 @@ namespace Corvus.Text.Json.Tests
                 {
                     JsonReaderState state = new JsonReaderState(readerOptions);
                     Utf8JsonReader reader = new Utf8JsonReader(utf8, isFinalBlock: false, state);
-                    ParsedJsonDocument.ParseValue(ref reader);
+                    ParsedJsonDocument<JsonElement>.ParseValue(ref reader);
                 });
 
             AssertExtensions.Throws<ArgumentException>(
@@ -2222,7 +2222,7 @@ namespace Corvus.Text.Json.Tests
                 {
                     JsonReaderState state = new JsonReaderState(readerOptions);
                     Utf8JsonReader reader = new Utf8JsonReader(utf8, isFinalBlock: false, state);
-                    ParsedJsonDocument.TryParseValue(ref reader, out _);
+                    ParsedJsonDocument<JsonElement>.TryParseValue(ref reader, out _);
                 });
         }
 
@@ -2250,7 +2250,7 @@ namespace Corvus.Text.Json.Tests
             };
             Assert.Equal(JsonCommentHandling.Skip, options.CommentHandling);
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("/* some comment */{ }", options))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("/* some comment */{ }", options))
             {
                 Assert.Equal(JsonValueKind.Object, doc.RootElement.ValueKind);
             }
@@ -2277,17 +2277,17 @@ namespace Corvus.Text.Json.Tests
                 AllowTrailingCommas = true
             };
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json, options))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json, options))
             {
                 Assert.Equal(json, doc.RootElement.GetRawText());
             }
-            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument.Parse(json));
+            Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(json));
         }
 
         [Fact]
         public static void GetPropertyByNullName()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("{ }"))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{ }"))
             {
                 AssertExtensions.Throws<ArgumentNullException>(
                     "propertyName",
@@ -2302,7 +2302,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void GetPropertyInvalidUtf16()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("{\"name\":\"value\"}"))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"value\"}"))
             {
                 Assert.Throws<ArgumentException>(() => doc.RootElement.GetProperty("unpaired\uDFFE"));
 
@@ -2317,7 +2317,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = $"{{ \"{propertyName}\": 1, \"{propertyName}\": 2, \"nope\": -1, \"{propertyName}\": 3 }}";
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 JsonElement root = doc.RootElement;
                 byte[] utf8PropertyName = Encoding.UTF8.GetBytes(propertyName);
@@ -2377,7 +2377,7 @@ namespace Corvus.Text.Json.Tests
             string json =
                 $"{{ \"{propertyName}\": 0, \"{first}\": 1, \"{pn2}\": 0, \"{second}\": 2, \"{pn3}\": 0, \"nope\": -1, \"{third}\": 3 }}";
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 JsonElement root = doc.RootElement;
                 byte[] utf8PropertyName = Encoding.UTF8.GetBytes(propertyName);
@@ -2454,7 +2454,7 @@ namespace Corvus.Text.Json.Tests
 ""Aren't string just the greatest?\r\nNot a terminating quote: \""     \r   \n   \t  \\   ""
 }";
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 Assert.Equal(6, doc.RootElement.GetPropertyCount());
                 ObjectEnumerator<JsonElement> enumerator = doc.RootElement.EnumerateObject();
@@ -2537,7 +2537,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ArrayEnumeratorIndependentWalk()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("[0, 1, 2, 3, 4, 5]"))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("[0, 1, 2, 3, 4, 5]"))
             {
                 JsonElement root = doc.RootElement;
                 ArrayEnumerator<JsonElement> structEnumerable = root.EnumerateArray();
@@ -2695,7 +2695,7 @@ namespace Corvus.Text.Json.Tests
   ""name4"": 4,
   ""name5"": 5
 }";
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 JsonElement root = doc.RootElement;
                 ObjectEnumerator<JsonElement> structEnumerable = root.EnumerateObject();
@@ -2892,7 +2892,7 @@ namespace Corvus.Text.Json.Tests
     ""glub"": { ""bool"": false }
   }
 }";
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 JsonElement root = doc.RootElement;
                 Assert.Equal(JsonValueKind.Object, root.ValueKind);
@@ -2914,16 +2914,16 @@ namespace Corvus.Text.Json.Tests
         {
             Assert.Throws<ArgumentNullException>(
                 "json",
-                () => ParsedJsonDocument.Parse((string)null));
+                () => ParsedJsonDocument<JsonElement>.Parse((string)null));
 
             AssertExtensions.Throws<ArgumentNullException>(
                 "utf8Json",
-                () => ParsedJsonDocument.Parse((Stream)null));
+                () => ParsedJsonDocument<JsonElement>.Parse((Stream)null));
 
             // This synchronously throws the ArgumentNullException
             AssertExtensions.Throws<ArgumentNullException>(
                 "utf8Json",
-                () => { ParsedJsonDocument.ParseAsync(null); });
+                () => { ParsedJsonDocument<JsonElement>.ParseAsync(null); });
         }
 
         [Fact]
@@ -2932,12 +2932,12 @@ namespace Corvus.Text.Json.Tests
             Assert.ThrowsAny<JsonException>(() =>
             {
                 Utf8JsonReader reader = default;
-                ParsedJsonDocument.ParseValue(ref reader);
+                ParsedJsonDocument<JsonElement>.ParseValue(ref reader);
             });
 
             {
                 Utf8JsonReader reader = default;
-                Assert.False(ParsedJsonDocument.TryParseValue(ref reader, out ParsedJsonDocument document));
+                Assert.False(ParsedJsonDocument<JsonElement>.TryParseValue(ref reader, out ParsedJsonDocument<JsonElement> document));
                 Assert.Null(document);
             }
         }
@@ -3049,7 +3049,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.True(reader.Read(), "Move to first token");
             }
 
-            using (ParsedJsonDocument document = ParsedJsonDocument.ParseValue(ref reader))
+            using (ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(ref reader))
             {
                 Assert.Equal(valueJson, document.RootElement.GetRawText());
             }
@@ -3105,7 +3105,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(tokenType, reader.TokenType);
             long currentPosition = reader.BytesConsumed;
 
-            using (ParsedJsonDocument document = ParsedJsonDocument.ParseValue(ref reader))
+            using (ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(ref reader))
             {
                 Assert.Equal(valueJson, document.RootElement.GetRawText());
             }
@@ -3171,7 +3171,7 @@ namespace Corvus.Text.Json.Tests
 
             long currentPosition = reader.BytesConsumed;
 
-            using (ParsedJsonDocument document = ParsedJsonDocument.ParseValue(ref reader))
+            using (ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(ref reader))
             {
                 Assert.Equal(valueJson, document.RootElement.GetRawText());
             }
@@ -3247,7 +3247,7 @@ namespace Corvus.Text.Json.Tests
 
             try
             {
-                using (ParsedJsonDocument.ParseValue(ref reader))
+                using (ParsedJsonDocument<JsonElement>.ParseValue(ref reader))
                 {
                 }
 
@@ -3263,7 +3263,7 @@ namespace Corvus.Text.Json.Tests
 
             Assert.Equal(initialPosition, reader.BytesConsumed);
 
-            Assert.False(ParsedJsonDocument.TryParseValue(ref reader, out ParsedJsonDocument doc));
+            Assert.False(ParsedJsonDocument<JsonElement>.TryParseValue(ref reader, out ParsedJsonDocument<JsonElement> doc));
             Assert.Null(doc);
             Assert.Equal(initialPosition, reader.BytesConsumed);
         }
@@ -3291,7 +3291,7 @@ namespace Corvus.Text.Json.Tests
 
             try
             {
-                using (ParsedJsonDocument.ParseValue(ref reader))
+                using (ParsedJsonDocument<JsonElement>.ParseValue(ref reader))
                 {
                 }
 
@@ -3308,11 +3308,11 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(JsonTokenType.PropertyName, reader.TokenType);
             Assert.Equal(startPosition, reader.BytesConsumed);
 
-            ParsedJsonDocument doc = null;
+            ParsedJsonDocument<JsonElement> doc = null;
 
             try
             {
-                ParsedJsonDocument.TryParseValue(ref reader, out doc);
+                ParsedJsonDocument<JsonElement>.TryParseValue(ref reader, out doc);
                 ex = null;
             }
             catch (Exception e)
@@ -3351,7 +3351,7 @@ namespace Corvus.Text.Json.Tests
 
             try
             {
-                using (ParsedJsonDocument.ParseValue(ref reader))
+                using (ParsedJsonDocument<JsonElement>.ParseValue(ref reader))
                 {
                 }
 
@@ -3368,7 +3368,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(JsonTokenType.PropertyName, reader.TokenType);
             Assert.Equal(startPosition, reader.BytesConsumed);
 
-            Assert.False(ParsedJsonDocument.TryParseValue(ref reader, out ParsedJsonDocument doc));
+            Assert.False(ParsedJsonDocument<JsonElement>.TryParseValue(ref reader, out ParsedJsonDocument<JsonElement> doc));
             Assert.Null(doc);
 
             Assert.Equal(JsonTokenType.PropertyName, reader.TokenType);
@@ -3398,7 +3398,7 @@ namespace Corvus.Text.Json.Tests
 
             try
             {
-                using (ParsedJsonDocument.ParseValue(ref reader))
+                using (ParsedJsonDocument<JsonElement>.ParseValue(ref reader))
                 {
                 }
 
@@ -3415,7 +3415,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(JsonTokenType.PropertyName, reader.TokenType);
             Assert.Equal(startPosition, reader.BytesConsumed);
 
-            Assert.False(ParsedJsonDocument.TryParseValue(ref reader, out ParsedJsonDocument doc));
+            Assert.False(ParsedJsonDocument<JsonElement>.TryParseValue(ref reader, out ParsedJsonDocument<JsonElement> doc));
             Assert.Null(doc);
 
             Assert.Equal(JsonTokenType.PropertyName, reader.TokenType);
@@ -3428,12 +3428,12 @@ namespace Corvus.Text.Json.Tests
             var options = new JsonReaderOptions { AllowMultipleValues = true };
             var reader = new Utf8JsonReader("[null,false,42,{},[1]]             [43]"u8, options);
 
-            using ParsedJsonDocument doc1 = ParsedJsonDocument.ParseValue(ref reader);
+            using ParsedJsonDocument<JsonElement> doc1 = ParsedJsonDocument<JsonElement>.ParseValue(ref reader);
             Assert.Equal("[null,false,42,{},[1]]", doc1.RootElement.GetRawText());
             Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
 
             Assert.True(reader.Read());
-            using ParsedJsonDocument doc2 = ParsedJsonDocument.ParseValue(ref reader);
+            using ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.ParseValue(ref reader);
             Assert.Equal("[43]", doc2.RootElement.GetRawText());
 
             Assert.False(reader.Read());
@@ -3446,7 +3446,7 @@ namespace Corvus.Text.Json.Tests
             var options = new JsonReaderOptions { AllowMultipleValues = true };
             var reader = new Utf8JsonReader("[null,false,42,{},[1]]             <NotJson/>"u8, options);
 
-            using ParsedJsonDocument doc = ParsedJsonDocument.ParseValue(ref reader);
+            using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.ParseValue(ref reader);
             Assert.Equal("[null,false,42,{},[1]]", doc.RootElement.GetRawText());
             Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
 
@@ -3460,7 +3460,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("""{ "foo" : {"nested:" : {"nested": 1, "bla": [1, 2, {"bla": 3}] } }, "test": true, "foo2" : {"nested:" : {"nested": 1, "bla": [1, 2, {"bla": 3}] } }}""", 3)]
         public static void TestGetPropertyCount(string json, int expectedCount)
         {
-            using var doc = ParsedJsonDocument.Parse(json);
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
             JsonElement element = doc.RootElement;
             Assert.Equal(expectedCount, element.GetPropertyCount());
         }
@@ -3468,7 +3468,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void VerifyGetPropertyCountAndArrayLengthUsingEnumerateMethods()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(SR.ProjectLockJson))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ProjectLockJson))
             {
                 CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(doc.RootElement);
             }
@@ -3544,7 +3544,7 @@ namespace Corvus.Text.Json.Tests
             // Replace last comma with ]
             utf8Json[NumberOfBytes - 1] = (byte)']';
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(utf8Json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(utf8Json))
             {
                 JsonElement root = doc.RootElement;
                 int count = root.GetArrayLength();
@@ -3559,7 +3559,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ValueEquals_Null_TrueForNullFalseForEmpty()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("   null   "))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("   null   "))
             {
                 JsonElement jElement = doc.RootElement;
                 Assert.True(jElement.ValueEquals((string)null));
@@ -3576,7 +3576,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ValueEquals_EmptyJsonString_True()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("\"\""))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("\"\""))
             {
                 JsonElement jElement = doc.RootElement;
                 Assert.True(jElement.ValueEquals(""));
@@ -3592,7 +3592,7 @@ namespace Corvus.Text.Json.Tests
         {
             string lookup = new string('a', 320);
             string jsonString = "\"" + lookup + "\"";
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 Assert.True(jElement.ValueEquals((string)lookup));
@@ -3607,7 +3607,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"My name is \\\"Ahson\\\"\"", "My name is \"Ahson\"")]
         public static void ValueEquals_JsonTokenStringType_True(string jsonString, string expected)
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 Assert.True(jElement.ValueEquals(expected));
@@ -3621,7 +3621,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"conne\\u0063tionId\"", "c")]
         public static void ValueEquals_DestinationTooSmallComparesEscaping_False(string jsonString, string other)
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 Assert.False(jElement.ValueEquals(other));
@@ -3636,7 +3636,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"hello\"", new char[1] { (char)0xD801 })]    // high surrogate - missing pair
         public static void InvalidUTF16Search(string jsonString, char[] lookup)
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 Assert.False(jElement.ValueEquals(lookup));
@@ -3649,7 +3649,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"conne\\u0063tionId\"", "bonnectionId")] // intentionally changing the expected starting character
         public static void ValueEquals_JsonTokenStringType_False(string jsonString, string otherText)
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 Assert.False(jElement.ValueEquals(otherText));
@@ -3669,7 +3669,7 @@ namespace Corvus.Text.Json.Tests
         public static void ValueEquals_NotString_Throws(string jsonString)
         {
             const string ErrorMessage = "The requested operation requires an element of type 'String', but the target element has type 'Object'.";
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 const string ThrowsAnyway = "throws-anyway";
@@ -3684,7 +3684,7 @@ namespace Corvus.Text.Json.Tests
         {
             const string jsonString = "{\"\" : \"some-value\"}";
             const string ErrorMessage = "The requested operation requires an element of type 'String', but the target element has type 'Object'.";
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonString))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
             {
                 JsonElement jElement = doc.RootElement;
                 const string ThrowsAnyway = "throws-anyway";
@@ -3699,7 +3699,7 @@ namespace Corvus.Text.Json.Tests
         [OuterLoop] // thread-safety / stress test
         public static async Task GetString_ConcurrentUse_ThreadSafe()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(SR.SimpleObjectJson))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
             {
                 JsonElement first = doc.RootElement.GetProperty("first");
                 JsonElement last = doc.RootElement.GetProperty("last");
@@ -3798,14 +3798,14 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static async Task VerifyMultiThreadedDispose()
         {
-            Action<object> disposeAction = (object document) => ((ParsedJsonDocument)document).Dispose();
+            Action<object> disposeAction = (object document) => ((ParsedJsonDocument<JsonElement>)document).Dispose();
 
             // Create a bunch of parallel tasks that call Dispose several times on the same object.
             Task[] tasks = new Task[100];
             int count = 0;
             for (int j = 0; j < 10; j++)
             {
-                ParsedJsonDocument document = ParsedJsonDocument.Parse("123" + j);
+                ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse("123" + j);
                 for (int i = 0; i < 10; i++)
                 {
                     tasks[count] = new Task(disposeAction, document);
@@ -3819,7 +3819,7 @@ namespace Corvus.Text.Json.Tests
 
             // When ArrayPool gets corrupted, the Rent method might return an already rented array, which is incorrect.
             // So we will rent as many arrays as calls to JsonElement.Dispose and check they are unique.
-            // The minimum length that we ask for is a mirror of the size of the string passed to ParsedJsonDocument.Parse.
+            // The minimum length that we ask for is a mirror of the size of the string passed to ParsedJsonDocument<JsonElement>.Parse.
             HashSet<byte[]> uniqueAddresses = new HashSet<byte[]>();
             while (count > 0)
             {
@@ -3832,7 +3832,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void DeserializeNullAsNullLiteral()
         {
-            var jsonDocument = ParsedJsonDocument.Parse("null");
+            var jsonDocument = ParsedJsonDocument<JsonElement>.Parse("null");
             Assert.NotNull(jsonDocument);
             Assert.Equal(JsonValueKind.Null, jsonDocument.RootElement.ValueKind);
         }

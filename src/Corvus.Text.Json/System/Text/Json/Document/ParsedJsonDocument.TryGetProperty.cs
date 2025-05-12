@@ -3,7 +3,7 @@
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class ParsedJsonDocument
+    public sealed partial class ParsedJsonDocument<T>
     {
         bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value)
         {

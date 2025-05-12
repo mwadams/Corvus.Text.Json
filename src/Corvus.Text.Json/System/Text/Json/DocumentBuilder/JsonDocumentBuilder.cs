@@ -5,10 +5,13 @@ using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class JsonDocumentBuilder : JsonDocument, IMutableJsonDocument
+    [CLSCompliant(false)]
+    public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonDocument
+        where T : struct, IMutableJsonElement<T>
     {
         private static readonly JsonWriterOptions InternalWriterOptions = new() { Indented = false };
         private readonly JsonWorkspace _workspace;
@@ -22,7 +25,14 @@ namespace Corvus.Text.Json
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IJsonDocument.IsDisposable => true;
 
-        public MutableJsonElement RootElement => new MutableJsonElement(this, 0);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        int IMutableJsonDocument.ParentWorkspaceIndex => _parentWorkspaceIndex;
+
+#if NET
+        public T RootElement => T.CreateInstance(this, 0);
+#else
+        public T RootElement => JsonElementHelpers.CreateInstance<T>(this, 0);
+#endif
 
         /// <summary>
         ///  Write the document into the provided writer as a JSON value.
@@ -53,10 +63,14 @@ namespace Corvus.Text.Json
             int metadataDbLength = sourceElement.ParentDocument.BuildRentedMetadataDb(sourceElement.ParentDocumentIndex, _workspace, out metadataDbBytes);
             _parsedData = MetadataDb.CreateRented(metadataDbBytes, metadataDbLength, convertToAlloc);
         }
+
         internal void Initialize(int parentWorkspaceIndex, int initialElementCount)
         {
-            _parentWorkspaceIndex = parentWorkspaceIndex;
-            _parsedData = MetadataDb.CreateRented(initialElementCount * DbRow.Size, convertToAlloc: false);
+            if (initialElementCount >= 0)
+            {
+                _parentWorkspaceIndex = parentWorkspaceIndex;
+                _parsedData = MetadataDb.CreateRented(initialElementCount * DbRow.Size, convertToAlloc: false);
+            }
         }
 
         void IDisposable.Dispose()
@@ -120,11 +134,11 @@ namespace Corvus.Text.Json
             return new JsonElement(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
         }
 
-        MutableJsonElement IMutableJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex)
+        JsonElement.Mutable IMutableJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex)
         {
             CheckNotDisposed();
 
-            return new MutableJsonElement(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
+            return new JsonElement.Mutable(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
         }
 
         int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
@@ -137,6 +151,11 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
             return GetRawValueUnsafe(index, includeQuotes);
+        }
+
+        public void InsertAndDispose(ref ComplexValueBuilder cvb)
+        {
+            cvb.InsertAndDispose(ref _parsedData);
         }
 
         private RawUtf8JsonString GetRawValueUnsafe(int index, bool includeQuotes)
@@ -661,10 +680,20 @@ namespace Corvus.Text.Json
 
         JsonElement IJsonDocument.CloneElement(int index)
         {
-            return CloneElement(index, false);
+            return JsonElement.From(CloneElement(index, false));
         }
 
-        private JsonElement CloneElement(int index, bool addDocumentToWorkspace)
+        TElement IJsonDocument.CloneElement<TElement>(int index)
+        {
+            T element = CloneElement(index, false);
+#if NET
+            return TElement.CreateInstance(element.ParentDocument, element.ParentDocumentIndex);
+#else
+            return JsonElementHelpers.CreateInstance<TElement>(element.ParentDocument, element.ParentDocumentIndex);
+#endif
+        }
+
+        private T CloneElement(int index, bool addDocumentToWorkspace)
         {
             CheckNotDisposed();
 
@@ -674,7 +703,7 @@ namespace Corvus.Text.Json
             if (row.FromExternalDocument)
             {
                 IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-                return document.CloneElement(row.LocationOrIndex);
+                return document.CloneElement<T>(row.LocationOrIndex);
             }
 
             using RawUtf8JsonString rawUtf8Json = GetRawValueUnsafe(index, includeQuotes: true);
@@ -690,8 +719,8 @@ namespace Corvus.Text.Json
                 segmentCopy = rawUtf8Json.Span.ToArray();
             }
 
-            ParsedJsonDocument newDocument =
-                ParsedJsonDocument.Parse(segmentCopy);
+            ParsedJsonDocument<T> newDocument =
+                ParsedJsonDocument<T>.Parse(segmentCopy);
 
             if (addDocumentToWorkspace)
             {
@@ -826,7 +855,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
-        bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out MutableJsonElement value)
+        bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement.Mutable value)
         {
             CheckNotDisposed();
 
@@ -840,7 +869,7 @@ namespace Corvus.Text.Json
                 propertyName,
                 out int valueIndex))
             {
-                value = new MutableJsonElement(this, valueIndex);
+                value = new JsonElement.Mutable(this, valueIndex);
                 return true;
             }
 
@@ -850,7 +879,7 @@ namespace Corvus.Text.Json
         }
 
         // TODO: figure out how to bridge from the non-mutable to mutable document in this deferral case
-        bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out MutableJsonElement value)
+        bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement.Mutable value)
         {
             CheckNotDisposed();
 
@@ -864,7 +893,7 @@ namespace Corvus.Text.Json
                 propertyName,
                 out int valueIndex))
             {
-                value = new MutableJsonElement(this, valueIndex);
+                value = new JsonElement.Mutable(this, valueIndex);
                 return true;
             }
 
@@ -997,5 +1026,73 @@ namespace Corvus.Text.Json
                 ThrowHelper.ThrowObjectDisposedException_JsonDocument();
             }
         }
+
+        int IMutableJsonDocument.WriteRawNumberValue(ReadOnlySpan<byte> value) => throw new NotImplementedException();
+        int IMutableJsonDocument.EscapeAndWriteStringValue(ReadOnlySpan<byte> value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(Guid value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(sbyte value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(byte value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(int value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(uint value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(long value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(ulong value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(short value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(ushort value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(float value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(double value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(decimal value) => throw new NotImplementedException();
+#if NET
+        void IMutableJsonDocument.WriteValue(Int128 value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(UInt128 value) => throw new NotImplementedException();
+        void IMutableJsonDocument.WriteValue(Half value) => throw new NotImplementedException();
+#endif
+        void IMutableJsonDocument.SetPropertyRawNumber(int objectIndex, ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetPropertyRawString(int objectIndex, ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, JsonObjectBuilder.Build objectValue) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, JsonArrayBuilder.Build arrayValue) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetPropertyNull(int objectIndex, ReadOnlySpan<byte> propertyName) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, bool value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty<T1>(int objectIndex, ReadOnlySpan<byte> propertyName, T1 value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, Guid value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, sbyte value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, byte value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, int value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, uint value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, long value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, ulong value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, short value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, ushort value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, float value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, double value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, decimal value) => throw new NotImplementedException();
+#if NET
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, Int128 value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, UInt128 value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetProperty(int objectIndex, ReadOnlySpan<byte> propertyName, Half value) => throw new NotImplementedException();
+#endif
+        void IMutableJsonDocument.SetItemRawNumber(int arrayIndex, int itemIndex, ReadOnlySpan<byte> value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItemRawString(int arrayIndex, int itemIndex, ReadOnlySpan<byte> value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayuIndex, int itemIndex, JsonObjectBuilder.Build objectValue) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayuIndex, int itemIndex, JsonArrayBuilder.Build arrayValue) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItemNull(int arrayIndex, int itemIndex) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, bool value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem<T1>(int arrayIndex, int itemIndex, T1 value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, Guid value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, sbyte value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, byte value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, int value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, uint value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, long value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, ulong value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, short value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, ushort value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, float value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, double value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, decimal value) => throw new NotImplementedException();
+#if NET
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, Int128 value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, UInt128 value) => throw new NotImplementedException();
+        void IMutableJsonDocument.SetItem(int arrayIndex, int itemIndex, Half value) => throw new NotImplementedException();
+#endif
     }
 }

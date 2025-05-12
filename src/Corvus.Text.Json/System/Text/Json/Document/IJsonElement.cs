@@ -31,5 +31,7 @@ namespace Corvus.Text.Json
         JsonValueKind ValueKind { get; }
 
         void CheckValidInstance();
+
+        void WriteTo(Utf8JsonWriter writer);
     }
 }

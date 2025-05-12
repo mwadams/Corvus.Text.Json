@@ -46,7 +46,7 @@ namespace Corvus.Text.Json
         /// </exception>
         public static JsonElement ParseValue(ref Utf8JsonReader reader)
         {
-            bool ret = ParsedJsonDocument.TryParseValue(ref reader, out ParsedJsonDocument? document, shouldThrow: true, useArrayPools: false);
+            bool ret = ParsedJsonDocument<JsonElement>.TryParseValue(ref reader, out ParsedJsonDocument<JsonElement>? document, shouldThrow: true, useArrayPools: false);
 
             Debug.Assert(ret, "TryParseValue returned false with shouldThrow: true.");
             Debug.Assert(document != null, "null document returned with shouldThrow: true.");
@@ -55,19 +55,19 @@ namespace Corvus.Text.Json
 
         internal static JsonElement ParseValue(Stream utf8Json, JsonDocumentOptions options)
         {
-            ParsedJsonDocument document = ParsedJsonDocument.ParseValue(utf8Json, options);
+            ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(utf8Json, options);
             return document.RootElement;
         }
 
         internal static JsonElement ParseValue(ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options)
         {
-            ParsedJsonDocument document = ParsedJsonDocument.ParseValue(utf8Json, options);
+            ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(utf8Json, options);
             return document.RootElement;
         }
 
         internal static JsonElement ParseValue(string json, JsonDocumentOptions options)
         {
-            ParsedJsonDocument document = ParsedJsonDocument.ParseValue(json, options);
+            ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(json, options);
             return document.RootElement;
         }
 
@@ -111,7 +111,7 @@ namespace Corvus.Text.Json
         /// </exception>
         public static bool TryParseValue(ref Utf8JsonReader reader, [NotNullWhen(true)] out JsonElement? element)
         {
-            bool ret = ParsedJsonDocument.TryParseValue(ref reader, out ParsedJsonDocument? document, shouldThrow: false, useArrayPools: false);
+            bool ret = ParsedJsonDocument<JsonElement>.TryParseValue(ref reader, out ParsedJsonDocument<JsonElement>? document, shouldThrow: false, useArrayPools: false);
             element = document?.RootElement;
             return ret;
         }

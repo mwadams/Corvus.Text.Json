@@ -1541,7 +1541,7 @@ namespace Corvus.Text.Json
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"ValueKind = {ValueKind} : \"{ToString()}\"";
+        private string DebuggerDisplay => $"JsonElement: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;

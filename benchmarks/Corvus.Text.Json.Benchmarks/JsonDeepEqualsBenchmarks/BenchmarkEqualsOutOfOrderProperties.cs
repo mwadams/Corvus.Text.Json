@@ -14,8 +14,8 @@ public class BenchmarkEqualsOutOfOrderProperties
 {
     private System.Text.Json.JsonDocument? documentA1;
     private System.Text.Json.JsonDocument? documentA2;
-    private Corvus.Text.Json.ParsedJsonDocument? documentB1;
-    private Corvus.Text.Json.ParsedJsonDocument? documentB2;
+    private Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>? documentB1;
+    private Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>? documentB2;
 
     [GlobalSetup]
     public void Setup()
@@ -78,7 +78,7 @@ public class BenchmarkEqualsOutOfOrderProperties
             }
             """);
 
-        this.documentB1 = Corvus.Text.Json.ParsedJsonDocument.Parse(
+        this.documentB1 = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(
             """
             {
                 "name": "John",
@@ -107,7 +107,7 @@ public class BenchmarkEqualsOutOfOrderProperties
             }
             """);
 
-        this.documentB2 = Corvus.Text.Json.ParsedJsonDocument.Parse(
+        this.documentB2 = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(
             """
             {
                "age": 30,

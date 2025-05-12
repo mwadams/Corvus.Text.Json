@@ -11,7 +11,7 @@ namespace Corvus.Text.Json
         // SizeOrLength - offset - 0 - size - 4
         // NumberOfRows - offset - 4 - size - 4
         [StructLayout(LayoutKind.Sequential)]
-        protected readonly struct StackRow
+        internal readonly struct StackRow
         {
             internal const int Size = 8;
 

@@ -55,8 +55,8 @@ namespace Corvus.Text.Json
 
         public static void AssertJsonEqual(string expected, string actual)
         {
-            using ParsedJsonDocument expectedDom = ParsedJsonDocument.Parse(expected);
-            using ParsedJsonDocument actualDom = ParsedJsonDocument.Parse(actual);
+            using ParsedJsonDocument<JsonElement> expectedDom = ParsedJsonDocument<JsonElement>.Parse(expected);
+            using ParsedJsonDocument<JsonElement> actualDom = ParsedJsonDocument<JsonElement>.Parse(actual);
             AssertJsonEqual(expectedDom.RootElement, actualDom.RootElement);
         }
 

@@ -6469,7 +6469,7 @@ namespace Corvus.Text.Json.Tests
             jsonUtf8.WriteStringValue(utcNow);
             jsonUtf8.Flush();
 
-            using ParsedJsonDocument doc = ParsedJsonDocument.Parse(output.WrittenMemory);            
+            using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(output.WrittenMemory);            
             Assert.Equal(utcNow, doc.RootElement.GetDateTime());
         }
 

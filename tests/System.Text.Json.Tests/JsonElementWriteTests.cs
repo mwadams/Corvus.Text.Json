@@ -10,18 +10,18 @@ namespace Corvus.Text.Json.Tests
 {
     public sealed class ParsedJsonDocumentWriteTests : JsonDomWriteTests
     {
-        protected override ParsedJsonDocument PrepareDocument(string jsonIn)
+        protected override ParsedJsonDocument<JsonElement> PrepareDocument(string jsonIn)
         {
-            var jsonDocument = ParsedJsonDocument.Parse(jsonIn, s_options);
+            var jsonDocument = ParsedJsonDocument<JsonElement>.Parse(jsonIn, s_options);
             return jsonDocument;
         }
 
-        protected override void WriteSingleValue(ParsedJsonDocument document, Utf8JsonWriter writer)
+        protected override void WriteSingleValue(ParsedJsonDocument<JsonElement> document, Utf8JsonWriter writer)
         {
             document.WriteTo(writer);
         }
 
-        protected override void WriteDocument(ParsedJsonDocument document, Utf8JsonWriter writer)
+        protected override void WriteDocument(ParsedJsonDocument<JsonElement> document, Utf8JsonWriter writer)
         {
             document.WriteTo(writer);
         }
@@ -29,7 +29,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void CheckByPassingNullWriter()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("true", default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("true", default))
             {
                 AssertExtensions.Throws<ArgumentNullException>("writer", () => doc.WriteTo(null));
             }
@@ -38,17 +38,17 @@ namespace Corvus.Text.Json.Tests
 
     public sealed class JsonElementWriteTests : JsonDomWriteTests
     {
-        protected override ParsedJsonDocument PrepareDocument(string jsonIn)
+        protected override ParsedJsonDocument<JsonElement> PrepareDocument(string jsonIn)
         {
-            return ParsedJsonDocument.Parse($" [  {jsonIn}  ]", s_options);
+            return ParsedJsonDocument<JsonElement>.Parse($" [  {jsonIn}  ]", s_options);
         }
 
-        protected override void WriteSingleValue(ParsedJsonDocument document, Utf8JsonWriter writer)
+        protected override void WriteSingleValue(ParsedJsonDocument<JsonElement> document, Utf8JsonWriter writer)
         {
             document.RootElement[0].WriteTo(writer);
         }
 
-        protected override void WriteDocument(ParsedJsonDocument document, Utf8JsonWriter writer)
+        protected override void WriteDocument(ParsedJsonDocument<JsonElement> document, Utf8JsonWriter writer)
         {
             document.RootElement.WriteTo(writer);
         }
@@ -56,7 +56,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public void CheckByPassingNullWriter()
         {
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("true", default))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("true", default))
             {
                 JsonElement root = doc.RootElement;
                 AssertExtensions.Throws<ArgumentNullException>("writer", () => root.WriteTo(null));
@@ -69,7 +69,7 @@ namespace Corvus.Text.Json.Tests
         public void WritePropertyOutsideObject(bool skipValidation)
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
-            using (var doc = ParsedJsonDocument.Parse("[ null, false, true, \"hi\", 5, {}, [] ]", s_options))
+            using (var doc = ParsedJsonDocument<JsonElement>.Parse("[ null, false, true, \"hi\", 5, {}, [] ]", s_options))
             {
                 JsonElement root = doc.RootElement;
                 var options = new JsonWriterOptions
@@ -126,7 +126,7 @@ namespace Corvus.Text.Json.Tests
         public void WriteValueInsideObject(bool skipValidation)
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
-            using (var doc = ParsedJsonDocument.Parse("[ null, false, true, \"hi\", 5, {}, [] ]", s_options))
+            using (var doc = ParsedJsonDocument<JsonElement>.Parse("[ null, false, true, \"hi\", 5, {}, [] ]", s_options))
             {
                 JsonElement root = doc.RootElement;
                 var options = new JsonWriterOptions
@@ -175,9 +175,9 @@ namespace Corvus.Text.Json.Tests
                 CommentHandling = JsonCommentHandling.Skip,
             };
 
-        protected abstract ParsedJsonDocument PrepareDocument(string jsonIn);
-        protected abstract void WriteSingleValue(ParsedJsonDocument document, Utf8JsonWriter writer);
-        protected abstract void WriteDocument(ParsedJsonDocument document, Utf8JsonWriter writer);
+        protected abstract ParsedJsonDocument<JsonElement> PrepareDocument(string jsonIn);
+        protected abstract void WriteSingleValue(ParsedJsonDocument<JsonElement> document, Utf8JsonWriter writer);
+        protected abstract void WriteDocument(ParsedJsonDocument<JsonElement> document, Utf8JsonWriter writer);
 
         [Theory]
         [InlineData(false)]
@@ -293,7 +293,7 @@ namespace Corvus.Text.Json.Tests
 
             byte[] utf8Data = Encoding.UTF8.GetBytes(parseJson);
 
-            using (ParsedJsonDocument document = ParsedJsonDocument.Parse(utf8Data))
+            using (ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(utf8Data))
             using (MemoryStream stream = new MemoryStream(Array.Empty<byte>()))
             using (Utf8JsonWriter writer = new Utf8JsonWriter(stream))
             {
@@ -716,7 +716,7 @@ null,
             string json = $"\"{unicodeString}\"";
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (ParsedJsonDocument doc = PrepareDocument(json))
+            using (ParsedJsonDocument<JsonElement> doc = PrepareDocument(json))
             {
                 using (var writer = new Utf8JsonWriter(buffer))
                 {
@@ -1131,7 +1131,7 @@ null,
             jsonIn.AsSpan(SpacesPre + TargetDepth + SpacesSplit + TargetDepth).Fill((byte)' ');
 
             var buffer = new ArrayBufferWriter<byte>(jsonIn.Length);
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(jsonIn, optionsCopy))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonIn, optionsCopy))
             {
                 using (var writer = new Utf8JsonWriter(buffer))
                 {
@@ -1157,7 +1157,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (ParsedJsonDocument doc = PrepareDocument(jsonIn))
+            using (ParsedJsonDocument<JsonElement> doc = PrepareDocument(jsonIn))
             {
                 {
                     var options = new JsonWriterOptions
@@ -1203,7 +1203,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (ParsedJsonDocument doc = PrepareDocument(jsonIn))
+            using (ParsedJsonDocument<JsonElement> doc = PrepareDocument(jsonIn))
             {
                 var options = new JsonWriterOptions
                 {
@@ -1233,7 +1233,7 @@ null,
                 Indented = indented
             };
 
-            using (ParsedJsonDocument doc = PrepareDocument(jsonIn))
+            using (ParsedJsonDocument<JsonElement> doc = PrepareDocument(jsonIn))
             {
                 using (var writer = new Utf8JsonWriter(buffer, options))
                 {
@@ -1250,7 +1250,7 @@ null,
                 string bufferString = Encoding.UTF8.GetString(bufferOutput);
                 buffer.Clear();
 
-                using (ParsedJsonDocument doc2 = PrepareDocument(bufferString))
+                using (ParsedJsonDocument<JsonElement> doc2 = PrepareDocument(bufferString))
                 {
                     using (var writer = new Utf8JsonWriter(buffer, options))
                     {
@@ -1307,7 +1307,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (ParsedJsonDocument doc = PrepareDocument(jsonIn))
+            using (ParsedJsonDocument<JsonElement> doc = PrepareDocument(jsonIn))
             {
                 var options = new JsonWriterOptions
                 {
@@ -1336,7 +1336,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (ParsedJsonDocument doc = PrepareDocument(jsonIn))
+            using (ParsedJsonDocument<JsonElement> doc = PrepareDocument(jsonIn))
             {
                 var options = new JsonWriterOptions
                 {
@@ -1364,7 +1364,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (ParsedJsonDocument doc = PrepareDocument(jsonIn))
+            using (ParsedJsonDocument<JsonElement> doc = PrepareDocument(jsonIn))
             {
                 var options = new JsonWriterOptions
                 {
@@ -1392,7 +1392,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (ParsedJsonDocument doc = PrepareDocument(jsonIn))
+            using (ParsedJsonDocument<JsonElement> doc = PrepareDocument(jsonIn))
             {
                 var options = new JsonWriterOptions
                 {

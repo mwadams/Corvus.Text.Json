@@ -10,12 +10,14 @@ using System.Threading.Tasks;
 
 namespace Corvus.Text.Json
 {
-    public sealed partial class ParsedJsonDocument
+    [CLSCompliant(false)]
+    public sealed partial class ParsedJsonDocument<T>
+        where T : struct, IJsonElement<T>
     {
         // Cached unrented documents for literal values.
-        private static ParsedJsonDocument? s_nullLiteral;
-        private static ParsedJsonDocument? s_trueLiteral;
-        private static ParsedJsonDocument? s_falseLiteral;
+        private static ParsedJsonDocument<T>? s_nullLiteral;
+        private static ParsedJsonDocument<T>? s_trueLiteral;
+        private static ParsedJsonDocument<T>? s_falseLiteral;
 
         private const int UnseekableStreamInitialRentSize = 4096;
 
@@ -25,7 +27,7 @@ namespace Corvus.Text.Json
         /// <remarks>
         ///   <para>
         ///     The <see cref="ReadOnlyMemory{T}"/> value will be used for the entire lifetime of the
-        ///     ParsedJsonDocument object, and the caller must ensure that the data therein does not change during
+        ///     ParsedJsonDocument<T> object, and the caller must ensure that the data therein does not change during
         ///     the object lifetime.
         ///   </para>
         ///
@@ -36,7 +38,7 @@ namespace Corvus.Text.Json
         /// <param name="utf8Json">JSON text to parse.</param>
         /// <param name="options">Options to control the reader behavior during parsing.</param>
         /// <returns>
-        ///   A ParsedJsonDocument representation of the JSON value.
+        ///   A ParsedJsonDocument<T> representation of the JSON value.
         /// </returns>
         /// <exception cref="JsonException">
         ///   <paramref name="utf8Json"/> does not represent a valid single JSON value.
@@ -44,7 +46,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ArgumentException">
         ///   <paramref name="options"/> contains unsupported options.
         /// </exception>
-        public static ParsedJsonDocument Parse(ReadOnlyMemory<byte> utf8Json, JsonDocumentOptions options = default)
+        public static ParsedJsonDocument<T> Parse(ReadOnlyMemory<byte> utf8Json, JsonDocumentOptions options = default)
         {
             return Parse(utf8Json, options.GetReaderOptions());
         }
@@ -55,7 +57,7 @@ namespace Corvus.Text.Json
         /// <remarks>
         ///   <para>
         ///     The <see cref="ReadOnlySequence{T}"/> may be used for the entire lifetime of the
-        ///     ParsedJsonDocument object, and the caller must ensure that the data therein does not change during
+        ///     ParsedJsonDocument<T> object, and the caller must ensure that the data therein does not change during
         ///     the object lifetime.
         ///   </para>
         ///
@@ -66,7 +68,7 @@ namespace Corvus.Text.Json
         /// <param name="utf8Json">JSON text to parse.</param>
         /// <param name="options">Options to control the reader behavior during parsing.</param>
         /// <returns>
-        ///   A ParsedJsonDocument representation of the JSON value.
+        ///   A ParsedJsonDocument<T> representation of the JSON value.
         /// </returns>
         /// <exception cref="JsonException">
         ///   <paramref name="utf8Json"/> does not represent a valid single JSON value.
@@ -74,7 +76,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ArgumentException">
         ///   <paramref name="options"/> contains unsupported options.
         /// </exception>
-        public static ParsedJsonDocument Parse(ReadOnlySequence<byte> utf8Json, JsonDocumentOptions options = default)
+        public static ParsedJsonDocument<T> Parse(ReadOnlySequence<byte> utf8Json, JsonDocumentOptions options = default)
         {
             JsonReaderOptions readerOptions = options.GetReaderOptions();
 
@@ -107,7 +109,7 @@ namespace Corvus.Text.Json
         /// <param name="utf8Json">JSON data to parse.</param>
         /// <param name="options">Options to control the reader behavior during parsing.</param>
         /// <returns>
-        ///   A ParsedJsonDocument representation of the JSON value.
+        ///   A ParsedJsonDocument<T> representation of the JSON value.
         /// </returns>
         /// <exception cref="JsonException">
         ///   <paramref name="utf8Json"/> does not represent a valid single JSON value.
@@ -115,7 +117,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ArgumentException">
         ///   <paramref name="options"/> contains unsupported options.
         /// </exception>
-        public static ParsedJsonDocument Parse(Stream utf8Json, JsonDocumentOptions options = default)
+        public static ParsedJsonDocument<T> Parse(Stream utf8Json, JsonDocumentOptions options = default)
         {
             ArgumentNullException.ThrowIfNull(utf8Json);
 
@@ -134,7 +136,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        internal static ParsedJsonDocument ParseRented(PooledByteBufferWriter utf8Json, JsonDocumentOptions options = default)
+        internal static ParsedJsonDocument<T> ParseRented(PooledByteBufferWriter utf8Json, JsonDocumentOptions options = default)
         {
             return Parse(
                 utf8Json.WrittenMemory,
@@ -143,7 +145,7 @@ namespace Corvus.Text.Json
                 extraPooledByteBufferWriter: utf8Json);
         }
 
-        internal static ParsedJsonDocument ParseValue(Stream utf8Json, JsonDocumentOptions options)
+        internal static ParsedJsonDocument<T> ParseValue(Stream utf8Json, JsonDocumentOptions options)
         {
             Debug.Assert(utf8Json != null);
 
@@ -160,7 +162,7 @@ namespace Corvus.Text.Json
             return ParseUnrented(owned.AsMemory(), options.GetReaderOptions());
         }
 
-        internal static ParsedJsonDocument ParseValue(ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options)
+        internal static ParsedJsonDocument<T> ParseValue(ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options)
         {
             byte[] owned = new byte[utf8Json.Length];
             utf8Json.CopyTo(owned);
@@ -168,7 +170,7 @@ namespace Corvus.Text.Json
             return ParseUnrented(owned.AsMemory(), options.GetReaderOptions());
         }
 
-        internal static ParsedJsonDocument ParseValue(string json, JsonDocumentOptions options)
+        internal static ParsedJsonDocument<T> ParseValue(string json, JsonDocumentOptions options)
         {
             Debug.Assert(json != null);
             return ParseValue(json.AsMemory(), options);
@@ -182,7 +184,7 @@ namespace Corvus.Text.Json
         /// <param name="options">Options to control the reader behavior during parsing.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
-        ///   A Task to produce a ParsedJsonDocument representation of the JSON value.
+        ///   A Task to produce a ParsedJsonDocument<T> representation of the JSON value.
         /// </returns>
         /// <exception cref="JsonException">
         ///   <paramref name="utf8Json"/> does not represent a valid single JSON value.
@@ -190,7 +192,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ArgumentException">
         ///   <paramref name="options"/> contains unsupported options.
         /// </exception>
-        public static Task<ParsedJsonDocument> ParseAsync(
+        public static Task<ParsedJsonDocument<T>> ParseAsync(
             Stream utf8Json,
             JsonDocumentOptions options = default,
             CancellationToken cancellationToken = default)
@@ -200,7 +202,7 @@ namespace Corvus.Text.Json
             return ParseAsyncCore(utf8Json, options, cancellationToken);
         }
 
-        private static async Task<ParsedJsonDocument> ParseAsyncCore(
+        private static async Task<ParsedJsonDocument<T>> ParseAsyncCore(
             Stream utf8Json,
             JsonDocumentOptions options = default,
             CancellationToken cancellationToken = default)
@@ -220,7 +222,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        internal static async Task<ParsedJsonDocument> ParseAsyncCoreUnrented(
+        internal static async Task<ParsedJsonDocument<T>> ParseAsyncCoreUnrented(
             Stream utf8Json,
             JsonDocumentOptions options = default,
             CancellationToken cancellationToken = default)
@@ -243,13 +245,13 @@ namespace Corvus.Text.Json
         /// </summary>
         /// <remarks>
         ///   The <see cref="ReadOnlyMemory{T}"/> value may be used for the entire lifetime of the
-        ///   ParsedJsonDocument object, and the caller must ensure that the data therein does not change during
+        ///   ParsedJsonDocument<T> object, and the caller must ensure that the data therein does not change during
         ///   the object lifetime.
         /// </remarks>
         /// <param name="json">JSON text to parse.</param>
         /// <param name="options">Options to control the reader behavior during parsing.</param>
         /// <returns>
-        ///   A ParsedJsonDocument representation of the JSON value.
+        ///   A ParsedJsonDocument<T> representation of the JSON value.
         /// </returns>
         /// <exception cref="JsonException">
         ///   <paramref name="json"/> does not represent a valid single JSON value.
@@ -257,7 +259,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ArgumentException">
         ///   <paramref name="options"/> contains unsupported options.
         /// </exception>
-        public static ParsedJsonDocument Parse([StringSyntax(StringSyntaxAttribute.Json)] ReadOnlyMemory<char> json, JsonDocumentOptions options = default)
+        public static ParsedJsonDocument<T> Parse([StringSyntax(StringSyntaxAttribute.Json)] ReadOnlyMemory<char> json, JsonDocumentOptions options = default)
         {
             ReadOnlySpan<char> jsonChars = json.Span;
             int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(jsonChars);
@@ -282,7 +284,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        internal static ParsedJsonDocument ParseValue(ReadOnlyMemory<char> json, JsonDocumentOptions options)
+        internal static ParsedJsonDocument<T> ParseValue(ReadOnlyMemory<char> json, JsonDocumentOptions options)
         {
             ReadOnlySpan<char> jsonChars = json.Span;
             int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(jsonChars);
@@ -313,7 +315,7 @@ namespace Corvus.Text.Json
         /// <param name="json">JSON text to parse.</param>
         /// <param name="options">Options to control the reader behavior during parsing.</param>
         /// <returns>
-        ///   A ParsedJsonDocument representation of the JSON value.
+        ///   A ParsedJsonDocument<T> representation of the JSON value.
         /// </returns>
         /// <exception cref="JsonException">
         ///   <paramref name="json"/> does not represent a valid single JSON value.
@@ -321,7 +323,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ArgumentException">
         ///   <paramref name="options"/> contains unsupported options.
         /// </exception>
-        public static ParsedJsonDocument Parse([StringSyntax(StringSyntaxAttribute.Json)] string json, JsonDocumentOptions options = default)
+        public static ParsedJsonDocument<T> Parse([StringSyntax(StringSyntaxAttribute.Json)] string json, JsonDocumentOptions options = default)
         {
             ArgumentNullException.ThrowIfNull(json);
 
@@ -366,7 +368,7 @@ namespace Corvus.Text.Json
         /// <exception cref="JsonException">
         ///   A value could not be read from the reader.
         /// </exception>
-        public static bool TryParseValue(ref Utf8JsonReader reader, [NotNullWhen(true)] out ParsedJsonDocument? document)
+        public static bool TryParseValue(ref Utf8JsonReader reader, [NotNullWhen(true)] out ParsedJsonDocument<T>? document)
         {
             return TryParseValue(ref reader, out document, shouldThrow: false, useArrayPools: true);
         }
@@ -376,7 +378,7 @@ namespace Corvus.Text.Json
         /// </summary>
         /// <param name="reader">The reader to read.</param>
         /// <returns>
-        ///   A ParsedJsonDocument representing the value (and nested values) read from the reader.
+        ///   A ParsedJsonDocument<T> representing the value (and nested values) read from the reader.
         /// </returns>
         /// <remarks>
         ///   <para>
@@ -406,9 +408,9 @@ namespace Corvus.Text.Json
         /// <exception cref="JsonException">
         ///   A value could not be read from the reader.
         /// </exception>
-        public static ParsedJsonDocument ParseValue(ref Utf8JsonReader reader)
+        public static ParsedJsonDocument<T> ParseValue(ref Utf8JsonReader reader)
         {
-            bool ret = TryParseValue(ref reader, out ParsedJsonDocument? document, shouldThrow: true, useArrayPools: true);
+            bool ret = TryParseValue(ref reader, out ParsedJsonDocument<T>? document, shouldThrow: true, useArrayPools: true);
 
             Debug.Assert(ret, "TryParseValue returned false with shouldThrow: true.");
             Debug.Assert(document != null, "null document returned with shouldThrow: true.");
@@ -417,7 +419,7 @@ namespace Corvus.Text.Json
 
         internal static bool TryParseValue(
             ref Utf8JsonReader reader,
-            [NotNullWhen(true)] out ParsedJsonDocument? document,
+            [NotNullWhen(true)] out ParsedJsonDocument<T>? document,
             bool shouldThrow,
             bool useArrayPools)
         {
@@ -660,7 +662,7 @@ namespace Corvus.Text.Json
             return true;
         }
 
-        private static ParsedJsonDocument CreateForLiteral(JsonTokenType tokenType)
+        private static ParsedJsonDocument<T> CreateForLiteral(JsonTokenType tokenType)
         {
             switch (tokenType)
             {
@@ -676,15 +678,15 @@ namespace Corvus.Text.Json
                     return s_nullLiteral;
             }
 
-            ParsedJsonDocument Create(byte[] utf8Json)
+            ParsedJsonDocument<T> Create(byte[] utf8Json)
             {
                 MetadataDb database = MetadataDb.CreateLocked(utf8Json.Length);
                 database.Append(tokenType, startLocation: 0, utf8Json.Length);
-                return new ParsedJsonDocument(utf8Json, database, isDisposable: false);
+                return new ParsedJsonDocument<T>(utf8Json, database, isDisposable: false);
             }
         }
 
-        private static ParsedJsonDocument Parse(
+        private static ParsedJsonDocument<T> Parse(
             ReadOnlyMemory<byte> utf8Json,
             JsonReaderOptions readerOptions,
             byte[]? extraRentedArrayPoolBytes = null,
@@ -708,10 +710,10 @@ namespace Corvus.Text.Json
                 stack.Dispose();
             }
 
-            return new ParsedJsonDocument(utf8Json, database, extraRentedArrayPoolBytes, extraPooledByteBufferWriter);
+            return new ParsedJsonDocument<T>(utf8Json, database, extraRentedArrayPoolBytes, extraPooledByteBufferWriter);
         }
 
-        private static ParsedJsonDocument ParseUnrented(
+        private static ParsedJsonDocument<T> ParseUnrented(
             ReadOnlyMemory<byte> utf8Json,
             JsonReaderOptions readerOptions,
             JsonTokenType tokenType = JsonTokenType.None)
@@ -746,7 +748,7 @@ namespace Corvus.Text.Json
                 }
             }
 
-            return new ParsedJsonDocument(utf8Json, database, isDisposable: false);
+            return new ParsedJsonDocument<T>(utf8Json, database, isDisposable: false);
         }
 
         private static ArraySegment<byte> ReadToEnd(Stream stream)

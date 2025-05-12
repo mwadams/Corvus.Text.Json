@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -95,7 +96,7 @@ namespace Corvus.Text.Json
         // * Third int
         //   * 4 bits JsonTokenType
         //   * 28 bits for the number of rows until the next value (never 0)
-        protected struct MetadataDb : IDisposable
+        public struct MetadataDb : IDisposable
         {
             private const int SizeOrLengthOffset = 4;
             private const int NumberOfRowsOffset = 8;
@@ -126,6 +127,9 @@ namespace Corvus.Text.Json
                 _convertToAlloc = false;
                 Length = completeDb.Length;
             }
+
+            // If the instance is "default", _data can be null
+            internal bool IsInitialized => _data is not null;
 
             internal static MetadataDb WrapForBuilder([NotNull] byte[] data, int currentLength)
             {
@@ -260,6 +264,134 @@ namespace Corvus.Text.Json
                 DbRow row = new DbRow(tokenType, startLocation, length);
                 MemoryMarshal.Write(_data.AsSpan(Length), ref row);
                 Length += DbRow.Size;
+            }
+
+            // This makes a space available to insert the given number of rows into the DB at the given index.
+            // It fixes up the next/previous rows in containing complex objects and leaves them available
+            // to be set.
+            internal void InsertRowsInComplexObject(int index, int rowCountToInsert, int itemCountToInsert, bool hasComplexChildren = false)
+            {
+                AssertValidIndex(index);
+
+                Debug.Assert(!_isLocked, "Appending to a locked database");
+
+                int lengthToInsert = DbRow.Size * rowCountToInsert;
+                // We are going to insert a set of rows inside a complex object.
+
+                // First, fix up the counts, then block copy
+                // If we do it in that order, we can just step through the data "as is"
+                // with existing offsets
+                int currentIndex = index - DbRow.Size;
+                while(currentIndex >= 0)
+                {
+                    JsonTokenType tokenType = GetJsonTokenType(currentIndex);
+                    switch(tokenType)
+                    {
+                        case JsonTokenType.EndObject:
+                        case JsonTokenType.EndArray:
+                            // Skip past the start object of this end object, and into the previous entry
+                            index -= GetStartIndex(currentIndex) + DbRow.Size; 
+                            break;
+                        case JsonTokenType.StartObject:
+                            // This was not skipped by hitting an EndObject/Array,
+                            // so it must be the start of a containing object/array
+                            // which will need to have its row count updated
+                            SetRowAndItemCount(currentIndex, rowCountToInsert, itemCountToInsert, false);
+                            currentIndex -= DbRow.Size;
+                            break;
+                        case JsonTokenType.StartArray:
+                            // This was not skipped by hitting an EndObject/Array,
+                            // so it must be the start of a containing object/array
+                            // which will need to have its row count updated
+                            SetRowAndItemCount(currentIndex, rowCountToInsert, itemCountToInsert, hasComplexChildren);
+                            currentIndex -= DbRow.Size;
+                            break;
+                        default:
+                            currentIndex -= DbRow.Size;
+                            break;
+                    }
+                }
+
+
+                if (rowCountToInsert > _data.Length - lengthToInsert)
+                {
+                    // We will need to reallocate
+                    byte[] toReturn = _data;
+
+                    // Allow the data to grow up to maximum possible capacity (~2G bytes) before encountering overflow.
+                    // Note: Array.MaxLength exists only on .NET 6 or greater,
+                    // so for the other versions value is hardcoded
+                    const int MaxArrayLength = 0x7FFFFFC7;
+#if NET
+                    Debug.Assert(MaxArrayLength == Array.MaxLength);
+#endif
+
+                    int newCapacity = toReturn.Length * 2;
+
+                    // Note that this check works even when newCapacity overflowed thanks to the (uint) cast
+                    if ((uint)newCapacity > MaxArrayLength) newCapacity = MaxArrayLength;
+
+                    // If the maximum capacity has already been reached,
+                    // then set the new capacity to be larger than what is possible
+                    // so that ArrayPool.Rent throws an OutOfMemoryException for us.
+                    if (newCapacity == toReturn.Length) newCapacity = int.MaxValue;
+
+                    _data = ArrayPool<byte>.Shared.Rent(newCapacity);
+                    // Block copy up to index
+                    Buffer.BlockCopy(toReturn, 0, _data, 0, index);
+                    // Then copy the rest of the data with the extra space
+                    Buffer.BlockCopy(toReturn, index, _data, index + lengthToInsert, Length - index);
+
+                    // The data in this rented buffer only conveys the positions and
+                    // lengths of tokens in a document, but no content; so it does not
+                    // need to be cleared.
+                    ArrayPool<byte>.Shared.Return(toReturn);
+                }
+                else
+                {
+                    // We don't need to reallocate, so just copy the data up
+                    Buffer.BlockCopy(_data, index, _data, index + lengthToInsert, Length - index);
+                }
+
+                Length += lengthToInsert;
+
+            }
+
+            private void SetRowAndItemCount(int startIndex, int rowCountToInsert, int itemCountToInsert, bool hasComplexChildren)
+            {
+                AssertValidIndex(startIndex);
+
+                int endIndex = GetEndIndex(startIndex);
+
+                AssertValidIndex(endIndex);
+
+                Span<byte> startPos = _data.AsSpan(startIndex + NumberOfRowsOffset);
+                uint currentStart = MemoryMarshal.Read<uint>(startPos);
+
+                uint startTokenType = currentStart & 0xF0000000U;
+
+                // Start and end row count are the same value, so we only need to calculate this once
+                uint numberOfRows = (currentStart & 0x0FFFFFFFU) + (uint)rowCountToInsert;
+
+                // Persist the most significant nybble and the new row count
+                uint updatedValue = startTokenType | numberOfRows;
+                MemoryMarshal.Write(startPos, ref updatedValue);
+
+                // Now do the item counts and complex children for the start. We do this now to try and do
+                // all the local updates first, to avoid busting the cache.
+                startPos = _data.AsSpan(startIndex + SizeOrLengthOffset);
+                int currentLength = MemoryMarshal.Read<int>(startPos);
+                bool currentlyHasComplexChildren = currentLength < 0;
+                int updatedLength = ((currentLength & int.MaxValue) + itemCountToInsert) * ((hasComplexChildren || currentlyHasComplexChildren) ? -1 : 1);
+                MemoryMarshal.Write(startPos, ref updatedLength);
+
+                // Now update the end row.
+                Span<byte> endPos = _data.AsSpan(endIndex + NumberOfRowsOffset);
+                uint currentEnd = MemoryMarshal.Read<uint>(endPos);
+                uint endTokenType = currentEnd & 0xF0000000U;
+                updatedValue = endTokenType | numberOfRows;
+                MemoryMarshal.Write(endPos, ref updatedValue);
+
             }
 
             internal void AppendExternal(JsonTokenType tokenType, int externalIndex, int sizeOrLength, int workspaceDocumentIndex)
@@ -400,6 +532,22 @@ namespace Corvus.Text.Json
                 return (JsonTokenType)(union >> 28);
             }
 
+            internal int GetStartIndex(int endIndex)
+            {
+                Debug.Assert(GetJsonTokenType(endIndex) is JsonTokenType.EndObject or JsonTokenType.EndArray);
+
+                uint union = MemoryMarshal.Read<uint>(_data.AsSpan(endIndex + NumberOfRowsOffset));
+                return endIndex - ((int)(union & 0x0FFFFFFFU) * DbRow.Size);
+            }
+
+            internal int GetEndIndex(int startIndex)
+            {
+                Debug.Assert(GetJsonTokenType(startIndex) is JsonTokenType.StartObject or JsonTokenType.StartArray);
+
+                uint union = MemoryMarshal.Read<uint>(_data.AsSpan(startIndex + NumberOfRowsOffset));
+                return startIndex + ((int)(union & 0x0FFFFFFFU) * DbRow.Size);
+            }
+
             internal MetadataDb CopySegment(int startIndex, int endIndex)
             {
                 Debug.Assert(
@@ -464,6 +612,12 @@ namespace Corvus.Text.Json
                 int length = Length;
                 Length = 0;
                 return length;
+            }
+
+            internal void Overwrite(ref MetadataDb destination, int targetIndex)
+            {
+                Debug.Assert(Length <= destination.Length - targetIndex);
+                Buffer.BlockCopy(_data, 0, destination._data, targetIndex, Length);
             }
         }
     }

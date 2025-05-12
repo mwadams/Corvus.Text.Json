@@ -16,7 +16,7 @@ namespace Corvus.Text.Json.Tests
             JsonElement clone;
             JsonElement clone2;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 root = doc.RootElement;
                 clone = root.Clone();
@@ -43,7 +43,7 @@ namespace Corvus.Text.Json.Tests
         {
             JsonElement clone;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse("[[[]]]"))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("[[[]]]"))
             {
                 JsonElement middle = doc.RootElement[0].Clone();
                 JsonElement inner = middle[0];
@@ -154,7 +154,7 @@ null
 
             JsonElement clone;
 
-            using (ParsedJsonDocument doc = ParsedJsonDocument.Parse(json))
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
             {
                 JsonElement target = doc.RootElement.GetProperty("obj")[0].GetProperty("target");
                 Assert.Equal(valueType, target.ValueKind);
@@ -164,14 +164,14 @@ null
             Assert.Equal(innerJson, clone.GetRawText());
         }
 
-        internal static ParsedJsonDocument SniffDocument(this JsonElement element)
+        internal static ParsedJsonDocument<JsonElement> SniffDocument(this JsonElement element)
         {
-            return (ParsedJsonDocument)typeof(JsonElement)
+            return (ParsedJsonDocument<JsonElement>)typeof(JsonElement)
                 .GetField("_parent", BindingFlags.Instance | BindingFlags.NonPublic)
                 .GetValue(element);
         }
 
-        internal static bool IsDisposable(this ParsedJsonDocument document)
+        internal static bool IsDisposable(this ParsedJsonDocument<JsonElement> document)
         {
             return ((IJsonDocument)document).IsDisposable;
         }

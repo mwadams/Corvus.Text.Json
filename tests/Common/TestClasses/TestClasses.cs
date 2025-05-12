@@ -2045,13 +2045,13 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Initialize()
         {
-            Number = ParsedJsonDocument.Parse(@"1").RootElement.Clone();
-            True = ParsedJsonDocument.Parse(@"true").RootElement.Clone();
-            False = ParsedJsonDocument.Parse(@"false").RootElement.Clone();
-            String = ParsedJsonDocument.Parse(@"""Hello""").RootElement.Clone();
-            Array = ParsedJsonDocument.Parse(@"[2, false, true, ""Goodbye""]").RootElement.Clone();
-            Object = ParsedJsonDocument.Parse(@"{}").RootElement.Clone();
-            Null = ParsedJsonDocument.Parse(@"null").RootElement.Clone();
+            Number = ParsedJsonDocument<JsonElement>.Parse(@"1").RootElement.Clone();
+            True = ParsedJsonDocument<JsonElement>.Parse(@"true").RootElement.Clone();
+            False = ParsedJsonDocument<JsonElement>.Parse(@"false").RootElement.Clone();
+            String = ParsedJsonDocument<JsonElement>.Parse(@"""Hello""").RootElement.Clone();
+            Array = ParsedJsonDocument<JsonElement>.Parse(@"[2, false, true, ""Goodbye""]").RootElement.Clone();
+            Object = ParsedJsonDocument<JsonElement>.Parse(@"{}").RootElement.Clone();
+            Null = ParsedJsonDocument<JsonElement>.Parse(@"null").RootElement.Clone();
         }
 
         public void Verify()
@@ -2103,10 +2103,10 @@ namespace Corvus.Text.Json.Serialization.Tests
         {
             Array = new JsonElement[]
             {
-                ParsedJsonDocument.Parse(@"1").RootElement.Clone(),
-                ParsedJsonDocument.Parse(@"true").RootElement.Clone(),
-                ParsedJsonDocument.Parse(@"false").RootElement.Clone(),
-                ParsedJsonDocument.Parse(@"""Hello""").RootElement.Clone()
+                ParsedJsonDocument<JsonElement>.Parse(@"1").RootElement.Clone(),
+                ParsedJsonDocument<JsonElement>.Parse(@"true").RootElement.Clone(),
+                ParsedJsonDocument<JsonElement>.Parse(@"false").RootElement.Clone(),
+                ParsedJsonDocument<JsonElement>.Parse(@"""Hello""").RootElement.Clone()
             };
         }
 
@@ -2156,8 +2156,8 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Initialize()
         {
-            Array = ParsedJsonDocument.Parse(s_array).RootElement.Clone();
-            Object = ParsedJsonDocument.Parse(s_object).RootElement.Clone();
+            Array = ParsedJsonDocument<JsonElement>.Parse(s_array).RootElement.Clone();
+            Object = ParsedJsonDocument<JsonElement>.Parse(s_object).RootElement.Clone();
         }
 
         public void Verify()
@@ -2192,7 +2192,7 @@ namespace Corvus.Text.Json.Serialization.Tests
 
     public class ParsedJsonDocumentClass : ITestClass, IDisposable
     {
-        public ParsedJsonDocument Document { get; set; }
+        public ParsedJsonDocument<JsonElement> Document { get; set; }
 
         public static readonly string s_json =
             @"{" +
@@ -2209,7 +2209,7 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Initialize()
         {
-            Document = ParsedJsonDocument.Parse(s_json);
+            Document = ParsedJsonDocument<JsonElement>.Parse(s_json);
         }
 
         public void Verify()
@@ -2254,7 +2254,7 @@ namespace Corvus.Text.Json.Serialization.Tests
 
     public class ParsedJsonDocumentArrayClass : ITestClass, IDisposable
     {
-        public ParsedJsonDocument Document { get; set; }
+        public ParsedJsonDocument<JsonElement> Document { get; set; }
 
         public static readonly string s_json =
             @"{" +
@@ -2272,7 +2272,7 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Initialize()
         {
-            Document = ParsedJsonDocument.Parse(s_json);
+            Document = ParsedJsonDocument<JsonElement>.Parse(s_json);
         }
 
         public void Verify()
