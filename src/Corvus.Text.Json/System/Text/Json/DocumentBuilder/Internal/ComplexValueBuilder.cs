@@ -25,10 +25,7 @@ namespace Corvus.Text.Json.Internal
 
         internal int Length => _parsedData.Length;
 
-#if DEBUG
         public int MemberCount => _memberCount;
-#endif
-
 
         [CLSCompliant(false)]
         public static ComplexValueBuilder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
