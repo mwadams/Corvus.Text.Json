@@ -126,21 +126,28 @@ namespace Corvus.Text.Json
                 return false;
             }
 
-            IJsonDocument element1ParentDocument = element1.ParentDocument;
-            IJsonDocument element2ParentDocument = element2.ParentDocument;
-            int element1ParentDocumentIndex = element1.ParentDocumentIndex;
-            int element2ParentDocumentIndex = element2.ParentDocumentIndex;
             switch (kind)
             {
                 case JsonValueKind.Null or JsonValueKind.False or JsonValueKind.True:
                     return true;
 
                 case JsonValueKind.Number:
+                {
+                    IJsonDocument element1ParentDocument = element1.ParentDocument;
+                    IJsonDocument element2ParentDocument = element2.ParentDocument;
+                    int element1ParentDocumentIndex = element1.ParentDocumentIndex;
+                    int element2ParentDocumentIndex = element2.ParentDocumentIndex;
                     return JsonHelpers.AreEqualJsonNumbers(
                         element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
                         element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
+                }
 
                 case JsonValueKind.String:
+                {
+                    IJsonDocument element1ParentDocument = element1.ParentDocument;
+                    IJsonDocument element2ParentDocument = element2.ParentDocument;
+                    int element1ParentDocumentIndex = element1.ParentDocumentIndex;
+                    int element2ParentDocumentIndex = element2.ParentDocumentIndex;
                     if (element2ParentDocument.ValueIsEscaped(element2ParentDocumentIndex, isPropertyName: false))
                     {
                         if (element1ParentDocument.ValueIsEscaped(element1ParentDocumentIndex, isPropertyName: false))
@@ -157,7 +164,7 @@ namespace Corvus.Text.Json
                             element2ParentDocumentIndex,
                             element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
                             isPropertyName: false,
-                            shouldUnescape: true);                            
+                            shouldUnescape: true);
                     }
 
                     // As above, note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
@@ -166,8 +173,15 @@ namespace Corvus.Text.Json
                         element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span,
                         isPropertyName: false,
                         shouldUnescape: true);
+                }
 
                 case JsonValueKind.Array:
+                {
+                    IJsonDocument element1ParentDocument = element1.ParentDocument;
+                    IJsonDocument element2ParentDocument = element2.ParentDocument;
+                    int element1ParentDocumentIndex = element1.ParentDocumentIndex;
+                    int element2ParentDocumentIndex = element2.ParentDocumentIndex;
+
                     if (element1ParentDocument.GetArrayLength(element1ParentDocumentIndex) != element2ParentDocument.GetArrayLength(element2ParentDocumentIndex))
                     {
                         return false;
@@ -187,9 +201,15 @@ namespace Corvus.Text.Json
 
                     Debug.Assert(!arrayEnumerator2.MoveNext());
                     return true;
+                }
 
                 default:
+                {
                     Debug.Assert(kind is JsonValueKind.Object);
+                    IJsonDocument element1ParentDocument = element1.ParentDocument;
+                    IJsonDocument element2ParentDocument = element2.ParentDocument;
+                    int element1ParentDocumentIndex = element1.ParentDocumentIndex;
+                    int element2ParentDocumentIndex = element2.ParentDocumentIndex;
 
                     int count = element1ParentDocument.GetPropertyCount(element1ParentDocumentIndex);
                     if (count != element2ParentDocument.GetPropertyCount(element2ParentDocumentIndex))
@@ -197,8 +217,8 @@ namespace Corvus.Text.Json
                         return false;
                     }
 
-                    ObjectEnumerator<JsonElement> objectEnumerator1 = new (element1ParentDocument, element1ParentDocumentIndex);
-                    ObjectEnumerator<JsonElement> objectEnumerator2 = new (element2ParentDocument, element2ParentDocumentIndex);
+                    ObjectEnumerator<JsonElement> objectEnumerator1 = new(element1ParentDocument, element1ParentDocumentIndex);
+                    ObjectEnumerator<JsonElement> objectEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
 
                     // Two JSON objects are considered equal if they define the same set of properties.
                     // Start optimistically with pairwise comparison, but fall back to unordered
@@ -228,6 +248,7 @@ namespace Corvus.Text.Json
 
                     Debug.Assert(!objectEnumerator2.MoveNext());
                     return true;
+                }
             }
 
             static bool UnorderedObjectDeepEquals(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, ref ObjectEnumerator<JsonElement> objectEnumerator2)

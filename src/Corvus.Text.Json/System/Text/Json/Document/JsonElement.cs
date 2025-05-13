@@ -385,6 +385,13 @@ namespace Corvus.Text.Json
             return _parent.GetString(_idx, JsonTokenType.String);
         }
 
+        public UnescapedUtf8JsonString GetUtf8String()
+        {
+            CheckValidInstance();
+
+            return _parent.GetUtf8JsonString(_idx, JsonTokenType.String);
+        }
+
         /// <summary>
         ///   Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
         /// </summary>

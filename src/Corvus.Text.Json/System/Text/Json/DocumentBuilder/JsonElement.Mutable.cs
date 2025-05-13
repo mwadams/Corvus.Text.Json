@@ -102,6 +102,23 @@ namespace Corvus.Text.Json
                 }
             }
 
+            public static implicit operator JsonElement(Mutable value)
+            {
+                return new(value._parent, value._idx);
+            }
+
+            public static explicit operator Mutable(JsonElement value)
+            {
+                if (value._parent is not IMutableJsonDocument doc)
+                {
+                    ThrowHelper.ThrowFormatException();
+                    // We will never get here
+                    return default;
+                }
+
+                return new(value._parent, value._idx);
+            }
+
             [CLSCompliant(false)]
             public static Mutable From<T>(in T instance)
                 where T : struct, IMutableJsonElement<T>
@@ -418,6 +435,13 @@ namespace Corvus.Text.Json
                 CheckValidInstance();
 
                 return _parent.GetString(_idx, JsonTokenType.String);
+            }
+
+            public UnescapedUtf8JsonString GetUtf8String()
+            {
+                CheckValidInstance();
+
+                return _parent.GetUtf8JsonString(_idx, JsonTokenType.String);
             }
 
             /// <summary>

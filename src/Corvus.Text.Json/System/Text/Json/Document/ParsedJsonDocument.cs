@@ -6,6 +6,7 @@ using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Xml.Linq;
 
@@ -133,6 +134,7 @@ namespace Corvus.Text.Json
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         bool IJsonDocument.ValueIsEscaped(int index, bool isPropertyName)
         {
             CheckNotDisposed();
@@ -162,6 +164,7 @@ namespace Corvus.Text.Json
             return row.SizeOrLengthOrPropertyMapIndex;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         JsonElement IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex)
         {
             CheckNotDisposed();
@@ -169,12 +172,14 @@ namespace Corvus.Text.Json
             return new JsonElement(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
         {
             CheckNotDisposed();
             return GetEndIndexUnsafe(index, includeEndElement);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         RawUtf8JsonString IJsonDocument.GetRawValue(int index, bool includeQuotes)
         {
             CheckNotDisposed();
@@ -203,6 +208,7 @@ namespace Corvus.Text.Json
             return _utf8Json.Slice(start, row.LocationOrIndex - start + row.SizeOrLengthOrPropertyMapIndex);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]        
         ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index, bool includeQuotes)
         {
             CheckNotDisposed();
@@ -225,10 +231,18 @@ namespace Corvus.Text.Json
             return _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         string? IJsonDocument.GetString(int index, JsonTokenType expectedType)
         {
             CheckNotDisposed();
             return GetStringUnsafe(index, expectedType);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType)
+        {
+            CheckNotDisposed();
+            return GetUtf8JsonStringUnsafe(index, expectedType);
         }
 
         private string? GetStringUnsafe(int index, JsonTokenType expectedType)
@@ -252,18 +266,48 @@ namespace Corvus.Text.Json
                 : JsonReaderHelper.TranscodeHelper(segment);
         }
 
+        private UnescapedUtf8JsonString GetUtf8JsonStringUnsafe(int index, JsonTokenType expectedType)
+        {
+            DbRow row = _parsedData.Get(index);
+
+            JsonTokenType tokenType = row.TokenType;
+
+            CheckExpectedType(expectedType, tokenType);
+
+            ReadOnlyMemory<byte> segment = _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+            if (row.HasComplexChildren)
+            {
+                byte[] rentedBytes = ArrayPool<byte>.Shared.Rent(segment.Length);
+                try
+                {
+                    JsonReaderHelper.Unescape(segment.Span, rentedBytes, out int written);
+                    return new UnescapedUtf8JsonString(rentedBytes.AsMemory(0, written), rentedBytes);
+                }
+                catch
+                {
+                    ArrayPool<byte>.Shared.Return(rentedBytes);
+                }
+            }
+
+            return new UnescapedUtf8JsonString(segment);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
         {
             CheckNotDisposed();
             return TextEqualsUnsafe(index, otherText, isPropertyName);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         bool IJsonDocument.TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
         {
             CheckNotDisposed();
             return TextEqualsUnsafe(index, otherUtf8Text, isPropertyName, shouldUnescape);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         string IJsonDocument.GetNameOfPropertyValue(int index)
         {
             CheckNotDisposed();
@@ -271,6 +315,7 @@ namespace Corvus.Text.Json
             return GetStringUnsafe(index - DbRow.Size, JsonTokenType.PropertyName)!;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         ReadOnlySpan<byte> IJsonDocument.GetPropertyNameRaw(int index)
         {
             CheckNotDisposed();

@@ -1,0 +1,59 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.Buffers;
+using System.Threading;
+
+namespace Corvus.Text.Json
+{
+    /// <summary>
+    /// Represents an Unescaped UTF-8 JSON string.
+    /// </summary>
+    /// <remarks>
+    /// This may use a rented buffer to back the string, so it is disposable.
+    /// </remarks>
+    public ref struct UnescapedUtf8JsonString
+#if NET
+        : IDisposable
+#endif
+    {
+        ReadOnlyMemory<byte> _utf8Bytes;
+        byte[]? _extraRentedArrayPoolBytes;
+
+        public readonly ReadOnlyMemory<byte> Memory => _utf8Bytes;
+        public readonly ReadOnlySpan<byte> Span => _utf8Bytes.Span;
+
+        public UnescapedUtf8JsonString(ReadOnlyMemory<byte> utf8Bytes, byte[]? extraRentedArrayPoolBytes = null)
+        {
+            _utf8Bytes = utf8Bytes;
+            _extraRentedArrayPoolBytes = extraRentedArrayPoolBytes;
+        }
+
+        /// <summary>
+        /// Take ownership of the <see cref="ArrayPool{T}.Shared"/> bytes, if any.
+        /// </summary>
+        /// <param name="extraRentedArrayPoolBytes">The rented bytes, or null if there are no rented bytes.</param>
+        /// <returns>The UTF-8 memory representing the rented bytes.</returns>
+        public ReadOnlyMemory<byte> TakeOwnership(out byte[]? extraRentedArrayPoolBytes)
+        {
+            extraRentedArrayPoolBytes = Interlocked.Exchange(ref _extraRentedArrayPoolBytes, null);
+            return _utf8Bytes;
+        }
+
+        public void Dispose()
+        {
+            if (_extraRentedArrayPoolBytes != null)
+            {
+                byte[]? extraRentedBytes = Interlocked.Exchange(ref _extraRentedArrayPoolBytes, null);
+
+                if (extraRentedBytes != null)
+                {
+                    // When "extra rented bytes exist" it contains the document,
+                    // and thus needs to be cleared before being returned.
+                    extraRentedBytes.AsSpan(0, _utf8Bytes.Length).Clear();
+                    ArrayPool<byte>.Shared.Return(extraRentedBytes);
+                }
+            }
+        }
+    }
+}

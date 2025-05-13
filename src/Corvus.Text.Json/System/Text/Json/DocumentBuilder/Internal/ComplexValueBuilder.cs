@@ -35,190 +35,340 @@ namespace Corvus.Text.Json.Internal
 
         public void AddProperty(ReadOnlySpan<byte> utf8PropertyName, ValueBuilderAction createComplexValue)
         {
-            int currentPropertyCount = _memberCount;
+            int currentMemberCount = _memberCount;
             _memberCount = 0;
             createComplexValue(ref this);
-            _memberCount = currentPropertyCount + 1;
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> utf8String)
         {
-            _memberCount++;
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddPropertyNull(ReadOnlySpan<byte> propertyName)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, bool value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value)
             where T : struct, IJsonElement<T>
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, Guid value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, byte value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, int value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, uint value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, long value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, short value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, float value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, double value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
 #if NET
         public void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, Half value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
 #endif
 
         public void AddItem(ReadOnlySpan<byte> utf8String)
         {
-            _memberCount++;
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(ValueBuilderAction createValue)
         {
-            int currentPropertyCount = _memberCount;
+            int currentMemberCount = _memberCount;
             _memberCount = 0;
             createValue(ref this);
-            _memberCount = currentPropertyCount + 1;
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddNullItem()
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(bool value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddItem<T>(T value)
             where T : struct, IJsonElement<T>
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(Guid value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddItem(sbyte value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(byte value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(int value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddItem(uint value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(long value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddItem(ulong value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(short value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddItem(ushort value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(float value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(double value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(decimal value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
 #if NET
         public void AddItem(Int128 value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         [CLSCompliant(false)]
         public void AddItem(UInt128 value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 
         public void AddItem(Half value)
         {
+            int currentMemberCount = _memberCount;
+            _memberCount = 0;
+            // TODO: Add value
+            _memberCount = currentMemberCount + 1;
         }
 #endif
         public void StartObject()
@@ -229,7 +379,7 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public void StartArray()
         {
-            _parsedData.Append(JsonTokenType.StartObject, _targetIndex, 0);
+            _parsedData.Append(JsonTokenType.StartObject, _targetIndex, -1);
         }
 
         public void EndObject()

@@ -8,12 +8,12 @@ using Corvus.Text.Json.Internal;
 namespace Sandbox;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly struct Person : IJsonElement<Person>
+public readonly struct Age : IJsonElement<Age>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    internal Person(IJsonDocument parent, int idx)
+    internal Age(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -32,45 +32,6 @@ public readonly struct Person : IJsonElement<Person>
     /// </exception>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 
-    public PersonName Name
-    {
-        get
-        {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out PersonName value))
-            {
-                return value;
-            }
-
-            return default;
-        }
-    }
-
-    public Age Age
-    {
-        get
-        {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Age, out Age value))
-            {
-                return value;
-            }
-
-            return default;
-        }
-    }
-
-    public CompetedInYears CompetedInYears
-    {
-        get
-        {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYears, out CompetedInYears value))
-            {
-                return value;
-            }
-
-            return default;
-        }
-    }
-
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private JsonTokenType TokenType
     {
@@ -80,10 +41,38 @@ public readonly struct Person : IJsonElement<Person>
         }
     }
 
-    public static Person From<T>(in T instance)
-        where T : struct, IJsonElement<T>
+    public static implicit operator int(Age age)
+    {
+        age.CheckValidInstance();
+
+        if (!age._parent.TryGetValue(age._idx, out int result))
+        {
+            CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
+        }
+
+        return result;
+    }
+
+    public static Age From<T>(in T instance)
+    where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
+    }
+
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity = 30)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        cvb.AddItem(year);
+        Debug.Assert(cvb.MemberCount == 1);
+        documentBuilder.InsertAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocument<Age, Mutable>(this);
     }
 
     /// <summary>
@@ -108,11 +97,6 @@ public readonly struct Person : IJsonElement<Person>
         _parent.WriteElementTo(_idx, writer);
     }
 
-    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
-    {
-        return workspace.CreateDocument<Person, Mutable>(this);
-    }
-
     private void CheckValidInstance()
     {
         if (_parent == null)
@@ -124,11 +108,11 @@ public readonly struct Person : IJsonElement<Person>
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static Person IJsonElement<Person>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static Age IJsonElement<Age>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"Person: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"Age: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -141,28 +125,6 @@ public readonly struct Person : IJsonElement<Person>
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
-
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
-        Builder.Create(ref cvb, age, name, competedInYears);
-        Debug.Assert(cvb.MemberCount == 1);
-        documentBuilder.InsertAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
-        Builder.BuildValue(builder, ref cvb);
-        Debug.Assert(cvb.MemberCount == 1);
-        documentBuilder.InsertAndDispose(ref cvb);
-        return documentBuilder;
-    }
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct Mutable : IMutableJsonElement<Mutable>
@@ -198,23 +160,34 @@ public readonly struct Person : IJsonElement<Person>
             }
         }
 
-
-        public static explicit operator Mutable(Person person)
+        public static explicit operator Mutable(Age age)
         {
-            if (person._parent is not IMutableJsonDocument doc)
+            if (age._parent is not IMutableJsonDocument doc)
             {
                 CodeGenThrowHelper.ThrowFormatException();
                 // We will never get here
                 return default;
             }
 
-            return new(doc, person._idx);
+            return new(doc, age._idx);
 
         }
 
-        public static implicit operator Person(Mutable person)
+        public static implicit operator Age(Mutable age)
         {
-            return new(person._parent, person._idx);
+            return new(age._parent, age._idx);
+        }
+
+        public static implicit operator int(Mutable age)
+        {
+            age.CheckValidInstance();
+
+            if (!age._parent.TryGetValue(age._idx, out int result))
+            {
+                CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
+            }
+
+            return result;
         }
 
         public static Mutable From<T>(in T instance)
@@ -260,7 +233,7 @@ public readonly struct Person : IJsonElement<Person>
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"Person.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+        private string DebuggerDisplay => $"Age.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -278,91 +251,50 @@ public readonly struct Person : IJsonElement<Person>
 
     public ref struct Builder
     {
-        public delegate void Build(ref Builder builder);
-
         public readonly ref struct Source
         {
-            public Build? Builder { get; }
+            public Age Instance { get; }
 
-            public Person Instance { get; }
+            public int Int32Value { get; }
 
-            public Source(Person instance)
+            public Source(Age instance)
             {
-                Builder = null;
                 Instance = instance;
+                Int32Value = default;
             }
 
-            public Source(Build builder)
+            public Source(int int32Value)
             {
-                Builder = builder;
                 Instance = default;
+                Int32Value = int32Value;
             }
 
-            public static implicit operator Source(Person instance) => new(instance);
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
-            {
-                if (Builder is Build personBuilder)
-                {
-                    valueBuilder.AddProperty(utf8Name, (ref ComplexValueBuilder o) => BuildValue(personBuilder, ref o));
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddProperty(utf8Name, Instance);
-                }
-            }
+            public static implicit operator Source(Age instance) => new(instance);
+            public static implicit operator Source(int instance) => new(instance);
 
             internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
             {
-                if (Builder is Build personBuilder)
+                if (Instance.ValueKind != JsonValueKind.Undefined)
                 {
-                    valueBuilder.AddItem((ref ComplexValueBuilder o) => BuildValue(personBuilder, ref o));
+                    valueBuilder.AddItem(Instance);
                 }
                 else
                 {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddItem(Instance);
+                    valueBuilder.AddItem(Int32Value);
+                }
+            }
+
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
+            {
+                if (Instance.ValueKind != JsonValueKind.Undefined)
+                {
+                    valueBuilder.AddProperty(utf8Name, Instance);
+                }
+                else
+                {
+                    valueBuilder.AddProperty(utf8Name, Int32Value);
                 }
             }
         }
-
-        private ComplexValueBuilder _builder;
-
-        internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
-
-        internal static Builder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
-        {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, targetIndex, initialElementCount);
-            return new Builder(builder);
-        }
-
-        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
-        {
-            o.StartObject();
-            Builder ovb = new(o);
-            value(ref ovb);
-            o = ovb._builder;
-            o.EndObject();
-        }
-
-        public void Create(Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears)
-        {
-            Create(ref _builder, age, name, competedInYears);
-        }
-
-        internal static void Create(ref ComplexValueBuilder builder, Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears)
-        {
-            age.AddAsProperty(JsonPropertyNames.Age, ref builder);
-            name.AddAsProperty(JsonPropertyNames.Name, ref builder);
-            competedInYears.AddAsProperty(JsonPropertyNames.CompetedInYears, ref builder);
-        }
-    }
-
-    public static class JsonPropertyNames
-    {
-        public static ReadOnlySpan<byte> Name => "name"u8;
-        public static ReadOnlySpan<byte> Age => "age"u8;
-        public static ReadOnlySpan<byte> CompetedInYears => "competedInYears"u8;
     }
 }

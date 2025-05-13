@@ -66,9 +66,10 @@ namespace Corvus.Text.Json
 
         internal void Initialize(int parentWorkspaceIndex, int initialElementCount)
         {
+            _parentWorkspaceIndex = parentWorkspaceIndex;
+
             if (initialElementCount >= 0)
             {
-                _parentWorkspaceIndex = parentWorkspaceIndex;
                 _parsedData = MetadataDb.CreateRented(initialElementCount * DbRow.Size, convertToAlloc: false);
             }
         }
@@ -246,6 +247,39 @@ namespace Corvus.Text.Json
             return row.HasComplexChildren
                 ? JsonReaderHelper.GetUnescapedString(segment)
                 : JsonReaderHelper.TranscodeHelper(segment);
+        }
+
+        UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType)
+        {
+            CheckNotDisposed();
+            return GetUtf8JsonStringUnsafe(index, expectedType);
+        }
+
+        private UnescapedUtf8JsonString GetUtf8JsonStringUnsafe(int index, JsonTokenType expectedType)
+        {
+            DbRow row = _parsedData.Get(index);
+
+            JsonTokenType tokenType = row.TokenType;
+
+            CheckExpectedType(expectedType, tokenType);
+
+            ReadOnlyMemory<byte> segment = GetRawSimpleValueUnsafe(index, false);
+
+            if (row.HasComplexChildren)
+            {
+                byte[] rentedBytes = ArrayPool<byte>.Shared.Rent(segment.Length);
+                try
+                {
+                    JsonReaderHelper.Unescape(segment.Span, rentedBytes, out int written);
+                    return new UnescapedUtf8JsonString(rentedBytes.AsMemory(0, written), rentedBytes);
+                }
+                catch
+                {
+                    ArrayPool<byte>.Shared.Return(rentedBytes);
+                }
+            }
+
+            return new UnescapedUtf8JsonString(segment);
         }
 
         bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
@@ -848,6 +882,36 @@ namespace Corvus.Text.Json
                 out int valueIndex))
             {
                 value = new JsonElement(this, valueIndex);
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            // If the row is from an external document, we defer to that
+            if (row.FromExternalDocument)
+            {
+                IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
+                return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
+            }
+
+            if (TryGetNamedPropertyValueUnsafe(
+                index,
+                propertyName,
+                out int valueIndex))
+            {
+#if NET
+                value = TElement.CreateInstance(this, valueIndex);
+#else
+                value = JsonElementHelpers.CreateInstance<TElement>(this, valueIndex);
+#endif
                 return true;
             }
 

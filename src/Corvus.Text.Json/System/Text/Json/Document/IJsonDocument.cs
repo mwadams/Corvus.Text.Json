@@ -22,7 +22,9 @@ namespace Corvus.Text.Json
         int GetPropertyCount(int index);
         bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value);
         bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value);
+        bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value) where TElement : struct, IJsonElement<TElement>;
         string? GetString(int index, JsonTokenType expectedType);
+        UnescapedUtf8JsonString GetUtf8JsonString(int index, JsonTokenType expectedType);
         bool TryGetValue(int index, [NotNullWhen(true)] out byte[]? value);
         bool TryGetValue(int index, out sbyte value);
         bool TryGetValue(int index, out byte value);

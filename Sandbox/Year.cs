@@ -41,6 +41,18 @@ public readonly struct Year : IJsonElement<Year>
         }
     }
 
+    public static implicit operator int(Year year)
+    {
+        year.CheckValidInstance();
+
+        if (!year._parent.TryGetValue(year._idx, out int result))
+        {
+            CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
+        }
+
+        return result;
+    }
+
     public static Year From<T>(in T instance)
     where T : struct, IJsonElement<T>
     {
@@ -146,6 +158,36 @@ public readonly struct Year : IJsonElement<Year>
             {
                 return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
             }
+        }
+
+        public static explicit operator Mutable(Year year)
+        {
+            if (year._parent is not IMutableJsonDocument doc)
+            {
+                CodeGenThrowHelper.ThrowFormatException();
+                // We will never get here
+                return default;
+            }
+
+            return new(doc, year._idx);
+
+        }
+
+        public static implicit operator Year(Mutable year)
+        {
+            return new(year._parent, year._idx);
+        }
+
+        public static implicit operator int(Mutable year)
+        {
+            year.CheckValidInstance();
+
+            if (!year._parent.TryGetValue(year._idx, out int result))
+            {
+                CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
+            }
+
+            return result;
         }
 
         public static Mutable From<T>(in T instance)

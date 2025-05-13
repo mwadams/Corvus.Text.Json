@@ -152,6 +152,7 @@
     <Compile Include="System\Text\Json\Document\JsonElement.Parse.cs" />
     <Compile Include="System\Text\Json\Document\JsonProperty.cs" />
     <Compile Include="System\Text\Json\Document\JsonValueKind.cs" />
+    <Compile Include="System\Text\Json\UnescapedUtf8JsonString.cs" />
     <Compile Include="System\Text\Json\RawUtf8JsonString.cs" />
     <Compile Include="System\Text\Json\JsonConstants.cs" />
     <Compile Include="System\Text\Json\JsonEncodedText.cs" />
@@ -249,6 +250,7 @@
     <Compile Include="System\Text\Json\Serialization\Metadata\PropertyRefCacheBuilder.cs" />
     <Compile Include="System\Text\Json\Serialization\PolymorphicSerializationState.cs" />-->
     <Compile Include="System\Text\Json\StackHelper.cs" />
+    <Compile Include="System\Text\Json\CodeGenThrowHelper.cs" />
     <Compile Include="System\Text\Json\ValueQueue.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriter.WriteValues.StringSegment.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriterCache.cs" />

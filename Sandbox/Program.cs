@@ -77,29 +77,7 @@ int[] years = [2012, 2016, 2024];
 
 using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocument(
     workspace,
-    age: 52,
-    name: new(static (ref PersonName.Builder personName) =>
-    {
-        personName.Create(
-            firstName: "Michael"u8,
-            lastName: "Adams"u8,
-            otherNames: new(static (ref OtherNames.Builder otherNames) =>
-            {
-                otherNames.Add("Francis"u8);
-                otherNames.Add("James"u8);
-            }));
-    }),
-    competedInYears: new((ref CompetedInYears.Builder competedInYears) =>
-    {
-        foreach(int year in years)
-        {
-            competedInYears.Add(year);
-        }
-    }));
-
-using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
-    workspace,
-    age: 52,
+    age: 51,
     name: new(static (ref PersonName.Builder personName) =>
     {
         personName.Create(
@@ -117,6 +95,21 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
         {
             competedInYears.Add(year);
         }
+    }));
+
+
+Person.Mutable mutablePerson = docBuilder.RootElement;
+// Implicit conversion from mutable to immutable.
+Person person = docBuilder.RootElement;
+Person.Mutable isItOK = (Person.Mutable)person; // This will throw if `person` wasn't created in a mutable document.
+
+using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
+    workspace,
+    age: person.Age, // Happily assign an existing instance, will not copy
+    name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
+    competedInYears: new((ref CompetedInYears.Builder competedInYears) =>
+    {
+        competedInYears.Add(2012);
     }));
 
 Console.WriteLine(docBuilder.RootElement.ToString());

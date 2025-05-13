@@ -33,6 +33,46 @@ public readonly struct PersonName : IJsonElement<PersonName>
     /// </exception>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 
+    public NameComponent FirstName
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponent value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    public NameComponent LastName
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out NameComponent value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    public OtherNames OtherNames
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private JsonTokenType TokenType
     {
@@ -48,7 +88,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, ReadOnlySpan<byte> firstName, ReadOnlySpan<byte> lastName, OtherNames.Builder.Source otherNames, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
@@ -279,15 +319,15 @@ public readonly struct PersonName : IJsonElement<PersonName>
             return new Builder(builder);
         }
 
-        public void Create(ReadOnlySpan<byte> firstName, ReadOnlySpan<byte> lastName, OtherNames.Builder.Source otherNames)
+        public void Create(NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
         {
             Create(ref _builder, firstName, lastName, otherNames);
         }
 
-        internal static void Create(ref ComplexValueBuilder builder, ReadOnlySpan<byte> firstName, ReadOnlySpan<byte> lastName, OtherNames.Builder.Source otherNames)
+        internal static void Create(ref ComplexValueBuilder builder, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
         {
-            builder.AddProperty(JsonPropertyNames.FirstName, firstName);
-            builder.AddProperty(JsonPropertyNames.LastName, lastName);
+            firstName.AddAsProperty(JsonPropertyNames.FirstName, ref builder);
+            lastName.AddAsProperty(JsonPropertyNames.LastName, ref builder);
             otherNames.AddAsProperty(JsonPropertyNames.OtherNames, ref builder);
         }
 

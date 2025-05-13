@@ -39,5 +39,27 @@ namespace Corvus.Text.Json
             value = default;
             return false;
         }
+
+        bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
+        {
+            CheckNotDisposed();
+
+
+            if (TryGetNamedPropertyValueUnsafe(
+                index,
+                propertyName,
+                out int valueIndex))
+            {
+#if NET
+                value = TElement.CreateInstance(this, valueIndex);
+#else
+                value = JsonElementHelpers.CreateInstance<TElement>(this, valueIndex);
+#endif
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
     }
 }
