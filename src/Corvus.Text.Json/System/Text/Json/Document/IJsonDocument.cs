@@ -55,6 +55,6 @@ namespace Corvus.Text.Json
         TElement CloneElement<TElement>(int index) where TElement : struct, IJsonElement<TElement>;
         int GetEndIndex(int index, bool includeEndElement);
         int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking);
-        void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref byte[] data, ref int length);
+        void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref JsonDocument.MetadataDb db);
     }
 }

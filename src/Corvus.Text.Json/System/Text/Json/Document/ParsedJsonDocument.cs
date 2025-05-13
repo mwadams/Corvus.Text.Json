@@ -1122,14 +1122,12 @@ namespace Corvus.Text.Json
             return db.TakeOwnership(out rentedBacking);
         }
 
-        void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref byte[] data, ref int length)
+        void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db)
         {
             CheckNotDisposed();
 
             int workspaceDocumentIndex = workspace.GetDocumentIndex(this);
-            MetadataDb db = MetadataDb.WrapForBuilder(data, length);
             AppendElement(index, ref db, workspaceDocumentIndex);
-            length = db.TakeOwnership(out data);
         }
 
         private void AppendElement(int index, ref MetadataDb db, int workspaceDocumentIndex)

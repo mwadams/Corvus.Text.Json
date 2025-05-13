@@ -131,13 +131,6 @@ namespace Corvus.Text.Json
             // If the instance is "default", _data can be null
             internal bool IsInitialized => _data is not null;
 
-            internal static MetadataDb WrapForBuilder([NotNull] byte[] data, int currentLength)
-            {
-                // This API is for the public end where we do not want to expose MetadataDb outside of
-                // the internals
-                return new MetadataDb(data, isLocked: false, convertToAlloc: false);
-            }
-
             internal static MetadataDb CreateRented(byte[] data, int length, bool convertToAlloc)
             {
                 return new MetadataDb(data, isLocked: false, convertToAlloc, length);

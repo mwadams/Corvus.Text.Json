@@ -1000,14 +1000,12 @@ namespace Corvus.Text.Json
             return db.TakeOwnership(out rentedBacking);
         }
 
-        void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref byte[] data, ref int length)
+        void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db)
         {
             CheckNotDisposed();
 
             int workspaceDocumentIndex = workspace.GetDocumentIndex(this);
-            MetadataDb db = MetadataDb.WrapForBuilder(data, length);
             AppendElement(index, workspace, ref db, workspaceDocumentIndex);
-            length = db.TakeOwnership(out data);
         }
 
 
@@ -1018,9 +1016,7 @@ namespace Corvus.Text.Json
             if (row.FromExternalDocument)
             {
                 IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-                int length = db.TakeOwnership(out byte[] rentedBacking);
-                document.AppendElementToMetadataDb(row.LocationOrIndex, workspace, ref rentedBacking, ref length);
-                db = MetadataDb.WrapForBuilder(rentedBacking, length);
+                document.AppendElementToMetadataDb(row.LocationOrIndex, workspace, ref db);
                 return;
             }
 
