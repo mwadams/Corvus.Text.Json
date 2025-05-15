@@ -8,12 +8,12 @@ using Corvus.Text.Json.Internal;
 namespace Sandbox;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly struct NameComponent : IJsonElement<NameComponent>
+public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    internal NameComponent(IJsonDocument parent, int idx)
+    internal NameComponentArray(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -22,64 +22,6 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
 
         _parent = parent;
         _idx = idx;
-    }
-
-    /// <summary>
-    ///   The <see cref="JsonValueKind"/> that the value is.
-    /// </summary>
-    /// <exception cref="ObjectDisposedException">
-    ///   The parent <see cref="JsonDocument"/> has been disposed.
-    /// </exception>
-    public JsonValueKind ValueKind => TokenType.ToValueKind();
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private JsonTokenType TokenType
-    {
-        get
-        {
-            return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
-        }
-    }
-
-    internal static bool IsMatch(IJsonDocument parentDocument, int parentDocumentIndex)
-    {
-        throw new NotImplementedException();    
-    }
-
-    public string? GetString()
-    {
-        CheckValidInstance();
-
-        return _parent.GetString(_idx, JsonTokenType.String);
-    }
-
-    public UnescapedUtf8JsonString GetUtf8String()
-    {
-        CheckValidInstance();
-
-        return _parent.GetUtf8JsonString(_idx, JsonTokenType.String);
-    }
-
-    public static NameComponent From<T>(in T instance)
-    where T : struct, IJsonElement<T>
-    {
-        return new(instance.ParentDocument, instance.ParentDocumentIndex);
-    }
-
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
-        cvb.AddItem(year);
-        Debug.Assert(cvb.MemberCount == 1);
-        documentBuilder.InsertAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
-    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
-    {
-        return workspace.CreateDocument<NameComponent, Mutable>(this);
     }
 
     /// <summary>
@@ -104,6 +46,73 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         _parent.WriteElementTo(_idx, writer);
     }
 
+    /// <summary>
+    ///   Get the name component at a specified index.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
+    /// </exception>
+    /// <exception cref="IndexOutOfRangeException">
+    ///   <paramref name="index"/> is not in the range [0, <see cref="GetArrayLength"/>()).
+    /// </exception>
+    /// <exception cref="ObjectDisposedException">
+    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// </exception>
+    public NameComponent this[int index]
+    {
+        get
+        {
+            CheckValidInstance();
+
+            return _parent.GetArrayIndexElement<NameComponent>(_idx, index);
+        }
+    }
+
+
+    /// <summary>
+    ///   The <see cref="JsonValueKind"/> that the value is.
+    /// </summary>
+    /// <exception cref="ObjectDisposedException">
+    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// </exception>
+    public JsonValueKind ValueKind => TokenType.ToValueKind();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private JsonTokenType TokenType
+    {
+        get
+        {
+            return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
+        }
+    }
+
+    internal static bool IsMatch(IJsonDocument parentDocument, int parentDocumentIndex)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        Builder.BuildValue(builder, ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        documentBuilder.InsertAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocument<NameComponentArray, Mutable>(this);
+    }
+
+    public static NameComponentArray From<T>(in T instance)
+    where T : struct, IJsonElement<T>
+    {
+        return new(instance.ParentDocument, instance.ParentDocumentIndex);
+    }
+
     private void CheckValidInstance()
     {
         if (_parent == null)
@@ -115,11 +124,11 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static NameComponent IJsonElement<NameComponent>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static NameComponentArray IJsonElement<NameComponentArray>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"NameComponent: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"OtherNames: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -132,6 +141,83 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
+
+    public ref struct Builder
+    {
+        public delegate void Build(ref Builder builder);
+
+        public readonly ref struct Source
+        {
+            public Build? Builder { get; }
+
+            public NameComponentArray Instance { get; }
+
+            public Source(NameComponentArray instance)
+            {
+                Builder = null;
+                Instance = instance;
+            }
+
+            public Source(Build builder)
+            {
+                Builder = builder;
+                Instance = default;
+            }
+
+            public static implicit operator Source(NameComponentArray instance) => new(instance);
+
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
+            {
+                if (Builder is Build builder)
+                {
+                    valueBuilder.AddProperty(utf8Name, (ref ComplexValueBuilder o) => BuildValue(builder, ref o));
+                }
+                else
+                {
+                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
+                    valueBuilder.AddProperty(utf8Name, Instance);
+                }
+            }
+
+            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+            {
+                if (Builder is Build builder)
+                {
+                    valueBuilder.AddItem((ref ComplexValueBuilder o) => BuildValue(builder, ref o));
+                }
+                else
+                {
+                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
+                    valueBuilder.AddItem(Instance);
+                }
+            }
+        }
+
+        private ComplexValueBuilder _builder;
+
+        internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
+
+        internal static Builder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
+        {
+            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, targetIndex, initialElementCount);
+            return new Builder(builder);
+        }
+
+        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
+        {
+            o.StartArray();
+            Builder ovb = new(o);
+            value(ref ovb);
+            o = ovb._builder;
+            o.EndArray();
+        }
+
+        public void Add(ReadOnlySpan<byte> name)
+        {
+            _builder.AddItem(name);
+        }
+    }
+
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct Mutable : IMutableJsonElement<Mutable>
@@ -167,35 +253,24 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             }
         }
 
-        public static explicit operator Mutable(NameComponent nameComponent)
+        public static explicit operator Mutable(NameComponentArray otherNames)
         {
-            if (nameComponent._parent is not IMutableJsonDocument doc)
+            if (otherNames._parent is not IMutableJsonDocument doc)
             {
                 CodeGenThrowHelper.ThrowFormatException();
                 // We will never get here
                 return default;
             }
 
-            return new(doc, nameComponent._idx);
+            return new(doc, otherNames._idx);
 
         }
 
-        public static implicit operator NameComponent(Mutable nameComponent)
+        public static implicit operator NameComponentArray(Mutable otherNames)
         {
-            return new(nameComponent._parent, nameComponent._idx);
+            return new(otherNames._parent, otherNames._idx);
         }
 
-        public static implicit operator int(Mutable nameComponent)
-        {
-            nameComponent.CheckValidInstance();
-
-            if (!nameComponent._parent.TryGetValue(nameComponent._idx, out int result))
-            {
-                CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
-            }
-
-            return result;
-        }
 
         public static Mutable From<T>(in T instance)
         where T : struct, IMutableJsonElement<T>
@@ -212,20 +287,6 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         }
 
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
-
-        public string? GetString()
-        {
-            CheckValidInstance();
-
-            return _parent.GetString(_idx, JsonTokenType.String);
-        }
-
-        public UnescapedUtf8JsonString GetUtf8String()
-        {
-            CheckValidInstance();
-
-            return _parent.GetUtf8JsonString(_idx, JsonTokenType.String);
-        }
 
         /// <summary>
         ///   Write the element into the provided writer as a JSON value.
@@ -254,7 +315,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"NameComponent.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+        private string DebuggerDisplay => $"OtherNames.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -267,55 +328,5 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         JsonValueKind IJsonElement.ValueKind => ValueKind;
-    }
-
-
-    public ref struct Builder
-    {
-        public readonly ref struct Source
-        {
-            public NameComponent Instance { get; }
-
-            public ReadOnlySpan<byte> Utf8StringValue { get; }
-
-            public Source(NameComponent instance)
-            {
-                Instance = instance;
-                Utf8StringValue = default;
-            }
-
-            public Source(ReadOnlySpan<byte> utf8StringValue)
-            {
-                Instance = default;
-                Utf8StringValue = utf8StringValue;
-            }
-
-            public static implicit operator Source(NameComponent instance) => new(instance);
-            public static implicit operator Source(ReadOnlySpan<byte> instance) => new(instance);
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                if (Instance.ValueKind != JsonValueKind.Undefined)
-                {
-                    valueBuilder.AddItem(Instance);
-                }
-                else
-                {
-                    valueBuilder.AddItem(Utf8StringValue);
-                }
-            }
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
-            {
-                if (Instance.ValueKind != JsonValueKind.Undefined)
-                {
-                    valueBuilder.AddProperty(utf8Name, Instance);
-                }
-                else
-                {
-                    valueBuilder.AddProperty(utf8Name, Utf8StringValue);
-                }
-            }
-        }
     }
 }

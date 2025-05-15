@@ -18,6 +18,7 @@ namespace Corvus.Text.Json
 
         JsonTokenType GetJsonTokenType(int index);
         JsonElement GetArrayIndexElement(int currentIndex, int arrayIndex);
+        TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex) where TElement : struct, IJsonElement<TElement>;
         int GetArrayLength(int index);
         int GetPropertyCount(int index);
         bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value);

@@ -75,6 +75,26 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
+        /// Validates the given document and index using the
+        /// semantics of this element type.
+        /// </summary>
+        /// <param name="parentDocument">The parent document.</param>
+        /// <param name="parentIndex">The parent index.</param>
+        /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
+        internal static void Validate(IJsonDocument parentDocument, int parentIndex, ref JsonValidationContext context)
+        {
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            // This is "always good"
+            ////context.AssertMatch();
+        }
+
+        /// <summary>
         ///   Get the number of values contained within the current array value.
         /// </summary>
         /// <returns>The number of values contained within the current array value.</returns>

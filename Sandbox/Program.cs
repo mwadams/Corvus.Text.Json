@@ -83,7 +83,7 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocument(
         personName.Create(
             firstName: "Michael"u8,
             lastName: "Adams"u8,
-            otherNames: new(static (ref OtherNames.Builder otherNames) =>
+            otherNames: new(static (ref NameComponentArray.Builder otherNames) =>
             {
                 otherNames.Add("Francis"u8);
                 otherNames.Add("James"u8);

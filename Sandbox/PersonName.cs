@@ -59,11 +59,11 @@ public readonly struct PersonName : IJsonElement<PersonName>
         }
     }
 
-    public OtherNames OtherNames
+    public NameComponentArray OtherNames
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponentArray value))
             {
                 return value;
             }
@@ -82,13 +82,18 @@ public readonly struct PersonName : IJsonElement<PersonName>
         }
     }
 
+    internal static bool IsMatch(IJsonDocument parentDocument, int parentDocumentIndex)
+    {
+        throw new NotImplementedException();
+    }
+
     public static PersonName From<T>(in T instance)
     where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, NameComponentArray.Builder.Source otherNames, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
@@ -198,6 +203,24 @@ public readonly struct PersonName : IJsonElement<PersonName>
             {
                 return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
             }
+        }
+
+        public static explicit operator Mutable(PersonName personName)
+        {
+            if (personName._parent is not IMutableJsonDocument doc)
+            {
+                CodeGenThrowHelper.ThrowFormatException();
+                // We will never get here
+                return default;
+            }
+
+            return new(doc, personName._idx);
+
+        }
+
+        public static implicit operator PersonName(Mutable personName)
+        {
+            return new(personName._parent, personName._idx);
         }
 
         public static Mutable From<T>(in T instance)
@@ -319,12 +342,12 @@ public readonly struct PersonName : IJsonElement<PersonName>
             return new Builder(builder);
         }
 
-        public void Create(NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
+        public void Create(NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, NameComponentArray.Builder.Source otherNames)
         {
             Create(ref _builder, firstName, lastName, otherNames);
         }
 
-        internal static void Create(ref ComplexValueBuilder builder, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
+        internal static void Create(ref ComplexValueBuilder builder, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, NameComponentArray.Builder.Source otherNames)
         {
             firstName.AddAsProperty(JsonPropertyNames.FirstName, ref builder);
             lastName.AddAsProperty(JsonPropertyNames.LastName, ref builder);

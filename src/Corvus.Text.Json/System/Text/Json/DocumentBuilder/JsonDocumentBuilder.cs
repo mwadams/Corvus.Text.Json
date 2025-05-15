@@ -5,6 +5,7 @@ using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
@@ -140,6 +141,18 @@ namespace Corvus.Text.Json
             CheckNotDisposed();
 
             return new JsonElement.Mutable(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        TElement IJsonDocument.GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex)
+        {
+            CheckNotDisposed();
+
+#if NET
+            return TElement.CreateInstance(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
+#else
+            return JsonElementHelpers.CreateInstance<TElement>(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
+#endif
         }
 
         int IJsonDocument.GetEndIndex(int index, bool includeEndElement)

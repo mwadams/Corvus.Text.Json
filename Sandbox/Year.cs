@@ -53,6 +53,11 @@ public readonly struct Year : IJsonElement<Year>
         return result;
     }
 
+    internal static bool IsMatch(IJsonDocument parentDocument, int parentDocumentIndex)
+    {
+        throw new NotImplementedException();
+    }
+
     public static Year From<T>(in T instance)
     where T : struct, IJsonElement<T>
     {

@@ -126,6 +126,11 @@ namespace Corvus.Text.Json
                 return new(instance.ParentDocument, instance.ParentDocumentIndex);
             }
 
+            internal static bool IsValid(IJsonDocument parentDocument, int parentIndex)
+            {
+                return IsValid(parentDocument, parentIndex);
+            }
+
             /// <summary>
             ///   Get the number of values contained within the current array value.
             /// </summary>

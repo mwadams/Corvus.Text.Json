@@ -173,6 +173,18 @@ namespace Corvus.Text.Json
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        TElement IJsonDocument.GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex)
+        {
+            CheckNotDisposed();
+
+#if NET
+            return TElement.CreateInstance(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
+#else
+            return JsonElementHelpers.CreateInstance<TElement>(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
         {
             CheckNotDisposed();

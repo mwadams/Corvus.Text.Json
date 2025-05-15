@@ -80,6 +80,11 @@ public readonly struct Person : IJsonElement<Person>
         }
     }
 
+    internal static bool IsMatch(IJsonDocument parentDocument, int parentDocumentIndex)
+    {
+        throw new NotImplementedException();
+    }
+
     public static Person From<T>(in T instance)
         where T : struct, IJsonElement<T>
     {
