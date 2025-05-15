@@ -20,7 +20,7 @@ namespace Corvus.Text.Json
         private int _curIdx;
         private readonly int _endIdxOrVersion;
 
-        internal ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)
+        public ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)
         {
             _targetDocument = targetDocument;
             _initialIndex = initialIndex;

@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 #endif
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 #if !NET
 using System.Reflection;
@@ -107,15 +108,10 @@ namespace Corvus.Text.Json
         /// </list>
         /// </remarks>
         [CLSCompliant(false)]
-        public static bool DeepEquals<TLeft, TRight>(TLeft element1, TRight element2)
+        public static bool DeepEquals<TLeft, TRight>(in TLeft element1, in TRight element2)
             where TLeft : struct, IJsonElement
             where TRight : struct, IJsonElement
         {
-            if (!StackHelper.TryEnsureSufficientExecutionStack())
-            {
-                ThrowHelper.ThrowInsufficientExecutionStackException_JsonElementDeepEqualsInsufficientExecutionStack();
-            }
-
             // We check valid instances once at the top, and then use the document directly throughout
             element1.CheckValidInstance();
             element2.CheckValidInstance();
@@ -335,5 +331,34 @@ namespace Corvus.Text.Json
                 return left.NameEquals(right.NameSpan);
             }
         }
+
+        /////// <summary>
+        /////// Compares the values of two <see cref="IJsonElement"/> values for equality, including the values of all descendant elements.
+        /////// </summary>
+        /////// <param name="element1">The first <see cref="JsonElement"/> to compare.</param>
+        /////// <param name="element2">The second <see cref="JsonElement"/> to compare.</param>
+        /////// <returns><see langword="true"/> if the two values are equal; otherwise, <see langword="false"/>.</returns>
+        /////// <remarks>
+        /////// Deep equality of two JSON values is defined as follows:
+        /////// <list type="bullet">
+        /////// <item>JSON values of different kinds are not equal.</item>
+        /////// <item>JSON constants <see langword="null"/>, <see langword="false"/>, and <see langword="true"/> only equal themselves.</item>
+        /////// <item>JSON numbers are equal if and only if they have they have equivalent decimal representations, with no rounding being used.</item>
+        /////// <item>JSON strings are equal if and only if they are equal using ordinal string comparison.</item>
+        /////// <item>JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal.</item>
+        /////// <item>
+        ///////     JSON objects are equal if and only if they have the same number of properties and each property in the first object
+        ///////     has a corresponding property in the second object with the same name and equal value. The order of properties is not
+        ///////     significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
+        ///////     last value in the first instance.
+        /////// </item>
+        /////// </list>
+        /////// </remarks>
+        ////[CLSCompliant(false)]
+        ////[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        ////public static bool DeepEquals(in JsonElement element1, in JsonElement element2)
+        ////{
+        ////    return JsonElement.DeepEquals(element1, element2);
+        ////}
     }
 }

@@ -3,6 +3,7 @@
 // </copyright>
 
 using BenchmarkDotNet.Attributes;
+using Corvus.Text.Json;
 
 namespace JsonDeepEqualsBenchmarks;
 
@@ -16,6 +17,8 @@ public class BenchmarkEqualsInOrderProperties
     private System.Text.Json.JsonDocument? documentA2;
     private Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>? documentB1;
     private Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>? documentB2;
+    private Corvus.Text.Json.JsonElementA documentC1;
+    private Corvus.Text.Json.JsonElementB documentC2;
 
     [GlobalSetup]
     public void Setup()
@@ -135,6 +138,8 @@ public class BenchmarkEqualsInOrderProperties
                 "19": 1
             }
             """);
+        this.documentC1 = JsonElementA.From(this.documentB1.RootElement);
+        this.documentC2 = JsonElementB.From(this.documentB2.RootElement);
     }
 
     [GlobalCleanup]
@@ -156,5 +161,17 @@ public class BenchmarkEqualsInOrderProperties
     public bool CorvusJsonElementDeepEquals()
     {
         return Corvus.Text.Json.JsonElementHelpers.DeepEquals(this.documentB1!.RootElement, this.documentB2!.RootElement);
+    }
+
+    [Benchmark]
+    public bool CorvusJsonElementGenericDeepEquals()
+    {
+        return Corvus.Text.Json.JsonElementHelpers.DeepEquals<JsonElement, JsonElement>(this.documentB1!.RootElement, this.documentB2!.RootElement);
+    }
+
+    [Benchmark]
+    public bool CorvusJsonElementHeterogenousDeepEquals()
+    {
+        return Corvus.Text.Json.JsonElementHelpers.DeepEquals(this.documentC1, this.documentC2);
     }
 }

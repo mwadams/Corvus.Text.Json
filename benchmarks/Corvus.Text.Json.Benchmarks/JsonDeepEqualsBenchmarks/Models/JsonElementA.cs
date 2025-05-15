@@ -12,12 +12,12 @@ namespace Corvus.Text.Json
     ///   Represents a specific JSON value within a <see cref="JsonDocument"/>.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public readonly partial struct JsonElement : IJsonElement<JsonElement>
+    public readonly partial struct JsonElementA : IJsonElement<JsonElementA>
     {
         private readonly IJsonDocument _parent;
         private readonly int _idx;
 
-        internal JsonElement(IJsonDocument parent, int idx)
+        internal JsonElementA(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
             // on the enumerators (when initialized as `default`) can
@@ -58,265 +58,18 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public JsonElement this[int index]
+        public JsonElementA this[int index]
         {
             get
             {
                 CheckValidInstance();
 
-                return _parent.GetArrayIndexElement(_idx, index);
+                return _parent.GetArrayIndexElement<JsonElementA>(_idx, index);
             }
         }
 
-        /////// <summary>
-        /////// Compares the values of two <see cref="IJsonElement"/> values for equality, including the values of all descendant elements.
-        /////// </summary>
-        /////// <typeparam name="TLeft">The type of the first <see cref="IJsonElement"/>.</typeparam>
-        /////// <typeparam name="TLeft">The type of the first <see cref="IJsonElement"/>.</typeparam>
-        /////// <param name="element1">The first <see cref="IJsonElement"/> to compare.</param>
-        /////// <param name="element2">The second <see cref="IJsonElement"/> to compare.</param>
-        /////// <returns><see langword="true"/> if the two values are equal; otherwise, <see langword="false"/>.</returns>
-        /////// <remarks>
-        /////// Deep equality of two JSON values is defined as follows:
-        /////// <list type="bullet">
-        /////// <item>JSON values of different kinds are not equal.</item>
-        /////// <item>JSON constants <see langword="null"/>, <see langword="false"/>, and <see langword="true"/> only equal themselves.</item>
-        /////// <item>JSON numbers are equal if and only if they have they have equivalent decimal representations, with no rounding being used.</item>
-        /////// <item>JSON strings are equal if and only if they are equal using ordinal string comparison.</item>
-        /////// <item>JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal.</item>
-        /////// <item>
-        ///////     JSON objects are equal if and only if they have the same number of properties and each property in the first object
-        ///////     has a corresponding property in the second object with the same name and equal value. The order of properties is not
-        ///////     significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
-        ///////     last value in the first instance.
-        /////// </item>
-        /////// </list>
-        /////// </remarks>
-        ////[CLSCompliant(false)]
-        ////public static bool DeepEquals(in JsonElement element1, in JsonElement element2)
-        ////{
-        ////    // We check valid instances once at the top, and then use the document directly throughout
-        ////    element1.CheckValidInstance();
-        ////    element2.CheckValidInstance();
-
-        ////    JsonValueKind kind = element1.ValueKind;
-        ////    if (kind != element2.ValueKind)
-        ////    {
-        ////        return false;
-        ////    }
-
-        ////    switch (kind)
-        ////    {
-        ////        case JsonValueKind.Null or JsonValueKind.False or JsonValueKind.True:
-        ////            return true;
-
-        ////        case JsonValueKind.Number:
-        ////        {
-        ////            IJsonDocument element1ParentDocument = element1._parent;
-        ////            IJsonDocument element2ParentDocument = element2._parent;
-        ////            int element1ParentDocumentIndex = element1._idx;
-        ////            int element2ParentDocumentIndex = element2._idx;
-        ////            return JsonHelpers.AreEqualJsonNumbers(
-        ////                element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-        ////                element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
-        ////        }
-
-        ////        case JsonValueKind.String:
-        ////        {
-        ////            IJsonDocument element1ParentDocument = element1._parent;
-        ////            IJsonDocument element2ParentDocument = element2._parent;
-        ////            int element1ParentDocumentIndex = element1._idx;
-        ////            int element2ParentDocumentIndex = element2._idx;
-        ////            if (element2ParentDocument.ValueIsEscaped(element2ParentDocumentIndex, isPropertyName: false))
-        ////            {
-        ////                if (element1ParentDocument.ValueIsEscaped(element1ParentDocumentIndex, isPropertyName: false))
-        ////                {
-        ////                    // Need to unescape and compare both inputs.
-        ////                    return JsonReaderHelper.UnescapeAndCompareBothInputs(
-        ////                        element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-        ////                        element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
-        ////                }
-
-        ////                // Note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
-        ////                // Swap values so that unescaping is handled by the LHS.
-        ////                return element2ParentDocument.TextEquals(
-        ////                    element2ParentDocumentIndex,
-        ////                    element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-        ////                    isPropertyName: false,
-        ////                    shouldUnescape: true);
-        ////            }
-
-        ////            // As above, note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
-        ////            return element1ParentDocument.TextEquals(
-        ////                element1ParentDocumentIndex,
-        ////                element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span,
-        ////                isPropertyName: false,
-        ////                shouldUnescape: true);
-        ////        }
-
-        ////        case JsonValueKind.Array:
-        ////        {
-        ////            IJsonDocument element1ParentDocument = element1._parent;
-        ////            IJsonDocument element2ParentDocument = element2._parent;
-        ////            int element1ParentDocumentIndex = element1._idx;
-        ////            int element2ParentDocumentIndex = element2._idx;
-
-        ////            if (element1ParentDocument.GetArrayLength(element1ParentDocumentIndex) != element2ParentDocument.GetArrayLength(element2ParentDocumentIndex))
-        ////            {
-        ////                return false;
-        ////            }
-
-        ////            ArrayEnumerator<JsonElement> arrayEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
-        ////            foreach (JsonElement e1 in new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex))
-        ////            {
-        ////                bool success = arrayEnumerator2.MoveNext();
-        ////                Debug.Assert(success, "enumerators must have matching length");
-
-        ////                if (!DeepEquals(e1, arrayEnumerator2.Current))
-        ////                {
-        ////                    return false;
-        ////                }
-        ////            }
-
-        ////            Debug.Assert(!arrayEnumerator2.MoveNext());
-        ////            return true;
-        ////        }
-
-        ////        default:
-        ////        {
-        ////            Debug.Assert(kind is JsonValueKind.Object);
-        ////            IJsonDocument element1ParentDocument = element1._parent;
-        ////            IJsonDocument element2ParentDocument = element2._parent;
-        ////            int element1ParentDocumentIndex = element1._idx;
-        ////            int element2ParentDocumentIndex = element2._idx;
-
-        ////            int count = element1ParentDocument.GetPropertyCount(element1ParentDocumentIndex);
-        ////            if (count != element2ParentDocument.GetPropertyCount(element2ParentDocumentIndex))
-        ////            {
-        ////                return false;
-        ////            }
-
-        ////            ObjectEnumerator<JsonElement> objectEnumerator1 = new(element1ParentDocument, element1ParentDocumentIndex);
-        ////            ObjectEnumerator<JsonElement> objectEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
-
-        ////            // Two JSON objects are considered equal if they define the same set of properties.
-        ////            // Start optimistically with pairwise comparison, but fall back to unordered
-        ////            // comparison as soon as a mismatch is encountered.
-
-        ////            while (objectEnumerator1.MoveNext())
-        ////            {
-        ////                bool success = objectEnumerator2.MoveNext();
-        ////                Debug.Assert(success, "enumerators should have matching lengths");
-
-        ////                JsonProperty<JsonElement> prop1 = objectEnumerator1.Current;
-        ////                JsonProperty<JsonElement> prop2 = objectEnumerator2.Current;
-
-        ////                if (!NameEquals(prop1, prop2))
-        ////                {
-        ////                    // We have our first mismatch, fall back to unordered comparison.
-        ////                    return UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentIndex, ref objectEnumerator2);
-        ////                }
-
-        ////                if (!DeepEquals(prop1.Value, prop2.Value))
-        ////                {
-        ////                    return false;
-        ////                }
-
-        ////                count--;
-        ////            }
-
-        ////            Debug.Assert(!objectEnumerator2.MoveNext());
-        ////            return true;
-        ////        }
-        ////    }
-
-        ////    static bool UnorderedObjectDeepEquals(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, ref ObjectEnumerator<JsonElement> objectEnumerator2)
-        ////    {
-        ////        // JsonElement objects allow duplicate property names, which is optional per the JSON RFC.
-        ////        // Even though this implementation of equality does not take property ordering into account,
-        ////        // duplicate, out of order properties resolve the value in the second instance to the last value
-        ////        // in the first instance. This differs from the System.Text.Json.JsonElement implementation, which supports duplicate
-        ////        // property names, if they are in order.
-        ////        //
-        ////        // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
-        ////        element1ParentDocument.EnsurePropertyMap(element1ParentDocumentIndex);
-
-        ////        Span<byte> buffer = stackalloc byte[JsonConstants.StackallocByteThreshold];
-
-        ////        do
-        ////        {
-        ////            JsonProperty<JsonElement> right = objectEnumerator2.Current;
-        ////            JsonElement leftValue;
-        ////            if (right.NameIsEscaped)
-        ////            {
-        ////                ReadOnlySpan<byte> rightNameSpan = right.NameSpan;
-        ////                int index = rightNameSpan.IndexOf(JsonConstants.BackSlash);
-        ////                Debug.Assert(index >= 0, "the name is not escaped");
-
-        ////                byte[]? unescapedRightNameArray = null;
-
-        ////                Span<byte> unescapedRightNameSpan = rightNameSpan.Length <= JsonConstants.StackallocByteThreshold ?
-        ////                    buffer :
-        ////                    (unescapedRightNameArray = ArrayPool<byte>.Shared.Rent(rightNameSpan.Length));
-
-        ////                JsonReaderHelper.Unescape(rightNameSpan, unescapedRightNameSpan, index, out int written);
-        ////                unescapedRightNameSpan = unescapedRightNameSpan.Slice(0, written);
-        ////                Debug.Assert(!unescapedRightNameSpan.IsEmpty);
-
-
-        ////                try
-        ////                {
-        ////                    if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentIndex, unescapedRightNameSpan, out leftValue) ||
-        ////                        !DeepEquals(leftValue, right.Value))
-        ////                    {
-        ////                        return false;
-        ////                    }
-        ////                }
-        ////                finally
-        ////                {
-        ////                    if (unescapedRightNameArray != null)
-        ////                    {
-        ////                        unescapedRightNameSpan.Clear();
-        ////                        ArrayPool<byte>.Shared.Return(unescapedRightNameArray);
-        ////                    }
-        ////                }
-        ////            }
-        ////            else
-        ////            {
-        ////                if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentIndex, right.NameSpan, out leftValue) ||
-        ////                    !DeepEquals(leftValue, right.Value))
-        ////                {
-        ////                    return false;
-        ////                }
-        ////            }
-
-
-        ////        }
-        ////        while (objectEnumerator2.MoveNext());
-
-        ////        return true;
-        ////    }
-
-        ////    static bool NameEquals(JsonProperty<JsonElement> left, JsonProperty<JsonElement> right)
-        ////    {
-        ////        if (right.NameIsEscaped)
-        ////        {
-        ////            if (left.NameIsEscaped)
-        ////            {
-        ////                // Need to unescape and compare both inputs.
-        ////                return JsonReaderHelper.UnescapeAndCompareBothInputs(left.NameSpan, right.NameSpan);
-        ////            }
-
-        ////            // Swap values so that unescaping is handled by the LHS
-        ////            (left, right) = (right, left);
-        ////        }
-
-        ////        return left.NameEquals(right.NameSpan);
-        ////    }
-        ////}
-
         [CLSCompliant(false)]
-        public static JsonElement From<T>(in T instance)
+        public static JsonElementA From<T>(in T instance)
             where T : struct, IJsonElement<T>
         {
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
@@ -377,84 +130,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   Gets a <see cref="JsonElement"/> representing the value of a required property identified
-        ///   by <paramref name="propertyName"/>.
-        /// </summary>
-        /// <remarks>
-        ///   Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///
-        ///   If a property is defined multiple times for the same object, the last such definition is
-        ///   what is matched.
-        /// </remarks>
-        /// <param name="propertyName">Name of the property whose value to return.</param>
-        /// <returns>
-        ///   A <see cref="JsonElement"/> representing the value of the requested property.
-        /// </returns>
-        /// <seealso cref="EnumerateObject"/>
-        /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
-        /// </exception>
-        /// <exception cref="KeyNotFoundException">
-        ///   No property was found with the requested name.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///   <paramref name="propertyName"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        public JsonElement GetProperty(string propertyName)
-        {
-            ArgumentNullException.ThrowIfNull(propertyName);
-
-            if (TryGetProperty(propertyName, out JsonElement property))
-            {
-                return property;
-            }
-
-            throw new KeyNotFoundException();
-        }
-
-        /// <summary>
-        ///   Gets a <see cref="JsonElement"/> representing the value of a required property identified
-        ///   by <paramref name="propertyName"/>.
-        /// </summary>
-        /// <remarks>
-        ///   <para>
-        ///     Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///   </para>
-        ///
-        ///   <para>
-        ///     If a property is defined multiple times for the same object, the last such definition is
-        ///     what is matched.
-        ///   </para>
-        /// </remarks>
-        /// <param name="propertyName">Name of the property whose value to return.</param>
-        /// <returns>
-        ///   A <see cref="JsonElement"/> representing the value of the requested property.
-        /// </returns>
-        /// <seealso cref="EnumerateObject"/>
-        /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
-        /// </exception>
-        /// <exception cref="KeyNotFoundException">
-        ///   No property was found with the requested name.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        public JsonElement GetProperty(ReadOnlySpan<char> propertyName)
-        {
-            if (TryGetProperty(propertyName, out JsonElement property))
-            {
-                return property;
-            }
-
-            throw new KeyNotFoundException();
-        }
-
-        /// <summary>
-        ///   Gets a <see cref="JsonElement"/> representing the value of a required property identified
+        ///   Gets a <see cref="JsonElementA"/> representing the value of a required property identified
         ///   by <paramref name="utf8PropertyName"/>.
         /// </summary>
         /// <remarks>
@@ -471,7 +147,7 @@ namespace Corvus.Text.Json
         ///   The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property to return.
         /// </param>
         /// <returns>
-        ///   A <see cref="JsonElement"/> representing the value of the requested property.
+        ///   A <see cref="JsonElementA"/> representing the value of the requested property.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
@@ -483,85 +159,14 @@ namespace Corvus.Text.Json
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="EnumerateObject"/>
-        public JsonElement GetProperty(ReadOnlySpan<byte> utf8PropertyName)
+        public JsonElementA GetProperty(ReadOnlySpan<byte> utf8PropertyName)
         {
-            if (TryGetProperty(utf8PropertyName, out JsonElement property))
+            if (TryGetProperty(utf8PropertyName, out JsonElementA property))
             {
                 return property;
             }
 
             throw new KeyNotFoundException();
-        }
-
-        /// <summary>
-        ///   Looks for a property named <paramref name="propertyName"/> in the current object, returning
-        ///   whether or not such a property existed. When the property exists <paramref name="value"/>
-        ///   is assigned to the value of that property.
-        /// </summary>
-        /// <remarks>
-        ///   <para>
-        ///     Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///   </para>
-        ///
-        ///   <para>
-        ///     If a property is defined multiple times for the same object, the last such definition is
-        ///     what is matched.
-        ///   </para>
-        /// </remarks>
-        /// <param name="propertyName">Name of the property to find.</param>
-        /// <param name="value">Receives the value of the located property.</param>
-        /// <returns>
-        ///   <see langword="true"/> if the property was found, <see langword="false"/> otherwise.
-        /// </returns>
-        /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///   <paramref name="propertyName"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <seealso cref="EnumerateObject"/>
-        public bool TryGetProperty(string propertyName, out JsonElement value)
-        {
-            ArgumentNullException.ThrowIfNull(propertyName);
-
-            return TryGetProperty(propertyName.AsSpan(), out value);
-        }
-
-        /// <summary>
-        ///   Looks for a property named <paramref name="propertyName"/> in the current object, returning
-        ///   whether or not such a property existed. When the property exists <paramref name="value"/>
-        ///   is assigned to the value of that property.
-        /// </summary>
-        /// <remarks>
-        ///   <para>
-        ///     Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///   </para>
-        ///
-        ///   <para>
-        ///     If a property is defined multiple times for the same object, the last such definition is
-        ///     what is matched.
-        ///   </para>
-        /// </remarks>
-        /// <param name="propertyName">Name of the property to find.</param>
-        /// <param name="value">Receives the value of the located property.</param>
-        /// <returns>
-        ///   <see langword="true"/> if the property was found, <see langword="false"/> otherwise.
-        /// </returns>
-        /// <seealso cref="EnumerateObject"/>
-        /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        public bool TryGetProperty(ReadOnlySpan<char> propertyName, out JsonElement value)
-        {
-            CheckValidInstance();
-
-            return _parent.TryGetNamedPropertyValue(_idx, propertyName, out value);
         }
 
         /// <summary>
@@ -593,7 +198,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, out JsonElement value)
+        public bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, out JsonElementA value)
         {
             CheckValidInstance();
 
@@ -628,7 +233,7 @@ namespace Corvus.Text.Json
 
             static bool ThrowJsonElementWrongTypeException(JsonTokenType actualType)
             {
-                throw ThrowHelper.GetJsonElementWrongTypeException(nameof(Boolean), actualType.ToValueKind());
+                throw new InvalidOperationException();
             }
         }
 
@@ -658,57 +263,6 @@ namespace Corvus.Text.Json
             CheckValidInstance();
 
             return _parent.GetUtf8JsonString(_idx, JsonTokenType.String);
-        }
-
-        /// <summary>
-        ///   Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
-        /// </summary>
-        /// <param name="value">Receives the value.</param>
-        /// <remarks>
-        ///  This method does not create a byte[] representation of values other than base 64 encoded JSON strings.
-        /// </remarks>
-        /// <returns>
-        ///   <see langword="true"/> if the entire token value is encoded as valid Base64 text and can be successfully decoded to bytes.
-        ///   <see langword="false"/> otherwise.
-        /// </returns>
-        /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        public bool TryGetBytesFromBase64([NotNullWhen(true)] out byte[]? value)
-        {
-            CheckValidInstance();
-
-            return _parent.TryGetValue(_idx, out value);
-        }
-
-        /// <summary>
-        ///   Gets the value of the element as bytes.
-        /// </summary>
-        /// <remarks>
-        ///   This method does not create a byte[] representation of values other than Base64 encoded JSON strings.
-        /// </remarks>
-        /// <returns>The value decode to bytes.</returns>
-        /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
-        /// </exception>
-        /// <exception cref="FormatException">
-        ///   The value is not encoded as Base64 text and hence cannot be decoded to bytes.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <seealso cref="ToString"/>
-        public byte[] GetBytesFromBase64()
-        {
-            if (!TryGetBytesFromBase64(out byte[]? value))
-            {
-                ThrowHelper.ThrowFormatException();
-            }
-
-            return value;
         }
 
         /// <summary>
@@ -950,7 +504,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetInt32(out int value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1002,7 +556,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetUInt32(out uint value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1052,7 +606,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetInt64(out long value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1104,7 +658,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetUInt64(out ulong value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1171,7 +725,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetDouble(out double value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1238,7 +792,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetSingle(out float value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1290,7 +844,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetDecimal(out decimal value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1341,7 +895,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetDateTime(out DateTime value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1392,7 +946,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetDateTimeOffset(out DateTimeOffset value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1443,7 +997,7 @@ namespace Corvus.Text.Json
         {
             if (!TryGetGuid(out Guid value))
             {
-                ThrowHelper.ThrowFormatException();
+                throw new InvalidOperationException();
             }
 
             return value;
@@ -1513,7 +1067,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        public static void EnsurePropertyMap(in JsonElement element)
+        public static void EnsurePropertyMap(in JsonElementA element)
         {
             element._parent.EnsurePropertyMap(element._idx);
         }
@@ -1642,7 +1196,7 @@ namespace Corvus.Text.Json
         /// </exception>
         public void WriteTo(Utf8JsonWriter writer)
         {
-            ArgumentNullException.ThrowIfNull(writer);
+            throw new InvalidOperationException();
 
             CheckValidInstance();
 
@@ -1657,10 +1211,10 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   Get an enumerator to enumerate the values in the JSON array represented by this JsonElement.
+        ///   Get an enumerator to enumerate the values in the JSON array represented by this JsonElementA.
         /// </summary>
         /// <returns>
-        ///   An enumerator to enumerate the values in the JSON array represented by this JsonElement.
+        ///   An enumerator to enumerate the values in the JSON array represented by this JsonElementA.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
@@ -1669,7 +1223,7 @@ namespace Corvus.Text.Json
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
-        public ArrayEnumerator<JsonElement> EnumerateArray()
+        public ArrayEnumerator<JsonElementA> EnumerateArray()
         {
             CheckValidInstance();
 
@@ -1677,17 +1231,17 @@ namespace Corvus.Text.Json
 
             if (tokenType != JsonTokenType.StartArray)
             {
-                ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartArray, tokenType);
+                throw new InvalidOperationException();
             }
 
-            return new ArrayEnumerator<JsonElement>(_parent, _idx);
+            return new ArrayEnumerator<JsonElementA>(_parent, _idx);
         }
 
         /// <summary>
-        ///   Get an enumerator to enumerate the properties in the JSON object represented by this JsonElement.
+        ///   Get an enumerator to enumerate the properties in the JSON object represented by this JsonElementA.
         /// </summary>
         /// <returns>
-        ///   An enumerator to enumerate the properties in the JSON object represented by this JsonElement.
+        ///   An enumerator to enumerate the properties in the JSON object represented by this JsonElementA.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
@@ -1696,7 +1250,7 @@ namespace Corvus.Text.Json
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
-        public ObjectEnumerator<JsonElement> EnumerateObject()
+        public ObjectEnumerator<JsonElementA> EnumerateObject()
         {
             CheckValidInstance();
 
@@ -1704,10 +1258,10 @@ namespace Corvus.Text.Json
 
             if (tokenType != JsonTokenType.StartObject)
             {
-                ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartObject, tokenType);
+                throw new InvalidOperationException();
             }
 
-            return new ObjectEnumerator<JsonElement>(_parent, _idx);
+            return new ObjectEnumerator<JsonElementA>(_parent, _idx);
         }
 
         /// <summary>
@@ -1715,7 +1269,7 @@ namespace Corvus.Text.Json
         /// </summary>
         /// <remarks>
         ///   <para>
-        ///     For JsonElement built from <see cref="JsonDocument"/>:
+        ///     For JsonElementA built from <see cref="JsonDocument"/>:
         ///   </para>
         ///
         ///   <para>
@@ -1775,21 +1329,21 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   Get a JsonElement which can be safely stored beyond the lifetime of the
+        ///   Get a JsonElementA which can be safely stored beyond the lifetime of the
         ///   original <see cref="JsonDocument"/>.
         /// </summary>
         /// <returns>
-        ///   A JsonElement which can be safely stored beyond the lifetime of the
+        ///   A JsonElementA which can be safely stored beyond the lifetime of the
         ///   original <see cref="JsonDocument"/>.
         /// </returns>
         /// <remarks>
         ///   <para>
-        ///     If this JsonElement is itself the output of a previous call to Clone, or
-        ///     a value contained within another JsonElement which was the output of a previous
+        ///     If this JsonElementA is itself the output of a previous call to Clone, or
+        ///     a value contained within another JsonElementA which was the output of a previous
         ///     call to Clone, this method results in no additional memory allocation.
         ///   </para>
         /// </remarks>
-        public JsonElement Clone()
+        public JsonElementA Clone()
         {
             CheckValidInstance();
 
@@ -1798,7 +1352,7 @@ namespace Corvus.Text.Json
                 return this;
             }
 
-            return _parent.CloneElement(_idx);
+            return _parent.CloneElement<JsonElementA>(_idx);
         }
 
         private void CheckValidInstance()
@@ -1812,11 +1366,11 @@ namespace Corvus.Text.Json
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-        static JsonElement IJsonElement<JsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElement(parentDocument, parentDocumentIndex);
+        public static JsonElementA CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElementA(parentDocument, parentDocumentIndex);
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"JsonElement: ValueKind = {ValueKind} : \"{ToString()}\"";
+        private string DebuggerDisplay => $"JsonElementA: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;
