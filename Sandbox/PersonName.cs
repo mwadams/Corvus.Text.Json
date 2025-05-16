@@ -59,11 +59,11 @@ public readonly struct PersonName : IJsonElement<PersonName>
         }
     }
 
-    public NameComponentArray OtherNames
+    public OtherNames OtherNames
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponentArray value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames value))
             {
                 return value;
             }
@@ -93,7 +93,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, NameComponentArray.Builder.Source otherNames, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
@@ -342,12 +342,12 @@ public readonly struct PersonName : IJsonElement<PersonName>
             return new Builder(builder);
         }
 
-        public void Create(NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, NameComponentArray.Builder.Source otherNames)
+        public void Create(NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
         {
             Create(ref _builder, firstName, lastName, otherNames);
         }
 
-        internal static void Create(ref ComplexValueBuilder builder, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, NameComponentArray.Builder.Source otherNames)
+        internal static void Create(ref ComplexValueBuilder builder, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
         {
             firstName.AddAsProperty(JsonPropertyNames.FirstName, ref builder);
             lastName.AddAsProperty(JsonPropertyNames.LastName, ref builder);

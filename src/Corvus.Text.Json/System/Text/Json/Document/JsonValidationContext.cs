@@ -316,8 +316,13 @@ namespace Corvus.Text.Json
 
                 if (requiredLength > 0 && requiredLength > _rentedBytes?.Length - _offset - Length)
                 {
-                    Enlarge(requiredLength * 2);
+                    Enlarge(requiredLength * 2); // We double requiredLength in order to support local and applied bitBuffers
                 }
+
+                // Now we need to set the values in the regular backing fields in order to point the spans at the right
+                // locations
+                // It might be better just to set up and assign a span, now we are not copying these validation contexts
+                // to avoid calculating that every time.
 
                 return;
             }
@@ -330,7 +335,7 @@ namespace Corvus.Text.Json
 
             if (requiredLength > 0 && requiredLength > _rentedBytes?.Length - _offset - Length)
             {
-                Enlarge(requiredLength * 2);
+                Enlarge(requiredLength * 2);  // We double requiredLength in order to support local and applied bitBuffers
             }
         }
 

@@ -287,46 +287,91 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     {
         public readonly ref struct Source
         {
-            public OtherNames Instance { get; }
+            public JsonElement JsonElementInstance { get; }
 
-            public int Int32Value { get; }
+            public ReadOnlySpan<byte> NameComponentSpan { get; }
+
+            public NameComponentArray.Builder.Build? NameComponentArrayBuilder { get; }
 
             public Source(OtherNames instance)
             {
-                Instance = instance;
-                Int32Value = default;
+                JsonElementInstance = JsonElement.From(instance);
+                NameComponentSpan = default;
+                NameComponentArrayBuilder = default;
             }
 
-            public Source(int int32Value)
+            public Source(NameComponent instance)
             {
-                Instance = default;
-                Int32Value = int32Value;
+                JsonElementInstance = JsonElement.From(instance);
+                NameComponentSpan = default;
+                NameComponentArrayBuilder = default;
+            }
+
+            public Source(NameComponentArray instance)
+            {
+                JsonElementInstance = JsonElement.From(instance);
+                NameComponentSpan = default;
+                NameComponentArrayBuilder = default;
+            }
+
+            public Source(ReadOnlySpan<byte> instance)
+            {
+                JsonElementInstance = default;
+                NameComponentSpan = instance;
+                NameComponentArrayBuilder = default;
+            }
+
+            public Source(NameComponentArray.Builder.Build instance)
+            {
+                JsonElementInstance = default;
+                NameComponentSpan = default ;
+                NameComponentArrayBuilder = instance;
             }
 
             public static implicit operator Source(OtherNames instance) => new(instance);
-            public static implicit operator Source(int instance) => new(instance);
+            public static implicit operator Source(NameComponentArray instance) => new(instance);
+            public static implicit operator Source(NameComponent instance) => new(instance);
+            public static implicit operator Source(ReadOnlySpan<byte> instance) => new(instance);
+            public static implicit operator Source(NameComponentArray.Builder.Build instance) => new(instance);
 
             internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
             {
-                if (Instance.ValueKind != JsonValueKind.Undefined)
+                // Where we might be one of multiple JsonElement types, we flatten into a single JsonElement value
+                // in the source. Note that where we can be only *one* JsonElement type, we just use the instance
+                // directly.
+                // We can always check Undefined for instances, nullability for builders,
+                // and use the individual values for primitives (you don't need separate primitives for each
+                // instance of e.g. a string value - just the one true string value).
+                if (JsonElementInstance.ValueKind != JsonValueKind.Undefined)
                 {
-                    valueBuilder.AddItem(Instance);
+                    valueBuilder.AddItem(JsonElementInstance);
+                }
+                else if (NameComponentArrayBuilder is NameComponentArray.Builder.Build nameComponentArrayBuilder)
+                {
+                    NameComponentArray.Builder.Source source = new(nameComponentArrayBuilder);
+                    source.AddAsItem(ref valueBuilder);
                 }
                 else
                 {
-                    valueBuilder.AddItem(Int32Value);
+                    valueBuilder.AddItem(NameComponentSpan);
                 }
             }
 
             internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
             {
-                if (Instance.ValueKind != JsonValueKind.Undefined)
+
+                if (JsonElementInstance.ValueKind != JsonValueKind.Undefined)
                 {
-                    valueBuilder.AddProperty(utf8Name, Instance);
+                    valueBuilder.AddProperty(utf8Name, JsonElementInstance);
+                }
+                else if (NameComponentArrayBuilder is NameComponentArray.Builder.Build nameComponentArrayBuilder)
+                {
+                    NameComponentArray.Builder.Source source = new(nameComponentArrayBuilder);
+                    source.AddAsProperty(utf8Name, ref valueBuilder);
                 }
                 else
                 {
-                    valueBuilder.AddProperty(utf8Name, Int32Value);
+                    valueBuilder.AddProperty(utf8Name, NameComponentSpan);
                 }
             }
         }

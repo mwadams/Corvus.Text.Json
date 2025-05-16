@@ -17,7 +17,6 @@ namespace Corvus.Text.Json
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
             JsonObjectBuilder.BuildValue(builder, ref cvb);
-            Debug.Assert(cvb.MemberCount == 1);
             documentBuilder.InsertAndDispose(ref cvb);
             return documentBuilder;
         }

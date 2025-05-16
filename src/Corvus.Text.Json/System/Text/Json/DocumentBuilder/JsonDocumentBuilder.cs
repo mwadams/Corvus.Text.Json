@@ -200,7 +200,7 @@ namespace Corvus.Text.Json
             Utf8JsonWriter writer = Utf8JsonWriterCache.RentWriterAndBuffer(InternalWriterOptions, _parsedData.Length, out PooledByteBufferWriter bufferWriter);
             try
             {
-                WriteElementToUnsafe(index, writer);
+                WriteComplexElementToUnsafe(index, writer);
                 writer.Flush();
                 int length = bufferWriter.WrittenSpan.Length;
                 byte[] additionalRentedBytes = ArrayPool<byte>.Shared.Rent(length);
@@ -782,10 +782,18 @@ namespace Corvus.Text.Json
             Utf8JsonWriter writer)
         {
             CheckNotDisposed();
+            // Need to look at the element types/deferrals etc
             WriteElementToUnsafe(index, writer);
         }
 
         private void WriteElementToUnsafe(
+            int index,
+            Utf8JsonWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void WriteComplexElementToUnsafe(
             int index,
             Utf8JsonWriter writer)
         {
