@@ -68,253 +68,6 @@ namespace Corvus.Text.Json
             }
         }
 
-        /////// <summary>
-        /////// Compares the values of two <see cref="IJsonElement"/> values for equality, including the values of all descendant elements.
-        /////// </summary>
-        /////// <typeparam name="TLeft">The type of the first <see cref="IJsonElement"/>.</typeparam>
-        /////// <typeparam name="TLeft">The type of the first <see cref="IJsonElement"/>.</typeparam>
-        /////// <param name="element1">The first <see cref="IJsonElement"/> to compare.</param>
-        /////// <param name="element2">The second <see cref="IJsonElement"/> to compare.</param>
-        /////// <returns><see langword="true"/> if the two values are equal; otherwise, <see langword="false"/>.</returns>
-        /////// <remarks>
-        /////// Deep equality of two JSON values is defined as follows:
-        /////// <list type="bullet">
-        /////// <item>JSON values of different kinds are not equal.</item>
-        /////// <item>JSON constants <see langword="null"/>, <see langword="false"/>, and <see langword="true"/> only equal themselves.</item>
-        /////// <item>JSON numbers are equal if and only if they have they have equivalent decimal representations, with no rounding being used.</item>
-        /////// <item>JSON strings are equal if and only if they are equal using ordinal string comparison.</item>
-        /////// <item>JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal.</item>
-        /////// <item>
-        ///////     JSON objects are equal if and only if they have the same number of properties and each property in the first object
-        ///////     has a corresponding property in the second object with the same name and equal value. The order of properties is not
-        ///////     significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
-        ///////     last value in the first instance.
-        /////// </item>
-        /////// </list>
-        /////// </remarks>
-        ////[CLSCompliant(false)]
-        ////public static bool DeepEquals(in JsonElement element1, in JsonElement element2)
-        ////{
-        ////    // We check valid instances once at the top, and then use the document directly throughout
-        ////    element1.CheckValidInstance();
-        ////    element2.CheckValidInstance();
-
-        ////    JsonValueKind kind = element1.ValueKind;
-        ////    if (kind != element2.ValueKind)
-        ////    {
-        ////        return false;
-        ////    }
-
-        ////    switch (kind)
-        ////    {
-        ////        case JsonValueKind.Null or JsonValueKind.False or JsonValueKind.True:
-        ////            return true;
-
-        ////        case JsonValueKind.Number:
-        ////        {
-        ////            IJsonDocument element1ParentDocument = element1._parent;
-        ////            IJsonDocument element2ParentDocument = element2._parent;
-        ////            int element1ParentDocumentIndex = element1._idx;
-        ////            int element2ParentDocumentIndex = element2._idx;
-        ////            return JsonHelpers.AreEqualJsonNumbers(
-        ////                element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-        ////                element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
-        ////        }
-
-        ////        case JsonValueKind.String:
-        ////        {
-        ////            IJsonDocument element1ParentDocument = element1._parent;
-        ////            IJsonDocument element2ParentDocument = element2._parent;
-        ////            int element1ParentDocumentIndex = element1._idx;
-        ////            int element2ParentDocumentIndex = element2._idx;
-        ////            if (element2ParentDocument.ValueIsEscaped(element2ParentDocumentIndex, isPropertyName: false))
-        ////            {
-        ////                if (element1ParentDocument.ValueIsEscaped(element1ParentDocumentIndex, isPropertyName: false))
-        ////                {
-        ////                    // Need to unescape and compare both inputs.
-        ////                    return JsonReaderHelper.UnescapeAndCompareBothInputs(
-        ////                        element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-        ////                        element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
-        ////                }
-
-        ////                // Note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
-        ////                // Swap values so that unescaping is handled by the LHS.
-        ////                return element2ParentDocument.TextEquals(
-        ////                    element2ParentDocumentIndex,
-        ////                    element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-        ////                    isPropertyName: false,
-        ////                    shouldUnescape: true);
-        ////            }
-
-        ////            // As above, note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
-        ////            return element1ParentDocument.TextEquals(
-        ////                element1ParentDocumentIndex,
-        ////                element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span,
-        ////                isPropertyName: false,
-        ////                shouldUnescape: true);
-        ////        }
-
-        ////        case JsonValueKind.Array:
-        ////        {
-        ////            IJsonDocument element1ParentDocument = element1._parent;
-        ////            IJsonDocument element2ParentDocument = element2._parent;
-        ////            int element1ParentDocumentIndex = element1._idx;
-        ////            int element2ParentDocumentIndex = element2._idx;
-
-        ////            if (element1ParentDocument.GetArrayLength(element1ParentDocumentIndex) != element2ParentDocument.GetArrayLength(element2ParentDocumentIndex))
-        ////            {
-        ////                return false;
-        ////            }
-
-        ////            ArrayEnumerator<JsonElement> arrayEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
-        ////            foreach (JsonElement e1 in new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex))
-        ////            {
-        ////                bool success = arrayEnumerator2.MoveNext();
-        ////                Debug.Assert(success, "enumerators must have matching length");
-
-        ////                if (!DeepEquals(e1, arrayEnumerator2.Current))
-        ////                {
-        ////                    return false;
-        ////                }
-        ////            }
-
-        ////            Debug.Assert(!arrayEnumerator2.MoveNext());
-        ////            return true;
-        ////        }
-
-        ////        default:
-        ////        {
-        ////            Debug.Assert(kind is JsonValueKind.Object);
-        ////            IJsonDocument element1ParentDocument = element1._parent;
-        ////            IJsonDocument element2ParentDocument = element2._parent;
-        ////            int element1ParentDocumentIndex = element1._idx;
-        ////            int element2ParentDocumentIndex = element2._idx;
-
-        ////            int count = element1ParentDocument.GetPropertyCount(element1ParentDocumentIndex);
-        ////            if (count != element2ParentDocument.GetPropertyCount(element2ParentDocumentIndex))
-        ////            {
-        ////                return false;
-        ////            }
-
-        ////            ObjectEnumerator<JsonElement> objectEnumerator1 = new(element1ParentDocument, element1ParentDocumentIndex);
-        ////            ObjectEnumerator<JsonElement> objectEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
-
-        ////            // Two JSON objects are considered equal if they define the same set of properties.
-        ////            // Start optimistically with pairwise comparison, but fall back to unordered
-        ////            // comparison as soon as a mismatch is encountered.
-
-        ////            while (objectEnumerator1.MoveNext())
-        ////            {
-        ////                bool success = objectEnumerator2.MoveNext();
-        ////                Debug.Assert(success, "enumerators should have matching lengths");
-
-        ////                JsonProperty<JsonElement> prop1 = objectEnumerator1.Current;
-        ////                JsonProperty<JsonElement> prop2 = objectEnumerator2.Current;
-
-        ////                if (!NameEquals(prop1, prop2))
-        ////                {
-        ////                    // We have our first mismatch, fall back to unordered comparison.
-        ////                    return UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentIndex, ref objectEnumerator2);
-        ////                }
-
-        ////                if (!DeepEquals(prop1.Value, prop2.Value))
-        ////                {
-        ////                    return false;
-        ////                }
-
-        ////                count--;
-        ////            }
-
-        ////            Debug.Assert(!objectEnumerator2.MoveNext());
-        ////            return true;
-        ////        }
-        ////    }
-
-        ////    static bool UnorderedObjectDeepEquals(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, ref ObjectEnumerator<JsonElement> objectEnumerator2)
-        ////    {
-        ////        // JsonElement objects allow duplicate property names, which is optional per the JSON RFC.
-        ////        // Even though this implementation of equality does not take property ordering into account,
-        ////        // duplicate, out of order properties resolve the value in the second instance to the last value
-        ////        // in the first instance. This differs from the System.Text.Json.JsonElement implementation, which supports duplicate
-        ////        // property names, if they are in order.
-        ////        //
-        ////        // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
-        ////        element1ParentDocument.EnsurePropertyMap(element1ParentDocumentIndex);
-
-        ////        Span<byte> buffer = stackalloc byte[JsonConstants.StackallocByteThreshold];
-
-        ////        do
-        ////        {
-        ////            JsonProperty<JsonElement> right = objectEnumerator2.Current;
-        ////            JsonElement leftValue;
-        ////            if (right.NameIsEscaped)
-        ////            {
-        ////                ReadOnlySpan<byte> rightNameSpan = right.NameSpan;
-        ////                int index = rightNameSpan.IndexOf(JsonConstants.BackSlash);
-        ////                Debug.Assert(index >= 0, "the name is not escaped");
-
-        ////                byte[]? unescapedRightNameArray = null;
-
-        ////                Span<byte> unescapedRightNameSpan = rightNameSpan.Length <= JsonConstants.StackallocByteThreshold ?
-        ////                    buffer :
-        ////                    (unescapedRightNameArray = ArrayPool<byte>.Shared.Rent(rightNameSpan.Length));
-
-        ////                JsonReaderHelper.Unescape(rightNameSpan, unescapedRightNameSpan, index, out int written);
-        ////                unescapedRightNameSpan = unescapedRightNameSpan.Slice(0, written);
-        ////                Debug.Assert(!unescapedRightNameSpan.IsEmpty);
-
-
-        ////                try
-        ////                {
-        ////                    if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentIndex, unescapedRightNameSpan, out leftValue) ||
-        ////                        !DeepEquals(leftValue, right.Value))
-        ////                    {
-        ////                        return false;
-        ////                    }
-        ////                }
-        ////                finally
-        ////                {
-        ////                    if (unescapedRightNameArray != null)
-        ////                    {
-        ////                        unescapedRightNameSpan.Clear();
-        ////                        ArrayPool<byte>.Shared.Return(unescapedRightNameArray);
-        ////                    }
-        ////                }
-        ////            }
-        ////            else
-        ////            {
-        ////                if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentIndex, right.NameSpan, out leftValue) ||
-        ////                    !DeepEquals(leftValue, right.Value))
-        ////                {
-        ////                    return false;
-        ////                }
-        ////            }
-
-
-        ////        }
-        ////        while (objectEnumerator2.MoveNext());
-
-        ////        return true;
-        ////    }
-
-        ////    static bool NameEquals(JsonProperty<JsonElement> left, JsonProperty<JsonElement> right)
-        ////    {
-        ////        if (right.NameIsEscaped)
-        ////        {
-        ////            if (left.NameIsEscaped)
-        ////            {
-        ////                // Need to unescape and compare both inputs.
-        ////                return JsonReaderHelper.UnescapeAndCompareBothInputs(left.NameSpan, right.NameSpan);
-        ////            }
-
-        ////            // Swap values so that unescaping is handled by the LHS
-        ////            (left, right) = (right, left);
-        ////        }
-
-        ////        return left.NameEquals(right.NameSpan);
-        ////    }
-        ////}
-
         [CLSCompliant(false)]
         public static JsonElement From<T>(in T instance)
             where T : struct, IJsonElement<T>
@@ -323,13 +76,12 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        /// Validates the given document and index using the
-        /// semantics of this element type.
+        /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
         /// </summary>
         /// <param name="parentDocument">The parent document.</param>
         /// <param name="parentIndex">The parent index.</param>
         /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
-        internal static void Validate(IJsonDocument parentDocument, int parentIndex, ref JsonValidationContext context)
+        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
         {
             // You're not allowed to ask about non-value-like entities
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
@@ -338,8 +90,7 @@ namespace Corvus.Text.Json
                 JsonTokenType.EndArray or
                 JsonTokenType.PropertyName);
 
-            // This is "always good"
-            ////context.AssertMatch();
+            context.Matched(true);
         }
 
         /// <summary>

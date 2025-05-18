@@ -1,8 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Buffers.Text;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
@@ -59,12 +61,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public TResult Match<TResult>(Func<NameComponent, TResult> nameComponent, Func<NameComponentArray, TResult> nameComponentArray, Func<OtherNames, TResult> noMatch)
     {
-        if (NameComponent.IsMatch(_parent, _idx))
+        if (NameComponent.JsonSchema.IsMatch(_parent, _idx))
         {
             return nameComponent(NameComponent.From(this));
         }
 
-        if (NameComponentArray.IsMatch(_parent, _idx))
+        if (NameComponentArray.JsonSchema.IsMatch(_parent, _idx))
         {
             return nameComponentArray(NameComponentArray.From(this));
         }
@@ -74,12 +76,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public TResult Match<TContext, TResult>(TContext context, Func<TContext, NameComponent, TResult> nameComponent, Func<TContext, NameComponentArray, TResult> nameComponentArray, Func<TContext, OtherNames, TResult> noMatch)
     {
-        if (NameComponent.IsMatch(_parent, _idx))
+        if (NameComponent.JsonSchema.IsMatch(_parent, _idx))
         {
             return nameComponent(context, NameComponent.From(this));
         }
 
-        if (NameComponentArray.IsMatch(_parent, _idx))
+        if (NameComponentArray.JsonSchema.IsMatch(_parent, _idx))
         {
             return nameComponentArray(context, NameComponentArray.From(this));
         }
@@ -129,6 +131,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         CheckValidInstance();
 
         _parent.WriteElementTo(_idx, writer);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+    {
+        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
     }
 
     private void CheckValidInstance()
@@ -324,7 +332,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             public Source(NameComponentArray.Builder.Build instance)
             {
                 JsonElementInstance = default;
-                NameComponentSpan = default ;
+                NameComponentSpan = default;
                 NameComponentArrayBuilder = instance;
             }
 
@@ -374,6 +382,140 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                     valueBuilder.AddProperty(utf8Name, NameComponentSpan);
                 }
             }
+        }
+    }
+
+    public static class JsonSchema
+    {
+        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/OtherNames"u8;
+
+        private static ReadOnlySpan<byte> OneOf0Location() => "#/oneOf/0/$ref"u8;
+        private static ReadOnlySpan<byte> OneOf1Location() => "#/oneOf/1/$ref"u8;
+        private static ReadOnlySpan<byte> EscapedOneOfKeyword() => "oneOf"u8;
+        private static ReadOnlySpan<byte> MatchedMoreThanOneSchema() => "Matched more than one schema."u8;
+        private static ReadOnlySpan<byte> MatchedNoSchema() => "Matched no schema."u8;
+
+        /// <summary>
+        /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
+        /// </summary>
+        /// <param name="parentDocument">The parent document.</param>
+        /// <param name="parentIndex">The parent index.</param>
+        /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
+        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        {
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            context.PushSchemaLocation(SchemaLocation);
+
+            int oneOfMatchCount = 0;
+
+            JsonSchemaContext oneOf0Context =
+                NameComponent.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf0Location);
+
+            NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentIndex, ref oneOf0Context);
+
+            if (oneOf0Context.IsMatch)
+            {
+                oneOfMatchCount++;
+                context.CommitChildContext(true);
+                context.ApplyEvaluatedItems(ref oneOf0Context);
+            }
+            else
+            {
+                context.PopChildContext();
+            }
+
+            JsonSchemaContext oneOf1Context =
+                NameComponentArray.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf1Location);
+
+            NameComponentArray.JsonSchema.ApplyJsonSchema(parentDocument, parentIndex, ref oneOf1Context);
+
+            if (oneOf1Context.IsMatch)
+            {
+                oneOfMatchCount++;
+                context.CommitChildContext(true);
+                context.ApplyEvaluatedItems(ref oneOf1Context);
+            }
+            else
+            {
+                context.PopChildContext();
+            }
+
+            if (oneOfMatchCount == 1)
+            {
+                context.Matched(true, schemaEvaluationPath: EscapedOneOfKeyword);
+            }
+            else if (oneOfMatchCount > 1)
+            {
+                context.Matched(false, MatchedMoreThanOneSchema, schemaEvaluationPath: EscapedOneOfKeyword);
+            }
+            else
+            {
+                context.Matched(false, MatchedNoSchema, schemaEvaluationPath: EscapedOneOfKeyword);
+            }
+
+            context.PopSchemaLocation();
+        }
+
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            JsonSchemaContext context = JsonSchemaContext.BeginContext(
+                parentDocument,
+                parentIndex,
+                usingEvaluatedProperties: false,
+                usingEvaluatedItems: false,
+                resultsCollector: resultsCollector);
+
+            try
+            {
+                ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                return context.IsMatch;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContext<TContext>(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            TContext providerContext,
+            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    providerContext: providerContext,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath);
         }
     }
 }

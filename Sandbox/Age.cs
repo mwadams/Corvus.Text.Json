@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
@@ -97,6 +98,11 @@ public readonly struct Age : IJsonElement<Age>
         _parent.WriteElementTo(_idx, writer);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+    {
+        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+    }
     private void CheckValidInstance()
     {
         if (_parent == null)
@@ -295,6 +301,166 @@ public readonly struct Age : IJsonElement<Age>
                     valueBuilder.AddProperty(utf8Name, Int32Value);
                 }
             }
+        }
+    }
+
+    public static class JsonSchema
+    {
+        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/Age"u8;
+        private static ReadOnlySpan<byte> ExpectedANumberValue() => "Expected a number value."u8;
+        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeNumber() => "Ignored because the value was not of type 'number'."u8;
+        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
+        private static ReadOnlySpan<byte> EscapedMinimumKeyword() => "minimum"u8;
+        private static ReadOnlySpan<byte> EscapedMaximumKeyword() => "maximum"u8;
+
+        private static bool minimumIsNegative => false;
+        private static ReadOnlySpan<byte> minimumIntegral => "0"u8;
+        private static ReadOnlySpan<byte> minimumFractional => ""u8;
+        private static int minimumExponent = 0;
+
+        private static bool maximumIsNegative => false;
+        private static ReadOnlySpan<byte> maximumIntegral => "130"u8;
+        private static ReadOnlySpan<byte> maximumFractional => ""u8;
+        private static int maximumExponent = 0;
+
+        /// <summary>
+        /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
+        /// </summary>
+        /// <param name="parentDocument">The parent document.</param>
+        /// <param name="parentIndex">The parent index.</param>
+        /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
+        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        {
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            context.PushSchemaLocation(SchemaLocation);
+
+            JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
+
+            if (tokenType != JsonTokenType.Number)
+            {
+                context.Matched(false, ExpectedANumberValue, schemaEvaluationPath: EscapedTypeKeyword);
+                if (!context.HasCollector)
+                {
+                    context.PopSchemaLocation();
+                    return;
+                }
+
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeNumber, schemaEvaluationPath: EscapedMinimumKeyword);
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeNumber, schemaEvaluationPath: EscapedMaximumKeyword);
+                context.PopSchemaLocation();
+                return;
+            }
+
+            ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex, false);
+            JsonElementHelpers.ParseNumber(number.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
+
+            if(JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                minimumIsNegative,
+                minimumIntegral,
+                minimumFractional,
+                minimumExponent) < 0)
+            {
+                context.Matched(false, schemaEvaluationPath: EscapedMinimumKeyword);
+                if (!context.HasCollector)
+                {
+                    context.PopSchemaLocation();
+                    return;
+                }
+            }
+            else
+            {
+                context.Matched(true, schemaEvaluationPath: EscapedMinimumKeyword);
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                maximumIsNegative,
+                maximumIntegral,
+                maximumFractional,
+                maximumExponent) > 0)
+            {
+                context.Matched(false, schemaEvaluationPath: EscapedMaximumKeyword);
+                if (!context.HasCollector)
+                {
+                    context.PopSchemaLocation();
+                    return;
+                }
+            }
+            else
+            {
+                context.Matched(true, schemaEvaluationPath: EscapedMaximumKeyword);
+            }
+
+            context.PopSchemaLocation();
+        }
+
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector resultsCollector)
+        {
+            JsonSchemaContext context = JsonSchemaContext.BeginContext(
+                parentDocument,
+                parentIndex,
+                usingEvaluatedProperties: false,
+                usingEvaluatedItems: false,
+                resultsCollector: resultsCollector);
+
+            try
+            {
+                ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                return context.IsMatch;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContext<TContext>(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            TContext providerContext,
+            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath,
+                    providerContext: providerContext);
         }
     }
 }

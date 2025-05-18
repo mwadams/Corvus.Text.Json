@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
@@ -39,11 +40,6 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         {
             return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
         }
-    }
-
-    internal static bool IsMatch(IJsonDocument parentDocument, int parentDocumentIndex)
-    {
-        throw new NotImplementedException();    
     }
 
     public string? GetString()
@@ -102,6 +98,12 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         CheckValidInstance();
 
         _parent.WriteElementTo(_idx, writer);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+    {
+        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
     }
 
     private void CheckValidInstance()
@@ -317,5 +319,139 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                 }
             }
         }
+    }
+
+    public static class JsonSchema
+    {
+        /// <summary>
+        /// A constant for the <c>maxLength</c> keyword.
+        /// </summary>
+        public static readonly long MaxLength = 256;
+
+        /// <summary>
+        /// A constant for the <c>minLength</c> keyword.
+        /// </summary>
+        public static readonly long MinLength = 1;
+
+        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/PersonNameElement"u8;
+        private static ReadOnlySpan<byte> ExpectedAStringValue() => "Expected a string value."u8;
+        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeString() => "Ignored because the value was not of type 'string'."u8;
+        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
+        private static ReadOnlySpan<byte> EscapedMinLengthKeyword() => "minLength"u8;
+        private static ReadOnlySpan<byte> EscapedMaxLengthKeyword() => "maxLength"u8;
+
+        /// <summary>
+        /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
+        /// </summary>
+        /// <param name="parentDocument">The parent document.</param>
+        /// <param name="parentIndex">The parent index.</param>
+        /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
+        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        {
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            context.PushSchemaLocation(SchemaLocation);
+
+            JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
+
+            if (tokenType != JsonTokenType.String)
+            {
+                context.Matched(false, ExpectedAStringValue, schemaEvaluationPath: EscapedTypeKeyword);
+                if (!context.HasCollector)
+                {
+                    context.PopSchemaLocation();
+                    return;
+                }
+
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeString, schemaEvaluationPath: EscapedMinLengthKeyword);
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeString, schemaEvaluationPath: EscapedMaxLengthKeyword);
+                context.PopSchemaLocation();
+                return;
+            }
+
+            using UnescapedUtf8JsonString stringValue = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
+            int length = JsonElementHelpers.GetUtf8StringLength(stringValue.Span);
+            if (length <= MaxLength)
+            {
+                context.Matched(true, schemaEvaluationPath: EscapedMaxLengthKeyword);
+            }
+            else
+            {
+                context.Matched(false, schemaEvaluationPath: EscapedMaxLengthKeyword);
+            }
+
+            if (length >= MinLength)
+            {
+                context.Matched(true, schemaEvaluationPath: EscapedMinLengthKeyword);
+            }
+            else
+            {
+                context.Matched(false, schemaEvaluationPath: EscapedMinLengthKeyword);
+            }
+
+            context.PopSchemaLocation();
+        }
+
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            JsonSchemaContext context = JsonSchemaContext.BeginContext(
+                parentDocument,
+                parentIndex,
+                usingEvaluatedProperties: false,
+                usingEvaluatedItems: false,
+                resultsCollector: resultsCollector);
+
+            try
+            {
+                ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                return context.IsMatch;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContext<TContext>(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            TContext providerContext,
+            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath,
+                    providerContext: providerContext);
+        }
+
     }
 }

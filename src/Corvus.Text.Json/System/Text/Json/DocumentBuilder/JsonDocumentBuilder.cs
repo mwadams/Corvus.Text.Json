@@ -315,6 +315,13 @@ namespace Corvus.Text.Json
         }
 
 
+        UnescapedUtf8JsonString IJsonDocument.GetUtf8NameOfPropertyValue(int index)
+        {
+            CheckNotDisposed();
+            // The property name is one row before the property value
+            return GetUtf8JsonStringUnsafe(index - DbRow.Size, JsonTokenType.PropertyName)!;
+        }
+
         ReadOnlySpan<byte> IJsonDocument.GetPropertyNameRaw(int index)
         {
             CheckNotDisposed();

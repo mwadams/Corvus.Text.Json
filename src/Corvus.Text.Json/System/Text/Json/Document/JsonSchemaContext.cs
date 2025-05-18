@@ -1,0 +1,528 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses _file to you under the MIT license.
+
+using System.Buffers;
+using System.Diagnostics;
+#if NET
+using System.Numerics;
+#endif
+using System.Runtime.CompilerServices;
+#if NET
+using System.Runtime.InteropServices;
+#endif
+using System.Threading;
+
+namespace Corvus.Text.Json
+{
+    [CLSCompliant(false)]
+    public struct JsonSchemaContext
+#if NET
+        : IDisposable
+#endif
+    {
+        private const int InitialRentedBufferSize = 8192; // This allows for 65,536 property/item bits without reallocation
+
+#if NET
+        // This allows for 255 property/item bits without allocation, and is exactly one 256Bit Vector in size so merging values will be as simple a SIMD instruction as possible
+        // on the most common processors at the time of writing.
+        private const int BufferSize = 8;
+        private const int BitsInAnInt = sizeof(int) * 8;
+        // This is the maximum number of properties/items for which we can store bits without allocation.
+        private const int MaxComplexValueCount = (BufferSize * BitsInAnInt) - 1;
+#endif
+
+        private readonly IJsonSchemaResultsCollector? _resultsCollector;
+        private readonly int _offset;
+
+        private int[]? _rentedBuffer;
+        private uint _lengthAndUsingFeatures;
+
+#if NET
+        // If the top bit of the last byte of _localEvaluated is set, it indicates that we are using the rented buffer
+        // for local evaluated bits and the first int is interpreted as the offset into the _rentedBuffer where the
+        // local evaluated bits start with the second int interpreted as the bit buffer length.
+        // If clear, then the remaining bits represent local evaluated indices.
+        private EvaluatedIndexBuffer _localEvaluated;
+        // If the top bit of the last byte of _appliedEvaluated is set, it indicates that we are using the rented buffer
+        // for applied evaluated bits, and the first int is interpreted as the offset into the _rentedBuffer where the
+        // applied evaluated bits start with the second int interpreted as the bit buffer length.
+        // If clear, then the remaining bits represent applied evaluated indices.
+        private EvaluatedIndexBuffer _appliedEvaluated;
+#else
+        private int _localEvaluatedOffset;
+        private int _localEvaluatedLength;
+        private int _appliedEvaluatedOffset;
+        private int _appliedEvaluatedLength;
+#endif
+
+        [Flags]
+        private enum UsingFeatures : uint
+        {
+            EvaluatedProperties = 0b0001_0000_0000_0000_0000_0000_0000_0000,
+            EvaluatedItems = 0b0010_0000_0000_0000_0000_0000_0000_0000,
+            IsMatch = 0b0100_0000_0000_0000_0000_0000_0000_0000,
+            IsDisposable = 0b1000_0000_0000_0000_0000_0000_0000_0000,
+
+            EvaluatedPropertiesOrItems = EvaluatedProperties | EvaluatedItems
+        }
+
+
+        private JsonSchemaContext(int[]? rentedBuffer, uint lengthAndUsingFeatures, int offset, int evaluatedCount, IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            _rentedBuffer = rentedBuffer;
+            _offset = offset;
+            _resultsCollector = resultsCollector;
+            _lengthAndUsingFeatures =
+                lengthAndUsingFeatures
+                & ~(uint)UsingFeatures.IsDisposable // Not disposable
+                | (uint)UsingFeatures.IsMatch; // But always valid
+
+#if NET
+            if (evaluatedCount > MaxComplexValueCount)
+            {
+                int bitBufferLength = EnsureBitBufferLengths(evaluatedCount);
+                _localEvaluated[^1] = 0b1000_0000; // Set the top bit to indicate that we are using the buffer for evaluated items
+                _appliedEvaluated[^1] = 0b1000_0000; // Set the top bit to indicate that we are using the buffer for evaluated items
+                _localEvaluated[0] = _offset;
+                _localEvaluated[1] = bitBufferLength;
+                _appliedEvaluated[0] = _offset + bitBufferLength;
+                _appliedEvaluated[1] = bitBufferLength;
+            }
+#else
+            if (evaluatedCount > 0)
+            {
+                int bitBufferLength = EnsureBitBufferLengths(evaluatedCount);
+                _localEvaluatedOffset = offset;
+                _localEvaluatedLength = bitBufferLength;
+                _appliedEvaluatedOffset = offset + bitBufferLength;
+                _appliedEvaluatedLength = bitBufferLength;
+            }
+#endif
+        }
+
+        private JsonSchemaContext(uint lengthAndUsingFeatures, int evaluatedCount, IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            _rentedBuffer = null;
+            _offset = 0;
+            _resultsCollector = resultsCollector;
+            _lengthAndUsingFeatures =
+                lengthAndUsingFeatures;
+
+#if NET
+            if (evaluatedCount > MaxComplexValueCount)
+            {
+                int bitBufferLength = EnsureBitBufferLengths(evaluatedCount);
+                _localEvaluated[^1] = 0b1000_0000; // Set the top bit to indicate that we are using the buffer for evaluated items
+                _appliedEvaluated[^1] = 0b1000_0000; // Set the top bit to indicate that we are using the buffer for evaluated items
+                _localEvaluated[0] = _offset;
+                _localEvaluated[1] = bitBufferLength;
+                _appliedEvaluated[0] = _offset + bitBufferLength;
+                _appliedEvaluated[1] = bitBufferLength;
+            }
+#else
+            if (evaluatedCount > 0)
+            {
+                int bitBufferLength = EnsureBitBufferLengths(evaluatedCount);
+                _localEvaluatedOffset = 0;
+                _localEvaluatedLength = bitBufferLength;
+                _appliedEvaluatedOffset = bitBufferLength;
+                _appliedEvaluatedLength = bitBufferLength;
+            }
+#endif
+        }
+
+        public bool IsMatch => ((_lengthAndUsingFeatures & (uint)UsingFeatures.IsMatch) != 0);
+
+        public bool HasCollector => _resultsCollector is not null;
+
+        // The length is the _lengthAndUsingFeatures union with the top nybble masked
+        private int Length => unchecked((int)(_lengthAndUsingFeatures & 0x0FFF_FFFFU));
+
+        private bool IsDisposable => ((_lengthAndUsingFeatures & (uint)UsingFeatures.IsDisposable) != 0);
+
+        private bool UseEvaluatedProperties => ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0);
+
+        private bool UseEvaluatedItems => ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0);
+
+        private Span<int> LocalEvaluated
+        {
+            get
+            {
+#if NET
+                if ((_localEvaluated[^1] & 0b1000_0000) == 0)
+                {
+                    return MemoryMarshal.CreateSpan(ref _localEvaluated[0], BufferSize);
+                }
+                else
+                {
+                    return _rentedBuffer.AsSpan(_localEvaluated[0], _localEvaluated[1]);
+                }
+#else
+                return _rentedBuffer.AsSpan(_localEvaluatedOffset,_localEvaluatedLength);
+#endif
+            }
+        }
+        private Span<int> AppliedEvaluated
+        {
+            get
+            {
+#if NET
+                if ((_appliedEvaluated[^1] & 0b1000_0000) == 0)
+                {
+                    return MemoryMarshal.CreateSpan(ref _appliedEvaluated[0], BufferSize);
+                }
+                else
+                {
+                    return _rentedBuffer.AsSpan(_appliedEvaluated[0], _appliedEvaluated[1]);
+                }
+#else
+                return _rentedBuffer.AsSpan(_appliedEvaluatedOffset,_appliedEvaluatedLength);
+#endif
+            }
+        }
+
+        public static JsonSchemaContext BeginContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            bool usingEvaluatedProperties,
+            bool usingEvaluatedItems,
+            IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            resultsCollector?.BeginChildContext();
+
+            uint usingFeatures = usingEvaluatedProperties ? (uint)UsingFeatures.EvaluatedProperties : 0;
+            usingFeatures |= usingEvaluatedItems ? (uint)UsingFeatures.EvaluatedItems : 0;
+            usingFeatures |= (uint)UsingFeatures.IsMatch | (uint)UsingFeatures.IsDisposable;
+
+            if (usingEvaluatedItems || usingEvaluatedItems)
+            {
+                JsonTokenType valueKind = parentDocument.GetJsonTokenType(parentDocumentIndex);
+                if (usingEvaluatedProperties && valueKind == JsonTokenType.StartObject)
+                {
+                    return new JsonSchemaContext(
+                        usingFeatures,
+                        evaluatedCount: parentDocument.GetPropertyCount(parentDocumentIndex),
+                        resultsCollector);
+                }
+
+                if (usingEvaluatedItems && valueKind == JsonTokenType.StartArray)
+                {
+                    return new JsonSchemaContext(
+                        usingFeatures,
+                        evaluatedCount: parentDocument.GetArrayLength(parentDocumentIndex),
+                        resultsCollector);
+                }
+            }
+
+            return new JsonSchemaContext(
+                null,
+                usingFeatures,
+                offset: 0,
+                evaluatedCount: -1,
+                resultsCollector);
+        }
+
+
+        /// <summary>
+        /// Push a schema location without starting a child context.
+        /// </summary>
+        /// <param name="relativeOrAbsoluteSchemaLocation"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void PushSchemaLocation(
+            JsonSchemaPathProvider relativeOrAbsoluteSchemaLocation)
+        {
+            _resultsCollector?.PushSchemaLocation(relativeOrAbsoluteSchemaLocation);
+        }
+
+        /// <summary>
+        /// If you have pushed a schema location without starting a child context,
+        /// this pops the location.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void PopSchemaLocation()
+        {
+            _resultsCollector?.PopSchemaLocation();
+        }
+        
+        public JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            bool useEvaluatedItems,
+            bool useEvaluatedProperties,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? documentEvaluationPath = null)
+        {
+            _resultsCollector?.BeginChildContext(schemaEvaluationPath, documentEvaluationPath);
+
+            return PushChildContextCore(parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+        }
+
+        public JsonSchemaContext PushChildContext<TProviderContext>(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            bool useEvaluatedItems,
+            bool useEvaluatedProperties,
+            TProviderContext providerContext,
+            JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath = null)
+        {
+            _resultsCollector?.BeginChildContext(providerContext, schemaEvaluationPath, documentEvaluationPath);
+
+            return PushChildContextCore(parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+        }
+
+        /// <summary>
+        /// Commits the most recently pushed child context.
+        /// </summary>
+        /// <remarks>
+        /// Note that this does not apply the evaluated properties/items from the child context
+        /// to the parent context.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void CommitChildContext(bool isMatch, JsonValidationMessageProvider? messageProvider = null)
+        {
+            _resultsCollector?.CommitChildContext(isMatch, messageProvider);
+
+            if (isMatch)
+            {
+                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
+            }
+            else
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Matched(
+            bool isMatch,
+            JsonValidationMessageProvider? messageProvider = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            _resultsCollector?.Matched(isMatch, messageProvider, schemaEvaluationPath);
+            if (isMatch)
+            {
+                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
+            }
+            else
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Ignored(
+            JsonValidationMessageProvider? messageProvider = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            _resultsCollector?.Ignored(messageProvider, schemaEvaluationPath);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Ignored<TProviderContext>(
+            TProviderContext providerContext,
+            JsonValidationMessageProvider<TProviderContext>? messageProvider = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            _resultsCollector?.Ignored(providerContext, messageProvider, schemaEvaluationPath);
+        }
+
+        /// <summary>
+        /// Pops the most recently pushed child context without committing changes.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void PopChildContext()
+        {
+            _resultsCollector?.PopChildContext();
+        }
+
+        /// <summary>
+        /// Applies the evaluated properties/items from the child context
+        /// to this (parent) context, if appropriate.
+        /// </summary>
+        /// <param name="childContext">The child context from which to apply evaluated properties/items</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ApplyEvaluatedItems(ref readonly JsonSchemaContext childContext)
+        {
+            if ((childContext.UseEvaluatedItems && UseEvaluatedItems) || (childContext.UseEvaluatedProperties && UseEvaluatedProperties))
+            {
+                Span<int> childLocalEvaluated = childContext.LocalEvaluated;
+                Span<int> childAppliedEvaluated = childContext.AppliedEvaluated;
+                Span<int> evaluatedItems = AppliedEvaluated;
+
+                // Ensure that we are all the same length - which we should be because we
+                // must be talking about the same object!
+                Debug.Assert(childLocalEvaluated.Length == childAppliedEvaluated.Length);
+                Debug.Assert(evaluatedItems.Length == childAppliedEvaluated.Length);
+
+#if NET
+                int vectorSize = Vector<int>.Count;
+                int length = evaluatedItems.Length;
+                int vectorCount = length / vectorSize;
+                int vectorizedLength = vectorCount * vectorSize;
+
+                var vEvaluatedItems = MemoryMarshal.Cast<int, Vector<int>>(evaluatedItems.Slice(0, vectorizedLength));
+                var vChildLocal = MemoryMarshal.Cast<int, Vector<int>>(childLocalEvaluated.Slice(0, vectorizedLength));
+                var vChildApplied = MemoryMarshal.Cast<int, Vector<int>>(childAppliedEvaluated.Slice(0, vectorizedLength));
+
+                for (int i = 0; i < vEvaluatedItems.Length; i++)
+                {
+                    vEvaluatedItems[i] = vEvaluatedItems[i] | vChildLocal[i] | vChildApplied[i];
+                }
+
+                // Scalar loop for remaining elements
+                for (int i = vectorizedLength; i < length; i++)
+                {
+                    evaluatedItems[i] |= childLocalEvaluated[i] | childAppliedEvaluated[i];
+                }
+#else
+                for (int i = 0; i < childLocalEvaluated.Length; i++)
+                {
+                    evaluatedItems[i] |= childLocalEvaluated[i] | childAppliedEvaluated[i];
+                }
+#endif
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_rentedBuffer != null && IsDisposable)
+            {
+                int[]? bufferToReturn = Interlocked.Exchange(ref _rentedBuffer, null);
+                if (bufferToReturn != null)
+                {
+                    // Clear the bytes as they may contain actual data
+                    bufferToReturn.AsSpan(0, Length).Clear();
+                    ArrayPool<int>.Shared.Return(bufferToReturn);
+                }
+            }
+        }
+
+        public void AddLocalEvaluatedItem(int index)
+        {
+            if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0)
+            {
+                // Calculate the offset into the array
+                int intOffset = index >> 5; // divide by 32 ==> shift right 5
+                int bitOffset = index & 0b1_1111; // remainder of dividing by 32
+                int bit = 1 << bitOffset;
+                Debug.Assert(intOffset < LocalEvaluated.Length);
+                LocalEvaluated[intOffset] |= bit;
+            }
+        }
+
+        public void AddLocalEvaluatedProperty(int index)
+        {
+            if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0)
+            {
+                // Calculate the offset into the array
+                int intOffset = index >> 5; // divide by 32 ==> shift right 5
+                int bitOffset = index & 0b1_1111; // remainder of dividing by 32
+                int bit = 1 << bitOffset;
+                Debug.Assert(intOffset < LocalEvaluated.Length);
+                LocalEvaluated[intOffset] |= bit;
+            }
+        }
+
+        private JsonSchemaContext PushChildContextCore(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties)
+        {
+            bool usesEvaluatedProperties = UseEvaluatedProperties || useEvaluatedProperties;
+            bool usesEvaluatedItems = UseEvaluatedItems || useEvaluatedItems;
+
+            uint usingFeatures = usesEvaluatedProperties ? (uint)UsingFeatures.EvaluatedProperties : 0;
+            usingFeatures |= usesEvaluatedItems ? (uint)UsingFeatures.EvaluatedItems : 0;
+
+            // If we are creating a child context, we have to ensure we are using new buffers
+            if (usesEvaluatedItems || usesEvaluatedProperties)
+            {
+                JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentDocumentIndex);
+                if (usesEvaluatedProperties && tokenType == JsonTokenType.StartObject)
+                {
+                    return new JsonSchemaContext(
+                        _rentedBuffer,
+                        _lengthAndUsingFeatures | usingFeatures,
+                        offset: Length,
+                        evaluatedCount: parentDocument.GetPropertyCount(parentDocumentIndex));
+                }
+
+                if (usesEvaluatedItems && tokenType == JsonTokenType.StartArray)
+                {
+                    return new JsonSchemaContext(
+                        _rentedBuffer,
+                        _lengthAndUsingFeatures | usingFeatures,
+                        offset: Length,
+                        evaluatedCount: parentDocument.GetArrayLength(parentDocumentIndex));
+                }
+            }
+
+            return new JsonSchemaContext(
+                _rentedBuffer,
+                _lengthAndUsingFeatures,
+                offset: Length,
+                evaluatedCount: -1);
+        }
+        private int EnsureBitBufferLengths(int count)
+        {
+            Debug.Assert(count != 0);
+
+            // Required property buffer length
+            int bitBufferLength = (count >> 5) + 1; // Divide by 32 (>> 5) gives offset, add 1 to give length
+            int propertyRemainder = count & 0b1_1111; // Remainder is the bottom 5 bits (0 > 31)
+            bitBufferLength += (propertyRemainder == 0 ? 0 : 1);
+
+            if (bitBufferLength > 0 && bitBufferLength > _rentedBuffer?.Length - _offset - Length)
+            {
+                Enlarge(bitBufferLength * 2); // We double the required length in order to support local and applied bitBuffers
+            }
+
+            return bitBufferLength;
+        }
+
+        private void Enlarge(int required)
+        {
+            if (_rentedBuffer == null)
+            {
+                _rentedBuffer = ArrayPool<int>.Shared.Rent(InitialRentedBufferSize);
+                return;
+            }
+
+            int[] toReturn = _rentedBuffer;
+
+            // Allow the data to grow up to maximum possible capacity (~2G bytes) before encountering overflow.
+            // Note: Array.MaxLength exists only on .NET 6 or greater,
+            // so for the other versions value is hardcoded
+            const int MaxArrayLength = 0x7FFFFFC7;
+
+#if NET
+            Debug.Assert(MaxArrayLength == Array.MaxLength);
+#endif
+
+            // We will double the length, or use required
+            int newCapacity = Math.Max(toReturn.Length * 2, toReturn.Length + required);
+
+            // Note that this check works even when newCapacity overflowed thanks to the (uint) cast
+            if ((uint)newCapacity > MaxArrayLength) newCapacity = MaxArrayLength;
+
+            // If the maximum capacity has already been reached,
+            // then set the new capacity to be larger than what is possible
+            // so that ArrayPool.Rent throws an OutOfMemoryException for us.
+            if (newCapacity == toReturn.Length) newCapacity = int.MaxValue;
+
+            _rentedBuffer = ArrayPool<int>.Shared.Rent(newCapacity);
+            Buffer.BlockCopy(toReturn, 0, _rentedBuffer, 0, toReturn.Length * sizeof(int));
+
+            // The data in this rented buffer only conveys the
+            // index of items or properties in a complex value, but no content;
+            // so it does not need to be cleared.
+            ArrayPool<int>.Shared.Return(toReturn);
+        }
+
+#if NET
+        [InlineArray(BufferSize)]
+        public struct EvaluatedIndexBuffer
+        {
+            private int _element0;
+        }
+#endif
+    }
+}

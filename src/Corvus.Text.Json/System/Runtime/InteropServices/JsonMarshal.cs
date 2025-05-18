@@ -49,7 +49,7 @@ namespace Corvus.Runtime.InteropServices
         public static ReadOnlySpan<byte> GetRawUtf8PropertyName<T>(JsonProperty<T> property)
             where T : struct, IJsonElement<T>
         {
-            return property.NameSpan;
+            return property.RawNameSpan;
         }
     }
 }

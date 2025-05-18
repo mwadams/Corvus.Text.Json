@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
@@ -140,6 +142,12 @@ public readonly struct PersonName : IJsonElement<PersonName>
         CheckValidInstance();
 
         _parent.WriteElementTo(_idx, writer);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+    {
+        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
     }
 
     private void CheckValidInstance()
@@ -366,8 +374,256 @@ public readonly struct PersonName : IJsonElement<PersonName>
 
     public static class JsonPropertyNames
     {
+        // These are the fully escaped property names
         public static ReadOnlySpan<byte> FirstName => "firstName"u8;
         public static ReadOnlySpan<byte> LastName => "lastName"u8;
         public static ReadOnlySpan<byte> OtherNames => "otherNames"u8;
+    }
+
+    public static class JsonSchema
+    {
+        private const int FirstNameRequiredOffset = 0;
+        private const int FirstNameRequiredBitMask = 0b0000_0000_0000_0001;
+        private const int BitMaskOffset0 = FirstNameRequiredBitMask;
+
+        private static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/PersonName"u8;
+        private static ReadOnlySpan<byte> Required0Location() => "#/required/0"u8;
+
+        private static ReadOnlySpan<byte> ExpectedAnObjectValue() => "Expected an object value."u8;
+        private static ReadOnlySpan<byte> RequiredPropertyFirstNameNotPresent() => "The required property 'firstName' was not present."u8;
+        private static ReadOnlySpan<byte> RequiredPropertyFirstNamePresent() => "The required property 'firstName' was present."u8;
+        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeObject() => "Ignored because the value was not of type 'object'."u8;
+        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
+        private static ReadOnlySpan<byte> EscapedPropertiesKeyword() => "properties"u8;
+        private static ReadOnlySpan<byte> EscapedRequiredKeyword() => "required"u8;
+        private static ReadOnlySpan<byte> EscapedFirstNameSchemaEvaluationPath() => "#/properties/firstName/$ref"u8;
+        private static ReadOnlySpan<byte> EscapedFirstNameDocumentEvaluationPath() => "#/firstName"u8;
+        private static ReadOnlySpan<byte> EscapedLastNameSchemaEvaluationPath() => "#/properties/lastName/$ref"u8;
+        private static ReadOnlySpan<byte> EscapedLastNameDocumentEvaluationPath() => "#/lastName"u8;
+        private static ReadOnlySpan<byte> EscapedOtherNamesSchemaEvaluationPath() => "#/properties/otherNames/$ref"u8;
+        private static ReadOnlySpan<byte> EscapedOtherNamesDocumentEvaluationPath() => "#/otherNames"u8;
+
+        /// <summary>
+        /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
+        /// </summary>
+        /// <param name="parentDocument">The parent document.</param>
+        /// <param name="parentIndex">The parent index.</param>
+        /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
+        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        {
+            // You're not allowed to ask about non-value-like tokens
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            context.PushSchemaLocation(SchemaLocation);
+
+            JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
+
+            if (tokenType != JsonTokenType.StartObject)
+            {
+                context.Matched(false, ExpectedAnObjectValue, EscapedTypeKeyword);
+                if (!context.HasCollector)
+                {
+                    context.PopSchemaLocation();
+                    return;
+                }
+
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeObject, EscapedPropertiesKeyword);
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeObject, EscapedRequiredKeyword);
+                context.PopSchemaLocation();
+                return;
+            }
+
+            Span<int> seenItems = stackalloc int[1];
+
+            int propertyCount = 0;
+
+            var enumerator = new ObjectEnumerator(parentDocument, parentIndex);
+            while (enumerator.MoveNext())
+            {
+                int currentIndex = enumerator.CurrentIndex;
+                ReadOnlySpan<byte> propertyName = parentDocument.GetPropertyNameRaw(currentIndex);
+
+                if (TryGetValidator(propertyName, out JsonSchemaMatcherWithRequiredBitBuffer? matcher))
+                {
+                    context.AddLocalEvaluatedProperty(propertyCount);
+                    matcher(parentDocument, currentIndex, ref context, seenItems);
+
+                    if (!context.IsMatch && !context.HasCollector)
+                    {
+                        return;
+                    }
+                }
+
+                propertyCount++;
+            }
+
+            // Do a quick test to see if we have all of the required bits set in each element
+            if ((seenItems[0] ^ BitMaskOffset0) == 0)
+            {
+                if (context.HasCollector)
+                {
+                    // Add a "matched" for each of the individual matched properties
+                    context.Matched(true, RequiredPropertyFirstNameNotPresent, Required0Location);
+                }
+
+                return;
+            }
+
+            // Sadly we don't, so we have to do the slow path
+            if (!context.HasCollector)
+            {
+                // Which we can cut short if we are not doing collections
+                context.Matched(false);
+                return;
+            }
+            else
+            {
+                // We have missed at least one of the required properties
+                // and we are doing collections, so test them all individually
+                if ((seenItems[FirstNameRequiredOffset] & FirstNameRequiredBitMask) == 0)
+                {
+                    context.Matched(false, RequiredPropertyFirstNameNotPresent, Required0Location);
+                    if (!context.HasCollector)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    context.Matched(true, RequiredPropertyFirstNamePresent, Required0Location);
+                }
+            }
+
+            context.PopSchemaLocation();
+        }
+
+        private static bool TryGetValidator(ReadOnlySpan<byte> span, [NotNullWhen(true)] out JsonSchemaMatcherWithRequiredBitBuffer? validator)
+        {
+            // We only have 1 property, so it is going to be vastly more efficient to do this
+            // with property names
+            if (JsonPropertyNames.FirstName.SequenceEqual(span))
+            {
+                validator = MatchFirstName;
+                return true;
+            }
+            else if (JsonPropertyNames.LastName.SequenceEqual(span))
+            {
+                validator = MatchLastName;
+                return true;
+            }
+            else if (JsonPropertyNames.OtherNames.SequenceEqual(span))
+            {
+                validator = MatchOtherNames;
+                return true;
+            }
+
+            validator = default;
+            return false;
+        }
+
+        private static void MatchFirstName(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
+        {
+            JsonSchemaContext childContext =
+                NameComponent.JsonSchema.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    ref context,
+                    schemaEvaluationPath: EscapedFirstNameSchemaEvaluationPath,
+                    documentEvaluationPath: EscapedFirstNameDocumentEvaluationPath);
+
+            NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
+            context.CommitChildContext(childContext.IsMatch);
+            requiredBitBuffer[FirstNameRequiredOffset] |= FirstNameRequiredBitMask;
+        }
+
+        private static void MatchLastName(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
+        {
+            JsonSchemaContext childContext =
+                NameComponent.JsonSchema.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    ref context,
+                    schemaEvaluationPath: EscapedLastNameSchemaEvaluationPath,
+                    documentEvaluationPath: EscapedLastNameDocumentEvaluationPath);
+
+            NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
+
+            context.CommitChildContext(childContext.IsMatch);
+        }
+
+        private static void MatchOtherNames(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
+        {
+            JsonSchemaContext childContext =
+                OtherNames.JsonSchema.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    ref context,
+                    schemaEvaluationPath: EscapedOtherNamesSchemaEvaluationPath,
+                    documentEvaluationPath: EscapedOtherNamesDocumentEvaluationPath);
+
+            OtherNames.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
+
+            context.CommitChildContext(childContext.IsMatch);
+        }
+
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            JsonSchemaContext context = JsonSchemaContext.BeginContext(
+                parentDocument,
+                parentIndex,
+                usingEvaluatedProperties: false,
+                usingEvaluatedItems: false,
+                resultsCollector: resultsCollector);
+
+            try
+            {
+                ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                return context.IsMatch;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContext<TContext>(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            TContext providerContext,
+            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    providerContext: providerContext,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath);
+        }
     }
 }

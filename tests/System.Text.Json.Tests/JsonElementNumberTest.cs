@@ -44,7 +44,7 @@ public class JsonElementNumberTest
         ReadOnlySpan<byte> rightFractionalSpan = GetUtf8Bytes(rightFractional);
 
         // Act
-        int result = JsonHelpers.CompareNormalizedJsonNumbers(
+        int result = JsonElementHelpers.CompareNormalizedJsonNumbers(
             leftIsNegative,
             leftIntegralSpan,
             leftFractionalSpan,
@@ -62,7 +62,7 @@ public class JsonElementNumberTest
     [InlineData("", "", 0, 1123, 0, true)] // Zero is always a multiple of any number, except zero
     [InlineData("", "", 0, 0, 0, false)] // A divisor of zero is never a multiple of any number
     [InlineData("123", "", 0, 0, 0, false)] // A divisor of zero is never a multiple of any number
-    [InlineData("123", "", 0, 1, 0, true)] // Any number is a multiple of 1
+    [InlineData("123", "", 0, 1, 0, true)] // Any integer is a multiple of 1
     [InlineData("124", "", 0, 2, 0, true)] // Even number divisible by 2
     [InlineData("123", "", 0, 2, 0, false)] // Odd number not divisible by 2
     [InlineData("126", "", 0, 3, 0, true)] // Divisible by 3
@@ -97,7 +97,7 @@ public class JsonElementNumberTest
         ReadOnlySpan<byte> fractionalSpan = GetUtf8Bytes(fractional);
 
         // Act
-        bool result = JsonHelpers.IsMultipleOf(
+        bool result = JsonElementHelpers.IsMultipleOf(
             integralSpan,
             fractionalSpan,
             exponent,
@@ -127,7 +127,7 @@ public class JsonElementNumberTest
         ReadOnlySpan<byte> fractionalSpan = GetUtf8Bytes(fractional);
 
         // Act
-        bool result =JsonHelpers.IsMultipleOf(
+        bool result = JsonElementHelpers.IsMultipleOf(
             integralSpan,
             fractionalSpan,
             exponent,
@@ -143,7 +143,7 @@ public class JsonElementNumberTest
     [InlineData("", "", 0, 1123, 0, true)] // Zero is always a multiple of any number, except zero
     [InlineData("", "", 0, 0, 0, false)] // A divisor of zero is never a multiple of any number
     [InlineData("123", "", 0, 0, 0, false)] // A divisor of zero is never a multiple of any number
-    [InlineData("123", "", 0, 1, 0, true)] // Any number is a multiple of 1
+    [InlineData("123", "", 0, 1, 0, true)] // Any integer is a multiple of 1
     [InlineData("124", "", 0, 2, 0, true)] // Even number divisible by 2
     [InlineData("123", "", 0, 2, 0, false)] // Odd number not divisible by 2
     [InlineData("126", "", 0, 3, 0, true)] // Divisible by 3
@@ -177,7 +177,7 @@ public class JsonElementNumberTest
         ReadOnlySpan<byte> fractionalSpan = GetUtf8Bytes(fractional);
 
         // Act
-        bool result = JsonHelpers.IsMultipleOf(
+        bool result = JsonElementHelpers.IsMultipleOf(
             integralSpan,
             fractionalSpan,
             exponent,
@@ -207,7 +207,7 @@ public class JsonElementNumberTest
         ReadOnlySpan<byte> fractionalSpan = GetUtf8Bytes(fractional);
 
         // Act
-        bool result = JsonHelpers.IsMultipleOf(
+        bool result = JsonElementHelpers.IsMultipleOf(
             integralSpan,
             fractionalSpan,
             exponent,

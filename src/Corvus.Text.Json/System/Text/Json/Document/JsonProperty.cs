@@ -39,6 +39,14 @@ namespace Corvus.Text.Json
             }
         }
 
+        public UnescapedUtf8JsonString NameSpan
+        {
+            get
+            {
+                return Value.ParentDocument.GetUtf8JsonString(Value.ParentDocumentIndex - JsonDocument.DbRow.Size, JsonTokenType.PropertyName);
+            }
+        }
+
         /// <summary>
         ///   Compares <paramref name="text" /> to the name of this property.
         /// </summary>
@@ -106,7 +114,7 @@ namespace Corvus.Text.Json
 
         internal bool NameIsEscaped => Value.ParentDocument.ValueIsEscaped(Value.ParentDocumentIndex, isPropertyName: true);
 
-        internal ReadOnlySpan<byte> NameSpan
+        internal ReadOnlySpan<byte> RawNameSpan
         {
             get
             {

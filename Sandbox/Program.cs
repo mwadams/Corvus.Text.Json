@@ -63,6 +63,36 @@ using ParsedJsonDocument<JsonElement> documentB2 = ParsedJsonDocument<JsonElemen
         }
         """);
 
+using ParsedJsonDocument<Person> documentB3 = ParsedJsonDocument<Person>.Parse(
+        """
+        {
+            "name": { "firstName": "Michael", "lastName": "Adams", "otherNames": ["Francis", "James"] },
+            "age": 52,
+            "competedInYears": [2012, 2016, 2024]
+        }
+        """);
+
+using ParsedJsonDocument<Person> documentB4 = ParsedJsonDocument<Person>.Parse(
+        """
+        {
+            "name": { "firstName": "Michael", "lastName": "Adams", "otherNames": "Francis James" },
+            "age": 52,
+            "competedInYears": [2012, 2016, 2024]
+        }
+        """);
+
+using ParsedJsonDocument<Person> documentB5 = ParsedJsonDocument<Person>.Parse(
+        """
+        {
+            "age": 52,
+            "competedInYears": [2012, 2016, 2024]
+        }
+        """);
+
+Console.WriteLine(documentB3.RootElement.IsSchemaMatch() ? "Person B3 is a match" : "Person B3 is not a match");
+Console.WriteLine(documentB4.RootElement.IsSchemaMatch() ? "Person B4 is a match" : "Person B4 is not a match");
+Console.WriteLine(documentB5.RootElement.IsSchemaMatch() ? "Person B5 is a match" : "Person B5 is not a match");
+
 JsonElementHelpers.DeepEquals(documentB1.RootElement, documentB2.RootElement);
 
 // Create a workspace for manipulating documents
@@ -163,3 +193,4 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocument(
     }));
 
 Console.WriteLine(docBuilder.RootElement.ToString());
+
