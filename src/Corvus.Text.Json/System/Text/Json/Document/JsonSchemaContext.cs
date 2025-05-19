@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses _file to you under the MIT license.
 
+using System;
 using System.Buffers;
 using System.Diagnostics;
 #if NET
@@ -16,9 +17,7 @@ namespace Corvus.Text.Json
 {
     [CLSCompliant(false)]
     public struct JsonSchemaContext
-#if NET
         : IDisposable
-#endif
     {
         private const int InitialRentedBufferSize = 8192; // This allows for 65,536 property/item bits without reallocation
 
@@ -73,9 +72,8 @@ namespace Corvus.Text.Json
             _offset = offset;
             _resultsCollector = resultsCollector;
             _lengthAndUsingFeatures =
-                lengthAndUsingFeatures
-                & ~(uint)UsingFeatures.IsDisposable // Not disposable
-                | (uint)UsingFeatures.IsMatch; // But always valid
+                lengthAndUsingFeatures                
+                | (uint)UsingFeatures.IsMatch; // But always  valid
 
 #if NET
             if (evaluatedCount > MaxComplexValueCount)
@@ -87,6 +85,7 @@ namespace Corvus.Text.Json
                 _localEvaluated[1] = bitBufferLength;
                 _appliedEvaluated[0] = _offset + bitBufferLength;
                 _appliedEvaluated[1] = bitBufferLength;
+                _lengthAndUsingFeatures = (_lengthAndUsingFeatures & 0xF000_0000U) | unchecked((uint)(bitBufferLength * 2));
             }
 #else
             if (evaluatedCount > 0)
@@ -96,37 +95,7 @@ namespace Corvus.Text.Json
                 _localEvaluatedLength = bitBufferLength;
                 _appliedEvaluatedOffset = offset + bitBufferLength;
                 _appliedEvaluatedLength = bitBufferLength;
-            }
-#endif
-        }
-
-        private JsonSchemaContext(uint lengthAndUsingFeatures, int evaluatedCount, IJsonSchemaResultsCollector? resultsCollector = null)
-        {
-            _rentedBuffer = null;
-            _offset = 0;
-            _resultsCollector = resultsCollector;
-            _lengthAndUsingFeatures =
-                lengthAndUsingFeatures;
-
-#if NET
-            if (evaluatedCount > MaxComplexValueCount)
-            {
-                int bitBufferLength = EnsureBitBufferLengths(evaluatedCount);
-                _localEvaluated[^1] = 0b1000_0000; // Set the top bit to indicate that we are using the buffer for evaluated items
-                _appliedEvaluated[^1] = 0b1000_0000; // Set the top bit to indicate that we are using the buffer for evaluated items
-                _localEvaluated[0] = _offset;
-                _localEvaluated[1] = bitBufferLength;
-                _appliedEvaluated[0] = _offset + bitBufferLength;
-                _appliedEvaluated[1] = bitBufferLength;
-            }
-#else
-            if (evaluatedCount > 0)
-            {
-                int bitBufferLength = EnsureBitBufferLengths(evaluatedCount);
-                _localEvaluatedOffset = 0;
-                _localEvaluatedLength = bitBufferLength;
-                _appliedEvaluatedOffset = bitBufferLength;
-                _appliedEvaluatedLength = bitBufferLength;
+                _lengthAndUsingFeatures = (_lengthAndUsingFeatures & 0xF000_0000U) | unchecked((uint)(bitBufferLength * 2));
             }
 #endif
         }
@@ -194,24 +163,25 @@ namespace Corvus.Text.Json
             usingFeatures |= usingEvaluatedItems ? (uint)UsingFeatures.EvaluatedItems : 0;
             usingFeatures |= (uint)UsingFeatures.IsMatch | (uint)UsingFeatures.IsDisposable;
 
-            if (usingEvaluatedItems || usingEvaluatedItems)
+            JsonTokenType valueKind = parentDocument.GetJsonTokenType(parentDocumentIndex);
+            if (usingEvaluatedProperties && valueKind == JsonTokenType.StartObject)
             {
-                JsonTokenType valueKind = parentDocument.GetJsonTokenType(parentDocumentIndex);
-                if (usingEvaluatedProperties && valueKind == JsonTokenType.StartObject)
-                {
-                    return new JsonSchemaContext(
-                        usingFeatures,
-                        evaluatedCount: parentDocument.GetPropertyCount(parentDocumentIndex),
-                        resultsCollector);
-                }
+                return new JsonSchemaContext(
+                    null,
+                    usingFeatures,
+                    offset: 0,
+                    evaluatedCount: parentDocument.GetPropertyCount(parentDocumentIndex),
+                    resultsCollector);
+            }
 
-                if (usingEvaluatedItems && valueKind == JsonTokenType.StartArray)
-                {
-                    return new JsonSchemaContext(
-                        usingFeatures,
-                        evaluatedCount: parentDocument.GetArrayLength(parentDocumentIndex),
-                        resultsCollector);
-                }
+            if (usingEvaluatedItems && valueKind == JsonTokenType.StartArray)
+            {
+                return new JsonSchemaContext(
+                    null,
+                    usingFeatures,
+                    offset: 0,
+                    evaluatedCount: parentDocument.GetArrayLength(parentDocumentIndex),
+                    resultsCollector);
             }
 
             return new JsonSchemaContext(
@@ -243,7 +213,7 @@ namespace Corvus.Text.Json
         {
             _resultsCollector?.PopSchemaLocation();
         }
-        
+
         public JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
@@ -336,13 +306,73 @@ namespace Corvus.Text.Json
             _resultsCollector?.PopChildContext();
         }
 
+        public bool HasLocalEvaluatedItem(int index)
+        {
+            if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0)
+            {
+                // Calculate the offset into the array
+                int intOffset = index >> 5; // divide by 32 ==> shift right 5
+                int bitOffset = index & 0b1_1111; // remainder of dividing by 32
+                int bit = 1 << bitOffset;
+                Debug.Assert(intOffset < LocalEvaluated.Length);
+                return (LocalEvaluated[intOffset] & bit) != 0;
+            }
+
+            return false;
+        }
+
+        public bool HasLocalEvaluatedProperty(int index)
+        {
+            if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0)
+            {
+                // Calculate the offset into the array
+                int intOffset = index >> 5; // divide by 32 ==> shift right 5
+                int bitOffset = index & 0b1_1111; // remainder of dividing by 32
+                int bit = 1 << bitOffset;
+                Debug.Assert(intOffset < LocalEvaluated.Length);
+                return (LocalEvaluated[intOffset] & bit) != 0;
+            }
+
+            return false;
+        }
+
+        public bool HasLocalOrAppliedEvaluatedItem(int index)
+        {
+            if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0)
+            {
+                // Calculate the offset into the array
+                int intOffset = index >> 5; // divide by 32 ==> shift right 5
+                int bitOffset = index & 0b1_1111; // remainder of dividing by 32
+                int bit = 1 << bitOffset;
+                Debug.Assert(intOffset < LocalEvaluated.Length);
+                return (LocalEvaluated[intOffset] & bit) != 0 || (AppliedEvaluated[intOffset] & bit) != 0;
+            }
+
+            return false;
+        }
+
+        public bool HasLocalOrAppliedEvaluatedProperty(int index)
+        {
+            if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0)
+            {
+                // Calculate the offset into the array
+                int intOffset = index >> 5; // divide by 32 ==> shift right 5
+                int bitOffset = index & 0b1_1111; // remainder of dividing by 32
+                int bit = 1 << bitOffset;
+                Debug.Assert(intOffset < LocalEvaluated.Length);
+                return (LocalEvaluated[intOffset] & bit) != 0 || (AppliedEvaluated[intOffset] & bit) != 0;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Applies the evaluated properties/items from the child context
         /// to this (parent) context, if appropriate.
         /// </summary>
         /// <param name="childContext">The child context from which to apply evaluated properties/items</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ApplyEvaluatedItems(ref readonly JsonSchemaContext childContext)
+        public void ApplyEvaluated(ref readonly JsonSchemaContext childContext)
         {
             if ((childContext.UseEvaluatedItems && UseEvaluatedItems) || (childContext.UseEvaluatedProperties && UseEvaluatedProperties))
             {
@@ -413,7 +443,7 @@ namespace Corvus.Text.Json
 
         public void AddLocalEvaluatedProperty(int index)
         {
-            if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0)
+            if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0)
             {
                 // Calculate the offset into the array
                 int intOffset = index >> 5; // divide by 32 ==> shift right 5
@@ -440,7 +470,7 @@ namespace Corvus.Text.Json
                 {
                     return new JsonSchemaContext(
                         _rentedBuffer,
-                        _lengthAndUsingFeatures | usingFeatures,
+                        _lengthAndUsingFeatures | usingFeatures & ~(uint)UsingFeatures.IsDisposable,
                         offset: Length,
                         evaluatedCount: parentDocument.GetPropertyCount(parentDocumentIndex));
                 }
@@ -449,7 +479,7 @@ namespace Corvus.Text.Json
                 {
                     return new JsonSchemaContext(
                         _rentedBuffer,
-                        _lengthAndUsingFeatures | usingFeatures,
+                        _lengthAndUsingFeatures | usingFeatures & ~(uint)UsingFeatures.IsDisposable,
                         offset: Length,
                         evaluatedCount: parentDocument.GetArrayLength(parentDocumentIndex));
                 }
@@ -457,7 +487,7 @@ namespace Corvus.Text.Json
 
             return new JsonSchemaContext(
                 _rentedBuffer,
-                _lengthAndUsingFeatures,
+                _lengthAndUsingFeatures & ~(uint)UsingFeatures.IsDisposable,
                 offset: Length,
                 evaluatedCount: -1);
         }
@@ -470,7 +500,7 @@ namespace Corvus.Text.Json
             int propertyRemainder = count & 0b1_1111; // Remainder is the bottom 5 bits (0 > 31)
             bitBufferLength += (propertyRemainder == 0 ? 0 : 1);
 
-            if (bitBufferLength > 0 && bitBufferLength > _rentedBuffer?.Length - _offset - Length)
+            if (bitBufferLength > 0 && (_rentedBuffer is null || bitBufferLength > _rentedBuffer.Length - _offset - Length))
             {
                 Enlarge(bitBufferLength * 2); // We double the required length in order to support local and applied bitBuffers
             }
@@ -483,6 +513,7 @@ namespace Corvus.Text.Json
             if (_rentedBuffer == null)
             {
                 _rentedBuffer = ArrayPool<int>.Shared.Rent(InitialRentedBufferSize);
+                _rentedBuffer.AsSpan().Clear();
                 return;
             }
 
@@ -510,6 +541,8 @@ namespace Corvus.Text.Json
 
             _rentedBuffer = ArrayPool<int>.Shared.Rent(newCapacity);
             Buffer.BlockCopy(toReturn, 0, _rentedBuffer, 0, toReturn.Length * sizeof(int));
+            // Clear the new buffer bits
+            _rentedBuffer.AsSpan(toReturn.Length).Clear();
 
             // The data in this rented buffer only conveys the
             // index of items or properties in a complex value, but no content;

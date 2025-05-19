@@ -420,8 +420,8 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             if (oneOf0Context.IsMatch)
             {
                 oneOfMatchCount++;
-                context.CommitChildContext(true);
-                context.ApplyEvaluatedItems(ref oneOf0Context);
+                context.CommitChildContext(isMatch: true);
+                context.ApplyEvaluated(ref oneOf0Context);
             }
             else
             {
@@ -437,7 +437,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             {
                 oneOfMatchCount++;
                 context.CommitChildContext(true);
-                context.ApplyEvaluatedItems(ref oneOf1Context);
+                context.ApplyEvaluated(ref oneOf1Context);
             }
             else
             {

@@ -4021,6 +4021,101 @@
                     </Rule>
                   </Rule>
                 </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonSchemaContextTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
               </Rule>
             </Rule>
           </Rule>
@@ -8061,6 +8156,101 @@
                     </Rule>
                   </Rule>
                 </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonSchemaContextTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
               </Rule>
             </Rule>
           </Rule>
@@ -12097,6 +12287,101 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisorBigInt_ReturnsExpected" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementNumberTest.IsMultipleOf_GeneralPurposeDivisorBigInt_ReturnsExpected" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonSchemaContextTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItems(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedItemsWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: True, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedProperties(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesAfterUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesBeforeUnchangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesFromChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: False, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [], notEvaluatedIndices: [0, 1, 2, 3, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [1, 2, 3], evaluatedIndices: [1, 2, 3], notEvaluatedIndices: [0, 4])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [65536], evaluatedIndices: [65536], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonSchemaContextTests.EvaluatedPropertiesWithChangedChildContext(usingEvaluatedProperties: True, usingEvaluatedItems: False, evaluateIndices: [66, 129], evaluatedIndices: [66, 129], notEvaluatedIndices: [0, 1, 2, 3, 4, ...])" />
                       </Rule>
                     </Rule>
                   </Rule>

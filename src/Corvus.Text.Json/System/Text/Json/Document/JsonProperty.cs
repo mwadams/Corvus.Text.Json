@@ -84,6 +84,7 @@ namespace Corvus.Text.Json
         /// </remarks>
         public bool NameEquals(ReadOnlySpan<byte> utf8Text)
         {
+            Value.CheckValidInstance();
             return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, utf8Text, isPropertyName: true, shouldUnescape: true);
         }
 
@@ -104,11 +105,13 @@ namespace Corvus.Text.Json
         /// </remarks>
         public bool NameEquals(ReadOnlySpan<char> text)
         {
+            Value.CheckValidInstance();
             return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, text, isPropertyName: true);
         }
 
         internal bool EscapedNameEquals(ReadOnlySpan<byte> utf8Text)
         {
+            Value.CheckValidInstance();
             return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, utf8Text, isPropertyName: true, shouldUnescape: false);
         }
 

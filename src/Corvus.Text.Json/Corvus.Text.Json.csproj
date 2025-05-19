@@ -257,7 +257,6 @@
     <Compile Include="System\Text\Json\Serialization\PolymorphicSerializationState.cs" />-->
     <Compile Include="System\Text\Json\StackHelper.cs" />
     <Compile Include="System\Text\Json\CodeGenThrowHelper.cs" />
-    <Compile Include="System\Text\Json\ValueQueue.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriter.WriteValues.StringSegment.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriterCache.cs" />
     <!--<Compile Include="System\Text\Json\Serialization\ReferenceEqualsWrapper.cs" />
