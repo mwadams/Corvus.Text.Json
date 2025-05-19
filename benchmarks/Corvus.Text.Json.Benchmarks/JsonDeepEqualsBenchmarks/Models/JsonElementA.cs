@@ -68,7 +68,6 @@ namespace Corvus.Text.Json
             }
         }
 
-        [CLSCompliant(false)]
         public static JsonElementA From<T>(in T instance)
             where T : struct, IJsonElement<T>
         {
@@ -262,7 +261,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public bool TryGetSByte(out sbyte value)
         {
             CheckValidInstance();
@@ -283,7 +281,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public sbyte GetSByte()
         {
             if (TryGetSByte(out sbyte value))
@@ -408,7 +405,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public bool TryGetUInt16(out ushort value)
         {
             CheckValidInstance();
@@ -432,7 +428,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public ushort GetUInt16()
         {
             if (TryGetUInt16(out ushort value))
@@ -507,7 +502,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public bool TryGetUInt32(out uint value)
         {
             CheckValidInstance();
@@ -531,7 +525,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public uint GetUInt32()
         {
             if (!TryGetUInt32(out uint value))
@@ -609,7 +602,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public bool TryGetUInt64(out ulong value)
         {
             CheckValidInstance();
@@ -633,7 +625,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public ulong GetUInt64()
         {
             if (!TryGetUInt64(out ulong value))
@@ -1176,8 +1167,6 @@ namespace Corvus.Text.Json
         /// </exception>
         public void WriteTo(Utf8JsonWriter writer)
         {
-            throw new InvalidOperationException();
-
             CheckValidInstance();
 
             _parent.WriteElementTo(_idx, writer);
@@ -1202,7 +1191,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public ArrayEnumerator<JsonElementA> EnumerateArray()
         {
             CheckValidInstance();
@@ -1229,7 +1217,6 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        [CLSCompliant(false)]
         public ObjectEnumerator<JsonElementA> EnumerateObject()
         {
             CheckValidInstance();
@@ -1295,7 +1282,7 @@ namespace Corvus.Text.Json
                     {
                         // null parent should have hit the None case
                         Debug.Assert(_parent != null);
-                        return _parent.GetRawValueAsString(_idx);
+                        return _parent!.GetRawValueAsString(_idx);
                     }
                 case JsonTokenType.String:
                     return GetString()!;

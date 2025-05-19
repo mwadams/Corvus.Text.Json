@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0;netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- For this project, we want warnings if there are public APIs/types without properly formatted XML comments. -->
     <SkipIntellisenseNoWarnCS1591>true</SkipIntellisenseNoWarnCS1591>
@@ -466,7 +466,7 @@
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\FeatureSwitchDefinitionAttribute.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
     <!--<Compile Include="Corvus.Text.Json.Typeforwards.netcoreapp.cs" />-->
     <Compile Include="System\Text\Json\Reader\JsonReaderHelper.net8.cs" />
     <!--<Compile Include="System\Text\Json\Serialization\Converters\Value\DateOnlyConverter.cs" />

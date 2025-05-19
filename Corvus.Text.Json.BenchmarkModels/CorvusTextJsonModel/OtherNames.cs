@@ -1,14 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Buffers.Text;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
-namespace Sandbox;
+namespace Benchmark.CorvusTextJson;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly struct OtherNames : IJsonElement<OtherNames>
@@ -126,7 +124,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     /// </exception>
     public void WriteTo(Utf8JsonWriter writer)
     {
-        ArgumentNullException.ThrowIfNull(writer);
+        ////ArgumentNullException.ThrowIfNull(writer);
 
         CheckValidInstance();
 
@@ -263,7 +261,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         /// </exception>
         public void WriteTo(Utf8JsonWriter writer)
         {
-            ArgumentNullException.ThrowIfNull(writer);
+            ////ArgumentNullException.ThrowIfNull(writer);
 
             CheckValidInstance();
 

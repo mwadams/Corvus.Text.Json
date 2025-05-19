@@ -19,6 +19,12 @@ namespace Corvus.Text.Json.Benchmarks
 
             config.AddJob(
                 Job.Default
+                    .WithRuntime(CoreRuntime.Core80)
+                    .WithOutlierMode(OutlierMode.RemoveAll)
+                    .WithStrategy(RunStrategy.Throughput));
+
+            config.AddJob(
+                Job.Default
                     .AsBaseline()
                     .WithRuntime(CoreRuntime.Core90)
                     .WithOutlierMode(OutlierMode.RemoveAll)

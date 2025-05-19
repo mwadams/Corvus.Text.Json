@@ -6,15 +6,15 @@ using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
-namespace Sandbox;
+namespace Benchmark.CorvusTextJson;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly struct Age : IJsonElement<Age>
+public readonly struct NameComponent : IJsonElement<NameComponent>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    internal Age(IJsonDocument parent, int idx)
+    internal NameComponent(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -42,19 +42,21 @@ public readonly struct Age : IJsonElement<Age>
         }
     }
 
-    public static implicit operator int(Age age)
+    public string? GetString()
     {
-        age.CheckValidInstance();
+        CheckValidInstance();
 
-        if (!age._parent.TryGetValue(age._idx, out int result))
-        {
-            CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
-        }
-
-        return result;
+        return _parent.GetString(_idx, JsonTokenType.String);
     }
 
-    public static Age From<T>(in T instance)
+    public UnescapedUtf8JsonString GetUtf8String()
+    {
+        CheckValidInstance();
+
+        return _parent.GetUtf8JsonString(_idx, JsonTokenType.String);
+    }
+
+    public static NameComponent From<T>(in T instance)
     where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
@@ -73,7 +75,7 @@ public readonly struct Age : IJsonElement<Age>
 
     public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
     {
-        return workspace.CreateDocument<Age, Mutable>(this);
+        return workspace.CreateDocument<NameComponent, Mutable>(this);
     }
 
     /// <summary>
@@ -91,7 +93,7 @@ public readonly struct Age : IJsonElement<Age>
     /// </exception>
     public void WriteTo(Utf8JsonWriter writer)
     {
-        ArgumentNullException.ThrowIfNull(writer);
+        ////ArgumentNullException.ThrowIfNull(writer);
 
         CheckValidInstance();
 
@@ -103,6 +105,7 @@ public readonly struct Age : IJsonElement<Age>
     {
         return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
     }
+
     private void CheckValidInstance()
     {
         if (_parent == null)
@@ -114,11 +117,11 @@ public readonly struct Age : IJsonElement<Age>
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static Age IJsonElement<Age>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static NameComponent IJsonElement<NameComponent>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"Age: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"NameComponent: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -166,29 +169,29 @@ public readonly struct Age : IJsonElement<Age>
             }
         }
 
-        public static explicit operator Mutable(Age age)
+        public static explicit operator Mutable(NameComponent nameComponent)
         {
-            if (age._parent is not IMutableJsonDocument doc)
+            if (nameComponent._parent is not IMutableJsonDocument doc)
             {
                 CodeGenThrowHelper.ThrowFormatException();
                 // We will never get here
                 return default;
             }
 
-            return new(doc, age._idx);
+            return new(doc, nameComponent._idx);
 
         }
 
-        public static implicit operator Age(Mutable age)
+        public static implicit operator NameComponent(Mutable nameComponent)
         {
-            return new(age._parent, age._idx);
+            return new(nameComponent._parent, nameComponent._idx);
         }
 
-        public static implicit operator int(Mutable age)
+        public static implicit operator int(Mutable nameComponent)
         {
-            age.CheckValidInstance();
+            nameComponent.CheckValidInstance();
 
-            if (!age._parent.TryGetValue(age._idx, out int result))
+            if (!nameComponent._parent.TryGetValue(nameComponent._idx, out int result))
             {
                 CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
             }
@@ -212,6 +215,20 @@ public readonly struct Age : IJsonElement<Age>
 
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
+        public string? GetString()
+        {
+            CheckValidInstance();
+
+            return _parent.GetString(_idx, JsonTokenType.String);
+        }
+
+        public UnescapedUtf8JsonString GetUtf8String()
+        {
+            CheckValidInstance();
+
+            return _parent.GetUtf8JsonString(_idx, JsonTokenType.String);
+        }
+
         /// <summary>
         ///   Write the element into the provided writer as a JSON value.
         /// </summary>
@@ -227,7 +244,7 @@ public readonly struct Age : IJsonElement<Age>
         /// </exception>
         public void WriteTo(Utf8JsonWriter writer)
         {
-            ArgumentNullException.ThrowIfNull(writer);
+            ////ArgumentNullException.ThrowIfNull(writer);
 
             CheckValidInstance();
 
@@ -239,7 +256,7 @@ public readonly struct Age : IJsonElement<Age>
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"Age.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+        private string DebuggerDisplay => $"NameComponent.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -259,24 +276,24 @@ public readonly struct Age : IJsonElement<Age>
     {
         public readonly ref struct Source
         {
-            public Age Instance { get; }
+            public NameComponent Instance { get; }
 
-            public int Int32Value { get; }
+            public ReadOnlySpan<byte> Utf8StringValue { get; }
 
-            public Source(Age instance)
+            public Source(NameComponent instance)
             {
                 Instance = instance;
-                Int32Value = default;
+                Utf8StringValue = default;
             }
 
-            public Source(int int32Value)
+            public Source(ReadOnlySpan<byte> utf8StringValue)
             {
                 Instance = default;
-                Int32Value = int32Value;
+                Utf8StringValue = utf8StringValue;
             }
 
-            public static implicit operator Source(Age instance) => new(instance);
-            public static implicit operator Source(int instance) => new(instance);
+            public static implicit operator Source(NameComponent instance) => new(instance);
+            public static implicit operator Source(ReadOnlySpan<byte> instance) => new(instance);
 
             internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
             {
@@ -286,7 +303,7 @@ public readonly struct Age : IJsonElement<Age>
                 }
                 else
                 {
-                    valueBuilder.AddItem(Int32Value);
+                    valueBuilder.AddItem(Utf8StringValue);
                 }
             }
 
@@ -298,7 +315,7 @@ public readonly struct Age : IJsonElement<Age>
                 }
                 else
                 {
-                    valueBuilder.AddProperty(utf8Name, Int32Value);
+                    valueBuilder.AddProperty(utf8Name, Utf8StringValue);
                 }
             }
         }
@@ -306,22 +323,22 @@ public readonly struct Age : IJsonElement<Age>
 
     public static class JsonSchema
     {
-        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/Age"u8;
-        private static ReadOnlySpan<byte> ExpectedANumberValue() => "Expected a number value."u8;
-        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeNumber() => "Ignored because the value was not of type 'number'."u8;
+        /// <summary>
+        /// A constant for the <c>maxLength</c> keyword.
+        /// </summary>
+        public static readonly long MaxLength = 256;
+
+        /// <summary>
+        /// A constant for the <c>minLength</c> keyword.
+        /// </summary>
+        public static readonly long MinLength = 1;
+
+        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/PersonNameElement"u8;
+        private static ReadOnlySpan<byte> ExpectedAStringValue() => "Expected a string value."u8;
+        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeString() => "Ignored because the value was not of type 'string'."u8;
         private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
-        private static ReadOnlySpan<byte> EscapedMinimumKeyword() => "minimum"u8;
-        private static ReadOnlySpan<byte> EscapedMaximumKeyword() => "maximum"u8;
-
-        private static bool minimumIsNegative => false;
-        private static ReadOnlySpan<byte> minimumIntegral => "0"u8;
-        private static ReadOnlySpan<byte> minimumFractional => ""u8;
-        private static int minimumExponent = 0;
-
-        private static bool maximumIsNegative => false;
-        private static ReadOnlySpan<byte> maximumIntegral => "130"u8;
-        private static ReadOnlySpan<byte> maximumFractional => ""u8;
-        private static int maximumExponent = 0;
+        private static ReadOnlySpan<byte> EscapedMinLengthKeyword() => "minLength"u8;
+        private static ReadOnlySpan<byte> EscapedMaxLengthKeyword() => "maxLength"u8;
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -342,72 +359,45 @@ public readonly struct Age : IJsonElement<Age>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (tokenType != JsonTokenType.Number)
+            if (tokenType != JsonTokenType.String)
             {
-                context.Matched(false, ExpectedANumberValue, schemaEvaluationPath: EscapedTypeKeyword);
+                context.Matched(false, ExpectedAStringValue, schemaEvaluationPath: EscapedTypeKeyword);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
                     return;
                 }
 
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeNumber, schemaEvaluationPath: EscapedMinimumKeyword);
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeNumber, schemaEvaluationPath: EscapedMaximumKeyword);
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeString, schemaEvaluationPath: EscapedMinLengthKeyword);
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeString, schemaEvaluationPath: EscapedMaxLengthKeyword);
                 context.PopSchemaLocation();
                 return;
             }
 
-            ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex, false);
-            JsonElementHelpers.ParseNumber(number.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
-
-            if(JsonElementHelpers.CompareNormalizedJsonNumbers(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                minimumIsNegative,
-                minimumIntegral,
-                minimumFractional,
-                minimumExponent) < 0)
+            using UnescapedUtf8JsonString stringValue = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
+            int length = JsonElementHelpers.GetUtf8StringLength(stringValue.Span);
+            if (length <= MaxLength)
             {
-                context.Matched(false, schemaEvaluationPath: EscapedMinimumKeyword);
-                if (!context.HasCollector)
-                {
-                    context.PopSchemaLocation();
-                    return;
-                }
+                context.Matched(true, schemaEvaluationPath: EscapedMaxLengthKeyword);
             }
             else
             {
-                context.Matched(true, schemaEvaluationPath: EscapedMinimumKeyword);
+                context.Matched(false, schemaEvaluationPath: EscapedMaxLengthKeyword);
             }
 
-            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                maximumIsNegative,
-                maximumIntegral,
-                maximumFractional,
-                maximumExponent) > 0)
+            if (length >= MinLength)
             {
-                context.Matched(false, schemaEvaluationPath: EscapedMaximumKeyword);
-                if (!context.HasCollector)
-                {
-                    context.PopSchemaLocation();
-                    return;
-                }
+                context.Matched(true, schemaEvaluationPath: EscapedMinLengthKeyword);
             }
             else
             {
-                context.Matched(true, schemaEvaluationPath: EscapedMaximumKeyword);
+                context.Matched(false, schemaEvaluationPath: EscapedMinLengthKeyword);
             }
 
             context.PopSchemaLocation();
         }
 
-        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector resultsCollector)
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
         {
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
@@ -462,5 +452,6 @@ public readonly struct Age : IJsonElement<Age>
                     documentEvaluationPath: documentEvaluationPath,
                     providerContext: providerContext);
         }
+
     }
 }
