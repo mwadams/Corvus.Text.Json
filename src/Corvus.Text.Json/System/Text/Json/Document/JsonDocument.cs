@@ -42,7 +42,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        protected int GetEndIndexUnsafe(int index, bool includeEndElement)
+        protected virtual int GetEndIndexUnsafe(int index, bool includeEndElement)
         {
             DbRow row = _parsedData.Get(index);
 

@@ -158,7 +158,22 @@ namespace Corvus.Text.Json
         int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
         {
             CheckNotDisposed();
+
             return GetEndIndexUnsafe(index, includeEndElement);
+        }
+
+        protected override int GetEndIndexUnsafe(int index, bool includeEndElement)
+        {
+            DbRow row = _parsedData.Get(index);
+
+            // If the row is from an external document, we defer to that
+            if (row.FromExternalDocument)
+            {
+                IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
+                return document.GetEndIndex(index, includeEndElement);
+            }
+
+            return base.GetEndIndexUnsafe(index, includeEndElement);
         }
 
         RawUtf8JsonString IJsonDocument.GetRawValue(int index, bool includeQuotes)
