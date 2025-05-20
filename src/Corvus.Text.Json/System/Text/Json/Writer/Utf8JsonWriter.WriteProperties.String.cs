@@ -256,7 +256,11 @@ namespace Corvus.Text.Json
             _commentAfterNoneOrPropertyName = false;
         }
 
-        private void WritePropertyNameUnescaped(ReadOnlySpan<byte> utf8PropertyName)
+        /// <summary>
+        /// Writes the unescaped property name to the output
+        /// </summary>
+        /// <param name="utf8PropertyName"></param>
+        internal void WritePropertyNameUnescaped(ReadOnlySpan<byte> utf8PropertyName)
         {
             JsonWriterHelper.ValidateProperty(utf8PropertyName);
             WriteStringByOptionsPropertyName(utf8PropertyName);

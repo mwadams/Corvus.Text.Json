@@ -797,14 +797,85 @@ namespace Corvus.Text.Json
             int index,
             Utf8JsonWriter writer)
         {
-            throw new NotImplementedException();
+            DbRow row = _parsedData.Get(index);
+
+            switch (row.TokenType)
+            {
+                case JsonTokenType.StartObject:
+                    writer.WriteStartObject();
+                    WriteComplexElementToUnsafe(index, writer);
+                    return;
+                case JsonTokenType.StartArray:
+                    writer.WriteStartArray();
+                    WriteComplexElementToUnsafe(index, writer);
+                    return;
+                case JsonTokenType.String:
+                    writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                    return;
+                case JsonTokenType.Number:
+                    writer.WriteNumberValue(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                    return;
+                case JsonTokenType.True:
+                    writer.WriteBooleanValue(value: true);
+                    return;
+                case JsonTokenType.False:
+                    writer.WriteBooleanValue(value: false);
+                    return;
+                case JsonTokenType.Null:
+                    writer.WriteNullValue();
+                    return;
+            }
+
+            Debug.Fail($"Unexpected encounter with JsonTokenType {row.TokenType}");
         }
 
         private void WriteComplexElementToUnsafe(
             int index,
             Utf8JsonWriter writer)
         {
-            throw new NotImplementedException();
+            int endIndex = GetEndIndexUnsafe(index, true);
+
+            for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
+            {
+                DbRow row = _parsedData.Get(i);
+
+                // All of the types which don't need the value span
+                switch (row.TokenType)
+                {
+                    case JsonTokenType.String:
+                        writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                        continue;
+                    case JsonTokenType.Number:
+                        writer.WriteNumberValue(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                        continue;
+                    case JsonTokenType.True:
+                        writer.WriteBooleanValue(value: true);
+                        continue;
+                    case JsonTokenType.False:
+                        writer.WriteBooleanValue(value: false);
+                        continue;
+                    case JsonTokenType.Null:
+                        writer.WriteNullValue();
+                        continue;
+                    case JsonTokenType.StartObject:
+                        writer.WriteStartObject();
+                        continue;
+                    case JsonTokenType.EndObject:
+                        writer.WriteEndObject();
+                        continue;
+                    case JsonTokenType.StartArray:
+                        writer.WriteStartArray();
+                        continue;
+                    case JsonTokenType.EndArray:
+                        writer.WriteEndArray();
+                        continue;
+                    case JsonTokenType.PropertyName:
+                        writer.WritePropertyNameUnescaped(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                        continue;
+                }
+
+                Debug.Fail($"Unexpected encounter with JsonTokenType {row.TokenType}");
+            }
         }
 
         void IJsonDocument.WritePropertyName(int index, Utf8JsonWriter writer)

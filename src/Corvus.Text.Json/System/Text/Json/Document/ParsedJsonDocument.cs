@@ -808,7 +808,7 @@ namespace Corvus.Text.Json
                     WriteComplexElement(index, writer);
                     return;
                 case JsonTokenType.String:
-                    WriteString(row, writer);
+                    writer.WriteStringValueUnescaped(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
                     return;
                 case JsonTokenType.Number:
                     writer.WriteNumberValue(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
@@ -839,7 +839,7 @@ namespace Corvus.Text.Json
                 switch (row.TokenType)
                 {
                     case JsonTokenType.String:
-                        WriteString(row, writer);
+                        writer.WriteStringValueUnescaped(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
                         continue;
                     case JsonTokenType.Number:
                         writer.WriteNumberValue(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
@@ -866,39 +866,11 @@ namespace Corvus.Text.Json
                         writer.WriteEndArray();
                         continue;
                     case JsonTokenType.PropertyName:
-                        WritePropertyName(row, writer);
+                        writer.WritePropertyNameUnescaped(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
                         continue;
                 }
 
                 Debug.Fail($"Unexpected encounter with JsonTokenType {row.TokenType}");
-            }
-        }
-
-        private ReadOnlySpan<byte> UnescapeString(in DbRow row, out ArraySegment<byte> rented)
-        {
-            Debug.Assert(row.TokenType == JsonTokenType.String || row.TokenType == JsonTokenType.PropertyName);
-            int loc = row.LocationOrIndex;
-            int length = row.SizeOrLengthOrPropertyMapIndex;
-            ReadOnlySpan<byte> text = _utf8Json.Slice(loc, length).Span;
-
-            if (!row.HasComplexChildren)
-            {
-                rented = default;
-                return text;
-            }
-
-            byte[] rent = ArrayPool<byte>.Shared.Rent(length);
-            JsonReaderHelper.Unescape(text, rent, out int written);
-            rented = new ArraySegment<byte>(rent, 0, written);
-            return rented.AsSpan();
-        }
-
-        private static void ClearAndReturn(ArraySegment<byte> rented)
-        {
-            if (rented.Array != null)
-            {
-                rented.AsSpan().Clear();
-                ArrayPool<byte>.Shared.Return(rented.Array);
             }
         }
 
@@ -908,35 +880,8 @@ namespace Corvus.Text.Json
 
             DbRow row = _parsedData.Get(index - DbRow.Size);
             Debug.Assert(row.TokenType == JsonTokenType.PropertyName);
-            WritePropertyName(row, writer);
-        }
+            writer.WritePropertyNameUnescaped(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
 
-        private void WritePropertyName(in DbRow row, Utf8JsonWriter writer)
-        {
-            ArraySegment<byte> rented = default;
-
-            try
-            {
-                writer.WritePropertyName(UnescapeString(row, out rented));
-            }
-            finally
-            {
-                ClearAndReturn(rented);
-            }
-        }
-
-        private void WriteString(in DbRow row, Utf8JsonWriter writer)
-        {
-            ArraySegment<byte> rented = default;
-
-            try
-            {
-                writer.WriteStringValue(UnescapeString(row, out rented));
-            }
-            finally
-            {
-                ClearAndReturn(rented);
-            }
         }
 
         internal static void Parse(
