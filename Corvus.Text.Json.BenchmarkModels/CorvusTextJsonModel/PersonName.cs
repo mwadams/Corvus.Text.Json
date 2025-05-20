@@ -317,7 +317,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             {
                 if (Builder is Build nameBuilder)
                 {
-                    valueBuilder.AddProperty(utf8Name, (ref ComplexValueBuilder o) => BuildValue(nameBuilder, ref o));
+                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(nameBuilder, ref o));
                 }
                 else
                 {
@@ -330,7 +330,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             {
                 if (Builder is Build nameBuilder)
                 {
-                    valueBuilder.AddItem((ref ComplexValueBuilder o) => BuildValue(nameBuilder, ref o));
+                    valueBuilder.AddItem((ref o) => BuildValue(nameBuilder, ref o));
                 }
                 else
                 {
@@ -536,7 +536,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
                     documentEvaluationPath: EscapedFirstNameDocumentEvaluationPath);
 
             NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
-            context.CommitChildContext(childContext.IsMatch);
+            context.CommitChildContext(childContext.IsMatch, ref childContext);
             requiredBitBuffer[FirstNameRequiredOffset] |= FirstNameRequiredBitMask;
         }
 
@@ -552,7 +552,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
 
             NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
 
-            context.CommitChildContext(childContext.IsMatch);
+            context.CommitChildContext(childContext.IsMatch, ref childContext);
         }
 
         private static void MatchOtherNames(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
@@ -567,7 +567,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
 
             OtherNames.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
 
-            context.CommitChildContext(childContext.IsMatch);
+            context.CommitChildContext(childContext.IsMatch, ref childContext);
         }
 
         internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)

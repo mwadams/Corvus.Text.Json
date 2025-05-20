@@ -7,15 +7,15 @@ using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
-namespace Benchmark.CorvusTextJson;
+namespace Benchmark.CorvusTextJson2;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly struct Person : IJsonElement<Person>
+public readonly struct PersonName : IJsonElement<PersonName>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    internal Person(IJsonDocument parent, int idx)
+    internal PersonName(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -24,6 +24,7 @@ public readonly struct Person : IJsonElement<Person>
 
         _parent = parent;
         _idx = idx;
+
     }
 
     /// <summary>
@@ -34,11 +35,11 @@ public readonly struct Person : IJsonElement<Person>
     /// </exception>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 
-    public PersonName Name
+    public NameComponent FirstName
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out PersonName value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponent value))
             {
                 return value;
             }
@@ -47,11 +48,11 @@ public readonly struct Person : IJsonElement<Person>
         }
     }
 
-    public Age Age
+    public NameComponent LastName
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Age, out Age value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out NameComponent value))
             {
                 return value;
             }
@@ -60,11 +61,11 @@ public readonly struct Person : IJsonElement<Person>
         }
     }
 
-    public CompetedInYears CompetedInYears
+    public OtherNames OtherNames
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYears, out CompetedInYears value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames value))
             {
                 return value;
             }
@@ -72,6 +73,7 @@ public readonly struct Person : IJsonElement<Person>
             return default;
         }
     }
+
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private JsonTokenType TokenType
@@ -87,10 +89,37 @@ public readonly struct Person : IJsonElement<Person>
         throw new NotImplementedException();
     }
 
-    public static Person From<T>(in T instance)
-        where T : struct, IJsonElement<T>
+    public static PersonName From<T>(in T instance)
+    where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
+    }
+
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames, int initialCapacity = 30)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        Builder.Create(ref cvb, firstName, lastName, otherNames);
+        Debug.Assert(cvb.MemberCount == 1);
+        documentBuilder.InsertAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        Builder.BuildValue(builder, ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        documentBuilder.InsertAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocument<PersonName, Mutable>(this);
     }
 
     /// <summary>
@@ -121,11 +150,6 @@ public readonly struct Person : IJsonElement<Person>
         return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
     }
 
-    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
-    {
-        return workspace.CreateDocument<Person, Mutable>(this);
-    }
-
     private void CheckValidInstance()
     {
         if (_parent == null)
@@ -137,11 +161,11 @@ public readonly struct Person : IJsonElement<Person>
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static Person IJsonElement<Person>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static PersonName IJsonElement<PersonName>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"Person: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"PersonName: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -154,28 +178,6 @@ public readonly struct Person : IJsonElement<Person>
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
-
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
-        Builder.Create(ref cvb, age, name, competedInYears);
-        Debug.Assert(cvb.MemberCount == 1);
-        documentBuilder.InsertAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
-        Builder.BuildValue(builder, ref cvb);
-        Debug.Assert(cvb.MemberCount == 1);
-        documentBuilder.InsertAndDispose(ref cvb);
-        return documentBuilder;
-    }
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct Mutable : IMutableJsonElement<Mutable>
@@ -211,23 +213,22 @@ public readonly struct Person : IJsonElement<Person>
             }
         }
 
-
-        public static explicit operator Mutable(Person person)
+        public static explicit operator Mutable(PersonName personName)
         {
-            if (person._parent is not IMutableJsonDocument doc)
+            if (personName._parent is not IMutableJsonDocument doc)
             {
                 CodeGenThrowHelper.ThrowFormatException();
                 // We will never get here
                 return default;
             }
 
-            return new(doc, person._idx);
+            return new(doc, personName._idx);
 
         }
 
-        public static implicit operator Person(Mutable person)
+        public static implicit operator PersonName(Mutable personName)
         {
-            return new(person._parent, person._idx);
+            return new(personName._parent, personName._idx);
         }
 
         public static Mutable From<T>(in T instance)
@@ -273,7 +274,7 @@ public readonly struct Person : IJsonElement<Person>
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"Person.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+        private string DebuggerDisplay => $"PersonName.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -288,7 +289,6 @@ public readonly struct Person : IJsonElement<Person>
         JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
 
-
     public ref struct Builder
     {
         public delegate void Build(ref Builder builder);
@@ -297,9 +297,9 @@ public readonly struct Person : IJsonElement<Person>
         {
             public Build? Builder { get; }
 
-            public Person Instance { get; }
+            public PersonName Instance { get; }
 
-            public Source(Person instance)
+            public Source(PersonName instance)
             {
                 Builder = null;
                 Instance = instance;
@@ -311,13 +311,13 @@ public readonly struct Person : IJsonElement<Person>
                 Instance = default;
             }
 
-            public static implicit operator Source(Person instance) => new(instance);
+            public static implicit operator Source(PersonName instance) => new(instance);
 
             internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
             {
-                if (Builder is Build personBuilder)
+                if (Builder is Build nameBuilder)
                 {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(personBuilder, ref o));
+                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(nameBuilder, ref o));
                 }
                 else
                 {
@@ -328,9 +328,9 @@ public readonly struct Person : IJsonElement<Person>
 
             internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
             {
-                if (Builder is Build personBuilder)
+                if (Builder is Build nameBuilder)
                 {
-                    valueBuilder.AddItem((ref o) => BuildValue(personBuilder, ref o));
+                    valueBuilder.AddItem((ref o) => BuildValue(nameBuilder, ref o));
                 }
                 else
                 {
@@ -350,6 +350,18 @@ public readonly struct Person : IJsonElement<Person>
             return new Builder(builder);
         }
 
+        public void Create(NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
+        {
+            Create(ref _builder, firstName, lastName, otherNames);
+        }
+
+        internal static void Create(ref ComplexValueBuilder builder, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
+        {
+            firstName.AddAsProperty(JsonPropertyNames.FirstName, ref builder);
+            lastName.AddAsProperty(JsonPropertyNames.LastName, ref builder);
+            otherNames.AddAsProperty(JsonPropertyNames.OtherNames, ref builder);
+        }
+
         internal static void BuildValue(Build value, ref ComplexValueBuilder o)
         {
             o.StartObject();
@@ -358,51 +370,39 @@ public readonly struct Person : IJsonElement<Person>
             o = ovb._builder;
             o.EndObject();
         }
-
-        public void Create(Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears)
-        {
-            Create(ref _builder, age, name, competedInYears);
-        }
-
-        internal static void Create(ref ComplexValueBuilder builder, Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears)
-        {
-            age.AddAsProperty(JsonPropertyNames.Age, ref builder);
-            name.AddAsProperty(JsonPropertyNames.Name, ref builder);
-            competedInYears.AddAsProperty(JsonPropertyNames.CompetedInYears, ref builder);
-        }
     }
 
     public static class JsonPropertyNames
     {
-        public static ReadOnlySpan<byte> Name => "name"u8;
-        public static ReadOnlySpan<byte> Age => "age"u8;
-        public static ReadOnlySpan<byte> CompetedInYears => "competedInYears"u8;
+        // These are the fully escaped property names
+        public static ReadOnlySpan<byte> FirstName => "firstName"u8;
+        public static ReadOnlySpan<byte> LastName => "lastName"u8;
+        public static ReadOnlySpan<byte> OtherNames => "otherNames"u8;
     }
 
     public static class JsonSchema
     {
-        private const int NameRequiredOffset = 0;
-        private const int NameRequiredBitMask = 0b0000_0000_0000_0001;
-        private const int BitMaskOffset0 = NameRequiredBitMask;
+        private const int FirstNameRequiredOffset = 0;
+        private const int FirstNameRequiredBitMask = 0b0000_0000_0000_0001;
+        private const int BitMaskOffset0 = FirstNameRequiredBitMask;
 
-        private static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/Person"u8;
+        private static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/PersonName"u8;
         private static ReadOnlySpan<byte> Required0Location() => "#/required/0"u8;
 
         private static ReadOnlySpan<byte> ExpectedAnObjectValue() => "Expected an object value."u8;
-        private static ReadOnlySpan<byte> RequiredPropertyNameNotPresent() => "The required property 'name' was not present."u8;
-        private static ReadOnlySpan<byte> RequiredPropertyNamePresent() => "The required property 'name' was present."u8;
+        private static ReadOnlySpan<byte> RequiredPropertyFirstNameNotPresent() => "The required property 'firstName' was not present."u8;
+        private static ReadOnlySpan<byte> RequiredPropertyFirstNamePresent() => "The required property 'firstName' was present."u8;
         private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeObject() => "Ignored because the value was not of type 'object'."u8;
         private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
         private static ReadOnlySpan<byte> EscapedPropertiesKeyword() => "properties"u8;
         private static ReadOnlySpan<byte> EscapedRequiredKeyword() => "required"u8;
-        private static ReadOnlySpan<byte> EscapedNameSchemaEvaluationPath() => "#/properties/name/$ref"u8;
-        private static ReadOnlySpan<byte> EscapedNameDocumentEvaluationPath() => "#/name"u8;
-        private static ReadOnlySpan<byte> EscapedAgeSchemaEvaluationPath() => "#/properties/age/$ref"u8;
-        private static ReadOnlySpan<byte> EscapedAgeDocumentEvaluationPath() => "#/age"u8;
-        private static ReadOnlySpan<byte> EscapedCompetedInYearsSchemaEvaluationPath() => "#/properties/competedInYears/$ref"u8;
-        private static ReadOnlySpan<byte> EscapedCompetedInYearsDocumentEvaluationPath() => "#/competedInYears"u8;
+        private static ReadOnlySpan<byte> EscapedFirstNameSchemaEvaluationPath() => "#/properties/firstName/$ref"u8;
+        private static ReadOnlySpan<byte> EscapedFirstNameDocumentEvaluationPath() => "#/firstName"u8;
+        private static ReadOnlySpan<byte> EscapedLastNameSchemaEvaluationPath() => "#/properties/lastName/$ref"u8;
+        private static ReadOnlySpan<byte> EscapedLastNameDocumentEvaluationPath() => "#/lastName"u8;
+        private static ReadOnlySpan<byte> EscapedOtherNamesSchemaEvaluationPath() => "#/properties/otherNames/$ref"u8;
+        private static ReadOnlySpan<byte> EscapedOtherNamesDocumentEvaluationPath() => "#/otherNames"u8;
 
-        // NEXT TIME: Implement the validation for Person
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
         /// </summary>
@@ -447,10 +447,10 @@ public readonly struct Person : IJsonElement<Person>
                 int currentIndex = enumerator.CurrentIndex;
                 ReadOnlySpan<byte> propertyName = parentDocument.GetPropertyNameRaw(currentIndex);
 
-                if (TryGetValidator(propertyName, out JsonSchemaMatcherWithRequiredBitBuffer? validator))
+                if (TryGetValidator(propertyName, out JsonSchemaMatcherWithRequiredBitBuffer? matcher))
                 {
                     context.AddLocalEvaluatedProperty(propertyCount);
-                    validator(parentDocument, currentIndex, ref context, seenItems);
+                    matcher(parentDocument, currentIndex, ref context, seenItems);
 
                     if (!context.IsMatch && !context.HasCollector)
                     {
@@ -467,7 +467,7 @@ public readonly struct Person : IJsonElement<Person>
                 if (context.HasCollector)
                 {
                     // Add a "matched" for each of the individual matched properties
-                    context.Matched(true, RequiredPropertyNameNotPresent, Required0Location);
+                    context.Matched(true, RequiredPropertyFirstNameNotPresent, Required0Location);
                 }
 
                 return;
@@ -484,9 +484,9 @@ public readonly struct Person : IJsonElement<Person>
             {
                 // We have missed at least one of the required properties
                 // and we are doing collections, so test them all individually
-                if ((seenItems[NameRequiredOffset] & NameRequiredBitMask) == 0)
+                if ((seenItems[FirstNameRequiredOffset] & FirstNameRequiredBitMask) == 0)
                 {
-                    context.Matched(false, RequiredPropertyNameNotPresent, Required0Location);
+                    context.Matched(false, RequiredPropertyFirstNameNotPresent, Required0Location);
                     if (!context.HasCollector)
                     {
                         return;
@@ -494,7 +494,7 @@ public readonly struct Person : IJsonElement<Person>
                 }
                 else
                 {
-                    context.Matched(true, RequiredPropertyNamePresent, Required0Location);
+                    context.Matched(true, RequiredPropertyFirstNamePresent, Required0Location);
                 }
             }
 
@@ -505,19 +505,19 @@ public readonly struct Person : IJsonElement<Person>
         {
             // We only have 1 property, so it is going to be vastly more efficient to do this
             // with property names
-            if (JsonPropertyNames.Name.SequenceEqual(span))
+            if (JsonPropertyNames.FirstName.SequenceEqual(span))
             {
-                validator = MatchName;
+                validator = MatchFirstName;
                 return true;
             }
-            else if (JsonPropertyNames.Age.SequenceEqual(span))
+            else if (JsonPropertyNames.LastName.SequenceEqual(span))
             {
-                validator = MatchAge;
+                validator = MatchLastName;
                 return true;
             }
-            else if (JsonPropertyNames.CompetedInYears.SequenceEqual(span))
+            else if (JsonPropertyNames.OtherNames.SequenceEqual(span))
             {
-                validator = MatchCompetedInYears;
+                validator = MatchOtherNames;
                 return true;
             }
 
@@ -525,48 +525,47 @@ public readonly struct Person : IJsonElement<Person>
             return false;
         }
 
-        private static void MatchName(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
+        private static void MatchFirstName(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
         {
             JsonSchemaContext childContext =
-                PersonName.JsonSchema.PushChildContext(
+                NameComponent.JsonSchema.PushChildContext(
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
-                    schemaEvaluationPath: EscapedNameSchemaEvaluationPath,
-                    documentEvaluationPath: EscapedNameDocumentEvaluationPath);
+                    schemaEvaluationPath: EscapedFirstNameSchemaEvaluationPath,
+                    documentEvaluationPath: EscapedFirstNameDocumentEvaluationPath);
 
-            PersonName.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
+            NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
             context.CommitChildContext(childContext.IsMatch, ref childContext);
-
-            requiredBitBuffer[NameRequiredOffset] |= NameRequiredBitMask;
+            requiredBitBuffer[FirstNameRequiredOffset] |= FirstNameRequiredBitMask;
         }
 
-        private static void MatchAge(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
+        private static void MatchLastName(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
         {
             JsonSchemaContext childContext =
-                Age.JsonSchema.PushChildContext(
+                NameComponent.JsonSchema.PushChildContext(
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
-                    schemaEvaluationPath: EscapedAgeSchemaEvaluationPath,
-                    documentEvaluationPath: EscapedAgeDocumentEvaluationPath);
+                    schemaEvaluationPath: EscapedLastNameSchemaEvaluationPath,
+                    documentEvaluationPath: EscapedLastNameDocumentEvaluationPath);
 
-            Age.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
+            NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
 
             context.CommitChildContext(childContext.IsMatch, ref childContext);
         }
 
-        private static void MatchCompetedInYears(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
+        private static void MatchOtherNames(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
         {
             JsonSchemaContext childContext =
-                CompetedInYears.JsonSchema.PushChildContext(
+                OtherNames.JsonSchema.PushChildContext(
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
-                    schemaEvaluationPath: EscapedCompetedInYearsSchemaEvaluationPath,
-                    documentEvaluationPath: EscapedCompetedInYearsDocumentEvaluationPath);
+                    schemaEvaluationPath: EscapedOtherNamesSchemaEvaluationPath,
+                    documentEvaluationPath: EscapedOtherNamesDocumentEvaluationPath);
 
-            CompetedInYears.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
+            OtherNames.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
 
             context.CommitChildContext(childContext.IsMatch, ref childContext);
         }

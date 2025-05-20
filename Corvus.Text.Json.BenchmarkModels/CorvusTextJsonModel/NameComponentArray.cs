@@ -173,7 +173,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             {
                 if (Builder is Build builder)
                 {
-                    valueBuilder.AddProperty(utf8Name, (ref ComplexValueBuilder o) => BuildValue(builder, ref o));
+                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(builder, ref o));
                 }
                 else
                 {
@@ -186,7 +186,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             {
                 if (Builder is Build builder)
                 {
-                    valueBuilder.AddItem((ref ComplexValueBuilder o) => BuildValue(builder, ref o));
+                    valueBuilder.AddItem((ref o) => BuildValue(builder, ref o));
                 }
                 else
                 {
@@ -415,7 +415,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
                     }
                 }
 
-                context.CommitChildContext(childContext.IsMatch);
+                context.CommitChildContext(childContext.IsMatch, ref childContext);
                 context.AddLocalEvaluatedItem(length);
             }
 

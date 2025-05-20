@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
-namespace Benchmark.CorvusTextJson;
+namespace Benchmark.CorvusTextJson2;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly struct OtherNames : IJsonElement<OtherNames>

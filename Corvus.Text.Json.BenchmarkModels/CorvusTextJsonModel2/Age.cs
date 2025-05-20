@@ -1,21 +1,20 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Buffers.Text;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
-namespace Benchmark.CorvusTextJson;
+namespace Benchmark.CorvusTextJson2;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
+public readonly struct Age : IJsonElement<Age>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    internal CompetedInYears(IJsonDocument parent, int idx)
+    internal Age(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -43,55 +42,38 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         }
     }
 
-    public static CompetedInYears From<T>(in T instance)
+    public static implicit operator int(Age age)
+    {
+        age.CheckValidInstance();
+
+        if (!age._parent.TryGetValue(age._idx, out int result))
+        {
+            CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
+        }
+
+        return result;
+    }
+
+    public static Age From<T>(in T instance)
     where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    private void CheckValidInstance()
-    {
-        if (_parent == null)
-        {
-            throw new InvalidOperationException();
-        }
-    }
-
-    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
-    {
-        return workspace.CreateDocument<CompetedInYears, Mutable>(this);
-    }
-
-    void IJsonElement.CheckValidInstance() => CheckValidInstance();
-
-#if NET
-    static CompetedInYears IJsonElement<CompetedInYears>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
-#endif
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"CompetedInYears: ValueKind = {ValueKind} : \"{ToString()}\"";
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IJsonDocument IJsonElement.ParentDocument => _parent;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    int IJsonElement.ParentDocumentIndex => _idx;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    JsonTokenType IJsonElement.TokenType => TokenType;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    JsonValueKind IJsonElement.ValueKind => ValueKind;
-
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
-        Builder.BuildValue(builder, ref cvb);
+        cvb.AddItem(year);
         Debug.Assert(cvb.MemberCount == 1);
         documentBuilder.InsertAndDispose(ref cvb);
         return documentBuilder;
+    }
+
+    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocument<Age, Mutable>(this);
     }
 
     /// <summary>
@@ -121,81 +103,34 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
     {
         return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
     }
-
-    public ref struct Builder
+    private void CheckValidInstance()
     {
-        public delegate void Build(ref Builder builder);
-
-        public readonly ref struct Source
+        if (_parent == null)
         {
-            public Build? Builder { get; }
-
-            public CompetedInYears Instance { get; }
-
-            public Source(CompetedInYears instance)
-            {
-                Builder = null;
-                Instance = instance;
-            }
-
-            public Source(Build builder)
-            {
-                Builder = builder;
-                Instance = default;
-            }
-
-            public static implicit operator Source(CompetedInYears instance) => new(instance);
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
-            {
-                if (Builder is Build competedInYearsBuilder)
-                {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(competedInYearsBuilder, ref o));
-                }
-                else
-                {
-                    valueBuilder.AddProperty(utf8Name, Instance);
-                }
-            }
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                if (Builder is Build competedInYearsBuilder)
-                {
-                    valueBuilder.AddItem((ref o) => BuildValue(competedInYearsBuilder, ref o));
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddItem(Instance);
-                }
-            }
-        }
-
-        private ComplexValueBuilder _builder;
-
-        internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
-
-        internal static Builder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
-        {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, targetIndex, initialElementCount);
-            return new Builder(builder);
-        }
-
-        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
-        {
-            o.StartArray();
-            Builder ovb = new(o);
-            value(ref ovb);
-            o = ovb._builder;
-            o.EndArray();
-        }
-
-        public void Add(Year.Builder.Source year)
-        {
-            year.AddAsItem(ref _builder);
+            throw new InvalidOperationException();
         }
     }
+
+    void IJsonElement.CheckValidInstance() => CheckValidInstance();
+
+#if NET
+    static Age IJsonElement<Age>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+#endif
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => $"Age: ValueKind = {ValueKind} : \"{ToString()}\"";
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IJsonDocument IJsonElement.ParentDocument => _parent;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    int IJsonElement.ParentDocumentIndex => _idx;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    JsonTokenType IJsonElement.TokenType => TokenType;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    JsonValueKind IJsonElement.ValueKind => ValueKind;
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct Mutable : IMutableJsonElement<Mutable>
@@ -231,7 +166,35 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             }
         }
 
+        public static explicit operator Mutable(Age age)
+        {
+            if (age._parent is not IMutableJsonDocument doc)
+            {
+                CodeGenThrowHelper.ThrowFormatException();
+                // We will never get here
+                return default;
+            }
 
+            return new(doc, age._idx);
+
+        }
+
+        public static implicit operator Age(Mutable age)
+        {
+            return new(age._parent, age._idx);
+        }
+
+        public static implicit operator int(Mutable age)
+        {
+            age.CheckValidInstance();
+
+            if (!age._parent.TryGetValue(age._idx, out int result))
+            {
+                CodeGenThrowHelper.ThrowFormatException(CodeGenNumericType.Int32);
+            }
+
+            return result;
+        }
 
         public static Mutable From<T>(in T instance)
         where T : struct, IMutableJsonElement<T>
@@ -276,7 +239,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"CompetedInYears.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+        private string DebuggerDisplay => $"Age.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -291,32 +254,74 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
 
+
+    public ref struct Builder
+    {
+        public readonly ref struct Source
+        {
+            public Age Instance { get; }
+
+            public int Int32Value { get; }
+
+            public Source(Age instance)
+            {
+                Instance = instance;
+                Int32Value = default;
+            }
+
+            public Source(int int32Value)
+            {
+                Instance = default;
+                Int32Value = int32Value;
+            }
+
+            public static implicit operator Source(Age instance) => new(instance);
+            public static implicit operator Source(int instance) => new(instance);
+
+            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+            {
+                if (Instance.ValueKind != JsonValueKind.Undefined)
+                {
+                    valueBuilder.AddItem(Instance);
+                }
+                else
+                {
+                    valueBuilder.AddItem(Int32Value);
+                }
+            }
+
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
+            {
+                if (Instance.ValueKind != JsonValueKind.Undefined)
+                {
+                    valueBuilder.AddProperty(utf8Name, Instance);
+                }
+                else
+                {
+                    valueBuilder.AddProperty(utf8Name, Int32Value);
+                }
+            }
+        }
+    }
+
     public static class JsonSchema
     {
-        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/CompetedInYears"u8;
-        private static ReadOnlySpan<byte> ExpectedAnArrayValue() => "Expected an array value."u8;
-        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeArray() => "Ignored because the value was not of type 'array'."u8;
+        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/Age"u8;
+        private static ReadOnlySpan<byte> ExpectedANumberValue() => "Expected a number value."u8;
+        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeNumber() => "Ignored because the value was not of type 'number'."u8;
         private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
-        private static ReadOnlySpan<byte> EscapedItemsKeyword() => "items"u8;
+        private static ReadOnlySpan<byte> EscapedMinimumKeyword() => "minimum"u8;
+        private static ReadOnlySpan<byte> EscapedMaximumKeyword() => "maximum"u8;
 
-        public static bool SchemaLocationForItemIndex(int index, Span<byte> buffer, out int written)
-        {
-            if (buffer.Length < 13)
-            {
-                written = 0;
-                return false;
-            }
+        private static bool minimumIsNegative => false;
+        private static ReadOnlySpan<byte> minimumIntegral => "0"u8;
+        private static ReadOnlySpan<byte> minimumFractional => ""u8;
+        private static int minimumExponent = 0;
 
-            "#/items/$ref/"u8.CopyTo(buffer);
-            if (!Utf8Formatter.TryFormat(index, buffer[13..], out int bytesWritten))
-            {
-                written = 0;
-                return false;
-            }
-
-            written = bytesWritten + 13;
-            return true;
-        }
+        private static bool maximumIsNegative => false;
+        private static ReadOnlySpan<byte> maximumIntegral => "130"u8;
+        private static ReadOnlySpan<byte> maximumFractional => ""u8;
+        private static int maximumExponent = 0;
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -337,49 +342,76 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (tokenType != JsonTokenType.StartArray)
+            if (tokenType != JsonTokenType.Number)
             {
-                context.Matched(false, ExpectedAnArrayValue, EscapedTypeKeyword);
+                context.Matched(false, ExpectedANumberValue, schemaEvaluationPath: EscapedTypeKeyword);
                 if (!context.HasCollector)
                 {
+                    context.PopSchemaLocation();
                     return;
                 }
 
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeArray, EscapedItemsKeyword);
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeNumber, schemaEvaluationPath: EscapedMinimumKeyword);
+                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeNumber, schemaEvaluationPath: EscapedMaximumKeyword);
                 context.PopSchemaLocation();
                 return;
             }
-
-            ArrayEnumerator arrayEnumerator = new(parentDocument, parentIndex);
-            int length = 0;
-
-            while (arrayEnumerator.MoveNext())
+            else
             {
-                JsonSchemaContext childContext = Year.JsonSchema.PushChildContext(
-                    parentDocument,
-                    arrayEnumerator.CurrentIndex,
-                    ref context,
-                    providerContext: length,
-                    schemaEvaluationPath: SchemaLocationForItemIndex);
+                context.Matched(true, schemaEvaluationPath: EscapedTypeKeyword);
+            }
 
-                Year.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
-                if (!childContext.IsMatch)
+            ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex, false);
+            JsonElementHelpers.ParseNumber(number.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                minimumIsNegative,
+                minimumIntegral,
+                minimumFractional,
+                minimumExponent) < 0)
+            {
+                context.Matched(false, schemaEvaluationPath: EscapedMinimumKeyword);
+                if (!context.HasCollector)
                 {
-                    context.Matched(false);
-                    if (!context.HasCollector)
-                    {
-                        return;
-                    }
+                    context.PopSchemaLocation();
+                    return;
                 }
+            }
+            else
+            {
+                context.Matched(true, schemaEvaluationPath: EscapedMinimumKeyword);
+            }
 
-                context.CommitChildContext(childContext.IsMatch, ref childContext);
-                context.AddLocalEvaluatedItem(length);
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                maximumIsNegative,
+                maximumIntegral,
+                maximumFractional,
+                maximumExponent) > 0)
+            {
+                context.Matched(false, schemaEvaluationPath: EscapedMaximumKeyword);
+                if (!context.HasCollector)
+                {
+                    context.PopSchemaLocation();
+                    return;
+                }
+            }
+            else
+            {
+                context.Matched(true, schemaEvaluationPath: EscapedMaximumKeyword);
             }
 
             context.PopSchemaLocation();
         }
 
-        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector resultsCollector)
         {
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
@@ -430,9 +462,9 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
-                    providerContext: providerContext,
                     schemaEvaluationPath: schemaEvaluationPath,
-                    documentEvaluationPath: documentEvaluationPath);
+                    documentEvaluationPath: documentEvaluationPath,
+                    providerContext: providerContext);
         }
     }
 }

@@ -48,10 +48,10 @@ namespace Corvus.Text.Json
         // If clear, then the remaining bits represent applied evaluated indices.
         private EvaluatedIndexBuffer _appliedEvaluated;
 #else
-        private int _localEvaluatedOffset;
-        private int _localEvaluatedLength;
-        private int _appliedEvaluatedOffset;
-        private int _appliedEvaluatedLength;
+        private readonly int _localEvaluatedOffset;
+        private readonly int _localEvaluatedLength;
+        private readonly int _appliedEvaluatedOffset;
+        private readonly int _appliedEvaluatedLength;
 #endif
 
         [Flags]
@@ -100,18 +100,18 @@ namespace Corvus.Text.Json
 #endif
         }
 
-        public bool IsMatch => ((_lengthAndUsingFeatures & (uint)UsingFeatures.IsMatch) != 0);
+        public readonly bool IsMatch => ((_lengthAndUsingFeatures & (uint)UsingFeatures.IsMatch) != 0);
 
-        public bool HasCollector => _resultsCollector is not null;
+        public readonly bool HasCollector => _resultsCollector is not null;
 
         // The length is the _lengthAndUsingFeatures union with the top nybble masked
-        private int Length => unchecked((int)(_lengthAndUsingFeatures & 0x0FFF_FFFFU));
+        private readonly int Length => unchecked((int)(_lengthAndUsingFeatures & 0x0FFF_FFFFU));
 
-        private bool IsDisposable => ((_lengthAndUsingFeatures & (uint)UsingFeatures.IsDisposable) != 0);
+        private readonly bool IsDisposable => ((_lengthAndUsingFeatures & (uint)UsingFeatures.IsDisposable) != 0);
 
-        private bool UseEvaluatedProperties => ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0);
+        private readonly bool UseEvaluatedProperties => ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0);
 
-        private bool UseEvaluatedItems => ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0);
+        private readonly bool UseEvaluatedItems => ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0);
 
         private Span<int> LocalEvaluated
         {
@@ -198,7 +198,7 @@ namespace Corvus.Text.Json
         /// </summary>
         /// <param name="relativeOrAbsoluteSchemaLocation"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void PushSchemaLocation(
+        public readonly void PushSchemaLocation(
             JsonSchemaPathProvider relativeOrAbsoluteSchemaLocation)
         {
             _resultsCollector?.PushSchemaLocation(relativeOrAbsoluteSchemaLocation);
@@ -209,12 +209,12 @@ namespace Corvus.Text.Json
         /// this pops the location.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void PopSchemaLocation()
+        public readonly void PopSchemaLocation()
         {
             _resultsCollector?.PopSchemaLocation();
         }
 
-        public JsonSchemaContext PushChildContext(
+        public readonly JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             bool useEvaluatedItems,
@@ -227,7 +227,7 @@ namespace Corvus.Text.Json
             return PushChildContextCore(parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }
 
-        public JsonSchemaContext PushChildContext<TProviderContext>(
+        public readonly JsonSchemaContext PushChildContext<TProviderContext>(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             bool useEvaluatedItems,
@@ -249,10 +249,10 @@ namespace Corvus.Text.Json
         /// to the parent context.
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CommitChildContext(bool isMatch, JsonValidationMessageProvider? messageProvider = null)
+        public void CommitChildContext(bool isMatch, ref readonly JsonSchemaContext childContext, JsonValidationMessageProvider? messageProvider = null)
         {
             _resultsCollector?.CommitChildContext(isMatch, messageProvider);
-
+            _rentedBuffer = childContext._rentedBuffer;
             if (isMatch)
             {
                 _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
@@ -281,7 +281,7 @@ namespace Corvus.Text.Json
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Ignored(
+        public readonly void Ignored(
             JsonValidationMessageProvider? messageProvider = null,
             JsonSchemaPathProvider? schemaEvaluationPath = null)
         {
@@ -289,7 +289,7 @@ namespace Corvus.Text.Json
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Ignored<TProviderContext>(
+        public readonly void Ignored<TProviderContext>(
             TProviderContext providerContext,
             JsonValidationMessageProvider<TProviderContext>? messageProvider = null,
             JsonSchemaPathProvider? schemaEvaluationPath = null)
@@ -301,9 +301,10 @@ namespace Corvus.Text.Json
         /// Pops the most recently pushed child context without committing changes.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void PopChildContext()
+        public void PopChildContext(ref readonly JsonSchemaContext childContext)
         {
             _resultsCollector?.PopChildContext();
+            _rentedBuffer = childContext._rentedBuffer;
         }
 
         public bool HasLocalEvaluatedItem(int index)
@@ -391,9 +392,9 @@ namespace Corvus.Text.Json
                 int vectorCount = length / vectorSize;
                 int vectorizedLength = vectorCount * vectorSize;
 
-                var vEvaluatedItems = MemoryMarshal.Cast<int, Vector<int>>(evaluatedItems.Slice(0, vectorizedLength));
-                var vChildLocal = MemoryMarshal.Cast<int, Vector<int>>(childLocalEvaluated.Slice(0, vectorizedLength));
-                var vChildApplied = MemoryMarshal.Cast<int, Vector<int>>(childAppliedEvaluated.Slice(0, vectorizedLength));
+                Span<Vector<int>> vEvaluatedItems = MemoryMarshal.Cast<int, Vector<int>>(evaluatedItems.Slice(0, vectorizedLength));
+                Span<Vector<int>> vChildLocal = MemoryMarshal.Cast<int, Vector<int>>(childLocalEvaluated.Slice(0, vectorizedLength));
+                Span<Vector<int>> vChildApplied = MemoryMarshal.Cast<int, Vector<int>>(childAppliedEvaluated.Slice(0, vectorizedLength));
 
                 for (int i = 0; i < vEvaluatedItems.Length; i++)
                 {
@@ -421,8 +422,8 @@ namespace Corvus.Text.Json
                 int[]? bufferToReturn = Interlocked.Exchange(ref _rentedBuffer, null);
                 if (bufferToReturn != null)
                 {
-                    // Clear the bytes as they may contain actual data
-                    bufferToReturn.AsSpan(0, Length).Clear();
+                    // Clear the entire buffer as they may contain actual data
+                    bufferToReturn.AsSpan().Clear();
                     ArrayPool<int>.Shared.Return(bufferToReturn);
                 }
             }
@@ -454,7 +455,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        private JsonSchemaContext PushChildContextCore(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties)
+        private readonly JsonSchemaContext PushChildContextCore(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties)
         {
             bool usesEvaluatedProperties = UseEvaluatedProperties || useEvaluatedProperties;
             bool usesEvaluatedItems = UseEvaluatedItems || useEvaluatedItems;
@@ -500,9 +501,17 @@ namespace Corvus.Text.Json
             int propertyRemainder = count & 0b1_1111; // Remainder is the bottom 5 bits (0 > 31)
             bitBufferLength += (propertyRemainder == 0 ? 0 : 1);
 
-            if (bitBufferLength > 0 && (_rentedBuffer is null || bitBufferLength > _rentedBuffer.Length - _offset - Length))
+            if (bitBufferLength > 0)
             {
-                Enlarge(bitBufferLength * 2); // We double the required length in order to support local and applied bitBuffers
+                if ((_rentedBuffer is null || bitBufferLength > _rentedBuffer.Length - _offset - Length))
+                {
+                    Enlarge(bitBufferLength * 2); // We double the required length in order to support local and applied bitBuffers
+                }
+                else
+                {
+                    // Clear our bit of the buffer
+                    _rentedBuffer.AsSpan(_offset, bitBufferLength * 2).Clear();
+                }
             }
 
             return bitBufferLength;

@@ -9,7 +9,7 @@ namespace JsonParsingBenchmarks;
 /// Construct elements from a JSON element.
 /// </summary>
 [MemoryDiagnoser]
-public class BenchmarkParseObjectWithPropertytMapBacking
+public class BenchmarkParseObjectWithPropertyMapBacking
 {
     [Benchmark(Baseline = true)]
     public System.Text.Json.JsonValueKind ParseObjectToJsonElement()

@@ -1,13 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using Corvus.Json;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
-namespace Benchmark.CorvusTextJson;
+namespace Benchmark.CorvusTextJson2;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly struct Person : IJsonElement<Person>
@@ -395,6 +398,7 @@ public readonly struct Person : IJsonElement<Person>
         private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
         private static ReadOnlySpan<byte> EscapedPropertiesKeyword() => "properties"u8;
         private static ReadOnlySpan<byte> EscapedRequiredKeyword() => "required"u8;
+        private static ReadOnlySpan<byte> EscapedUnevaluatedPropertiesKeyword() => "unevaluatedProperties"u8;
         private static ReadOnlySpan<byte> EscapedNameSchemaEvaluationPath() => "#/properties/name/$ref"u8;
         private static ReadOnlySpan<byte> EscapedNameDocumentEvaluationPath() => "#/name"u8;
         private static ReadOnlySpan<byte> EscapedAgeSchemaEvaluationPath() => "#/properties/age/$ref"u8;
@@ -453,6 +457,20 @@ public readonly struct Person : IJsonElement<Person>
                     validator(parentDocument, currentIndex, ref context, seenItems);
 
                     if (!context.IsMatch && !context.HasCollector)
+                    {
+                        return;
+                    }
+                }
+
+                if (!context.HasLocalOrAppliedEvaluatedProperty(propertyCount))
+                {
+                    // We push and commit the child context as an optimization for "NotAny" - no need to actually validate with anything in between, just
+                    // jump straight to "isMatch: false"; but benefit from the output generation.
+                    // TODO: we have to re-evaluate the property name, because we aren't allowed to use the ReadOnlySpan prior to dotnet 9.
+                    // we could optimize after this to use allows ref struct on the generic on NET9 and up and #ifdef this. It would be faster.
+                    JsonSchemaContext childContext = context.PushChildContext(parentDocument, currentIndex, false, false, schemaEvaluationPath: EscapedUnevaluatedPropertiesKeyword);
+                    context.CommitChildContext(isMatch: false, ref childContext);
+                    if (!context.HasCollector)
                     {
                         return;
                     }
@@ -621,7 +639,7 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocument,
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
-                    useEvaluatedProperties: false,
+                    useEvaluatedProperties: true, // But we do use evaluated properties
                     providerContext: providerContext,
                     schemaEvaluationPath: schemaEvaluationPath,
                     documentEvaluationPath: documentEvaluationPath);

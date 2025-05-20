@@ -124,7 +124,7 @@ namespace Corvus.Text.Json.Tests
                 childContext.AddLocalEvaluatedItem(item);
             }
 
-            context.CommitChildContext(true);
+            context.CommitChildContext(true, ref childContext);
             context.ApplyEvaluated(ref childContext);
 
             Assert.All(evaluatedIndices, i => Assert.True(context.HasLocalOrAppliedEvaluatedItem(i)));
@@ -157,7 +157,7 @@ namespace Corvus.Text.Json.Tests
                 childContext.AddLocalEvaluatedProperty(item);
             }
 
-            context.CommitChildContext(true);
+            context.CommitChildContext(true, ref childContext);
             context.ApplyEvaluated(ref childContext);
 
             Assert.All(evaluatedIndices, i => Assert.True(context.HasLocalOrAppliedEvaluatedProperty(i)));
@@ -186,7 +186,7 @@ namespace Corvus.Text.Json.Tests
             // Act
             JsonSchemaContext childContext = context.PushChildContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
             // NOP
-            context.CommitChildContext(true);
+            context.CommitChildContext(true, ref childContext);
             context.ApplyEvaluated(ref childContext);
 
             foreach (int item in evaluateIndices)
@@ -219,7 +219,7 @@ namespace Corvus.Text.Json.Tests
             // Act
             JsonSchemaContext childContext = context.PushChildContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
             // NOP
-            context.CommitChildContext(true);
+            context.CommitChildContext(true, ref childContext);
             context.ApplyEvaluated(ref childContext);
 
             foreach (int item in evaluateIndices)
@@ -258,7 +258,7 @@ namespace Corvus.Text.Json.Tests
 
             JsonSchemaContext childContext = context.PushChildContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
             // NOP
-            context.CommitChildContext(true);
+            context.CommitChildContext(true, ref childContext);
             context.ApplyEvaluated(ref childContext);
 
 
@@ -291,7 +291,7 @@ namespace Corvus.Text.Json.Tests
             }
 
             JsonSchemaContext childContext = context.PushChildContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
-            context.CommitChildContext(true);
+            context.CommitChildContext(true, ref childContext);
             context.ApplyEvaluated(ref childContext);
 
             Assert.All(evaluatedIndices, i => Assert.True(context.HasLocalOrAppliedEvaluatedProperty(i)));
@@ -328,7 +328,7 @@ namespace Corvus.Text.Json.Tests
             {
                 childContext.AddLocalEvaluatedItem(item);
             }
-            context.CommitChildContext(true);
+            context.CommitChildContext(true, ref childContext);
             context.ApplyEvaluated(ref childContext);
 
 
@@ -367,7 +367,7 @@ namespace Corvus.Text.Json.Tests
                 childContext.AddLocalEvaluatedProperty(item);
             }
 
-            context.CommitChildContext(true);
+            context.CommitChildContext(true, ref childContext);
             context.ApplyEvaluated(ref childContext);
 
             Assert.All(evaluatedIndices, i => Assert.True(context.HasLocalOrAppliedEvaluatedProperty(i)));
