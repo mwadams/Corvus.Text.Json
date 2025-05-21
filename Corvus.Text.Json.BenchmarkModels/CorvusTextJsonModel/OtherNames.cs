@@ -52,11 +52,6 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         return From(nameComponentArray);
     }
 
-    internal static bool IsMatch(IJsonDocument parentDocument, int parentDocumentIndex)
-    {
-        throw new NotImplementedException();
-    }
-
     public TResult Match<TResult>(Func<NameComponent, TResult> nameComponent, Func<NameComponentArray, TResult> nameComponentArray, Func<OtherNames, TResult> noMatch)
     {
         if (NameComponent.JsonSchema.IsMatch(_parent, _idx))

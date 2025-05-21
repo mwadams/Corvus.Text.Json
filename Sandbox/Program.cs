@@ -7,6 +7,11 @@ using Benchmark.CorvusTextJson2;
 using Corvus.Json;
 using Corvus.Text.Json;
 
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
+
 // Parse a document in the usual way
 using ParsedJsonDocument<JsonElement> documentB1 = ParsedJsonDocument<JsonElement>.Parse(
         """
@@ -105,7 +110,14 @@ Console.WriteLine(documentB3.RootElement.IsSchemaMatch() ? "Person B3 is a match
 Console.WriteLine(documentB4.RootElement.IsSchemaMatch() ? "Person B4 is a match" : "Person B4 is not a match");
 Console.WriteLine(documentB5.RootElement.IsSchemaMatch() ? "Person B5 is a match" : "Person B5 is not a match");
 Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is a match" : "Person B6 is not a match");
-JsonElementHelpers.DeepEquals(documentB1.RootElement, documentB2.RootElement);
+
+
+Console.WriteLine(JsonElementHelpers.DeepEquals(documentB1.RootElement, documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
+
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
 
 // Create a workspace for manipulating documents
 using JsonWorkspace workspace = new();
@@ -115,15 +127,42 @@ using JsonDocumentBuilder<JsonElement.Mutable> initializedBuilder = documentB1.R
 Console.WriteLine(initializedBuilder.RootElement.ToString());
 
 #if NET
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
+
 ArrayBufferWriter<byte> arrayBufferWriter = new(initialCapacity: 1024);
-Utf8JsonWriter writer = new Utf8JsonWriter(arrayBufferWriter);
+using Utf8JsonWriter writer = new Utf8JsonWriter(arrayBufferWriter);
 initializedBuilder.RootElement.WriteTo(writer);
 writer.Flush();
 
 Console.WriteLine(Encoding.UTF8.GetString(arrayBufferWriter.WrittenSpan));
+
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
+
+arrayBufferWriter = new(initialCapacity: 1024);
+using Utf8JsonWriter writer2 = new Utf8JsonWriter(arrayBufferWriter, new JsonWriterOptions() { Indented = true });
+initializedBuilder.RootElement.WriteTo(writer2);
+writer2.Flush();
+
+Console.WriteLine(Encoding.UTF8.GetString(arrayBufferWriter.WrittenSpan));
+
 #endif
 
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
+
 Console.WriteLine(initializedBuilder.RootElement.ToString());
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
 
 // Create a builder for our root element
 using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocument(
@@ -155,9 +194,6 @@ using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocum
     });
 
 // Validate that we can write the document back out again
-Console.WriteLine();
-Console.WriteLine("************");
-Console.WriteLine();
 Console.WriteLine(builder.RootElement.ToString());
 
 int[] years = [2012, 2016, 2024];
