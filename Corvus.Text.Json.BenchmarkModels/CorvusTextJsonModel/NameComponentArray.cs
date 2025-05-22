@@ -48,6 +48,69 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
         _parent.WriteElementTo(_idx, writer);
     }
 
+    /// <summary>
+    ///   Gets a string representation for the current value appropriate to the value type.
+    /// </summary>
+    /// <remarks>
+    ///   <para>
+    ///     For JsonElement built from <see cref="JsonDocument"/>:
+    ///   </para>
+    ///
+    ///   <para>
+    ///     For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
+    ///   </para>
+    ///
+    ///   <para>
+    ///     For <see cref="JsonValueKind.True"/>, <see cref="bool.TrueString"/> is returned.
+    ///   </para>
+    ///
+    ///   <para>
+    ///     For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
+    ///   </para>
+    ///
+    ///   <para>
+    ///     For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
+    ///   </para>
+    ///
+    ///   <para>
+    ///     For other types, the value of <see cref="GetRawText"/>() is returned.
+    ///   </para>
+    /// </remarks>
+    /// <returns>
+    ///   A string representation for the current value appropriate to the value type.
+    /// </returns>
+    /// <exception cref="ObjectDisposedException">
+    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// </exception>
+    public override string ToString()
+    {
+        switch (TokenType)
+        {
+            case JsonTokenType.None:
+            case JsonTokenType.Null:
+                return string.Empty;
+            case JsonTokenType.True:
+                return bool.TrueString;
+            case JsonTokenType.False:
+                return bool.FalseString;
+            case JsonTokenType.Number:
+            case JsonTokenType.StartArray:
+            case JsonTokenType.StartObject:
+            {
+                // null parent should have hit the None case
+                return _parent.GetRawValueAsString(_idx);
+            }
+            case JsonTokenType.String:
+                return _parent.GetString(_idx, JsonTokenType.String)!;
+            case JsonTokenType.Comment:
+            case JsonTokenType.EndArray:
+            case JsonTokenType.EndObject:
+            default:
+                Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
+                return string.Empty;
+        }
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
     {
@@ -311,6 +374,69 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             CheckValidInstance();
 
             _parent.WriteElementTo(_idx, writer);
+        }
+
+        /// <summary>
+        ///   Gets a string representation for the current value appropriate to the value type.
+        /// </summary>
+        /// <remarks>
+        ///   <para>
+        ///     For JsonElement built from <see cref="JsonDocument"/>:
+        ///   </para>
+        ///
+        ///   <para>
+        ///     For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
+        ///   </para>
+        ///
+        ///   <para>
+        ///     For <see cref="JsonValueKind.True"/>, <see cref="bool.TrueString"/> is returned.
+        ///   </para>
+        ///
+        ///   <para>
+        ///     For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
+        ///   </para>
+        ///
+        ///   <para>
+        ///     For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
+        ///   </para>
+        ///
+        ///   <para>
+        ///     For other types, the value of <see cref="GetRawText"/>() is returned.
+        ///   </para>
+        /// </remarks>
+        /// <returns>
+        ///   A string representation for the current value appropriate to the value type.
+        /// </returns>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        public override string ToString()
+        {
+            switch (TokenType)
+            {
+                case JsonTokenType.None:
+                case JsonTokenType.Null:
+                    return string.Empty;
+                case JsonTokenType.True:
+                    return bool.TrueString;
+                case JsonTokenType.False:
+                    return bool.FalseString;
+                case JsonTokenType.Number:
+                case JsonTokenType.StartArray:
+                case JsonTokenType.StartObject:
+                {
+                    // null parent should have hit the None case
+                    return _parent.GetRawValueAsString(_idx);
+                }
+                case JsonTokenType.String:
+                    return _parent.GetString(_idx, JsonTokenType.String)!;
+                case JsonTokenType.Comment:
+                case JsonTokenType.EndArray:
+                case JsonTokenType.EndObject:
+                default:
+                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
+                    return string.Empty;
+            }
         }
 
 #if NET

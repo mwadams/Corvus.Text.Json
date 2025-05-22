@@ -1515,7 +1515,7 @@ namespace Corvus.Text.Json
                         return _parent.GetRawValueAsString(_idx);
                     }
                 case JsonTokenType.String:
-                    return GetString()!;
+                    return _parent.GetString(_idx, JsonTokenType.String)!;
                 case JsonTokenType.Comment:
                 case JsonTokenType.EndArray:
                 case JsonTokenType.EndObject:

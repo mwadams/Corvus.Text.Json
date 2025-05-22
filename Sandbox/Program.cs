@@ -169,6 +169,7 @@ using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocum
     workspace,
     static (ref JsonObjectBuilder o) =>
     {
+        o.Add("age"u8, 51);
         o.Add(
             "name"u8,
             static (ref JsonObjectBuilder o) =>
@@ -183,7 +184,6 @@ using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocum
                         a.Add("James"u8);
                     });
             });
-        o.Add("age"u8, 52);
         o.Add("competedInYears"u8,
             static (ref JsonArrayBuilder a) =>
             {
@@ -220,6 +220,13 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocument(
         }
     }));
 
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
+
+Console.WriteLine(docBuilder.RootElement.ToString());
+
 using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
     workspace,
     age: 51,
@@ -238,6 +245,16 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
         }
     }));
 
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
+
+Console.WriteLine(docBuilder2.RootElement.ToString());
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine();
 
 Person.Mutable mutablePerson = docBuilder.RootElement;
 // Implicit conversion from mutable to immutable.
