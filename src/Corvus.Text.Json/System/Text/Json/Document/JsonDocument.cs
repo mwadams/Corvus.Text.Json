@@ -5,6 +5,8 @@
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+
 #if NET
 using System.Globalization;
 #endif
@@ -195,8 +197,19 @@ namespace Corvus.Text.Json
             return row.HasComplexChildren;
         }
 
-        protected void Enlarge(int v, ref byte[] byteArray)
+        protected void Enlarge(int v, [NotNull] ref byte[]? byteArray)
         {
+            if (byteArray is null)
+            {
+                byteArray = ArrayPool<byte>.Shared.Rent(Math.Max(16384, v));
+                return;
+            }
+
+            if (byteArray.Length > v)
+            {
+                return;
+            }
+
             byte[] toReturn = byteArray;
 
             // Allow the data to grow up to maximum possible capacity (~2G bytes) before encountering overflow.
@@ -274,14 +287,7 @@ namespace Corvus.Text.Json
             ReadOnlySpan<byte> valueUtf8 = value ? JsonConstants.TrueValue : JsonConstants.FalseValue;
             int offset = _valueOffset;
             int length = valueUtf8.Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
 #if NET
             BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Boolean);
@@ -306,14 +312,7 @@ namespace Corvus.Text.Json
 
             int offset = _valueOffset;
             int length = JsonConstants.NullValue.Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
 #if NET
             BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Null);
@@ -334,14 +333,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatGuidLength + 2;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -372,14 +364,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatInt64Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -402,14 +387,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatUInt64Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -432,14 +410,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatInt64Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -463,14 +434,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatUInt64Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -493,14 +457,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatInt64Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -524,14 +481,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatUInt64Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -554,14 +504,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatInt64Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -585,14 +528,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatUInt64Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -615,14 +551,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatSingleLength;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -645,14 +574,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatDoubleLength;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -675,14 +597,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatDecimalLength;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -706,14 +621,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatInt128Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -733,14 +641,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatUInt128Length;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -759,14 +660,7 @@ namespace Corvus.Text.Json
             int offset = _valueOffset;
             int result = offset;
             int length = JsonConstants.MaximumFormatHalfLength;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
-            }
-            else
-            {
-                Enlarge(length, ref _valueBacking);
-            }
+            Enlarge(length, ref _valueBacking);
 
             offset += 4;
 
@@ -786,14 +680,7 @@ namespace Corvus.Text.Json
             int index = escapedPropertyName.IndexOf(JsonConstants.BackSlash);
             Debug.Assert(index >= 0);
             int maxRequiredLength = escapedPropertyName.Length + 4;
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(maxRequiredLength);
-            }
-            else
-            {
-                Enlarge(maxRequiredLength, ref _valueBacking);
-            }
+            Enlarge(maxRequiredLength, ref _valueBacking);
 
             int offset = _valueOffset;
             int length = index;
@@ -829,14 +716,7 @@ namespace Corvus.Text.Json
             // We write the value buffer offset here, to save doing it again later.
             _valueOffset += unescapedString.Length + 4;
 
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(_valueOffset);
-            }
-            else
-            {
-                Enlarge(_valueOffset, ref _valueBacking);
-            }
+            Enlarge(_valueOffset, ref _valueBacking);
 
             uint length = (uint)unescapedString.Length;
             if (length > 0x0FFFFFFF)
@@ -869,14 +749,7 @@ namespace Corvus.Text.Json
 
             int maxRequiredSize = valueIdx == -1 ? utf8Value.Length + 2 + 4 : JsonWriterHelper.GetMaxEscapedLength(utf8Value.Length, valueIdx) + 2 + 4;
 
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(maxRequiredSize);
-            }
-            else
-            {
-                Enlarge(_valueOffset + maxRequiredSize, ref _valueBacking);
-            }
+            Enlarge(_valueOffset + maxRequiredSize, ref _valueBacking);
 
             int written;
 
@@ -927,14 +800,7 @@ namespace Corvus.Text.Json
             // We write the value buffer offset here, to save doing it again later.
             _valueOffset += escapedString.Length + 4;
 
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(_valueOffset);
-            }
-            else
-            {
-                Enlarge(_valueOffset, ref _valueBacking);
-            }
+            Enlarge(_valueOffset, ref _valueBacking);
 
             uint length = (uint)escapedString.Length + 2;
             if (length > 0x0FFFFFFF)
@@ -966,14 +832,7 @@ namespace Corvus.Text.Json
             // We write the value buffer offset here, to save doing it again later.
             _valueOffset += unescapedNumberValue.Length + 4;
 
-            if (_valueBacking is null)
-            {
-                _valueBacking = ArrayPool<byte>.Shared.Rent(_valueOffset);
-            }
-            else
-            {
-                Enlarge(_valueOffset, ref _valueBacking);
-            }
+            Enlarge(_valueOffset, ref _valueBacking);
 
             uint length = (uint)unescapedNumberValue.Length;
             if (length > 0x0FFFFFFF)

@@ -19,29 +19,28 @@ namespace Corvus.Text.Json.Benchmarks
 
             config.AddJob(
                 Job.Default
-                    .WithRuntime(CoreRuntime.Core80)
-                    .WithOutlierMode(OutlierMode.RemoveAll)
-                    .WithStrategy(RunStrategy.Throughput));
-
-            config.AddJob(
-                Job.Default
-                    .AsBaseline()
-                    .WithRuntime(CoreRuntime.Core90)
-                    .WithOutlierMode(OutlierMode.RemoveAll)
-                    .WithStrategy(RunStrategy.Throughput));
-
-
-            config.AddJob(
-                Job.Default
                     .WithRuntime(CoreRuntime.Core10_0)
                     .WithOutlierMode(OutlierMode.RemoveAll)
                     .WithStrategy(RunStrategy.Throughput));
 
-            config.AddJob(
-                Job.Default
-                    .WithRuntime(ClrRuntime.Net481)
-                    .WithOutlierMode(OutlierMode.RemoveAll)
-                    .WithStrategy(RunStrategy.Throughput));
+            ////config.AddJob(
+            ////    Job.Default
+            ////        .AsBaseline()
+            ////        .WithRuntime(CoreRuntime.Core90)
+            ////        .WithOutlierMode(OutlierMode.RemoveAll)
+            ////        .WithStrategy(RunStrategy.Throughput));
+
+            ////config.AddJob(
+            ////    Job.Default
+            ////        .WithRuntime(CoreRuntime.Core80)
+            ////        .WithOutlierMode(OutlierMode.RemoveAll)
+            ////        .WithStrategy(RunStrategy.Throughput));
+
+            ////config.AddJob(
+            ////    Job.Default
+            ////        .WithRuntime(ClrRuntime.Net481)
+            ////        .WithOutlierMode(OutlierMode.RemoveAll)
+            ////        .WithStrategy(RunStrategy.Throughput));
 
             BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(config: config);
         }

@@ -93,8 +93,8 @@ public readonly struct PersonName : IJsonElement<PersonName>
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1, -1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.StartObject();
         Builder.Create(ref cvb, firstName, lastName, otherNames);
         cvb.EndObject();
@@ -105,8 +105,8 @@ public readonly struct PersonName : IJsonElement<PersonName>
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1, -1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
         documentBuilder.InsertAndDispose(ref cvb);
         return documentBuilder;
@@ -467,7 +467,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
 
         internal static Builder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
         {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, targetIndex, initialElementCount);
+            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
             return new Builder(builder);
         }
 

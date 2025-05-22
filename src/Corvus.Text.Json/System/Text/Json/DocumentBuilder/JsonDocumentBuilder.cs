@@ -3,6 +3,7 @@
 
 using System.Buffers;
 using System.Buffers.Text;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -22,6 +23,18 @@ namespace Corvus.Text.Json
         {
             _workspace = workspace;
         }
+
+#if DEBUG
+        public void EnumerateRows()
+        {
+            List<DbRow> results = [];
+            for (int i = 0; i < _parsedData.Length; i += DbRow.Size)
+            {
+                results.Add(_parsedData.Get(i));
+            }
+        }
+#endif
+
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IJsonDocument.IsDisposable => true;
@@ -68,13 +81,18 @@ namespace Corvus.Text.Json
             _parsedData = MetadataDb.CreateRented(metadataDbBytes, metadataDbLength, convertToAlloc);
         }
 
-        internal void Initialize(int parentWorkspaceIndex, int initialElementCount)
+        internal void Initialize(int parentWorkspaceIndex, int initialElementCount, int initialValueBufferSize)
         {
             _parentWorkspaceIndex = parentWorkspaceIndex;
 
             if (initialElementCount >= 0)
             {
                 _parsedData = MetadataDb.CreateRented(initialElementCount * DbRow.Size, convertToAlloc: false);
+            }
+
+            if (initialValueBufferSize > 0)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(initialValueBufferSize);
             }
         }
 
@@ -1164,7 +1182,9 @@ namespace Corvus.Text.Json
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {
+                int currentLength = db.Length;
                 AppendElement(i, workspace, ref db, workspaceDocumentIndex);
+                i += db.Length - currentLength - DbRow.Size;
             }
 
             complexObjectRow = _parsedData.Get(endIndex);

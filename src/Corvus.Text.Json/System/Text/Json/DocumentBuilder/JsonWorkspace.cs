@@ -57,12 +57,12 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public JsonDocumentBuilder<TElement> CreateDocument<TElement>(int initialCapacity = 30)
+        public JsonDocumentBuilder<TElement> CreateDocument<TElement>(int initialCapacity = 30, int initialValueBufferSize = 8192)
             where TElement : struct, IMutableJsonElement<TElement>
         {
             JsonDocumentBuilder<TElement> result = new(this);
             int index = GetDocumentIndex(result);
-            result.Initialize(index, initialCapacity);
+            result.Initialize(index, initialCapacity, initialValueBufferSize);
             return result;
         }
 

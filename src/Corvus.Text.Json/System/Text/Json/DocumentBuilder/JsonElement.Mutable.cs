@@ -15,7 +15,7 @@ namespace Corvus.Text.Json
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
             JsonObjectBuilder.BuildValue(builder, ref cvb);
             documentBuilder.InsertAndDispose(ref cvb);
             return documentBuilder;
@@ -26,7 +26,7 @@ namespace Corvus.Text.Json
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
             JsonArrayBuilder.BuildValue(builder, ref cvb);
             Debug.Assert(cvb.MemberCount == 1);
             documentBuilder.InsertAndDispose(ref cvb);

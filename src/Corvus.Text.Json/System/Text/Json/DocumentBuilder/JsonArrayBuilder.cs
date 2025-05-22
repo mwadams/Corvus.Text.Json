@@ -15,7 +15,7 @@ namespace Corvus.Text.Json
 
         internal static JsonArrayBuilder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
         {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, targetIndex, initialElementCount);
+            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
             return new JsonArrayBuilder(builder);
         }
 

@@ -8,9 +8,13 @@ namespace Corvus.Text.Json
 {
     public abstract partial class JsonDocument
     {
+        [DebuggerDisplay("{DebuggerDisplay,nq}")]
         [StructLayout(LayoutKind.Sequential)]
         internal readonly struct DbRow
         {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private string DebuggerDisplay => $"DbRow: TokenType = {TokenType}, RowCount: {(FromExternalDocument ? "External document" : NumberOfRows)}";
+
             internal const int Size = 12;
 
             // Sign bit indicates whether this is from an external document.

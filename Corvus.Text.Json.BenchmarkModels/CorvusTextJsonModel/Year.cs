@@ -63,8 +63,8 @@ public readonly struct Year : IJsonElement<Year>
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1, -1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.AddItem(year);
         Debug.Assert(cvb.MemberCount == 1);
         documentBuilder.InsertAndDispose(ref cvb);

@@ -220,7 +220,7 @@ public readonly struct Person : IJsonElement<Person>
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.StartObject();
         Builder.Create(ref cvb, age, name, competedInYears);
         cvb.EndObject();
@@ -232,7 +232,7 @@ public readonly struct Person : IJsonElement<Person>
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 0, initialCapacity);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
         documentBuilder.InsertAndDispose(ref cvb);
         return documentBuilder;
@@ -470,7 +470,7 @@ public readonly struct Person : IJsonElement<Person>
 
         internal static Builder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
         {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, targetIndex, initialElementCount);
+            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
             return new Builder(builder);
         }
 
@@ -715,7 +715,7 @@ public readonly struct Person : IJsonElement<Person>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: false,
+                usingEvaluatedProperties: true,
                 usingEvaluatedItems: false,
                 resultsCollector: resultsCollector);
 

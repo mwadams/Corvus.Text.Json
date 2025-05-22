@@ -4,11 +4,11 @@
 using System;
 using System.Buffers;
 using System.Buffers.Text;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Xml.Linq;
 
 namespace Corvus.Text.Json
 {
@@ -64,7 +64,18 @@ namespace Corvus.Text.Json
             _extraPooledByteBufferWriter = extraPooledByteBufferWriter;
             _isDisposable = isDisposable;
         }
-        
+
+#if DEBUG
+        public void EnumerateRows()
+        {
+            List<DbRow> results = [];
+            for(int i = 0; i < _parsedData.Length; i += DbRow.Size)
+            {
+                results.Add(_parsedData.Get(i));
+            }
+        }
+#endif
+
         /// <inheritdoc />
         public void Dispose()
         {
@@ -1127,7 +1138,9 @@ namespace Corvus.Text.Json
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {
+                int currentLength = db.Length;
                 AppendElement(i, ref db, workspaceDocumentIndex);
+                i += db.Length - currentLength - DbRow.Size;
             }
 
             complexObjectRow = _parsedData.Get(endIndex);
