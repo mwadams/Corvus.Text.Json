@@ -14,25 +14,31 @@ namespace Corvus.Text.Json
 
         int ParentWorkspaceIndex { get; }
 
-        int WriteRawNumberValue(ReadOnlySpan<byte> value);
-        int EscapeAndWriteStringValue(ReadOnlySpan<byte> value);
-        void WriteValue(Guid value);
-        void WriteValue(sbyte value);
-        void WriteValue(byte value);
-        void WriteValue(int value);
-        void WriteValue(uint value);
-        void WriteValue(long value);
-        void WriteValue(ulong value);
-        void WriteValue(short value);
-        void WriteValue(ushort value);
-        void WriteValue(float value);
-        void WriteValue(double value);
-        void WriteValue(decimal value);
+        JsonWorkspace Workspace { get; }
+
+        int StoreRawNumberValue(ReadOnlySpan<byte> value);
+        int StoreNullValue();
+        int StoreBooleanValue(bool value);
+        int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping);
+        int StoreRawStringValue(ReadOnlySpan<byte> value);
+        int StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString);
+        int StoreValue(Guid value);
+        int StoreValue(sbyte value);
+        int StoreValue(byte value);
+        int StoreValue(int value);
+        int StoreValue(uint value);
+        int StoreValue(long value);
+        int StoreValue(ulong value);
+        int StoreValue(short value);
+        int StoreValue(ushort value);
+        int StoreValue(float value);
+        int StoreValue(double value);
+        int StoreValue(decimal value);
 
 #if NET
-        void WriteValue(Int128 value);
-        void WriteValue(UInt128 value);
-        void WriteValue(Half value);
+        int StoreValue(Int128 value);
+        int StoreValue(UInt128 value);
+        int StoreValue(Half value);
 #endif
 
 

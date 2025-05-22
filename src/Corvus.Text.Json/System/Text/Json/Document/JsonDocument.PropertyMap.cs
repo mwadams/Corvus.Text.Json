@@ -246,7 +246,7 @@ namespace Corvus.Text.Json
                     Debug.Assert(propertyRow.LocationOrIndex >= 0, "The property must be local if it has complex children");
 
                     ReadOnlyMemory<byte> rawName = GetRawSimpleValueUnsafe(index, false);
-                    ReadOnlySpan<byte> unescapedName = UnescapeAndWriteUnescapedStringValue(rawName.Span, out int dynamicValueOffset);
+                    ReadOnlySpan<byte> unescapedName = UnescapeAndStoreUnescapedStringValue(rawName.Span, out int dynamicValueOffset);
                     ulong hashCode = PropertyMap.GetHashCode(unescapedName);
                     ref int bucket = ref PropertyMap.GetBucket(buckets, hashCode, size);
                     int entryIndex = propertyIndex * PropertyMap.Entry.Size;

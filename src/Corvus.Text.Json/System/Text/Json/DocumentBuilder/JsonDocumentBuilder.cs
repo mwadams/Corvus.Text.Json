@@ -29,6 +29,9 @@ namespace Corvus.Text.Json
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int IMutableJsonDocument.ParentWorkspaceIndex => _parentWorkspaceIndex;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        JsonWorkspace IMutableJsonDocument.Workspace => _workspace;
+
 #if NET
         public T RootElement => T.CreateInstance(this, 0);
 #else
@@ -817,18 +820,16 @@ namespace Corvus.Text.Json
             switch (row.TokenType)
             {
                 case JsonTokenType.StartObject:
-                    writer.WriteStartObject();
                     WriteComplexElementToUnsafe(index, writer);
                     return;
                 case JsonTokenType.StartArray:
-                    writer.WriteStartArray();
                     WriteComplexElementToUnsafe(index, writer);
                     return;
                 case JsonTokenType.String:
-                    writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                    writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(index, includeQuotes: false).Span);
                     return;
                 case JsonTokenType.Number:
-                    writer.WriteNumberValue(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                    writer.WriteNumberValue(GetRawSimpleValueUnsafe(index, includeQuotes: false).Span);
                     return;
                 case JsonTokenType.True:
                     writer.WriteBooleanValue(value: true);
@@ -850,7 +851,7 @@ namespace Corvus.Text.Json
         {
             int endIndex = GetEndIndexUnsafe(index, true);
 
-            for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
+            for (int i = index; i < endIndex; i += DbRow.Size)
             {
                 DbRow row = _parsedData.Get(i);
 
@@ -858,10 +859,10 @@ namespace Corvus.Text.Json
                 switch (row.TokenType)
                 {
                     case JsonTokenType.String:
-                        writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                        writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(i, includeQuotes: false).Span);
                         continue;
                     case JsonTokenType.Number:
-                        writer.WriteNumberValue(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                        writer.WriteNumberValue(GetRawSimpleValueUnsafe(i, includeQuotes: false).Span);
                         continue;
                     case JsonTokenType.True:
                         writer.WriteBooleanValue(value: true);
@@ -885,7 +886,7 @@ namespace Corvus.Text.Json
                         writer.WriteEndArray();
                         continue;
                     case JsonTokenType.PropertyName:
-                        writer.WritePropertyNameUnescaped(GetRawSimpleValueUnsafe(row.LocationOrIndex, includeQuotes: false).Span);
+                        writer.WritePropertyNameUnescaped(GetRawSimpleValueUnsafe(i, includeQuotes: false).Span);
                         continue;
                 }
 
@@ -1201,24 +1202,29 @@ namespace Corvus.Text.Json
             }
         }
 
-        int IMutableJsonDocument.WriteRawNumberValue(ReadOnlySpan<byte> value) => throw new NotImplementedException();
-        int IMutableJsonDocument.EscapeAndWriteStringValue(ReadOnlySpan<byte> value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(Guid value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(sbyte value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(byte value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(int value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(uint value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(long value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(ulong value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(short value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(ushort value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(float value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(double value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(decimal value) => throw new NotImplementedException();
+        int IMutableJsonDocument.StoreBooleanValue(bool value) => StoreBooleanValue(value);
+        int IMutableJsonDocument.StoreNullValue() => StoreNullValue();
+        int IMutableJsonDocument.StoreRawNumberValue(ReadOnlySpan<byte> value) => StoreRawNumberValue(value);
+        int IMutableJsonDocument.EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping) => EscapeAndStoreRawStringValue(value, out requiredEscaping);
+        int IMutableJsonDocument.StoreRawStringValue(ReadOnlySpan<byte> value) => StoreRawStringValue(value);
+        int IMutableJsonDocument.StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString) => StoreUnescapedStringValue(unescapedString);
+
+        int IMutableJsonDocument.StoreValue(Guid value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(sbyte value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(byte value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(int value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(uint value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(long value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(ulong value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(short value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(ushort value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(float value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(double value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(decimal value) => StoreValue(value);
 #if NET
-        void IMutableJsonDocument.WriteValue(Int128 value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(UInt128 value) => throw new NotImplementedException();
-        void IMutableJsonDocument.WriteValue(Half value) => throw new NotImplementedException();
+        int IMutableJsonDocument.StoreValue(Int128 value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(UInt128 value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(Half value) => StoreValue(value);
 #endif
         void IMutableJsonDocument.SetPropertyRawNumber(int objectIndex, ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value) => throw new NotImplementedException();
         void IMutableJsonDocument.SetPropertyRawString(int objectIndex, ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value) => throw new NotImplementedException();

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
 // We need to target netstandard2.0, so keep using ref for MemoryMarshal.Write
@@ -23,7 +24,7 @@ namespace Corvus.Text.Json
         //
         // Number
         // * First int
-        //   * Top bit is 0 if this is the token offset in the target document, 1 if it is a dynamic number
+        //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
         //   * 31 bits for token offset if the top bit is zero, or the dynamic value offset if the top bit is 1
         // * Second int
         //   * Top bit is set if the number uses scientific notation
@@ -34,7 +35,7 @@ namespace Corvus.Text.Json
         //
         // String, PropertyName
         // * First int
-        //   * Top bit is 0 if this is the token offset in the target document, or 1 if this is a dynamic value
+        //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
         //   * 31 bits for token offset if the top bit is zero, or the dynamic value offset if the top bit is 1
         // * Second int
         //   * Top bit is set if the string requires unescaping
@@ -45,7 +46,7 @@ namespace Corvus.Text.Json
         //
         // Other value types (True, False, Null)
         // * First int
-        //   * Top bit is unassigned / always clear
+        //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
         //   * 31 bits for token offset
         // * Second int
         //   * Top bit is unassigned / always clear
@@ -56,7 +57,7 @@ namespace Corvus.Text.Json
         //
         // EndObject
         // * First int
-        //   * Top bit is 0 if there are no external or dynamic property values, otherwise 1
+        //   * Top bit is unassigned / always clear
         //   * 31 bits for token offset
         // * Second int
         //   * Top bit is 1 if this object has a property map, otherwise 0
@@ -67,7 +68,7 @@ namespace Corvus.Text.Json
         //
         // EndArray
         // * First int
-        //   * Top bit is 0 if there are no external or dynamic property values, otherwise 1
+        //   * Top bit is unassigned / always clear
         //   * 31 bits for token offset
         // * Second int
         //   * Unassigned / always clear
@@ -77,7 +78,7 @@ namespace Corvus.Text.Json
         //
         // StartObject
         // * First int
-        //   * Top bit is unassigned / always clear
+        //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
         //   * 31 bits for token offset
         // * Second int
         //   * Top bit is unassigned / always clear
@@ -88,7 +89,7 @@ namespace Corvus.Text.Json
         //
         // StartArray
         // * First int
-        //   * Top bit is unassigned / always clear
+        //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
         //   * 31 bits for token offset
         // * Second int
         //   * Top bit is set if the array contains other arrays or objects ("complex" types)
@@ -255,6 +256,20 @@ namespace Corvus.Text.Json
                 }
 
                 DbRow row = new DbRow(tokenType, startLocation, length);
+                MemoryMarshal.Write(_data.AsSpan(Length), ref row);
+                Length += DbRow.Size;
+            }
+
+            internal void AppendDynamicSimpleValue(JsonTokenType tokenType, int location, bool requiresUnescapingOrHasExponent)
+            {
+                Debug.Assert(tokenType >= JsonTokenType.PropertyName);
+
+                if (Length >= _data.Length - DbRow.Size)
+                {
+                    Enlarge();
+                }
+
+                DbRow row = new DbRow(tokenType, location, requiresUnescapingOrHasExponent ? -1 : 1);
                 MemoryMarshal.Write(_data.AsSpan(Length), ref row);
                 Length += DbRow.Size;
             }

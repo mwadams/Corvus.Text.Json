@@ -1,8 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+
 using System.Buffers;
+using System.Buffers.Text;
 using System.Diagnostics;
+#if NET
+using System.Globalization;
+#endif
 using System.Threading;
 
 namespace Corvus.Text.Json
@@ -31,6 +36,11 @@ namespace Corvus.Text.Json
         protected int _valueOffset;
         [CLSCompliant(false)]
         protected MetadataDb _parsedData;
+
+        // These are the indices of the one-and-only instances of the "null", "true", and "false" text in this document.
+        private int _nullIndex = -1;
+        private int _trueIndex = -1;
+        private int _falseIndex = -1;
 
         protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes);
 
@@ -247,7 +257,531 @@ namespace Corvus.Text.Json
             ArrayPool<int>.Shared.Return(toReturn);
         }
 
-        protected ReadOnlySpan<byte> UnescapeAndWriteUnescapedStringValue(ReadOnlySpan<byte> escapedPropertyName, out int dynamicValueOffset)
+        protected int StoreBooleanValue(bool value)
+        {
+            ref int valueIndex = ref _falseIndex;
+
+            if (value)
+            {
+                valueIndex = ref _trueIndex;
+            }
+
+            if (valueIndex >= 0)
+            {
+                return valueIndex;
+            }
+
+            ReadOnlySpan<byte> valueUtf8 = value ? JsonConstants.TrueValue : JsonConstants.FalseValue;
+            int offset = _valueOffset;
+            int length = valueUtf8.Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Boolean);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Boolean);
+#endif
+
+            valueIndex = offset;
+
+            offset += 4;
+            valueUtf8.CopyTo(_valueBacking.AsSpan(offset));
+            _valueOffset = offset + length;
+            return valueIndex;
+        }
+
+        protected int StoreNullValue()
+        {
+            if (_nullIndex >= 0)
+            {
+                return _nullIndex;
+            }
+
+            int offset = _valueOffset;
+            int length = JsonConstants.NullValue.Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Null);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Null);
+#endif
+
+            _nullIndex = offset;
+
+            offset += 4;
+            JsonConstants.NullValue.CopyTo(_valueBacking.AsSpan(offset));
+            _valueOffset = offset + length;
+            return _nullIndex;
+        }
+
+        protected int StoreValue(Guid value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatGuidLength + 2;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            length += 2;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#endif
+
+            _valueOffset = offset;
+            return result;
+
+        }
+
+        [CLSCompliant(false)]
+        protected int StoreValue(sbyte value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatInt64Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(byte value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatUInt64Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(int value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatInt64Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        [CLSCompliant(false)]
+        protected int StoreValue(uint value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatUInt64Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(long value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatInt64Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        [CLSCompliant(false)]
+        protected int StoreValue(ulong value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatUInt64Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(short value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatInt64Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        [CLSCompliant(false)]
+        protected int StoreValue(ushort value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatUInt64Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(float value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatSingleLength;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(double value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatDoubleLength;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(decimal value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatDecimalLength;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+#if NET
+        protected int StoreValue(Int128 value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatInt128Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = value.TryFormat(_valueBacking.AsSpan(offset), out length, provider: CultureInfo.InvariantCulture);
+            Debug.Assert(success);
+            offset += length;
+
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        [CLSCompliant(false)]
+        protected int StoreValue(UInt128 value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatUInt128Length;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = value.TryFormat(_valueBacking.AsSpan(offset), out length, provider: CultureInfo.InvariantCulture);
+            Debug.Assert(success);
+            offset += length;
+
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(Half value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatHalfLength;
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(length);
+            }
+            else
+            {
+                Enlarge(length, ref _valueBacking);
+            }
+
+            offset += 4;
+
+            bool success = value.TryFormat(_valueBacking.AsSpan(offset), out length, provider: CultureInfo.InvariantCulture);
+            Debug.Assert(success);
+            offset += length;
+
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+
+            _valueOffset = offset;
+            return result;
+        }
+#endif
+
+        protected ReadOnlySpan<byte> UnescapeAndStoreUnescapedStringValue(ReadOnlySpan<byte> escapedPropertyName, out int dynamicValueOffset)
         {
             int index = escapedPropertyName.IndexOf(JsonConstants.BackSlash);
             Debug.Assert(index >= 0);
@@ -289,7 +823,7 @@ namespace Corvus.Text.Json
             return _valueBacking.AsSpan(valueOffset, length);
         }
 
-        protected int WriteUnescapedStringValue(ReadOnlySpan<byte> unescapedString)
+        protected int StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString)
         {
             int offset = _valueOffset;
             // We write the value buffer offset here, to save doing it again later.
@@ -324,7 +858,8 @@ namespace Corvus.Text.Json
             return offset;
         }
 
-        protected int WriteStringValue(ReadOnlySpan<byte> utf8Value)
+
+        protected int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> utf8Value, out bool requiredEscaping)
         {
             int offset = _valueOffset;
 
@@ -332,7 +867,7 @@ namespace Corvus.Text.Json
 
             Debug.Assert(valueIdx >= -1 && valueIdx < utf8Value.Length);
 
-            int maxRequiredSize = valueIdx == -1 ? utf8Value.Length + 2 : JsonWriterHelper.GetMaxEscapedLength(utf8Value.Length, valueIdx) + 2;
+            int maxRequiredSize = valueIdx == -1 ? utf8Value.Length + 2 + 4 : JsonWriterHelper.GetMaxEscapedLength(utf8Value.Length, valueIdx) + 2 + 4;
 
             if (_valueBacking is null)
             {
@@ -346,15 +881,18 @@ namespace Corvus.Text.Json
             int written;
 
             int index = offset + 4;
+
             _valueBacking[index++] = JsonConstants.Quote;
 
             if (valueIdx != -1)
             {
-                JsonWriterHelper.EscapeString(utf8Value, _valueBacking.AsSpan(offset + 4), valueIdx, null, out written);
+                requiredEscaping = true;
+                JsonWriterHelper.EscapeString(utf8Value, _valueBacking.AsSpan(index), valueIdx, null, out written);
                 index += written;
             }
             else
             {
+                requiredEscaping = false;
                 utf8Value.CopyTo(_valueBacking.AsSpan(index));
                 written = utf8Value.Length;
                 index += written;
@@ -379,6 +917,81 @@ namespace Corvus.Text.Json
 #else
             BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
 #endif
+            _valueOffset = index;
+            return offset;
+        }
+
+        protected int StoreRawStringValue(ReadOnlySpan<byte> escapedString)
+        {
+            int offset = _valueOffset;
+            // We write the value buffer offset here, to save doing it again later.
+            _valueOffset += escapedString.Length + 4;
+
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(_valueOffset);
+            }
+            else
+            {
+                Enlarge(_valueOffset, ref _valueBacking);
+            }
+
+            uint length = (uint)escapedString.Length + 2;
+            if (length > 0x0FFFFFFF)
+            {
+                ThrowHelper.ThrowArgumentException_ValueTooLarge(length);
+            }
+
+            // Shift it and OR in the value type.
+            length <<= 4;
+            length |= (uint)DynamicValueType.QuotedUtf8String;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
+#endif
+            int index = offset + 4;
+            _valueBacking[index++] = JsonConstants.Quote;
+            escapedString.CopyTo(_valueBacking.AsSpan(index));
+            index += escapedString.Length;
+            _valueBacking[index++] = JsonConstants.Quote;
+            return offset;
+        }
+
+        protected int StoreRawNumberValue(ReadOnlySpan<byte> unescapedNumberValue)
+        {
+            JsonWriterHelper.ValidateNumber(unescapedNumberValue);
+            int offset = _valueOffset;
+            // We write the value buffer offset here, to save doing it again later.
+            _valueOffset += unescapedNumberValue.Length + 4;
+
+            if (_valueBacking is null)
+            {
+                _valueBacking = ArrayPool<byte>.Shared.Rent(_valueOffset);
+            }
+            else
+            {
+                Enlarge(_valueOffset, ref _valueBacking);
+            }
+
+            uint length = (uint)unescapedNumberValue.Length;
+            if (length > 0x0FFFFFFF)
+            {
+                ThrowHelper.ThrowArgumentException_ValueTooLarge(length);
+            }
+
+            // Shift it and OR in the value type.
+            length <<= 4;
+            length |= (uint)DynamicValueType.Number;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
+#endif
+            unescapedNumberValue.CopyTo(_valueBacking.AsSpan(offset + 4));
+
             return offset;
         }
 
@@ -405,6 +1018,7 @@ namespace Corvus.Text.Json
             length >>= 4;
 
             int start;
+
             if (!includeQuotes && valueType == DynamicValueType.QuotedUtf8String)
             {
                 start = offset + 5;

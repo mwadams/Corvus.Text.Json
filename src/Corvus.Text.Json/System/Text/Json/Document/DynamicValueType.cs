@@ -9,5 +9,7 @@ namespace Corvus.Text.Json
         UnescapedUtf8String,
         QuotedUtf8String,
         Number,
+        Boolean,
+        Null
     }
 }
