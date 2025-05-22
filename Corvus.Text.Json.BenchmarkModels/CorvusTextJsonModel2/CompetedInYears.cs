@@ -27,6 +27,40 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
     }
 
     /// <summary>
+    ///   Get the name component at a specified index.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
+    /// </exception>
+    /// <exception cref="IndexOutOfRangeException">
+    ///   <paramref name="index"/> is not in the range [0, <see cref="GetArrayLength"/>()).
+    /// </exception>
+    /// <exception cref="ObjectDisposedException">
+    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// </exception>
+    public Year this[int index]
+    {
+        get
+        {
+            CheckValidInstance();
+
+            return _parent.GetArrayIndexElement<Year>(_idx, index);
+        }
+    }
+
+    public int GetArrayLength()
+    {
+        CheckValidInstance();
+        return _parent.GetArrayLength(_idx);
+    }
+
+    public ArrayEnumerator<Year> GetArrayEnumerator()
+    {
+        CheckValidInstance();
+        return new ArrayEnumerator<Year>(_parent, _idx);
+    }
+
+    /// <summary>
     ///   The <see cref="JsonValueKind"/> that the value is.
     /// </summary>
     /// <exception cref="ObjectDisposedException">
@@ -275,6 +309,41 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
 
             _parent = parent;
             _idx = idx;
+        }
+
+
+        /// <summary>
+        ///   Get the name component at a specified index.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
+        /// </exception>
+        /// <exception cref="IndexOutOfRangeException">
+        ///   <paramref name="index"/> is not in the range [0, <see cref="GetArrayLength"/>()).
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        public Year.Mutable this[int index]
+        {
+            get
+            {
+                CheckValidInstance();
+
+                return _parent.GetArrayIndexElement<Year.Mutable>(_idx, index);
+            }
+        }
+
+        public int GetArrayLength()
+        {
+            CheckValidInstance();
+            return _parent.GetArrayLength(_idx);
+        }
+
+        public ArrayEnumerator<Year.Mutable> GetArrayEnumerator()
+        {
+            CheckValidInstance();
+            return new ArrayEnumerator<Year.Mutable>(_parent, _idx);
         }
 
         /// <summary>

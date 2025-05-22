@@ -2,9 +2,10 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Benchmark.CorvusJsonSchema2;
+using Benchmark.CorvusTextJson2;
 using BenchmarkDotNet.Attributes;
 using CommunityToolkit.HighPerformance.Buffers;
+using Corvus.Text.Json;
 
 namespace ValidationBenchmarks;
 
@@ -46,9 +47,9 @@ public class BenchmarkBuildAndWrite
     [Benchmark]
     public bool BuildCorvusJsonSchema()
     {
-        Person person = Person.Create(
+        Benchmark.CorvusJsonSchema2.Person person = Benchmark.CorvusJsonSchema2.Person.Create(
             age: 51,
-            name: PersonName.Create(
+            name: Benchmark.CorvusJsonSchema2.PersonName.Create(
                 firstName: "Michael",
                 lastName: "Adams",
                 otherNames: ["Francis", "James"]),
@@ -62,23 +63,23 @@ public class BenchmarkBuildAndWrite
     [Benchmark]
     public bool BuildCorvusTextJson()
     {
-        using Corvus.Text.Json.JsonWorkspace workspace = new();
+        using JsonWorkspace workspace = new();
 
-        using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateDocument(
+        using JsonDocumentBuilder<Person.Mutable> person = Person.CreateDocument(
             workspace,
             age: 51,
-            name: new(static (ref Benchmark.CorvusTextJson.PersonName.Builder personName) =>
+            name: new(static (ref PersonName.Builder personName) =>
             {
                 personName.Create(
                     firstName: "Michael"u8,
                     lastName: "Adams"u8,
-                    otherNames: new(static (ref Benchmark.CorvusTextJson.NameComponentArray.Builder otherNames) =>
+                    otherNames: new(static (ref NameComponentArray.Builder otherNames) =>
                     {
                         otherNames.Add("Francis"u8);
                         otherNames.Add("James"u8);
                     }));
             }),
-            competedInYears: new(static (ref Benchmark.CorvusTextJson.CompetedInYears.Builder competedInYears) =>
+            competedInYears: new(static (ref CompetedInYears.Builder competedInYears) =>
             {
                 competedInYears.Add(2012);
                 competedInYears.Add(2016);

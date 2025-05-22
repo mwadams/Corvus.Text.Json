@@ -139,6 +139,17 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
         }
     }
 
+    public int GetArrayLength()
+    {
+        CheckValidInstance();
+        return _parent.GetArrayLength(_idx);
+    }
+
+    public ArrayEnumerator<NameComponent> GetArrayEnumerator()
+    {
+        CheckValidInstance();
+        return new ArrayEnumerator<NameComponent>(_parent, _idx);
+    }
 
     /// <summary>
     ///   The <see cref="JsonValueKind"/> that the value is.
@@ -300,6 +311,40 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
 
             _parent = parent;
             _idx = idx;
+        }
+
+        /// <summary>
+        ///   Get the name component at a specified index.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
+        /// </exception>
+        /// <exception cref="IndexOutOfRangeException">
+        ///   <paramref name="index"/> is not in the range [0, <see cref="GetArrayLength"/>()).
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        public NameComponent.Mutable this[int index]
+        {
+            get
+            {
+                CheckValidInstance();
+
+                return _parent.GetArrayIndexElement<NameComponent.Mutable>(_idx, index);
+            }
+        }
+
+        public int GetArrayLength()
+        {
+            CheckValidInstance();
+            return _parent.GetArrayLength(_idx);
+        }
+
+        public ArrayEnumerator<NameComponent.Mutable> GetArrayEnumerator()
+        {
+            CheckValidInstance();
+            return new ArrayEnumerator<NameComponent.Mutable>(_parent, _idx);
         }
 
         /// <summary>

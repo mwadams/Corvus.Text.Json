@@ -254,6 +254,45 @@ public readonly struct PersonName : IJsonElement<PersonName>
             _idx = idx;
         }
 
+        public NameComponent.Mutable FirstName
+        {
+            get
+            {
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponent.Mutable value))
+                {
+                    return value;
+                }
+
+                return default;
+            }
+        }
+
+        public NameComponent.Mutable LastName
+        {
+            get
+            {
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out NameComponent.Mutable value))
+                {
+                    return value;
+                }
+
+                return default;
+            }
+        }
+
+        public OtherNames.Mutable OtherNames
+        {
+            get
+            {
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames.Mutable value))
+                {
+                    return value;
+                }
+
+                return default;
+            }
+        }
+
         /// <summary>
         ///   The <see cref="JsonValueKind"/> that the value is.
         /// </summary>
