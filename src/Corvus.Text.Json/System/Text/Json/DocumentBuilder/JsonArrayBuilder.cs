@@ -46,7 +46,7 @@ namespace Corvus.Text.Json
 
         public void AddNull()
         {
-            _builder.AddNullItem();
+            _builder.AddItemNull();
         }
 
         public void Add(bool value)

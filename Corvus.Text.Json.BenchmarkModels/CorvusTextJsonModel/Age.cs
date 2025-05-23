@@ -67,7 +67,7 @@ public readonly struct Age : IJsonElement<Age>
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.AddItem(year);
         Debug.Assert(cvb.MemberCount == 1);
-        documentBuilder.InsertAndDispose(ref cvb);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }
 

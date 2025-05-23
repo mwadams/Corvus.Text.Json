@@ -1106,7 +1106,7 @@ namespace Corvus.Text.Json
             AppendElement(index, ref db, workspaceDocumentIndex);
         }
 
-        private void AppendElement(int index, ref MetadataDb db, int workspaceDocumentIndex)
+        private int AppendElement(int index, ref MetadataDb db, int workspaceDocumentIndex)
         {
             switch (_parsedData.GetJsonTokenType(index))
             {
@@ -1118,33 +1118,35 @@ namespace Corvus.Text.Json
                 case JsonTokenType.PropertyName:
                     DbRow row = _parsedData.Get(index);
                     db.AppendExternal(row.TokenType, index, 1, workspaceDocumentIndex);
-                    return;
+                    return 1;
 
                 case JsonTokenType.StartObject:
                 case JsonTokenType.StartArray:
-                    ProcessComplexObject(index, ref db, workspaceDocumentIndex);
-                    return;
+                    return ProcessComplexObject(index, ref db, workspaceDocumentIndex);
             }
 
             Debug.Fail($"Unexpected encounter with JsonTokenType {_parsedData.GetJsonTokenType(index)}");
+            return -1;
         }
 
-        private void ProcessComplexObject(int index, ref MetadataDb db, int workspaceDocumentIndex)
+        private int ProcessComplexObject(int index, ref MetadataDb db, int workspaceDocumentIndex)
         {
+            int count = 2;
             DbRow complexObjectRow = _parsedData.Get(index);
-            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
+            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.SizeOrLengthOrPropertyMapIndex, workspaceDocumentIndex);
 
             int endIndex = GetEndIndexUnsafe(index, false);
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {
-                int currentLength = db.Length;
-                AppendElement(i, ref db, workspaceDocumentIndex);
-                i += db.Length - currentLength - DbRow.Size;
+                int rowsAdded = AppendElement(i, ref db, workspaceDocumentIndex);
+                count += rowsAdded;
+                i += (rowsAdded - 1) * DbRow.Size;
             }
 
             complexObjectRow = _parsedData.Get(endIndex);
-            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
+            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.SizeOrLengthOrPropertyMapIndex, complexObjectRow.NumberOfRows);
+            return count;
         }
     }
 }

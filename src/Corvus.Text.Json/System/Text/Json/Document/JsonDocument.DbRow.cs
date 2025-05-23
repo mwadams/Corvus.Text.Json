@@ -13,7 +13,7 @@ namespace Corvus.Text.Json
         internal readonly struct DbRow
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private string DebuggerDisplay => $"DbRow: TokenType = {TokenType}, RowCount: {(FromExternalDocument ? "External document" : NumberOfRows)}";
+            private string DebuggerDisplay => $"DbRow: TokenType = {TokenType}, {(FromExternalDocument ? $"WorkspaceDocumentId: {NumberOfRows}" : $"NumberOfRows: {NumberOfRows}")}";
 
             internal const int Size = 12;
 
@@ -28,7 +28,7 @@ namespace Corvus.Text.Json
             // remaining nybbles are the number of rows to skip to get to the next value
             // This isn't limiting on the number of rows, since Span.MaxLength / sizeof(DbRow) can't
             // exceed that range.
-            private readonly uint _numberOfRowsAndTypeUnion;
+            private readonly uint _numberOfRowsExternalDocumentIndexAndTypeUnion;
 
             /// <summary>
             /// Index into the payload
@@ -57,12 +57,12 @@ namespace Corvus.Text.Json
             internal bool FromExternalDocument => (unchecked(_locationAndFromExternalDocumentUnion) & 0x8000_0000U) != 0;
 
             internal int NumberOfRows =>
-                (int)(_numberOfRowsAndTypeUnion & 0x0FFFFFFFU); // Number of rows that the current JSON element occupies within the database
+                (int)(_numberOfRowsExternalDocumentIndexAndTypeUnion & 0x0FFFFFFFU); // Number of rows that the current JSON element occupies within the database
 
             internal int WorkspaceDocumentId =>
-                (int)(_numberOfRowsAndTypeUnion & 0x0FFFFFFFU); // The workspace document ID, if this simple value is from an external document.
+                (int)(_numberOfRowsExternalDocumentIndexAndTypeUnion & 0x0FFFFFFFU); // The workspace document ID, if this simple value is from an external document.
 
-            internal JsonTokenType TokenType => (JsonTokenType)(_numberOfRowsAndTypeUnion >> 28);
+            internal JsonTokenType TokenType => (JsonTokenType)(_numberOfRowsExternalDocumentIndexAndTypeUnion >> 28);
 
             internal const int UnknownSize = -1;
 
@@ -83,7 +83,7 @@ namespace Corvus.Text.Json
 
                 _locationAndFromExternalDocumentUnion = (uint)externalIndex | 0x8000_0000U; // Add the sign bit to indicate that this is from an external document.
                 _sizeLengthOrPropertyMapIndexUnion = sizeOrLength;
-                _numberOfRowsAndTypeUnion = (unchecked((uint)jsonTokenType << 28) + (unchecked((uint)workspaceDocumentIndex) & 0x0FFFFFFFU));
+                _numberOfRowsExternalDocumentIndexAndTypeUnion = (unchecked((uint)jsonTokenType << 28) + (unchecked((uint)workspaceDocumentIndex) & 0x0FFFFFFFU));
             }
 
             /// <summary>
@@ -92,6 +92,7 @@ namespace Corvus.Text.Json
             /// <param name="jsonTokenType">The <see cref="JsonTokenType"/>.</param>
             /// <param name="location">The location of the value in the UTF8 backing.</param>
             /// <param name="sizeOrLength">The size or length of the entity.</param>
+            /// <param name="numberOfRows">The number of rows in the entity.</param>"
             internal DbRow(JsonTokenType jsonTokenType, int location, int sizeOrLength)
             {
                 Debug.Assert(jsonTokenType > JsonTokenType.None && jsonTokenType <= JsonTokenType.Null, "The token type is out of the valid range.");
@@ -101,7 +102,7 @@ namespace Corvus.Text.Json
 
                 _locationAndFromExternalDocumentUnion = (uint)location;
                 _sizeLengthOrPropertyMapIndexUnion = sizeOrLength;
-                _numberOfRowsAndTypeUnion = unchecked((uint)jsonTokenType << 28);
+                _numberOfRowsExternalDocumentIndexAndTypeUnion = unchecked((uint)jsonTokenType << 28) | 1U;
             }
 
             internal bool IsSimpleValue => TokenType >= JsonTokenType.PropertyName;

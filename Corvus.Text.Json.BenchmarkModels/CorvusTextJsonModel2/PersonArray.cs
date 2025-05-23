@@ -164,7 +164,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
-        documentBuilder.InsertAndDispose(ref cvb);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }
 

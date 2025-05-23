@@ -159,10 +159,20 @@ using ParsedJsonDocument<Person> documentB6 = ParsedJsonDocument<Person>.Parse(
         }
         """);
 
+using ParsedJsonDocument<Person> documentB7 = ParsedJsonDocument<Person>.Parse(
+        """
+        {
+            "name": { "lastName": "Adams", "otherNames": "Francis James" },
+            "age": -7,
+            "competedInYears": [2012, 2016, 2024]
+        }
+        """);
+
 Console.WriteLine(documentB3.RootElement.IsSchemaMatch() ? "Person B3 is a match" : "Person B3 is not a match");
 Console.WriteLine(documentB4.RootElement.IsSchemaMatch() ? "Person B4 is a match" : "Person B4 is not a match");
 Console.WriteLine(documentB5.RootElement.IsSchemaMatch() ? "Person B5 is a match" : "Person B5 is not a match");
 Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is a match" : "Person B6 is not a match");
+Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is a match" : "Person B7 is not a match");
 
 
 Console.WriteLine(JsonElementHelpers.DeepEquals(documentB1.RootElement, documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
@@ -174,7 +184,9 @@ Console.WriteLine();
 Console.WriteLine(documentB3.RootElement);
 
 Console.WriteLine();
-Console.WriteLine("************");
+Console.WriteLine("**************");
+Console.WriteLine("*** BEFORE ***");
+Console.WriteLine("**************");
 Console.WriteLine();
 
 // Create a workspace for manipulating documents
@@ -183,6 +195,72 @@ using JsonWorkspace workspace = new();
 using JsonDocumentBuilder<JsonElement.Mutable> initializedBuilder = documentB1.RootElement.CreateDocument(workspace);
 
 Console.WriteLine(initializedBuilder.RootElement.ToString());
+
+Console.WriteLine();
+Console.WriteLine("*************");
+Console.WriteLine("*** AFTER ***");
+Console.WriteLine("*************");
+Console.WriteLine();
+
+initializedBuilder.RootElement.SetProperty("age"u8, 51);
+
+Console.WriteLine(initializedBuilder.RootElement.ToString());
+
+
+Console.WriteLine();
+Console.WriteLine("**************");
+Console.WriteLine("*** BEFORE ***");
+Console.WriteLine("**************");
+Console.WriteLine();
+
+using ParsedJsonDocument<JsonElement> documentB8 = ParsedJsonDocument<JsonElement>.Parse(
+        """
+        {
+            "name": "John",
+            "age": 30,
+            "city": "New York",
+            "slightlyLonger": true,
+            "complex" : {"first": 13, "second": "foo", "third": [4,5,{"bar": "baz"}] }
+        }
+        """);
+
+using JsonDocumentBuilder<JsonElement.Mutable> b8Builder = documentB8.RootElement.CreateDocument(workspace);
+
+Console.WriteLine(b8Builder.RootElement.ToString());
+
+b8Builder.RootElement.SetProperty("complex"u8, 42);
+
+Console.WriteLine();
+Console.WriteLine("*************");
+Console.WriteLine("*** AFTER ***");
+Console.WriteLine("*************");
+Console.WriteLine();
+
+Console.WriteLine(b8Builder.RootElement.ToString());
+
+
+
+Console.WriteLine();
+Console.WriteLine("**************");
+Console.WriteLine("*** BEFORE ***");
+Console.WriteLine("**************");
+Console.WriteLine();
+
+using JsonDocumentBuilder<JsonElement.Mutable> b8Builder2 = documentB8.RootElement.CreateDocument(workspace);
+
+Console.WriteLine(b8Builder2.RootElement.ToString());
+
+Console.WriteLine();
+Console.WriteLine("*************");
+Console.WriteLine("*** AFTER ***");
+Console.WriteLine("*************");
+Console.WriteLine();
+
+b8Builder2.RootElement.GetProperty("complex"u8).GetProperty("third")[2].SetProperty("aNumber"u8, 42);
+b8Builder2.RootElement.GetProperty("complex"u8).GetProperty("third").SetItem(1, null);
+b8Builder2.RootElement.GetProperty("complex"u8).GetProperty("third").SetItem(2, null);
+
+Console.WriteLine(b8Builder2.RootElement.ToString());
 
 #if NET
 

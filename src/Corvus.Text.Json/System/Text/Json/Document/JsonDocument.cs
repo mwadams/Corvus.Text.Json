@@ -177,7 +177,7 @@ namespace Corvus.Text.Json
 
                 if (!row.IsSimpleValue)
                 {
-                    objectOffset += DbRow.Size * row.NumberOfRows;
+                    objectOffset = GetEndIndexUnsafe(arrayIndex, includeEndElement: false);
                 }
 
                 elementCount++;
@@ -949,7 +949,7 @@ namespace Corvus.Text.Json
                 return false;
             }
 
-            int endIndex = checked(row.NumberOfRows * DbRow.Size + startIndex);
+            int endIndex = GetEndIndexUnsafe(startIndex, false);// checked(row.NumberOfRows * DbRow.Size + startIndex);
 
             DbRow endObjectRow = _parsedData.Get(endIndex);
             int propertyMapIndex = endObjectRow.SizeOrLengthOrPropertyMapIndex;

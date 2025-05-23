@@ -98,7 +98,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         cvb.StartObject();
         Builder.Create(ref cvb, firstName, lastName, otherNames);
         cvb.EndObject();
-        documentBuilder.InsertAndDispose(ref cvb);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }
 
@@ -108,7 +108,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1, -1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
-        documentBuilder.InsertAndDispose(ref cvb);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }
 

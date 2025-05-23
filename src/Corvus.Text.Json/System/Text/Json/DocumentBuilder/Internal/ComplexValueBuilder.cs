@@ -23,7 +23,6 @@ namespace Corvus.Text.Json.Internal
             _rowCount = 0;
         }
 
-
         internal int Length => _parsedData.Length;
 
         public int MemberCount => _memberCount;
@@ -361,7 +360,7 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
-        public void AddNullItem()
+        public void AddItemNull()
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Null, _parentDocument.StoreNullValue(), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
@@ -549,21 +548,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
-        public void InsertAndDispose(ref JsonDocument.MetadataDb targetData, int targetIndex = 0)
+        public void SetAndDispose(ref JsonDocument.MetadataDb targetData)
         {
             // We don't need to initialize the metadata DB if we are creating a whole document
             // This allows us to hand off the parsed data rather than writing it in.
-            if (!targetData.IsInitialized)
-            {
-                // The target index must be 0 for an uninitialized target.
-                Debug.Assert(targetIndex == 0);
-                targetData = _parsedData;
-            }
-            else
-            {
-                _parsedData.Overwrite(ref targetData, targetIndex);
-                _parsedData.Dispose();
-            }
+            Debug.Assert(!targetData.IsInitialized);
+            targetData = _parsedData;
+        }
+
+        public void InsertAndDispose(int complexObjectStartIndex, int targetIndex, ref JsonDocument.MetadataDb targetData)
+        {
+            targetData.InsertRowsInComplexObject(_parentDocument, complexObjectStartIndex, targetIndex, _rowCount, _memberCount);
+            _parsedData.Overwrite(ref targetData, targetIndex);
+        }
+
+        public void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref JsonDocument.MetadataDb targetData)
+        {
+            targetData.ReplaceRowsInComplexObject(_parentDocument, complexObjectStartIndex, startIndex, endIndex, memberCountToReplace, _rowCount, _memberCount);
+            _parsedData.Overwrite(ref targetData, startIndex);
         }
 
         private void AddStringValue(JsonTokenType tokenType, ReadOnlySpan<byte> stringValue, bool escape)

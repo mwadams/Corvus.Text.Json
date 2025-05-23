@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
@@ -11,25 +12,25 @@ namespace Corvus.Text.Json
     public readonly partial struct JsonElement
     {
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, JsonObjectBuilder.Build builder, int initialCapacity = 30)
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, JsonObjectBuilder.Build builder, int estimatedMemberCount = 30)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
             JsonObjectBuilder.BuildValue(builder, ref cvb);
-            documentBuilder.InsertAndDispose(ref cvb);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
             return documentBuilder;
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, JsonArrayBuilder.Build builder, int initialCapacity = 30)
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, JsonArrayBuilder.Build builder, int estimatedMemberCount = 30)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
             JsonArrayBuilder.BuildValue(builder, ref cvb);
             Debug.Assert(cvb.MemberCount == 1);
-            documentBuilder.InsertAndDispose(ref cvb);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
             return documentBuilder;
         }
 
@@ -1577,43 +1578,105 @@ namespace Corvus.Text.Json
                 return _parent.CloneElement(_idx);
             }
 
-            public void SetPropertyRawNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+
+            public void SetProperty(ReadOnlySpan<byte> propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
             {
                 CheckValidInstance();
 
-                _parent.SetPropertyRawNumber(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._parent.GetEndIndex(value._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, (ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
-            public void SetPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+            public void SetProperty(ReadOnlySpan<byte> propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
             {
                 CheckValidInstance();
 
-                _parent.SetPropertyRawNumber(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._parent.GetEndIndex(value._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, (ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
-            public void SetProperty(ReadOnlySpan<byte> propertyName, JsonObjectBuilder.Build objectValue)
+            public void SetProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8StringValue)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, objectValue);
+
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(utf8StringValue);
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._parent.GetEndIndex(value._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, utf8StringValue);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
-            public void SetProperty(ReadOnlySpan<byte> propertyName, JsonArrayBuilder.Build arrayValue)
-            {
-                CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, arrayValue);
-            }
 
             public void SetPropertyNull(ReadOnlySpan<byte> propertyName)
             {
                 CheckValidInstance();
 
-                _parent.SetPropertyNull(_idx, propertyName);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItemNull();
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._parent.GetEndIndex(value._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddPropertyNull(propertyName);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, bool value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
@@ -1621,141 +1684,403 @@ namespace Corvus.Text.Json
                 where T : struct, IJsonElement<T>
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, Guid value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetProperty(ReadOnlySpan<byte> propertyName, sbyte value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, byte value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, int value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetProperty(ReadOnlySpan<byte> propertyName, uint value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, long value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetProperty(ReadOnlySpan<byte> propertyName, ulong value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, short value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetProperty(ReadOnlySpan<byte> propertyName, ushort value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, float value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, double value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, decimal value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
 #if NET
             public void SetProperty(ReadOnlySpan<byte> propertyName, Int128 value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetProperty(ReadOnlySpan<byte> propertyName, UInt128 value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, Half value)
             {
                 CheckValidInstance();
-                _parent.SetProperty(_idx, propertyName, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
             }
 
 #endif
 
-            public void SetItemRawNumber(int itemIndex, ReadOnlySpan<byte> value)
+            public void SetItem(int itemIndex, ReadOnlySpan<byte> value)
             {
                 CheckValidInstance();
-                _parent.SetItemRawNumber(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
-            public void SetItemRawString(int itemIndex, ReadOnlySpan<byte> value)
+            public void SetItem(int itemIndex, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
             {
                 CheckValidInstance();
-                _parent.SetItemRawString(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+                cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
-            public void SetItem(int itemIndex, JsonObjectBuilder.Build objectValue)
+            public void SetItem(int itemIndex, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, objectValue);
-            }
-
-            public void SetItem(int itemIndex, JsonArrayBuilder.Build arrayValue)
-            {
-                CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, arrayValue);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+                cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItemNull(int itemIndex)
             {
                 CheckValidInstance();
-                _parent.SetItemNull(_idx, itemIndex);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItemNull();
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, bool value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
@@ -1763,83 +2088,239 @@ namespace Corvus.Text.Json
                 where T : struct, IJsonElement<T>
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, Guid value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetItem(int itemIndex, sbyte value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, byte value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, int value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetItem(int itemIndex, uint value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, long value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetItem(int itemIndex, ulong value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, short value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetItem(int itemIndex, ushort value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, float value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, double value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, decimal value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
 
@@ -1847,20 +2328,56 @@ namespace Corvus.Text.Json
             public void SetItem(int itemIndex, Int128 value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             [CLSCompliant(false)]
             public void SetItem(int itemIndex, UInt128 value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 
             public void SetItem(int itemIndex, Half value)
             {
                 CheckValidInstance();
-                _parent.SetItem(_idx, itemIndex, value);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
+                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                }
             }
 #endif
 
