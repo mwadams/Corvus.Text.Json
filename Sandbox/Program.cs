@@ -53,10 +53,11 @@
 
 ////range.Dispose();
 
+#if NET
 using System.Buffers;
 using System.Text;
+#endif
 using Benchmark.CorvusTextJson2;
-using Corvus.Json;
 using Corvus.Text.Json;
 
 Console.WriteLine();
@@ -438,7 +439,7 @@ var nameValue = nameValueDoc.RootElement;
 Console.WriteLine(nameValue.ToString());
 
 // Stash away the lastName element to check it *doesn't* work past modification
-var lastName = nameValue.GetProperty("lastName");
+var lastName = nameValue.GetProperty("lastName"u8);
 
 // Modify the doc
 nameValue.SetProperty("firstName"u8, "Matthew"u8);
