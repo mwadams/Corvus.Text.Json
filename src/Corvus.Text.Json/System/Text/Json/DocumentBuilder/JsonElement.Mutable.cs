@@ -1588,13 +1588,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
-                    _parent.OverwriteAndDispose(_idx, value._idx, value._parent.GetEndIndex(value._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, (ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1608,13 +1608,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
-                    _parent.OverwriteAndDispose(_idx, value._idx, value._parent.GetEndIndex(value._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, (ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1628,13 +1628,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(utf8StringValue);
-                    _parent.OverwriteAndDispose(_idx, value._idx, value._parent.GetEndIndex(value._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, utf8StringValue);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1649,13 +1649,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItemNull();
-                    _parent.OverwriteAndDispose(_idx, value._idx, value._parent.GetEndIndex(value._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddPropertyNull(propertyName);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1668,13 +1668,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1689,13 +1689,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1708,13 +1708,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1728,13 +1728,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1747,13 +1747,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1766,13 +1766,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1786,13 +1786,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1805,13 +1805,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1825,13 +1825,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1844,13 +1844,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1864,13 +1864,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1883,13 +1883,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1902,13 +1902,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1921,13 +1921,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1941,13 +1941,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1961,13 +1961,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -1980,13 +1980,13 @@ namespace Corvus.Text.Json
                 {
                     // We are going to replace just the value
                     cvb.AddItem(value);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._parent.GetEndIndex(element._idx, true), 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
                 else
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, value);
-                    int endIndex = _parent.GetEndIndex(_idx, false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
             }
@@ -2002,12 +2002,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2020,12 +2020,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2038,12 +2038,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2056,12 +2056,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2074,12 +2074,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2094,12 +2094,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2112,12 +2112,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2131,12 +2131,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2149,12 +2149,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2167,12 +2167,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2186,12 +2186,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2204,12 +2204,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2223,12 +2223,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2241,12 +2241,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2260,12 +2260,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2278,12 +2278,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2296,12 +2296,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2314,12 +2314,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2334,12 +2334,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2353,12 +2353,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 
@@ -2371,12 +2371,12 @@ namespace Corvus.Text.Json
                 if (itemIndex == arrayLength)
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex - 1);
-                    _parent.InsertAndDispose(_idx, element._idx + JsonDocument.DbRow.Size, ref cvb);
+                    _parent.InsertAndDispose(_idx, element._idx + element._parent.GetDbSize(element._idx, true), ref cvb);
                 }
                 else
                 {
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx, 1, ref cvb);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
             }
 #endif

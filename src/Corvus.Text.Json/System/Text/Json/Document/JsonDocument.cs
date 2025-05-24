@@ -54,16 +54,16 @@ namespace Corvus.Text.Json
             }
         }
 
-        protected virtual int GetEndIndexUnsafe(int index, bool includeEndElement)
+        protected virtual int GetDbSizeUnsafe(int index, bool includeEndElement)
         {
             DbRow row = _parsedData.Get(index);
 
             if (row.IsSimpleValue)
             {
-                return index + DbRow.Size;
+                return DbRow.Size;
             }
 
-            int endIndex = index + DbRow.Size * row.NumberOfRows;
+            int endIndex = DbRow.Size * row.NumberOfRows;
 
             if (includeEndElement)
             {
@@ -177,7 +177,7 @@ namespace Corvus.Text.Json
 
                 if (!row.IsSimpleValue)
                 {
-                    objectOffset = GetEndIndexUnsafe(arrayIndex, includeEndElement: false);
+                    objectOffset = objectOffset + GetDbSizeUnsafe(objectOffset, includeEndElement: false);
                 }
 
                 elementCount++;
@@ -949,7 +949,7 @@ namespace Corvus.Text.Json
                 return false;
             }
 
-            int endIndex = GetEndIndexUnsafe(startIndex, false);// checked(row.NumberOfRows * DbRow.Size + startIndex);
+            int endIndex = startIndex + GetDbSizeUnsafe(startIndex, false);// checked(row.NumberOfRows * DbRow.Size + startIndex);
 
             DbRow endObjectRow = _parsedData.Get(endIndex);
             int propertyMapIndex = endObjectRow.SizeOrLengthOrPropertyMapIndex;

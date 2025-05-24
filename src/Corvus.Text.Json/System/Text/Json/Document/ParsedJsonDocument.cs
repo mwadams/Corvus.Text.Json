@@ -196,10 +196,10 @@ namespace Corvus.Text.Json
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
+        int IJsonDocument.GetDbSize(int index, bool includeEndElement)
         {
             CheckNotDisposed();
-            return GetEndIndexUnsafe(index, includeEndElement);
+            return GetDbSizeUnsafe(index, includeEndElement);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -225,7 +225,7 @@ namespace Corvus.Text.Json
                 return _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
             }
 
-            int endElementIdx = GetEndIndexUnsafe(index, includeEndElement: false);
+            int endElementIdx = index + GetDbSizeUnsafe(index, includeEndElement: false);
             int start = row.LocationOrIndex;
             row = _parsedData.Get(endElementIdx);
             return _utf8Json.Slice(start, row.LocationOrIndex - start + row.SizeOrLengthOrPropertyMapIndex);
@@ -758,7 +758,7 @@ namespace Corvus.Text.Json
                 return JsonReaderHelper.TranscodeHelper(_utf8Json.Slice(start, end - start).Span);
             }
 
-            int endElementIdx = GetEndIndexUnsafe(valueIndex, includeEndElement: false);
+            int endElementIdx = valueIndex + GetDbSizeUnsafe(valueIndex, includeEndElement: false);
             row = _parsedData.Get(endElementIdx);
             end = row.LocationOrIndex + row.SizeOrLengthOrPropertyMapIndex;
             return JsonReaderHelper.TranscodeHelper(_utf8Json.Slice(start, end - start).Span);
@@ -769,7 +769,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            int endIndex = GetEndIndexUnsafe(index, true);
+            int endIndex = index + GetDbSizeUnsafe(index, true);
             MetadataDb newDb = _parsedData.CopySegment(index, endIndex);
             ReadOnlyMemory<byte> segmentCopy = GetRawValueUnsafe(index, includeQuotes: true).ToArray();
 
@@ -840,7 +840,7 @@ namespace Corvus.Text.Json
 
         private void WriteComplexElement(int index, Utf8JsonWriter writer)
         {
-            int endIndex = GetEndIndexUnsafe(index, true);
+            int endIndex = index + GetDbSizeUnsafe(index, true);
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {
@@ -1135,7 +1135,7 @@ namespace Corvus.Text.Json
             DbRow complexObjectRow = _parsedData.Get(index);
             db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.SizeOrLengthOrPropertyMapIndex, workspaceDocumentIndex);
 
-            int endIndex = GetEndIndexUnsafe(index, false);
+            int endIndex = index + GetDbSizeUnsafe(index, false);
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {

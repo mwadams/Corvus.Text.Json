@@ -325,7 +325,7 @@ namespace Corvus.Text.Json
                             // This was not skipped by hitting an EndObject/Array,
                             // so it must be the start of a containing object/array
                             // which will need to have its row count updated
-                            SetRowAndMemberCount(currentIndex, parentDocument.GetEndIndex(currentIndex, false), rowCountToInsert, memberCountToInsert);
+                            SetRowAndMemberCount(currentIndex, currentIndex + parentDocument.GetDbSize(currentIndex, false), rowCountToInsert, memberCountToInsert);
                             // No more members to insert once we move out of our object, just rows.
                             memberCountToInsert = 0;
                             currentIndex -= DbRow.Size;
@@ -334,7 +334,7 @@ namespace Corvus.Text.Json
                             // This was not skipped by hitting an EndObject/Array,
                             // so it must be the start of a containing object/array
                             // which will need to have its row count updated
-                            SetRowAndMemberCount(currentIndex, parentDocument.GetEndIndex(currentIndex, false), rowCountToInsert, memberCountToInsert, isArray: true);
+                            SetRowAndMemberCount(currentIndex, currentIndex + parentDocument.GetDbSize(currentIndex, false), rowCountToInsert, memberCountToInsert, isArray: true);
                             // No more members to insert once we move out of our array, just rows.
                             memberCountToInsert = 0;
                             currentIndex -= DbRow.Size;

@@ -26,7 +26,7 @@ namespace Corvus.Text.Json
             _initialIndex = initialIndex;
             _curIdx = -1;
 
-            _endIdxOrVersion = _targetDocument.GetEndIndex(_initialIndex, includeEndElement: false);
+            _endIdxOrVersion = _initialIndex + _targetDocument.GetDbSize(_initialIndex, includeEndElement: false);
         }
 
         /// <inheritdoc />
@@ -96,7 +96,7 @@ namespace Corvus.Text.Json
             }
             else
             {
-                _curIdx = _targetDocument.GetEndIndex(_curIdx, includeEndElement: true);
+                _curIdx += _targetDocument.GetDbSize(_curIdx, includeEndElement: true);
             }
 
             return _curIdx < _endIdxOrVersion;

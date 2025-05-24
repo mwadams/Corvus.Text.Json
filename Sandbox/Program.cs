@@ -257,8 +257,8 @@ Console.WriteLine("*************");
 Console.WriteLine();
 
 b8Builder2.RootElement.GetProperty("complex"u8).GetProperty("third")[2].SetProperty("aNumber"u8, 42);
-b8Builder2.RootElement.GetProperty("complex"u8).GetProperty("third").SetItem(1, null);
-b8Builder2.RootElement.GetProperty("complex"u8).GetProperty("third").SetItem(2, null);
+b8Builder2.RootElement.GetProperty("complex"u8).GetProperty("third").SetItemNull(1);
+b8Builder2.RootElement.GetProperty("complex"u8).GetProperty("third").SetItemNull(2);
 
 Console.WriteLine(b8Builder2.RootElement.ToString());
 
@@ -409,4 +409,28 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocument(
     }));
 
 Console.WriteLine(docBuilder3.RootElement.ToString());
+
+Console.WriteLine();
+Console.WriteLine("************");
+Console.WriteLine("************");
+Console.WriteLine();
+
+var json =
+    """
+    {
+        "age": 51,
+        "name": {
+            "firstName": "Michael",
+            "lastName": "Adams",
+            "otherNames": ["Francis", "James"]
+        },
+        "competedInYears": [2012, 2016, 2024]
+    }
+    """;
+
+var personDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").CreateDocument(workspace);
+Console.WriteLine(nameValueDoc.RootElement.ToString());
+nameValueDoc.RootElement.SetProperty("firstName"u8, "Matthew"u8);
+Console.WriteLine(nameValueDoc.RootElement.ToString());
 

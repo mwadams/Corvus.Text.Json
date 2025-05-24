@@ -176,14 +176,14 @@ namespace Corvus.Text.Json
 #endif
         }
 
-        int IJsonDocument.GetEndIndex(int index, bool includeEndElement)
+        int IJsonDocument.GetDbSize(int index, bool includeEndElement)
         {
             CheckNotDisposed();
 
-            return GetEndIndexUnsafe(index, includeEndElement);
+            return GetDbSizeUnsafe(index, includeEndElement);
         }
 
-        protected override int GetEndIndexUnsafe(int index, bool includeEndElement)
+        protected override int GetDbSizeUnsafe(int index, bool includeEndElement)
         {
             DbRow row = _parsedData.Get(index);
 
@@ -191,10 +191,10 @@ namespace Corvus.Text.Json
             if (row.FromExternalDocument)
             {
                 IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-                return document.GetEndIndex(index, includeEndElement);
+                return document.GetDbSize(row.LocationOrIndex, includeEndElement);
             }
 
-            return base.GetEndIndexUnsafe(index, includeEndElement);
+            return base.GetDbSizeUnsafe(index, includeEndElement);
         }
 
         RawUtf8JsonString IJsonDocument.GetRawValue(int index, bool includeQuotes)
@@ -877,7 +877,7 @@ namespace Corvus.Text.Json
             int index,
             Utf8JsonWriter writer)
         {
-            int endIndex = GetEndIndexUnsafe(index, true);
+            int endIndex = index + GetDbSizeUnsafe(index, true);
 
             for (int i = index; i < endIndex; i += DbRow.Size)
             {
@@ -983,14 +983,14 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            DbRow row = _parsedData.Get(index);
+            ////DbRow row = _parsedData.Get(index);
 
-            // If the row is from an external document, we defer to that
-            if (row.FromExternalDocument)
-            {
-                IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-                return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
-            }
+            ////// If the row is from an external document, we defer to that
+            ////if (row.FromExternalDocument)
+            ////{
+            ////    IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
+            ////    return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
+            ////}
 
             if (TryGetNamedPropertyValueUnsafe(
                 index,
@@ -1010,14 +1010,14 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            DbRow row = _parsedData.Get(index);
+            ////DbRow row = _parsedData.Get(index);
 
-            // If the row is from an external document, we defer to that
-            if (row.FromExternalDocument)
-            {
-                IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-                return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
-            }
+            ////// If the row is from an external document, we defer to that
+            ////if (row.FromExternalDocument)
+            ////{
+            ////    IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
+            ////    return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
+            ////}
 
             if (TryGetNamedPropertyValueUnsafe(
                 index,
@@ -1036,14 +1036,14 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            DbRow row = _parsedData.Get(index);
+            ////DbRow row = _parsedData.Get(index);
 
-            // If the row is from an external document, we defer to that
-            if (row.FromExternalDocument)
-            {
-                IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-                return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
-            }
+            ////// If the row is from an external document, we defer to that
+            ////if (row.FromExternalDocument)
+            ////{
+            ////    IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
+            ////    return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
+            ////}
 
             if (TryGetNamedPropertyValueUnsafe(
                 index,
@@ -1188,7 +1188,7 @@ namespace Corvus.Text.Json
             DbRow complexObjectRow = _parsedData.Get(index);
             db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
 
-            int endIndex = GetEndIndexUnsafe(index, false);
+            int endIndex = index + GetDbSizeUnsafe(index, false);
 
             for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
             {
