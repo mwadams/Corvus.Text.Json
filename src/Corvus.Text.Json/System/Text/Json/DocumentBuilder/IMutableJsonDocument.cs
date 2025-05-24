@@ -8,6 +8,8 @@ namespace Corvus.Text.Json
     [CLSCompliant(false)]
     public interface IMutableJsonDocument : IJsonDocument
     {
+        ulong Version { get; }
+
         new JsonElement.Mutable GetArrayIndexElement(int currentIndex, int arrayIndex);
         bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement.Mutable value);
         bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement.Mutable value);

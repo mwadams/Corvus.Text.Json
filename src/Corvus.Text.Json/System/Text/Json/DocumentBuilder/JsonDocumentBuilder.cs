@@ -18,6 +18,7 @@ namespace Corvus.Text.Json
         private static readonly JsonWriterOptions InternalWriterOptions = new() { Indented = false };
         private readonly JsonWorkspace _workspace;
         private int _parentWorkspaceIndex = -1;
+        private ulong _version = 0;
 
         internal JsonDocumentBuilder(JsonWorkspace workspace)
         {
@@ -41,6 +42,9 @@ namespace Corvus.Text.Json
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int IMutableJsonDocument.ParentWorkspaceIndex => _parentWorkspaceIndex;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ulong IMutableJsonDocument.Version => _version;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         JsonWorkspace IMutableJsonDocument.Workspace => _workspace;
@@ -205,16 +209,19 @@ namespace Corvus.Text.Json
 
         void IMutableJsonDocument.InsertAndDispose(int complexObjectStartIndex, int index, ref ComplexValueBuilder cvb)
         {
+            _version++;
             cvb.InsertAndDispose(complexObjectStartIndex, index, ref _parsedData);
         }
 
         void IMutableJsonDocument.SetAndDispose(ref ComplexValueBuilder cvb)
         {
+            _version++;
             cvb.SetAndDispose(ref _parsedData);
         }
 
         void IMutableJsonDocument.OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref ComplexValueBuilder cvb)
         {
+            _version++;
             cvb.OverwriteAndDispose(complexObjectStartIndex, startIndex, endIndex, memberCountToReplace, ref _parsedData);
         }
 

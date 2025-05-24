@@ -429,8 +429,29 @@ var json =
     """;
 
 var personDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").CreateDocument(workspace);
-Console.WriteLine(nameValueDoc.RootElement.ToString());
-nameValueDoc.RootElement.SetProperty("firstName"u8, "Matthew"u8);
-Console.WriteLine(nameValueDoc.RootElement.ToString());
 
+
+using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").CreateDocument(workspace);
+
+// Get the name element
+var nameValue = nameValueDoc.RootElement;
+Console.WriteLine(nameValue.ToString());
+
+// Stash away the lastName element to check it *doesn't* work past modification
+var lastName = nameValue.GetProperty("lastName");
+
+// Modify the doc
+nameValue.SetProperty("firstName"u8, "Matthew"u8);
+
+// And the modified element continues to work fine
+Console.WriteLine(nameValue.ToString());
+
+try
+{
+    // But the stashed element throws an InvalidOperationException
+    Console.WriteLine(lastName.GetString());
+}
+catch(InvalidOperationException ex)
+{
+    Console.WriteLine($"Caught expected exception: {ex.Message}");
+}

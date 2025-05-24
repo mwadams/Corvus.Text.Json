@@ -288,8 +288,9 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct Mutable : IMutableJsonElement<Mutable>
     {
-        private readonly IJsonDocument _parent;
+        private readonly IMutableJsonDocument _parent;
         private readonly int _idx;
+        private readonly ulong _documentVersion;
 
         internal Mutable(IJsonDocument parent, int idx)
         {
@@ -297,9 +298,11 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             // on the enumerators (when initialized as `default`) can
             // get here with a null.
             Debug.Assert(idx >= 0);
+            Debug.Assert(parent is IMutableJsonDocument);
 
-            _parent = parent;
+            _parent = (IMutableJsonDocument)parent;
             _idx = idx;
+            _documentVersion = _parent.Version;
         }
 
         /// <summary>
@@ -347,6 +350,11 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
         private void CheckValidInstance()
         {
             if (_parent == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (_documentVersion != _parent.Version)
             {
                 throw new InvalidOperationException();
             }

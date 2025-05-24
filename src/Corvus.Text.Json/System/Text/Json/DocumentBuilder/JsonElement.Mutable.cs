@@ -44,10 +44,11 @@ namespace Corvus.Text.Json
         ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
         /// </summary>
         [DebuggerDisplay("{DebuggerDisplay,nq}")]
-        public readonly partial struct Mutable : IMutableJsonElement<Mutable>
+        public partial struct Mutable : IMutableJsonElement<Mutable>
         {
             private readonly IMutableJsonDocument _parent;
             private readonly int _idx;
+            private ulong _documentVersion;
 
             internal Mutable(IJsonDocument parent, int idx)
             {
@@ -60,6 +61,7 @@ namespace Corvus.Text.Json
 
                 _parent = (IMutableJsonDocument)parent;
                 _idx = idx;
+                _documentVersion = _parent.Version;
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1535,6 +1537,11 @@ namespace Corvus.Text.Json
             /// </exception>
             public override string ToString()
             {
+                if (_parent == null || _documentVersion != _parent.Version)
+                {
+                    return string.Empty;
+                }
+
                 switch (TokenType)
                 {
                     case JsonTokenType.None:
@@ -1597,6 +1604,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
@@ -1617,6 +1626,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8StringValue)
@@ -1637,6 +1648,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
 
@@ -1658,6 +1671,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, bool value)
@@ -1677,6 +1692,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -1698,6 +1715,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, Guid value)
@@ -1717,6 +1736,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -1737,6 +1758,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, byte value)
@@ -1756,6 +1779,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, int value)
@@ -1775,6 +1800,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -1795,6 +1822,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, long value)
@@ -1814,6 +1843,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -1834,6 +1865,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, short value)
@@ -1853,6 +1886,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -1873,6 +1908,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, float value)
@@ -1892,6 +1929,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, double value)
@@ -1911,6 +1950,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, decimal value)
@@ -1930,6 +1971,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
 #if NET
@@ -1950,6 +1993,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -1970,6 +2015,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, Half value)
@@ -1989,6 +2036,8 @@ namespace Corvus.Text.Json
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
 #endif
@@ -2009,6 +2058,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
@@ -2027,6 +2078,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
@@ -2045,6 +2098,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItemNull(int itemIndex)
@@ -2063,6 +2118,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, bool value)
@@ -2081,6 +2138,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -2101,6 +2160,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, Guid value)
@@ -2119,6 +2180,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -2138,6 +2201,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, byte value)
@@ -2156,6 +2221,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, int value)
@@ -2174,6 +2241,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -2193,6 +2262,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, long value)
@@ -2211,6 +2282,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -2230,6 +2303,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, short value)
@@ -2248,6 +2323,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -2267,6 +2344,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, float value)
@@ -2285,6 +2364,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, double value)
@@ -2303,6 +2384,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, decimal value)
@@ -2321,6 +2404,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
 
@@ -2341,6 +2426,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             [CLSCompliant(false)]
@@ -2360,6 +2447,8 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 
             public void SetItem(int itemIndex, Half value)
@@ -2378,12 +2467,19 @@ namespace Corvus.Text.Json
                     Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
                     _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
                 }
+
+                _documentVersion = _parent.Version;
             }
 #endif
 
             private void CheckValidInstance()
             {
                 if (_parent == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                if (_documentVersion != _parent.Version)
                 {
                     throw new InvalidOperationException();
                 }
