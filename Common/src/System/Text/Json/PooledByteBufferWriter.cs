@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Corvus.Text.Json
 {
-    internal sealed class PooledByteBufferWriter : PipeWriter, IDisposable
+    internal sealed class PooledByteBufferWriter : PipeWriter, IByteBufferWriter
     {
         private const int MinimumBufferSize = 256;
 

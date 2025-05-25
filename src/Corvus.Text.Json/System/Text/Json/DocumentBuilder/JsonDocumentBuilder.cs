@@ -3,7 +3,6 @@
 
 using System.Buffers;
 using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -71,6 +70,11 @@ namespace Corvus.Text.Json
         public void WriteTo(Utf8JsonWriter writer)
         {
             ArgumentNullException.ThrowIfNull(writer);
+
+            if (writer.Options.Encoder != _workspace.Encoder)
+            {
+                ThrowHelper.ThrowInvalidOperationException_IncompatibleEncoders();
+            }
 
             RootElement.WriteTo(writer);
         }
@@ -250,7 +254,7 @@ namespace Corvus.Text.Json
             // In an ideal world, you are not doing this too often; in general you will be acquiring simple values
             // rather than complex ones - except for ToString() and so forth which are not intended to be high-performance
             // scenarios (not least because they allocate strings!)
-            Utf8JsonWriter writer = Utf8JsonWriterCache.RentWriterAndBuffer(InternalWriterOptions, _parsedData.Length, out PooledByteBufferWriter bufferWriter);
+            Utf8JsonWriter writer = _workspace.RentWriterAndBuffer(InternalWriterOptions, _parsedData.Length, out IByteBufferWriter bufferWriter);
             try
             {
                 WriteComplexElementToUnsafe(index, writer);
@@ -263,7 +267,7 @@ namespace Corvus.Text.Json
             }
             finally
             {
-                Utf8JsonWriterCache.ReturnWriterAndBuffer(writer, bufferWriter);
+                _workspace.ReturnWriterAndBuffer(writer, bufferWriter);
             }
         }
 
@@ -766,7 +770,7 @@ namespace Corvus.Text.Json
                 return document.GetPropertyRawValueAsString(row.LocationOrIndex);
             }
 
-            Utf8JsonWriter writer = Utf8JsonWriterCache.RentWriterAndBuffer(InternalWriterOptions, _parsedData.Length, out PooledByteBufferWriter bufferWriter);
+            Utf8JsonWriter writer = _workspace.RentWriterAndBuffer(InternalWriterOptions, _parsedData.Length, out IByteBufferWriter bufferWriter);
             try
             {
                 // We have to write a property in an object context.
@@ -781,7 +785,7 @@ namespace Corvus.Text.Json
             }
             finally
             {
-                Utf8JsonWriterCache.ReturnWriterAndBuffer(writer, bufferWriter);
+                _workspace.ReturnWriterAndBuffer(writer, bufferWriter);
             }
         }
 
@@ -861,7 +865,15 @@ namespace Corvus.Text.Json
                     WriteComplexElementToUnsafe(index, writer);
                     return;
                 case JsonTokenType.String:
-                    writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(index, includeQuotes: false).Span);
+                    if (row.FromExternalDocument)
+                    {
+                        using var unescaped = GetUtf8JsonStringUnsafe(index, JsonTokenType.String);
+                        writer.WriteStringValue(unescaped.Span);
+                    }
+                    else
+                    {
+                        writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(index, false).Span);
+                    }
                     return;
                 case JsonTokenType.Number:
                     writer.WriteNumberValue(GetRawSimpleValueUnsafe(index, includeQuotes: false).Span);
@@ -894,7 +906,15 @@ namespace Corvus.Text.Json
                 switch (row.TokenType)
                 {
                     case JsonTokenType.String:
-                        writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(i, includeQuotes: false).Span);
+                        if (row.FromExternalDocument)
+                        {
+                            using var unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.String);
+                            writer.WriteStringValue(unescaped.Span);
+                        }
+                        else
+                        {
+                            writer.WriteStringValueUnescaped(GetRawSimpleValueUnsafe(i, false).Span);
+                        }
                         continue;
                     case JsonTokenType.Number:
                         writer.WriteNumberValue(GetRawSimpleValueUnsafe(i, includeQuotes: false).Span);
@@ -921,7 +941,15 @@ namespace Corvus.Text.Json
                         writer.WriteEndArray();
                         continue;
                     case JsonTokenType.PropertyName:
-                        writer.WritePropertyNameUnescaped(GetRawSimpleValueUnsafe(i, includeQuotes: false).Span);
+                        if (row.FromExternalDocument)
+                        {
+                            using var unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.PropertyName);
+                            writer.WritePropertyName(unescaped.Span);
+                        }
+                        else
+                        {
+                            writer.WritePropertyNameUnescaped(GetRawSimpleValueUnsafe(i, false).Span);
+                        }
                         continue;
                 }
 
@@ -1242,7 +1270,7 @@ namespace Corvus.Text.Json
         int IMutableJsonDocument.StoreBooleanValue(bool value) => StoreBooleanValue(value);
         int IMutableJsonDocument.StoreNullValue() => StoreNullValue();
         int IMutableJsonDocument.StoreRawNumberValue(ReadOnlySpan<byte> value) => StoreRawNumberValue(value);
-        int IMutableJsonDocument.EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping) => EscapeAndStoreRawStringValue(value, out requiredEscaping);
+        int IMutableJsonDocument.EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping) => EscapeAndStoreRawStringValue(value, out requiredEscaping, _workspace.Encoder);
         int IMutableJsonDocument.StoreRawStringValue(ReadOnlySpan<byte> value) => StoreRawStringValue(value);
         int IMutableJsonDocument.StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString) => StoreUnescapedStringValue(unescapedString);
 

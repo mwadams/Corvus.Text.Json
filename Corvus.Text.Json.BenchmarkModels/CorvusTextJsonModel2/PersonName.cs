@@ -24,7 +24,6 @@ public readonly struct PersonName : IJsonElement<PersonName>
 
         _parent = parent;
         _idx = idx;
-
     }
 
     /// <summary>
@@ -39,7 +38,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponent value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out NameComponent value))
             {
                 return value;
             }
@@ -52,7 +51,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out NameComponent value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.LastName, out NameComponent value))
             {
                 return value;
             }
@@ -65,7 +64,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out OtherNames value))
             {
                 return value;
             }
@@ -90,7 +89,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, in NameComponent.Builder.Source firstName, in NameComponent.Builder.Source lastName, in OtherNames.Builder.Source otherNames, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
@@ -238,11 +237,11 @@ public readonly struct PersonName : IJsonElement<PersonName>
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public readonly struct Mutable : IMutableJsonElement<Mutable>
+    public struct Mutable : IMutableJsonElement<Mutable>
     {
         private readonly IMutableJsonDocument _parent;
         private readonly int _idx;
-        private readonly ulong _documentVersion;
+        private ulong _documentVersion;
 
         internal Mutable(IJsonDocument parent, int idx)
         {
@@ -261,7 +260,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponent.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out NameComponent.Mutable value))
                 {
                     return value;
                 }
@@ -274,7 +273,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out NameComponent.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.LastName, out NameComponent.Mutable value))
                 {
                     return value;
                 }
@@ -287,13 +286,79 @@ public readonly struct PersonName : IJsonElement<PersonName>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out OtherNames.Mutable value))
                 {
                     return value;
                 }
 
                 return default;
             }
+        }
+
+        public void SetFirstName(in NameComponent.Builder.Source value)
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out Mutable element))
+            {
+                // We are going to replace just the value
+                value.AddAsItem(ref cvb);
+                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                value.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref cvb, escapeName: false);
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        public void SetLastName(in NameComponent.Builder.Source value)
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.LastName, out Mutable element))
+            {
+                // We are going to replace just the value
+                value.AddAsItem(ref cvb);
+                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                value.AddAsProperty(JsonPropertyNamesEscaped.LastName, ref cvb, escapeName: false);
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        public void SetOtherNames(in OtherNames.Builder.Source value)
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.OtherNames, out Mutable element))
+            {
+                // We are going to replace just the value
+                value.AddAsItem(ref cvb);
+                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                value.AddAsProperty(JsonPropertyNamesEscaped.OtherNames, ref cvb, escapeName: false);
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
         }
 
         /// <summary>
@@ -481,16 +546,16 @@ public readonly struct PersonName : IJsonElement<PersonName>
 
             public static implicit operator Source(PersonName instance) => new(instance);
 
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
             {
                 if (Builder is Build nameBuilder)
                 {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(nameBuilder, ref o));
+                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(nameBuilder, ref o), escapeName);
                 }
                 else
                 {
                     Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddProperty(utf8Name, Instance);
+                    valueBuilder.AddProperty(utf8Name, Instance, escapeName);
                 }
             }
 
@@ -518,16 +583,16 @@ public readonly struct PersonName : IJsonElement<PersonName>
             return new Builder(builder);
         }
 
-        public void Create(NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
+        public void Create(in NameComponent.Builder.Source firstName, in NameComponent.Builder.Source lastName, in OtherNames.Builder.Source otherNames)
         {
             Create(ref _builder, firstName, lastName, otherNames);
         }
 
-        internal static void Create(ref ComplexValueBuilder builder, NameComponent.Builder.Source firstName, NameComponent.Builder.Source lastName, OtherNames.Builder.Source otherNames)
+        internal static void Create(ref ComplexValueBuilder builder, in NameComponent.Builder.Source firstName, in NameComponent.Builder.Source lastName, in OtherNames.Builder.Source otherNames)
         {
-            firstName.AddAsProperty(JsonPropertyNames.FirstName, ref builder);
-            lastName.AddAsProperty(JsonPropertyNames.LastName, ref builder);
-            otherNames.AddAsProperty(JsonPropertyNames.OtherNames, ref builder);
+            firstName.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref builder, escapeName: false);
+            lastName.AddAsProperty(JsonPropertyNamesEscaped.LastName, ref builder, escapeName: false);
+            otherNames.AddAsProperty(JsonPropertyNamesEscaped.OtherNames, ref builder, escapeName: false);
         }
 
         internal static void BuildValue(Build value, ref ComplexValueBuilder o)
@@ -541,6 +606,14 @@ public readonly struct PersonName : IJsonElement<PersonName>
     }
 
     public static class JsonPropertyNames
+    {
+        // These are the unescaped property names
+        public static ReadOnlySpan<byte> FirstName => "firstName"u8;
+        public static ReadOnlySpan<byte> LastName => "lastName"u8;
+        public static ReadOnlySpan<byte> OtherNames => "otherNames"u8;
+    }
+
+    private static class JsonPropertyNamesEscaped
     {
         // These are the fully escaped property names
         public static ReadOnlySpan<byte> FirstName => "firstName"u8;
@@ -673,17 +746,17 @@ public readonly struct PersonName : IJsonElement<PersonName>
         {
             // We only have 1 property, so it is going to be vastly more efficient to do this
             // with property names
-            if (JsonPropertyNames.FirstName.SequenceEqual(span))
+            if (JsonPropertyNamesEscaped.FirstName.SequenceEqual(span))
             {
                 validator = MatchFirstName;
                 return true;
             }
-            else if (JsonPropertyNames.LastName.SequenceEqual(span))
+            else if (JsonPropertyNamesEscaped.LastName.SequenceEqual(span))
             {
                 validator = MatchLastName;
                 return true;
             }
-            else if (JsonPropertyNames.OtherNames.SequenceEqual(span))
+            else if (JsonPropertyNamesEscaped.OtherNames.SequenceEqual(span))
             {
                 validator = MatchOtherNames;
                 return true;

@@ -830,4 +830,7 @@
   <data name="TypeDoesNotHaveAConstructorWithTheRequiredSignature" xml:space="preserve">
     <value>The type '{0}' does not have a constructor that takes the parent document instance and parent document index.</value>
   </data>
+  <data name="IncompatibleEncoders" xml:space="preserve">
+    <value>The JavascriptEncoder provided by the Utf8JsonWriter must match the JsonDocumentBuilder.</value>
+  </data>
 </root>

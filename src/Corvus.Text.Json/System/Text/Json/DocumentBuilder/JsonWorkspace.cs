@@ -3,6 +3,7 @@
 
 using System.Buffers;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
 
 namespace Corvus.Text.Json
 {
@@ -22,6 +23,11 @@ namespace Corvus.Text.Json
             _length = 0;
         }
 
+        /// <summary>
+        /// Get or set the <see cref="JavaScriptEncoder"/> for the workspace.
+        /// </summary>
+        public JavaScriptEncoder? Encoder { get; set; }
+
         [CLSCompliant(false)]
         public IJsonDocument GetDocument(int index)
         {
@@ -31,6 +37,28 @@ namespace Corvus.Text.Json
             }
 
             return _documents[index];
+        }
+
+        public Utf8JsonWriter RentWriterAndBuffer(JsonWriterOptions options, int defaultBufferSize, out IByteBufferWriter bufferWriter)
+        {
+            Utf8JsonWriter result = Utf8JsonWriterCache.RentWriterAndBuffer(options with { Encoder = Encoder }, defaultBufferSize, out PooledByteBufferWriter writer);
+            bufferWriter = writer;
+            return result;
+        }
+
+        public Utf8JsonWriter RentWriter(JsonWriterOptions options, IBufferWriter<byte> bufferWriter)
+        {
+            return Utf8JsonWriterCache.RentWriter(options with { Encoder = Encoder }, bufferWriter);
+        }
+
+        public void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)
+        {
+            Utf8JsonWriterCache.ReturnWriterAndBuffer(writer, bufferWriter);
+        }
+
+        public void ReturnWriter(Utf8JsonWriter writer)
+        {
+            Utf8JsonWriterCache.ReturnWriter(writer);
         }
 
         public void Dispose()

@@ -425,15 +425,15 @@ public readonly struct Year : IJsonElement<Year>
                 }
             }
 
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
             {
                 if (Instance.ValueKind != JsonValueKind.Undefined)
                 {
-                    valueBuilder.AddProperty(utf8Name, Instance);
+                    valueBuilder.AddProperty(utf8Name, Instance, escapeName);
                 }
                 else
                 {
-                    valueBuilder.AddProperty(utf8Name, Int32Value);
+                    valueBuilder.AddProperty(utf8Name, Int32Value, escapeName);
                 }
             }
         }

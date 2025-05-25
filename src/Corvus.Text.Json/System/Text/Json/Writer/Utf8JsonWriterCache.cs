@@ -14,9 +14,6 @@ namespace Corvus.Text.Json
         [ThreadStatic]
         private static ThreadLocalState? t_threadLocalState;
 
-        ////public static Utf8JsonWriter RentWriterAndBuffer(JsonSerializerOptions options, out PooledByteBufferWriter bufferWriter) =>
-        ////    RentWriterAndBuffer(options.GetWriterOptions(), options.DefaultBufferSize, out bufferWriter);
-
         public static Utf8JsonWriter RentWriterAndBuffer(JsonWriterOptions options, int defaultBufferSize, out PooledByteBufferWriter bufferWriter)
         {
             ThreadLocalState state = t_threadLocalState ??= new();
@@ -61,7 +58,7 @@ namespace Corvus.Text.Json
             return writer;
         }
 
-        public static void ReturnWriterAndBuffer(Utf8JsonWriter writer, PooledByteBufferWriter bufferWriter)
+        public static void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)
         {
             Debug.Assert(t_threadLocalState != null);
             ThreadLocalState state = t_threadLocalState;

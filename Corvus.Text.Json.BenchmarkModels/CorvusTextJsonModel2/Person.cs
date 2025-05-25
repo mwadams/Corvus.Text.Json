@@ -41,7 +41,7 @@ public readonly struct Person : IJsonElement<Person>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out PersonName value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Name, out PersonName value))
             {
                 return value;
             }
@@ -54,7 +54,7 @@ public readonly struct Person : IJsonElement<Person>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Age, out Age value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Age, out Age value))
             {
                 return value;
             }
@@ -67,7 +67,7 @@ public readonly struct Person : IJsonElement<Person>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYears, out CompetedInYears value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.CompetedInYears, out CompetedInYears value))
             {
                 return value;
             }
@@ -216,7 +216,7 @@ public readonly struct Person : IJsonElement<Person>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
@@ -239,11 +239,11 @@ public readonly struct Person : IJsonElement<Person>
     }
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public readonly struct Mutable : IMutableJsonElement<Mutable>
+    public struct Mutable : IMutableJsonElement<Mutable>
     {
         private readonly IMutableJsonDocument _parent;
         private readonly int _idx;
-        private readonly ulong _documentVersion;
+        private ulong _documentVersion;
 
         internal Mutable(IJsonDocument parent, int idx)
         {
@@ -262,7 +262,7 @@ public readonly struct Person : IJsonElement<Person>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out PersonName.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Name, out PersonName.Mutable value))
                 {
                     return value;
                 }
@@ -275,7 +275,7 @@ public readonly struct Person : IJsonElement<Person>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Age, out Age.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Age, out Age.Mutable value))
                 {
                     return value;
                 }
@@ -288,13 +288,79 @@ public readonly struct Person : IJsonElement<Person>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYears, out CompetedInYears.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.CompetedInYears, out CompetedInYears.Mutable value))
                 {
                     return value;
                 }
 
                 return default;
             }
+        }
+
+        public void SetName(in PersonName.Builder.Source value)
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Name, out Mutable element))
+            {
+                // We are going to replace just the value
+                value.AddAsItem(ref cvb);
+                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                value.AddAsProperty(JsonPropertyNamesEscaped.Name, ref cvb, escapeName: false);
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        public void SetAge(in Age.Builder.Source value)
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Age, out Mutable element))
+            {
+                // We are going to replace just the value
+                value.AddAsItem(ref cvb);
+                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                value.AddAsProperty(JsonPropertyNamesEscaped.Age, ref cvb, escapeName: false);
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        public void SetCompetedInYears(in CompetedInYears.Builder.Source value)
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.CompetedInYears, out Mutable element))
+            {
+                // We are going to replace just the value
+                value.AddAsItem(ref cvb);
+                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                value.AddAsProperty(JsonPropertyNamesEscaped.CompetedInYears, ref cvb, escapeName: false);
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
         }
 
         /// <summary>
@@ -484,16 +550,16 @@ public readonly struct Person : IJsonElement<Person>
 
             public static implicit operator Source(Person instance) => new(instance);
 
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
             {
                 if (Builder is Build personBuilder)
                 {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(personBuilder, ref o));
+                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(personBuilder, ref o), escapeName);
                 }
                 else
                 {
                     Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddProperty(utf8Name, Instance);
+                    valueBuilder.AddProperty(utf8Name, Instance, escapeName);
                 }
             }
 
@@ -530,20 +596,27 @@ public readonly struct Person : IJsonElement<Person>
             o.EndObject();
         }
 
-        public void Create(Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears)
+        public void Create(in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears)
         {
             Create(ref _builder, age, name, competedInYears);
         }
 
-        internal static void Create(ref ComplexValueBuilder builder, Age.Builder.Source age, PersonName.Builder.Source name, CompetedInYears.Builder.Source competedInYears)
+        internal static void Create(ref ComplexValueBuilder builder, in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears)
         {
-            age.AddAsProperty(JsonPropertyNames.Age, ref builder);
-            name.AddAsProperty(JsonPropertyNames.Name, ref builder);
-            competedInYears.AddAsProperty(JsonPropertyNames.CompetedInYears, ref builder);
+            age.AddAsProperty(JsonPropertyNamesEscaped.Age, ref builder, escapeName: false);
+            name.AddAsProperty(JsonPropertyNamesEscaped.Name, ref builder, escapeName: false);
+            competedInYears.AddAsProperty(JsonPropertyNamesEscaped.CompetedInYears, ref builder, escapeName: false);
         }
     }
 
     public static class JsonPropertyNames
+    {
+        public static ReadOnlySpan<byte> Name => "name"u8;
+        public static ReadOnlySpan<byte> Age => "age"u8;
+        public static ReadOnlySpan<byte> CompetedInYears => "competedInYears"u8;
+    }
+
+    private static class JsonPropertyNamesEscaped
     {
         public static ReadOnlySpan<byte> Name => "name"u8;
         public static ReadOnlySpan<byte> Age => "age"u8;
@@ -691,17 +764,17 @@ public readonly struct Person : IJsonElement<Person>
         {
             // We only have 1 property, so it is going to be vastly more efficient to do this
             // with property names
-            if (JsonPropertyNames.Name.SequenceEqual(span))
+            if (JsonPropertyNamesEscaped.Name.SequenceEqual(span))
             {
                 validator = MatchName;
                 return true;
             }
-            else if (JsonPropertyNames.Age.SequenceEqual(span))
+            else if (JsonPropertyNamesEscaped.Age.SequenceEqual(span))
             {
                 validator = MatchAge;
                 return true;
             }
-            else if (JsonPropertyNames.CompetedInYears.SequenceEqual(span))
+            else if (JsonPropertyNamesEscaped.CompetedInYears.SequenceEqual(span))
             {
                 validator = MatchCompetedInYears;
                 return true;

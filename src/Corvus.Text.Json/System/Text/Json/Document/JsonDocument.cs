@@ -2,15 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Encodings.Web;
 
 #if NET
 using System.Globalization;
 #endif
+
 using System.Threading;
 
 namespace Corvus.Text.Json
@@ -740,11 +741,11 @@ namespace Corvus.Text.Json
         }
 
 
-        protected int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> utf8Value, out bool requiredEscaping)
+        protected int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> utf8Value, out bool requiredEscaping, JavaScriptEncoder? encoder)
         {
             int offset = _valueOffset;
 
-            int valueIdx = JsonWriterHelper.NeedsEscaping(utf8Value, null);
+            int valueIdx = JsonWriterHelper.NeedsEscaping(utf8Value, encoder);
 
             Debug.Assert(valueIdx >= -1 && valueIdx < utf8Value.Length);
 
@@ -761,7 +762,7 @@ namespace Corvus.Text.Json
             if (valueIdx != -1)
             {
                 requiredEscaping = true;
-                JsonWriterHelper.EscapeString(utf8Value, _valueBacking.AsSpan(index), valueIdx, null, out written);
+                JsonWriterHelper.EscapeString(utf8Value, _valueBacking.AsSpan(index), valueIdx, encoder, out written);
                 index += written;
             }
             else
@@ -799,7 +800,7 @@ namespace Corvus.Text.Json
         {
             int offset = _valueOffset;
             // We write the value buffer offset here, to save doing it again later.
-            _valueOffset += escapedString.Length + 4;
+            _valueOffset += escapedString.Length + 6;
 
             Enlarge(_valueOffset, ref _valueBacking);
 

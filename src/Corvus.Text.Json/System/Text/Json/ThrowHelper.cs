@@ -207,6 +207,13 @@ namespace Corvus.Text.Json
             }
         }
 
+
+        [DoesNotReturn]
+        public static void ThrowInvalidOperationException_IncompatibleEncoders()
+        {
+            throw GetInvalidOperationException(SR.IncompatibleEncoders);
+        }
+
         [DoesNotReturn]
         public static void ThrowInvalidOperationException(int currentDepth, int maxDepth)
         {

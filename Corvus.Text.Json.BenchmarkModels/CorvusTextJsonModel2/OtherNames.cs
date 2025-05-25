@@ -492,21 +492,21 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                 }
             }
 
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder)
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
             {
 
                 if (JsonElementInstance.ValueKind != JsonValueKind.Undefined)
                 {
-                    valueBuilder.AddProperty(utf8Name, JsonElementInstance);
+                    valueBuilder.AddProperty(utf8Name, JsonElementInstance, escapeName);
                 }
                 else if (NameComponentArrayBuilder is NameComponentArray.Builder.Build nameComponentArrayBuilder)
                 {
                     NameComponentArray.Builder.Source source = new(nameComponentArrayBuilder);
-                    source.AddAsProperty(utf8Name, ref valueBuilder);
+                    source.AddAsProperty(utf8Name, ref valueBuilder, escapeName);
                 }
                 else
                 {
-                    valueBuilder.AddProperty(utf8Name, NameComponentSpan);
+                    valueBuilder.AddProperty(utf8Name, NameComponentSpan, escapeName, escapeValue: true);
                 }
             }
         }

@@ -69,7 +69,7 @@ namespace Corvus.Text.Json
         public void EnumerateRows()
         {
             List<DbRow> results = [];
-            for(int i = 0; i < _parsedData.Length; i += DbRow.Size)
+            for (int i = 0; i < _parsedData.Length; i += DbRow.Size)
             {
                 results.Add(_parsedData.Get(i));
             }
@@ -231,7 +231,7 @@ namespace Corvus.Text.Json
             return _utf8Json.Slice(start, row.LocationOrIndex - start + row.SizeOrLengthOrPropertyMapIndex);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index, bool includeQuotes)
         {
             CheckNotDisposed();
@@ -358,7 +358,7 @@ namespace Corvus.Text.Json
         bool IJsonDocument.TryGetValue(int index, [NotNullWhen(true)] out byte[]? value)
         {
             CheckNotDisposed();
-            
+
             DbRow row = _parsedData.Get(index);
 
             CheckExpectedType(JsonTokenType.String, row.TokenType);
@@ -819,7 +819,10 @@ namespace Corvus.Text.Json
                     WriteComplexElement(index, writer);
                     return;
                 case JsonTokenType.String:
-                    writer.WriteStringValueUnescaped(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
+                    {
+                        using var unescaped = GetUtf8JsonStringUnsafe(index, JsonTokenType.String);
+                        writer.WriteStringValue(unescaped.Span);
+                    }
                     return;
                 case JsonTokenType.Number:
                     writer.WriteNumberValue(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
@@ -850,7 +853,10 @@ namespace Corvus.Text.Json
                 switch (row.TokenType)
                 {
                     case JsonTokenType.String:
-                        writer.WriteStringValueUnescaped(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
+                        {
+                            using var unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.String);
+                            writer.WriteStringValue(unescaped.Span);
+                        }
                         continue;
                     case JsonTokenType.Number:
                         writer.WriteNumberValue(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
@@ -877,7 +883,10 @@ namespace Corvus.Text.Json
                         writer.WriteEndArray();
                         continue;
                     case JsonTokenType.PropertyName:
-                        writer.WritePropertyNameUnescaped(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
+                        {
+                            using var unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.PropertyName);
+                            writer.WritePropertyName(unescaped.Span);
+                        }
                         continue;
                 }
 

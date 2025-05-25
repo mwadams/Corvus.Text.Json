@@ -358,6 +358,8 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocument(
         }
     }));
 
+docBuilder.RootElement.Name.SetOtherNames(new((ref o) => o.Add("Leo"u8)));
+docBuilder.RootElement.Name.SetOtherNames("William"u8);
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -451,8 +453,9 @@ try
 {
     // But the stashed element throws an InvalidOperationException
     Console.WriteLine(lastName.GetString());
+    Console.WriteLine($"Expected exception was not thrown.");
 }
-catch(InvalidOperationException ex)
+catch (InvalidOperationException ex)
 {
     Console.WriteLine($"Caught expected exception: {ex.Message}");
 }
