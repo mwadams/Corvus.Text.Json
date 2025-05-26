@@ -21,6 +21,7 @@ namespace Corvus.Text.Json
         int StoreRawNumberValue(ReadOnlySpan<byte> value);
         int StoreNullValue();
         int StoreBooleanValue(bool value);
+        int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, out bool requiredEscaping);
         int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping);
         int StoreRawStringValue(ReadOnlySpan<byte> value);
         int StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString);

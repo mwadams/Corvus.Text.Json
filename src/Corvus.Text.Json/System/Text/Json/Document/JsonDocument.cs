@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
 
+
 #if NET
 using System.Globalization;
 #endif
@@ -770,6 +771,67 @@ namespace Corvus.Text.Json
                 requiredEscaping = false;
                 utf8Value.CopyTo(_valueBacking.AsSpan(index));
                 written = utf8Value.Length;
+                index += written;
+            }
+
+            _valueBacking[index++] = JsonConstants.Quote;
+
+            // Then write the type information.
+
+            uint length = (uint)(written + 2);
+            if (length > 0x0FFFFFFF)
+            {
+                ThrowHelper.ThrowArgumentException_ValueTooLarge(length);
+            }
+
+            // Shift it and OR in the value type.
+            length <<= 4;
+            length |= (uint)DynamicValueType.QuotedUtf8String;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
+#endif
+            _valueOffset = index;
+            return offset;
+        }
+
+        protected int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, out bool requiredEscaping, JavaScriptEncoder? encoder)
+        {
+            int offset = _valueOffset;
+
+            int valueIdx = JsonWriterHelper.NeedsEscaping(value, encoder);
+
+            int valueLength = value.Length;
+            Debug.Assert(valueIdx >= -1 && valueIdx < valueLength);
+
+            int maxRequiredSize = valueIdx == -1 ? valueLength + 2 + 4 : JsonWriterHelper.GetMaxEscapedLength(valueLength, valueIdx) + 2 + 4;
+
+            Enlarge(_valueOffset + maxRequiredSize, ref _valueBacking);
+
+            int written;
+
+            int index = offset + 4;
+
+            _valueBacking[index++] = JsonConstants.Quote;
+
+            if (valueIdx != -1)
+            {
+                requiredEscaping = true;
+
+                char[]? buffer = null;
+                Span<char> escapedBuffer = valueLength <= JsonConstants.StackallocCharThreshold ? stackalloc char[JsonConstants.StackallocCharThreshold] : (buffer = ArrayPool<char>.Shared.Rent(valueLength)).AsSpan();
+
+                JsonWriterHelper.EscapeString(value, buffer, valueIdx, encoder, out written);
+                JsonWriterHelper.ToUtf8(escapedBuffer.Slice(0, written), _valueBacking.AsSpan(index), out written);
+                index += written;
+            }
+            else
+            {
+                requiredEscaping = false;
+                JsonWriterHelper.ToUtf8(value, _valueBacking.AsSpan(index), out written);
+                written = valueLength;
                 index += written;
             }
 
