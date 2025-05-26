@@ -1,56 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-////using Corvus.Text.Json.JsonWorkspace workspace = new();
-
-////using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateDocument(
-////    workspace,
-////    age: 51,
-////    name: new(static (ref Benchmark.CorvusTextJson.PersonName.Builder personName) =>
-////    {
-////        personName.Create(
-////            firstName: "Michael"u8,
-////            lastName: "Adams"u8,
-////            otherNames: new(static (ref Benchmark.CorvusTextJson.NameComponentArray.Builder otherNames) =>
-////            {
-////                otherNames.Add("Francis"u8);
-////                otherNames.Add("James"u8);
-////            }));
-////    }),
-////    competedInYears: new(static (ref Benchmark.CorvusTextJson.CompetedInYears.Builder competedInYears) =>
-////    {
-////        competedInYears.Add(2012);
-////        competedInYears.Add(2016);
-////        competedInYears.Add(2024);
-////    }));
-
-////Microsoft.DiagnosticsHub.UserMarkRange range = new("Corvus.Text.Json");
-
-////for (int i = 0; i < 1000; i++)
-////{
-////    using Corvus.Text.Json.JsonWorkspace workspace2 = new();
-////    using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person2 = Benchmark.CorvusTextJson.Person.CreateDocument(
-////        workspace2,
-////        age: 51,
-////        name: new(static (ref Benchmark.CorvusTextJson.PersonName.Builder personName) =>
-////        {
-////            personName.Create(
-////                firstName: "Michael"u8,
-////                lastName: "Adams"u8,
-////                otherNames: new(static (ref Benchmark.CorvusTextJson.NameComponentArray.Builder otherNames) =>
-////                {
-////                    otherNames.Add("Francis"u8);
-////                    otherNames.Add("James"u8);
-////                }));
-////        }),
-////        competedInYears: new(static (ref Benchmark.CorvusTextJson.CompetedInYears.Builder competedInYears) =>
-////        {
-////            competedInYears.Add(2012);
-////            competedInYears.Add(2016);
-////            competedInYears.Add(2024);
-////        }));
-////}
-
+﻿////Microsoft.DiagnosticsHub.UserMarkRange range = new("Corvus.Text.Json");
 ////range.Dispose();
 
 #if NET
@@ -169,11 +117,11 @@ using ParsedJsonDocument<Person> documentB7 = ParsedJsonDocument<Person>.Parse(
         }
         """);
 
-Console.WriteLine(documentB3.RootElement.IsSchemaMatch() ? "Person B3 is a match" : "Person B3 is not a match");
-Console.WriteLine(documentB4.RootElement.IsSchemaMatch() ? "Person B4 is a match" : "Person B4 is not a match");
-Console.WriteLine(documentB5.RootElement.IsSchemaMatch() ? "Person B5 is a match" : "Person B5 is not a match");
-Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is a match" : "Person B6 is not a match");
-Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is a match" : "Person B7 is not a match");
+Console.WriteLine(documentB3.RootElement.IsSchemaMatch() ? "Person B3 is arrayBuilder match" : "Person B3 is not arrayBuilder match");
+Console.WriteLine(documentB4.RootElement.IsSchemaMatch() ? "Person B4 is arrayBuilder match" : "Person B4 is not arrayBuilder match");
+Console.WriteLine(documentB5.RootElement.IsSchemaMatch() ? "Person B5 is arrayBuilder match" : "Person B5 is not arrayBuilder match");
+Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is arrayBuilder match" : "Person B6 is not arrayBuilder match");
+Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is arrayBuilder match" : "Person B7 is not arrayBuilder match");
 
 
 Console.WriteLine(JsonElementHelpers.DeepEquals(documentB1.RootElement, documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
@@ -308,25 +256,25 @@ using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocum
     {
         o.Add(
             "name"u8,
-            static (ref o) =>
+            static (ref objectBuilder) =>
             {
-                o.Add("firstName"u8, "Michael"u8);
-                o.Add("lastName"u8, "Adams"u8);
-                o.Add(
+                objectBuilder.Add("firstName"u8, "Michael"u8);
+                objectBuilder.Add("lastName"u8, "Adams"u8);
+                objectBuilder.Add(
                     "otherNames"u8,
-                    static (ref JsonArrayBuilder a) =>
+                    static (ref arrayBuilder) =>
                     {
-                        a.Add("Francis"u8);
-                        a.Add("James"u8);
+                        arrayBuilder.Add("Francis"u8);
+                        arrayBuilder.Add("James"u8);
                     });
             });
         o.Add("age"u8, 51);
         o.Add("competedInYears"u8,
-            static (ref JsonArrayBuilder a) =>
+            static (ref arrayBuilder) =>
             {
-                a.Add(2012);
-                a.Add(2016);
-                a.Add(2024);
+                arrayBuilder.Add(2012);
+                arrayBuilder.Add(2016);
+                arrayBuilder.Add(2024);
             });
     });
 
