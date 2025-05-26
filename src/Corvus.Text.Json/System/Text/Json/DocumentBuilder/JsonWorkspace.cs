@@ -12,17 +12,17 @@ namespace Corvus.Text.Json
     public class JsonWorkspace
         : IDisposable
     {
-        private static readonly JsonWriterOptions InternalWriterOptions = new() { Indented = false };
+        private static readonly JsonWriterOptions s_internalWriterOptions = new() { Indented = false };
 
         private IJsonDocument[] _documents;
-        private Dictionary<IJsonDocument, int> _documentIndices = [];
+        private readonly Dictionary<IJsonDocument, int> _documentIndices = [];
         private int _length;
 
         public JsonWorkspace(int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
         {
             _documents = ArrayPool<IJsonDocument>.Shared.Rent(initialDocumentCapacity);
             _length = 0;
-            Options = options ?? InternalWriterOptions;
+            Options = options ?? s_internalWriterOptions;
         }
 
         public JsonWriterOptions Options { get; }
@@ -50,6 +50,7 @@ namespace Corvus.Text.Json
             return Utf8JsonWriterCache.RentWriter(Options, bufferWriter);
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)
         {
             Utf8JsonWriterCache.ReturnWriterAndBuffer(writer, bufferWriter);
@@ -59,7 +60,9 @@ namespace Corvus.Text.Json
         {
             Utf8JsonWriterCache.ReturnWriter(writer);
         }
+#pragma warning restore CA1822 // Mark members as static
 
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
         public void Dispose()
         {
             if (_length >= 0)
@@ -71,6 +74,7 @@ namespace Corvus.Text.Json
 
             ThrowHelper.ThrowObjectDisposedException_JsonWorkspace();
         }
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
 
         [CLSCompliant(false)]
         public JsonDocumentBuilder<TMutableElement> CreateDocument<TElement, TMutableElement>(TElement sourceElement)
@@ -106,7 +110,7 @@ namespace Corvus.Text.Json
                 Array.Copy(_documents, newDocuments, _length);
                 IJsonDocument[] documentsToReturn = _documents;
                 _documents = newDocuments;
-                ArrayPool<IJsonDocument>.Shared.Return(_documents);
+                ArrayPool<IJsonDocument>.Shared.Return(documentsToReturn);
             }
 
             int result = _length;

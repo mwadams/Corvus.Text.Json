@@ -449,15 +449,15 @@ public readonly struct Age : IJsonElement<Age>
         private static ReadOnlySpan<byte> EscapedMinimumKeyword() => "minimum"u8;
         private static ReadOnlySpan<byte> EscapedMaximumKeyword() => "maximum"u8;
 
-        private static bool minimumIsNegative => false;
-        private static ReadOnlySpan<byte> minimumIntegral => "0"u8;
-        private static ReadOnlySpan<byte> minimumFractional => ""u8;
-        private static int minimumExponent = 0;
+        private static bool MinimumIsNegative => false;
+        private static ReadOnlySpan<byte> MinimumIntegral => "0"u8;
+        private static ReadOnlySpan<byte> MinimumFractional => ""u8;
+        private const int MinimumExponent = 0;
 
-        private static bool maximumIsNegative => false;
-        private static ReadOnlySpan<byte> maximumIntegral => "130"u8;
-        private static ReadOnlySpan<byte> maximumFractional => ""u8;
-        private static int maximumExponent = 0;
+        private static bool MaximumIsNegative => false;
+        private static ReadOnlySpan<byte> MaximumIntegral => "130"u8;
+        private static ReadOnlySpan<byte> MaximumFractional => ""u8;
+        private const int MaximumExponent = 0;
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -501,10 +501,10 @@ public readonly struct Age : IJsonElement<Age>
                 integral,
                 fractional,
                 exponent,
-                minimumIsNegative,
-                minimumIntegral,
-                minimumFractional,
-                minimumExponent) < 0)
+                MinimumIsNegative,
+                MinimumIntegral,
+                MinimumFractional,
+                MinimumExponent) < 0)
             {
                 context.Matched(false, schemaEvaluationPath: EscapedMinimumKeyword);
                 if (!context.HasCollector)
@@ -523,10 +523,10 @@ public readonly struct Age : IJsonElement<Age>
                 integral,
                 fractional,
                 exponent,
-                maximumIsNegative,
-                maximumIntegral,
-                maximumFractional,
-                maximumExponent) > 0)
+                MaximumIsNegative,
+                MaximumIntegral,
+                MaximumFractional,
+                MaximumExponent) > 0)
             {
                 context.Matched(false, schemaEvaluationPath: EscapedMaximumKeyword);
                 if (!context.HasCollector)
@@ -543,7 +543,7 @@ public readonly struct Age : IJsonElement<Age>
             context.PopSchemaLocation();
         }
 
-        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector resultsCollector)
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
         {
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,

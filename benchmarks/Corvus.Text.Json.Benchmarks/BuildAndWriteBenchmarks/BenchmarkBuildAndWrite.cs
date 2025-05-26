@@ -7,7 +7,7 @@ using BenchmarkDotNet.Attributes;
 using CommunityToolkit.HighPerformance.Buffers;
 using Corvus.Text.Json;
 
-namespace ValidationBenchmarks;
+namespace BuildAndWriteBenchmarks;
 
 /// <summary>
 /// Construct elements from a JSON element.
@@ -19,7 +19,7 @@ public class BenchmarkBuildAndWrite
     public bool BuildJsonObject()
     {
         var bufferWriter = new ArrayPoolBufferWriter<byte>();
-        System.Text.Json.Utf8JsonWriter writer = new System.Text.Json.Utf8JsonWriter(bufferWriter);
+        System.Text.Json.Utf8JsonWriter writer = new(bufferWriter);
         System.Text.Json.Nodes.JsonObject jsonObject =
         [
             new ("age", 51),
@@ -42,7 +42,7 @@ public class BenchmarkBuildAndWrite
     public bool BuildCorvusJsonSchema()
     {
         var bufferWriter = new ArrayPoolBufferWriter<byte>();
-        System.Text.Json.Utf8JsonWriter writer = new System.Text.Json.Utf8JsonWriter(bufferWriter);
+        System.Text.Json.Utf8JsonWriter writer = new(bufferWriter);
         Benchmark.CorvusJsonSchema2.Person person = Benchmark.CorvusJsonSchema2.Person.Create(
             age: 51,
             name: Benchmark.CorvusJsonSchema2.PersonName.Create(
@@ -84,7 +84,7 @@ public class BenchmarkBuildAndWrite
                 competedInYears.Add(2024);
             }));
 
-        var writer = workspace.RentWriterAndBuffer(defaultBufferSize: 1024, out IByteBufferWriter bufferWriter);
+        Utf8JsonWriter writer = workspace.RentWriterAndBuffer(defaultBufferSize: 1024, out IByteBufferWriter bufferWriter);
         person.WriteTo(writer);
         writer.Flush();
         workspace.ReturnWriterAndBuffer(writer, bufferWriter);

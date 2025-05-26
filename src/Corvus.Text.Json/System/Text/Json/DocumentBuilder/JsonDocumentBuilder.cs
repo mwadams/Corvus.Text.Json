@@ -77,9 +77,8 @@ namespace Corvus.Text.Json
             where TElement : struct, IJsonElement<TElement>
         {
             _parentWorkspaceIndex = parentWorkspaceIndex;
-            byte[] metadataDbBytes;
             sourceElement.CheckValidInstance();
-            int metadataDbLength = sourceElement.ParentDocument.BuildRentedMetadataDb(sourceElement.ParentDocumentIndex, _workspace, out metadataDbBytes);
+            int metadataDbLength = sourceElement.ParentDocument.BuildRentedMetadataDb(sourceElement.ParentDocumentIndex, _workspace, out byte[] metadataDbBytes);
             _parsedData = MetadataDb.CreateRented(metadataDbBytes, metadataDbLength, convertToAlloc);
         }
 
@@ -107,7 +106,7 @@ namespace Corvus.Text.Json
 
             base.DisposeCore();
 
-            this._parentWorkspaceIndex = -1;
+            _parentWorkspaceIndex = -1;
         }
 
         JsonTokenType IJsonDocument.GetJsonTokenType(int index)
@@ -863,7 +862,7 @@ namespace Corvus.Text.Json
                 case JsonTokenType.String:
                     if (row.FromExternalDocument || forceEncoding)
                     {
-                        using var unescaped = GetUtf8JsonStringUnsafe(index, JsonTokenType.String);
+                        using UnescapedUtf8JsonString unescaped = GetUtf8JsonStringUnsafe(index, JsonTokenType.String);
                         writer.WriteStringValue(unescaped.Span);
                     }
                     else
@@ -905,7 +904,7 @@ namespace Corvus.Text.Json
                     case JsonTokenType.String:
                         if (row.FromExternalDocument || forceEncoding)
                         {
-                            using var unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.String);
+                            using UnescapedUtf8JsonString unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.String);
                             writer.WriteStringValue(unescaped.Span);
                         }
                         else
@@ -940,7 +939,7 @@ namespace Corvus.Text.Json
                     case JsonTokenType.PropertyName:
                         if (row.FromExternalDocument || forceEncoding)
                         {
-                            using var unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.PropertyName);
+                            using UnescapedUtf8JsonString unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.PropertyName);
                             writer.WritePropertyName(unescaped.Span);
                         }
                         else
@@ -979,10 +978,7 @@ namespace Corvus.Text.Json
         private ReadOnlySpan<byte> UnescapeString(int index, out ArraySegment<byte> rented)
         {
             DbRow row = _parsedData.Get(index);
-
-            Debug.Assert(row.TokenType == JsonTokenType.String || row.TokenType == JsonTokenType.PropertyName);
-            int loc = row.LocationOrIndex;
-            int length = row.SizeOrLengthOrPropertyMapIndex;
+            Debug.Assert(row.TokenType is JsonTokenType.String or JsonTokenType.PropertyName);
             ReadOnlySpan<byte> text = GetRawSimpleValueUnsafe(index, false).Span;
 
             if (!row.HasComplexChildren)
@@ -991,6 +987,7 @@ namespace Corvus.Text.Json
                 return text;
             }
 
+            int length = text.Length;
             byte[] rent = ArrayPool<byte>.Shared.Rent(length);
             JsonReaderHelper.Unescape(text, rent, out int written);
             rented = new ArraySegment<byte>(rent, 0, written);
@@ -1098,11 +1095,6 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            DbRow row = _parsedData.Get(index);
-
-            // With a mutable element, we don't go direct to the parent document;
-            // we indirect through this document so we get the correct index/mutability.
-
             if (TryGetNamedPropertyValueUnsafe(
                 index,
                 propertyName,
@@ -1121,11 +1113,6 @@ namespace Corvus.Text.Json
         bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement.Mutable value)
         {
             CheckNotDisposed();
-
-            DbRow row = _parsedData.Get(index);
-
-            // With a mutable element, we don't go direct to the parent document;
-            // we indirect through this document so we get the correct index/mutability.
 
             if (TryGetNamedPropertyValueUnsafe(
                 index,

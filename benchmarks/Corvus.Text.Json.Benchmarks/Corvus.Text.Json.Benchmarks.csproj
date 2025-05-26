@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);CS1591;SA1615;NU1510</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;SA1615;NU1510;CA1822</NoWarn>
     <Platforms>AnyCPU</Platforms>
     <LangVersion>Preview</LangVersion>
   </PropertyGroup>

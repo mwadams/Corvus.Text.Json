@@ -324,7 +324,7 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
             lastName: "Adams"u8,
             otherNames: "Francis James"u8);
     }),
-    competedInYears: new((ref CompetedInYears.Builder competedInYears) =>
+    competedInYears: new((ref competedInYears) =>
     {
         competedInYears.Add(2012);
         competedInYears.Add(2016);
@@ -352,7 +352,7 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocument(
     workspace,
     age: person.Age, // Happily assign an existing instance, will not copy
     name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
-    competedInYears: new((ref CompetedInYears.Builder competedInYears) =>
+    competedInYears: new((ref competedInYears) =>
     {
         competedInYears.Add(2012);
     }));
@@ -364,7 +364,7 @@ Console.WriteLine("************");
 Console.WriteLine("************");
 Console.WriteLine();
 
-var json =
+string json =
     """
     {
         "age": 51,
@@ -383,11 +383,11 @@ var personDoc = ParsedJsonDocument<JsonElement>.Parse(json);
 using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").CreateDocument(workspace);
 
 // Get the name element
-var nameValue = nameValueDoc.RootElement;
+JsonElement.Mutable nameValue = nameValueDoc.RootElement;
 Console.WriteLine(nameValue.ToString());
 
 // Stash away the lastName element to check it *doesn't* work past modification
-var lastName = nameValue.GetProperty("lastName"u8);
+JsonElement.Mutable lastName = nameValue.GetProperty("lastName"u8);
 
 // Modify the doc
 nameValue.SetProperty("firstName"u8, "Matthew"u8);

@@ -498,7 +498,7 @@ public readonly partial struct PersonArray
                 context.PopSchemaLocation();
             }
 
-            internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector resultsCollector)
+            internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
             {
                 JsonSchemaContext context = JsonSchemaContext.BeginContext(
                     parentDocument,
