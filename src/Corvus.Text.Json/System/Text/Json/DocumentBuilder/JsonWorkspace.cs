@@ -3,7 +3,6 @@
 
 using System.Buffers;
 using System.Collections.Generic;
-using System.Text.Encodings.Web;
 
 namespace Corvus.Text.Json
 {
@@ -13,20 +12,20 @@ namespace Corvus.Text.Json
     public class JsonWorkspace
         : IDisposable
     {
+        private static readonly JsonWriterOptions InternalWriterOptions = new() { Indented = false };
+
         private IJsonDocument[] _documents;
         private Dictionary<IJsonDocument, int> _documentIndices = [];
         private int _length;
 
-        public JsonWorkspace(int initialDocumentCapacity = 5)
+        public JsonWorkspace(int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
         {
             _documents = ArrayPool<IJsonDocument>.Shared.Rent(initialDocumentCapacity);
             _length = 0;
+            Options = options ?? InternalWriterOptions;
         }
 
-        /// <summary>
-        /// Get or set the <see cref="JavaScriptEncoder"/> for the workspace.
-        /// </summary>
-        public JavaScriptEncoder? Encoder { get; set; }
+        public JsonWriterOptions Options { get; }
 
         [CLSCompliant(false)]
         public IJsonDocument GetDocument(int index)
@@ -39,16 +38,16 @@ namespace Corvus.Text.Json
             return _documents[index];
         }
 
-        public Utf8JsonWriter RentWriterAndBuffer(JsonWriterOptions options, int defaultBufferSize, out IByteBufferWriter bufferWriter)
+        public Utf8JsonWriter RentWriterAndBuffer(int defaultBufferSize, out IByteBufferWriter bufferWriter)
         {
-            Utf8JsonWriter result = Utf8JsonWriterCache.RentWriterAndBuffer(options with { Encoder = Encoder }, defaultBufferSize, out PooledByteBufferWriter writer);
+            Utf8JsonWriter result = Utf8JsonWriterCache.RentWriterAndBuffer(Options, defaultBufferSize, out PooledByteBufferWriter writer);
             bufferWriter = writer;
             return result;
         }
 
-        public Utf8JsonWriter RentWriter(JsonWriterOptions options, IBufferWriter<byte> bufferWriter)
+        public Utf8JsonWriter RentWriter(IBufferWriter<byte> bufferWriter)
         {
-            return Utf8JsonWriterCache.RentWriter(options with { Encoder = Encoder }, bufferWriter);
+            return Utf8JsonWriterCache.RentWriter(Options, bufferWriter);
         }
 
         public void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)

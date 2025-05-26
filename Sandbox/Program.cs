@@ -269,24 +269,23 @@ Console.WriteLine();
 Console.WriteLine("************");
 Console.WriteLine();
 
-ArrayBufferWriter<byte> arrayBufferWriter = new(initialCapacity: 1024);
-using Utf8JsonWriter writer = new Utf8JsonWriter(arrayBufferWriter);
+Utf8JsonWriter writer = workspace.RentWriterAndBuffer(defaultBufferSize: 1024, out IByteBufferWriter bufferWriter);
 initializedBuilder.RootElement.WriteTo(writer);
 writer.Flush();
 
-Console.WriteLine(Encoding.UTF8.GetString(arrayBufferWriter.WrittenSpan));
-
+Console.WriteLine(Encoding.UTF8.GetString(bufferWriter.WrittenSpan));
+workspace.ReturnWriterAndBuffer(writer, bufferWriter);
 
 Console.WriteLine();
 Console.WriteLine("************");
 Console.WriteLine();
 
-arrayBufferWriter = new(initialCapacity: 1024);
-using Utf8JsonWriter writer2 = new Utf8JsonWriter(arrayBufferWriter, new JsonWriterOptions() { Indented = true });
-initializedBuilder.RootElement.WriteTo(writer2);
-writer2.Flush();
+writer = workspace.RentWriterAndBuffer(defaultBufferSize: 1024, out bufferWriter);
+initializedBuilder.RootElement.WriteTo(writer);
+writer.Flush();
 
-Console.WriteLine(Encoding.UTF8.GetString(arrayBufferWriter.WrittenSpan));
+Console.WriteLine(Encoding.UTF8.GetString(bufferWriter.WrittenSpan));
+workspace.ReturnWriterAndBuffer(writer, bufferWriter);
 
 #endif
 
@@ -305,11 +304,11 @@ Console.WriteLine();
 // Create a builder for our root element
 using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocument(
     workspace,
-    static (ref JsonObjectBuilder o) =>
+    static (ref o) =>
     {
         o.Add(
             "name"u8,
-            static (ref JsonObjectBuilder o) =>
+            static (ref o) =>
             {
                 o.Add("firstName"u8, "Michael"u8);
                 o.Add("lastName"u8, "Adams"u8);
@@ -339,18 +338,18 @@ int[] years = [2012, 2016, 2024];
 using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocument(
     workspace,
     age: 51,
-    name: new(static (ref PersonName.Builder personName) =>
+    name: new(static (ref personName) =>
     {
         personName.Create(
             firstName: "Michael"u8,
             lastName: "Adams"u8,
-            otherNames: new(static (ref NameComponentArray.Builder otherNames) =>
+            otherNames: new(static (ref otherNames) =>
             {
                 otherNames.Add("Francis"u8);
                 otherNames.Add("James"u8);
             }));
     }),
-    competedInYears: new((ref CompetedInYears.Builder competedInYears) =>
+    competedInYears: new((ref competedInYears) =>
     {
         foreach (int year in years)
         {
@@ -370,7 +369,7 @@ Console.WriteLine(docBuilder.RootElement.ToString());
 using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
     workspace,
     age: 51,
-    name: new(static (ref PersonName.Builder personName) =>
+    name: new((ref personName) =>
     {
         personName.Create(
             firstName: "Michael"u8,
@@ -379,10 +378,9 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
     }),
     competedInYears: new((ref CompetedInYears.Builder competedInYears) =>
     {
-        foreach (int year in years)
-        {
-            competedInYears.Add(year);
-        }
+        competedInYears.Add(2012);
+        competedInYears.Add(2016);
+        competedInYears.Add(2024);
     }));
 
 
