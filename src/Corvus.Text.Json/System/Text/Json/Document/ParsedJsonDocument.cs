@@ -1126,7 +1126,7 @@ namespace Corvus.Text.Json
                 case JsonTokenType.String:
                 case JsonTokenType.PropertyName:
                     DbRow row = _parsedData.Get(index);
-                    db.AppendExternal(row.TokenType, index, 1, workspaceDocumentIndex);
+                    db.AppendExternal(row.TokenType, index, row.RawSizeOrLength, workspaceDocumentIndex);
                     return 1;
 
                 case JsonTokenType.StartObject:
@@ -1142,7 +1142,7 @@ namespace Corvus.Text.Json
         {
             int count = 2;
             DbRow complexObjectRow = _parsedData.Get(index);
-            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.SizeOrLengthOrPropertyMapIndex, workspaceDocumentIndex);
+            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
 
             int endIndex = index + GetDbSizeUnsafe(index, false);
 
@@ -1154,7 +1154,7 @@ namespace Corvus.Text.Json
             }
 
             complexObjectRow = _parsedData.Get(endIndex);
-            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.SizeOrLengthOrPropertyMapIndex, complexObjectRow.NumberOfRows);
+            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, complexObjectRow.NumberOfRows);
             return count;
         }
     }

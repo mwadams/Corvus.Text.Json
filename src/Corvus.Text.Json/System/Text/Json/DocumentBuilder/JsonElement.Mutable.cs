@@ -50,6 +50,7 @@ namespace Corvus.Text.Json
             private readonly int _idx;
             private ulong _documentVersion;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
             internal Mutable(IJsonDocument parent, int idx)
             {
                 // parent is usually not null, but the Current property
@@ -57,12 +58,11 @@ namespace Corvus.Text.Json
                 // get here with a null.
                 Debug.Assert(idx >= 0);
 
-                Debug.Assert(parent is IMutableJsonDocument, "The parent must be a mutable JSON document");
-
                 _parent = (IMutableJsonDocument)parent;
                 _idx = idx;
-                _documentVersion = _parent.Version;
+                _documentVersion = _parent?.Version ?? 0;
             }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private JsonTokenType TokenType

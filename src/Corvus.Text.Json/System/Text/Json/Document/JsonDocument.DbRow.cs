@@ -78,7 +78,6 @@ namespace Corvus.Text.Json
                 Debug.Assert(jsonTokenType > JsonTokenType.None && jsonTokenType <= JsonTokenType.Null, "The token type is out of the valid range.");
                 Debug.Assert((byte)jsonTokenType < 1 << 4, "The token type is out of the valid range");
                 Debug.Assert(externalIndex >= 0, "The location must be >= 0");
-                Debug.Assert(sizeOrLength >= UnknownSize, "The size or length must be >= 0, or UnknownSize");
                 Debug.Assert(workspaceDocumentIndex >= 0, "The parent document index must be >= 0");
 
                 _locationAndFromExternalDocumentUnion = (uint)externalIndex | 0x8000_0000U; // Add the sign bit to indicate that this is from an external document.

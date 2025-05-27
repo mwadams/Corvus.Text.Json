@@ -962,7 +962,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.StartObject, row.TokenType);
 
             // Only one row means it was EndObject.
-            if (row.NumberOfRows == 1)
+            if (!row.FromExternalDocument && row.NumberOfRows == 1)
             {
                 valueIndex = -1;
                 return false;
@@ -1007,7 +1007,7 @@ namespace Corvus.Text.Json
             CheckExpectedType(JsonTokenType.StartObject, row.TokenType);
 
             // Only one row means it was EndObject.
-            if (row.NumberOfRows == 1)
+            if (!row.FromExternalDocument && row.NumberOfRows == 1)
             {
                 valueIndex = -1;
                 return false;

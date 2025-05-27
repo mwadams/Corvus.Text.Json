@@ -3,6 +3,7 @@
 
 using System.Buffers;
 using System.Buffers.Text;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -47,11 +48,18 @@ namespace Corvus.Text.Json
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         JsonWorkspace IMutableJsonDocument.Workspace => _workspace;
 
+        public T RootElement
+        {
+            get
+            {
+                CheckNotDisposed();
 #if NET
-        public T RootElement => T.CreateInstance(this, 0);
+                return T.CreateInstance(this, 0);
 #else
-        public T RootElement => JsonElementHelpers.CreateInstance<T>(this, 0);
+                return JsonElementHelpers.CreateInstance<T>(this, 0);
 #endif
+            }
+        }
 
         /// <summary>
         ///  Write the document into the provided writer as a JSON value.
@@ -97,7 +105,7 @@ namespace Corvus.Text.Json
             }
         }
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             if (_parentWorkspaceIndex == -1)
             {
@@ -759,8 +767,8 @@ namespace Corvus.Text.Json
             if (row.FromExternalDocument && valueRow.FromExternalDocument &&
                 row.WorkspaceDocumentId == valueRow.WorkspaceDocumentId)
             {
-                IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-                return document.GetPropertyRawValueAsString(row.LocationOrIndex);
+                IJsonDocument document = _workspace.GetDocument(valueRow.WorkspaceDocumentId);
+                return document.GetPropertyRawValueAsString(valueRow.LocationOrIndex);
             }
 
             Utf8JsonWriter writer = _workspace.RentWriterAndBuffer(_parsedData.Length, out IByteBufferWriter bufferWriter);
@@ -1190,7 +1198,7 @@ namespace Corvus.Text.Json
                 case JsonTokenType.Number:
                 case JsonTokenType.String:
                 case JsonTokenType.PropertyName:
-                    db.AppendExternal(row.TokenType, index, 1, workspaceDocumentIndex);
+                    db.AppendExternal(row.TokenType, index, row.RawSizeOrLength, workspaceDocumentIndex);
                     return;
 
                 case JsonTokenType.StartObject:
@@ -1231,7 +1239,7 @@ namespace Corvus.Text.Json
                 case JsonTokenType.String:
                 case JsonTokenType.PropertyName:
                     DbRow row = _parsedData.Get(index);
-                    db.AppendExternal(row.TokenType, index, 1, workspaceDocumentIndex);
+                    db.AppendExternal(row.TokenType, index, row.RawSizeOrLength, workspaceDocumentIndex);
                     return;
 
                 case JsonTokenType.StartObject:

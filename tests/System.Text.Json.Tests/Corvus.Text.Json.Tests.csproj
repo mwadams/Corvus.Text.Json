@@ -57,6 +57,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />
+    <Compile Include="JsonDocumentBuilderTests.cs" />
     <Compile Include="JsonElementNumberTest.cs" />
     <Compile Include="JsonSchemaContextTests.cs" />
     <!-- Include common SR helper when resources are included. -->
@@ -188,7 +189,7 @@
     <Compile Include="InvalidBufferWriter.cs" />
     <Compile Include="JsonBase64TestData.cs" />
     <Compile Include="JsonDateTimeTestData.cs" />
-    <Compile Include="JsonDocumentTests.cs" />
+    <Compile Include="ParsedJsonDocumentTests.cs" />
     <Compile Include="JsonElementCloneTests.cs" />
     <Compile Include="JsonElementParseTests.cs" />
     <Compile Include="JsonElementWriteTests.cs" />
