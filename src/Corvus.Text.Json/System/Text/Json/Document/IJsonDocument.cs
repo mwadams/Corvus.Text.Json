@@ -57,6 +57,5 @@ namespace Corvus.Text.Json
         int GetDbSize(int index, bool includeEndElement);
         int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking);
         void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref JsonDocument.MetadataDb db);
-        UnescapedUtf8JsonString GetUtf8NameOfPropertyValue(int currentIndex);
     }
 }
