@@ -244,16 +244,16 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
 
             public static implicit operator Source(NameComponentArray instance) => new(instance);
 
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
             {
                 if (Builder is Build builder)
                 {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(builder, ref o), escapeName);
+                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(builder, ref o), escapeName, nameRequiresUnescaping);
                 }
                 else
                 {
                     Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName);
+                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
                 }
             }
 

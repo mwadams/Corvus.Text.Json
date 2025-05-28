@@ -492,12 +492,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                 }
             }
 
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
             {
 
                 if (JsonElementInstance.ValueKind != JsonValueKind.Undefined)
                 {
-                    valueBuilder.AddProperty(utf8Name, JsonElementInstance, escapeName);
+                    valueBuilder.AddProperty(utf8Name, JsonElementInstance, escapeName, nameRequiresUnescaping);
                 }
                 else if (NameComponentArrayBuilder is NameComponentArray.Builder.Build nameComponentArrayBuilder)
                 {
@@ -506,7 +506,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                 }
                 else
                 {
-                    valueBuilder.AddProperty(utf8Name, NameComponentSpan, escapeName, escapeValue: true);
+                    valueBuilder.AddProperty(utf8Name, NameComponentSpan, escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
                 }
             }
         }

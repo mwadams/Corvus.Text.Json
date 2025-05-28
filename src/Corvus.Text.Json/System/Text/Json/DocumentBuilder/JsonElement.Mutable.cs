@@ -67,12 +67,12 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentRawString(JsonWorkspace workspace, ReadOnlySpan<byte> value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentRawString(JsonWorkspace workspace, ReadOnlySpan<byte> value, bool requiresUnescaping)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value, false);
+            cvb.AddItem(value, false, requiresUnescaping);
             ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
             return documentBuilder;
         }

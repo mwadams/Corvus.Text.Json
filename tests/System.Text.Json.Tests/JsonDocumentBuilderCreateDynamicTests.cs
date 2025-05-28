@@ -2295,7 +2295,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Equal("null", property.Name);
                 Assert.Equal("null", property.Value.GetRawText());
                 Assert.Equal(string.Empty, property.Value.ToString());
-                Assert.Equal("\"null\":null", property.ToString());
+                Assert.Equal("\"n\\u0075ll\":null", property.ToString());
 
                 Assert.True(enumerator.MoveNext(), "Move to multiLineArray property");
                 property = enumerator.Current;
@@ -3135,8 +3135,7 @@ namespace Corvus.Text.Json.Tests
                 {
                     foreach (JsonProperty<JsonElement> property in source.EnumerateObject())
                     {
-                        using var name = property.NameSpan;
-                        BuildProperty(name.Span, property.Value, ref objectBuilder);
+                        BuildProperty(property.RawNameSpan, property.Value, ref objectBuilder, property.NameIsEscaped);
                     }
                 });
             }
@@ -3152,8 +3151,7 @@ namespace Corvus.Text.Json.Tests
             }
             else if (source.ValueKind == JsonValueKind.String)
             {
-                using var utf8StringValue = source.GetUtf8String();
-                return JsonElement.CreateDocumentRawString(workspace, utf8StringValue.Span);
+                return JsonElement.CreateDocumentRawString(workspace, source.ValueSpan, source.ValueIsEscaped);
             }
             else if (source.ValueKind == JsonValueKind.True)
             {
@@ -3174,7 +3172,7 @@ namespace Corvus.Text.Json.Tests
 
             throw new InvalidOperationException($"Unsupported value kind {source.ValueKind}");
 
-            static void BuildProperty(ReadOnlySpan<byte> propertyName, JsonElement propertyValue, ref JsonObjectBuilder builder)
+            static void BuildProperty(ReadOnlySpan<byte> propertyName, JsonElement propertyValue, ref JsonObjectBuilder builder, bool nameRequiresUnescaping)
             {
                 switch (propertyValue.ValueKind)
                 {
@@ -3183,10 +3181,11 @@ namespace Corvus.Text.Json.Tests
                         {
                             foreach (JsonProperty<JsonElement> property in propertyValue.EnumerateObject())
                             {
-                                using var name = property.NameSpan;
-                                BuildProperty(name.Span, property.Value, ref objectBuilder);
+                                BuildProperty(property.RawNameSpan, property.Value, ref objectBuilder, property.NameIsEscaped);
                             }
-                        });
+                        },
+                        escapeName: false,
+                        nameRequiresUnescaping);
                         break;
                     case JsonValueKind.Array:
                         builder.Add(propertyName, (ref JsonArrayBuilder arrayBuilder) =>
@@ -3195,22 +3194,24 @@ namespace Corvus.Text.Json.Tests
                             {
                                 BuildItem(value, ref arrayBuilder);
                             }
-                        });
+                        },
+                        escapeName: false,
+                        nameRequiresUnescaping);
                         break;
                     case JsonValueKind.String:
-                        builder.AddRawString(propertyName, propertyValue.ValueSpan);
+                        builder.AddRawString(propertyName, propertyValue.ValueSpan, propertyValue.ValueIsEscaped, escapeName: false, nameRequiresUnescaping);
                         break;
                     case JsonValueKind.Number:
-                        builder.AddFormattedNumber(propertyName, propertyValue.ValueSpan);
+                        builder.AddFormattedNumber(propertyName, propertyValue.ValueSpan, escapeName: false, nameRequiresUnescaping);
                         break;
                     case JsonValueKind.True:
-                        builder.Add(propertyName, true);
+                        builder.Add(propertyName, true, escapeName: false, nameRequiresUnescaping);
                         break;
                     case JsonValueKind.False:
-                        builder.Add(propertyName, false);
+                        builder.Add(propertyName, false, escapeName: false, nameRequiresUnescaping);
                         break;
                     case JsonValueKind.Null:
-                        builder.AddNull(propertyName);
+                        builder.AddNull(propertyName, escapeName: false, nameRequiresUnescaping);
                         break;
                     default:
                         throw new NotSupportedException("Unsupported JSON value kind: " + propertyValue.ValueKind);
@@ -3226,8 +3227,7 @@ namespace Corvus.Text.Json.Tests
                         {
                             foreach (JsonProperty<JsonElement> property in value.EnumerateObject())
                             {
-                                using var name = property.NameSpan;
-                                BuildProperty(name.Span, property.Value, ref objectBuilder);
+                                BuildProperty(property.RawNameSpan, property.Value, ref objectBuilder, property.NameIsEscaped);
                             }
                         });
                         break;
@@ -3241,7 +3241,7 @@ namespace Corvus.Text.Json.Tests
                         });
                         break;
                     case JsonValueKind.String:
-                        builder.AddRawString(value.ValueSpan);
+                        builder.AddRawString(value.ValueSpan, value.ValueIsEscaped);
                         break;
                     case JsonValueKind.Number:
                         builder.AddFormattedNumber(value.ValueSpan);

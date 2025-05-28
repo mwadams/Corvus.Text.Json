@@ -28,171 +28,218 @@ namespace Corvus.Text.Json
             valueBuilder.EndObject();
         }
 
-        public void AddFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+        public void AddFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddPropertyFormattedNumber(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void AddRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+        public void AddRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddPropertyRawString(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping,
+                valueRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, Build value)
+        public void Add(ReadOnlySpan<byte> propertyName, Build value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                (ref ComplexValueBuilder valueBuilder) => BuildValue(value, ref valueBuilder));
+                (ref ComplexValueBuilder valueBuilder) => BuildValue(value, ref valueBuilder),
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, JsonArrayBuilder.Build value)
+        public void Add(ReadOnlySpan<byte> propertyName, JsonArrayBuilder.Build value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                (ref ComplexValueBuilder valueBuilder) => JsonArrayBuilder.BuildValue(value, ref valueBuilder));
+                (ref ComplexValueBuilder valueBuilder) => JsonArrayBuilder.BuildValue(value, ref valueBuilder),
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String)
+        public void Add(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName = true, bool escapeValue = true, bool nameRequiresUnescaping = false, bool valueRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                utf8String);
+                utf8String,
+                escapeName,
+                escapeValue,
+                nameRequiresUnescaping,
+                valueRequiresUnescaping);
         }
 
-        public void AddNull(ReadOnlySpan<byte> propertyName)
+        public void AddNull(ReadOnlySpan<byte> propertyName, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
-            _builder.AddPropertyNull(propertyName);
+            _builder.AddPropertyNull(propertyName, escapeName, nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, bool value)
+        public void Add(ReadOnlySpan<byte> propertyName, bool value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
         [CLSCompliant(false)]
-        public void Add<T>(ReadOnlySpan<byte> propertyName, T value)
+        public void Add<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName = true, bool nameRequiresUnescaping = false)
             where T : struct, IJsonElement<T>
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, Guid value)
+        public void Add(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
-        }
-
-        [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, sbyte value)
-        {
-            _builder.AddProperty(
-                propertyName,
-                value);
-        }
-
-        public void Add(ReadOnlySpan<byte> propertyName, byte value)
-        {
-            _builder.AddProperty(
-                propertyName,
-                value);
-        }
-
-        public void Add(ReadOnlySpan<byte> propertyName, int value)
-        {
-            _builder.AddProperty(
-                propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, uint value)
+        public void Add(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, long value)
+        public void Add(ReadOnlySpan<byte> propertyName, byte value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, int value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, ulong value)
+        public void Add(ReadOnlySpan<byte> propertyName, uint value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, short value)
+        public void Add(ReadOnlySpan<byte> propertyName, long value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, ushort value)
+        public void Add(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, float value)
+        public void Add(ReadOnlySpan<byte> propertyName, short value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, double value)
+        [CLSCompliant(false)]
+        public void Add(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, decimal value)
+        public void Add(ReadOnlySpan<byte> propertyName, float value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, double value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
 #if NET
-        public void Add(ReadOnlySpan<byte> propertyName, Int128 value)
+        public void Add(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, UInt128 value)
+        public void Add(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, Half value)
+        public void Add(ReadOnlySpan<byte> propertyName, Half value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             _builder.AddProperty(
                 propertyName,
-                value);
+                value,
+                escapeName,
+                nameRequiresUnescaping);
         }
 #endif
     }

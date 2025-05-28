@@ -50,10 +50,11 @@ namespace Corvus.Text.Json
                 value);
         }
 
-        public void AddRawString(ReadOnlySpan<byte> value)
+        public void AddRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
         {
             _builder.AddItemRawString(
-                value);
+                value,
+                requiresUnescaping);
         }
 
         public void AddNull()

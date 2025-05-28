@@ -37,7 +37,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ValueBuilderAction createComplexValue)
         {
-            AddProperty(propertyName, createComplexValue, true);
+            AddProperty(propertyName, createComplexValue, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -46,13 +46,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), createComplexValue);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, ValueBuilderAction createComplexValue, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ValueBuilderAction createComplexValue, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
             int currentRowCount = _rowCount;
             _memberCount = 0;
             _rowCount = 0;
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             createComplexValue(ref this);
             _memberCount = currentMemberCount + 1;
             _rowCount = currentRowCount + _rowCount + 1;
@@ -73,7 +73,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String)
         {
-            AddProperty(propertyName, utf8String, escapeName: true, escapeValue: true);
+            AddProperty(propertyName, utf8String, escapeName: true, escapeValue: true, false, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,10 +82,10 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value.AsSpan());
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName, bool escapeValue)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName, bool escapeValue, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
-            AddStringValue(JsonTokenType.String, utf8String, escapeValue);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            AddStringValue(JsonTokenType.String, utf8String, escapeValue, valueRequiresUnescaping);
             _memberCount += 1;
             _rowCount += 2;
         }
@@ -100,7 +100,7 @@ namespace Corvus.Text.Json.Internal
 
         public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
         {
-            AddPropertyFormattedNumber(propertyName, value, true);
+            AddPropertyFormattedNumber(propertyName, value, true, false);
         }
 
         public void AddPropertyFormattedNumber(string propertyName, string value)
@@ -108,9 +108,9 @@ namespace Corvus.Text.Json.Internal
             AddPropertyFormattedNumber(propertyName.AsSpan(), value.AsSpan());
         }
 
-        public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName)
+        public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: value.IndexOfAny((byte)'e', (byte)'E') >= 0);
             _memberCount += 1;
             _rowCount += 2;
@@ -124,15 +124,15 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
-        public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+        public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
         {
-            AddPropertyRawString(propertyName, value, true);
+            AddPropertyRawString(propertyName, value, true, false, valueRequiresUnescaping);
         }
 
-        public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName)
+        public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
-            AddStringValue(JsonTokenType.String, value, false);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            AddStringValue(JsonTokenType.String, value, escape: false, ifNotEscapeRequiresUenscaping: valueRequiresUnescaping);
             _memberCount += 1;
             _rowCount += 2;
         }
@@ -140,7 +140,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddPropertyNull(ReadOnlySpan<byte> propertyName)
         {
-            AddPropertyNull(propertyName, true);
+            AddPropertyNull(propertyName, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -149,9 +149,9 @@ namespace Corvus.Text.Json.Internal
             AddPropertyNull(propertyName.AsSpan());
         }
 
-        public void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName)
+        public void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Null, _parentDocument.StoreNullValue(), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -168,7 +168,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, bool value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -177,9 +177,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(value ? JsonTokenType.True : JsonTokenType.False, _parentDocument.StoreBooleanValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -198,7 +198,7 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value)
             where T : struct, IJsonElement<T>
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -210,11 +210,11 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName)
+        public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName, bool nameRequiresUnescaping)
             where T : struct, IJsonElement<T>
         {
             int currentLength = Length;
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
             _memberCount += 1;
             _rowCount += (Length - currentLength) / JsonDocument.DbRow.Size;
@@ -234,7 +234,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, Guid value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -243,9 +243,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -263,7 +263,7 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -274,9 +274,9 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -294,7 +294,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, byte value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -303,9 +303,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, byte value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, byte value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -322,7 +322,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, int value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -331,9 +331,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, int value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, int value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -351,7 +351,7 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, uint value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -362,9 +362,9 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public void AddProperty(ReadOnlySpan<byte> propertyName, uint value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, uint value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -382,7 +382,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, long value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -391,9 +391,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, long value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, long value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -411,7 +411,7 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -422,9 +422,9 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -442,7 +442,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, short value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -451,9 +451,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, short value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, short value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -471,7 +471,7 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -482,9 +482,9 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -502,7 +502,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, float value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -511,9 +511,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, float value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, float value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -530,7 +530,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, double value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -539,9 +539,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, double value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, double value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -558,7 +558,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -567,9 +567,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -587,7 +587,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -596,9 +596,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -616,7 +616,7 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -627,9 +627,9 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -647,7 +647,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, Half value)
         {
-            AddProperty(propertyName, value, true);
+            AddProperty(propertyName, value, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -656,9 +656,9 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName.AsSpan(), value);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, Half value, bool escapeName)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, Half value, bool escapeName, bool nameRequiresUnescaping)
         {
-            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount += 2;
@@ -676,7 +676,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddItem(ReadOnlySpan<byte> utf8String)
         {
-            AddItem(utf8String, true);
+            AddItem(utf8String, true, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -685,9 +685,9 @@ namespace Corvus.Text.Json.Internal
             AddItem(value.AsSpan());
         }
 
-        public void AddItem(ReadOnlySpan<byte> utf8String, bool escapeValue)
+        public void AddItem(ReadOnlySpan<byte> utf8String, bool escapeValue, bool requiresUnescaping)
         {
-            AddStringValue(JsonTokenType.String, utf8String, escapeValue);
+            AddStringValue(JsonTokenType.String, utf8String, escapeValue, requiresUnescaping);
             _memberCount += 1;
             _rowCount += 1;
         }
@@ -699,9 +699,9 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 1;
         }
 
-        public void AddItemRawString(ReadOnlySpan<byte> value)
+        public void AddItemRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
         {
-            AddStringValue(JsonTokenType.String, value, false);
+            AddStringValue(JsonTokenType.String, value, false, requiresUnescaping);
             _memberCount += 1;
             _rowCount++;
         }
@@ -944,14 +944,14 @@ namespace Corvus.Text.Json.Internal
             _parsedData.Overwrite(ref targetData, startIndex);
         }
 
-        private void AddStringValue(JsonTokenType tokenType, ReadOnlySpan<byte> stringValue, bool escape)
+        private void AddStringValue(JsonTokenType tokenType, ReadOnlySpan<byte> stringValue, bool escape, bool ifNotEscapeRequiresUenscaping)
         {
             Debug.Assert(tokenType is JsonTokenType.PropertyName or JsonTokenType.String);
 
             if (!escape)
             {
                 int location = _parentDocument.StoreRawStringValue(stringValue);
-                _parsedData.AppendDynamicSimpleValue(tokenType, location, requiresUnescapingOrHasExponent: stringValue.IndexOf(JsonConstants.BackSlash) >= 0);
+                _parsedData.AppendDynamicSimpleValue(tokenType, location, requiresUnescapingOrHasExponent: ifNotEscapeRequiresUenscaping);
             }
             else
             {

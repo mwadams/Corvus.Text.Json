@@ -439,15 +439,15 @@ public readonly partial struct PersonArray
                     }
                 }
 
-                internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
+                internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
                 {
                     if (Instance.ValueKind != JsonValueKind.Undefined)
                     {
-                        valueBuilder.AddProperty(utf8Name, Instance, escapeName);
+                        valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
                     }
                     else
                     {
-                        valueBuilder.AddProperty(utf8Name, Int32Value, escapeName);
+                        valueBuilder.AddProperty(utf8Name, Int32Value, escapeName, nameRequiresUnescaping);
                     }
                 }
             }

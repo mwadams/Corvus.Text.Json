@@ -209,15 +209,15 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
 
             public static implicit operator Source(CompetedInYears instance) => new(instance);
 
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
             {
                 if (Builder is Build competedInYearsBuilder)
                 {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(competedInYearsBuilder, ref o), escapeName);
+                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(competedInYearsBuilder, ref o), escapeName, nameRequiresUnescaping);
                 }
                 else
                 {
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName);
+                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
                 }
             }
 

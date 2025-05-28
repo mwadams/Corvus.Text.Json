@@ -226,13 +226,13 @@ namespace Corvus.Text.Json
             _tokenType = JsonTokenType.String;
         }
 
-        internal void WriteStringValueUnescaped(ReadOnlySpan<byte> utf8Value)
-        {
-            JsonWriterHelper.ValidateValue(utf8Value);
-            WriteStringByOptions(utf8Value);
-            SetFlagToAddListSeparatorBeforeNextItem();
-            _tokenType = JsonTokenType.String;
-        }
+        ////internal void WriteStringValueUnescaped(ReadOnlySpan<byte> utf8Value)
+        ////{
+        ////    JsonWriterHelper.ValidateValue(utf8Value);
+        ////    WriteStringByOptions(utf8Value);
+        ////    SetFlagToAddListSeparatorBeforeNextItem();
+        ////    _tokenType = JsonTokenType.String;
+        ////}
 
 
         private void WriteStringEscape(ReadOnlySpan<byte> utf8Value)

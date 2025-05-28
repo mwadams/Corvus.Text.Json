@@ -309,7 +309,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             else
             {
                 // We are going to insert the new value
-                value.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref cvb, escapeName: false);
+                value.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref cvb, escapeName: false, nameRequiresUnescaping: false);
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -331,7 +331,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             else
             {
                 // We are going to insert the new value
-                value.AddAsProperty(JsonPropertyNamesEscaped.LastName, ref cvb, escapeName: false);
+                value.AddAsProperty(JsonPropertyNamesEscaped.LastName, ref cvb, escapeName: false, nameRequiresUnescaping: false);
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -353,7 +353,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             else
             {
                 // We are going to insert the new value
-                value.AddAsProperty(JsonPropertyNamesEscaped.OtherNames, ref cvb, escapeName: false);
+                value.AddAsProperty(JsonPropertyNamesEscaped.OtherNames, ref cvb, escapeName: false, nameRequiresUnescaping: false);
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -546,16 +546,16 @@ public readonly struct PersonName : IJsonElement<PersonName>
 
             public static implicit operator Source(PersonName instance) => new(instance);
 
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true)
+            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
             {
                 if (Builder is Build nameBuilder)
                 {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(nameBuilder, ref o), escapeName);
+                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(nameBuilder, ref o), escapeName, nameRequiresUnescaping);
                 }
                 else
                 {
                     Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName);
+                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
                 }
             }
 

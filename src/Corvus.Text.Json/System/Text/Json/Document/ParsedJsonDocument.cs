@@ -892,7 +892,7 @@ namespace Corvus.Text.Json
 
             DbRow row = _parsedData.Get(index - DbRow.Size);
             Debug.Assert(row.TokenType == JsonTokenType.PropertyName);
-            writer.WritePropertyNameUnescaped(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
+            writer.WritePropertyName(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
 
         }
 
