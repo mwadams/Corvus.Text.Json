@@ -57,6 +57,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />
+    <Compile Include="JsonDocumentBuilderCreateDynamicTests.cs" />
     <Compile Include="JsonDocumentBuilderTests.cs" />
     <Compile Include="JsonElementNumberTest.cs" />
     <Compile Include="JsonSchemaContextTests.cs" />

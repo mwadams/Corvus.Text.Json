@@ -129,14 +129,12 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, bool value)
         {
             AddProperty(propertyName, value, true);
-            _rowCount += 2;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(string propertyName, bool value)
         {
             AddProperty(propertyName.AsSpan(), value);
-            _rowCount += 2;
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName)

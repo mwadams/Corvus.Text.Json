@@ -936,7 +936,7 @@ namespace Corvus.Text.Json
             uint length = BitConverter.ToUInt32(_valueBacking!, offset);
 
             DynamicValueType valueType = (DynamicValueType)(length & 0xF);
-            Debug.Assert(valueType == DynamicValueType.QuotedUtf8String || valueType == DynamicValueType.Number, $"Expected Unescaped UTF8 string at {offset}");
+            Debug.Assert(valueType is DynamicValueType.QuotedUtf8String or DynamicValueType.Number or DynamicValueType.Boolean or DynamicValueType.Null, $"Expected simple value at {offset}");
 
             length >>= 4;
 
