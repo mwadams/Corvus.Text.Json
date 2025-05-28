@@ -89,6 +89,195 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocumentFormattedNumber(JsonWorkspace workspace, ReadOnlySpan<byte> formattedNumber)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItemFormattedNumber(formattedNumber);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocumentFormattedNumber(JsonWorkspace workspace, string formattedNumber)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItemFormattedNumber(formattedNumber);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocumentFormattedNumber(JsonWorkspace workspace, ReadOnlySpan<char> formattedNumber)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItemFormattedNumber(formattedNumber);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, long value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, ulong value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, uint value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, short value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, ushort value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, sbyte value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, byte value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, double value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, float value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, decimal value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+#if NET
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Int128 value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, UInt128 value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Half value)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
+            cvb.AddItem(value);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+#endif
+
+        [CLSCompliant(false)]
         public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
         {
             return workspace.CreateDocument<JsonElement, Mutable>(this);

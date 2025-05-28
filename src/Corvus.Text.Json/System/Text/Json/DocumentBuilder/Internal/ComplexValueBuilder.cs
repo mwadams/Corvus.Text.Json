@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -93,6 +94,32 @@ namespace Corvus.Text.Json.Internal
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
             AddStringValue(JsonTokenType.String, value);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+        {
+            AddPropertyFormattedNumber(propertyName, value, true);
+        }
+
+        public void AddPropertyFormattedNumber(string propertyName, string value)
+        {
+            AddPropertyFormattedNumber(propertyName.AsSpan(), value.AsSpan());
+        }
+
+        public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: value.IndexOfAny((byte)'e', (byte)'E') >= 0);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddPropertyFormattedNumber(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: value.IndexOfAny('e', 'E') >= 0);
             _memberCount += 1;
             _rowCount += 2;
         }
@@ -680,6 +707,25 @@ namespace Corvus.Text.Json.Internal
         public void AddItem(bool value)
         {
             _parsedData.AppendDynamicSimpleValue(value ? JsonTokenType.True : JsonTokenType.False, _parentDocument.StoreBooleanValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItemFormattedNumber(string value)
+        {
+            AddItemFormattedNumber(value.AsSpan());
+        }
+
+        public void AddItemFormattedNumber(ReadOnlySpan<byte> value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItemFormattedNumber(ReadOnlySpan<char> value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount++;
         }

@@ -584,6 +584,11 @@ namespace Corvus.Text.Json
             return GetInvalidOperationException(SR.CannotTranscodeInvalidUtf8, innerException);
         }
 
+        public static InvalidOperationException GetInvalidOperationException_ReadInvalidUTF16(DecoderFallbackException? innerException = null)
+        {
+            return GetInvalidOperationException(SR.CannotTranscodeInvalidUtf16, innerException);
+        }
+
         public static ArgumentException GetArgumentException_ReadInvalidUTF16(EncoderFallbackException innerException)
         {
             return new ArgumentException(SR.CannotTranscodeInvalidUtf16, innerException);

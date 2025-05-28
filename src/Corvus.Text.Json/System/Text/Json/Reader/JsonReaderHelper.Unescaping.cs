@@ -5,6 +5,7 @@ using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Text.Unicode;
 
 namespace Corvus.Text.Json
@@ -310,6 +311,44 @@ namespace Corvus.Text.Json
                 // and while unescaping, using that exception for failure to decode invalid UTF-8 bytes as well.
                 // Therefore, wrapping the DecoderFallbackException around an InvalidOperationException.
                 throw ThrowHelper.GetInvalidOperationException_ReadInvalidUTF8(dfe);
+            }
+            catch (ArgumentException)
+            {
+                // Destination buffer was too small; clear it up since the encoder might have not.
+                destination.Clear();
+                throw;
+            }
+        }
+
+        public static int TranscodeHelper(ReadOnlySpan<char> chars, Span<byte> destination)
+        {
+            try
+            {
+#if NET
+                return s_utf8Encoding.GetBytes(chars, destination);
+#else
+                if (chars.IsEmpty)
+                {
+                    return 0;
+                }
+                unsafe
+                {
+                    fixed (char* srcPtr = chars)
+                    fixed (byte* destPtr = destination)
+                    {
+                        return s_utf8Encoding.GetBytes(srcPtr, chars.Length, destPtr, destination.Length);
+                    }
+                }
+#endif
+            }
+            catch (DecoderFallbackException dfe)
+            {
+                // We want to be consistent with the exception being thrown
+                // so the user only has to catch a single exception.
+                // Since we already throw InvalidOperationException for mismatch token type,
+                // and while unescaping, using that exception for failure to decode invalid UTF-16 bytes as well.
+                // Therefore, wrapping the DecoderFallbackException around an InvalidOperationException.
+                throw ThrowHelper.GetInvalidOperationException_ReadInvalidUTF16(dfe);
             }
             catch (ArgumentException)
             {

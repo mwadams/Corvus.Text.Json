@@ -28,6 +28,13 @@ namespace Corvus.Text.Json
             valueBuilder.EndObject();
         }
 
+        public void AddFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+        {
+            _builder.AddPropertyFormattedNumber(
+                propertyName,
+                value);
+        }
+
         public void Add(ReadOnlySpan<byte> propertyName, Build value)
         {
             _builder.AddProperty(

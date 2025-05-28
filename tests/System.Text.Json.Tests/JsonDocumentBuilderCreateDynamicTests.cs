@@ -2279,9 +2279,9 @@ namespace Corvus.Text.Json.Tests
                 property = enumerator.Current;
 
                 Assert.Equal("number", property.Name);
-                Assert.Equal("\"number\":10200", property.ToString());
+                Assert.Equal("\"number\":1.02e+4", property.ToString());
                 Assert.Equal(10200.0, property.Value.GetDouble());
-                Assert.Equal("10200", property.Value.GetRawText());
+                Assert.Equal("1.02e+4", property.Value.GetRawText());
 
                 Assert.True(enumerator.MoveNext(), "Move to bool property");
                 property = enumerator.Current;
@@ -3169,6 +3169,10 @@ namespace Corvus.Text.Json.Tests
             {
                 return JsonElement.CreateDocumentNull(workspace);
             }
+            else if (source.ValueKind == JsonValueKind.Number)
+            {
+                return JsonElement.CreateDocumentFormattedNumber(workspace, source.ValueSpan);
+            }
 
             throw new InvalidOperationException($"Unsupported value kind {source.ValueKind}");
 
@@ -3202,22 +3206,7 @@ namespace Corvus.Text.Json.Tests
                         }
                         break;
                     case JsonValueKind.Number:
-                        if (propertyValue.TryGetInt64(out long int64Value))
-                        {
-                            builder.Add(propertyName, int64Value);
-                        }
-                        else if (propertyValue.TryGetDouble(out double doubleValue))
-                        {
-                            builder.Add(propertyName, doubleValue);
-                        }
-                        else if (propertyValue.TryGetDecimal(out decimal decimalValue))
-                        {
-                            builder.Add(propertyName, decimalValue);
-                        }
-                        else
-                        {
-                            throw new NotSupportedException("Unsupported numeric type");
-                        }
+                        builder.AddFormattedNumber(propertyName, propertyValue.ValueSpan);
                         break;
                     case JsonValueKind.True:
                         builder.Add(propertyName, true);
@@ -3263,30 +3252,7 @@ namespace Corvus.Text.Json.Tests
                         }
                         break;
                     case JsonValueKind.Number:
-                        if (value.TryGetInt64(out long int64Value))
-                        {
-                            builder.Add(int64Value);
-                        }
-                        else if (value.TryGetUInt32(out uint uint32Value))
-                        {
-                            builder.Add(uint32Value);
-                        }
-                        else if (value.TryGetUInt64(out ulong uint64Value))
-                        {
-                            builder.Add(uint64Value);
-                        }
-                        else if (value.TryGetDouble(out double doubleValue))
-                        {
-                            builder.Add(uint64Value);
-                        }
-                        else if (value.TryGetDecimal(out decimal decimalValue))
-                        {
-                            builder.Add(uint64Value);
-                        }
-                        else
-                        {
-                            throw new NotSupportedException("Unsupported numeric type");
-                        }
+                        builder.AddFormattedNumber(value.ValueSpan);
                         break;
                     case JsonValueKind.True:
                         builder.Add(true);

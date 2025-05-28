@@ -44,6 +44,12 @@ namespace Corvus.Text.Json
             _builder.AddItem(utf8String);
         }
 
+        public void AddFormattedNumber(ReadOnlySpan<byte> value)
+        {
+            _builder.AddItemFormattedNumber(
+                value);
+        }
+
         public void AddNull()
         {
             _builder.AddItemNull();

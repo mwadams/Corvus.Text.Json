@@ -19,6 +19,7 @@ namespace Corvus.Text.Json
         JsonWorkspace Workspace { get; }
 
         int StoreRawNumberValue(ReadOnlySpan<byte> value);
+        int StoreRawNumberValue(ReadOnlySpan<char> value);
         int StoreNullValue();
         int StoreBooleanValue(bool value);
         int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, out bool requiredEscaping);
