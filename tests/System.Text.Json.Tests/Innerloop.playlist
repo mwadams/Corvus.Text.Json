@@ -5970,6 +5970,592 @@
                     </Rule>
                   </Rule>
                 </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonDocumentBuilderWriteTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.CheckByPassingNullWriter" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.CheckByPassingNullWriter" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.ReadWriteEscapedPropertyNames" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.ReadWriteEscapedPropertyNames" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteCorruptedNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteCorruptedNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalse" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalse" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteIncredibleDepth" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteIncredibleDepth" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNull" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNull" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNullAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNullAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberDecimalScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberDecimalScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverprecise" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverprecise" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverpreciseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverpreciseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientificAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientificAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrue" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrue" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrueAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrueAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteValueSurrogatesEscapeString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteValueSurrogatesEscapeString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteWithRelaxedEscaper" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteWithRelaxedEscaper" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonElementMutableWriteTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.CheckByPassingNullWriter" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.CheckByPassingNullWriter" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.ReadWriteEscapedPropertyNames" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.ReadWriteEscapedPropertyNames" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteCorruptedNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteCorruptedNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalse" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalse" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteIncredibleDepth" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteIncredibleDepth" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNull" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNull" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNullAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNullAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberDecimalScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberDecimalScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverprecise" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverprecise" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverpreciseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverpreciseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientificAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientificAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WritePropertyOutsideObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WritePropertyOutsideObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrue" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrue" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrueAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrueAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueInsideObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueInsideObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueSurrogatesEscapeString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueSurrogatesEscapeString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteWithRelaxedEscaper" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteWithRelaxedEscaper" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
               </Rule>
             </Rule>
           </Rule>
@@ -11949,6 +12535,592 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.VerifyMultiThreadedDispose" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.VerifyMultiThreadedDispose" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonDocumentBuilderWriteTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.CheckByPassingNullWriter" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.CheckByPassingNullWriter" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.ReadWriteEscapedPropertyNames" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.ReadWriteEscapedPropertyNames" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteCorruptedNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteCorruptedNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalse" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalse" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteIncredibleDepth" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteIncredibleDepth" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNull" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNull" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNullAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNullAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberDecimalScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberDecimalScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverprecise" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverprecise" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverpreciseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverpreciseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientificAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientificAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrue" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrue" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrueAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrueAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteValueSurrogatesEscapeString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteValueSurrogatesEscapeString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteWithRelaxedEscaper" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteWithRelaxedEscaper" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonElementMutableWriteTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.CheckByPassingNullWriter" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.CheckByPassingNullWriter" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.ReadWriteEscapedPropertyNames" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.ReadWriteEscapedPropertyNames" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteCorruptedNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteCorruptedNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalse" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalse" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteIncredibleDepth" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteIncredibleDepth" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNull" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNull" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNullAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNullAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberDecimalScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberDecimalScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverprecise" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverprecise" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverpreciseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverpreciseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientificAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientificAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WritePropertyOutsideObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WritePropertyOutsideObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrue" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrue" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrueAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrueAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueInsideObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueInsideObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueSurrogatesEscapeString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueSurrogatesEscapeString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteWithRelaxedEscaper" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteWithRelaxedEscaper" />
                       </Rule>
                     </Rule>
                   </Rule>
@@ -17938,6 +19110,592 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.VerifyMultiThreadedDispose" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.VerifyMultiThreadedDispose" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonDocumentBuilderWriteTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.CheckByPassingNullWriter" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.CheckByPassingNullWriter" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.ReadWriteEscapedPropertyNames" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.ReadWriteEscapedPropertyNames" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteCorruptedNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteCorruptedNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEmptyObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEscapedStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteEverythingObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalse" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalse" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteFalseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteIncredibleDepth" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteIncredibleDepth" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNull" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNull" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNullAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNullAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberDecimalScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberDecimalScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverprecise" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverprecise" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverpreciseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberOverpreciseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientificAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberScientificAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteNumberTooLargeScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrue" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrue" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrueAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteTrueAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteValueSurrogatesEscapeString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteValueSurrogatesEscapeString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteWithRelaxedEscaper" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderWriteTests.WriteWithRelaxedEscaper" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="JsonElementMutableWriteTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.CheckByPassingNullWriter" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.CheckByPassingNullWriter" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.ReadWriteEscapedPropertyNames" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.ReadWriteEscapedPropertyNames" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteCorruptedNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteCorruptedNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyCommentedObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEmptyObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEscapedStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteEverythingObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalse" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalse" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteFalseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteIncredibleDepth" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteIncredibleDepth" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiStringAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNonAsciiStringAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNull" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNull" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNullAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNullAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumber" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumber" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberAsPropertyWithLargeName" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberDecimalScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberDecimalScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverprecise" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverprecise" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverpreciseAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberOverpreciseAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientificAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberScientificAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeScientific" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteNumberTooLargeScientific" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WritePropertyOutsideObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WritePropertyOutsideObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArrayAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleArrayAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteSimpleObjectNeedsEscaping" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrue" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrue" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrueAsProperty" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteTrueAsProperty" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueInsideObject" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueInsideObject" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueSurrogatesEscapeString" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteValueSurrogatesEscapeString" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteWithRelaxedEscaper" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonElementMutableWriteTests.WriteWithRelaxedEscaper" />
                       </Rule>
                     </Rule>
                   </Rule>
