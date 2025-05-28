@@ -35,6 +35,13 @@ namespace Corvus.Text.Json
                 value);
         }
 
+        public void AddRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+        {
+            _builder.AddPropertyRawString(
+                propertyName,
+                value);
+        }
+
         public void Add(ReadOnlySpan<byte> propertyName, Build value)
         {
             _builder.AddProperty(

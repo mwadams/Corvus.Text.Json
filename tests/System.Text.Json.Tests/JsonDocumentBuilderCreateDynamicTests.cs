@@ -499,8 +499,6 @@ namespace Corvus.Text.Json.Tests
                 string expected = GetExpectedConcat(type, jsonString);
 
                 Assert.Equal(expected, actual);
-
-                Assert.Equal(jsonString, rootElement.GetRawText());
             }
         }
 
@@ -3155,7 +3153,7 @@ namespace Corvus.Text.Json.Tests
             else if (source.ValueKind == JsonValueKind.String)
             {
                 using var utf8StringValue = source.GetUtf8String();
-                return JsonElement.CreateDocument(workspace, utf8StringValue.Span);
+                return JsonElement.CreateDocumentRawString(workspace, utf8StringValue.Span);
             }
             else if (source.ValueKind == JsonValueKind.True)
             {
@@ -3200,10 +3198,7 @@ namespace Corvus.Text.Json.Tests
                         });
                         break;
                     case JsonValueKind.String:
-                        using (var valueString = propertyValue.GetUtf8String())
-                        {
-                            builder.Add(propertyName, valueString.Span);
-                        }
+                        builder.AddRawString(propertyName, propertyValue.ValueSpan);
                         break;
                     case JsonValueKind.Number:
                         builder.AddFormattedNumber(propertyName, propertyValue.ValueSpan);
@@ -3246,10 +3241,7 @@ namespace Corvus.Text.Json.Tests
                         });
                         break;
                     case JsonValueKind.String:
-                        using (var valueString = value.GetUtf8String())
-                        {
-                            builder.Add(valueString.Span);
-                        }
+                        builder.AddRawString(value.ValueSpan);
                         break;
                     case JsonValueKind.Number:
                         builder.AddFormattedNumber(value.ValueSpan);

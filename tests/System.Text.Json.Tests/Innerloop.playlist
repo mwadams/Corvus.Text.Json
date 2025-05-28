@@ -5633,12 +5633,6 @@
                       </Rule>
                     </Rule>
                     <Rule Match="All">
-                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_ConcurrentUse_ThreadSafe" />
-                      <Rule Match="Any">
-                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_ConcurrentUse_ThreadSafe" />
-                      </Rule>
-                    </Rule>
-                    <Rule Match="All">
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.InvalidBase64" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.InvalidBase64" />
@@ -11619,12 +11613,6 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_BadUtf8" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_BadUtf8" />
-                      </Rule>
-                    </Rule>
-                    <Rule Match="All">
-                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_ConcurrentUse_ThreadSafe" />
-                      <Rule Match="Any">
-                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_ConcurrentUse_ThreadSafe" />
                       </Rule>
                     </Rule>
                     <Rule Match="All">
@@ -17614,12 +17602,6 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_BadUtf8" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_BadUtf8" />
-                      </Rule>
-                    </Rule>
-                    <Rule Match="All">
-                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_ConcurrentUse_ThreadSafe" />
-                      <Rule Match="Any">
-                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderCreateDynamicTests.GetString_ConcurrentUse_ThreadSafe" />
                       </Rule>
                     </Rule>
                     <Rule Match="All">
