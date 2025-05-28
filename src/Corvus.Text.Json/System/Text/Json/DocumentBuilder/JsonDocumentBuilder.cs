@@ -1012,15 +1012,6 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            ////DbRow row = _parsedData.Get(index);
-
-            ////// If the row is from an external document, we defer to that
-            ////if (row.FromExternalDocument)
-            ////{
-            ////    IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-            ////    return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
-            ////}
-
             if (TryGetNamedPropertyValueUnsafe(
                 index,
                 propertyName,
@@ -1039,15 +1030,6 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            ////DbRow row = _parsedData.Get(index);
-
-            ////// If the row is from an external document, we defer to that
-            ////if (row.FromExternalDocument)
-            ////{
-            ////    IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-            ////    return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
-            ////}
-
             if (TryGetNamedPropertyValueUnsafe(
                 index,
                 propertyName,
@@ -1064,15 +1046,6 @@ namespace Corvus.Text.Json
         bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
         {
             CheckNotDisposed();
-
-            ////DbRow row = _parsedData.Get(index);
-
-            ////// If the row is from an external document, we defer to that
-            ////if (row.FromExternalDocument)
-            ////{
-            ////    IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-            ////    return document.TryGetNamedPropertyValue(row.LocationOrIndex, propertyName, out value);
-            ////}
 
             if (TryGetNamedPropertyValueUnsafe(
                 index,
