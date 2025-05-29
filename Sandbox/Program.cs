@@ -1,10 +1,6 @@
 ﻿////Microsoft.DiagnosticsHub.UserMarkRange range = new("Corvus.Text.Json");
 ////range.Dispose();
 
-#if NET
-using System.Buffers;
-using System.Text;
-#endif
 using Benchmark.CorvusTextJson2;
 using Corvus.Text.Json;
 
@@ -124,7 +120,7 @@ Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is arrayBu
 Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is arrayBuilder match" : "Person B7 is not arrayBuilder match");
 
 
-Console.WriteLine(JsonElementHelpers.DeepEquals(documentB1.RootElement, documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
+Console.WriteLine(documentB1.RootElement.DeepEquals(documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -221,7 +217,7 @@ Utf8JsonWriter writer = workspace.RentWriterAndBuffer(defaultBufferSize: 1024, o
 initializedBuilder.RootElement.WriteTo(writer);
 writer.Flush();
 
-Console.WriteLine(Encoding.UTF8.GetString(bufferWriter.WrittenSpan));
+Console.WriteLine(System.Text.Encoding.UTF8.GetString(bufferWriter.WrittenSpan));
 workspace.ReturnWriterAndBuffer(writer, bufferWriter);
 
 Console.WriteLine();
@@ -232,7 +228,7 @@ writer = workspace.RentWriterAndBuffer(defaultBufferSize: 1024, out bufferWriter
 initializedBuilder.RootElement.WriteTo(writer);
 writer.Flush();
 
-Console.WriteLine(Encoding.UTF8.GetString(bufferWriter.WrittenSpan));
+Console.WriteLine(System.Text.Encoding.UTF8.GetString(bufferWriter.WrittenSpan));
 workspace.ReturnWriterAndBuffer(writer, bufferWriter);
 
 #endif

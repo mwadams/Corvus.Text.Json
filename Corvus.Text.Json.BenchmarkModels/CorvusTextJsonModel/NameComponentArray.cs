@@ -148,7 +148,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
     public ArrayEnumerator<NameComponent> GetArrayEnumerator()
     {
         CheckValidInstance();
-        return new ArrayEnumerator<NameComponent>(_parent, _idx);
+        return EnumeratorCreator.CreateArrayEnumerator<NameComponent>(_parent, _idx);
     }
 
 
@@ -348,7 +348,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
         public ArrayEnumerator<NameComponent.Mutable> GetArrayEnumerator()
         {
             CheckValidInstance();
-            return new ArrayEnumerator<NameComponent.Mutable>(_parent, _idx);
+            return EnumeratorCreator.CreateArrayEnumerator<NameComponent.Mutable>(_parent, _idx);
         }
 
         /// <summary>

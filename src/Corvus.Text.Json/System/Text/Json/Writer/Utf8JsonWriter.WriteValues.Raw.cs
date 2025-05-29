@@ -4,6 +4,7 @@
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {

@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Threading;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json.Tests
 {

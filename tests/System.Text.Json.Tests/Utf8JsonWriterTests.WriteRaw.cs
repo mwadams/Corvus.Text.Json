@@ -5,6 +5,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Corvus.Text.Json.Internal;
 using Microsoft.DotNet.XUnitExtensions;
 using Xunit;
 

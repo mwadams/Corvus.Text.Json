@@ -12,11 +12,11 @@ namespace Corvus.Text.Json.Internal
         public delegate void ValueBuilderAction(ref ComplexValueBuilder builder);
 
         private IMutableJsonDocument _parentDocument;
-        private JsonDocument.MetadataDb _parsedData;
+        private MetadataDb _parsedData;
         private int _memberCount;
         private int _rowCount;
 
-        private ComplexValueBuilder(IMutableJsonDocument parentDocument, JsonDocument.MetadataDb parsedData)
+        private ComplexValueBuilder(IMutableJsonDocument parentDocument, MetadataDb parsedData)
         {
             _parentDocument = parentDocument;
             _parsedData = parsedData;
@@ -31,7 +31,7 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public static ComplexValueBuilder Create(IMutableJsonDocument parentDocument, int initialElementCount)
         {
-            return new(parentDocument, JsonDocument.MetadataDb.CreateRented(initialElementCount * JsonDocument.DbRow.Size, convertToAlloc: false));
+            return new(parentDocument, MetadataDb.CreateRented(initialElementCount * DbRow.Size, convertToAlloc: false));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -217,7 +217,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
             _memberCount += 1;
-            _rowCount += (Length - currentLength) / JsonDocument.DbRow.Size;
+            _rowCount += (Length - currentLength) / DbRow.Size;
         }
 
         [CLSCompliant(false)]
@@ -228,7 +228,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, propertyName);
             value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
             _memberCount += 1;
-            _rowCount += (Length - currentLength) / JsonDocument.DbRow.Size;
+            _rowCount += (Length - currentLength) / DbRow.Size;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -757,7 +757,7 @@ namespace Corvus.Text.Json.Internal
             int currentLength = Length;
             value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
             _memberCount += 1;
-            _rowCount += (Length - currentLength) / JsonDocument.DbRow.Size;
+            _rowCount += (Length - currentLength) / DbRow.Size;
         }
 
         public void AddItem(Guid value)
@@ -886,11 +886,11 @@ namespace Corvus.Text.Json.Internal
 
         public void EndObject()
         {
-            int startRowIndex = Length - (_rowCount * JsonDocument.DbRow.Size);
+            int startRowIndex = Length - (_rowCount * DbRow.Size);
             _parsedData.Append(JsonTokenType.EndObject, 0, 1);
             _parsedData.SetLength(startRowIndex, _memberCount);
             _parsedData.SetNumberOfRows(startRowIndex, _rowCount);
-            _parsedData.SetNumberOfRows(_parsedData.Length - JsonDocument.DbRow.Size, _rowCount);
+            _parsedData.SetNumberOfRows(_parsedData.Length - DbRow.Size, _rowCount);
 
             // Now increment for the parent
             _rowCount++;
@@ -898,7 +898,7 @@ namespace Corvus.Text.Json.Internal
 
         public void EndArray()
         {
-            int startRowIndex = Length - (_rowCount * JsonDocument.DbRow.Size);
+            int startRowIndex = Length - (_rowCount * DbRow.Size);
             _parsedData.Append(JsonTokenType.EndArray, 0, 1);
             _parsedData.SetLength(startRowIndex, _memberCount);
 
@@ -918,13 +918,13 @@ namespace Corvus.Text.Json.Internal
             }
 
             _parsedData.SetNumberOfRows(startRowIndex, _rowCount);
-            _parsedData.SetNumberOfRows(_parsedData.Length - JsonDocument.DbRow.Size, _rowCount);
+            _parsedData.SetNumberOfRows(_parsedData.Length - DbRow.Size, _rowCount);
 
             // Now increment for the parent
             _rowCount++;
         }
 
-        public void SetAndDispose(ref JsonDocument.MetadataDb targetData)
+        public void SetAndDispose(ref MetadataDb targetData)
         {
             // We don't need to initialize the metadata DB if we are creating a whole document
             // This allows us to hand off the parsed data rather than writing it in.
@@ -932,13 +932,13 @@ namespace Corvus.Text.Json.Internal
             targetData = _parsedData;
         }
 
-        public void InsertAndDispose(int complexObjectStartIndex, int targetIndex, ref JsonDocument.MetadataDb targetData)
+        public void InsertAndDispose(int complexObjectStartIndex, int targetIndex, ref MetadataDb targetData)
         {
             targetData.InsertRowsInComplexObject(_parentDocument, complexObjectStartIndex, targetIndex, _rowCount, _memberCount);
             _parsedData.Overwrite(ref targetData, targetIndex);
         }
 
-        public void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref JsonDocument.MetadataDb targetData)
+        public void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref MetadataDb targetData)
         {
             targetData.ReplaceRowsInComplexObject(_parentDocument, complexObjectStartIndex, startIndex, endIndex, memberCountToReplace, _rowCount, _memberCount);
             _parsedData.Overwrite(ref targetData, startIndex);

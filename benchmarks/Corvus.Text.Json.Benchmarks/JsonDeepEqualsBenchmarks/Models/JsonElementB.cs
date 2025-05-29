@@ -5,6 +5,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
@@ -1203,7 +1204,7 @@ namespace Corvus.Text.Json
                 throw new InvalidOperationException();
             }
 
-            return new ArrayEnumerator<JsonElementB>(_parent, _idx);
+            return EnumeratorCreator.CreateArrayEnumerator<JsonElementB>(_parent, _idx);
         }
 
         /// <summary>
@@ -1229,7 +1230,7 @@ namespace Corvus.Text.Json
                 throw new InvalidOperationException();
             }
 
-            return new ObjectEnumerator<JsonElementB>(_parent, _idx);
+            return EnumeratorCreator.CreateObjectEnumerator<JsonElementB>(_parent, _idx);
         }
 
         /// <summary>

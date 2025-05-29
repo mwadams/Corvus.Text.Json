@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0;netstandard2.0</TargetFrameworks>
@@ -124,37 +124,39 @@
     <Compile Include="System\Runtime\InteropServices\JsonMarshal.cs" />
     <Compile Include="System\Text\Json\AppContextSwitchHelper.cs" />
     <Compile Include="System\Text\Json\BitStack.cs" />
-    <Compile Include="System\Text\Json\DocumentBuilder\IMutableJsonElement{T}.cs" />
+    <Compile Include="System\Text\Json\DocumentBuilder\Internal\IMutableJsonElement{T}.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\Internal\ComplexValueBuilder.cs" />
-    <Compile Include="System\Text\Json\DocumentBuilder\IMutableJsonDocument.cs" />
+    <Compile Include="System\Text\Json\DocumentBuilder\Internal\IMutableJsonDocument.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonArrayBuilder.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonObjectBuilder.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonDocumentBuilder.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonElement.Mutable.cs" />
     <Compile Include="System\Text\Json\DocumentBuilder\JsonWorkspace.cs" />
-    <Compile Include="System\Text\Json\Document\DynamicValueType.cs" />
-    <Compile Include="System\Text\Json\Document\IJsonElement{T}.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\EnumeratorCreator.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\DynamicValueType.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\IJsonElement{T}.cs" />
     <Compile Include="System\Text\Json\Document\Internal\ArrayEnumerator.cs" />
-    <Compile Include="System\Text\Json\Document\JsonDocument.PropertyMap.cs" />
-    <Compile Include="System\Text\Json\Document\IJsonDocument.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\JsonDocument.PropertyMap.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\IJsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\ArrayEnumerator{T}.cs" />
     <Compile Include="System\Text\Json\Document\JsonElement.JsonSchema.cs" />
+    <Compile Include="System\Text\Json\Document\JsonElementExtensions.cs" />
     <Compile Include="System\Text\Json\Document\JsonSchemaContext.cs" />
-    <Compile Include="System\Text\Json\Document\JsonSchemaMatcher.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\JsonSchemaMatcher.cs" />
     <Compile Include="System\Text\Json\Document\ObjectEnumerator{T}.cs" />
     <Compile Include="System\Text\Json\Document\Internal\ObjectEnumerator.cs" />
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.cs" />
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.Parse.cs" />
-    <Compile Include="System\Text\Json\Document\JsonDocument.StackRow.cs" />
-    <Compile Include="System\Text\Json\Document\JsonDocument.StackRowStack.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\JsonDocument.StackRow.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\JsonDocument.StackRowStack.cs" />
     <Compile Include="System\Text\Json\Document\ParsedJsonDocument.TryGetProperty.cs" />
-    <Compile Include="System\Text\Json\Document\JsonDocument.cs" />
-    <Compile Include="System\Text\Json\Document\JsonDocument.MetadataDb.cs" />
-    <Compile Include="System\Text\Json\Document\JsonDocument.DbRow.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\JsonDocument.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\MetadataDb.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\DbRow.cs" />
     <Compile Include="System\Text\Json\Document\JsonDocumentOptions.cs" />
-    <Compile Include="System\Text\Json\Document\IJsonElement.cs" />
+    <Compile Include="System\Text\Json\Document\Internal\IJsonElement.cs" />
     <Compile Include="System\Text\Json\Document\IJsonSchemaResultsCollector.cs" />
-    <Compile Include="System\Text\Json\JsonElementHelpers.cs" />
+    <Compile Include="System\Text\Json\Internal\JsonElementHelpers.cs" />
     <Compile Include="System\Text\Json\Document\JsonElement.cs" />
     <Compile Include="System\Text\Json\Document\JsonElement.Parse.cs" />
     <Compile Include="System\Text\Json\Document\JsonProperty.cs" />
@@ -167,7 +169,7 @@
     <Compile Include="System\Text\Json\JsonHelpers.cs" />
     <Compile Include="System\Text\Json\JsonHelpers.Date.cs" />
     <Compile Include="System\Text\Json\JsonHelpers.Escaping.cs" />
-    <Compile Include="System\Text\Json\JsonTokenType.cs" />
+    <Compile Include="System\Text\Json\Internal\JsonTokenType.cs" />
     <Compile Include="System\BitConverterEx.cs" />
     <!--<Compile Include="System\Text\Json\Nodes\JsonArray.cs" />
     <Compile Include="System\Text\Json\Nodes\JsonArray.IList.cs" />
@@ -257,7 +259,7 @@
     <Compile Include="System\Text\Json\Serialization\Metadata\PropertyRefCacheBuilder.cs" />
     <Compile Include="System\Text\Json\Serialization\PolymorphicSerializationState.cs" />-->
     <Compile Include="System\Text\Json\StackHelper.cs" />
-    <Compile Include="System\Text\Json\CodeGenThrowHelper.cs" />
+    <Compile Include="System\Text\Json\Internal\CodeGenThrowHelper.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriter.WriteValues.StringSegment.cs" />
     <Compile Include="System\Text\Json\Writer\Utf8JsonWriterCache.cs" />
     <!--<Compile Include="System\Text\Json\Serialization\ReferenceEqualsWrapper.cs" />

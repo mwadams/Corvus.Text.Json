@@ -4,7 +4,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
     public abstract partial class JsonDocument
     {

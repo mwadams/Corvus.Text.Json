@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {

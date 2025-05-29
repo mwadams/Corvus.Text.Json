@@ -57,7 +57,7 @@ namespace Corvus.Text.Json.Internal
 
             if (_curIdx < 0)
             {
-                _curIdx = _initialIndex + JsonDocument.DbRow.Size;
+                _curIdx = _initialIndex + DbRow.Size;
             }
             else
             {

@@ -4,6 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
@@ -20,7 +21,7 @@ namespace Corvus.Text.Json
         private int _curIdx;
         private readonly int _endIdxOrVersion;
 
-        public ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)
+        internal ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)
         {
             _targetDocument = targetDocument;
             _initialIndex = initialIndex;
@@ -92,7 +93,7 @@ namespace Corvus.Text.Json
 
             if (_curIdx < 0)
             {
-                _curIdx = _initialIndex + JsonDocument.DbRow.Size;
+                _curIdx = _initialIndex + DbRow.Size;
             }
             else
             {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Corvus.Text.Json.Internal;
 using Microsoft.DotNet.XUnitExtensions;
 using Newtonsoft.Json;
 using Xunit;

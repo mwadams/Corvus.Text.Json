@@ -4,6 +4,7 @@
 using Xunit;
 using System.Collections.Generic;
 using Corvus.Runtime.InteropServices;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json.Tests
 {

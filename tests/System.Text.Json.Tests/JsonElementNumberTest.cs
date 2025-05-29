@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Corvus.Text.Json.Internal;
+using Xunit;
 
 namespace Corvus.Text.Json.Tests;
 

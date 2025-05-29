@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
 #pragma warning disable CS9191 // This is the warning about in/ref params; we disable it because we target netstandard2.0
 

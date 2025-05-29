@@ -15,9 +15,10 @@ using System.Runtime.CompilerServices;
 #if !NET
 using System.Reflection;
 using System.Reflection.Emit;
+using Corvus.Text.Json.Internal;
 #endif
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
     /// <summary>
     /// Extension methods for <see cref="IJsonElement"/>.

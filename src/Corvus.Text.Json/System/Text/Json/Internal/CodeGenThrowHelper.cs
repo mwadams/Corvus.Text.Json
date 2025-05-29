@@ -4,9 +4,8 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using static Corvus.Text.Json.Utf8JsonWriter;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
     public static partial class CodeGenThrowHelper
     {

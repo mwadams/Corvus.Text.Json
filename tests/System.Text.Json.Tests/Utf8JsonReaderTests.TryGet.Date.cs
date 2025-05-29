@@ -3,6 +3,7 @@
 
 using System.Buffers;
 using System.Globalization;
+using Corvus.Text.Json.Internal;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests

@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Sdk;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using Corvus.Text.Json.Internal;
 using Newtonsoft.Json;
 using Xunit;
 

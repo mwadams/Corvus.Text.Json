@@ -2,7 +2,7 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
     internal enum DynamicValueType : uint
     {

@@ -4,6 +4,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using Corvus.Text.Json.Internal;
 using static Corvus.Text.Json.Utf8JsonWriter;
 
 namespace Corvus.Text.Json

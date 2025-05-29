@@ -3,6 +3,7 @@
 
 using System.Buffers;
 using System.Collections.Generic;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {

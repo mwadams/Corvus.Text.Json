@@ -3,7 +3,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
     /// <summary>
     /// The interface explicitly implemented by JSON Document providers
@@ -56,6 +56,6 @@ namespace Corvus.Text.Json
         TElement CloneElement<TElement>(int index) where TElement : struct, IJsonElement<TElement>;
         int GetDbSize(int index, bool includeEndElement);
         int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking);
-        void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref JsonDocument.MetadataDb db);
+        void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db);
     }
 }

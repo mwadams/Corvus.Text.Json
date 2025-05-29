@@ -3,7 +3,7 @@
 
 using System;
 using System.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
@@ -43,7 +43,7 @@ namespace Corvus.Text.Json
         {
             get
             {
-                return Value.ParentDocument.GetUtf8JsonString(Value.ParentDocumentIndex - JsonDocument.DbRow.Size, JsonTokenType.PropertyName);
+                return Value.ParentDocument.GetUtf8JsonString(Value.ParentDocumentIndex - DbRow.Size, JsonTokenType.PropertyName);
             }
         }
 

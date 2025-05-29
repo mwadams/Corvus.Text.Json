@@ -15,7 +15,7 @@ using System.Globalization;
 
 using System.Threading;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
     public abstract partial class JsonDocument
     {

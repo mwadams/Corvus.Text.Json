@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {

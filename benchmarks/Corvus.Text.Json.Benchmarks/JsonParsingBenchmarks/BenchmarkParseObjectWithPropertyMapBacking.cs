@@ -78,7 +78,7 @@ public class BenchmarkParseObjectWithPropertyMapBacking
             }
             """);
 
-        Corvus.Text.Json.JsonElement.EnsurePropertyMap(document.RootElement);
+        document.RootElement.EnsurePropertyMap();
 
         return document.RootElement.ValueKind;
     }

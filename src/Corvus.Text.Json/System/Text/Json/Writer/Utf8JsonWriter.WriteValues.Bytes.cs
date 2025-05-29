@@ -3,6 +3,7 @@
 
 using System.Buffers.Text;
 using System.Diagnostics;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {

@@ -4,6 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
@@ -20,7 +21,7 @@ namespace Corvus.Text.Json
         private int _curIdx;
         private readonly int _endIdxOrVersion;
 
-        public ObjectEnumerator(IJsonDocument targetDocument, int initialIndex)
+        internal ObjectEnumerator(IJsonDocument targetDocument, int initialIndex)
         {
             _targetDocument = targetDocument;
             _initialIndex = initialIndex;
@@ -98,7 +99,7 @@ namespace Corvus.Text.Json
 
             if (_curIdx < 0)
             {
-                _curIdx = _initialIndex + JsonDocument.DbRow.Size;
+                _curIdx = _initialIndex + DbRow.Size;
             }
             else
             {
@@ -106,7 +107,7 @@ namespace Corvus.Text.Json
             }
 
             // _curIdx is now pointing at a property name, move one more to get the value
-            _curIdx += JsonDocument.DbRow.Size;
+            _curIdx += DbRow.Size;
 
             return _curIdx < _endIdxOrVersion;
         }

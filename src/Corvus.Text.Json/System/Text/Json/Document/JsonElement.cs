@@ -5,6 +5,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
@@ -1264,9 +1265,10 @@ namespace Corvus.Text.Json
             }
         }
 
-        public static void EnsurePropertyMap(in JsonElement element)
+        public void EnsurePropertyMap()
         {
-            element._parent.EnsurePropertyMap(element._idx);
+            CheckValidInstance();
+            _parent.EnsurePropertyMap(_idx);
         }
 
         /// <summary>

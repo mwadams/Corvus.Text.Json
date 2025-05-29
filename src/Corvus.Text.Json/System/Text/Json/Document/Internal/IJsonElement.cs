@@ -1,7 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
     /// <summary>
     /// Implemented by JsonElement-derived types.

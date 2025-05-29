@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #endif
 using System.Threading;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
@@ -150,12 +151,13 @@ namespace Corvus.Text.Json
             }
         }
 
-        public static JsonSchemaContext BeginContext(
-            IJsonDocument parentDocument,
+        public static JsonSchemaContext BeginContext<T>(
+            T parentDocument,
             int parentDocumentIndex,
             bool usingEvaluatedProperties,
             bool usingEvaluatedItems,
             IJsonSchemaResultsCollector? resultsCollector = null)
+            where T : IJsonDocument
         {
             resultsCollector?.BeginChildContext();
 
