@@ -7,6 +7,7 @@ namespace Corvus.Text.Json
 {
     public sealed partial class ParsedJsonDocument<T>
     {
+        /// <inheritdoc />
         bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value)
         {
             CheckNotDisposed();
@@ -24,6 +25,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value)
         {
             CheckNotDisposed();
@@ -42,6 +44,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
         {
             CheckNotDisposed();

@@ -139,9 +139,9 @@
     <Compile Include="Corvus\Text\Json\Document\Internal\JsonDocument.PropertyMap.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\IJsonDocument.cs" />
     <Compile Include="Corvus\Text\Json\Document\ArrayEnumerator{T}.cs" />
+    <Compile Include="Corvus\Text\Json\Document\Internal\JsonSchemaContext.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElement.JsonSchema.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElementExtensions.cs" />
-    <Compile Include="Corvus\Text\Json\Document\JsonSchemaContext.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\JsonSchemaMatcher.cs" />
     <Compile Include="Corvus\Text\Json\Document\ObjectEnumerator{T}.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\ObjectEnumerator.cs" />

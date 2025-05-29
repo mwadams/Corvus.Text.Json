@@ -128,6 +128,8 @@ namespace Corvus.Text.Json
             RootElement.WriteTo(writer);
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         JsonTokenType IJsonDocument.GetJsonTokenType(int index)
         {
             CheckNotDisposed();
@@ -135,6 +137,8 @@ namespace Corvus.Text.Json
             return _parsedData.GetJsonTokenType(index);
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void IJsonDocument.EnsurePropertyMap(int index)
         {
             if (_isDisposable)
@@ -145,6 +149,7 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         bool IJsonDocument.ValueIsEscaped(int index, bool isPropertyName)
         {
@@ -153,6 +158,8 @@ namespace Corvus.Text.Json
             return ValueIsEscapedUnsafe(index, isPropertyName);
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int IJsonDocument.GetArrayLength(int index)
         {
             CheckNotDisposed();
@@ -164,6 +171,8 @@ namespace Corvus.Text.Json
             return row.SizeOrLengthOrPropertyMapIndex;
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int IJsonDocument.GetPropertyCount(int index)
         {
             CheckNotDisposed();
@@ -175,6 +184,7 @@ namespace Corvus.Text.Json
             return row.SizeOrLengthOrPropertyMapIndex;
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         JsonElement IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex)
         {
@@ -183,6 +193,7 @@ namespace Corvus.Text.Json
             return new JsonElement(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         TElement IJsonDocument.GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex)
         {
@@ -195,6 +206,7 @@ namespace Corvus.Text.Json
 #endif
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int IJsonDocument.GetDbSize(int index, bool includeEndElement)
         {
@@ -202,6 +214,7 @@ namespace Corvus.Text.Json
             return GetDbSizeUnsafe(index, includeEndElement);
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         RawUtf8JsonString IJsonDocument.GetRawValue(int index, bool includeQuotes)
         {
@@ -231,6 +244,7 @@ namespace Corvus.Text.Json
             return _utf8Json.Slice(start, row.LocationOrIndex - start + row.SizeOrLengthOrPropertyMapIndex);
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index, bool includeQuotes)
         {
@@ -254,6 +268,7 @@ namespace Corvus.Text.Json
             return _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         string? IJsonDocument.GetString(int index, JsonTokenType expectedType)
         {
@@ -261,6 +276,7 @@ namespace Corvus.Text.Json
             return GetStringUnsafe(index, expectedType);
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType)
         {
@@ -316,6 +332,7 @@ namespace Corvus.Text.Json
             return new UnescapedUtf8JsonString(segment);
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
         {
@@ -323,6 +340,7 @@ namespace Corvus.Text.Json
             return TextEqualsUnsafe(index, otherText, isPropertyName);
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         bool IJsonDocument.TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
         {
@@ -330,6 +348,7 @@ namespace Corvus.Text.Json
             return TextEqualsUnsafe(index, otherUtf8Text, isPropertyName, shouldUnescape);
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         string IJsonDocument.GetNameOfPropertyValue(int index)
         {
@@ -338,6 +357,7 @@ namespace Corvus.Text.Json
             return GetStringUnsafe(index - DbRow.Size, JsonTokenType.PropertyName)!;
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         ReadOnlySpan<byte> IJsonDocument.GetPropertyNameRaw(int index)
         {
@@ -347,6 +367,7 @@ namespace Corvus.Text.Json
             return GetRawSimpleValueUnsafe(index - DbRow.Size, false).Span;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, [NotNullWhen(true)] out byte[]? value)
         {
             CheckNotDisposed();
@@ -368,6 +389,7 @@ namespace Corvus.Text.Json
             return JsonReaderHelper.TryDecodeBase64(segment, out value);
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out sbyte value)
         {
             CheckNotDisposed();
@@ -390,6 +412,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out byte value)
         {
             CheckNotDisposed();
@@ -412,6 +435,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out short value)
         {
             CheckNotDisposed();
@@ -434,6 +458,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out ushort value)
         {
             CheckNotDisposed();
@@ -456,6 +481,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out int value)
         {
             CheckNotDisposed();
@@ -478,6 +504,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out uint value)
         {
             CheckNotDisposed();
@@ -500,6 +527,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out long value)
         {
             CheckNotDisposed();
@@ -522,6 +550,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out ulong value)
         {
             CheckNotDisposed();
@@ -544,6 +573,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out double value)
         {
             CheckNotDisposed();
@@ -566,6 +596,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out float value)
         {
             CheckNotDisposed();
@@ -588,6 +619,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out decimal value)
         {
             CheckNotDisposed();
@@ -610,6 +642,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out DateTime value)
         {
             CheckNotDisposed();
@@ -645,6 +678,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out DateTimeOffset value)
         {
             CheckNotDisposed();
@@ -680,6 +714,7 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out Guid value)
         {
             CheckNotDisposed();
@@ -716,6 +751,8 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         string IJsonDocument.GetRawValueAsString(int index)
         {
             CheckNotDisposed();
@@ -724,6 +761,8 @@ namespace Corvus.Text.Json
             return JsonReaderHelper.TranscodeHelper(segment.Span);
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         string IJsonDocument.GetPropertyRawValueAsString(int valueIndex)
         {
             CheckNotDisposed();
@@ -757,7 +796,7 @@ namespace Corvus.Text.Json
         }
 
 
-        public T CloneElement(int index)
+        private T CloneElement(int index)
         {
             CheckNotDisposed();
 
@@ -776,11 +815,15 @@ namespace Corvus.Text.Json
             return newDocument.RootElement;
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         JsonElement IJsonDocument.CloneElement(int index)
         {
             return JsonElement.From(CloneElement(index));
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         TElement IJsonDocument.CloneElement<TElement>(int index)
         {
             T element = CloneElement(index);
@@ -792,6 +835,7 @@ namespace Corvus.Text.Json
 
         }
 
+        /// <inheritdoc />
         void IJsonDocument.WriteElementTo(
             int index,
             Utf8JsonWriter writer)
@@ -886,6 +930,7 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <inheritdoc />
         void IJsonDocument.WritePropertyName(int index, Utf8JsonWriter writer)
         {
             CheckNotDisposed();
@@ -893,7 +938,6 @@ namespace Corvus.Text.Json
             DbRow row = _parsedData.Get(index - DbRow.Size);
             Debug.Assert(row.TokenType == JsonTokenType.PropertyName);
             writer.WritePropertyName(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
-
         }
 
         internal static void Parse(
@@ -1073,6 +1117,7 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <inheritdoc />
         int IJsonDocument.BuildRentedMetadataDb(int index, JsonWorkspace workspace, out byte[] rentedBacking)
         {
             CheckNotDisposed();
@@ -1099,6 +1144,8 @@ namespace Corvus.Text.Json
             return db.TakeOwnership(out rentedBacking);
         }
 
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db)
         {
             CheckNotDisposed();

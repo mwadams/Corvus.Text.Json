@@ -28,6 +28,8 @@ namespace Corvus.Text.Json
         /// <summary>
         ///   The name of this property.
         /// </summary>
+        /// <remarks>Note that this allocates.</remarks>
+        /// <seealso cref="NameSpan"/>.
         public string Name
         {
             get
@@ -38,6 +40,14 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Gets the name as an unescaped UTF-8 JSON string.
+        /// </summary>
+        /// <remarks>
+        /// Note that this does not allocate. The result should be
+        /// disposed when it is no longer needed, as it may use a rented buffer to back the string.
+        /// It is only valid for the lifetime of the document that contains this property.
+        /// </remarks>
         public UnescapedUtf8JsonString NameSpan
         {
             get
@@ -79,7 +89,7 @@ namespace Corvus.Text.Json
         /// </exception>
         /// <remarks>
         ///   This method is functionally equal to doing an ordinal comparison of <paramref name="utf8Text" /> and
-        ///   <see cref="Name" />, but can avoid creating the string instance.
+        ///   <see cref="NameSpan" />, but can avoid creating the UTF8 string instance.
         /// </remarks>
         public bool NameEquals(ReadOnlySpan<byte> utf8Text)
         {
@@ -99,8 +109,8 @@ namespace Corvus.Text.Json
         ///   This value's <see cref="Type"/> is not <see cref="JsonTokenType.PropertyName"/>.
         /// </exception>
         /// <remarks>
-        ///   This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
-        ///   <see cref="Name" />, but can avoid creating the string instance.
+        ///   This method is functionally equal to doing an ordinal comparison of <paramref name="utf8Text" /> and
+        ///   <see cref="NameSpan" />, but can avoid creating the UTF-8 string instance.
         /// </remarks>
         public bool NameEquals(ReadOnlySpan<char> text)
         {

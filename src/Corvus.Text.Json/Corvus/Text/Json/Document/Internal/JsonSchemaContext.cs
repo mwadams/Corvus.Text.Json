@@ -11,10 +11,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #endif
 using System.Threading;
-using Corvus.Text.Json.Internal;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// The context for a JSON schema evaluation.
+    /// </summary>
     [CLSCompliant(false)]
     public struct JsonSchemaContext
         : IDisposable
@@ -100,8 +102,14 @@ namespace Corvus.Text.Json
 #endif
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the context represents a match.
+        /// </summary>
         public readonly bool IsMatch => ((_lengthAndUsingFeatures & (uint)UsingFeatures.IsMatch) != 0);
 
+        /// <summary>
+        /// Gets a value indicating whether this context has a <see cref="IJsonSchemaResultsCollector"/>.
+        /// </summary>
         public readonly bool HasCollector => _resultsCollector is not null;
 
         // The length is the _lengthAndUsingFeatures union with the top nybble masked
@@ -155,6 +163,16 @@ namespace Corvus.Text.Json
 #pragma warning  restore IDE0251
         }
 
+        /// <summary>
+        /// Begin a context
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parentDocument"></param>
+        /// <param name="parentDocumentIndex"></param>
+        /// <param name="usingEvaluatedProperties"></param>
+        /// <param name="usingEvaluatedItems"></param>
+        /// <param name="resultsCollector"></param>
+        /// <returns></returns>
         public static JsonSchemaContext BeginContext<T>(
             T parentDocument,
             int parentDocumentIndex,
