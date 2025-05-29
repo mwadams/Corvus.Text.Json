@@ -62,7 +62,7 @@ public class BenchmarkToMutableAndSetProperty
     public string SetPropertyCorvusTextJson()
     {
         using Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement> corvusDocument = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(Json);
-        using Corvus.Text.Json.JsonWorkspace workspace = new(1);
+        using Corvus.Text.Json.JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create(1);
         using Corvus.Text.Json.JsonDocumentBuilder<Corvus.Text.Json.JsonElement.Mutable> nameValueDoc = corvusDocument!.RootElement.GetProperty("name").CreateDocument(workspace);
         nameValueDoc.RootElement.SetProperty("firstName"u8, "Matthew"u8);
         return nameValueDoc.RootElement.ToString();

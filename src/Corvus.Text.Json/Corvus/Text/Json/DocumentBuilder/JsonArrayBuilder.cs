@@ -31,12 +31,12 @@ namespace Corvus.Text.Json
         public void Add(JsonObjectBuilder.Build value)
         {
             _builder.AddItem(
-                (ref ComplexValueBuilder valueBuilder) => JsonObjectBuilder.BuildValue(value, ref valueBuilder));
+                (ref valueBuilder) => JsonObjectBuilder.BuildValue(value, ref valueBuilder));
         }
 
         public void Add(Build value)
         {
-            _builder.AddItem((ref ComplexValueBuilder valueBuilder) => BuildValue(value, ref valueBuilder));
+            _builder.AddItem((ref valueBuilder) => BuildValue(value, ref valueBuilder));
         }
 
         public void Add(ReadOnlySpan<byte> utf8String)

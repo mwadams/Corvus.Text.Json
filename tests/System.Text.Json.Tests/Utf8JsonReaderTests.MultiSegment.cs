@@ -1693,7 +1693,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Contains(reader.TokenType, new[] { JsonTokenType.EndArray, JsonTokenType.EndObject });
             }
 
-            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader jsonReader) =>
+            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref jsonReader) =>
             {
                 jsonReader.Read();
                 if (commentHandling == JsonCommentHandling.Allow && jsonReader.TokenType == JsonTokenType.Comment)
@@ -1804,7 +1804,7 @@ namespace Corvus.Text.Json.Tests
 
             if (expectThrow)
             {
-                JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader jsonReader) =>
+                JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref jsonReader) =>
                 {
                     while (jsonReader.Read())
                         ;
@@ -1902,7 +1902,7 @@ namespace Corvus.Text.Json.Tests
 
         private static void ValidateThrows(ref Utf8JsonReader reader)
         {
-            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader jsonReader) =>
+            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref jsonReader) =>
             {
                 while (jsonReader.Read())
                     ;
@@ -2351,7 +2351,7 @@ namespace Corvus.Text.Json.Tests
             Assert.True(reader.Read());
             Assert.Equal(JsonTokenType.EndObject, reader.TokenType);
 
-            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader reader) => reader.Read());
+            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref reader) => reader.Read());
         }
 
         [Theory]

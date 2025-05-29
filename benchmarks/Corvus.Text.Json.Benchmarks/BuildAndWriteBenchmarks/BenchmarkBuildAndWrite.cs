@@ -61,7 +61,7 @@ public class BenchmarkBuildAndWrite
     [Benchmark]
     public bool BuildCorvusTextJson()
     {
-        using JsonWorkspace workspace = new();
+        using JsonWorkspace workspace = JsonWorkspace.Create();
 
         using JsonDocumentBuilder<Person.Mutable> person = Person.CreateDocument(
             workspace,

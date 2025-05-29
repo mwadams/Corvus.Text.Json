@@ -294,7 +294,7 @@ namespace Corvus.Text.Json.Tests
 
             byte[] utf8Data = Encoding.UTF8.GetBytes(parseJson);
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDocument = ParsedJsonDocument<JsonElement>.Parse(utf8Data))
             using (MemoryStream stream = new MemoryStream(Array.Empty<byte>()))
             using (Utf8JsonWriter writer = new Utf8JsonWriter(stream))
@@ -716,7 +716,7 @@ null,
             string json = $"\"{unicodeString}\"";
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = PrepareDocument(json, workspace))
             {
                 using (var writer = new Utf8JsonWriter(buffer))
@@ -1132,7 +1132,7 @@ null,
             jsonIn.AsSpan(SpacesPre + TargetDepth + SpacesSplit + TargetDepth).Fill((byte)' ');
 
             var buffer = new ArrayBufferWriter<byte>(jsonIn.Length);
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(jsonIn, optionsCopy))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
             {
@@ -1160,7 +1160,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = PrepareDocument(jsonIn, workspace))
             {
                 {
@@ -1207,7 +1207,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = PrepareDocument(jsonIn, workspace))
             {
                 var options = new JsonWriterOptions
@@ -1238,7 +1238,7 @@ null,
                 Indented = indented
             };
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = PrepareDocument(jsonIn, workspace))
             {
                 using (var writer = new Utf8JsonWriter(buffer, options))
@@ -1257,7 +1257,7 @@ null,
                 buffer.Clear();
 
 
-                using (JsonWorkspace workspace = new())
+                using (JsonWorkspace workspace = JsonWorkspace.Create())
                 using (JsonDocumentBuilder<JsonElement.Mutable> doc2 = PrepareDocument(bufferString, workspace))
                 {
                     using (var writer = new Utf8JsonWriter(buffer, options))
@@ -1315,7 +1315,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = PrepareDocument(jsonIn, workspace))
             {
                 var options = new JsonWriterOptions
@@ -1345,7 +1345,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = PrepareDocument(jsonIn, workspace))
             {
                 var options = new JsonWriterOptions
@@ -1374,7 +1374,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = PrepareDocument(jsonIn, workspace))
             {
                 var options = new JsonWriterOptions
@@ -1403,7 +1403,7 @@ null,
         {
             var buffer = new ArrayBufferWriter<byte>(1024);
 
-            using (JsonWorkspace workspace = new())
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = PrepareDocument(jsonIn, workspace))
             {
                 var options = new JsonWriterOptions

@@ -739,7 +739,7 @@ namespace Corvus.Text.Json.Tests
                     }
                     else
                     {
-                        JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetString());
+                        JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetString());
                     }
 
                     try
@@ -790,9 +790,9 @@ namespace Corvus.Text.Json.Tests
                     catch (InvalidOperationException)
                     { }
 
-                    JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetGuid());
+                    JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetGuid());
 
-                    JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetGuid(out _));
+                    JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetGuid(out _));
                 }
 
                 if (json.TokenType != JsonTokenType.Comment)
@@ -1096,9 +1096,9 @@ namespace Corvus.Text.Json.Tests
                 Assert.True(json.Read());
                 Assert.Equal(JsonTokenType.String, json.TokenType);
 
-                JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader json) => json.GetString());
-                JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader json) => json.CopyString(new byte[6 * jsonString.Length]));
-                JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader json) => json.CopyString(new char[6 * jsonString.Length]));
+                JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref json) => json.GetString());
+                JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref json) => json.CopyString(new byte[6 * jsonString.Length]));
+                JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref json) => json.CopyString(new char[6 * jsonString.Length]));
             }
         }
 
@@ -1126,19 +1126,19 @@ namespace Corvus.Text.Json.Tests
                     {
                         int length = json.HasValueSequence ? (int)json.ValueSequence.Length : json.ValueSpan.Length;
 
-                        InvalidOperationException ex = JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader json) => json.GetString());
+                        InvalidOperationException ex = JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref json) => json.GetString());
                         if (ex.InnerException is not null)
                         {
                             Assert.IsType<DecoderFallbackException>(ex.InnerException);
                         }
 
-                        ex = JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader json) => json.CopyString(new byte[length]));
+                        ex = JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref json) => json.CopyString(new byte[length]));
                         if (ex.InnerException is not null)
                         {
                             Assert.IsType<DecoderFallbackException>(ex.InnerException);
                         }
 
-                        ex = JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader json) => json.CopyString(new char[length]));
+                        ex = JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref json) => json.CopyString(new char[length]));
                         if (ex.InnerException is not null)
                         {
                             Assert.IsType<DecoderFallbackException>(ex.InnerException);
@@ -1208,13 +1208,13 @@ namespace Corvus.Text.Json.Tests
             {
                 do
                 {
-                    JsonTestHelper.AssertThrows<InvalidOperationException>(ref reader, (ref Utf8JsonReader reader) => reader.CopyString(new byte[128]));
-                    JsonTestHelper.AssertThrows<InvalidOperationException>(ref reader, (ref Utf8JsonReader reader) => reader.CopyString(new char[128]));
+                    JsonTestHelper.AssertThrows<InvalidOperationException>(ref reader, (ref reader) => reader.CopyString(new byte[128]));
+                    JsonTestHelper.AssertThrows<InvalidOperationException>(ref reader, (ref reader) => reader.CopyString(new char[128]));
                 }
                 while (reader.Read());
 
-                JsonTestHelper.AssertThrows<InvalidOperationException>(ref reader, (ref Utf8JsonReader reader) => reader.CopyString(new byte[128]));
-                JsonTestHelper.AssertThrows<InvalidOperationException>(ref reader, (ref Utf8JsonReader reader) => reader.CopyString(new char[128]));
+                JsonTestHelper.AssertThrows<InvalidOperationException>(ref reader, (ref reader) => reader.CopyString(new byte[128]));
+                JsonTestHelper.AssertThrows<InvalidOperationException>(ref reader, (ref reader) => reader.CopyString(new char[128]));
             }
         }
 
@@ -1235,7 +1235,7 @@ namespace Corvus.Text.Json.Tests
                 byte[] buffer = new byte[expectedUtf8Size];
                 for (int i = 0; i < expectedUtf8Size; i++)
                 {
-                    JsonTestHelper.AssertThrows<ArgumentException>(ref reader, (ref Utf8JsonReader reader) => reader.CopyString(buffer.AsSpan(0, i)));
+                    JsonTestHelper.AssertThrows<ArgumentException>(ref reader, (ref reader) => reader.CopyString(buffer.AsSpan(0, i)));
                     Assert.All(buffer, static b => Assert.Equal(0, b));
                 }
 
@@ -1260,7 +1260,7 @@ namespace Corvus.Text.Json.Tests
                 char[] buffer = new char[expectedSize];
                 for (int i = 0; i < expectedSize; i++)
                 {
-                    JsonTestHelper.AssertThrows<ArgumentException>(ref reader, (ref Utf8JsonReader reader) => reader.CopyString(buffer.AsSpan(0, i)));
+                    JsonTestHelper.AssertThrows<ArgumentException>(ref reader, (ref reader) => reader.CopyString(buffer.AsSpan(0, i)));
                     Assert.All(buffer, static c => Assert.Equal(0, c));
                 }
 
@@ -1502,7 +1502,7 @@ namespace Corvus.Text.Json.Tests
             Assert.False(json.TryGetGuid(out Guid actual));
             Assert.Equal(default, actual);
 
-            JsonTestHelper.AssertThrows<FormatException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetGuid());
+            JsonTestHelper.AssertThrows<FormatException>(ref json, (ref jsonReader) => jsonReader.GetGuid());
         }
 
         [Theory]
@@ -1523,7 +1523,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.False(json.TryGetGuid(out Guid actual), "json.TryGetGuid(out Guid actual)");
                 Assert.Equal(Guid.Empty, actual);
 
-                JsonTestHelper.AssertThrows<FormatException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetGuid());
+                JsonTestHelper.AssertThrows<FormatException>(ref json, (ref jsonReader) => jsonReader.GetGuid());
             }
 
             Test(testString, isFinalBlock: true);

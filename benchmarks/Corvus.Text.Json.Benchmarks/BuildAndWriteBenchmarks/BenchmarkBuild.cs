@@ -27,7 +27,6 @@ public class BenchmarkBuild
             new ("competedInYears", new System.Text.Json.Nodes.JsonArray(2012, 2016, 2024))])),
         ];
 
-        ////jsonObject.WriteTo(_writer!);
         return true;
     }
 
@@ -42,37 +41,35 @@ public class BenchmarkBuild
                 otherNames: ["Francis", "James"]),
             competedInYears: [2012, 2016, 2024]);
 
-        ////person.WriteTo(_writer!);
         return true;
     }
 
     [Benchmark]
     public bool BuildCorvusTextJson()
     {
-        using Corvus.Text.Json.JsonWorkspace workspace = new();
+        using Corvus.Text.Json.JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
 
         using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateDocument(
             workspace,
             age: 51,
-            name: new(static (ref Benchmark.CorvusTextJson.PersonName.Builder personName) =>
+            name: new(static (ref personName) =>
             {
                 personName.Create(
                     firstName: "Michael"u8,
                     lastName: "Adams"u8,
-                    otherNames: new(static (ref Benchmark.CorvusTextJson.NameComponentArray.Builder otherNames) =>
+                    otherNames: new(static (ref otherNames) =>
                     {
                         otherNames.Add("Francis"u8);
                         otherNames.Add("James"u8);
                     }));
             }),
-            competedInYears: new(static (ref Benchmark.CorvusTextJson.CompetedInYears.Builder competedInYears) =>
+            competedInYears: new(static (ref competedInYears) =>
             {
                 competedInYears.Add(2012);
                 competedInYears.Add(2016);
                 competedInYears.Add(2024);
             }));
 
-        ////person.WriteTo(_corvusWriter!);
         return true;
     }
 }

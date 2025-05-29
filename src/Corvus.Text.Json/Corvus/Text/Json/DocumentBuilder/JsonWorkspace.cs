@@ -10,23 +10,46 @@ namespace Corvus.Text.Json
     /// <summary>
     /// A workspace for manipulating JSON documents.
     /// </summary>
-    public class JsonWorkspace
-        : IDisposable
+    public class JsonWorkspace : IDisposable
     {
         private static readonly JsonWriterOptions s_internalWriterOptions = new() { Indented = false };
 
         private IJsonDocument[] _documents;
         private readonly Dictionary<IJsonDocument, int> _documentIndices = [];
         private int _length;
+        private bool _rented;
 
-        public JsonWorkspace(int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
+        internal JsonWorkspace(bool rented, int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
         {
             _documents = ArrayPool<IJsonDocument>.Shared.Rent(initialDocumentCapacity);
             _length = 0;
             Options = options ?? s_internalWriterOptions;
+            _rented = rented;
         }
 
-        public JsonWriterOptions Options { get; }
+        public JsonWriterOptions Options { get; private set; }
+
+        /// <summary>
+        /// Creates an instance of a <see cref="JsonWorkspace"/>.
+        /// </summary>
+        /// <param name="initialDocumentCapacity">The initial document capacity for the workspace.</param>
+        /// <param name="options">The ambient <see cref="JsonWriterOptions"/>.</param>
+        /// <returns>The <see cref="JsonWorkspace"/>.</returns>
+        public static JsonWorkspace Create(int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
+        {
+            return JsonWorkspaceCache.RentWorkspace(initialDocumentCapacity, options);
+        }
+
+        /// <summary>
+        /// Creates an instance of a <see cref="JsonWorkspace"/>.
+        /// </summary>
+        /// <param name="initialDocumentCapacity">The initial document capacity for the workspace.</param>
+        /// <param name="options">The ambient <see cref="JsonWriterOptions"/>.</param>
+        /// <returns>The <see cref="JsonWorkspace"/>.</returns>
+        public static JsonWorkspace CreateUnrented(int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
+        {
+            return new(false, initialDocumentCapacity, options);
+        }
 
         [CLSCompliant(false)]
         public IJsonDocument GetDocument(int index)
@@ -64,17 +87,24 @@ namespace Corvus.Text.Json
 #pragma warning restore CA1822 // Mark members as static
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
+
         public void Dispose()
         {
-            if (_length >= 0)
+            if (_rented)
             {
-                ArrayPool<IJsonDocument>.Shared.Return(_documents);
-               _length = -1;
-                return;
+                JsonWorkspaceCache.ReturnWorkspace(this);
             }
-
-            ThrowHelper.ThrowObjectDisposedException_JsonWorkspace();
+            else
+            {
+                if (_length > 0)
+                {
+                    ArrayPool<IJsonDocument>.Shared.Return(_documents);
+                    _documentIndices.Clear();
+                    _length = -1;
+                }
+            }
         }
+
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
 
         [CLSCompliant(false)]
@@ -119,5 +149,40 @@ namespace Corvus.Text.Json
             _documentIndices.Add(document, result);
             return result;
         }
+
+        internal void Reset(int initialDocumentCapacity, JsonWriterOptions? options)
+        {
+            Options = options ?? s_internalWriterOptions;
+            if (_documents.Length < initialDocumentCapacity)
+            {
+                ArrayPool<IJsonDocument>.Shared.Return(_documents);
+                _documents = ArrayPool<IJsonDocument>.Shared.Rent(initialDocumentCapacity);
+            }
+            else
+            {
+                if (_length > 0)
+                {
+                    Array.Clear(_documents, 0, _length);
+                }
+            }
+
+            _documentIndices.Clear();
+            _length = 0;
+        }
+
+        internal void ResetAllStateForCacheReuse()
+        {
+            if (_length >= 0)
+            {
+                Array.Clear(_documents, 0, _length);
+                _length = -1;
+                _documentIndices.Clear();
+                return;
+            }
+
+            ThrowHelper.ThrowObjectDisposedException_JsonWorkspace();
+        }
+
+        internal static JsonWorkspace CreateEmptyInstanceForCaching() => new(true);
     }
 }

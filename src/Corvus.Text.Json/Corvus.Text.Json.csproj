@@ -184,6 +184,7 @@
     <Compile Include="Corvus\Text\Json\StackHelper.cs" />
     <Compile Include="Corvus\Text\Json\Internal\CodeGenThrowHelper.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteValues.StringSegment.cs" />
+    <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\JsonWorkspaceCache.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriterCache.cs" />
     <Compile Include="Corvus\Text\Json\ThrowHelper.cs" />
     <Compile Include="Corvus\Text\Json\Writer\JsonWriterHelper.cs" />

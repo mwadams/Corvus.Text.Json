@@ -135,7 +135,7 @@ Console.WriteLine("**************");
 Console.WriteLine();
 
 // Create a workspace for manipulating documents
-using JsonWorkspace workspace = new();
+using JsonWorkspace workspace = JsonWorkspace.Create();
 
 using JsonDocumentBuilder<JsonElement.Mutable> initializedBuilder = documentB1.RootElement.CreateDocument(workspace);
 

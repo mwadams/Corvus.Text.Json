@@ -38,10 +38,10 @@ namespace Corvus.Text.Json.Tests
             Assert.False(json.Read());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.ValueTextEquals(""));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.ValueTextEquals("".AsSpan()));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.ValueTextEquals(default(ReadOnlySpan<char>)));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.ValueTextEquals(default(ReadOnlySpan<byte>)));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.ValueTextEquals(""));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.ValueTextEquals("".AsSpan()));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.ValueTextEquals(default(ReadOnlySpan<char>)));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.ValueTextEquals(default(ReadOnlySpan<byte>)));
 
             TestGetMethodsOnDefault();
         }
@@ -50,67 +50,67 @@ namespace Corvus.Text.Json.Tests
         {
             Utf8JsonReader json = default;
 
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetByte(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetByte());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetByte(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetByte());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetComment());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetComment());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetDateTime(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetDateTime());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetDateTime(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetDateTime());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetDateTimeOffset(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetDateTimeOffset());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetDateTimeOffset(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetDateTimeOffset());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetDecimal(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetDecimal());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetDecimal(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetDecimal());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetDouble(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetDouble());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetDouble(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetDouble());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetInt16(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetInt16());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetInt16(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetInt16());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetInt32(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetInt32());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetInt32(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetInt32());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetInt64(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetInt64());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetInt64(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetInt64());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetSByte(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetSByte());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetSByte(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetSByte());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetSingle(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetSingle());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetSingle(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetSingle());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetUInt16(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetUInt16());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetUInt16(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetUInt16());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetUInt32(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetUInt32());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetUInt32(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetUInt32());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.TryGetUInt64(out _));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetUInt64());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.TryGetUInt64(out _));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetUInt64());
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetString());
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.CopyString(new byte[16]));
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.CopyString(new char[16]));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetString());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.CopyString(new byte[16]));
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.CopyString(new char[16]));
 
             json = default;
-            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref Utf8JsonReader jsonReader) => jsonReader.GetBoolean());
+            JsonTestHelper.AssertThrows<InvalidOperationException>(ref json, (ref jsonReader) => jsonReader.GetBoolean());
         }
 
         [Fact]
@@ -3340,7 +3340,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Contains(reader.TokenType, new[] { JsonTokenType.EndArray, JsonTokenType.EndObject });
             }
 
-            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader jsonReader) =>
+            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref jsonReader) =>
             {
                 jsonReader.Read();
                 if (commentHandling == JsonCommentHandling.Allow && jsonReader.TokenType == JsonTokenType.Comment)
@@ -3447,7 +3447,7 @@ namespace Corvus.Text.Json.Tests
 
             if (expectThrow)
             {
-                JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader jsonReader) =>
+                JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref jsonReader) =>
                 {
                     while (jsonReader.Read())
                         ;
@@ -3953,7 +3953,7 @@ namespace Corvus.Text.Json.Tests
             Assert.True(reader.Read());
             Assert.Equal(JsonTokenType.EndObject, reader.TokenType);
 
-            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader reader) => reader.Read());
+            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref reader) => reader.Read());
         }
 
         [Theory]

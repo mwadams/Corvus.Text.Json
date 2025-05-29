@@ -3451,7 +3451,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal("[null,false,42,{},[1]]", doc.RootElement.GetRawText());
             Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
 
-            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader reader) => reader.Read());
+            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref reader) => reader.Read());
         }
 
         [Theory]
@@ -3799,7 +3799,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static async Task VerifyMultiThreadedDispose()
         {
-            Action<object> disposeAction = (object document) => ((ParsedJsonDocument<JsonElement>)document).Dispose();
+            Action<object> disposeAction = document => ((ParsedJsonDocument<JsonElement>)document).Dispose();
 
             // Create a bunch of parallel tasks that call Dispose several times on the same object.
             Task[] tasks = new Task[100];

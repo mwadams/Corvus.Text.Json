@@ -80,7 +80,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal("[null,false,42,{},[1]]", element.GetRawText());
             Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
 
-            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref Utf8JsonReader reader) => reader.Read());
+            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref reader) => reader.Read());
         }
 
         public static IEnumerable<object[]> ElementParsePartialDataCases

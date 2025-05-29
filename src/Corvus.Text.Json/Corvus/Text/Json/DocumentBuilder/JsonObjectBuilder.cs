@@ -55,7 +55,7 @@ namespace Corvus.Text.Json
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
                 propertyName,
-                (ref ComplexValueBuilder valueBuilder) => BuildValue(value, ref valueBuilder),
+                (ref valueBuilder) => BuildValue(value, ref valueBuilder),
                 escapeName,
                 nameRequiresUnescaping);
         }
@@ -65,7 +65,7 @@ namespace Corvus.Text.Json
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
                 propertyName,
-                (ref ComplexValueBuilder valueBuilder) => JsonArrayBuilder.BuildValue(value, ref valueBuilder),
+                (ref valueBuilder) => JsonArrayBuilder.BuildValue(value, ref valueBuilder),
                 escapeName,
                 nameRequiresUnescaping);
         }
