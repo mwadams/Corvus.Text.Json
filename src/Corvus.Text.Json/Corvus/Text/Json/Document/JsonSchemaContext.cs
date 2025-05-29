@@ -255,7 +255,7 @@ namespace Corvus.Text.Json
         /// to the parent context.
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CommitChildContext(bool isMatch, ref readonly JsonSchemaContext childContext, JsonValidationMessageProvider? messageProvider = null)
+        public void CommitChildContext(bool isMatch, ref readonly JsonSchemaContext childContext, JsonSchemaMessageProvider? messageProvider = null)
         {
             _resultsCollector?.CommitChildContext(isMatch, messageProvider);
             _rentedBuffer = childContext._rentedBuffer;
@@ -272,7 +272,7 @@ namespace Corvus.Text.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Matched(
             bool isMatch,
-            JsonValidationMessageProvider? messageProvider = null,
+            JsonSchemaMessageProvider? messageProvider = null,
             JsonSchemaPathProvider? schemaEvaluationPath = null)
         {
             _resultsCollector?.Matched(isMatch, messageProvider, schemaEvaluationPath);
@@ -288,7 +288,7 @@ namespace Corvus.Text.Json
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void Ignored(
-            JsonValidationMessageProvider? messageProvider = null,
+            JsonSchemaMessageProvider? messageProvider = null,
             JsonSchemaPathProvider? schemaEvaluationPath = null)
         {
             _resultsCollector?.Ignored(messageProvider, schemaEvaluationPath);
@@ -297,7 +297,7 @@ namespace Corvus.Text.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void Ignored<TProviderContext>(
             TProviderContext providerContext,
-            JsonValidationMessageProvider<TProviderContext>? messageProvider = null,
+            JsonSchemaMessageProvider<TProviderContext>? messageProvider = null,
             JsonSchemaPathProvider? schemaEvaluationPath = null)
         {
             _resultsCollector?.Ignored(providerContext, messageProvider, schemaEvaluationPath);

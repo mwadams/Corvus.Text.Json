@@ -11,6 +11,9 @@ namespace Corvus.Text.Json
     /// </summary>
     public readonly partial struct JsonElement
     {
+        /// <summary>
+        /// JSON Schema support for the <see cref="JsonElement"/>
+        /// </summary>
         public static class JsonSchema
         {
             /// <summary>
@@ -31,6 +34,12 @@ namespace Corvus.Text.Json
                 context.Matched(true);
             }
 
+            /// <summary>
+            /// Determines if the given document and index are a match for the <see cref="JsonElement"/> schema.
+            /// </summary>
+            /// <param name="parentDocument">The parent document.</param>
+            /// <param name="parentIndex">The parent index.</param>
+            /// <returns></returns>
             [CLSCompliant(false)]
             public static bool IsMatch(IJsonDocument parentDocument, int parentIndex)
             {

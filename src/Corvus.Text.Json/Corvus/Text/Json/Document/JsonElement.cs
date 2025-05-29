@@ -68,6 +68,12 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Create an instance of a <see cref="JsonElement/> from a <see cref="IJsonElement"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the source element.</typeparam>
+        /// <param name="instance">The instance of the source element.</param>
+        /// <returns>An instance of a <see cref="JsonELement"/>.</returns>
         [CLSCompliant(false)]
         public static JsonElement From<T>(in T instance)
             where T : struct, IJsonElement<T>
@@ -406,6 +412,22 @@ namespace Corvus.Text.Json
             return _parent.GetString(_idx, JsonTokenType.String);
         }
 
+        /// <summary>
+        /// Gets the value of the element as a <see cref="UnescapedUtf8JsonString"/>.
+        /// </summary>
+        /// <returns>The value of the element as an <see cref="UnescapedUtf8JsonString"/>.</returns>
+        /// <exception cref="InvalidOperationException">
+        ///   This value's <see cref="ValueKind"/> is neither <see cref="JsonValueKind.String"/> nor <see cref="JsonValueKind.Null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <seealso cref="ToString"/>
+        /// <remarks>
+        /// The <see cref="UnescapedUtf8JsonString"/> should be disposed when it is finished with, as it may have rented
+        /// storage to provide the unescaped value. It is only valid for as long as the source <see cref="JsonElement"/>
+        /// is valid.
+        /// </remarks>
         public UnescapedUtf8JsonString GetUtf8String()
         {
             CheckValidInstance();
@@ -1225,6 +1247,7 @@ namespace Corvus.Text.Json
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
+        /// <remarks>Note that this method allocates.</remarks>
         public string GetRawText()
         {
             CheckValidInstance();
@@ -1266,6 +1289,15 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Ensures that a fast-lookup property map is created for this element.
+        /// </summary>
+        /// <remarks>
+        /// This enables dictionary-based lookup of property values in the element.
+        /// If the cost of lookups exceeds the cost of building the map, this can
+        /// provide substantial performance improvements. It is a zero-allocation
+        /// operation.
+        /// </remarks>
         public void EnsurePropertyMap()
         {
             CheckValidInstance();
@@ -1563,24 +1595,31 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <inheritdoc/>
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
+        /// <inheritdoc/>
         static JsonElement IJsonElement<JsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
+        /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => $"JsonElement: ValueKind = {ValueKind} : \"{ToString()}\"";
 
+        /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;
 
+        /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int IJsonElement.ParentDocumentIndex => _idx;
 
+        /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         JsonTokenType IJsonElement.TokenType => TokenType;
 
+        /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
