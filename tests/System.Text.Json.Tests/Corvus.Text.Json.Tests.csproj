@@ -351,7 +351,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <PackageReference Include="System.Collections.Immutable" Version="10.0.0-preview.3.25171.5" />
-    <PackageReference Include="System.IO.Pipelines" Version="10.0.0-preview.3.25171.5" />
+    <PackageReference Include="System.IO.Pipelines" Version="10.0.0-preview.4.25258.110" />
     <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.0-preview.3.25171.5" />
     <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
@@ -384,7 +384,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="3.12.0-beta1.25155.1">
+    <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="3.12.0-beta1.25218.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
