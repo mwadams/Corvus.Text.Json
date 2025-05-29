@@ -143,7 +143,7 @@ namespace Corvus.Text.Json.Tests
                         if (count >= decimals.Count)
                             count = 0;
 
-                        var str = string.Format(CultureInfo.InvariantCulture, "{0}", decimals[count]);
+                        string str = string.Format(CultureInfo.InvariantCulture, "{0}", decimals[count]);
                         decimal expected = decimal.Parse(str, CultureInfo.InvariantCulture);
                         Assert.Equal(expected, numberDecimal);
                         count++;
@@ -272,7 +272,7 @@ namespace Corvus.Text.Json.Tests
                             if (count >= decimals.Count)
                                 count = 0;
 
-                            var str = string.Format(CultureInfo.InvariantCulture, "{0}", decimals[count]);
+                            string str = string.Format(CultureInfo.InvariantCulture, "{0}", decimals[count]);
                             decimal expected = decimal.Parse(str, CultureInfo.InvariantCulture);
                             Assert.Equal(expected, json.GetDecimal());
                             count++;
@@ -1012,7 +1012,7 @@ namespace Corvus.Text.Json.Tests
             if (jsonString == null)
             {
                 var random = new Random(42);
-                var charArray = new char[500];
+                char[] charArray = new char[500];
                 charArray[0] = '"';
                 for (int i = 1; i < charArray.Length; i++)
                 {

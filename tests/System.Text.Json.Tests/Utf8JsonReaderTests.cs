@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Corvus.Text.Json.Internal;
-using Microsoft.DotNet.XUnitExtensions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -302,7 +301,7 @@ namespace Corvus.Text.Json.Tests
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
             byte[] result = JsonTestHelper.ReturnBytesHelper(dataUtf8, out int outputLength);
-            var outputArray = new byte[outputLength];
+            byte[] outputArray = new byte[outputLength];
             Span<byte> outputSpan = outputArray;
 
             Stream stream = new MemoryStream(dataUtf8);
@@ -349,7 +348,7 @@ namespace Corvus.Text.Json.Tests
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
             byte[] result = JsonTestHelper.ReturnBytesHelper(dataUtf8, out int outputLength);
-            var outputArray = new byte[outputLength];
+            byte[] outputArray = new byte[outputLength];
             Span<byte> outputSpan = outputArray;
 
             Stream stream = new MemoryStream(dataUtf8);
@@ -407,7 +406,7 @@ namespace Corvus.Text.Json.Tests
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
             byte[] result = JsonTestHelper.ReturnBytesHelper(dataUtf8, out int outputLength);
-            var outputArray = new byte[outputLength];
+            byte[] outputArray = new byte[outputLength];
             Span<byte> outputSpan = outputArray;
 
             for (int i = 0; i < dataUtf8.Length; i++)
@@ -2981,7 +2980,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void EmptyJsonIsInvalid()
         {
-            var dataUtf8 = ReadOnlySpan<byte>.Empty;
+            ReadOnlySpan<byte> dataUtf8 = ReadOnlySpan<byte>.Empty;
             var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
 
             try
@@ -3000,7 +2999,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void JsonContainingOnlyWhitespaceIsInvalid()
         {
-            var dataUtf8 = new byte[] { 0x20 };
+            byte[] dataUtf8 = new byte[] { 0x20 };
             var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
 
             try
@@ -3237,8 +3236,8 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(CommentTestLineSeparators))]
         public static void ConsumeSingleLineCommentSingleSpanTest(string lineSeparator)
         {
-            var expected = "Comment";
-            var jsonData = "{//" + expected + lineSeparator + "}";
+            string expected = "Comment";
+            string jsonData = "{//" + expected + lineSeparator + "}";
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonData);
 
             for (int i = 0; i < jsonData.Length; i++)
@@ -3256,8 +3255,8 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(CommentTestLineSeparators))]
         public static void SkipSingleLineCommentSingleSpanTest(string lineSeparator)
         {
-            var expected = "Comment";
-            var jsonData = "{//" + expected + lineSeparator + "}";
+            string expected = "Comment";
+            string jsonData = "{//" + expected + lineSeparator + "}";
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonData);
 
             for (int i = 0; i < jsonData.Length; i++)
@@ -4798,10 +4797,10 @@ namespace Corvus.Text.Json.Tests
                 foreach (string delim in new[] { "\r", "\r\n", "\n" })
                 {
                     // NOTE: Leading and trailing spaces in the comments are significant.
-                    var singleLineComment = " Single Line Comment ";
+                    string singleLineComment = " Single Line Comment ";
                     dataList.Add(new object[] { $"{{//{singleLineComment}{delim}}}", singleLineComment });
 
-                    var multilineComment = $" Multiline {delim} Comment ";
+                    string multilineComment = $" Multiline {delim} Comment ";
                     dataList.Add(new object[] { $"{{/*{multilineComment}*/{delim}}}", multilineComment });
                 }
                 return dataList;
@@ -4814,7 +4813,7 @@ namespace Corvus.Text.Json.Tests
             {
                 var dataList = new List<object[]>();
 
-                var rawComments = new string[]
+                string[] rawComments = new string[]
                 {
                     "A string with {0}valid UTF8 \\t tab",
                     "A string with {0}invalid UTF8 \\xc3\\x28",

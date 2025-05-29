@@ -764,7 +764,7 @@ namespace Corvus.Text.Json
             }
 
             ReadOnlyMemory<byte> name = GetRawSimpleValueUnsafe(propertyNameIndex, includeQuotes: true);
-            using var value = GetRawValueUnsafe(valueIndex, includeQuotes: true);
+            using RawUtf8JsonString value = GetRawValueUnsafe(valueIndex, includeQuotes: true);
             // quoted name, quoted value and a colon
             int length = name.Length + value.Span.Length + 1;
             byte[]? buffer = null;

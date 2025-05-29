@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
-using System.Buffers.Text;
 #if !NET8_0_OR_GREATER
 using System.Collections;
 #endif

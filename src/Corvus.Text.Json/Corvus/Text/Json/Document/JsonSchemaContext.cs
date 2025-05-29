@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses _file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Diagnostics;
 #if NET
@@ -116,6 +115,7 @@ namespace Corvus.Text.Json
 
         private Span<int> LocalEvaluated
         {
+#pragma warning disable IDE0251 //Member can be made 'readonly'
             get
             {
 #if NET
@@ -131,9 +131,12 @@ namespace Corvus.Text.Json
                 return _rentedBuffer.AsSpan(_localEvaluatedOffset,_localEvaluatedLength);
 #endif
             }
+#pragma warning  restore IDE0251
         }
+
         private Span<int> AppliedEvaluated
         {
+#pragma warning disable IDE0251 //Member can be made 'readonly'
             get
             {
 #if NET
@@ -149,6 +152,7 @@ namespace Corvus.Text.Json
                 return _rentedBuffer.AsSpan(_appliedEvaluatedOffset,_appliedEvaluatedLength);
 #endif
             }
+#pragma warning  restore IDE0251
         }
 
         public static JsonSchemaContext BeginContext<T>(

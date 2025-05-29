@@ -200,7 +200,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void TestTextEqualsLargeMatch()
         {
-            var jsonChars = new char[320];  // Some value larger than 256 (stack threshold)
+            char[] jsonChars = new char[320];  // Some value larger than 256 (stack threshold)
             jsonChars.AsSpan().Fill('a');
             byte[] lookup = Encoding.UTF8.GetBytes(jsonChars);
 
@@ -264,7 +264,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void TestTextEqualsLargeMismatch()
         {
-            var jsonChars = new char[320];  // Some value larger than 256 (stack threshold)
+            char[] jsonChars = new char[320];  // Some value larger than 256 (stack threshold)
             jsonChars.AsSpan().Fill('a');
             ReadOnlySpan<char> escapedA = new char[6] { '\\', 'u', '0', '0', '6', '1' };
 
@@ -402,7 +402,7 @@ namespace Corvus.Text.Json.Tests
         {
             byte[] utf8Data = Encoding.UTF8.GetBytes(jsonString);
 
-            var lookupString = new string('a', 13);
+            string lookupString = new string('a', 13);
 
             bool found = false;
 

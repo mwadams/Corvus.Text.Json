@@ -139,8 +139,8 @@ namespace System.Reflection
 
         private static void CheckNullabilityAttributes(NullabilityInfo nullability, IList<CustomAttributeData> attributes)
         {
-            var codeAnalysisReadState = NullabilityState.Unknown;
-            var codeAnalysisWriteState = NullabilityState.Unknown;
+            NullabilityState codeAnalysisReadState = NullabilityState.Unknown;
+            NullabilityState codeAnalysisWriteState = NullabilityState.Unknown;
 
             foreach (CustomAttributeData attribute in attributes)
             {
@@ -500,7 +500,7 @@ namespace System.Reflection
                 return true;
             }
 
-            var state = NullabilityState.Unknown;
+            NullabilityState state = NullabilityState.Unknown;
             if (CreateParser(genericParameter.GetCustomAttributesData()).ParseNullableState(0, ref state))
             {
                 nullability.ReadState = state;
@@ -587,7 +587,7 @@ namespace System.Reflection
             bool isValueType = IsValueTypeOrValueTypeByRef(nullability.Type);
             if (!isValueType)
             {
-                var state = NullabilityState.Unknown;
+                NullabilityState state = NullabilityState.Unknown;
                 if (!parser.ParseNullableState(index, ref state))
                 {
                     return false;

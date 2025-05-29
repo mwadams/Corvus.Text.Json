@@ -1,7 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -373,10 +372,12 @@ namespace Corvus.Text.Json
 
             JsonTokenType type = TokenType;
 
+#pragma warning disable IDE0075 // Disable the IDE suggestion to simplify the conditional as it makes it unreadable
             return
                 type == JsonTokenType.True ? true :
                 type == JsonTokenType.False ? false :
                 ThrowJsonElementWrongTypeException(type);
+#pragma warning restore IDE0075
 
             static bool ThrowJsonElementWrongTypeException(JsonTokenType actualType)
             {
@@ -1565,7 +1566,7 @@ namespace Corvus.Text.Json
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-        static JsonElement IJsonElement<JsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElement(parentDocument, parentDocumentIndex);
+        static JsonElement IJsonElement<JsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

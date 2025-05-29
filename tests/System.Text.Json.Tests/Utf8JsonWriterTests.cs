@@ -925,7 +925,7 @@ namespace Corvus.Text.Json.Tests
         {
             try
             {
-                var largeArray = new char[150_000_000];
+                char[] largeArray = new char[150_000_000];
                 largeArray.AsSpan().Fill('a');
 
                 // Text size chosen so that after several doublings of the underlying buffer we reach ~2 GB (but don't go over)
@@ -3169,7 +3169,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(JsonOptions_TestData))]
         public void WritingTooDeepProperty(JsonWriterOptions options)
         {
-            var capacity = 3 + 1000 * (11 + 1001 * options.IndentSize / 2);
+            int capacity = 3 + 1000 * (11 + 1001 * options.IndentSize / 2);
             var output = new ArrayBufferWriter<byte>(capacity);
             using (var jsonUtf8 = new Utf8JsonWriter(output, options))
             {
@@ -4208,7 +4208,7 @@ namespace Corvus.Text.Json.Tests
             var output = new ArrayBufferWriter<byte>(10);
             using var jsonUtf8 = new Utf8JsonWriter(output);
 
-            var bytes = new byte[3] { 0xFB, 0xEF, 0xBE };
+            byte[] bytes = new byte[3] { 0xFB, 0xEF, 0xBE };
             jsonUtf8.WriteBase64StringValue(bytes);
 
             jsonUtf8.Flush();
@@ -4222,7 +4222,7 @@ namespace Corvus.Text.Json.Tests
             var output = new ArrayBufferWriter<byte>(10);
             using var jsonUtf8 = new Utf8JsonWriter(output);
 
-            var bytes = new byte[200];
+            byte[] bytes = new byte[200];
 
             bytes.AsSpan().Fill(100);
             bytes[4] = 0xFB;
@@ -4423,7 +4423,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Throws<ArgumentException>(() => jsonUtf8.WriteCommentValue(comment));
             Assert.Throws<ArgumentException>(() => jsonUtf8.WriteCommentValue(comment.AsSpan()));
 
-            var invalidUtf8 = new byte[2] { 0xc3, 0x28 };
+            byte[] invalidUtf8 = new byte[2] { 0xc3, 0x28 };
             Assert.Throws<ArgumentException>(() => jsonUtf8.WriteCommentValue(invalidUtf8));
         }
 
@@ -4766,7 +4766,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(JsonOptions_TestData))]
         public void EscapeAsciiCharacters(JsonWriterOptions options)
         {
-            var propertyArray = new char[128];
+            char[] propertyArray = new char[128];
 
             char[] specialCases = { '+', '`', (char)0x7F, '/' };
             for (int i = 0; i < propertyArray.Length; i++)
@@ -4831,7 +4831,7 @@ namespace Corvus.Text.Json.Tests
         public void EscapeCharacters(JsonWriterOptions options)
         {
             // Do not include surrogate pairs.
-            var propertyArray = new char[0xD800 + (0xFFFF - 0xE000) + 1];
+            char[] propertyArray = new char[0xD800 + (0xFFFF - 0xE000) + 1];
 
             for (int i = 128; i < propertyArray.Length; i++)
             {
@@ -4889,7 +4889,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(JsonOptions_TestData))]
         public void HighSurrogateMissingGetsReplaced(JsonWriterOptions options)
         {
-            var propertyArray = new char[10] { 'a', (char)0xD800, (char)0xDC00, (char)0xD803, (char)0xDE6D, (char)0xD834, (char)0xDD1E, (char)0xDBFF, (char)0xDFFF, 'a' };
+            char[] propertyArray = new char[10] { 'a', (char)0xD800, (char)0xDC00, (char)0xD803, (char)0xDE6D, (char)0xD834, (char)0xDD1E, (char)0xDBFF, (char)0xDFFF, 'a' };
 
             string propertyName = new string(propertyArray);
             string value = new string(propertyArray);
@@ -5319,12 +5319,12 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(WriteStartEndWithPropertyName_TestData))]
         public void WriteStartEndWithPropertyNameArrayDifferentKeyLengths(JsonWriterOptions options, int keyLength)
         {
-            var keyChars = new char[keyLength];
+            char[] keyChars = new char[keyLength];
             for (int i = 0; i < keyChars.Length; i++)
             {
                 keyChars[i] = '<';
             }
-            var key = new string(keyChars);
+            string key = new string(keyChars);
 
             string expectedStr = GetStartEndWithPropertyArrayExpectedString(key, options, escape: true);
 
@@ -5394,12 +5394,12 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(WriteStartEndWithPropertyName_TestData))]
         public void WriteStartEndWithPropertyNameObjectDifferentKeyLengths(JsonWriterOptions options, int keyLength)
         {
-            var keyChars = new char[keyLength];
+            char[] keyChars = new char[keyLength];
             for (int i = 0; i < keyChars.Length; i++)
             {
                 keyChars[i] = '<';
             }
-            var key = new string(keyChars);
+            string key = new string(keyChars);
 
             string expectedStr = GetStartEndWithPropertyObjectExpectedString(key, options, escape: true);
 
@@ -5716,7 +5716,7 @@ namespace Corvus.Text.Json.Tests
             var random = new Random(42);
             const int numberOfItems = 1_000;
 
-            var ints = new int[numberOfItems];
+            int[] ints = new int[numberOfItems];
             ints[0] = 0;
             ints[1] = int.MaxValue;
             ints[2] = int.MinValue;
@@ -5727,7 +5727,7 @@ namespace Corvus.Text.Json.Tests
                 ints[i] = random.Next(int.MinValue, int.MaxValue);
             }
 
-            var uints = new uint[numberOfItems];
+            uint[] uints = new uint[numberOfItems];
             uints[0] = uint.MaxValue;
             uints[1] = uint.MinValue;
             uints[2] = 3294967295;
@@ -5739,7 +5739,7 @@ namespace Corvus.Text.Json.Tests
                 uints[i] = fullRange;
             }
 
-            var longs = new long[numberOfItems];
+            long[] longs = new long[numberOfItems];
             longs[0] = 0;
             longs[1] = long.MaxValue;
             longs[2] = long.MinValue;
@@ -5752,7 +5752,7 @@ namespace Corvus.Text.Json.Tests
                 longs[i] = value;
             }
 
-            var ulongs = new ulong[numberOfItems];
+            ulong[] ulongs = new ulong[numberOfItems];
             ulongs[0] = ulong.MaxValue;
             ulongs[1] = ulong.MinValue;
             ulongs[2] = 10446744073709551615;
@@ -5761,7 +5761,7 @@ namespace Corvus.Text.Json.Tests
 
             }
 
-            var doubles = new double[numberOfItems * 2];
+            double[] doubles = new double[numberOfItems * 2];
             doubles[0] = 0.00;
             doubles[1] = double.MaxValue;
             doubles[2] = double.MinValue;
@@ -5770,7 +5770,7 @@ namespace Corvus.Text.Json.Tests
 
             for (int i = 5; i < numberOfItems; i++)
             {
-                var value = random.NextDouble();
+                double value = random.NextDouble();
                 if (value < 0.5)
                 {
                     doubles[i] = random.NextDouble() * double.MinValue;
@@ -5783,7 +5783,7 @@ namespace Corvus.Text.Json.Tests
 
             for (int i = numberOfItems; i < numberOfItems * 2; i++)
             {
-                var value = random.NextDouble();
+                double value = random.NextDouble();
                 if (value < 0.5)
                 {
                     doubles[i] = random.NextDouble() * -1_000_000;
@@ -5794,7 +5794,7 @@ namespace Corvus.Text.Json.Tests
                 }
             }
 
-            var floats = new float[numberOfItems];
+            float[] floats = new float[numberOfItems];
             floats[0] = 0.00f;
             floats[1] = float.MaxValue;
             floats[2] = float.MinValue;
@@ -5807,7 +5807,7 @@ namespace Corvus.Text.Json.Tests
                 floats[i] = (float)(mantissa * exponent);
             }
 
-            var decimals = new decimal[numberOfItems * 2];
+            decimal[] decimals = new decimal[numberOfItems * 2];
             decimals[0] = (decimal)0.00;
             decimals[1] = decimal.MaxValue;
             decimals[2] = decimal.MinValue;
@@ -5815,7 +5815,7 @@ namespace Corvus.Text.Json.Tests
             decimals[4] = (decimal)-123.45e1;
             for (int i = 5; i < numberOfItems; i++)
             {
-                var value = random.NextDouble();
+                double value = random.NextDouble();
                 if (value < 0.5)
                 {
                     decimals[i] = (decimal)(random.NextDouble() * -78E14);
@@ -5828,7 +5828,7 @@ namespace Corvus.Text.Json.Tests
 
             for (int i = numberOfItems; i < numberOfItems * 2; i++)
             {
-                var value = random.NextDouble();
+                double value = random.NextDouble();
                 if (value < 0.5)
                 {
                     decimals[i] = (decimal)(random.NextDouble() * -1_000_000);
@@ -6534,7 +6534,7 @@ namespace Corvus.Text.Json.Tests
         public static void WriteStringValue_JsonEncodedText_Large(int stringLength)
         {
             {
-                var message = new string('a', stringLength);
+                string message = new string('a', stringLength);
                 var builder = new StringBuilder();
                 builder.Append("\"");
                 for (int i = 0; i < stringLength; i++)
@@ -6554,7 +6554,7 @@ namespace Corvus.Text.Json.Tests
                 JsonTestHelper.AssertContents(expectedMessage, output);
             }
             {
-                var message = new string('>', stringLength);
+                string message = new string('>', stringLength);
                 var builder = new StringBuilder();
                 builder.Append("\"");
                 for (int i = 0; i < stringLength; i++)
@@ -6815,8 +6815,8 @@ namespace Corvus.Text.Json.Tests
             {
                 byte[] bytesTooLarge;
                 char[] charsTooLarge;
-                var bytes = new byte[5];
-                var chars = new char[5];
+                byte[] bytes = new byte[5];
+                char[] chars = new char[5];
 
                 bytesTooLarge = new byte[400_000_000];
                 charsTooLarge = new char[400_000_000];
@@ -7204,12 +7204,12 @@ namespace Corvus.Text.Json.Tests
         public static void WriteStringValue_IndentationOptions()
         {
             var options = new JsonWriterOptions();
-            var expectedOutput = GetCustomExpectedString(options);
+            string expectedOutput = GetCustomExpectedString(options);
 
             options.IndentCharacter = '\t';
             options.IndentSize = 127;
 
-            var output = GetCustomExpectedString(options);
+            string output = GetCustomExpectedString(options);
 
             Assert.Equal(expectedOutput, output);
         }
@@ -8018,7 +8018,7 @@ namespace Corvus.Text.Json.Tests
 
         private static string HandleFormatting(string text, JsonWriterOptions options)
         {
-            var normalized = text.Replace("  ", GetIndentText(options));
+            string normalized = text.Replace("  ", GetIndentText(options));
 
             if (options.NewLine != Environment.NewLine)
             {

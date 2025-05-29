@@ -4,11 +4,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 ////using Corvus.Text.Json.Serialization;
 ////using Corvus.Text.Json.Serialization.Metadata;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Corvus.Text.Json
@@ -85,12 +83,12 @@ namespace Corvus.Text.Json
                         actualProperties.Add(property.Name);
                     }
 
-                    foreach (var property in expectedProperties.Except(actualProperties))
+                    foreach (string property in expectedProperties.Except(actualProperties))
                     {
                         AssertTrue(passCondition: false, $"Property \"{property}\" missing from actual object.");
                     }
 
-                    foreach (var property in actualProperties.Except(expectedProperties))
+                    foreach (string property in actualProperties.Except(expectedProperties))
                     {
                         AssertTrue(passCondition: false, $"Actual object defines additional property \"{property}\".");
                     }

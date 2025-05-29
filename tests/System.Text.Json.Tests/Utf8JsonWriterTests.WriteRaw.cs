@@ -394,7 +394,7 @@ namespace Corvus.Text.Json.Tests
         {
             try
             {
-                var largeArray = new char[150_000_000];
+                char[] largeArray = new char[150_000_000];
                 largeArray.AsSpan().Fill('a');
 
                 // Text size chosen so that after several doublings of the underlying buffer we reach ~2 GB (but don't go over)
@@ -675,7 +675,7 @@ namespace Corvus.Text.Json.Tests
             {
                 if (startSegment is null) // First segment
                 {
-                    var bytes = new byte[ArrayMaxLength];
+                    byte[] bytes = new byte[ArrayMaxLength];
                     bytes[0] = (byte)'"';
                     FillArray(bytes, (byte)'a', 1, bytes.Length);
                     endSegment = startSegment = new(bytes);

@@ -1,7 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Collections.Generic;
@@ -26,7 +25,7 @@ namespace Corvus.Text.Json
         where T : struct, IJsonElement<T>
     {
         private ReadOnlyMemory<byte> _utf8Json;
-        private bool _isDisposable;
+        private readonly bool _isDisposable;
         private byte[]? _extraRentedArrayPoolBytes;
         private PooledByteBufferWriter? _extraPooledByteBufferWriter;
 
@@ -767,7 +766,7 @@ namespace Corvus.Text.Json
             ReadOnlyMemory<byte> segmentCopy = GetRawValueUnsafe(index, includeQuotes: true).ToArray();
 
             ParsedJsonDocument<T> newDocument =
-                new ParsedJsonDocument<T>(
+                new(
                     segmentCopy,
                     newDb,
                     extraRentedArrayPoolBytes: null,
@@ -813,7 +812,7 @@ namespace Corvus.Text.Json
                     return;
                 case JsonTokenType.String:
                     {
-                        using var unescaped = GetUtf8JsonStringUnsafe(index, JsonTokenType.String);
+                        using UnescapedUtf8JsonString unescaped = GetUtf8JsonStringUnsafe(index, JsonTokenType.String);
                         writer.WriteStringValue(unescaped.Span);
                     }
                     return;
@@ -847,7 +846,7 @@ namespace Corvus.Text.Json
                 {
                     case JsonTokenType.String:
                         {
-                            using var unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.String);
+                            using UnescapedUtf8JsonString unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.String);
                             writer.WriteStringValue(unescaped.Span);
                         }
                         continue;
@@ -877,7 +876,7 @@ namespace Corvus.Text.Json
                         continue;
                     case JsonTokenType.PropertyName:
                         {
-                            using var unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.PropertyName);
+                            using UnescapedUtf8JsonString unescaped = GetUtf8JsonStringUnsafe(i, JsonTokenType.PropertyName);
                             writer.WritePropertyName(unescaped.Span);
                         }
                         continue;
@@ -908,7 +907,7 @@ namespace Corvus.Text.Json
             int numberOfRowsForMembers = 0;
             int numberOfRowsForValues = 0;
 
-            Utf8JsonReader reader = new Utf8JsonReader(
+            Utf8JsonReader reader = new(
                 utf8JsonSpan,
                 isFinalBlock: true,
                 new JsonReaderState(options: readerOptions));

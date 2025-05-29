@@ -9,7 +9,6 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Xunit;
-using System.Buffers.Text;
 using System.IO.Tests;
 using System.Linq;
 using System.Runtime.InteropServices;

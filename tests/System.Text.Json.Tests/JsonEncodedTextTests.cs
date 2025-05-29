@@ -218,8 +218,8 @@ namespace Corvus.Text.Json.Tests
         public static void ToStringLargeTest(int stringLength)
         {
             {
-                var message = new string('a', stringLength);
-                var expectedMessage = new string('a', stringLength);
+                string message = new string('a', stringLength);
+                string expectedMessage = new string('a', stringLength);
 
                 JsonEncodedText text = JsonEncodedText.Encode(message);
                 JsonEncodedText textSpan = JsonEncodedText.Encode(message.AsSpan());
@@ -235,7 +235,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Equal(text.GetHashCode(), textUtf8Span.GetHashCode());
             }
             {
-                var message = new string('>', stringLength);
+                string message = new string('>', stringLength);
                 var builder = new StringBuilder(stringLength);
                 for (int i = 0; i < stringLength; i++)
                 {
@@ -285,7 +285,7 @@ namespace Corvus.Text.Json.Tests
         public static void GetUtf8BytesLargeTest(int stringLength)
         {
             {
-                var message = new string('a', stringLength);
+                string message = new string('a', stringLength);
                 byte[] expectedBytes = Encoding.UTF8.GetBytes(message);
 
                 JsonEncodedText text = JsonEncodedText.Encode(message);
@@ -302,7 +302,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Equal(text.GetHashCode(), textUtf8Span.GetHashCode());
             }
             {
-                var message = new string('>', stringLength);
+                string message = new string('>', stringLength);
                 var builder = new StringBuilder(stringLength);
                 for (int i = 0; i < stringLength; i++)
                 {
@@ -344,8 +344,8 @@ namespace Corvus.Text.Json.Tests
         [InlineData(10_000)]
         public static void GetValueLargeTest(int stringLength)
         {
-            var message = new string('a', stringLength);
-            var expectedMessage = new string('a', stringLength);
+            string message = new string('a', stringLength);
+            string expectedMessage = new string('a', stringLength);
 
             JsonEncodedText text = JsonEncodedText.Encode(message);
             JsonEncodedText textSpan = JsonEncodedText.Encode(message.AsSpan());
@@ -362,7 +362,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData(10_000)]
         public static void GetValueLargeEscapedTest(int stringLength)
         {
-            var message = new string('>', stringLength);
+            string message = new string('>', stringLength);
             var builder = new StringBuilder(stringLength);
             for (int i = 0; i < stringLength; i++)
             {
@@ -382,7 +382,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void InvalidUTF16()
         {
-            var invalid = new char[5] { 'a', 'b', 'c', (char)0xDC00, 'a' };
+            char[] invalid = new char[5] { 'a', 'b', 'c', (char)0xDC00, 'a' };
             Assert.Throws<ArgumentException>(() => JsonEncodedText.Encode(invalid));
 
             invalid = new char[5] { 'a', 'b', 'c', (char)0xD800, 'a' };
@@ -391,7 +391,7 @@ namespace Corvus.Text.Json.Tests
             invalid = new char[5] { 'a', 'b', 'c', (char)0xDC00, (char)0xD800 };
             Assert.Throws<ArgumentException>(() => JsonEncodedText.Encode(invalid));
 
-            var valid = new char[5] { 'a', 'b', 'c', (char)0xD800, (char)0xDC00 };
+            char[] valid = new char[5] { 'a', 'b', 'c', (char)0xD800, (char)0xDC00 };
             JsonEncodedText _ = JsonEncodedText.Encode(valid);
 
             Assert.Throws<ArgumentException>(() => JsonEncodedText.Encode(new string(valid).Substring(0, 4)));
@@ -417,8 +417,8 @@ namespace Corvus.Text.Json.Tests
         {
             try
             {
-                var largeValueString = new string('a', 400_000_000);
-                var utf8Value = new byte[400_000_000];
+                string largeValueString = new string('a', 400_000_000);
+                byte[] utf8Value = new byte[400_000_000];
                 utf8Value.AsSpan().Fill((byte)'a');
 
                 Assert.Throws<ArgumentException>(() => JsonEncodedText.Encode(largeValueString));

@@ -54,7 +54,7 @@ namespace Corvus.Text.Json.Tests
             BitStack bitStack = default;
             Assert.Equal(0, bitStack.CurrentDepth);
 
-            var values = new bool[bitLength];
+            bool[] values = new bool[bitLength];
             for (int i = 0; i < bitLength; i++)
             {
                 values[i] = s_random.NextDouble() >= 0.5;
@@ -91,7 +91,7 @@ namespace Corvus.Text.Json.Tests
             BitStack bitStack = default;
             Assert.Equal(0, bitStack.CurrentDepth);
 
-            var values = new bool[bitLength];
+            bool[] values = new bool[bitLength];
             for (int i = 0; i < bitLength; i++)
             {
                 values[i] = s_random.NextDouble() >= 0.5;

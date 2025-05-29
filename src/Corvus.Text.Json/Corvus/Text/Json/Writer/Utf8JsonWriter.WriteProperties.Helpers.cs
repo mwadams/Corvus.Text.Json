@@ -5,7 +5,6 @@ using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json

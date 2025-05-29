@@ -1,12 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using Corvus.Json;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 

@@ -114,7 +114,7 @@ namespace Corvus.Text.Json
                     continue;
                 }
 
-                var adjacencyRow = new bool[Math.Max(nodes.Count, count)];
+                bool[] adjacencyRow = new bool[Math.Max(nodes.Count, count)];
                 foreach (T childNode in children)
                 {
                     if (!nodeIndex.TryGetValue(childNode, out int index))

@@ -4,13 +4,11 @@
 
 
 using System.Buffers;
-using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests
@@ -60,7 +58,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidUtf16DataWithOptions_TestData))]
         public static void WriteStringValueSegment_Utf16_SplitCodePointsReplacement(char[] inputArr, JsonWriterOptions options)
         {
-            var expectedChars = new char[inputArr.Length * MaxExpansionFactorWhileEscaping];
+            char[] expectedChars = new char[inputArr.Length * MaxExpansionFactorWhileEscaping];
 
             options.Encoder.Encode(inputArr, expectedChars, out int charsConsumed, out int charsWritten);
             Assert.Equal(inputArr.Length, charsConsumed);
@@ -116,7 +114,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidUtf8DataWithOptions_TestData))]
         public static void WriteStringValueSegment_Utf8_SplitCodePointsReplacement(byte[] inputArr, JsonWriterOptions options)
         {
-            var expectedBytes = new byte[inputArr.Length * MaxExpansionFactorWhileEscaping];
+            byte[] expectedBytes = new byte[inputArr.Length * MaxExpansionFactorWhileEscaping];
 
             options.Encoder.EncodeUtf8(inputArr, expectedBytes, out int bytesConsumed, out int bytesWritten);
             Assert.Equal(inputArr.Length, bytesConsumed);
@@ -881,7 +879,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void WriteStringValueSegment_Flush()
         {
-            var noEscape = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+            JavaScriptEncoder noEscape = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
             TestFlushImpl(['\uD800'], ['\uDC00'], new(), @"""\uD800\uDC00""", StringValueEncodingType.Utf16);
             TestFlushImpl<byte>([0b110_11111], [0b10_111111], new(), @"""\u07FF""", StringValueEncodingType.Utf8);
             TestFlushImpl<byte>([0b110_11111], [0b10_111111], new() { Encoder = noEscape }, "\"\u07FF\"", StringValueEncodingType.Utf8);

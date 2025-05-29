@@ -48,7 +48,7 @@ namespace Corvus.Text.Json.Tests
             if (buffers.Length == 1)
                 return new ReadOnlySequence<byte>(buffers[0]);
             var list = new List<Memory<byte>>();
-            foreach (var buffer in buffers)
+            foreach (byte[] buffer in buffers)
                 list.Add(buffer);
             return Create(list.ToArray());
         }

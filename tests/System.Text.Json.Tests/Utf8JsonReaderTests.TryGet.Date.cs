@@ -260,15 +260,15 @@ namespace Corvus.Text.Json.Tests
         [InlineData(@"""\u001c\u0001\u0001""")]
         public static void TryGetDateTimeAndOffset_InvalidPropertyValue(string testString)
         {
-            var dataUtf8 = Encoding.UTF8.GetBytes(testString);
+            byte[] dataUtf8 = Encoding.UTF8.GetBytes(testString);
             var json = new Utf8JsonReader(dataUtf8);
             Assert.True(json.Read());
 
-            Assert.False(json.TryGetDateTime(out var dateTime));
+            Assert.False(json.TryGetDateTime(out DateTime dateTime));
             Assert.Equal(default, dateTime);
             JsonTestHelper.AssertThrows<FormatException>(ref json, (ref Utf8JsonReader json) => json.GetDateTime());
 
-            Assert.False(json.TryGetDateTimeOffset(out var dateTimeOffset));
+            Assert.False(json.TryGetDateTimeOffset(out DateTimeOffset dateTimeOffset));
             Assert.Equal(default, dateTimeOffset);
             JsonTestHelper.AssertThrows<FormatException>(ref json, (ref Utf8JsonReader json) => json.GetDateTimeOffset());
         }

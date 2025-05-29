@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json

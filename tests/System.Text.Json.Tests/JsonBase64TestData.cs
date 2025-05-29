@@ -29,21 +29,21 @@ namespace Corvus.Text.Json.Tests
         private static string GenerateRandomValidLargeString()
         {
             var random = new Random(42);
-            var charArray = new char[502]; // valid Base64 strings must have length divisible by 4 (not including surrounding quotes)
+            char[] charArray = new char[502]; // valid Base64 strings must have length divisible by 4 (not including surrounding quotes)
             charArray[0] = '"';
             for (int i = 1; i < charArray.Length - 1; i++)
             {
                 charArray[i] = (char)random.Next('A', 'Z'); // ASCII values (between 65 and 90) that constitute valid base 64 string.
             }
             charArray[charArray.Length - 1] = '"';
-            var jsonString = new string(charArray);
+            string jsonString = new string(charArray);
             return jsonString;
         }
 
         private static string GenerateRandomInvalidLargeString(bool includeEscapedCharacter)
         {
             var random = new Random(42);
-            var charArray = new char[500];
+            char[] charArray = new char[500];
             charArray[0] = '"';
             for (int i = 1; i < charArray.Length - 1; i++)
             {
@@ -57,7 +57,7 @@ namespace Corvus.Text.Json.Tests
             }
 
             charArray[charArray.Length - 1] = '"';
-            var jsonString = new string(charArray);
+            string jsonString = new string(charArray);
             return jsonString;
         }
     }

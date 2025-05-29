@@ -681,10 +681,10 @@ null,
         [InlineData(true)]
         public void WriteNumberAsPropertyWithLargeName(bool indented)
         {
-            var charArray = new char[300];
+            char[] charArray = new char[300];
             charArray.AsSpan().Fill('a');
             charArray[0] = (char)0xEA;
-            var propertyName = new string(charArray);
+            string propertyName = new string(charArray);
 
             WritePropertyValueBothForms(
                 indented,

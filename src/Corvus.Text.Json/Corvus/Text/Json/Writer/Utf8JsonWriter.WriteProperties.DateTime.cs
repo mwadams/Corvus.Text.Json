@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
-using System.Buffers.Text;
 using System.Diagnostics;
 using Corvus.Text.Json.Internal;
 
@@ -19,7 +18,7 @@ namespace Corvus.Text.Json
         /// Thrown if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         /// <remarks>
-        /// Writes the <see cref="DateTime"/> using the round-trippable ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000.
+        /// Writes the <see cref="DateTime"/> using the round-trip ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000.
         /// The property name should already be escaped when the instance of <see cref="JsonEncodedText"/> was created.
         /// </remarks>
         public void WriteString(JsonEncodedText propertyName, DateTime value)
@@ -48,7 +47,7 @@ namespace Corvus.Text.Json
         /// Thrown if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         /// <remarks>
-        /// Writes the <see cref="DateTime"/> using the round-trippable ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000.
+        /// Writes the <see cref="DateTime"/> using the round-trip ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000.
         /// The property name is escaped before writing.
         /// </remarks>
         public void WriteString(string propertyName, DateTime value)
@@ -69,7 +68,7 @@ namespace Corvus.Text.Json
         /// Thrown if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         /// <remarks>
-        /// Writes the <see cref="DateTime"/> using the round-trippable ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000.
+        /// Writes the <see cref="DateTime"/> using the round-trip ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000.
         /// The property name is escaped before writing.
         /// </remarks>
         public void WriteString(ReadOnlySpan<char> propertyName, DateTime value)
@@ -94,7 +93,7 @@ namespace Corvus.Text.Json
         /// Thrown if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         /// <remarks>
-        /// Writes the <see cref="DateTime"/> using the round-trippable ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000.
+        /// Writes the <see cref="DateTime"/> using the round-trip ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000.
         /// The property name is escaped before writing.
         /// </remarks>
         public void WriteString(ReadOnlySpan<byte> utf8PropertyName, DateTime value)
