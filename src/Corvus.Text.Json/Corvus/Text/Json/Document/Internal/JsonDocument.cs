@@ -54,16 +54,7 @@ namespace Corvus.Text.Json.Internal
         /// </summary>
         public bool IsImmutable
         {
-            get => _isImmutable;
-            protected set
-            {
-                if (_isImmutable && !value)
-                {
-                    ThrowHelper.ThrowInvalidOperationException(SR.CannotChangeImmutabilityOfAnImmutableDocument);
-                }
-
-                _isImmutable = value;
-            }
+            get => _isImmutable;           
         }
 
         /// <summary>
