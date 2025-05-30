@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
@@ -3628,6 +3628,649 @@ namespace Corvus.Text.Json.Tests
 #endif
             }
         }
+
+
+        [Fact]
+        public static void SetItem_OnEmptyArray_AddsItem()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // Act
+            root.SetItem(0, 123);
+
+            // Assert
+            Assert.Equal(1, root.GetArrayLength());
+            Assert.Equal(123, root[0].GetInt32());
+        }
+
+        [Fact]
+        public static void SetItem_OnNonEmptyArray_ReplacesExistingItem()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // Act
+            root.SetItem(1, 99);
+
+            // Assert
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(1, root[0].GetInt32());
+            Assert.Equal(99, root[1].GetInt32());
+            Assert.Equal(3, root[2].GetInt32());
+        }
+
+        [Fact]
+        public static void SetItem_AtArrayLength_AppendsItem()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[10,20]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // Act
+            root.SetItem(2, 30);
+
+            // Assert
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(10, root[0].GetInt32());
+            Assert.Equal(20, root[1].GetInt32());
+            Assert.Equal(30, root[2].GetInt32());
+        }
+
+        [Fact]
+        public static void SetItem_Throws_WhenIndexIsNegative()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 100));
+        }
+
+        [Fact]
+        public static void SetItem_Throws_WhenIndexIsGreaterThanArrayLength()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(4, 100));
+        }
+
+        // Place these inside the JsonDocumentBuilderTests class
+
+        [Fact]
+        public static void SetItem_Bool_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[false]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, true);
+            Assert.True(root[0].GetBoolean());
+
+            root.SetItem(1, false);
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.False(root[1].GetBoolean());
+        }
+
+        [Fact]
+        public static void SetItem_Guid_Works()
+        {
+            var guid1 = Guid.NewGuid();
+            var guid2 = Guid.NewGuid();
+            using var doc = ParsedJsonDocument<JsonElement>.Parse($"[\"{guid1}\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, guid2);
+            Assert.Equal(guid2, root[0].GetGuid());
+
+            var guid3 = Guid.NewGuid();
+            root.SetItem(1, guid3);
+            Assert.Equal(guid3, root[1].GetGuid());
+        }
+
+        [Fact]
+        public static void SetItem_Byte_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, (byte)42);
+            Assert.Equal(42, root[0].GetByte());
+
+            root.SetItem(1, (byte)255);
+            Assert.Equal(255, root[1].GetByte());
+        }
+
+        [Fact]
+        public static void SetItem_Long_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, long.MaxValue);
+            Assert.Equal(long.MaxValue, root[0].GetInt64());
+
+            root.SetItem(1, long.MinValue);
+            Assert.Equal(long.MinValue, root[1].GetInt64());
+        }
+
+        [Fact]
+        public static void SetItem_Short_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, (short)-12345);
+            Assert.Equal(-12345, root[0].GetInt16());
+
+            root.SetItem(1, (short)12345);
+            Assert.Equal(12345, root[1].GetInt16());
+        }
+
+        [Fact]
+        public static void SetItem_Float_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, 3.14f);
+            Assert.Equal(3.14f, root[0].GetSingle());
+
+            root.SetItem(1, -2.71f);
+            Assert.Equal(-2.71f, root[1].GetSingle());
+        }
+
+        [Fact]
+        public static void SetItem_Double_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, 2.718281828);
+            Assert.Equal(2.718281828, root[0].GetDouble());
+
+            root.SetItem(1, -3.1415926535);
+            Assert.Equal(-3.1415926535, root[1].GetDouble());
+        }
+
+        [Fact]
+        public static void SetItem_Generic_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // Use a JsonElement.Mutable as the value
+            using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
+            using var builderDoc2 = doc2.RootElement.CreateDocument(workspace);
+            var value = builderDoc2.RootElement;
+
+            root.SetItem<JsonElement.Mutable>(0, value);
+            Assert.Equal(42, root[0].GetInt32());
+        }
+
+        [Fact]
+        public static void SetItem_Utf8String_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // Simple ASCII
+            root.SetItem(0, "hello"u8);
+            Assert.Equal("hello", root[0].GetString());
+
+            root.SetItem(1, "world"u8);
+            Assert.Equal("world", root[1].GetString());
+
+            // Escaped UTF-8 string: "foo\"bar" (the quote is escaped in JSON, but the UTF-8 bytes are unescaped)
+            ReadOnlySpan<byte> escapedUtf8 = "foo\"bar"u8;
+            root.SetItem(2, escapedUtf8);
+            Assert.Equal("foo\"bar", root[2].GetString());
+
+            // Non-ASCII UTF-8 string: "héllo" (e with acute accent)
+            ReadOnlySpan<byte> nonAsciiUtf8 = new byte[] { (byte)'h', 0xC3, 0xA9, (byte)'l', (byte)'l', (byte)'o' };
+            root.SetItem(3, nonAsciiUtf8);
+            Assert.Equal("héllo", root[3].GetString());
+
+            // Non-ASCII UTF-8 string: emoji "😊"
+            ReadOnlySpan<byte> emojiUtf8 = "😊"u8;
+            root.SetItem(4, emojiUtf8);
+            Assert.Equal("😊", root[4].GetString());
+        }
+
+        [Fact]
+        public static void SetItemNull_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItemNull(0);
+            Assert.Equal(JsonValueKind.Null, root[0].ValueKind);
+
+            root.SetItemNull(1);
+            Assert.Equal(JsonValueKind.Null, root[1].ValueKind);
+        }
+
+        [Fact]
+        public static void SetItem_SByte_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, (sbyte)-8);
+            Assert.Equal(-8, root[0].GetSByte());
+
+            root.SetItem(1, (sbyte)127);
+            Assert.Equal(127, root[1].GetSByte());
+        }
+
+        [Fact]
+        public static void SetItem_UShort_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, (ushort)65535);
+            Assert.Equal(65535, root[0].GetUInt16());
+
+            root.SetItem(1, (ushort)42);
+            Assert.Equal((ushort)42, root[1].GetUInt16());
+        }
+
+        [Fact]
+        public static void SetItem_UInt_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, 4294967295u);
+            Assert.Equal(4294967295u, root[0].GetUInt32());
+
+            root.SetItem(1, 123u);
+            Assert.Equal(123u, root[1].GetUInt32());
+        }
+
+        [Fact]
+        public static void SetItem_ULong_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, 18446744073709551615ul);
+            Assert.Equal(18446744073709551615ul, root[0].GetUInt64());
+
+            root.SetItem(1, 42ul);
+            Assert.Equal(42ul, root[1].GetUInt64());
+        }
+
+        [Fact]
+        public static void SetItem_Int_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, -123456);
+            Assert.Equal(-123456, root[0].GetInt32());
+
+            root.SetItem(1, 654321);
+            Assert.Equal(654321, root[1].GetInt32());
+        }
+
+        [Fact]
+        public static void SetItem_Decimal_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, 123.456m);
+            Assert.Equal(123.456m, root[0].GetDecimal());
+
+            root.SetItem(1, -789.01m);
+            Assert.Equal(-789.01m, root[1].GetDecimal());
+        }
+
+#if NET
+        [Fact]
+        public static void SetItem_Int128_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
+            Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
+
+            root.SetItem(0, bigValue);
+            Assert.Equal(bigValue, root[0].GetInt128());
+
+            root.SetItem(1, smallValue);
+            Assert.Equal(smallValue, root[1].GetInt128());
+        }
+
+        [Fact]
+        public static void SetItem_UInt128_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
+            UInt128 smallValue = 42;
+
+            root.SetItem(0, bigValue);
+            Assert.Equal(bigValue, root[0].GetUInt128());
+
+            root.SetItem(1, smallValue);
+            Assert.Equal(smallValue, root[1].GetUInt128());
+        }
+
+        [Fact]
+        public static void SetItem_Half_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Half value1 = (Half)3.25;
+            Half value2 = (Half)(-2.5);
+
+            root.SetItem(0, value1);
+            Assert.Equal(value1, root[0].GetHalf());
+
+            root.SetItem(1, value2);
+            Assert.Equal(value2, root[1].GetHalf());
+        }
+#endif
+
+        [Fact]
+        public static void SetItem_Bool_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[true]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, false));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, true));
+        }
+
+        [Fact]
+        public static void SetItem_Guid_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"00000000-0000-0000-0000-000000000000\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+            var guid = Guid.NewGuid();
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, guid));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, guid));
+        }
+
+        [Fact]
+        public static void SetItem_Byte_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (byte)1));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, (byte)2));
+        }
+
+        [Fact]
+        public static void SetItem_SByte_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (sbyte)1));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, (sbyte)2));
+        }
+
+        [Fact]
+        public static void SetItem_Short_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (short)1));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, (short)2));
+        }
+
+        [Fact]
+        public static void SetItem_UShort_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (ushort)1));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, (ushort)2));
+        }
+
+        [Fact]
+        public static void SetItem_Int_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2));
+        }
+
+        [Fact]
+        public static void SetItem_UInt_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1u));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2u));
+        }
+
+        [Fact]
+        public static void SetItem_Long_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1L));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2L));
+        }
+
+        [Fact]
+        public static void SetItem_ULong_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1UL));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2UL));
+        }
+
+        [Fact]
+        public static void SetItem_Float_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0f));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2.0f));
+        }
+
+        [Fact]
+        public static void SetItem_Double_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2.0));
+        }
+
+        [Fact]
+        public static void SetItem_Decimal_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0m));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2.0m));
+        }
+
+        [Fact]
+        public static void SetItem_Utf8String_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, "test"u8));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, "test"u8));
+        }
+
+        [Fact]
+        public static void SetItem_Generic_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
+            using var builderDoc2 = doc2.RootElement.CreateDocument(workspace);
+            var value = builderDoc2.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(-1, value));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(2, value));
+        }
+
+        [Fact]
+        public static void SetItemNull_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItemNull(-1));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItemNull(2));
+        }
+
+#if NET
+        [Fact]
+        public static void SetItem_Int128_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Int128 value = Int128.One;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, value));
+        }
+
+        [Fact]
+        public static void SetItem_UInt128_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            UInt128 value = UInt128.One;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, value));
+        }
+
+        [Fact]
+        public static void SetItem_Half_Throws_WhenIndexOutOfBounds()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.BuildDynamicDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Half value = (Half)1.0;
+
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, value));
+        }
+#endif
 
         private static void BuildSegmentedReader(
             out Utf8JsonReader reader,

@@ -761,7 +761,7 @@ namespace Corvus.Text.Json.Internal
 
         public void AddItem(Guid value)
         {
-            _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount++;
         }
