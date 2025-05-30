@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Threading;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json.Tests
 {
@@ -3012,6 +3013,619 @@ namespace Corvus.Text.Json.Tests
                             }
                         }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default));
                 }
+            }
+        }
+
+        [Fact]
+        public static void CopySingleDimensionalArray()
+        {
+            const int length = 3;
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
+            {
+                var outputSbyte = new sbyte[length];
+                var outputByte = new byte[length];
+                var outputInt16 = new short[length];
+                var outputUInt16 = new ushort[length];
+                var outputInt32 = new int[length];
+                var outputUInt32 = new uint[length];
+                var outputInt64 = new long[length];
+                var outputUInt64 = new ulong[length];
+                var outputDouble = new double[length];
+                var outputSingle = new float[length];
+                var outputDecimal = new decimal[length];
+#if NET
+                var outputInt128 = new Int128[length];
+                var outputUInt128 = new UInt128[length];
+                var outputHalf = new Half[length];
+#endif
+                IJsonElement root = doc.RootElement;
+
+                int written = 0;
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, out written));
+                Assert.True(outputSbyte.SequenceEqual(new sbyte[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputByte, out written));
+                Assert.True(outputByte.SequenceEqual(new byte[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputInt16, out written));
+                Assert.True(outputInt16.SequenceEqual(new short[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt16, out written));
+                Assert.True(outputUInt16.SequenceEqual(new ushort[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputInt32, out written));
+                Assert.True(outputInt32.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt32, out written));
+                Assert.True(outputUInt32.SequenceEqual(new uint[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputInt64, out written));
+                Assert.True(outputInt64.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt64, out written));
+                Assert.True(outputUInt64.SequenceEqual(new ulong[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputDouble, out written));
+                Assert.True(outputDouble.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputSingle, out written));
+                Assert.True(outputSingle.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputDecimal, out written));
+                Assert.True(outputDecimal.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+#if NET
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputInt128, out written));
+                Assert.True(outputInt128.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt128, out written));
+                Assert.True(outputUInt128.SequenceEqual(new UInt128[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyTo(root.ParentDocument, root.ParentDocumentIndex, outputHalf, out written));
+                Assert.True(outputHalf.SequenceEqual([(Half)1, (Half)2, (Half)3]));
+                Assert.Equal(length, written);
+#endif
+            }
+        }
+
+        [Fact]
+        public static void CopyArrayRank1()
+        {
+            const int length = 3;
+            const int rank = 1;
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
+            {
+                var outputSbyte = new sbyte[length];
+                var outputByte = new byte[length];
+                var outputInt16 = new short[length];
+                var outputUInt16 = new ushort[length];
+                var outputInt32 = new int[length];
+                var outputUInt32 = new uint[length];
+                var outputInt64 = new long[length];
+                var outputUInt64 = new ulong[length];
+                var outputDouble = new double[length];
+                var outputSingle = new float[length];
+                var outputDecimal = new decimal[length];
+#if NET
+                var outputInt128 = new Int128[length];
+                var outputUInt128 = new UInt128[length];
+                var outputHalf = new Half[length];
+#endif
+                IJsonElement root = doc.RootElement;
+
+                int written = 0;
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written));
+                Assert.True(outputSbyte.SequenceEqual(new sbyte[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputByte, rank, out written));
+                Assert.True(outputByte.SequenceEqual(new byte[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt16, rank, out written));
+                Assert.True(outputInt16.SequenceEqual(new short[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt16, rank, out written));
+                Assert.True(outputUInt16.SequenceEqual(new ushort[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt32, rank, out written));
+                Assert.True(outputInt32.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt32, rank, out written));
+                Assert.True(outputUInt32.SequenceEqual(new uint[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt64, rank, out written));
+                Assert.True(outputInt64.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt64, rank, out written));
+                Assert.True(outputUInt64.SequenceEqual(new ulong[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDouble, rank, out written));
+                Assert.True(outputDouble.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSingle, rank, out written));
+                Assert.True(outputSingle.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDecimal, rank, out written));
+                Assert.True(outputDecimal.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+#if NET
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt128, rank, out written));
+                Assert.True(outputInt128.SequenceEqual([1, 2, 3]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt128, rank, out written));
+                Assert.True(outputUInt128.SequenceEqual(new UInt128[] { 1, 2, 3 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputHalf, rank, out written));
+                Assert.True(outputHalf.SequenceEqual([(Half)1, (Half)2, (Half)3]));
+                Assert.Equal(length, written);
+#endif
+            }
+        }
+
+        [Fact]
+        public static void CopyArrayRank1_OutputTooShort()
+        {
+            const int length = 2;
+            const int rank = 1;
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
+            {
+                IJsonElement root = doc.RootElement;
+                int written;
+
+                var outputSbyte = new sbyte[length];
+                var outputByte = new byte[length];
+                var outputInt16 = new short[length];
+                var outputUInt16 = new ushort[length];
+                var outputInt32 = new int[length];
+                var outputUInt32 = new uint[length];
+                var outputInt64 = new long[length];
+                var outputUInt64 = new ulong[length];
+                var outputDouble = new double[length];
+                var outputSingle = new float[length];
+                var outputDecimal = new decimal[length];
+#if NET
+                var outputInt128 = new Int128[length];
+                var outputUInt128 = new UInt128[length];
+                var outputHalf = new Half[length];
+#endif
+
+                // The expected behavior is that TryCopyArrayOfRankTo returns false and written == 0
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputByte, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt16, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt16, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt32, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt32, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt64, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt64, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDouble, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSingle, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDecimal, rank, out written));
+                Assert.Equal(0, written);
+
+#if NET
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt128, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt128, rank, out written));
+                Assert.Equal(0, written);
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputHalf, rank, out written));
+                Assert.Equal(0, written);
+#endif
+            }
+        }
+
+        [Fact]
+        public static void CopyArrayRank2()
+        {
+            const int length = 9;
+            const int rank = 2;
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5,6],[7,8,9]]"))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
+            {
+                var outputSbyte = new sbyte[length];
+                var outputByte = new byte[length];
+                var outputInt16 = new short[length];
+                var outputUInt16 = new ushort[length];
+                var outputInt32 = new int[length];
+                var outputUInt32 = new uint[length];
+                var outputInt64 = new long[length];
+                var outputUInt64 = new ulong[length];
+                var outputDouble = new double[length];
+                var outputSingle = new float[length];
+                var outputDecimal = new decimal[length];
+#if NET
+                var outputInt128 = new Int128[length];
+                var outputUInt128 = new UInt128[length];
+                var outputHalf = new Half[length];
+#endif
+                IJsonElement root = doc.RootElement;
+
+                int written = 0;
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written));
+                Assert.True(outputSbyte.SequenceEqual(new sbyte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputByte, rank, out written));
+                Assert.True(outputByte.SequenceEqual(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt16, rank, out written));
+                Assert.True(outputInt16.SequenceEqual(new short[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt16, rank, out written));
+                Assert.True(outputUInt16.SequenceEqual(new ushort[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt32, rank, out written));
+                Assert.True(outputInt32.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt32, rank, out written));
+                Assert.True(outputUInt32.SequenceEqual(new uint[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt64, rank, out written));
+                Assert.True(outputInt64.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt64, rank, out written));
+                Assert.True(outputUInt64.SequenceEqual(new ulong[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDouble, rank, out written));
+                Assert.True(outputDouble.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSingle, rank, out written));
+                Assert.True(outputSingle.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDecimal, rank, out written));
+                Assert.True(outputDecimal.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+                Assert.Equal(length, written);
+
+#if NET
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt128, rank, out written));
+                Assert.True(outputInt128.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt128, rank, out written));
+                Assert.True(outputUInt128.SequenceEqual(new UInt128[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputHalf, rank, out written));
+                Assert.True(outputHalf.SequenceEqual([(Half)1, (Half)2, (Half)3, (Half)4, (Half)5, (Half)6, (Half)7, (Half)8, (Half)9]));
+                Assert.Equal(length, written);
+#endif
+            }
+        }
+
+        [Fact]
+        public static void CopyArrayRank3Ragged()
+        {
+            const int length = 8;
+            const int rank = 2;
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
+            {
+                var outputSbyte = new sbyte[length];
+                var outputByte = new byte[length];
+                var outputInt16 = new short[length];
+                var outputUInt16 = new ushort[length];
+                var outputInt32 = new int[length];
+                var outputUInt32 = new uint[length];
+                var outputInt64 = new long[length];
+                var outputUInt64 = new ulong[length];
+                var outputDouble = new double[length];
+                var outputSingle = new float[length];
+                var outputDecimal = new decimal[length];
+#if NET
+                var outputInt128 = new Int128[length];
+                var outputUInt128 = new UInt128[length];
+                var outputHalf = new Half[length];
+#endif
+                IJsonElement root = doc.RootElement;
+
+                int written = 0;
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written));
+                Assert.True(outputSbyte.SequenceEqual(new sbyte[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputByte, rank, out written));
+                Assert.True(outputByte.SequenceEqual(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt16, rank, out written));
+                Assert.True(outputInt16.SequenceEqual(new short[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt16, rank, out written));
+                Assert.True(outputUInt16.SequenceEqual(new ushort[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt32, rank, out written));
+                Assert.True(outputInt32.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt32, rank, out written));
+                Assert.True(outputUInt32.SequenceEqual(new uint[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt64, rank, out written));
+                Assert.True(outputInt64.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt64, rank, out written));
+                Assert.True(outputUInt64.SequenceEqual(new ulong[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDouble, rank, out written));
+                Assert.True(outputDouble.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSingle, rank, out written));
+                Assert.True(outputSingle.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDecimal, rank, out written));
+                Assert.True(outputDecimal.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8]));
+                Assert.Equal(length, written);
+
+#if NET
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt128, rank, out written));
+                Assert.True(outputInt128.SequenceEqual([1, 2, 3, 4, 5, 6, 7, 8]));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt128, rank, out written));
+                Assert.True(outputUInt128.SequenceEqual(new UInt128[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+                Assert.Equal(length, written);
+
+                Assert.True(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputHalf, rank, out written));
+                Assert.True(outputHalf.SequenceEqual([(Half)1, (Half)2, (Half)3, (Half)4, (Half)5, (Half)6, (Half)7, (Half)8]));
+                Assert.Equal(length, written);
+#endif
+            }
+        }
+
+        [Fact]
+        public static void CopyArrayRank3Ragged_OutputTooShort()
+        {
+            const int length = 7; // The JSON array has 8 elements, so this is too short
+            const int rank = 2;
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
+            {
+                IJsonElement root = doc.RootElement;
+                int written;
+
+                var outputSbyte = new sbyte[length];
+                var outputByte = new byte[length];
+                var outputInt16 = new short[length];
+                var outputUInt16 = new ushort[length];
+                var outputInt32 = new int[length];
+                var outputUInt32 = new uint[length];
+                var outputInt64 = new long[length];
+                var outputUInt64 = new ulong[length];
+                var outputDouble = new double[length];
+                var outputSingle = new float[length];
+                var outputDecimal = new decimal[length];
+#if NET
+                var outputInt128 = new Int128[length];
+                var outputUInt128 = new UInt128[length];
+                var outputHalf = new Half[length];
+#endif
+
+                // The expected behavior is that TryCopyArrayOfRankTo returns false, written == 0, and the array is not modified
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputByte, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputByte, val => Assert.Equal(0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt16, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputInt16, val => Assert.Equal(0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt16, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputUInt16, val => Assert.Equal((ushort)0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt32, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputInt32, val => Assert.Equal(0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt32, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputUInt32, val => Assert.Equal((uint)0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt64, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputInt64, val => Assert.Equal(0L, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt64, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputUInt64, val => Assert.Equal((ulong)0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDouble, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputDouble, val => Assert.Equal(0d, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSingle, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputSingle, val => Assert.Equal(0f, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputDecimal, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputDecimal, val => Assert.Equal(0m, val));
+
+#if NET
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputInt128, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputInt128, val => Assert.Equal((Int128)0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputUInt128, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputUInt128, val => Assert.Equal((UInt128)0, val));
+
+                Assert.False(JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputHalf, rank, out written));
+                Assert.Equal(0, written);
+                Assert.All(outputHalf, val => Assert.Equal((Half)0, val));
+#endif
+            }
+        }
+
+        [Fact]
+        public static void CopyArrayNonIntegerType()
+        {
+            const int length = 8;
+            const int rank = 2;
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,\"stringValue\"],[6,7,8]]"))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
+            {
+                var outputSbyte = new sbyte[length];
+                var outputByte = new byte[length];
+                var outputInt16 = new short[length];
+                var outputUInt16 = new ushort[length];
+                var outputInt32 = new int[length];
+                var outputUInt32 = new uint[length];
+                var outputInt64 = new long[length];
+                var outputUInt64 = new ulong[length];
+                var outputDouble = new double[length];
+                var outputSingle = new float[length];
+                var outputDecimal = new decimal[length];
+#if NET
+                var outputInt128 = new Int128[length];
+                var outputUInt128 = new UInt128[length];
+                var outputHalf = new Half[length];
+#endif
+
+                IJsonElement root = doc.RootElement;
+
+                int written = 0;
+
+                const string ErrorMessage = "The requested operation requires an element of type 'Number', but the target element has type 'String'.";
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+#if NET
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+
+                AssertExtensions.Throws<InvalidOperationException>(() => JsonElementTensorHelpers.TryCopyArrayOfRankTo(root.ParentDocument, root.ParentDocumentIndex, outputSbyte, rank, out written), ErrorMessage);
+                Assert.All(outputSbyte, val => Assert.Equal(0, val)); // Ensure the array is not modified
+                Assert.Equal(0, written);
+#endif
             }
         }
 
