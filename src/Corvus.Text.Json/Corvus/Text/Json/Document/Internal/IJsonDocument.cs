@@ -16,6 +16,8 @@ namespace Corvus.Text.Json.Internal
 
         bool IsDisposable { get; }
 
+        bool IsImmutable { get; }
+
         JsonTokenType GetJsonTokenType(int index);
         JsonElement GetArrayIndexElement(int currentIndex, int arrayIndex);
         TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex) where TElement : struct, IJsonElement<TElement>;

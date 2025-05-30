@@ -4585,6 +4585,36 @@
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.VerifyMultiThreadedDispose" />
                       </Rule>
                     </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderThrows" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderThrows" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderSucceeds" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderSucceeds" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderFails" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderFails" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderThrows" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderThrows" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromImmutableBuilderSucceeds" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromImmutableBuilderSucceeds" />
+                      </Rule>
+                    </Rule>
                   </Rule>
                 </Rule>
                 <Rule Match="All">
@@ -12082,6 +12112,36 @@
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.VerifyMultiThreadedDispose" />
                       </Rule>
                     </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderThrows" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderThrows" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderThrows" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderThrows" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderSucceeds" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderSucceeds" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderFails" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderFails" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromImmutableBuilderSucceeds" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromImmutableBuilderSucceeds" />
+                      </Rule>
+                    </Rule>
                   </Rule>
                 </Rule>
                 <Rule Match="All">
@@ -18307,6 +18367,36 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.VerifyMultiThreadedDispose" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.VerifyMultiThreadedDispose" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderThrows" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderThrows" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderSucceeds" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderSucceeds" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderFails" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.ModifyingImmutableBuilderFails" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderThrows" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromMutableBuilderThrows" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromImmutableBuilderSucceeds" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.JsonDocumentBuilderTests.CreateBuilderFromImmutableBuilderSucceeds" />
                       </Rule>
                     </Rule>
                   </Rule>

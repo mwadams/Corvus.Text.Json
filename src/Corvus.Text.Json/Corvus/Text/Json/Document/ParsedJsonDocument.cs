@@ -63,6 +63,7 @@ namespace Corvus.Text.Json
             _extraRentedArrayPoolBytes = extraRentedArrayPoolBytes;
             _extraPooledByteBufferWriter = extraPooledByteBufferWriter;
             _isDisposable = isDisposable;
+            _isImmutable = true;
         }
 
 #if DEBUG

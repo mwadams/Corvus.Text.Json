@@ -3,17 +3,18 @@
 
 using System.Buffers;
 using System.Collections;
-using System.Globalization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using Xunit;
 using System.IO.Tests;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Sdk;
 
 namespace Corvus.Text.Json.Tests
 {
@@ -3130,5 +3131,42 @@ namespace Corvus.Text.Json.Tests
             Assert.NotNull(jsonDocument);
             Assert.Equal(JsonValueKind.Null, jsonDocument.RootElement.ValueKind);
         }
+
+        [Fact]
+        public static void CreateBuilderFromMutableBuilderThrows()
+        {
+            const string ErrorMessage = "You cannot create a mutable copy of a mutable document. Consider calling Freeze() on the source document.";
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateDocument(workspace, "Hello"u8);
+            AssertExtensions.Throws<InvalidOperationException>(() => mutableBuilder.RootElement.CreateDocument(workspace), ErrorMessage);
+        }
+
+        [Fact]
+        public static void CreateBuilderFromImmutableBuilderSucceeds()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateDocument(workspace, "Hello"u8);
+            Assert.False(mutableBuilder.IsImmutable);
+            mutableBuilder.Freeze();
+            Assert.True(mutableBuilder.IsImmutable);
+            using var copyOfFrozen = mutableBuilder.RootElement.CreateDocument(workspace);
+            Assert.False(copyOfFrozen.IsImmutable);
+        }
+
+        [Fact]
+        public static void ModifyingImmutableBuilderFails()
+        {
+            const string ErrorMessage = "You cannot modify an immutable document.";
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder =
+                JsonElement.CreateDocument(
+                    workspace,
+                    (ref JsonArrayBuilder arrayBuilder) => arrayBuilder.Add(true));
+            Assert.False(mutableBuilder.IsImmutable);
+            mutableBuilder.Freeze();
+            Assert.True(mutableBuilder.IsImmutable);
+            AssertExtensions.Throws<InvalidOperationException>(() => mutableBuilder.RootElement.SetItem(0, false), ErrorMessage);
+        }
+
     }
 }

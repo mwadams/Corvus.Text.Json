@@ -381,6 +381,12 @@ namespace Corvus.Text.Json
                 return new(instance.ParentDocument, instance.ParentDocumentIndex);
             }
 
+            [CLSCompliant(false)]
+            public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+            {
+                return workspace.CreateDocument<JsonElement, Mutable>(this);
+            }
+
             internal static bool IsValid(IJsonDocument parentDocument, int parentIndex)
             {
                 return IsValid(parentDocument, parentIndex);

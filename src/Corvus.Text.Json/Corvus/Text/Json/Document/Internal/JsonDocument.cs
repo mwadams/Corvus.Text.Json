@@ -41,11 +41,32 @@ namespace Corvus.Text.Json.Internal
         protected int _valueOffset;
         [CLSCompliant(false)]
         protected MetadataDb _parsedData;
+        [CLSCompliant(false)]
+        protected bool _isImmutable;
 
         // These are the indices of the one-and-only instances of the "null", "true", and "false" text in this document.
         private int _nullIndex = -1;
         private int _trueIndex = -1;
         private int _falseIndex = -1;
+
+        public bool IsImmutable
+        {
+            get => _isImmutable;
+            protected set
+            {
+                if (_isImmutable && !value)
+                {
+                    ThrowHelper.ThrowInvalidOperationException(SR.CannotChangeImmutabilityOfAnImmutableDocument);
+                }
+
+                _isImmutable = value;
+            }
+        }
+
+        public void Freeze()
+        {
+            _isImmutable = true;
+        }
 
         protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes);
 

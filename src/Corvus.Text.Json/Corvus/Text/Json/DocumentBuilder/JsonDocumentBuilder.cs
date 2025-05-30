@@ -214,18 +214,21 @@ namespace Corvus.Text.Json
 
         void IMutableJsonDocument.InsertAndDispose(int complexObjectStartIndex, int index, ref ComplexValueBuilder cvb)
         {
+            CheckNotImmutable();
             _version++;
             cvb.InsertAndDispose(complexObjectStartIndex, index, ref _parsedData);
         }
 
         void IMutableJsonDocument.SetAndDispose(ref ComplexValueBuilder cvb)
         {
+            CheckNotImmutable();
             _version++;
             cvb.SetAndDispose(ref _parsedData);
         }
 
         void IMutableJsonDocument.OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref ComplexValueBuilder cvb)
         {
+            CheckNotImmutable();
             _version++;
             cvb.OverwriteAndDispose(complexObjectStartIndex, startIndex, endIndex, memberCountToReplace, ref _parsedData);
         }
@@ -1121,6 +1124,7 @@ namespace Corvus.Text.Json
         int IJsonDocument.BuildRentedMetadataDb(int index, JsonWorkspace workspace, out byte[] rentedBacking)
         {
             CheckNotDisposed();
+            CheckImmutable();
 
             int workspaceDocumentIndex = workspace.GetDocumentIndex(this);
 
@@ -1155,6 +1159,7 @@ namespace Corvus.Text.Json
         void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db)
         {
             CheckNotDisposed();
+            CheckNotImmutable();
 
             int workspaceDocumentIndex = workspace.GetDocumentIndex(this);
             AppendElement(index, workspace, ref db, workspaceDocumentIndex);
@@ -1233,6 +1238,7 @@ namespace Corvus.Text.Json
             Debug.Fail($"Unexpected encounter with JsonTokenType {_parsedData.GetJsonTokenType(index)}");
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void CheckNotDisposed()
         {
             if (_parentWorkspaceIndex < 0)
@@ -1240,6 +1246,25 @@ namespace Corvus.Text.Json
                 ThrowHelper.ThrowObjectDisposedException_JsonDocument();
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void CheckNotImmutable()
+        {
+            if (_isImmutable)
+            {
+                ThrowHelper.ThrowInvalidOperationException(SR.CannotModifyAnImmutableDocument);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void CheckImmutable()
+        {
+            if (!_isImmutable)
+            {
+                ThrowHelper.ThrowInvalidOperationException(SR.CannotCreateBuilderFromMutableDocument);
+            }
+        }
+
 
         int IMutableJsonDocument.StoreBooleanValue(bool value) => StoreBooleanValue(value);
         int IMutableJsonDocument.StoreNullValue() => StoreNullValue();
