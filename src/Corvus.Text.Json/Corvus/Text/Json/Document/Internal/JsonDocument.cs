@@ -49,6 +49,9 @@ namespace Corvus.Text.Json.Internal
         private int _trueIndex = -1;
         private int _falseIndex = -1;
 
+        /// <summary>
+        /// Gets a value indicating whether the document is immutable.
+        /// </summary>
         public bool IsImmutable
         {
             get => _isImmutable;
@@ -63,6 +66,23 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Makes the document immutable.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// You can only create a new document from this document once it is frozen.
+        /// </para>
+        /// <para>
+        /// Immutable documents (like <see cref="ParsedJsonDocument{T}"/> are frozen once they
+        /// are created, and there is no need to call freeze on them.
+        /// </para>
+        /// <para>
+        /// Mutable documents (like <see cref="JsonDocumentBuilder{T}"/> must be frozen before
+        /// you can create a child document from one of its elements. Once a mutable document is
+        /// frozen, any methods that would modify the document will throw.
+        /// </para>
+        /// </remarks>
         public void Freeze()
         {
             _isImmutable = true;
