@@ -115,7 +115,7 @@ namespace Corvus.Text.Json.Internal
             }
 
             return endIndex;
-        }
+        }        
 
         protected bool TextEqualsUnsafe(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
         {

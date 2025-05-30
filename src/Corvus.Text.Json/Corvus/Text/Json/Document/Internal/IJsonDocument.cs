@@ -43,6 +43,11 @@ namespace Corvus.Text.Json.Internal
         bool TryGetValue(int index, out DateTime value);
         bool TryGetValue(int index, out DateTimeOffset value);
         bool TryGetValue(int index, out Guid value);
+#if NET
+        bool TryGetValue(int index, out Int128 value);
+        bool TryGetValue(int index, out UInt128 value);
+        bool TryGetValue(int index, out Half value);
+#endif
         string GetNameOfPropertyValue(int index);
         ReadOnlySpan<byte> GetPropertyNameRaw(int index);
         string GetRawValueAsString(int index);

@@ -27,6 +27,9 @@ namespace Corvus.Text.Json
             _rented = rented;
         }
 
+        /// <summary>
+        /// Gets the JsonWriterOptions
+        /// </summary>
         public JsonWriterOptions Options { get; private set; }
 
         /// <summary>

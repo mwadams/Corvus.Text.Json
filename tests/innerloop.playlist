@@ -5543,6 +5543,54 @@
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.VerifyMultiThreadedDispose" />
                       </Rule>
                     </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank2" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank2" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayNonIntegerType" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayNonIntegerType" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged_OutputTooShort" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray_OutputTooShort" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1_OutputTooShort" />
+                      </Rule>
+                    </Rule>
                   </Rule>
                 </Rule>
                 <Rule Match="All">
@@ -11368,6 +11416,72 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.VerifyMultiThreadedDispose" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.VerifyMultiThreadedDispose" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank2" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank2" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayNonIntegerType" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayNonIntegerType" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray_OutputTooShort_Throws" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray_OutputTooShort_Throws" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1_OutputTooShort_Throws" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1_OutputTooShort_Throws" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged_OutputTooShort_Throws" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged_OutputTooShort_Throws" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1_OutputTooShort" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged_OutputTooShort" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray_OutputTooShort" />
                       </Rule>
                     </Rule>
                   </Rule>
@@ -18812,12 +18926,6 @@
                       </Rule>
                     </Rule>
                     <Rule Match="All">
-                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.GetString_ConcurrentUse_ThreadSafe" />
-                      <Rule Match="Any">
-                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.GetString_ConcurrentUse_ThreadSafe" />
-                      </Rule>
-                    </Rule>
-                    <Rule Match="All">
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.HonorReaderOptionsMaxDepth" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.HonorReaderOptionsMaxDepth" />
@@ -19331,6 +19439,54 @@
                       <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.VerifyMultiThreadedDispose" />
                       <Rule Match="Any">
                         <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.VerifyMultiThreadedDispose" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank2" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank2" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayNonIntegerType" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayNonIntegerType" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank1_OutputTooShort" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopyArrayRank3Ragged_OutputTooShort" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray_OutputTooShort" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Corvus.Text.Json.Tests.ParsedJsonDocumentTests.CopySingleDimensionalArray_OutputTooShort" />
                       </Rule>
                     </Rule>
                   </Rule>

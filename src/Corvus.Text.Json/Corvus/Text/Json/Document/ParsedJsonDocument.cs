@@ -242,7 +242,7 @@ namespace Corvus.Text.Json
             int endElementIdx = index + GetDbSizeUnsafe(index, includeEndElement: false);
             int start = row.LocationOrIndex;
             row = _parsedData.Get(endElementIdx);
-            return _utf8Json.Slice(start, row.LocationOrIndex - start + row.SizeOrLengthOrPropertyMapIndex);
+            return _utf8Json.Slice(start, row.LocationOrIndex - start + (row.HasPropertyMap ? GetLengthOfEndToken(row.SizeOrLengthOrPropertyMapIndex) : row.SizeOrLengthOrPropertyMapIndex));
         }
 
         /// <inheritdoc />
@@ -642,6 +642,74 @@ namespace Corvus.Text.Json
             value = 0;
             return false;
         }
+
+#if NET
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out Int128 value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+
+            if (Int128.TryParse(segment, out Int128 tmp))
+            {
+                value = tmp;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out UInt128 value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+
+            if (UInt128.TryParse(segment, out UInt128 tmp))
+            {
+                value = tmp;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out Half value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+
+            if (Half.TryParse(segment, out Half tmp))
+            {
+                value = tmp;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+#endif
 
         /// <inheritdoc />
         bool IJsonDocument.TryGetValue(int index, out DateTime value)
@@ -1194,7 +1262,8 @@ namespace Corvus.Text.Json
             }
 
             complexObjectRow = _parsedData.Get(endIndex);
-            db.AppendExternal(complexObjectRow.TokenType, index, 1, complexObjectRow.NumberOfRows);
+            int entityLength = complexObjectRow.HasPropertyMap ? GetLengthOfEndToken(complexObjectRow.SizeOrLengthOrPropertyMapIndex) : complexObjectRow.RawSizeOrLength;
+            db.AppendExternal(complexObjectRow.TokenType, index, entityLength, complexObjectRow.NumberOfRows);
             return count;
         }
     }

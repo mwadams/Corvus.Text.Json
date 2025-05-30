@@ -1,7 +1,4 @@
-﻿////Microsoft.DiagnosticsHub.UserMarkRange range = new("Corvus.Text.Json");
-////range.Dispose();
-
-using Benchmark.CorvusTextJson2;
+﻿using Benchmark.CorvusTextJson2;
 using Corvus.Text.Json;
 
 Console.WriteLine();
@@ -113,11 +110,11 @@ using ParsedJsonDocument<Person> documentB7 = ParsedJsonDocument<Person>.Parse(
         }
         """);
 
-Console.WriteLine(documentB3.RootElement.IsSchemaMatch() ? "Person B3 is arrayBuilder match" : "Person B3 is not arrayBuilder match");
-Console.WriteLine(documentB4.RootElement.IsSchemaMatch() ? "Person B4 is arrayBuilder match" : "Person B4 is not arrayBuilder match");
-Console.WriteLine(documentB5.RootElement.IsSchemaMatch() ? "Person B5 is arrayBuilder match" : "Person B5 is not arrayBuilder match");
-Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is arrayBuilder match" : "Person B6 is not arrayBuilder match");
-Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is arrayBuilder match" : "Person B7 is not arrayBuilder match");
+Console.WriteLine(documentB3.RootElement.IsSchemaMatch() ? "Person B3 is a match" : "Person B3 is not a match");
+Console.WriteLine(documentB4.RootElement.IsSchemaMatch() ? "Person B4 is a match" : "Person B4 is not a match");
+Console.WriteLine(documentB5.RootElement.IsSchemaMatch() ? "Person B5 is a match" : "Person B5 is not a match");
+Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is a match" : "Person B6 is not a match");
+Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is a match" : "Person B7 is not a match");
 
 
 

@@ -634,6 +634,74 @@ namespace Corvus.Text.Json
             return false;
         }
 
+#if NET
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out Int128 value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+            
+            if (Int128.TryParse(segment, out Int128 tmp))
+            {
+                value = tmp;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out UInt128 value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+
+            if (UInt128.TryParse(segment, out UInt128 tmp))
+            {
+                value = tmp;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out Half value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+
+            if (Half.TryParse(segment, out Half tmp))
+            {
+                value = tmp;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+#endif
+
         bool IJsonDocument.TryGetValue(int index, out DateTime value)
         {
             CheckNotDisposed();
@@ -1212,7 +1280,8 @@ namespace Corvus.Text.Json
             }
 
             complexObjectRow = _parsedData.Get(endIndex);
-            db.AppendExternal(complexObjectRow.TokenType, index, 1, workspaceDocumentIndex);
+            int entityLength = complexObjectRow.HasPropertyMap ? GetLengthOfEndToken(complexObjectRow.SizeOrLengthOrPropertyMapIndex) : complexObjectRow.RawSizeOrLength;
+            db.AppendExternal(complexObjectRow.TokenType, index, entityLength, workspaceDocumentIndex);
         }
 
         private void AppendLocalElement(int index, JsonWorkspace workspace, ref MetadataDb db, int workspaceDocumentIndex)

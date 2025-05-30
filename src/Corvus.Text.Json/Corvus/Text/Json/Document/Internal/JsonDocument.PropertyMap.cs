@@ -169,7 +169,7 @@ namespace Corvus.Text.Json.Internal
         protected void EnsurePropertyMapUnsafe(int index)
         {
             DbRow row = _parsedData.Get(index);
-            Debug.Assert(row.TokenType != JsonTokenType.StartObject);
+            Debug.Assert(row.TokenType == JsonTokenType.StartObject);
             int endIndex = checked((row.NumberOfRows * DbRow.Size) + index);
             row = _parsedData.Get(endIndex);
 
@@ -286,6 +286,11 @@ namespace Corvus.Text.Json.Internal
             _entryOffset += entriesSize;
 
             return propertyMapIndex;
+        }
+
+        protected int GetLengthOfEndToken(int propertyMapBufferIndex)
+        {
+            return PropertyMap.GetLengthOfEndToken(_propertyMapBacking.AsSpan(propertyMapBufferIndex, PropertyMap.Size));
         }
 
         protected bool TryGetNamedPropertyValueFromPropertyMap(int propertyMapBufferIndex, ReadOnlySpan<byte> unescapedUtf8Name, out int valueIndex)

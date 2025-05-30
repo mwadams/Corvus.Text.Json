@@ -156,6 +156,7 @@
     <Compile Include="Corvus\Text\Json\Document\JsonDocumentOptions.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\IJsonElement.cs" />
     <Compile Include="Corvus\Text\Json\Document\IJsonSchemaResultsCollector.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementTensorHelpers.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElement.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElement.Parse.cs" />
