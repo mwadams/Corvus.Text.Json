@@ -1193,7 +1193,7 @@ namespace Corvus.Text.Json
             }
 
             complexObjectRow = _parsedData.Get(endIndex);
-            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, complexObjectRow.NumberOfRows);
+            db.AppendExternal(complexObjectRow.TokenType, index, 1, complexObjectRow.NumberOfRows);
             return count;
         }
     }

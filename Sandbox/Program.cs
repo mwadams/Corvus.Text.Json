@@ -120,6 +120,12 @@ Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is arrayBu
 Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is arrayBuilder match" : "Person B7 is not arrayBuilder match");
 
 
+
+Console.WriteLine(documentB1.RootElement.DeepEquals(documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
+
+documentB1.RootElement.EnsurePropertyMap();
+documentB2.RootElement.EnsurePropertyMap();
+
 Console.WriteLine(documentB1.RootElement.DeepEquals(documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
 
 Console.WriteLine();

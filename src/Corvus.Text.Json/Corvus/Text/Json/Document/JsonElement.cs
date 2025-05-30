@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
@@ -1298,6 +1299,7 @@ namespace Corvus.Text.Json
         /// provide substantial performance improvements. It is a zero-allocation
         /// operation.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EnsurePropertyMap()
         {
             CheckValidInstance();

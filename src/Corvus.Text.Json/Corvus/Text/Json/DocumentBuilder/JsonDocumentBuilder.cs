@@ -1207,7 +1207,7 @@ namespace Corvus.Text.Json
             }
 
             complexObjectRow = _parsedData.Get(endIndex);
-            db.AppendExternal(complexObjectRow.TokenType, index, complexObjectRow.RawSizeOrLength, workspaceDocumentIndex);
+            db.AppendExternal(complexObjectRow.TokenType, index, 1, workspaceDocumentIndex);
         }
 
         private void AppendLocalElement(int index, JsonWorkspace workspace, ref MetadataDb db, int workspaceDocumentIndex)
