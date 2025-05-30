@@ -402,6 +402,64 @@ namespace Corvus.Text.Json.Internal
 
         }
 
+        protected int StoreValue(DateTime value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatGuidLength + 2;
+            Enlarge(length, ref _valueBacking);
+
+            offset += 4;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            JsonWriterHelper.WriteDateTimeTrimmed(_valueBacking.AsSpan(offset), value, out length);
+            offset += length;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            length += 2;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#endif
+
+            _valueOffset = offset;
+            return result;
+
+        }
+
+        protected int StoreValue(DateTimeOffset value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatGuidLength + 2;
+            Enlarge(length, ref _valueBacking);
+
+            offset += 4;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            JsonWriterHelper.WriteDateTimeOffsetTrimmed(_valueBacking.AsSpan(offset), value, out length);
+            offset += length;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            length += 2;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#endif
+
+            _valueOffset = offset;
+            return result;
+
+        }
+
         [CLSCompliant(false)]
         protected int StoreValue(sbyte value)
         {

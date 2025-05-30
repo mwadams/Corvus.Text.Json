@@ -259,6 +259,62 @@ namespace Corvus.Text.Json.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(ReadOnlySpan<byte> propertyName, DateTime value)
+        {
+            AddProperty(propertyName, value, true, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(string propertyName, DateTime value)
+        {
+            AddProperty(propertyName.AsSpan(), value);
+        }
+
+        public void AddProperty(ReadOnlySpan<byte> propertyName, DateTime value, bool escapeName, bool nameRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddProperty(ReadOnlySpan<char> propertyName, DateTime value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(ReadOnlySpan<byte> propertyName, DateTimeOffset value)
+        {
+            AddProperty(propertyName, value, true, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(string propertyName, DateTimeOffset value)
+        {
+            AddProperty(propertyName.AsSpan(), value);
+        }
+
+        public void AddProperty(ReadOnlySpan<byte> propertyName, DateTimeOffset value, bool escapeName, bool nameRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddProperty(ReadOnlySpan<char> propertyName, DateTimeOffset value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value)
         {
@@ -760,6 +816,20 @@ namespace Corvus.Text.Json.Internal
         }
 
         public void AddItem(Guid value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItem(DateTime value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItem(DateTimeOffset value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;

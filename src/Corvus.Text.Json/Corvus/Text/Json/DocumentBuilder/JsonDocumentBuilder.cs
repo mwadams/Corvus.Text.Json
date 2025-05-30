@@ -1345,6 +1345,8 @@ namespace Corvus.Text.Json
         int IMutableJsonDocument.StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString) => StoreUnescapedStringValue(unescapedString);
 
         int IMutableJsonDocument.StoreValue(Guid value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(DateTime value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(DateTimeOffset value) => StoreValue(value);
         int IMutableJsonDocument.StoreValue(sbyte value) => StoreValue(value);
         int IMutableJsonDocument.StoreValue(byte value) => StoreValue(value);
         int IMutableJsonDocument.StoreValue(int value) => StoreValue(value);

@@ -2153,6 +2153,48 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            public void SetProperty(ReadOnlySpan<byte> propertyName, DateTime value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            public void SetProperty(ReadOnlySpan<byte> propertyName, DateTimeOffset value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             [CLSCompliant(false)]
             public void SetProperty(ReadOnlySpan<byte> propertyName, sbyte value)
             {
@@ -2572,6 +2614,44 @@ namespace Corvus.Text.Json
             }
 
             public void SetItem(int itemIndex, Guid value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            public void SetItem(int itemIndex, DateTime value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            public void SetItem(int itemIndex, DateTimeOffset value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);

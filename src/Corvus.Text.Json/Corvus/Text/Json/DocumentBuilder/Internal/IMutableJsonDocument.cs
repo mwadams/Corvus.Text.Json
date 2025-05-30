@@ -25,6 +25,8 @@ namespace Corvus.Text.Json.Internal
         int StoreRawStringValue(ReadOnlySpan<byte> value);
         int StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString);
         int StoreValue(Guid value);
+        int StoreValue(DateTime value);
+        int StoreValue(DateTimeOffset value);
         int StoreValue(sbyte value);
         int StoreValue(byte value);
         int StoreValue(int value);
