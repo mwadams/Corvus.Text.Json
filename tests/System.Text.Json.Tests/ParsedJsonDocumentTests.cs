@@ -777,6 +777,36 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
+        public static void DeepEqualsInOrder()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            {
+                Assert.True(doc.RootElement.DeepEquals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void DeepEqualsOutOfOrder()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals2))
+            {
+                Assert.True(doc.RootElement.DeepEquals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void DeepEquals_NotEquals()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
+            {
+                Assert.False(doc.RootElement.DeepEquals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
         public static void ParsedWithPropertyMap()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJsonWithComplexName))
