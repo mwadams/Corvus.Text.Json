@@ -122,7 +122,7 @@
     <Compile Include="..\Common\ReflectionExtensions.cs" Link="Common\System\Text\Json\Serialization\ReflectionExtensions.cs" />-->
     <Compile Include="..\Common\ThrowHelper.cs" Link="Common\System\Text\Json\ThrowHelper.cs" />
     <Compile Include="Corvus\Runtime\InteropServices\JsonMarshal.cs" />
-    <Compile Include="Corvus\Text\Json\AppContextSwitchHelper.cs" />
+    <!--<Compile Include="Corvus\Text\Json\AppContextSwitchHelper.cs" />-->
     <Compile Include="Corvus\Text\Json\BitStack.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\IMutableJsonElement{T}.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\ComplexValueBuilder.cs" />
@@ -227,7 +227,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ReferenceEqualityComparer.cs" />
+    <!--<Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ReferenceEqualityComparer.cs" />-->
     <Compile Include="$(CoreLibSharedDir)System\Runtime\CompilerServices\IsExternalInit.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Runtime\Versioning\RequiresPreviewFeaturesAttribute.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\DynamicDependencyAttribute.cs" />
@@ -257,7 +257,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Compile Include="$(CommonPath)System\IO\StreamExtensions.netstandard.cs" Link="Common\System\IO\StreamExtensions.netstandard.cs" />
-    <Compile Include="Corvus\Collections\Generic\StackExtensions.netstandard.cs" />
+    <!--<Compile Include="Corvus\Collections\Generic\StackExtensions.netstandard.cs" />-->
     <Compile Include="$(CommonPath)System\Buffers\ArrayBufferWriter.cs" Link="Common\System\Buffers\ArrayBufferWriter.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\StringSyntaxAttribute.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\RequiresDynamicCodeAttribute.cs" />
