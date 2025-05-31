@@ -608,14 +608,6 @@ namespace Corvus.Text.Json.Internal
             return endIndex - ((int)(union & 0x0FFFFFFFU) * DbRow.Size);
         }
 
-        internal int GetEndIndex(int startIndex)
-        {
-            Debug.Assert(GetJsonTokenType(startIndex) is JsonTokenType.StartObject or JsonTokenType.StartArray);
-
-            uint union = MemoryMarshal.Read<uint>(_data.AsSpan(startIndex + NumberOfRowsOffset));
-            return startIndex + ((int)(union & 0x0FFFFFFFU) * DbRow.Size);
-        }
-
         internal MetadataDb CopySegment(int startIndex, int endIndex)
         {
             Debug.Assert(
