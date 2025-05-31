@@ -11,7 +11,7 @@ namespace Corvus.Text.Json.Internal
     internal readonly struct DbRow
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"DbRow: TokenType = {TokenType}, {(FromExternalDocument ? $"WorkspaceDocumentId: {NumberOfRows}" : $"NumberOfRows: {NumberOfRows}")}";
+        private string DebuggerDisplay => $"DbRow: TokenType = {TokenType}, {(FromExternalDocument && (TokenType is not JsonTokenType.EndObject or JsonTokenType.EndArray) ? $"WorkspaceDocumentId: {NumberOfRows}" : $"NumberOfRows: {NumberOfRows}")}";
 
         internal const int Size = 12;
 

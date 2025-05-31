@@ -913,7 +913,7 @@ namespace Corvus.Text.Json.Internal
                 char[]? buffer = null;
                 Span<char> escapedBuffer = valueLength <= JsonConstants.StackallocCharThreshold ? stackalloc char[JsonConstants.StackallocCharThreshold] : (buffer = ArrayPool<char>.Shared.Rent(valueLength)).AsSpan();
 
-                JsonWriterHelper.EscapeString(value, buffer, valueIdx, encoder, out written);
+                JsonWriterHelper.EscapeString(value, escapedBuffer, valueIdx, encoder, out written);
                 JsonWriterHelper.ToUtf8(escapedBuffer.Slice(0, written), _valueBacking.AsSpan(index), out written);
                 index += written;
             }

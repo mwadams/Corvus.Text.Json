@@ -377,7 +377,7 @@ namespace Corvus.Text.Json.Internal
                 // Block copy up to index
                 Buffer.BlockCopy(toReturn, 0, _data, 0, startIndex);
                 // Then copy the rest of the data with the extra space
-                Buffer.BlockCopy(toReturn, endIndex, _data, startIndex + lengthToInsert, Length - endIndex);
+                Buffer.BlockCopy(toReturn, endIndex, _data, endIndex + lengthToInsert, Length - endIndex);
 
                 // The data in this rented buffer only conveys the positions and
                 // lengths of tokens in a document, but no content; so it does not

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 
@@ -1998,6 +1999,33 @@ namespace Corvus.Text.Json
                 return _parent.CloneElement(_idx);
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+            {
+                SetProperty(propertyName.AsSpan(), objectValue, estimatedMemberCount);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+            {
+                CheckValidInstance();
+
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, (ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
 
             public void SetProperty(ReadOnlySpan<byte> propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
             {
@@ -2014,6 +2042,34 @@ namespace Corvus.Text.Json
                 {
                     // We are going to insert the new value
                     cvb.AddProperty(propertyName, (ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+            {
+                SetProperty(propertyName.AsSpan(), arrayValue, estimatedMemberCount);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+            {
+                CheckValidInstance();
+
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, (ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
                     int endIndex = _idx + _parent.GetDbSize(_idx, false);
                     _parent.InsertAndDispose(_idx, endIndex, ref cvb);
                 }
@@ -2043,6 +2099,34 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, string utf8StringValue)
+            {
+                SetProperty(propertyName.AsSpan(), utf8StringValue.AsSpan());
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> utf8StringValue)
+            {
+                CheckValidInstance();
+
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(utf8StringValue);
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, utf8StringValue);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8StringValue)
             {
                 CheckValidInstance();
@@ -2065,6 +2149,32 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetPropertyNull(string propertyName)
+            {
+                SetPropertyNull(propertyName.AsSpan());
+            }
+            public void SetPropertyNull(ReadOnlySpan<char> propertyName)
+            {
+                CheckValidInstance();
+
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItemNull();
+                    _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddPropertyNull(propertyName);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
 
             public void SetPropertyNull(ReadOnlySpan<byte> propertyName)
             {
@@ -2088,7 +2198,64 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, bool value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, bool value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, bool value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [CLSCompliant(false)]
+            public void SetProperty<T>(string propertyName, T value)
+                where T : struct, IJsonElement<T>
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            [CLSCompliant(false)]
+            public void SetProperty<T>(ReadOnlySpan<char> propertyName, T value)
+                where T : struct, IJsonElement<T>
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -2132,7 +2299,61 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, Guid value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, Guid value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, Guid value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, DateTime value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, DateTime value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -2174,7 +2395,64 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, DateTimeOffset value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, DateTimeOffset value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, DateTimeOffset value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [CLSCompliant(false)]
+            public void SetProperty(string propertyName, sbyte value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            [CLSCompliant(false)]
+            public void SetProperty(ReadOnlySpan<char> propertyName, sbyte value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -2217,6 +2495,33 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, byte value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, byte value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, byte value)
             {
                 CheckValidInstance();
@@ -2238,7 +2543,63 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, int value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, int value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, int value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [CLSCompliant(false)]
+            public void SetProperty(string propertyName, uint value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            [CLSCompliant(false)]
+            public void SetProperty(ReadOnlySpan<char> propertyName, uint value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -2281,7 +2642,63 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, long value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, long value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, long value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [CLSCompliant(false)]
+            public void SetProperty(string propertyName, ulong value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            [CLSCompliant(false)]
+            public void SetProperty(ReadOnlySpan<char> propertyName, ulong value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -2324,7 +2741,63 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, short value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, short value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, short value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [CLSCompliant(false)]
+            public void SetProperty(string propertyName, ushort value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            [CLSCompliant(false)]
+            public void SetProperty(ReadOnlySpan<char> propertyName, ushort value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -2367,6 +2840,33 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, float value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, float value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, float value)
             {
                 CheckValidInstance();
@@ -2388,7 +2888,61 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, double value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, double value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, double value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, decimal value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, decimal value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -2431,7 +2985,63 @@ namespace Corvus.Text.Json
             }
 
 #if NET
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, Int128 value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, Int128 value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, Int128 value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [CLSCompliant(false)]
+            public void SetProperty(string propertyName, UInt128 value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            [CLSCompliant(false)]
+            public void SetProperty(ReadOnlySpan<char> propertyName, UInt128 value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -2474,6 +3084,33 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetProperty(string propertyName, Half value)
+            {
+                SetProperty(propertyName.AsSpan(), value);
+            }
+
+            public void SetProperty(ReadOnlySpan<char> propertyName, Half value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
+                {
+                    // We are going to replace just the value
+                    cvb.AddItem(value);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    cvb.AddProperty(propertyName, value);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
             public void SetProperty(ReadOnlySpan<byte> propertyName, Half value)
             {
                 CheckValidInstance();
@@ -2496,6 +3133,31 @@ namespace Corvus.Text.Json
             }
 
 #endif
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SetItem(int itemIndex, string value)
+            {
+                SetItem(itemIndex, value.AsSpan());
+            }
+
+            public void SetItem(int itemIndex, ReadOnlySpan<char> value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
 
             public void SetItem(int itemIndex, ReadOnlySpan<byte> value)
             {

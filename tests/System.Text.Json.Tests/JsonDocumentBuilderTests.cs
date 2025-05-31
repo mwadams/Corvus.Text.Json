@@ -4023,6 +4023,37 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
+        public static void SetItem_String_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // Simple ASCII
+            root.SetItem(0, "hello");
+            Assert.Equal("hello", root[0].GetString());
+
+            root.SetItem(1, "world");
+            Assert.Equal("world", root[1].GetString());
+
+            // Escaped UTF-8 string: "foo\"bar" (the quote is escaped in JSON, but the UTF-8 bytes are unescaped)
+            string escapedString = "foo\"bar";
+            root.SetItem(2, escapedString);
+            Assert.Equal("foo\"bar", root[2].GetString());
+
+            // Non-ASCII UTF-8 string: "héllo" (e with acute accent)
+            byte[] nonAsciiUtf8 = [(byte)'h', 0xC3, 0xA9, (byte)'l', (byte)'l', (byte)'o'];
+            root.SetItem(3, Encoding.UTF8.GetString(nonAsciiUtf8));
+            Assert.Equal("héllo", root[3].GetString());
+
+            // Non-ASCII string: emoji "😊"
+            string emoji = "😊";
+            root.SetItem(4, emoji);
+            Assert.Equal("😊", root[4].GetString());
+        }
+
+        [Fact]
         public static void SetItemNull_Works()
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
@@ -4461,6 +4492,143 @@ namespace Corvus.Text.Json.Tests
 #endif
 
         [Fact]
+        public static void SetProperty_Object_Creator_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // ASCII property name
+            root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); } );
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
+
+            // Non-ASCII property name
+            root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
+
+            // Encoded UTF-8 property name: "foo\"bar"
+            root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_Object_Creator_Nested_Object_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement.GetProperty("a");
+
+            // ASCII property name
+            root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
+
+            // Non-ASCII property name
+            root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
+
+            // Encoded UTF-8 property name: "foo\"bar"
+            root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_Object_Creator_Object_Shrink_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // ASCII property name
+            root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_Object_Creator_Nested_Object_Shrink_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": {\"c\": true}}}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement.GetProperty("a");
+
+            // ASCII property name
+            root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
+        }
+
+
+        [Fact]
+        public static void SetProperty_Array_Creator_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // ASCII property name
+            root.SetProperty("a"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("a").ToString());
+
+            // Non-ASCII property name
+            root.SetProperty("héllo"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("héllo").ToString());
+
+            // Encoded UTF-8 property name: "foo\"bar"
+            root.SetProperty("foo\"bar"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("foo\"bar").ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_Array_Creator_Nested_Object_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement.GetProperty("a");
+
+            // ASCII property name
+            root.SetProperty("b"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("b").ToString());
+
+            // Non-ASCII property name
+            root.SetProperty("héllo"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("héllo").ToString());
+
+            // Encoded UTF-8 property name: "foo\"bar"
+            root.SetProperty("foo\"bar"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("foo\"bar").ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_Array_Creator_Object_Shrink_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // ASCII property name
+            root.SetProperty("a"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("a").ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_Array_Creator_Nested_Object_Shrink_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": {\"c\": true}}}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement.GetProperty("a");
+
+            // ASCII property name
+            root.SetProperty("b"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("b").ToString());
+        }
+
+        [Fact]
         public static void SetProperty_Bool_Works()
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
@@ -4770,6 +4938,343 @@ namespace Corvus.Text.Json.Tests
 #endif
 
         [Fact]
+        public static void SetProperty_Bool_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", true);
+            Assert.True(root.GetProperty("a").GetBoolean());
+
+            root.SetProperty("héllo", false);
+            Assert.False(root.GetProperty("héllo").GetBoolean());
+
+            root.SetProperty("foo\"bar", true);
+            Assert.True(root.GetProperty("foo\"bar").GetBoolean());
+        }
+
+        [Fact]
+        public static void SetProperty_Guid_StringPropertyName_Works()
+        {
+            var guid1 = Guid.NewGuid();
+            var guid2 = Guid.NewGuid();
+            using var doc = ParsedJsonDocument<JsonElement>.Parse($"{{\"a\":\"{guid1}\"}}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", guid2);
+            Assert.Equal(guid2, root.GetProperty("a").GetGuid());
+
+            var guid3 = Guid.NewGuid();
+            root.SetProperty("héllo", guid3);
+            Assert.Equal(guid3, root.GetProperty("héllo").GetGuid());
+
+            var guid4 = Guid.NewGuid();
+            root.SetProperty("foo\"bar", guid4);
+            Assert.Equal(guid4, root.GetProperty("foo\"bar").GetGuid());
+        }
+
+        [Fact]
+        public static void SetProperty_Byte_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", (byte)42);
+            Assert.Equal(42, root.GetProperty("a").GetByte());
+
+            root.SetProperty("héllo", (byte)255);
+            Assert.Equal(255, root.GetProperty("héllo").GetByte());
+
+            root.SetProperty("foo\"bar", (byte)128);
+            Assert.Equal(128, root.GetProperty("foo\"bar").GetByte());
+        }
+
+        [Fact]
+        public static void SetProperty_SByte_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", (sbyte)-8);
+            Assert.Equal(-8, root.GetProperty("a").GetSByte());
+
+            root.SetProperty("héllo", (sbyte)127);
+            Assert.Equal(127, root.GetProperty("héllo").GetSByte());
+
+            root.SetProperty("foo\"bar", (sbyte)-128);
+            Assert.Equal(-128, root.GetProperty("foo\"bar").GetSByte());
+        }
+
+        [Fact]
+        public static void SetProperty_Short_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", (short)-12345);
+            Assert.Equal(-12345, root.GetProperty("a").GetInt16());
+
+            root.SetProperty("héllo", (short)12345);
+            Assert.Equal(12345, root.GetProperty("héllo").GetInt16());
+
+            root.SetProperty("foo\"bar", (short)-32768);
+            Assert.Equal(-32768, root.GetProperty("foo\"bar").GetInt16());
+        }
+
+        [Fact]
+        public static void SetProperty_UShort_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", (ushort)65535);
+            Assert.Equal(65535, root.GetProperty("a").GetUInt16());
+
+            root.SetProperty("héllo", (ushort)42);
+            Assert.Equal((ushort)42, root.GetProperty("héllo").GetUInt16());
+
+            root.SetProperty("foo\"bar", (ushort)0);
+            Assert.Equal((ushort)0, root.GetProperty("foo\"bar").GetUInt16());
+        }
+
+        [Fact]
+        public static void SetProperty_Int_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", -123456);
+            Assert.Equal(-123456, root.GetProperty("a").GetInt32());
+
+            root.SetProperty("héllo", 654321);
+            Assert.Equal(654321, root.GetProperty("héllo").GetInt32());
+
+            root.SetProperty("foo\"bar", int.MinValue);
+            Assert.Equal(int.MinValue, root.GetProperty("foo\"bar").GetInt32());
+        }
+
+        [Fact]
+        public static void SetProperty_UInt_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", 4294967295u);
+            Assert.Equal(4294967295u, root.GetProperty("a").GetUInt32());
+
+            root.SetProperty("héllo", 123u);
+            Assert.Equal(123u, root.GetProperty("héllo").GetUInt32());
+
+            root.SetProperty("foo\"bar", 0u);
+            Assert.Equal(0u, root.GetProperty("foo\"bar").GetUInt32());
+        }
+
+        [Fact]
+        public static void SetProperty_Long_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", long.MaxValue);
+            Assert.Equal(long.MaxValue, root.GetProperty("a").GetInt64());
+
+            root.SetProperty("héllo", long.MinValue);
+            Assert.Equal(long.MinValue, root.GetProperty("héllo").GetInt64());
+
+            root.SetProperty("foo\"bar", 0L);
+            Assert.Equal(0L, root.GetProperty("foo\"bar").GetInt64());
+        }
+
+        [Fact]
+        public static void SetProperty_ULong_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", 18446744073709551615ul);
+            Assert.Equal(18446744073709551615ul, root.GetProperty("a").GetUInt64());
+
+            root.SetProperty("héllo", 42ul);
+            Assert.Equal(42ul, root.GetProperty("héllo").GetUInt64());
+
+            root.SetProperty("foo\"bar", 0ul);
+            Assert.Equal(0ul, root.GetProperty("foo\"bar").GetUInt64());
+        }
+
+        [Fact]
+        public static void SetProperty_Float_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", 3.14f);
+            Assert.Equal(3.14f, root.GetProperty("a").GetSingle());
+
+            root.SetProperty("héllo", -2.71f);
+            Assert.Equal(-2.71f, root.GetProperty("héllo").GetSingle());
+
+            root.SetProperty("foo\"bar", 0.0f);
+            Assert.Equal(0.0f, root.GetProperty("foo\"bar").GetSingle());
+        }
+
+        [Fact]
+        public static void SetProperty_Double_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", 2.718281828);
+            Assert.Equal(2.718281828, root.GetProperty("a").GetDouble());
+
+            root.SetProperty("héllo", -3.1415926535);
+            Assert.Equal(-3.1415926535, root.GetProperty("héllo").GetDouble());
+
+            root.SetProperty("foo\"bar", 0.0);
+            Assert.Equal(0.0, root.GetProperty("foo\"bar").GetDouble());
+        }
+
+        [Fact]
+        public static void SetProperty_Decimal_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", 123.456m);
+            Assert.Equal(123.456m, root.GetProperty("a").GetDecimal());
+
+            root.SetProperty("héllo", -789.01m);
+            Assert.Equal(-789.01m, root.GetProperty("héllo").GetDecimal());
+
+            root.SetProperty("foo\"bar", 0.0m);
+            Assert.Equal(0.0m, root.GetProperty("foo\"bar").GetDecimal());
+        }
+
+#if NET
+        [Fact]
+        public static void SetProperty_Int128_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
+            Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
+
+            root.SetProperty("a", bigValue);
+            Assert.Equal(bigValue, root.GetProperty("a").GetInt128());
+
+            root.SetProperty("héllo", smallValue);
+            Assert.Equal(smallValue, root.GetProperty("héllo").GetInt128());
+
+            root.SetProperty("foo\"bar", Int128.Zero);
+            Assert.Equal(Int128.Zero, root.GetProperty("foo\"bar").GetInt128());
+        }
+
+        [Fact]
+        public static void SetProperty_UInt128_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
+            UInt128 smallValue = 42;
+
+            root.SetProperty("a", bigValue);
+            Assert.Equal(bigValue, root.GetProperty("a").GetUInt128());
+
+            root.SetProperty("héllo", smallValue);
+            Assert.Equal(smallValue, root.GetProperty("héllo").GetUInt128());
+
+            root.SetProperty("foo\"bar", UInt128.Zero);
+            Assert.Equal(UInt128.Zero, root.GetProperty("foo\"bar").GetUInt128());
+        }
+
+        [Fact]
+        public static void SetProperty_Half_StringPropertyName_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            Half value1 = (Half)3.25;
+            Half value2 = (Half)(-2.5);
+
+            root.SetProperty("a", value1);
+            Assert.Equal(value1, root.GetProperty("a").GetHalf());
+
+            root.SetProperty("héllo", value2);
+            Assert.Equal(value2, root.GetProperty("héllo").GetHalf());
+
+            root.SetProperty("foo\"bar", (Half)0.0);
+            Assert.Equal((Half)0.0, root.GetProperty("foo\"bar").GetHalf());
+        }
+#endif
+
+        [Fact]
+        public static void SetProperty_DateTime_StringPropertyName_Works()
+        {
+            var dt1 = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
+            var dt2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", dt1);
+            Assert.Equal(dt1, root.GetProperty("a").GetDateTime());
+
+            root.SetProperty("héllo", dt2);
+            Assert.Equal(dt2, root.GetProperty("héllo").GetDateTime());
+        }
+
+        [Fact]
+        public static void SetProperty_DateTimeOffset_StringPropertyName_Works()
+        {
+            var dto1 = new DateTimeOffset(2024, 5, 30, 12, 34, 56, TimeSpan.Zero);
+            var dto2 = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.FromHours(2));
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", dto1);
+            Assert.Equal(dto1, root.GetProperty("a").GetDateTimeOffset());
+
+            root.SetProperty("héllo", dto2);
+            Assert.Equal(dto2, root.GetProperty("héllo").GetDateTimeOffset());
+        }
+
+        [Fact]
         public static void SetProperty_Utf8String_Works()
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
@@ -4787,6 +5292,27 @@ namespace Corvus.Text.Json.Tests
 
             // Encoded UTF-8 property name: "foo\"bar"
             root.SetProperty("foo\"bar"u8, "baz"u8);
+            Assert.Equal("baz", root.GetProperty("foo\"bar").GetString());
+        }
+
+        [Fact]
+        public static void SetProperty_String_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            var root = builderDoc.RootElement;
+
+            // ASCII property name
+            root.SetProperty("a", "hello");
+            Assert.Equal("hello", root.GetProperty("a").GetString());
+
+            // Non-ASCII property name
+            root.SetProperty("héllo", "world");
+            Assert.Equal("world", root.GetProperty("héllo").GetString());
+
+            // Encoded UTF-8 property name: "foo\"bar"
+            root.SetProperty("foo\"bar", "baz");
             Assert.Equal("baz", root.GetProperty("foo\"bar").GetString());
         }
 
