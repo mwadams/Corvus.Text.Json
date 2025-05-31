@@ -2983,7 +2983,7 @@ namespace Corvus.Text.Json.Tests
         [OuterLoop] // thread-safety / stress test
         public static async Task GetString_ConcurrentUse_ThreadSafe()
         {
-            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
             using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDynamicDocument(workspace))
             {

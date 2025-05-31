@@ -777,6 +777,37 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
+        public static void ParsedWithPropertyMap()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJsonWithComplexName))
+            {
+                JsonElement parsedObject = doc.RootElement;
+                parsedObject.EnsurePropertyMap();
+                int age = parsedObject.GetProperty("ag\"e").GetInt32();
+                string ageString = parsedObject.GetProperty("ag\"e").ToString();
+                string first = parsedObject.GetProperty("first").GetString();
+                string last = parsedObject.GetProperty("last").GetString();
+                string phoneNumber = parsedObject.GetProperty("phoneNumber").GetString();
+                string street = parsedObject.GetProperty("street").GetString();
+                string city = parsedObject.GetProperty("city").GetString();
+                int zip = parsedObject.GetProperty("zip").GetInt32();
+
+                Assert.Equal(7, parsedObject.GetPropertyCount());
+                Assert.True(parsedObject.TryGetProperty("ag\"e", out JsonElement age2));
+                Assert.Equal(30, age2.GetInt32());
+
+                Assert.Equal(30, age);
+                Assert.Equal("30", ageString);
+                Assert.Equal("John", first);
+                Assert.Equal("Smith", last);
+                Assert.Equal("425-214-3151", phoneNumber);
+                Assert.Equal("1 Microsoft Way", street);
+                Assert.Equal("Redmond", city);
+                Assert.Equal(98052, zip);
+            }
+        }
+
+        [Fact]
         public static void ParseNestedJsonWithPropertyMap()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
