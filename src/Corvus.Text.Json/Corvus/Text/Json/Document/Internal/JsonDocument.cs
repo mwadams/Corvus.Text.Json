@@ -803,35 +803,6 @@ namespace Corvus.Text.Json.Internal
             return _valueBacking.AsSpan(valueOffset, length);
         }
 
-        protected int StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString)
-        {
-            int offset = _valueOffset;
-            // We write the value buffer offset here, to save doing it again later.
-            _valueOffset += unescapedString.Length + 4;
-
-            Enlarge(_valueOffset, ref _valueBacking);
-
-            uint length = (uint)unescapedString.Length;
-            if (length > 0x0FFFFFFF)
-            {
-                ThrowHelper.ThrowArgumentException_ValueTooLarge(length);
-            }
-
-            // Shift it and OR in the value type.
-            length <<= 4;
-            length |= (uint)DynamicValueType.UnescapedUtf8String;
-
-#if NET
-            BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#else
-            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#endif
-            unescapedString.CopyTo(_valueBacking.AsSpan(offset + 4));
-
-            return offset;
-        }
-
-
         protected int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> utf8Value, out bool requiredEscaping, JavaScriptEncoder? encoder)
         {
             int offset = _valueOffset;

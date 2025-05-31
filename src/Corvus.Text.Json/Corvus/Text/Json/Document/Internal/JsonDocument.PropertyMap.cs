@@ -84,12 +84,6 @@ namespace Corvus.Text.Json.Internal
                 return ref buckets[(int)(hashCode % (ulong)size)];
             }
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal static int GetBucket(ReadOnlySpan<int> buckets, ulong hashCode, int size)
-            {
-                return buckets[(int)(hashCode % (ulong)size)];
-            }
-
             [StructLayout(LayoutKind.Sequential)]
             internal struct Entry
             {

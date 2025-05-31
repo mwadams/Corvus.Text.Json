@@ -23,7 +23,6 @@ namespace Corvus.Text.Json.Internal
         int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, out bool requiredEscaping);
         int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping);
         int StoreRawStringValue(ReadOnlySpan<byte> value);
-        int StoreUnescapedStringValue(ReadOnlySpan<byte> unescapedString);
         int StoreValue(Guid value);
         int StoreValue(DateTime value);
         int StoreValue(DateTimeOffset value);

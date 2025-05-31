@@ -783,8 +783,8 @@ namespace Corvus.Text.Json.Tests
             {
                 JsonElement parsedObject = doc.RootElement;
                 parsedObject.EnsurePropertyMap();
-                int age = parsedObject.GetProperty("ag\"e").GetInt32();
-                string ageString = parsedObject.GetProperty("ag\"e").ToString();
+                int age = parsedObject.GetProperty("ag\"e567890").GetInt32();
+                string ageString = parsedObject.GetProperty("ag\"e567890").ToString();
                 string first = parsedObject.GetProperty("first").GetString();
                 string last = parsedObject.GetProperty("last").GetString();
                 string phoneNumber = parsedObject.GetProperty("phoneNumber").GetString();
@@ -793,7 +793,7 @@ namespace Corvus.Text.Json.Tests
                 int zip = parsedObject.GetProperty("zip").GetInt32();
 
                 Assert.Equal(7, parsedObject.GetPropertyCount());
-                Assert.True(parsedObject.TryGetProperty("ag\"e", out JsonElement age2));
+                Assert.True(parsedObject.TryGetProperty("ag\"e567890", out JsonElement age2));
                 Assert.Equal(30, age2.GetInt32());
 
                 Assert.Equal(30, age);

@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace Corvus.Text.Json.Internal
 {
     /// <summary>
-    /// Defines a thread-local cache for JsonSerializer to store reusable Utf8JsonWriter/IBufferWriter instances.
+    /// Defines a thread-local cache for us to store reusable JsonWorkspace instances.
     /// </summary>
     internal static class JsonWorkspaceCache
     {
@@ -27,7 +27,7 @@ namespace Corvus.Text.Json.Internal
             }
             else
             {
-                // We're in a recursive call -- return a fresh instance.
+                // We've created a second workspace, so we're going to create another instance.
                 workspace = new JsonWorkspace(true, initialDocumentCapacity, options);
             }
 
