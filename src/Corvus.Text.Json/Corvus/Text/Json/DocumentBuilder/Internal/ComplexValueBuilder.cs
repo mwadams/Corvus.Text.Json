@@ -39,12 +39,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, createComplexValue, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, ValueBuilderAction createComplexValue)
-        {
-            AddProperty(propertyName.AsSpan(), createComplexValue);
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, ValueBuilderAction createComplexValue, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -75,12 +69,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, utf8String, escapeName: true, escapeValue: true, false, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, string value)
-        {
-            AddProperty(propertyName.AsSpan(), value.AsSpan());
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName, bool escapeValue, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -100,11 +88,6 @@ namespace Corvus.Text.Json.Internal
         public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
         {
             AddPropertyFormattedNumber(propertyName, value, true, false);
-        }
-
-        public void AddPropertyFormattedNumber(string propertyName, string value)
-        {
-            AddPropertyFormattedNumber(propertyName.AsSpan(), value.AsSpan());
         }
 
         public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping)
@@ -142,12 +125,6 @@ namespace Corvus.Text.Json.Internal
             AddPropertyNull(propertyName, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddPropertyNull(string propertyName)
-        {
-            AddPropertyNull(propertyName.AsSpan());
-        }
-
         public void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -168,12 +145,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, bool value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, bool value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName, bool nameRequiresUnescaping)
@@ -198,14 +169,6 @@ namespace Corvus.Text.Json.Internal
             where T : struct, IJsonElement<T>
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void AddProperty<T>(string propertyName, T value)
-            where T : struct, IJsonElement<T>
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         [CLSCompliant(false)]
@@ -235,13 +198,7 @@ namespace Corvus.Text.Json.Internal
         {
             AddProperty(propertyName, value, true, false);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, Guid value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
-        }
-
+       
         public void AddProperty(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -262,12 +219,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, DateTime value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, DateTime value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, DateTime value, bool escapeName, bool nameRequiresUnescaping)
@@ -292,12 +243,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, DateTimeOffset value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, DateTimeOffset value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -319,13 +264,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void AddProperty(string propertyName, sbyte value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         [CLSCompliant(false)]
@@ -352,12 +290,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, byte value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, byte value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -378,12 +310,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, int value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, int value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, int value, bool escapeName, bool nameRequiresUnescaping)
@@ -407,13 +333,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, uint value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void AddProperty(string propertyName, uint value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         [CLSCompliant(false)]
@@ -440,12 +359,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, long value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, long value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -467,13 +380,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void AddProperty(string propertyName, ulong value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         [CLSCompliant(false)]
@@ -500,12 +406,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, short value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, short value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -527,13 +427,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void AddProperty(string propertyName, ushort value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         [CLSCompliant(false)]
@@ -560,12 +453,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, float value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, float value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -588,12 +475,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, double value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, double value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -614,12 +495,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, decimal value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName, bool nameRequiresUnescaping)
@@ -645,12 +520,6 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, Int128 value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
-        }
-
         public void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -672,13 +541,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void AddProperty(string propertyName, UInt128 value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         [CLSCompliant(false)]
@@ -703,12 +565,6 @@ namespace Corvus.Text.Json.Internal
         public void AddProperty(ReadOnlySpan<byte> propertyName, Half value)
         {
             AddProperty(propertyName, value, true, false);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(string propertyName, Half value)
-        {
-            AddProperty(propertyName.AsSpan(), value);
         }
 
         public void AddProperty(ReadOnlySpan<byte> propertyName, Half value, bool escapeName, bool nameRequiresUnescaping)
