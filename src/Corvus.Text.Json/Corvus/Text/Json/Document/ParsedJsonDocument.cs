@@ -146,6 +146,8 @@ namespace Corvus.Text.Json
             {
                 CheckNotDisposed();
 
+                CheckExpectedType(JsonTokenType.StartObject, _parsedData.GetJsonTokenType(index));
+
                 EnsurePropertyMapUnsafe(index);
             }
         }

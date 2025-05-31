@@ -746,6 +746,86 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
+        public static void ParseSimpleObjectWithPropertyMap()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
+            {
+                JsonElement parsedObject = doc.RootElement;
+                parsedObject.EnsurePropertyMap();
+                int age = parsedObject.GetProperty("age").GetInt32();
+                string ageString = parsedObject.GetProperty("age").ToString();
+                string first = parsedObject.GetProperty("first").GetString();
+                string last = parsedObject.GetProperty("last").GetString();
+                string phoneNumber = parsedObject.GetProperty("phoneNumber").GetString();
+                string street = parsedObject.GetProperty("street").GetString();
+                string city = parsedObject.GetProperty("city").GetString();
+                int zip = parsedObject.GetProperty("zip").GetInt32();
+
+                Assert.Equal(7, parsedObject.GetPropertyCount());
+                Assert.True(parsedObject.TryGetProperty("age", out JsonElement age2));
+                Assert.Equal(30, age2.GetInt32());
+
+                Assert.Equal(30, age);
+                Assert.Equal("30", ageString);
+                Assert.Equal("John", first);
+                Assert.Equal("Smith", last);
+                Assert.Equal("425-214-3151", phoneNumber);
+                Assert.Equal("1 Microsoft Way", street);
+                Assert.Equal("Redmond", city);
+                Assert.Equal(98052, zip);
+            }
+        }
+
+        [Fact]
+        public static void ParseNestedJsonWithPropertyMap()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
+            {
+                JsonElement parsedObject = doc.RootElement;
+
+                Assert.Equal(1, parsedObject.GetArrayLength());
+                JsonElement person = parsedObject[0];
+                person.EnsurePropertyMap();
+                Assert.Equal(5, person.GetPropertyCount());
+                double age = person.GetProperty("age").GetDouble();
+                string first = person.GetProperty("first").GetString();
+                string last = person.GetProperty("last").GetString();
+                JsonElement phoneNums = person.GetProperty("phoneNumbers");
+                Assert.Equal(2, phoneNums.GetArrayLength());
+                string phoneNum1 = phoneNums[0].GetString();
+                string phoneNum2 = phoneNums[1].GetString();
+                JsonElement address = person.GetProperty("address");
+                string street = address.GetProperty("street").GetString();
+                string city = address.GetProperty("city").GetString();
+                double zipCode = address.GetProperty("zip").GetDouble();
+                const string ThrowsAnyway = "throws-anyway";
+
+                Assert.Equal(30, age);
+                Assert.Equal("John", first);
+                Assert.Equal("Smith", last);
+                Assert.Equal("425-000-1212", phoneNum1);
+                Assert.Equal("425-000-1213", phoneNum2);
+                Assert.Equal("1 Microsoft Way", street);
+                Assert.Equal("Redmond", city);
+                Assert.Equal(98052, zipCode);
+
+                Assert.Throws<InvalidOperationException>(() => person.GetArrayLength());
+                Assert.Throws<IndexOutOfRangeException>(() => phoneNums[2]);
+                Assert.Throws<InvalidOperationException>(() => phoneNums.GetProperty("2"));
+                Assert.Throws<KeyNotFoundException>(() => address.GetProperty("2"));
+                Assert.Throws<InvalidOperationException>(() => address.GetProperty("city").GetDouble());
+                Assert.Throws<InvalidOperationException>(() => address.GetProperty("city").GetBoolean());
+                Assert.Throws<InvalidOperationException>(() => address.GetProperty("zip").GetString());
+                Assert.Throws<InvalidOperationException>(() => person.GetProperty("phoneNumbers").GetString());
+                Assert.Throws<InvalidOperationException>(() => person.GetString());
+                Assert.Throws<InvalidOperationException>(() => person.ValueEquals(ThrowsAnyway));
+                Assert.Throws<InvalidOperationException>(() => person.ValueEquals(ThrowsAnyway.AsSpan()));
+                Assert.Throws<InvalidOperationException>(() => person.ValueEquals(Encoding.UTF8.GetBytes(ThrowsAnyway)));
+            }
+        }
+
+
+        [Fact]
         public static void ParseBoolean()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("[true,false]"))
