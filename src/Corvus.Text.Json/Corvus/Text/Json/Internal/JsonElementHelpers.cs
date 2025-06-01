@@ -423,6 +423,10 @@ namespace Corvus.Text.Json.Internal
         /// </summary>
         public static bool AreEqualNormalizedJsonNumbers(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent)
         {
+            Debug.Assert(leftIntegral.Length == 0 || leftIntegral[0] != (byte)'0');
+            Debug.Assert(leftFractional.Length == 0 || leftFractional[^1] != (byte)'0');
+            Debug.Assert(rightIntegral.Length == 0 || rightIntegral[0] != (byte)'0');
+            Debug.Assert(rightFractional.Length == 0 || rightFractional[^1] != (byte)'0');
             int nDigits;
             if (leftIsNegative != rightIsNegative ||
                 leftExponent != rightExponent ||
@@ -481,32 +485,6 @@ namespace Corvus.Text.Json.Internal
             return leftFirst.SequenceEqual(rightFirst) &&
                 leftMiddle.SequenceEqual(rightMiddle) &&
                 leftLast.SequenceEqual(rightLast);
-        }
-
-        /// <summary>
-        /// Compares two JSON numbers.
-        /// </summary>
-        /// <param name="left">The left number.</param>
-        /// <param name="right">The right number.</param>
-        /// <returns>-1 if the LHS is less than the RHS, 0 if they are equal, and 1 if the LHS is greater than the RHS.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int CompareJsonNumbers(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right)
-        {
-            Debug.Assert(left.Length > 0 && right.Length > 0);
-
-            ParseNumber(left,
-                out bool leftIsNegative,
-                out ReadOnlySpan<byte> leftIntegral,
-                out ReadOnlySpan<byte> leftFractional,
-                out int leftExponent);
-
-            ParseNumber(right,
-                out bool rightIsNegative,
-                out ReadOnlySpan<byte> rightIntegral,
-                out ReadOnlySpan<byte> rightFractional,
-                out int rightExponent);
-
-            return CompareNormalizedJsonNumbers(leftIsNegative, leftIntegral, leftFractional, leftExponent, rightIsNegative, rightIntegral, rightFractional, rightExponent);
         }
 
         /// <summary>
@@ -604,53 +582,6 @@ namespace Corvus.Text.Json.Internal
 
             // Step 4: Numbers are equal
             return 0;
-        }
-
-        /// <summary>
-        /// Determines whether a valid UTF-8 JSON number is an exact multiple of the given divisor.
-        /// </summary>
-        /// <param name="value">The UTF-8 JSON number.</param>
-        /// <param name="divisor">The integer value of the divisor.</param>
-        /// <param name="divisorExponent">The exponent of the divisor (+ve or -ve).</param>
-        /// <returns><see langword="true"/> if the value is an exact multiple of <c>divisor * 10^divisorExponent</c>.</returns>
-        /// <remarks>
-        /// This will always return <see langword="false"/> if the <paramref name="divisor"/> is <c>0</c> and <see langword="true"/>
-        /// if the value is zero.
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public static bool IsMultipleOf(ReadOnlySpan<byte> value, ulong divisor, int divisorExponent)
-        {
-            ParseNumber(value,
-                out _,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
-
-            return IsMultipleOf(integral, fractional, exponent, divisor, divisorExponent);
-        }
-
-        /// <summary>
-        /// Determines whether a valid UTF-8 JSON number is an exact multiple of the given divisor.
-        /// </summary>
-        /// <param name="value">The UTF-8 JSON number.</param>
-        /// <param name="divisor">The integer value of the divisor.</param>
-        /// <param name="divisorExponent">The exponent of the divisor (+ve or -ve).</param>
-        /// <returns><see langword="true"/> if the value is an exact multiple of <c>divisor * 10^divisorExponent</c>.</returns>
-        /// <remarks>
-        /// This will always return <see langword="false"/> if the <paramref name="divisor"/> is <c>0</c> and <see langword="true"/>
-        /// if the value is zero.
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsMultipleOf(ReadOnlySpan<byte> value, System.Numerics.BigInteger divisor, int divisorExponent)
-        {
-            ParseNumber(value,
-                out _,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
-
-            return IsMultipleOf(integral, fractional, exponent, divisor, divisorExponent);
         }
 
         /// <summary>

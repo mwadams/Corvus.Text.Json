@@ -139,6 +139,48 @@ public class JsonElementNumberTest
         Assert.Equal(expected, result);
     }
 
+    [Theory]
+    [InlineData(false, "123", "45", 2, false, "123", "45", 2, true)] // Identical
+    [InlineData(false, "123", "45", 2, true, "123", "45", 2, false)] // Different sign
+    [InlineData(false, "123", "45", 2, false, "123", "45", -1, false)] // Different exponent
+    [InlineData(false, "123", "45", 2, false, "123", "46", 2, false)] // Different digits
+    [InlineData(false, "1", "2345", 2, false, "12", "345", 2, true)] // Same digits, different split
+    [InlineData(false, "", "", 0, false, "", "", 0, true)] // Both zero
+    [InlineData(true, "", "", 0, false, "", "", 0, false)] // Zero, different sign
+    [InlineData(false, "12345678901234567890", "", 0, false, "12345678901234567890", "", 0, true)] // Long numbers, equal
+    [InlineData(false, "12345678901234567890", "", 0, false, "12345678901234567891", "", 0, false)] // Long numbers, not equal
+    public void AreEqualNormalizedJsonNumbersTests(
+        bool leftIsNegative,
+        string leftIntegral,
+        string leftFractional,
+        int leftExponent,
+        bool rightIsNegative,
+        string rightIntegral,
+        string rightFractional,
+        int rightExponent,
+        bool expected)
+    {
+        // Arrange
+        ReadOnlySpan<byte> leftIntegralSpan = GetUtf8Bytes(leftIntegral);
+        ReadOnlySpan<byte> leftFractionalSpan = GetUtf8Bytes(leftFractional);
+        ReadOnlySpan<byte> rightIntegralSpan = GetUtf8Bytes(rightIntegral);
+        ReadOnlySpan<byte> rightFractionalSpan = GetUtf8Bytes(rightFractional);
+
+        // Act
+        bool result = JsonElementHelpers.AreEqualNormalizedJsonNumbers(
+            leftIsNegative,
+            leftIntegralSpan,
+            leftFractionalSpan,
+            leftExponent,
+            rightIsNegative,
+            rightIntegralSpan,
+            rightFractionalSpan,
+            rightExponent);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
 #if NET
     [Theory]
     [InlineData("", "", 0, 1123, 0, true)] // Zero is always a multiple of any number, except zero
