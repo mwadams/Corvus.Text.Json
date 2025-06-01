@@ -385,6 +385,11 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             return new(otherNames._parent, otherNames._idx);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+        }
 
         public static Mutable From<T>(in T instance)
         where T : struct, IMutableJsonElement<T>

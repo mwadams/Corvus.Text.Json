@@ -15,7 +15,8 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
 {
     private System.Text.Json.JsonDocument? documentA1;
     private Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.PersonArray>? documentB1;
-
+    private Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson2.PersonArray.Mutable>? documentB2;
+    private Corvus.Text.Json.JsonWorkspace? workspace;
     [GlobalSetup]
     public void Setup()
     {
@@ -31,15 +32,19 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
         string json =
             "[33.4," + string.Join(",", Enumerable.Range(0, 10000).Select(i => personJson)) + "]";
 
-        this.documentA1 = System.Text.Json.JsonDocument.Parse(json);
-        this.documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.PersonArray>.Parse(json);
+        documentA1 = System.Text.Json.JsonDocument.Parse(json);
+        documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.PersonArray>.Parse(json);
+        workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        documentB2 = documentB1.RootElement.CreateDocument(workspace);
     }
 
     [GlobalCleanup]
     public void CleanUp()
     {
-        this.documentA1?.Dispose();
-        this.documentB1?.Dispose();
+        documentA1?.Dispose();
+        documentB1?.Dispose();
+        documentB2?.Dispose();
+        workspace?.Dispose();
     }
 
     [Benchmark(Baseline=true)]
@@ -52,5 +57,11 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
     public bool ValidateCorvusTextJson()
     {
         return documentB1!.RootElement.IsSchemaMatch();
+    }
+
+    [Benchmark]
+    public bool ValidateCorvusTextJsonDynamic()
+    {
+        return documentB2!.RootElement.IsSchemaMatch();
     }
 }

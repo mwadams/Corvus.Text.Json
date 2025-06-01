@@ -267,7 +267,6 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         private readonly int _idx;
         private readonly ulong _documentVersion;
 
-
         internal Mutable(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
@@ -298,7 +297,11 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             }
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+        }
 
         public static Mutable From<T>(in T instance)
         where T : struct, IMutableJsonElement<T>

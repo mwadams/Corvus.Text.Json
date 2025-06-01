@@ -313,6 +313,13 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
         /// </exception>
         public JsonValueKind ValueKind => TokenType.ToValueKind();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        {
+            return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+        }
+
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private JsonTokenType TokenType
         {
