@@ -4586,17 +4586,22 @@ namespace Corvus.Text.Json.Tests
             using var builderDoc = doc.RootElement.CreateDocument(workspace);
             var root = builderDoc.RootElement;
 
-            // ASCII property name
+            // Existing UTF-8 property name tests
             root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
-
-            // Non-ASCII property name
             root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
-
-            // Encoded UTF-8 property name: "foo\"bar"
             root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
+
+            // New: string property name
+            root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
+
+            // New: ReadOnlySpan<char> property name
+            ReadOnlySpan<char> spanName = "span";
+            root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
 
         [Fact]
@@ -4607,17 +4612,22 @@ namespace Corvus.Text.Json.Tests
             using var builderDoc = doc.RootElement.CreateDocument(workspace);
             var root = builderDoc.RootElement.GetProperty("a");
 
-            // ASCII property name
+            // Existing UTF-8 property name tests
             root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
-
-            // Non-ASCII property name
             root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
-
-            // Encoded UTF-8 property name: "foo\"bar"
             root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
+
+            // New: string property name
+            root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
+
+            // New: ReadOnlySpan<char> property name
+            ReadOnlySpan<char> spanName = "span";
+            root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
 
         [Fact]
@@ -4628,9 +4638,18 @@ namespace Corvus.Text.Json.Tests
             using var builderDoc = doc.RootElement.CreateDocument(workspace);
             var root = builderDoc.RootElement;
 
-            // ASCII property name
+            // Existing UTF-8 property name test
             root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
+
+            // New: string property name
+            root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
+
+            // New: ReadOnlySpan<char> property name
+            ReadOnlySpan<char> spanName = "span";
+            root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
 
         [Fact]
@@ -4641,9 +4660,18 @@ namespace Corvus.Text.Json.Tests
             using var builderDoc = doc.RootElement.CreateDocument(workspace);
             var root = builderDoc.RootElement.GetProperty("a");
 
-            // ASCII property name
+            // Existing UTF-8 property name test
             root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
+
+            // New: string property name
+            root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
+
+            // New: ReadOnlySpan<char> property name
+            ReadOnlySpan<char> spanName = "span";
+            root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
 
 
@@ -5842,6 +5870,8 @@ namespace Corvus.Text.Json.Tests
             var dt = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
             var dto = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
+            using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
+
             // Build an array using every method on JsonArrayBuilder
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocument(
                 workspace,
@@ -5890,6 +5920,8 @@ namespace Corvus.Text.Json.Tests
                     {
                         ob.Add("foo"u8, "bar"u8);
                     });
+
+                    arrayBuilder.Add(parsedDoc.RootElement);
                 });
 
             var root = doc.RootElement;
@@ -5935,6 +5967,10 @@ namespace Corvus.Text.Json.Tests
             var nestedObject = root[i++];
             Assert.Equal(JsonValueKind.Object, nestedObject.ValueKind);
             Assert.Equal("bar", nestedObject.GetProperty("foo").GetString());
+
+            var element = root[i++];
+            Assert.Equal(3, element.GetProperty("foo").GetInt32());
+
         }
         [Fact]
         public static void CreateObject_AllTypes()
@@ -5944,6 +5980,8 @@ namespace Corvus.Text.Json.Tests
             var guid = Guid.NewGuid();
             var dt = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
             var dto = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+            using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
             // Build an object using every method on JsonObjectBuilder
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocument(
@@ -5969,6 +6007,7 @@ namespace Corvus.Text.Json.Tests
                     objBuilder.Add("string2".AsSpan(), "there".AsSpan());
                     objBuilder.Add("utf8string"u8, "world"u8);
                     objBuilder.AddNull("nullValue"u8);
+                    objBuilder.Add("elementValue"u8, parsedDoc.RootElement);
 
 #if NET
                     objBuilder.Add("int128"u8, Int128.Parse("170141183460469231731687303715884105727"));
@@ -6027,6 +6066,9 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(guid, root.GetProperty("guid").GetGuid());
             Assert.Equal(dt, root.GetProperty("datetime").GetDateTime());
             Assert.Equal(dto, root.GetProperty("datetimeoffset").GetDateTimeOffset());
+
+            var elementValue = root.GetProperty("elementValue");
+            Assert.Equal(3, elementValue.GetProperty("foo").GetInt32());
 
             // Nested array
             var nestedArray = root.GetProperty("array");

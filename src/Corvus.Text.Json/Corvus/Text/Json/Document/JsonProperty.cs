@@ -118,12 +118,6 @@ namespace Corvus.Text.Json
             return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, text, isPropertyName: true);
         }
 
-        internal bool EscapedNameEquals(ReadOnlySpan<byte> utf8Text)
-        {
-            Value.CheckValidInstance();
-            return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, utf8Text, isPropertyName: true, shouldUnescape: false);
-        }
-
         internal bool NameIsEscaped => Value.ParentDocument.ValueIsEscaped(Value.ParentDocumentIndex, isPropertyName: true);
 
         internal ReadOnlySpan<byte> RawNameSpan
