@@ -164,20 +164,19 @@ namespace Corvus.Text.Json.Internal
         {
             DbRow row = _parsedData.Get(index);
             Debug.Assert(row.TokenType == JsonTokenType.StartObject);
-            int endIndex = checked((row.NumberOfRows * DbRow.Size) + index);
+            int endIndex = index + GetDbSizeUnsafe(index, false);
             row = _parsedData.Get(endIndex);
 
             if (!row.HasPropertyMap)
             {
-                int propertyMapIndex = CreatePropertyMap(index);
+                int propertyMapIndex = CreatePropertyMap(index, endIndex);
                 _parsedData.SetPropertyMapIndex(endIndex, propertyMapIndex);
             }
         }
 
-        private int CreatePropertyMap(int startObjectIndex)
+        private int CreatePropertyMap(int startObjectIndex, int endIndex)
         {
             DbRow startObjectRow = _parsedData.Get(startObjectIndex);
-            int endIndex = checked((startObjectRow.NumberOfRows * DbRow.Size) + startObjectIndex);
             DbRow endObjectRow = _parsedData.Get(endIndex);
 
             int lengthOfEnd = endObjectRow.SizeOrLengthOrPropertyMapIndex;
@@ -225,7 +224,6 @@ namespace Corvus.Text.Json.Internal
 
             int propertyIndex = 0;
 
-            // Move to the row before the EndObject
             int index = startObjectIndex + DbRow.Size;
 
             while (index < endIndex)
@@ -265,8 +263,9 @@ namespace Corvus.Text.Json.Internal
                 }
                 else
                 {
-                    Debug.Assert(row.NumberOfRows > 0, "There must be at least one row in a non-simple value.");
-                    index = valueIndex + (DbRow.Size * (row.NumberOfRows + 1));
+                    int length = GetDbSizeUnsafe(valueIndex, true);
+                    Debug.Assert(length > 0, "There must be at least one row in a non-simple value.");
+                    index = valueIndex + length;
                 }
             }
 

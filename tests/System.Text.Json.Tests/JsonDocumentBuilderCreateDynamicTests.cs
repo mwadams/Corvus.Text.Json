@@ -4440,7 +4440,7 @@ namespace Corvus.Text.Json.Tests
                             }
                         },
                         escapeName: false,
-                        nameRequiresUnescaping);
+                        nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
                     case JsonValueKind.Array:
                         builder.Add(propertyName, (ref arrayBuilder) =>
@@ -4451,22 +4451,22 @@ namespace Corvus.Text.Json.Tests
                             }
                         },
                         escapeName: false,
-                        nameRequiresUnescaping);
+                        nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
                     case JsonValueKind.String:
-                        builder.AddRawString(propertyName, propertyValue.ValueSpan, propertyValue.ValueIsEscaped, escapeName: false, nameRequiresUnescaping);
+                        builder.AddRawString(propertyName, propertyValue.ValueSpan, propertyValue.ValueIsEscaped, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
                     case JsonValueKind.Number:
-                        builder.AddFormattedNumber(propertyName, propertyValue.ValueSpan, escapeName: false, nameRequiresUnescaping);
+                        builder.AddFormattedNumber(propertyName, propertyValue.ValueSpan, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
                     case JsonValueKind.True:
-                        builder.Add(propertyName, true, escapeName: false, nameRequiresUnescaping);
+                        builder.Add(propertyName, true, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
                     case JsonValueKind.False:
-                        builder.Add(propertyName, false, escapeName: false, nameRequiresUnescaping);
+                        builder.Add(propertyName, false, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
                     case JsonValueKind.Null:
-                        builder.AddNull(propertyName, escapeName: false, nameRequiresUnescaping);
+                        builder.AddNull(propertyName, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
                     default:
                         throw new NotSupportedException("Unsupported JSON value kind: " + propertyValue.ValueKind);
