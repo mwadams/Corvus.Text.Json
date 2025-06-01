@@ -5832,5 +5832,212 @@ namespace Corvus.Text.Json.Tests
             root.SetProperty("foo\"bar"u8, dto2);
             Assert.Equal(dto2, root.GetProperty("foo\"bar").GetDateTimeOffset());
         }
+
+        [Fact]
+        public static void CreateArray_AllTypes()
+        {
+            using var workspace = JsonWorkspace.Create();
+
+            var guid = Guid.NewGuid();
+            var dt = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
+            var dto = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+            // Build an array using every method on JsonArrayBuilder
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocument(
+                workspace,
+                (ref JsonArrayBuilder arrayBuilder) =>
+                {
+                    // Add primitive types
+                    arrayBuilder.Add(true);
+                    arrayBuilder.Add(false);
+                    arrayBuilder.Add((byte)42);
+                    arrayBuilder.Add((sbyte)-8);
+                    arrayBuilder.Add((short)-12345);
+                    arrayBuilder.Add((ushort)65535);
+                    arrayBuilder.Add(-123456); // int
+                    arrayBuilder.Add(654321u); // uint
+                    arrayBuilder.Add(long.MaxValue);
+                    arrayBuilder.Add(ulong.MaxValue);
+                    arrayBuilder.Add(3.14f);
+                    arrayBuilder.Add(-2.71d);
+                    arrayBuilder.Add(123.456m);
+                    arrayBuilder.Add(-789.01m);
+                    arrayBuilder.Add("hello");
+                    arrayBuilder.Add("there".AsSpan());
+                    arrayBuilder.Add("world"u8);
+                    arrayBuilder.AddNull();
+
+#if NET
+                    arrayBuilder.Add(Int128.Parse("170141183460469231731687303715884105727"));
+                    arrayBuilder.Add(UInt128.Parse("340282366920938463463374607431768211455"));
+                    arrayBuilder.Add((Half)1.5);
+#endif
+
+                    // Add Guid, DateTime, DateTimeOffset
+                    arrayBuilder.Add(guid);
+                    arrayBuilder.Add(dt);
+                    arrayBuilder.Add(dto);
+
+                    // Add nested array
+                    arrayBuilder.Add((ref JsonArrayBuilder ab) =>
+                    {
+                        ab.Add(1);
+                        ab.Add(2);
+                    });
+
+                    // Add nested object
+                    arrayBuilder.Add((ref JsonObjectBuilder ob) =>
+                    {
+                        ob.Add("foo"u8, "bar"u8);
+                    });
+                });
+
+            var root = doc.RootElement;
+
+            // Now verify the array contents
+            int i = 0;
+            Assert.True(root[i++].GetBoolean());
+            Assert.False(root[i++].GetBoolean());
+            Assert.Equal((byte)42, root[i++].GetByte());
+            Assert.Equal((sbyte)-8, root[i++].GetSByte());
+            Assert.Equal((short)-12345, root[i++].GetInt16());
+            Assert.Equal((ushort)65535, root[i++].GetUInt16());
+            Assert.Equal(-123456, root[i++].GetInt32());
+            Assert.Equal(654321u, root[i++].GetUInt32());
+            Assert.Equal(long.MaxValue, root[i++].GetInt64());
+            Assert.Equal(ulong.MaxValue, root[i++].GetUInt64());
+            Assert.Equal(3.14f, root[i++].GetSingle());
+            Assert.Equal(-2.71d, root[i++].GetDouble());
+            Assert.Equal(123.456m, root[i++].GetDecimal());
+            Assert.Equal(-789.01m, root[i++].GetDecimal());
+            Assert.Equal("hello", root[i++].GetString());
+            Assert.Equal("there", root[i++].GetString());
+            Assert.Equal("world", root[i++].GetString());
+            Assert.Equal(JsonValueKind.Null, root[i++].ValueKind);
+
+#if NET
+            Assert.Equal(Int128.Parse("170141183460469231731687303715884105727"), root[i++].GetInt128());
+            Assert.Equal(UInt128.Parse("340282366920938463463374607431768211455"), root[i++].GetUInt128());
+            Assert.Equal((Half)1.5, root[i++].GetHalf());
+#endif
+
+            Assert.Equal(guid, root[i++].GetGuid());
+            Assert.Equal(dt, root[i++].GetDateTime());
+            Assert.Equal(dto, root[i++].GetDateTimeOffset());
+
+            // Nested array
+            var nestedArray = root[i++];
+            Assert.Equal(2, nestedArray.GetArrayLength());
+            Assert.Equal(1, nestedArray[0].GetInt32());
+            Assert.Equal(2, nestedArray[1].GetInt32());
+
+            // Nested object
+            var nestedObject = root[i++];
+            Assert.Equal(JsonValueKind.Object, nestedObject.ValueKind);
+            Assert.Equal("bar", nestedObject.GetProperty("foo").GetString());
+        }
+        [Fact]
+        public static void CreateObject_AllTypes()
+        {
+            using var workspace = JsonWorkspace.Create();
+
+            var guid = Guid.NewGuid();
+            var dt = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
+            var dto = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+            // Build an object using every method on JsonObjectBuilder
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocument(
+                workspace,
+                (ref JsonObjectBuilder objBuilder) =>
+                {
+                    // Add primitive types
+                    objBuilder.Add("boolTrue"u8, true);
+                    objBuilder.Add("boolFalse"u8, false);
+                    objBuilder.Add("byte"u8, (byte)42);
+                    objBuilder.Add("sbyte"u8, (sbyte)-8);
+                    objBuilder.Add("short"u8, (short)-12345);
+                    objBuilder.Add("ushort"u8, (ushort)65535);
+                    objBuilder.Add("int"u8, -123456);
+                    objBuilder.Add("uint"u8, 654321u);
+                    objBuilder.Add("long"u8, long.MaxValue);
+                    objBuilder.Add("ulong"u8, ulong.MaxValue);
+                    objBuilder.Add("float"u8, 3.14f);
+                    objBuilder.Add("double"u8, -2.71d);
+                    objBuilder.Add("decimal1"u8, 123.456m);
+                    objBuilder.Add("decimal2"u8, -789.01m);
+                    objBuilder.Add("string1", "hello");
+                    objBuilder.Add("string2".AsSpan(), "there".AsSpan());
+                    objBuilder.Add("utf8string"u8, "world"u8);
+                    objBuilder.AddNull("nullValue"u8);
+
+#if NET
+                    objBuilder.Add("int128"u8, Int128.Parse("170141183460469231731687303715884105727"));
+                    objBuilder.Add("uint128"u8, UInt128.Parse("340282366920938463463374607431768211455"));
+                    objBuilder.Add("half"u8, (Half)1.5);
+#endif
+
+                    // Add Guid, DateTime, DateTimeOffset
+                    objBuilder.Add("guid"u8, guid);
+                    objBuilder.Add("datetime"u8, dt);
+                    objBuilder.Add("datetimeoffset"u8, dto);
+
+                    // Add nested array
+                    objBuilder.Add("array"u8, (ref JsonArrayBuilder ab) =>
+                    {
+                        ab.Add(1);
+                        ab.Add(2);
+                    });
+
+                    // Add nested object
+                    objBuilder.Add("object"u8, (ref JsonObjectBuilder ob) =>
+                    {
+                        ob.Add("foo"u8, "bar"u8);
+                    });
+                });
+
+            var root = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Object, root.ValueKind);
+
+            Assert.True(root.GetProperty("boolTrue").GetBoolean());
+            Assert.False(root.GetProperty("boolFalse").GetBoolean());
+            Assert.Equal((byte)42, root.GetProperty("byte").GetByte());
+            Assert.Equal((sbyte)-8, root.GetProperty("sbyte").GetSByte());
+            Assert.Equal((short)-12345, root.GetProperty("short").GetInt16());
+            Assert.Equal((ushort)65535, root.GetProperty("ushort").GetUInt16());
+            Assert.Equal(-123456, root.GetProperty("int").GetInt32());
+            Assert.Equal(654321u, root.GetProperty("uint").GetUInt32());
+            Assert.Equal(long.MaxValue, root.GetProperty("long").GetInt64());
+            Assert.Equal(ulong.MaxValue, root.GetProperty("ulong").GetUInt64());
+            Assert.Equal(3.14f, root.GetProperty("float").GetSingle());
+            Assert.Equal(-2.71d, root.GetProperty("double").GetDouble());
+            Assert.Equal(123.456m, root.GetProperty("decimal1").GetDecimal());
+            Assert.Equal(-789.01m, root.GetProperty("decimal2").GetDecimal());
+            Assert.Equal("hello", root.GetProperty("string1").GetString());
+            Assert.Equal("there", root.GetProperty("string2").GetString());
+            Assert.Equal("world", root.GetProperty("utf8string").GetString());
+            Assert.Equal(JsonValueKind.Null, root.GetProperty("nullValue").ValueKind);
+
+#if NET
+            Assert.Equal(Int128.Parse("170141183460469231731687303715884105727"), root.GetProperty("int128").GetInt128());
+            Assert.Equal(UInt128.Parse("340282366920938463463374607431768211455"), root.GetProperty("uint128").GetUInt128());
+            Assert.Equal((Half)1.5, root.GetProperty("half").GetHalf());
+#endif
+
+            Assert.Equal(guid, root.GetProperty("guid").GetGuid());
+            Assert.Equal(dt, root.GetProperty("datetime").GetDateTime());
+            Assert.Equal(dto, root.GetProperty("datetimeoffset").GetDateTimeOffset());
+
+            // Nested array
+            var nestedArray = root.GetProperty("array");
+            Assert.Equal(2, nestedArray.GetArrayLength());
+            Assert.Equal(1, nestedArray[0].GetInt32());
+            Assert.Equal(2, nestedArray[1].GetInt32());
+
+            // Nested object
+            var nestedObject = root.GetProperty("object");
+            Assert.Equal(JsonValueKind.Object, nestedObject.ValueKind);
+            Assert.Equal("bar", nestedObject.GetProperty("foo").GetString());
+        }
     }
 }

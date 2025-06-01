@@ -82,6 +82,20 @@ namespace Corvus.Text.Json
                 false);
         }
 
+        public void Add(string propertyName, string value)
+        {
+            _builder.AddProperty(
+                propertyName,
+                value);
+        }
+
+        public void Add(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
+        {
+            _builder.AddProperty(
+                propertyName,
+                value);
+        }
+
         public void AddNull(ReadOnlySpan<byte> propertyName, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
@@ -111,6 +125,26 @@ namespace Corvus.Text.Json
         }
 
         public void Add(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, DateTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, DateTimeOffset value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(

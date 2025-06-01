@@ -39,6 +39,16 @@ namespace Corvus.Text.Json
             _builder.AddItem((ref valueBuilder) => BuildValue(value, ref valueBuilder));
         }
 
+        public void Add(string value)
+        {
+            _builder.AddItem(value);
+        }
+
+        public void Add(ReadOnlySpan<char> value)
+        {
+            _builder.AddItem(value);
+        }
+
         public void Add(ReadOnlySpan<byte> utf8String)
         {
             _builder.AddItem(utf8String);
@@ -73,8 +83,17 @@ namespace Corvus.Text.Json
         {
             _builder.AddItem(value);
         }
-
         public void Add(Guid value)
+        {
+            _builder.AddItem(value);
+        }
+
+        public void Add(DateTime value)
+        {
+            _builder.AddItem(value);
+        }
+
+        public void Add(DateTimeOffset value)
         {
             _builder.AddItem(value);
         }
