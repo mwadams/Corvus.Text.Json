@@ -231,7 +231,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(new MemoryStream(data)))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 Assert.Equal(JsonValueKind.Number, root.ValueKind);
@@ -247,7 +247,7 @@ namespace Corvus.Text.Json.Tests
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc =
                 ParsedJsonDocument<JsonElement>.Parse(new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data: data)))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 Assert.Equal(JsonValueKind.Number, root.ValueKind);
@@ -262,7 +262,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
             using (ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(new MemoryStream(data)))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 Assert.Equal(JsonValueKind.Number, root.ValueKind);
@@ -278,7 +278,7 @@ namespace Corvus.Text.Json.Tests
             using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
             using (ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(
                 new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data: data)))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 Assert.Equal(JsonValueKind.Number, root.ValueKind);
@@ -456,7 +456,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
             using (ParsedJsonDocument<JsonElement> doc = await (stringDocBuilder?.Invoke(jsonString) ?? bytesDocBuilder?.Invoke(dataUtf8)))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 Assert.NotNull(doc);
 
@@ -567,7 +567,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 string actual = builderDoc.PrintJson();
 
@@ -583,7 +583,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleArrayJson))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -604,7 +604,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable parsedObject = builderDoc.RootElement;
 
@@ -637,7 +637,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable parsedObject = builderDoc.RootElement;
 
@@ -688,7 +688,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
             {
                 doc.RootElement.EnsurePropertyMap();
-                using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace);
+                using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
                 JsonElement.Mutable parsedObject = builderDoc.RootElement;
 
                 int age = parsedObject.GetProperty("age").GetInt32();
@@ -721,7 +721,7 @@ namespace Corvus.Text.Json.Tests
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
             {
-                using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace);
+                using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
 
                 JsonElement sourcePerson = doc.RootElement[0];
                 sourcePerson.EnsurePropertyMap();
@@ -773,7 +773,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("[true,false]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable parsedObject = builderDoc.RootElement;
                 bool first = parsedObject[0].GetBoolean();
@@ -788,7 +788,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -802,7 +802,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.BasicJson))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -825,7 +825,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 JsonElement.Mutable target = root[2];
@@ -855,7 +855,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -958,7 +958,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1058,7 +1058,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1155,7 +1155,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1258,7 +1258,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1335,7 +1335,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + ulong.MaxValue + "0  ", default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1407,7 +1407,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1449,7 +1449,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1477,7 +1477,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1502,7 +1502,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1539,7 +1539,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1570,7 +1570,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + str + "  "))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1643,7 +1643,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    1e+100000002"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1743,7 +1743,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
                 "[ 0, 1, 2, 3/*.14159*/           , /* 42, 11, hut, hut, hike! */ 4 ]",
                 options))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1802,7 +1802,7 @@ namespace Corvus.Text.Json.Tests
             var buffer = new ArrayBufferWriter<byte>(1024);
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{\"First\":1}", default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 JsonProperty<JsonElement.Mutable> property = root.EnumerateObject().First();
@@ -1925,7 +1925,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 Assert.Equal(expectedValue, doc.RootElement.GetString());
             }
@@ -1939,7 +1939,7 @@ namespace Corvus.Text.Json.Tests
             byte[] badUtf8 = new byte[] { 0x22, 0xEF, 0xBB, 0x22 };
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(badUtf8))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1962,7 +1962,7 @@ namespace Corvus.Text.Json.Tests
             // is UTF-8 EF BB BB.  So let's leave out a BB and put it in quotes.
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(new byte[] { 0x22, 0xEF, 0xBB, 0x22 }))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -1982,7 +1982,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 byte[] expected = Convert.FromBase64String("1234"); // new byte[3] { 215, 109, 248 }
 
@@ -2001,7 +2001,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 Assert.Equal(expected, doc.RootElement.GetBytesFromBase64());
 
@@ -2018,7 +2018,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 Assert.False(doc.RootElement.TryGetBytesFromBase64(out byte[] value));
                 Assert.Null(value);
@@ -2035,7 +2035,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -2071,7 +2071,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -2154,7 +2154,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
 
@@ -2173,7 +2173,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{ }"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 AssertExtensions.Throws<ArgumentNullException>(
                     "propertyName",
@@ -2190,7 +2190,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"value\"}"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 Assert.Throws<ArgumentException>(() => doc.RootElement.GetProperty("unpaired\uDFFE"));
 
@@ -2207,7 +2207,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 byte[] utf8PropertyName = Encoding.UTF8.GetBytes(propertyName);
@@ -2269,7 +2269,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 byte[] utf8PropertyName = Encoding.UTF8.GetBytes(propertyName);
@@ -2348,7 +2348,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 Assert.Equal(6, builderDoc.RootElement.GetPropertyCount());
                 ObjectEnumerator<JsonElement.Mutable> enumerator = builderDoc.RootElement.EnumerateObject();
@@ -2433,7 +2433,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("[0, 1, 2, 3, 4, 5]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 ArrayEnumerator<JsonElement.Mutable> structEnumerable = root.EnumerateArray();
@@ -2593,7 +2593,7 @@ namespace Corvus.Text.Json.Tests
 }";
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 ObjectEnumerator<JsonElement.Mutable> structEnumerable = root.EnumerateObject();
@@ -2792,7 +2792,7 @@ namespace Corvus.Text.Json.Tests
 }";
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable root = builderDoc.RootElement;
                 Assert.Equal(JsonValueKind.Object, root.ValueKind);
@@ -2818,7 +2818,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable element = builderDoc.RootElement;
                 Assert.Equal(expectedCount, element.GetPropertyCount());
@@ -2830,7 +2830,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ProjectLockJson))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(builderDoc.RootElement);
             }
@@ -2924,7 +2924,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("   null   "))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 Assert.True(jElement.ValueEquals((string)null));
@@ -2943,7 +2943,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("\"\""))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 Assert.True(jElement.ValueEquals(""));
@@ -2961,7 +2961,7 @@ namespace Corvus.Text.Json.Tests
             string jsonString = "\"" + lookup + "\"";
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 Assert.True(jElement.ValueEquals((string)lookup));
@@ -2978,7 +2978,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 Assert.True(jElement.ValueEquals(expected));
@@ -2994,7 +2994,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 Assert.False(jElement.ValueEquals(other));
@@ -3011,7 +3011,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 Assert.False(jElement.ValueEquals(lookup));
@@ -3026,7 +3026,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 Assert.False(jElement.ValueEquals(otherText));
@@ -3048,7 +3048,7 @@ namespace Corvus.Text.Json.Tests
             const string ErrorMessage = "The requested operation requires an element of type 'String', but the target element has type 'Object'.";
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 const string ThrowsAnyway = "throws-anyway";
@@ -3065,7 +3065,7 @@ namespace Corvus.Text.Json.Tests
             const string ErrorMessage = "The requested operation requires an element of type 'String', but the target element has type 'Object'.";
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable jElement = builderDoc.RootElement;
                 const string ThrowsAnyway = "throws-anyway";
@@ -3082,7 +3082,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
-            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
             {
                 JsonElement.Mutable first = builderDoc.RootElement.GetProperty("first");
                 JsonElement.Mutable last = builderDoc.RootElement.GetProperty("last");
@@ -3119,7 +3119,7 @@ namespace Corvus.Text.Json.Tests
             const int length = 3;
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
                 var outputSbyte = new sbyte[length];
                 var outputByte = new byte[length];
@@ -3208,7 +3208,7 @@ namespace Corvus.Text.Json.Tests
             const int rank = 1;
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
                 var outputSbyte = new sbyte[length];
                 var outputByte = new byte[length];
@@ -3297,7 +3297,7 @@ namespace Corvus.Text.Json.Tests
             const int rank = 1;
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
                 IJsonElement root = doc.RootElement;
                 int written;
@@ -3373,7 +3373,7 @@ namespace Corvus.Text.Json.Tests
             const int rank = 2;
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5,6],[7,8,9]]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
                 var outputSbyte = new sbyte[length];
                 var outputByte = new byte[length];
@@ -3462,7 +3462,7 @@ namespace Corvus.Text.Json.Tests
             const int rank = 2;
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
                 var outputSbyte = new sbyte[length];
                 var outputByte = new byte[length];
@@ -3551,7 +3551,7 @@ namespace Corvus.Text.Json.Tests
             const int rank = 2;
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
                 IJsonElement root = doc.RootElement;
                 int written;
@@ -3641,7 +3641,7 @@ namespace Corvus.Text.Json.Tests
             const int rank = 2;
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,\"stringValue\"],[6,7,8]]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
                 var outputSbyte = new sbyte[length];
                 var outputByte = new byte[length];
@@ -3839,7 +3839,7 @@ namespace Corvus.Text.Json.Tests
             const string ErrorMessage = "You cannot create a mutable copy of a mutable document. Consider calling Freeze() on the source document.";
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateDocument(workspace, "Hello"u8);
-            AssertExtensions.Throws<InvalidOperationException>(() => mutableBuilder.RootElement.CreateDocument(workspace), ErrorMessage);
+            AssertExtensions.Throws<InvalidOperationException>(() => mutableBuilder.RootElement.CreateDocumentBuilder(workspace), ErrorMessage);
         }
 
         [Fact]
@@ -3850,7 +3850,7 @@ namespace Corvus.Text.Json.Tests
             Assert.False(mutableBuilder.IsImmutable);
             mutableBuilder.Freeze();
             Assert.True(mutableBuilder.IsImmutable);
-            using var copyOfFrozen = mutableBuilder.RootElement.CreateDocument(workspace);
+            using var copyOfFrozen = mutableBuilder.RootElement.CreateDocumentBuilder(workspace);
             Assert.False(copyOfFrozen.IsImmutable);
         }
 
@@ -3875,7 +3875,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Act
@@ -3892,7 +3892,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Act
@@ -3911,7 +3911,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[10,20]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Act
@@ -3930,7 +3930,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Act & Assert
@@ -3943,7 +3943,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Act & Assert
@@ -3957,7 +3957,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[false]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, true);
@@ -3975,7 +3975,7 @@ namespace Corvus.Text.Json.Tests
             var guid2 = Guid.NewGuid();
             using var doc = ParsedJsonDocument<JsonElement>.Parse($"[\"{guid1}\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, guid2);
@@ -3991,7 +3991,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, (byte)42);
@@ -4006,7 +4006,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, long.MaxValue);
@@ -4021,7 +4021,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, (short)-12345);
@@ -4036,7 +4036,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, 3.14f);
@@ -4051,7 +4051,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, 2.718281828);
@@ -4066,12 +4066,12 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Use a JsonElement.Mutable as the value
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.CreateDocument(workspace);
+            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             var value = builderDoc2.RootElement;
 
             root.SetItem<JsonElement.Mutable>(0, value);
@@ -4083,7 +4083,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Simple ASCII
@@ -4114,7 +4114,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Simple ASCII
@@ -4145,7 +4145,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItemNull(0);
@@ -4160,7 +4160,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, (sbyte)-8);
@@ -4175,7 +4175,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, (ushort)65535);
@@ -4190,7 +4190,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, 4294967295u);
@@ -4205,7 +4205,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, 18446744073709551615ul);
@@ -4220,7 +4220,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, -123456);
@@ -4235,7 +4235,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetItem(0, 123.456m);
@@ -4251,7 +4251,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
@@ -4269,7 +4269,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
@@ -4287,7 +4287,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Half value1 = (Half)3.25;
@@ -4306,7 +4306,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2020-01-01T00:00:00Z\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             var dt1 = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
@@ -4324,7 +4324,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2020-01-01T00:00:00Z\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             var dto1 = new DateTimeOffset(2024, 5, 30, 12, 34, 56, TimeSpan.Zero);
@@ -4342,7 +4342,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[true]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, false));
@@ -4354,7 +4354,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"00000000-0000-0000-0000-000000000000\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
             var guid = Guid.NewGuid();
 
@@ -4367,7 +4367,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (byte)1));
@@ -4379,7 +4379,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (sbyte)1));
@@ -4391,7 +4391,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (short)1));
@@ -4403,7 +4403,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (ushort)1));
@@ -4415,7 +4415,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1));
@@ -4427,7 +4427,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1u));
@@ -4439,7 +4439,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1L));
@@ -4451,7 +4451,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1UL));
@@ -4463,7 +4463,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0f));
@@ -4475,7 +4475,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0));
@@ -4487,7 +4487,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0m));
@@ -4499,7 +4499,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, "test"u8));
@@ -4511,11 +4511,11 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.CreateDocument(workspace);
+            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             var value = builderDoc2.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(-1, value));
@@ -4527,7 +4527,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItemNull(-1));
@@ -4540,7 +4540,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Int128 value = Int128.One;
@@ -4554,7 +4554,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             UInt128 value = UInt128.One;
@@ -4568,7 +4568,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Half value = (Half)1.0;
@@ -4583,7 +4583,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Existing UTF-8 property name tests
@@ -4609,7 +4609,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement.GetProperty("a");
 
             // Existing UTF-8 property name tests
@@ -4635,7 +4635,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Existing UTF-8 property name test
@@ -4657,7 +4657,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": {\"c\": true}}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement.GetProperty("a");
 
             // Existing UTF-8 property name test
@@ -4680,7 +4680,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // ASCII property name
@@ -4701,7 +4701,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement.GetProperty("a");
 
             // ASCII property name
@@ -4722,7 +4722,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // ASCII property name
@@ -4735,7 +4735,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": {\"c\": true}}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement.GetProperty("a");
 
             // ASCII property name
@@ -4748,7 +4748,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // ASCII property name
@@ -4771,7 +4771,7 @@ namespace Corvus.Text.Json.Tests
             var guid2 = Guid.NewGuid();
             using var doc = ParsedJsonDocument<JsonElement>.Parse($"{{\"a\":\"{guid1}\"}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // ASCII property name
@@ -4796,7 +4796,7 @@ namespace Corvus.Text.Json.Tests
             var dt2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, dt1);
@@ -4816,7 +4816,7 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
@@ -4831,7 +4831,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, (byte)42);
@@ -4849,7 +4849,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, (sbyte)-8);
@@ -4867,7 +4867,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, (short)-12345);
@@ -4885,7 +4885,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, (ushort)65535);
@@ -4903,7 +4903,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, -123456);
@@ -4921,7 +4921,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 4294967295u);
@@ -4939,7 +4939,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, long.MaxValue);
@@ -4957,7 +4957,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 18446744073709551615ul);
@@ -4975,7 +4975,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 3.14f);
@@ -4993,7 +4993,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 2.718281828);
@@ -5011,7 +5011,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 123.456m);
@@ -5030,7 +5030,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
@@ -5051,7 +5051,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
@@ -5072,7 +5072,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Half value1 = (Half)3.25;
@@ -5094,7 +5094,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", true);
@@ -5114,7 +5114,7 @@ namespace Corvus.Text.Json.Tests
             var guid2 = Guid.NewGuid();
             using var doc = ParsedJsonDocument<JsonElement>.Parse($"{{\"a\":\"{guid1}\"}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", guid2);
@@ -5134,7 +5134,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", (byte)42);
@@ -5152,7 +5152,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", (sbyte)-8);
@@ -5170,7 +5170,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", (short)-12345);
@@ -5188,7 +5188,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", (ushort)65535);
@@ -5206,7 +5206,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", -123456);
@@ -5224,7 +5224,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", 4294967295u);
@@ -5242,7 +5242,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", long.MaxValue);
@@ -5260,7 +5260,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", 18446744073709551615ul);
@@ -5278,7 +5278,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", 3.14f);
@@ -5296,7 +5296,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", 2.718281828);
@@ -5314,7 +5314,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", 123.456m);
@@ -5333,7 +5333,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
@@ -5354,7 +5354,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
@@ -5375,7 +5375,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Half value1 = (Half)3.25;
@@ -5399,7 +5399,7 @@ namespace Corvus.Text.Json.Tests
             var dt2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", dt1);
@@ -5416,7 +5416,7 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
@@ -5431,7 +5431,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // ASCII property name
@@ -5452,7 +5452,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // ASCII property name
@@ -5473,7 +5473,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // ASCII property name
@@ -5495,7 +5495,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // ASCII property name
@@ -5516,7 +5516,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":false,\"foo\\\"bar\":true}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Non-ASCII property name
@@ -5533,7 +5533,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Non-ASCII property name
@@ -5550,7 +5550,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":\"a\",\"foo\\\"bar\":\"b\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Non-ASCII property name
@@ -5567,11 +5567,11 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("123");
-            using var builderDoc2 = doc2.RootElement.CreateDocument(workspace);
+            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             var value = builderDoc2.RootElement;
 
             // Non-ASCII property name
@@ -5588,7 +5588,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, long.MaxValue);
@@ -5603,7 +5603,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, ulong.MaxValue);
@@ -5618,7 +5618,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, 3.14f);
@@ -5633,7 +5633,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, 2.718281828);
@@ -5648,7 +5648,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, 123.456m);
@@ -5663,7 +5663,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetPropertyNull("héllo"u8);
@@ -5679,7 +5679,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
@@ -5697,7 +5697,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
@@ -5715,7 +5715,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             Half value1 = (Half)3.25;
@@ -5734,7 +5734,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, (byte)123);
@@ -5749,7 +5749,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, (sbyte)-42);
@@ -5764,7 +5764,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, (short)-12345);
@@ -5779,7 +5779,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, (ushort)65535);
@@ -5794,7 +5794,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, 4294967295u);
@@ -5811,7 +5811,7 @@ namespace Corvus.Text.Json.Tests
             var guid2 = Guid.NewGuid();
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":\"00000000-0000-0000-0000-000000000000\",\"foo\\\"bar\":\"00000000-0000-0000-0000-000000000000\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Non-ASCII property name
@@ -5830,7 +5830,7 @@ namespace Corvus.Text.Json.Tests
             var dt2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":\"2020-01-01T00:00:00Z\",\"foo\\\"bar\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Non-ASCII property name
@@ -5849,7 +5849,7 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":\"2020-01-01T00:00:00Z\",\"foo\\\"bar\":\"2020-01-01T00:00:00+02:00\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocument(workspace);
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             var root = builderDoc.RootElement;
 
             // Non-ASCII property name

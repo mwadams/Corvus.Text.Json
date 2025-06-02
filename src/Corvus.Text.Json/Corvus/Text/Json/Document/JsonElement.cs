@@ -69,6 +69,12 @@ namespace Corvus.Text.Json
             }
         }
 
+        [CLSCompliant(false)]
+        public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+        {
+            return workspace.CreateDocumentBuilder<JsonElement, Mutable>(this);
+        }
+
         /// <summary>
         /// Create an instance of a <see cref="JsonElement/> from a <see cref="IJsonElement"/>.
         /// </summary>

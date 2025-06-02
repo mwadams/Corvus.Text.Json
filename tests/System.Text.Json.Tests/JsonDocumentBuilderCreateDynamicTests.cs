@@ -3832,7 +3832,7 @@ namespace Corvus.Text.Json.Tests
 
             // Use a JsonElement.Mutable as the value
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.CreateDocument(workspace);
+            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             var value = builderDoc2.RootElement;
 
             root.SetItem<JsonElement.Mutable>(0, value);
@@ -4209,7 +4209,7 @@ namespace Corvus.Text.Json.Tests
             var root = builderDoc.RootElement;
 
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.CreateDocument(workspace);
+            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             var value = builderDoc2.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(-1, value));

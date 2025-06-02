@@ -140,7 +140,7 @@ Console.WriteLine();
 // Create a workspace for manipulating documents
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using JsonDocumentBuilder<JsonElement.Mutable> initializedBuilder = documentB1.RootElement.CreateDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> initializedBuilder = documentB1.RootElement.CreateDocumentBuilder(workspace);
 
 Console.WriteLine(initializedBuilder.RootElement.ToString());
 
@@ -172,7 +172,7 @@ using ParsedJsonDocument<JsonElement> documentB8 = ParsedJsonDocument<JsonElemen
         }
         """);
 
-using JsonDocumentBuilder<JsonElement.Mutable> b8Builder = documentB8.RootElement.CreateDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> b8Builder = documentB8.RootElement.CreateDocumentBuilder(workspace);
 
 Console.WriteLine(b8Builder.RootElement.ToString());
 
@@ -194,7 +194,7 @@ Console.WriteLine("*** BEFORE ***");
 Console.WriteLine("**************");
 Console.WriteLine();
 
-using JsonDocumentBuilder<JsonElement.Mutable> b8Builder2 = documentB8.RootElement.CreateDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> b8Builder2 = documentB8.RootElement.CreateDocumentBuilder(workspace);
 
 Console.WriteLine(b8Builder2.RootElement.ToString());
 
@@ -379,7 +379,7 @@ string json =
 var personDoc = ParsedJsonDocument<JsonElement>.Parse(json);
 
 
-using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").CreateDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").CreateDocumentBuilder(workspace);
 
 // Get the name element
 JsonElement.Mutable nameValue = nameValueDoc.RootElement;

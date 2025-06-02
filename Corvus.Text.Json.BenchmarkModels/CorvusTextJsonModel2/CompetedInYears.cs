@@ -91,9 +91,9 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         }
     }
 
-    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
-        return workspace.CreateDocument<CompetedInYears, Mutable>(this);
+        return workspace.CreateDocumentBuilder<CompetedInYears, Mutable>(this);
     }
 
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
@@ -120,7 +120,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
         Debug.Assert(cvb.MemberCount == 1);

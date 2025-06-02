@@ -111,7 +111,7 @@ namespace Corvus.Text.Json
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
 
         [CLSCompliant(false)]
-        public JsonDocumentBuilder<TMutableElement> CreateDocument<TElement, TMutableElement>(TElement sourceElement)
+        public JsonDocumentBuilder<TMutableElement> CreateDocumentBuilder<TElement, TMutableElement>(TElement sourceElement)
             where TElement : struct, IJsonElement<TElement>
             where TMutableElement : struct, IMutableJsonElement<TMutableElement>
         {
@@ -122,7 +122,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public JsonDocumentBuilder<TElement> CreateDocument<TElement>(int initialCapacity = 30, int initialValueBufferSize = 8192)
+        public JsonDocumentBuilder<TElement> CreateDocumentBuilder<TElement>(int initialCapacity = 30, int initialValueBufferSize = 8192)
             where TElement : struct, IMutableJsonElement<TElement>
         {
             JsonDocumentBuilder<TElement> result = new(this);

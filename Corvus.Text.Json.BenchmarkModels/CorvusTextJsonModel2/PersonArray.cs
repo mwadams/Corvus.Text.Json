@@ -157,10 +157,10 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
         }
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
@@ -168,9 +168,9 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
         return documentBuilder;
     }
 
-    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
-        return workspace.CreateDocument<PersonArray, Mutable>(this);
+        return workspace.CreateDocumentBuilder<PersonArray, Mutable>(this);
     }
 
     public static PersonArray From<T>(in T instance)

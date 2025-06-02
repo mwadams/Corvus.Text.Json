@@ -13,7 +13,7 @@ namespace Corvus.Text.Json.Tests
         protected override JsonDocumentBuilder<JsonElement.Mutable> PrepareDocument(string jsonIn, JsonWorkspace workspace)
         {
             var jsonDocument = ParsedJsonDocument<JsonElement>.Parse(jsonIn, s_options);
-            return jsonDocument.RootElement.CreateDocument(workspace);
+            return jsonDocument.RootElement.CreateDocumentBuilder(workspace);
         }
 
         protected override void WriteSingleValue(JsonDocumentBuilder<JsonElement.Mutable> document, Utf8JsonWriter writer)
@@ -41,7 +41,7 @@ namespace Corvus.Text.Json.Tests
         protected override JsonDocumentBuilder<JsonElement.Mutable> PrepareDocument(string jsonIn, JsonWorkspace workspace)
         {
             var jsonDocument = ParsedJsonDocument<JsonElement>.Parse($" [  {jsonIn}  ]", s_options);
-            return jsonDocument.RootElement.CreateDocument(workspace);
+            return jsonDocument.RootElement.CreateDocumentBuilder(workspace);
         }
 
         protected override void WriteSingleValue(JsonDocumentBuilder<JsonElement.Mutable> document, Utf8JsonWriter writer)
@@ -296,7 +296,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDocument = ParsedJsonDocument<JsonElement>.Parse(utf8Data))
-            using (JsonDocumentBuilder<JsonElement.Mutable> document = parsedDocument.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> document = parsedDocument.RootElement.CreateDocumentBuilder(workspace))
             using (MemoryStream stream = new MemoryStream(Array.Empty<byte>()))
             using (Utf8JsonWriter writer = new Utf8JsonWriter(stream))
             {
@@ -1137,7 +1137,7 @@ null,
             var buffer = new ArrayBufferWriter<byte>(jsonIn.Length);
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(jsonIn, optionsCopy))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocument(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
                 using (var writer = new Utf8JsonWriter(buffer))
                 {

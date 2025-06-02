@@ -179,9 +179,9 @@ public readonly struct Person : IJsonElement<Person>
         return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
     }
 
-    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
-        return workspace.CreateDocument<Person, Mutable>(this);
+        return workspace.CreateDocumentBuilder<Person, Mutable>(this);
     }
 
     private void CheckValidInstance()
@@ -216,7 +216,7 @@ public readonly struct Person : IJsonElement<Person>
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.StartObject();
         Builder.Create(ref cvb, age, name, competedInYears);
@@ -228,7 +228,7 @@ public readonly struct Person : IJsonElement<Person>
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);

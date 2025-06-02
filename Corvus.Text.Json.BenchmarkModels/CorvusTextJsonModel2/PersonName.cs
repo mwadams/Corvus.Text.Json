@@ -89,10 +89,10 @@ public readonly struct PersonName : IJsonElement<PersonName>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, in NameComponent.Builder.Source firstName, in NameComponent.Builder.Source lastName, in OtherNames.Builder.Source otherNames, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in NameComponent.Builder.Source firstName, in NameComponent.Builder.Source lastName, in OtherNames.Builder.Source otherNames, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.StartObject();
         Builder.Create(ref cvb, firstName, lastName, otherNames);
@@ -101,19 +101,19 @@ public readonly struct PersonName : IJsonElement<PersonName>
         return documentBuilder;
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }
 
-    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
-        return workspace.CreateDocument<PersonName, Mutable>(this);
+        return workspace.CreateDocumentBuilder<PersonName, Mutable>(this);
     }
 
     /// <summary>
