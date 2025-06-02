@@ -499,7 +499,7 @@ namespace Corvus.Text.Json.Internal
             ReadOnlySpan<byte> fractional,
             int exponent)
         {
-            return (integral.Length == 0 && fractional.Length == 0) || exponent >= fractional.Length;
+            return (integral.Length == 0 && fractional.Length == 0) || exponent > 0;
         }
 
         /// <summary>
@@ -531,29 +531,23 @@ namespace Corvus.Text.Json.Internal
 
             int signMultiplier = leftIsNegative ? -1 : 1;
 
-            // Step 2: Compare effective magnitudes of the numbers
-            int leftEffectiveIntegralLength = leftIntegral.Length + leftExponent;
-            int rightEffectiveIntegralLength = rightIntegral.Length + rightExponent;
+            int leftTotalLength = leftIntegral.Length + leftFractional.Length;
+            int rightTotalLength = rightIntegral.Length + rightFractional.Length;
 
-            if (leftEffectiveIntegralLength != rightEffectiveIntegralLength)
+            // Step 2: Compare effective magnitudes of the numbers
+            int leftEffectiveLength = leftTotalLength + leftExponent;
+            int rightEffectiveLength = rightTotalLength + rightExponent;
+
+            if (leftEffectiveLength != rightEffectiveLength)
             {
-                return (leftEffectiveIntegralLength > rightEffectiveIntegralLength ? 1 : -1) * signMultiplier;
+                return (leftEffectiveLength > rightEffectiveLength ? 1 : -1) * signMultiplier;
             }
 
             // Step 3: Compare digits, accounting for exponent difference
-            int leftIntegralDigits = Math.Max(-leftExponent, leftIntegral.Length);
-            int rightIntegralDigits = Math.Max(-rightExponent, rightIntegral.Length);
+            int leftLeadingZeros = leftExponent < 0 ? Math.Max(0, -(leftTotalLength + leftExponent)) : 0;
+            int rightLeadingZeros = rightExponent < 0 ? Math.Max(0, -(rightTotalLength + rightExponent)) : 0;
 
-            int leftFractionalDigits = Math.Max(leftExponent, leftFractional.Length);
-            int rightFractionalDigits = Math.Max(rightExponent, rightFractional.Length);
-
-            int leftDigitLength = leftIntegralDigits + leftFractionalDigits;
-            int rightDigitLength = rightIntegralDigits + rightFractionalDigits;
-
-            int leftLeadingZeros = Math.Max(0, leftIntegralDigits - leftIntegral.Length);
-            int rightLeadingZeros = Math.Max(0, rightIntegralDigits - rightIntegral.Length);
-
-            int maxDigitLength = Math.Max(leftDigitLength, rightDigitLength);
+            int maxDigitLength = Math.Max(leftTotalLength, rightTotalLength);
 
             // Adjust so we don't bother with matching leading zeros
             if (leftLeadingZeros > rightLeadingZeros)
@@ -636,10 +630,12 @@ namespace Corvus.Text.Json.Internal
             // Determine if that significand has a fractional component. If so, return false as it cannot be an exact multiple of an integer
             // Note that this test encompasses the pathological case of netExponent < 0, which makes some component of the integral part
             // fractional.
-            if (netExponent < fractional.Length)
+            if (netExponent < 0)
             {
                 return false;
             }
+
+            int totalLength = integral.Length + fractional.Length;
 
             // Step 4.
             // Determine if the divisor is one of the common "fast path" divisors and use that (e.g. 1, 2, 5, 10) otherwise use the general purpose
@@ -649,21 +645,21 @@ namespace Corvus.Text.Json.Internal
                 case 1:
                     return true; // 0 mod 1 == 0
                 case 2:
-                    return IsDivisibleByTwo(integral, fractional, integral.Length + netExponent - 1);
+                    return IsDivisibleByTwo(integral, fractional, totalLength + netExponent - 1);
                 case 3:
                     return IsDivisibleByThree(integral, fractional);
                 case 4:
-                    return IsDivisibleByFour(integral, fractional, integral.Length + netExponent - 1);
+                    return IsDivisibleByFour(integral, fractional, totalLength + netExponent - 1);
                 case 5:
-                    return IsDivisibleByFive(integral, fractional, integral.Length + netExponent - 1);
+                    return IsDivisibleByFive(integral, fractional, totalLength + netExponent - 1);
                 case 6:
-                    return IsDivisibleBySix(integral, fractional, integral.Length + netExponent - 1);
+                    return IsDivisibleBySix(integral, fractional, totalLength + netExponent - 1);
                 case 8:
-                    return IsDivisibleByEight(integral, fractional, integral.Length + netExponent - 1);
+                    return IsDivisibleByEight(integral, fractional, totalLength + netExponent - 1);
                 case 10:
-                    return IsDivisibleByTen(integral, fractional, integral.Length + netExponent - 1);
+                    return IsDivisibleByTen(integral, fractional, totalLength + netExponent - 1);
                 default:
-                    return GeneralPurposeIsMultipleOf(integral, fractional, integral.Length + netExponent - 1, divisor);
+                    return GeneralPurposeIsMultipleOf(integral, fractional, totalLength + netExponent - 1, divisor);
             }
         }
 
@@ -718,10 +714,12 @@ namespace Corvus.Text.Json.Internal
             // Determine if that significand has a fractional component. If so, return false as it cannot be an exact multiple of an integer
             // Note that this test encompasses the pathological case of netExponent < 0, which makes some component of the integral part
             // fractional.
-            if (netExponent < fractional.Length)
+            if (netExponent < 0)
             {
                 return false;
             }
+
+            int totalLength = integral.Length + fractional.Length;
 
             // Step 4.
             // Determine if the divisor is one of the common "fast path" divisors and use that (e.g. 1, 2, 5, 10) otherwise use the general purpose
@@ -733,7 +731,7 @@ namespace Corvus.Text.Json.Internal
 
             if (divisor.Equals(2))
             {
-                return IsDivisibleByTwo(integral, fractional, integral.Length + netExponent - 1);
+                return IsDivisibleByTwo(integral, fractional, totalLength + netExponent - 1);
             }
 
 
@@ -744,30 +742,30 @@ namespace Corvus.Text.Json.Internal
 
             if (divisor.Equals(4))
             {
-                return IsDivisibleByFour(integral, fractional, integral.Length + netExponent - 1);
+                return IsDivisibleByFour(integral, fractional, totalLength + netExponent - 1);
             }
 
             if (divisor.Equals(5))
             {
-                return IsDivisibleByFive(integral, fractional, integral.Length + netExponent - 1);
+                return IsDivisibleByFive(integral, fractional, totalLength + netExponent - 1);
             }
 
             if (divisor.Equals(6))
             {
-                return IsDivisibleBySix(integral, fractional, integral.Length + netExponent - 1);
+                return IsDivisibleBySix(integral, fractional, totalLength + netExponent - 1);
             }
 
             if (divisor.Equals(8))
             {
-                return IsDivisibleByEight(integral, fractional, integral.Length + netExponent - 1);
+                return IsDivisibleByEight(integral, fractional, totalLength + netExponent - 1);
             }
 
             if (divisor.Equals(10))
             {
-                return IsDivisibleByTen(integral, fractional, integral.Length + netExponent - 1);
+                return IsDivisibleByTen(integral, fractional, totalLength + netExponent - 1);
             }
 
-            return GeneralPurposeIsMultipleOf(integral, fractional, integral.Length + netExponent - 1, divisor);
+            return GeneralPurposeIsMultipleOf(integral, fractional, totalLength + netExponent - 1, divisor);
         }
 
         public static void ParseNumber(

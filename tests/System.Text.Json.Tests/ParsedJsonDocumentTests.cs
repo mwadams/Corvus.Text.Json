@@ -810,6 +810,25 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
+        public static void DeepEqualsOutOfOrder_RightEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo": "hello", "bar": "world" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "f\u006fo": "hello" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.DeepEquals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
         public static void DeepEquals_NotEquals()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
@@ -4669,6 +4688,18 @@ namespace Corvus.Text.Json.Tests
                 Assert.Equal(0, written);
 #endif
             }
+        }
+
+        [Theory]
+        [InlineData("foo", 3)]
+        [InlineData("fo", 2)]
+        [InlineData("f", 1)]
+        [InlineData("", 0)]
+        [InlineData("\uD83D\uDCA9", 1)]
+        [InlineData("\uD83D\uDCA9\uD83D\uDCA9", 2)]
+        public static void GetUtf8StringLengthWorks(string inputString, int length)
+        {
+            Assert.Equal(length, JsonElementHelpers.GetUtf8StringLength(Encoding.UTF8.GetBytes(inputString)));
         }
     }
 

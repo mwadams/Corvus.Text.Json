@@ -11,22 +11,22 @@ public class JsonElementNumberTest
     [InlineData(false, "1", "", 3, false, "1000", "", 0, 0)] // Different Exponents
     [InlineData(false, "123", "", 0, false, "124", "", 0, -1)] // Different Integral Parts
     [InlineData(false, "12", "", 0, false, "124", "", 0, -1)] // Integral Parts differ by an order of magnitude
-    [InlineData(false, "1", "23", 0, false, "1", "24", 0, -1)] // Different Fractional Parts
+    [InlineData(false, "1", "23", -2, false, "1", "24", -2, -1)] // Different Fractional Parts
     [InlineData(false, "1", "", 100, false, "1", "", 99, 1)] // Very Large Numbers
     [InlineData(false, "1", "", -100, false, "1", "", -99, -1)] // Very Small Numbers
     [InlineData(false, "1", "23", 100, false, "1", "23", 99, 1)] // Very Large Numbers
     [InlineData(false, "1", "23", -100, false, "1", "23", -99, -1)] // Very Small Numbers
-    [InlineData(false, "1", "23", 2, false, "123", "", 0, 0)] // Exponent Adjustment
-    [InlineData(false, "123", "", -2, false, "1", "23", 0, 0)] // Exponent Adjustment (Negative)
+    [InlineData(false, "1", "23", 2, false, "123", "", 2, 0)] // Exponent Adjustment
+    [InlineData(false, "123", "", -2, false, "1", "23", -2, 0)] // Exponent Adjustment (Negative)
     [InlineData(false, "0", "123", 0, false, "0", "123", 0, 0)] // Zero with Fractional Part
-    [InlineData(false, "123", "45", 0, false, "123", "46", 0, -1)] // Mixed Integral and Fractional
-    [InlineData(false, "123", "45", 0, false, "124", "00", 0, -1)] // Mixed Integral and Fractional
+    [InlineData(false, "123", "45", -2, false, "123", "46", -2, -1)] // Mixed Integral and Fractional
+    [InlineData(false, "123", "45", -2, false, "124", "00", -2, -1)] // Mixed Integral and Fractional
     [InlineData(false, "123", "", 0, false, "1234", "", 0, -1)] // Different Lengths
-    [InlineData(false, "12345", "", -2, false, "123", "45", 0, 0)] // Mixed Integral and Fractional with Exponent
-    [InlineData(true, "1", "23", 2, true, "123", "", 0, 0)] // Negative Numbers with Exponent Adjustment
-    [InlineData(true, "123", "", -2, true, "1", "23", 0, 0)] // Negative Numbers with Exponent Adjustment (Negative)
+    [InlineData(false, "12345", "", -2, false, "123","45", -2, 0)] // Mixed Integral and Fractional with Exponent
+    [InlineData(true, "1", "23", 2, true, "123", "", 2, 0)] // Negative Numbers with Exponent Adjustment
+    [InlineData(true, "123", "", -2, true, "1", "23", -2, 0)] // Negative Numbers with Exponent Adjustment (Negative)
     [InlineData(false, "1", "12345678901234567890", 0, false, "1", "12345678901234567891", 0, -1)] // Very Long Fractional Parts
-    [InlineData(false, "12345678901234567890", "", 0, false, "12345678901234567891", "", 0, -1)] // Very Long Integral Parts
+    [InlineData(false, "12345678901234567891", "", 0, false, "12345678901234567892", "", 0, -1)] // Very Long Integral Parts
     public void CompareNormalizedJsonNumbersTests(
         bool leftIsNegative,
         string leftIntegral,
@@ -80,7 +80,8 @@ public class JsonElementNumberTest
     [InlineData("57", "", 0, 8, 0, false)] // Not divisible by 8 (smaller than 100)
     [InlineData("100", "", 0, 10, 0, true)] // Divisible by 10
     [InlineData("101", "", 0, 10, 0, false)] // Not divisible by 10
-    [InlineData("123", "45", 0, 1, 0, false)] // Fractional part makes it not a multiple
+    [InlineData("123", "45", 0, 1, 0, true)] // No fractional exponent.
+    [InlineData("123", "45", -2, 1, 0, false)] // Fractional part makes it not a multiple
     [InlineData("123", "", -2, 1, -2, true)] // Adjusted exponent matches divisor
     [InlineData("1", "23", 0, 1, -2, true)] // Adjusted exponent matches divisor
     [InlineData("1", "23", 0, 1, 2, false)] // Adjusted exponent matches divisor
@@ -111,8 +112,8 @@ public class JsonElementNumberTest
 
     [Theory]
     [InlineData("123456789", "", 0, 3, 0, true)] // 123456789 is a multiple of 3
-    [InlineData("123456789", "12", 100, 112, 0, true)] // 123456789.12E100 is a multiple of 112
-    [InlineData("123456789", "121", 100, 112, 0, false)] // 123456789.121E100 is not a multiple of 112
+    [InlineData("123456789", "12", 100, 112, 0, true)] // 123456789.12E98 is a multiple of 112
+    [InlineData("123456789", "121", 100, 112, 0, false)] // 123456789.121E97 is not a multiple of 112
     [InlineData("123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789", "123456789123456789123456789123456789123456789123456789", 1200, 112, 0, false)] // Very large number is not a multiple of 112
     [InlineData("999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999", "999999999999999999999999999999999999999999999999999999", 54, 9, 0, true)] // Very large number is a multiple of 9
     public void IsMultipleOf_GeneralPurposeDivisor_ReturnsExpected(
@@ -202,7 +203,8 @@ public class JsonElementNumberTest
     [InlineData("56", "", 0, 8, 0, true)] // Divisible by 8 (smaller than 100)
     [InlineData("57", "", 0, 8, 0, false)] // Not divisible by 8 (smaller than 100)    [InlineData("100", "", 0, 10, 0, true)] // Divisible by 10
     [InlineData("101", "", 0, 10, 0, false)] // Not divisible by 10
-    [InlineData("123", "45", 0, 1, 0, false)] // Fractional part makes it not a multiple
+    [InlineData("123", "45", 0, 1, 0, true)] // No fractional exponent.
+    [InlineData("123", "45", -2, 1, 0, false)] // Fractional part makes it not a multiple
     [InlineData("123", "", -2, 1, -2, true)] // Adjusted exponent matches divisor
     [InlineData("1", "23", 0, 1, -2, true)] // Adjusted exponent matches divisor
     [InlineData("1", "23", 0, 1, 2, false)] // Adjusted exponent matches divisor
