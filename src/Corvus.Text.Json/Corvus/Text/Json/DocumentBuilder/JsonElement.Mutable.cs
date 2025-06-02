@@ -112,28 +112,6 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentFormattedNumber(JsonWorkspace workspace, string formattedNumber)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItemFormattedNumber(formattedNumber);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
-
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentFormattedNumber(JsonWorkspace workspace, ReadOnlySpan<char> formattedNumber)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocument<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItemFormattedNumber(formattedNumber);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
-
-        [CLSCompliant(false)]
         public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, long value)
         {
             // Create the document builder without a MetadataDb

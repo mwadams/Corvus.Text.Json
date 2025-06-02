@@ -386,17 +386,10 @@ namespace Corvus.Text.Json.Internal
             }
             else
             {
-                ////// We don't need to reallocate, so just copy the data up
-                ////// This is also the code path if lengthToInsert is negative. We will be
-                ////// copying the data down.
-                ////if (lengthToInsert > 0)
-                ////{
-                ////    Buffer.BlockCopy(_data, endIndex, _data, endIndex + lengthToInsert, Length - endIndex);
-                ////}
-                ////else
-                ////{
+                // We don't need to reallocate, so just copy the data up
+                // This is also the code path if lengthToInsert is negative. We will be
+                // copying the data down.
                 Buffer.BlockCopy(_data, endIndex, _data, endIndex + lengthToInsert, Length - endIndex);
-                ////}
             }
 
             Length += lengthToInsert;
@@ -455,7 +448,10 @@ namespace Corvus.Text.Json.Internal
                 // of simple values.
                 //
                 // If the off-by-one relationship does not hold, then one of the values was
-                // more than one row, making it a complex object.
+                // more than one row, making it a complex object. This is indicated by setting
+                // the top bit of currentLenght (which, handily, is just negating the value).
+                // The current length must be greater than zero, as we must have at least
+                // one row for this condition to hold.
                 if (currentLength + 1 != numberOfRows)
                 {
                     currentLength *= -1;

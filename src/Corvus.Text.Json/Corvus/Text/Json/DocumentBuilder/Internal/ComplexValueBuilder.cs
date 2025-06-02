@@ -98,19 +98,6 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
-        public void AddPropertyFormattedNumber(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
-        {
-            AddStringValue(JsonTokenType.PropertyName, propertyName);
-            _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: value.IndexOfAny('e', 'E') >= 0);
-            _memberCount += 1;
-            _rowCount += 2;
-        }
-
-        public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
-        {
-            AddPropertyRawString(propertyName, value, true, false, valueRequiresUnescaping);
-        }
-
         public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -642,19 +629,7 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
-        public void AddItemFormattedNumber(string value)
-        {
-            AddItemFormattedNumber(value.AsSpan());
-        }
-
         public void AddItemFormattedNumber(ReadOnlySpan<byte> value)
-        {
-            _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: false);
-            _memberCount += 1;
-            _rowCount++;
-        }
-
-        public void AddItemFormattedNumber(ReadOnlySpan<char> value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;

@@ -979,30 +979,6 @@ namespace Corvus.Text.Json.Internal
             return offset;
         }
 
-        protected int StoreRawNumberValue(ReadOnlySpan<char> unescapedNumberValueChars)
-        {
-            // This is a number, so it is UTF-8 compatible.
-            int utf8Length = Encoding.UTF8.GetMaxByteCount(unescapedNumberValueChars.Length);
-            byte[]? utf8Buffer = null;
-            Span<byte> unescapedNumberValue = utf8Length <= JsonConstants.StackallocByteThreshold ?
-                stackalloc byte[JsonConstants.StackallocByteThreshold] :
-                (utf8Buffer = ArrayPool<byte>.Shared.Rent(utf8Length)).AsSpan();
-
-            try
-            {
-                unescapedNumberValue = unescapedNumberValue.Slice(0, JsonReaderHelper.TranscodeHelper(unescapedNumberValueChars, unescapedNumberValue));
-                return StoreRawNumberValue(unescapedNumberValue);
-            }
-            finally
-            {
-                if (utf8Buffer is not null)
-                {
-                    unescapedNumberValue.Clear();
-                    ArrayPool<byte>.Shared.Return(utf8Buffer);
-                }
-            }
-        }
-
         protected ReadOnlyMemory<byte> ReadDynamicUnescapedUtf8String(int offset)
         {
             // The first 4 bytes are the type and length
