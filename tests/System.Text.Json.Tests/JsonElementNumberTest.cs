@@ -146,6 +146,7 @@ public class JsonElementNumberTest
     [InlineData(false, "123", "45", 2, false, "123", "45", -1, false)] // Different exponent
     [InlineData(false, "123", "45", 2, false, "123", "46", 2, false)] // Different digits
     [InlineData(false, "1", "2345", 2, false, "12", "345", 2, true)] // Same digits, different split
+    [InlineData(false, "12345", "", 2, false, "1234", "5", 2, true)] // left is longer than right
     [InlineData(false, "", "", 0, false, "", "", 0, true)] // Both zero
     [InlineData(true, "", "", 0, false, "", "", 0, false)] // Zero, different sign
     [InlineData(false, "12345678901234567890", "", 0, false, "12345678901234567890", "", 0, true)] // Long numbers, equal
