@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
@@ -866,6 +867,23 @@ namespace Corvus.Text.Json
             return JsonReaderHelper.TranscodeHelper(_utf8Json.Slice(start, end - start).Span);
         }
 
+        internal static ParsedJsonDocument<T> ParseUnrented(ReadOnlyMemory<byte> utf8Json, JsonReaderOptions? options = null)
+        {
+            MetadataDb db = MetadataDb.CreateRented(utf8Json.Length, convertToAlloc: true);
+            var stack = new StackRowStack(JsonDocumentOptions.DefaultMaxDepth * StackRow.Size);
+            try
+            {
+                Parse(utf8Json.Span, options ?? default, ref db, ref stack);
+            }
+            finally
+            {
+                stack.Dispose();
+            }
+
+            db.CompleteAllocations();
+
+            return new ParsedJsonDocument<T>(utf8Json, db, isDisposable: false);
+        }
 
         private T CloneElement(int index)
         {

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Corvus.Text.Json.Tests
 {
-    public static class JsonElementMutableCloneTests
+    public static class JsonElementMutableDynamicCloneTests
     {
         [Fact]
         public static void CloneTwiceFromSameDocument()
@@ -19,7 +19,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
             {
                 root = doc.RootElement;
                 clone = root.Clone();
@@ -48,7 +48,7 @@ namespace Corvus.Text.Json.Tests
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[[]]]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
             {
                 JsonElement middle = doc.RootElement[0].Clone();
                 JsonElement inner = middle[0];
@@ -158,17 +158,19 @@ null
             string json = $"{{ \"obj\": [ {{ \"not target\": true, \"target\": {innerJson} }}, 5 ] }}";
 
             JsonElement clone;
+            string rawTarget;
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
             {
                 JsonElement.Mutable target = doc.RootElement.GetProperty("obj")[0].GetProperty("target");
                 Assert.Equal(valueType, target.ValueKind);
                 clone = target.Clone();
+                rawTarget = target.GetRawText();
             }
 
-            Assert.Equal(innerJson, clone.GetRawText());
+            Assert.Equal(rawTarget, clone.GetRawText());
         }
 
         internal static JsonDocumentBuilder<JsonElement.Mutable> SniffDocument(this JsonElement.Mutable element)

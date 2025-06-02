@@ -173,13 +173,13 @@ namespace Corvus.Text.Json.Internal
             return initialSize;
         }
 
-        internal static MetadataDb CreateLocked(int payloadLength)
+        internal static MetadataDb CreateLocked(int payloadLength, bool convertToAlloc = false)
         {
             // Add one row worth of data since we need at least one row for a primitive type.
             int size = payloadLength + DbRow.Size;
 
             byte[] data = new byte[size];
-            return new MetadataDb(data, isLocked: true, convertToAlloc: false);
+            return new MetadataDb(data, isLocked: true, convertToAlloc: convertToAlloc);
         }
 
         public void Dispose()

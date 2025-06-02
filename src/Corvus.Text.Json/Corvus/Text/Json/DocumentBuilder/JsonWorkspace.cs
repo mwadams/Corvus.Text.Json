@@ -54,17 +54,6 @@ namespace Corvus.Text.Json
             return new(false, initialDocumentCapacity, options);
         }
 
-        [CLSCompliant(false)]
-        public IJsonDocument GetDocument(int index)
-        {
-            if (index < 0 || index >= _length)
-            {
-                throw new ArgumentOutOfRangeException(SR.ArgumentOutOfRange_IndexMustBeLess);
-            }
-
-            return _documents[index];
-        }
-
         public Utf8JsonWriter RentWriterAndBuffer(int defaultBufferSize, out IByteBufferWriter bufferWriter)
         {
             Utf8JsonWriter result = Utf8JsonWriterCache.RentWriterAndBuffer(Options, defaultBufferSize, out PooledByteBufferWriter writer);
@@ -129,6 +118,16 @@ namespace Corvus.Text.Json
             int index = GetDocumentIndex(result);
             result.Initialize(index, initialCapacity, initialValueBufferSize);
             return result;
+        }
+
+        internal IJsonDocument GetDocument(int index)
+        {
+            if (index < 0 || index >= _length)
+            {
+                throw new ArgumentOutOfRangeException(SR.ArgumentOutOfRange_IndexMustBeLess);
+            }
+
+            return _documents[index];
         }
 
         internal int GetDocumentIndex(IJsonDocument document)

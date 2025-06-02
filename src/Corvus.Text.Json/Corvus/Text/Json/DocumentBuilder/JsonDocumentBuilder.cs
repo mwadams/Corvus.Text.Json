@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
@@ -864,20 +865,16 @@ namespace Corvus.Text.Json
 
         JsonElement IJsonDocument.CloneElement(int index)
         {
-            return JsonElement.From(CloneElement(index, false));
+            return CloneElement<JsonElement>(index);
         }
 
         TElement IJsonDocument.CloneElement<TElement>(int index)
         {
-            T element = CloneElement(index, false);
-#if NET
-            return TElement.CreateInstance(element.ParentDocument, element.ParentDocumentIndex);
-#else
-            return JsonElementHelpers.CreateInstance<TElement>(element.ParentDocument, element.ParentDocumentIndex);
-#endif
+            return CloneElement<TElement>(index);
         }
 
-        private T CloneElement(int index, bool addDocumentToWorkspace)
+        private TElement CloneElement<TElement>(int index)
+            where TElement : struct, IJsonElement<TElement>
         {
             CheckNotDisposed();
 
@@ -887,29 +884,16 @@ namespace Corvus.Text.Json
             if (row.FromExternalDocument)
             {
                 IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
-                return document.CloneElement<T>(row.LocationOrIndex);
+                return document.CloneElement<TElement>(row.LocationOrIndex);
             }
 
             using RawUtf8JsonString rawUtf8Json = GetRawValueUnsafe(index, includeQuotes: true);
 
             ReadOnlyMemory<byte> segmentCopy;
-            byte[]? extraRentedArrayPoolBytes = null;
-            if (addDocumentToWorkspace)
-            {
-                segmentCopy = rawUtf8Json.TakeOwnership(out extraRentedArrayPoolBytes);
-            }
-            else
-            {
                 segmentCopy = rawUtf8Json.Span.ToArray();
-            }
 
-            ParsedJsonDocument<T> newDocument =
-                ParsedJsonDocument<T>.Parse(segmentCopy);
-
-            if (addDocumentToWorkspace)
-            {
-                _workspace.GetDocumentIndex(newDocument);
-            }
+            ParsedJsonDocument<TElement> newDocument =
+                ParsedJsonDocument<TElement>.ParseUnrented(segmentCopy);
 
             return newDocument.RootElement;
         }
