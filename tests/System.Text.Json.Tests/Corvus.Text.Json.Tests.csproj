@@ -65,6 +65,8 @@
     <Compile Include="JsonElementHelpersParseNumberTests.cs" />
     <Compile Include="JsonElementNumberTest.cs" />
     <Compile Include="JsonElement.MutableWriteTests.cs" />
+    <Compile Include="JsonPropertyDocumentBuilderDynamicTests.cs" />
+    <Compile Include="JsonPropertyDocumentBuilderTests.cs" />
     <Compile Include="JsonSchemaContextTests.cs" />
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="System\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
