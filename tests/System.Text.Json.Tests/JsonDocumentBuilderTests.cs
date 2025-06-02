@@ -3838,7 +3838,7 @@ namespace Corvus.Text.Json.Tests
         {
             const string ErrorMessage = "You cannot create a mutable copy of a mutable document. Consider calling Freeze() on the source document.";
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateDocument(workspace, "Hello"u8);
+            using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateDocumentBuilder(workspace, "Hello"u8);
             AssertExtensions.Throws<InvalidOperationException>(() => mutableBuilder.RootElement.CreateDocumentBuilder(workspace), ErrorMessage);
         }
 
@@ -3846,7 +3846,7 @@ namespace Corvus.Text.Json.Tests
         public static void CreateBuilderFromImmutableBuilderSucceeds()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateDocument(workspace, "Hello"u8);
+            using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateDocumentBuilder(workspace, "Hello"u8);
             Assert.False(mutableBuilder.IsImmutable);
             mutableBuilder.Freeze();
             Assert.True(mutableBuilder.IsImmutable);
@@ -3860,7 +3860,7 @@ namespace Corvus.Text.Json.Tests
             const string ErrorMessage = "You cannot modify an immutable document.";
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder =
-                JsonElement.CreateDocument(
+                JsonElement.CreateDocumentBuilder(
                     workspace,
                     (ref JsonArrayBuilder arrayBuilder) => arrayBuilder.Add(true));
             Assert.False(mutableBuilder.IsImmutable);
@@ -5873,7 +5873,7 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
             // Build an array using every method on JsonArrayBuilder
-            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocument(
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
                 (ref JsonArrayBuilder arrayBuilder) =>
                 {
@@ -5984,7 +5984,7 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
             // Build an object using every method on JsonObjectBuilder
-            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocument(
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
                 (ref JsonObjectBuilder objBuilder) =>
                 {

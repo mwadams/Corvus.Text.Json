@@ -249,7 +249,7 @@ Console.WriteLine("************");
 Console.WriteLine();
 
 // Create a builder for our root element
-using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocument(
+using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocumentBuilder(
     workspace,
     static (ref o) =>
     {

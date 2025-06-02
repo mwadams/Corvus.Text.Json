@@ -13,7 +13,7 @@ namespace Corvus.Text.Json
     public readonly partial struct JsonElement
     {
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, JsonObjectBuilder.Build builder, int estimatedMemberCount = 30)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, JsonObjectBuilder.Build builder, int estimatedMemberCount = 30)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -24,7 +24,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, JsonArrayBuilder.Build builder, int estimatedMemberCount = 30)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, JsonArrayBuilder.Build builder, int estimatedMemberCount = 30)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -35,7 +35,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, string value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, string value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -46,7 +46,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, ReadOnlySpan<char> value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, ReadOnlySpan<char> value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -57,7 +57,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, ReadOnlySpan<byte> value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, ReadOnlySpan<byte> value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -68,7 +68,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentRawString(JsonWorkspace workspace, ReadOnlySpan<byte> value, bool requiresUnescaping)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilderRawString(JsonWorkspace workspace, ReadOnlySpan<byte> value, bool requiresUnescaping)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -79,7 +79,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, bool value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, bool value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -90,7 +90,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentNull(JsonWorkspace workspace)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilderNull(JsonWorkspace workspace)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -101,7 +101,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentFormattedNumber(JsonWorkspace workspace, ReadOnlySpan<byte> formattedNumber)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilderFormattedNumber(JsonWorkspace workspace, ReadOnlySpan<byte> formattedNumber)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -112,7 +112,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, long value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, long value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -123,7 +123,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, ulong value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, ulong value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -134,7 +134,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, int value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -145,7 +145,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, uint value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, uint value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -156,7 +156,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, short value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, short value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -167,7 +167,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, ushort value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, ushort value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -178,7 +178,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, sbyte value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, sbyte value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -189,7 +189,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, byte value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, byte value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -200,7 +200,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, double value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, double value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -211,7 +211,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, float value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, float value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -222,7 +222,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, decimal value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, decimal value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -234,7 +234,7 @@ namespace Corvus.Text.Json
 
 #if NET
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Int128 value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Int128 value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -245,7 +245,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, UInt128 value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, UInt128 value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -256,7 +256,7 @@ namespace Corvus.Text.Json
         }
 
         [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Half value)
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Half value)
         {
             // Create the document builder without a MetadataDb
             JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);

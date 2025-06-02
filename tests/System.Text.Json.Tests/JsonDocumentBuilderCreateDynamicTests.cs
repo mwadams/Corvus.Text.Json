@@ -4386,7 +4386,7 @@ namespace Corvus.Text.Json.Tests
         {
             if (source.ValueKind == JsonValueKind.Object)
             {
-                return JsonElement.CreateDocument(workspace, (ref objectBuilder) =>
+                return JsonElement.CreateDocumentBuilder(workspace, (ref objectBuilder) =>
                 {
                     foreach (JsonProperty<JsonElement> property in source.EnumerateObject())
                     {
@@ -4396,7 +4396,7 @@ namespace Corvus.Text.Json.Tests
             }
             else if (source.ValueKind == JsonValueKind.Array)
             {
-                return JsonElement.CreateDocument(workspace, (ref arrayBuilder) =>
+                return JsonElement.CreateDocumentBuilder(workspace, (ref arrayBuilder) =>
                 {
                     foreach (JsonElement value in source.EnumerateArray())
                     {
@@ -4406,23 +4406,23 @@ namespace Corvus.Text.Json.Tests
             }
             else if (source.ValueKind == JsonValueKind.String)
             {
-                return JsonElement.CreateDocumentRawString(workspace, source.ValueSpan, source.ValueIsEscaped);
+                return JsonElement.CreateDocumentBuilderRawString(workspace, source.ValueSpan, source.ValueIsEscaped);
             }
             else if (source.ValueKind == JsonValueKind.True)
             {
-                return JsonElement.CreateDocument(workspace, true);
+                return JsonElement.CreateDocumentBuilder(workspace, true);
             }
             else if (source.ValueKind == JsonValueKind.False)
             {
-                return JsonElement.CreateDocument(workspace, false);
+                return JsonElement.CreateDocumentBuilder(workspace, false);
             }
             else if (source.ValueKind == JsonValueKind.Null)
             {
-                return JsonElement.CreateDocumentNull(workspace);
+                return JsonElement.CreateDocumentBuilderNull(workspace);
             }
             else if (source.ValueKind == JsonValueKind.Number)
             {
-                return JsonElement.CreateDocumentFormattedNumber(workspace, source.ValueSpan);
+                return JsonElement.CreateDocumentBuilderFormattedNumber(workspace, source.ValueSpan);
             }
 
             throw new InvalidOperationException($"Unsupported value kind {source.ValueKind}");
