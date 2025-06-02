@@ -1214,7 +1214,7 @@ namespace Corvus.Text.Json
             else
             {
                 // Number of rows + end row.
-                estimatedRowCount = row.NumberOfRows + 1;
+                estimatedRowCount = GetDbSizeUnsafe(index, true);
             }
 
             MetadataDb db = MetadataDb.CreateRented(estimatedRowCount * DbRow.Size, false);
