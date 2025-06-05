@@ -42,6 +42,11 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         }
     }
 
+    public static explicit operator string?(NameComponent value)
+    {
+        return value.GetString();
+    }
+
     public string? GetString()
     {
         CheckValidInstance();
@@ -234,6 +239,11 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             {
                 return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
             }
+        }
+
+        public static explicit operator string?(Mutable value)
+        {
+            return value.GetString();
         }
 
         public static explicit operator Mutable(NameComponent nameComponent)

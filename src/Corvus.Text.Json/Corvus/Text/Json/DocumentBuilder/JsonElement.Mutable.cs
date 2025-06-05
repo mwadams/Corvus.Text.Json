@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
+using NodaTime;
 
 namespace Corvus.Text.Json
 {
@@ -1480,6 +1481,261 @@ namespace Corvus.Text.Json
                 return value;
             }
 #endif
+
+            /// <summary>
+            ///   Attempts to represent the current JSON string as a <see cref="LocalDate"/>.
+            /// </summary>
+            /// <param name="value">Receives the value.</param>
+            /// <remarks>
+            ///   This method does not create a LocalDate representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>
+            ///   <see langword="true"/> if the string can be represented as a <see cref="LocalDate"/>,
+            ///   <see langword="false"/> otherwise.
+            /// </returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            public bool TryGetLocalDate(out LocalDate value)
+            {
+                CheckValidInstance();
+
+                return _parent.TryGetValue(_idx, out value);
+            }
+
+            /// <summary>
+            ///   Gets the value of the element as a <see cref="LocalDate"/>.
+            /// </summary>
+            /// <remarks>
+            ///   This method does not create a LocalDate representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>The value of the element as a <see cref="LocalDate"/>.</returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="FormatException">
+            ///   The value cannot be represented as a <see cref="DateTime"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="ToString"/>
+            public LocalDate GetLocalDate()
+            {
+                if (!TryGetLocalDate(out LocalDate value))
+                {
+                    ThrowHelper.ThrowFormatException();
+                }
+
+                return value;
+            }
+
+            /// <summary>
+            ///   Attempts to represent the current JSON string as a <see cref="OffsetTime"/>.
+            /// </summary>
+            /// <param name="value">Receives the value.</param>
+            /// <remarks>
+            ///   This method does not create a OffsetTime representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>
+            ///   <see langword="true"/> if the string can be represented as a <see cref="OffsetTime"/>,
+            ///   <see langword="false"/> otherwise.
+            /// </returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            public bool TryGetOffsetTime(out OffsetTime value)
+            {
+                CheckValidInstance();
+
+                return _parent.TryGetValue(_idx, out value);
+            }
+
+            /// <summary>
+            ///   Gets the value of the element as a <see cref="OffsetTime"/>.
+            /// </summary>
+            /// <remarks>
+            ///   This method does not create a OffsetTime representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>The value of the element as a <see cref="OffsetTime"/>.</returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="FormatException">
+            ///   The value cannot be represented as a <see cref="DateTime"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="ToString"/>
+            public OffsetTime GetOffsetTime()
+            {
+                if (!TryGetOffsetTime(out OffsetTime value))
+                {
+                    ThrowHelper.ThrowFormatException();
+                }
+
+                return value;
+            }
+
+            /// <summary>
+            ///   Attempts to represent the current JSON string as a <see cref="OffsetDateTime"/>.
+            /// </summary>
+            /// <param name="value">Receives the value.</param>
+            /// <remarks>
+            ///   This method does not create a OffsetDateTime representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>
+            ///   <see langword="true"/> if the string can be represented as a <see cref="OffsetDateTime"/>,
+            ///   <see langword="false"/> otherwise.
+            /// </returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            public bool TryGetOffsetDateTime(out OffsetDateTime value)
+            {
+                CheckValidInstance();
+
+                return _parent.TryGetValue(_idx, out value);
+            }
+
+            /// <summary>
+            ///   Gets the value of the element as a <see cref="OffsetDateTime"/>.
+            /// </summary>
+            /// <remarks>
+            ///   This method does not create a OffsetDateTime representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>The value of the element as a <see cref="OffsetDateTime"/>.</returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="FormatException">
+            ///   The value cannot be represented as a <see cref="DateTime"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="ToString"/>
+            public OffsetDateTime GetOffsetDateTime()
+            {
+                if (!TryGetOffsetDateTime(out OffsetDateTime value))
+                {
+                    ThrowHelper.ThrowFormatException();
+                }
+
+                return value;
+            }
+
+            /// <summary>
+            ///   Attempts to represent the current JSON string as a <see cref="OffsetDate"/>.
+            /// </summary>
+            /// <param name="value">Receives the value.</param>
+            /// <remarks>
+            ///   This method does not create a OffsetDate representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>
+            ///   <see langword="true"/> if the string can be represented as a <see cref="OffsetDate"/>,
+            ///   <see langword="false"/> otherwise.
+            /// </returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            public bool TryGetOffsetDate(out OffsetDate value)
+            {
+                CheckValidInstance();
+
+                return _parent.TryGetValue(_idx, out value);
+            }
+
+            /// <summary>
+            ///   Gets the value of the element as a <see cref="OffsetDate"/>.
+            /// </summary>
+            /// <remarks>
+            ///   This method does not create a OffsetDate representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>The value of the element as a <see cref="OffsetDate"/>.</returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="FormatException">
+            ///   The value cannot be represented as a <see cref="DateTime"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="ToString"/>
+            public OffsetDate GetOffsetDate()
+            {
+                if (!TryGetOffsetDate(out OffsetDate value))
+                {
+                    ThrowHelper.ThrowFormatException();
+                }
+
+                return value;
+            }
+
+            /// <summary>
+            ///   Attempts to represent the current JSON string as a <see cref="Period"/>.
+            /// </summary>
+            /// <param name="value">Receives the value.</param>
+            /// <remarks>
+            ///   This method does not create a Period representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>
+            ///   <see langword="true"/> if the string can be represented as a <see cref="Period"/>,
+            ///   <see langword="false"/> otherwise.
+            /// </returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            public bool TryGetPeriod(out Period value)
+            {
+                CheckValidInstance();
+
+                return _parent.TryGetValue(_idx, out value);
+            }
+
+            /// <summary>
+            ///   Gets the value of the element as a <see cref="Period"/>.
+            /// </summary>
+            /// <remarks>
+            ///   This method does not create a Period representation of values other than JSON strings.
+            /// </remarks>
+            /// <returns>The value of the element as a <see cref="Period"/>.</returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="FormatException">
+            ///   The value cannot be represented as a <see cref="DateTime"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="ToString"/>
+            public Period GetPeriod()
+            {
+                if (!TryGetPeriod(out Period value))
+                {
+                    ThrowHelper.ThrowFormatException();
+                }
+
+                return value;
+            }
 
             /// <summary>
             ///   Attempts to represent the current JSON string as a <see cref="DateTime"/>.
@@ -3267,7 +3523,7 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
-            public void SetItem(int itemIndex, DateTime value)
+            public void SetItem(int itemIndex, in DateTime value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
@@ -3286,7 +3542,102 @@ namespace Corvus.Text.Json
                 _documentVersion = _parent.Version;
             }
 
-            public void SetItem(int itemIndex, DateTimeOffset value)
+            public void SetItem(int itemIndex, in DateTimeOffset value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            public void SetItem(int itemIndex, in OffsetDateTime value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            public void SetItem(int itemIndex, in OffsetDate value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            public void SetItem(int itemIndex, in OffsetTime value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            public void SetItem(int itemIndex, in LocalDate value)
+            {
+                CheckValidInstance();
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+                cvb.AddItem(value);
+                int arrayLength = GetArrayLength();
+                if (itemIndex == arrayLength)
+                {
+                    _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+                }
+                else
+                {
+                    Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            public void SetItem(int itemIndex, in Period value)
             {
                 CheckValidInstance();
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);

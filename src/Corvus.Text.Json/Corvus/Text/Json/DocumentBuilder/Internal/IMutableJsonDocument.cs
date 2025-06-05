@@ -1,6 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using NodaTime;
+
 namespace Corvus.Text.Json.Internal
 {
     [CLSCompliant(false)]
@@ -23,8 +25,13 @@ namespace Corvus.Text.Json.Internal
         int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping);
         int StoreRawStringValue(ReadOnlySpan<byte> value);
         int StoreValue(Guid value);
-        int StoreValue(DateTime value);
-        int StoreValue(DateTimeOffset value);
+        int StoreValue(in DateTime value);
+        int StoreValue(in DateTimeOffset value);
+        int StoreValue(in OffsetDateTime value);
+        int StoreValue(in OffsetDate value);
+        int StoreValue(in OffsetTime value);
+        int StoreValue(in LocalDate value);
+        int StoreValue(in Period value);
         int StoreValue(sbyte value);
         int StoreValue(byte value);
         int StoreValue(int value);

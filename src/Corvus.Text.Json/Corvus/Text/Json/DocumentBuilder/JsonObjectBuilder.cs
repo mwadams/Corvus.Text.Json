@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using Corvus.Text.Json.Internal;
+using NodaTime;
 
 namespace Corvus.Text.Json
 {
@@ -128,7 +129,7 @@ namespace Corvus.Text.Json
                 nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, DateTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void Add(ReadOnlySpan<byte> propertyName, in DateTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -138,7 +139,57 @@ namespace Corvus.Text.Json
                 nameRequiresUnescaping);
         }
 
-        public void Add(ReadOnlySpan<byte> propertyName, DateTimeOffset value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void Add(ReadOnlySpan<byte> propertyName, in DateTimeOffset value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, in OffsetDateTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, in OffsetDate value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, in OffsetTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, in LocalDate value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, in Period value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(

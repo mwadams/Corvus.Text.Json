@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using NodaTime;
 
 namespace Corvus.Text.Json.Internal
 {
@@ -152,7 +153,7 @@ namespace Corvus.Text.Json.Internal
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
-        public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value)
+        public void AddProperty<T>(ReadOnlySpan<byte> propertyName, in T value)
             where T : struct, IJsonElement<T>
         {
             AddProperty(propertyName, value, true, false);
@@ -203,12 +204,12 @@ namespace Corvus.Text.Json.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(ReadOnlySpan<byte> propertyName, DateTime value)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in DateTime value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, DateTime value, bool escapeName, bool nameRequiresUnescaping)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in DateTime value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -216,7 +217,7 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
-        public void AddProperty(ReadOnlySpan<char> propertyName, DateTime value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in DateTime value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -225,12 +226,12 @@ namespace Corvus.Text.Json.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddProperty(ReadOnlySpan<byte> propertyName, DateTimeOffset value)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in DateTimeOffset value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
-        public void AddProperty(ReadOnlySpan<byte> propertyName, DateTimeOffset value, bool escapeName, bool nameRequiresUnescaping)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in DateTimeOffset value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -238,7 +239,117 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
-        public void AddProperty(ReadOnlySpan<char> propertyName, DateTimeOffset value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in DateTimeOffset value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetDateTime value)
+        {
+            AddProperty(propertyName, value, true, false);
+        }
+
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetDateTime value, bool escapeName, bool nameRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetDateTime value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetTime value)
+        {
+            AddProperty(propertyName, value, true, false);
+        }
+
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetTime value, bool escapeName, bool nameRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetTime value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetDate value)
+        {
+            AddProperty(propertyName, value, true, false);
+        }
+
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetDate value, bool escapeName, bool nameRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetDate value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in LocalDate value)
+        {
+            AddProperty(propertyName, value, true, false);
+        }
+
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in LocalDate value, bool escapeName, bool nameRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddProperty(ReadOnlySpan<char> propertyName, in LocalDate value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in Period value)
+        {
+            AddProperty(propertyName, value, true, false);
+        }
+
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in Period value, bool escapeName, bool nameRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        public void AddProperty(ReadOnlySpan<char> propertyName, in Period value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -637,7 +748,7 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public void AddItem<T>(T value)
+        public void AddItem<T>(in T value)
             where T : struct, IJsonElement<T>
         {
             int currentLength = Length;
@@ -653,14 +764,49 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
-        public void AddItem(DateTime value)
+        public void AddItem(in DateTime value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;
             _rowCount++;
         }
 
-        public void AddItem(DateTimeOffset value)
+        public void AddItem(in DateTimeOffset value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItem(in OffsetDateTime value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItem(in OffsetDate value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItem(in OffsetTime value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItem(in LocalDate value)
+        {
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
+            _memberCount += 1;
+            _rowCount++;
+        }
+
+        public void AddItem(in Period value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
             _memberCount += 1;

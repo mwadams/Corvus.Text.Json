@@ -91,6 +91,11 @@
 
 
   <ItemGroup>
+    <Compile Include="Corvus\NodaTimeExtensions\GregorianYearMonthDayCalculator.cs" />
+    <Compile Include="Corvus\NodaTimeExtensions\Period.cs" />
+    <Compile Include="Corvus\NodaTimeExtensions\PeriodBuilder.cs" />
+    <Compile Include="Corvus\NodaTimeExtensions\Utf8ValueCursor.cs" />
+    <Compile Include="Corvus\NodaTimeExtensions\ValueCursor.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Collections\HashHelpers.cs" Link="Common\System\Collections\HashHelpers.cs" />
     <Compile Include="$(CommonPath)System\HexConverter.cs" Link="Common\System\HexConverter.cs" />
     <Compile Include="$(CommonPath)System\Net\ArrayBuffer.cs" Link="Common\System\Net\ArrayBuffer.cs" />
@@ -156,12 +161,19 @@
     <Compile Include="Corvus\Text\Json\Document\JsonDocumentOptions.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\IJsonElement.cs" />
     <Compile Include="Corvus\Text\Json\Document\IJsonSchemaResultsCollector.cs" />
-    <Compile Include="Corvus\Text\Json\Internal\JsonElementTensorHelpers.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.DateTime.Core.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.CreationAndConversion.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.Uri.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementTensorHelpers.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.DeepEquals.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElement.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElement.Parse.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonProperty.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonValueKind.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.DateTime.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\Number.cs" />
     <Compile Include="Corvus\Text\Json\UnescapedUtf8JsonString.cs" />
     <Compile Include="Corvus\Text\Json\RawUtf8JsonString.cs" />
     <Compile Include="Corvus\Text\Json\JsonConstants.cs" />
@@ -274,6 +286,7 @@
 
   <!-- Application tfms (.NETCoreApp, .NETFramework) need to use the same or higher version of .NETStandard's dependencies. -->
   <ItemGroup>
+    <PackageReference Include="NodaTime" Version="3.2.2" />
     <PackageReference Include="System.Text.Encodings.Web" Version="10.0.0-preview.4.25258.110" />
     <PackageReference Include="System.IO.Pipelines" Version="10.0.0-preview.4.25258.110" />
   </ItemGroup>
@@ -283,6 +296,7 @@
     <PackageReference Include="System.Memory" Version="4.6.3" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.0-preview.4.25258.110" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
   </ItemGroup>
 

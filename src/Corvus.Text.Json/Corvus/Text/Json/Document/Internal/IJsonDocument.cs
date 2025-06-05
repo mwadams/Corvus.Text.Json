@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics.CodeAnalysis;
+using NodaTime;
 
 namespace Corvus.Text.Json.Internal
 {
@@ -42,6 +43,11 @@ namespace Corvus.Text.Json.Internal
         bool TryGetValue(int index, out decimal value);
         bool TryGetValue(int index, out DateTime value);
         bool TryGetValue(int index, out DateTimeOffset value);
+        bool TryGetValue(int index, out OffsetDateTime value);
+        bool TryGetValue(int index, out OffsetDate value);
+        bool TryGetValue(int index, out OffsetTime value);
+        bool TryGetValue(int index, out LocalDate value);
+        bool TryGetValue(int index, out Period value);
         bool TryGetValue(int index, out Guid value);
 #if NET
         bool TryGetValue(int index, out Int128 value);

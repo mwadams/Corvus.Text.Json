@@ -110,6 +110,20 @@ public readonly struct Person : IJsonElement<Person>
         _parent.WriteElementTo(_idx, writer);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override bool Equals(object? obj)
+    {
+        return (obj is IJsonElement other && Equals(new Person(other.ParentDocument, other.ParentDocumentIndex)))
+            || (obj is null && this.IsNull());
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Equals<T>(T other)
+        where T : struct, IJsonElement
+    {
+        return JsonElementHelpers.DeepEquals(this, other);
+    }
+
     /// <summary>
     ///   Gets a string representation for the current value appropriate to the value type.
     /// </summary>

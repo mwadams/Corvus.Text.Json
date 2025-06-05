@@ -736,6 +736,11 @@ namespace Corvus.Text.Json
                 case DataType.DateTimeOffset:
                 case DataType.TimeOnly:
                 case DataType.TimeSpan:
+                case DataType.OffsetDateTime:
+                case DataType.LocalDate:
+                case DataType.OffsetDate:
+                case DataType.OffsetTime:
+                case DataType.Period:
                 case DataType.Guid:
                 case DataType.Version:
                     message = SR.Format(SR.UnsupportedFormat, dataType);
@@ -854,6 +859,11 @@ namespace Corvus.Text.Json
         DateTimeOffset,
         TimeOnly,
         TimeSpan,
+        OffsetDateTime,
+        OffsetDate,
+        OffsetTime,
+        LocalDate,
+        Period,
         Base64String,
         Guid,
         Version,

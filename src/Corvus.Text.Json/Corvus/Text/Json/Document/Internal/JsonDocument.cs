@@ -7,6 +7,8 @@ using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
+using NodaTime;
+
 
 
 #if NET
@@ -393,7 +395,7 @@ namespace Corvus.Text.Json.Internal
 
         }
 
-        protected int StoreValue(DateTime value)
+        protected int StoreValue(in DateTime value)
         {
             int offset = _valueOffset;
             int result = offset;
@@ -422,7 +424,7 @@ namespace Corvus.Text.Json.Internal
 
         }
 
-        protected int StoreValue(DateTimeOffset value)
+        protected int StoreValue(in DateTimeOffset value)
         {
             int offset = _valueOffset;
             int result = offset;
@@ -449,6 +451,156 @@ namespace Corvus.Text.Json.Internal
             _valueOffset = offset;
             return result;
 
+        }
+
+        protected int StoreValue(in OffsetDateTime value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatDateTimeOffsetLength + 2;
+            Enlarge(length, ref _valueBacking);
+
+            offset += 4;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            bool success = JsonElementHelpers.TryFormatOffsetDateTime(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+
+            offset += length;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            length += 2;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(in OffsetDate value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatOffsetDateLength + 2;
+            Enlarge(length, ref _valueBacking);
+
+            offset += 4;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            bool success = JsonElementHelpers.TryFormatOffsetDate(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+
+            offset += length;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            length += 2;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(in OffsetTime value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatOffsetTimeLength + 2;
+            Enlarge(length, ref _valueBacking);
+
+            offset += 4;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            bool success = JsonElementHelpers.TryFormatOffsetTime(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+
+            offset += length;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            length += 2;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(in LocalDate value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatOffsetTimeLength + 2;
+            Enlarge(length, ref _valueBacking);
+
+            offset += 4;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            bool success = JsonElementHelpers.TryFormatLocalDate(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+
+            offset += length;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            length += 2;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(in Period value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length = JsonConstants.MaximumFormatOffsetTimeLength + 2;
+            Enlarge(length, ref _valueBacking);
+
+            offset += 4;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            bool success = JsonElementHelpers.TryFormatPeriod(value, _valueBacking.AsSpan(offset), out length);
+            Debug.Assert(success);
+
+            offset += length;
+
+            _valueBacking[offset++] = JsonConstants.Quote;
+
+            length += 2;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
+#endif
+
+            _valueOffset = offset;
+            return result;
         }
 
         [CLSCompliant(false)]

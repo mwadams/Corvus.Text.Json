@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Corvus.Text.Json.Internal;
+using NodaTime;
 
 namespace Corvus.Text.Json
 {
@@ -82,12 +83,36 @@ namespace Corvus.Text.Json
             _builder.AddItem(value);
         }
 
-        public void Add(DateTime value)
+        public void Add(in DateTime value)
         {
             _builder.AddItem(value);
         }
 
-        public void Add(DateTimeOffset value)
+        public void Add(in DateTimeOffset value)
+        {
+            _builder.AddItem(value);
+        }
+
+        public void Add(in OffsetDateTime value)
+        {
+            _builder.AddItem(value);
+        }
+
+        public void Add(in OffsetDate value)
+        {
+            _builder.AddItem(value);
+        }
+
+        public void Add(in OffsetTime value)
+        {
+            _builder.AddItem(value);
+        }
+
+        public void Add(in LocalDate value)
+        {
+            _builder.AddItem(value);
+        }
+        public void Add(in Period value)
         {
             _builder.AddItem(value);
         }

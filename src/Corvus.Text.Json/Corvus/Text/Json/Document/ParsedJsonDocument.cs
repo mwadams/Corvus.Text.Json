@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
+using NodaTime;
 
 namespace Corvus.Text.Json
 {
@@ -784,6 +785,180 @@ namespace Corvus.Text.Json
 
             value = default;
             return false;
+        }
+
+        bool IJsonDocument.TryGetValue(int index, out OffsetDateTime value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+            ReadOnlySpan<byte> data = _utf8Json.Span;
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
+            {
+                value = default;
+                return false;
+            }
+
+            // Segment needs to be unescaped
+            if (row.HasComplexChildren)
+            {
+                Debug.Assert(segment.Length <= JsonConstants.MaximumEscapedDateTimeOffsetParseLength);
+                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
+
+                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
+                Debug.Assert(written > 0);
+
+                sourceUnescaped = sourceUnescaped.Slice(0, written);
+                Debug.Assert(!sourceUnescaped.IsEmpty);
+
+                return JsonElementHelpers.TryParseOffsetDateTime(segment, out value);
+            }
+
+            return JsonElementHelpers.TryParseOffsetDateTime(segment, out value);
+        }
+
+        bool IJsonDocument.TryGetValue(int index, out OffsetDate value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+            ReadOnlySpan<byte> data = _utf8Json.Span;
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
+            {
+                value = default;
+                return false;
+            }
+
+            // Segment needs to be unescaped
+            if (row.HasComplexChildren)
+            {
+                Debug.Assert(segment.Length <= JsonConstants.MaximumEscapedDateTimeOffsetParseLength);
+                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
+
+                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
+                Debug.Assert(written > 0);
+
+                sourceUnescaped = sourceUnescaped.Slice(0, written);
+                Debug.Assert(!sourceUnescaped.IsEmpty);
+
+                return JsonElementHelpers.TryParseOffsetDate(segment, out value);
+            }
+
+            return JsonElementHelpers.TryParseOffsetDate(segment, out value);
+        }
+
+
+        bool IJsonDocument.TryGetValue(int index, out OffsetTime value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+            ReadOnlySpan<byte> data = _utf8Json.Span;
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
+            {
+                value = default;
+                return false;
+            }
+
+            // Segment needs to be unescaped
+            if (row.HasComplexChildren)
+            {
+                Debug.Assert(segment.Length <= JsonConstants.MaximumEscapedDateTimeOffsetParseLength);
+                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
+
+                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
+                Debug.Assert(written > 0);
+
+                sourceUnescaped = sourceUnescaped.Slice(0, written);
+                Debug.Assert(!sourceUnescaped.IsEmpty);
+
+                return JsonElementHelpers.TryParseOffsetTime(segment, out value);
+            }
+
+            return JsonElementHelpers.TryParseOffsetTime(segment, out value);
+        }
+
+        bool IJsonDocument.TryGetValue(int index, out LocalDate value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+            ReadOnlySpan<byte> data = _utf8Json.Span;
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
+            {
+                value = default;
+                return false;
+            }
+
+            // Segment needs to be unescaped
+            if (row.HasComplexChildren)
+            {
+                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
+
+                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
+                Debug.Assert(written > 0);
+
+                sourceUnescaped = sourceUnescaped.Slice(0, written);
+                Debug.Assert(!sourceUnescaped.IsEmpty);
+
+                return JsonElementHelpers.TryParseLocalDate(segment, out value);
+            }
+
+            return JsonElementHelpers.TryParseLocalDate(segment, out value);
+        }
+
+        bool IJsonDocument.TryGetValue(int index, out Period value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+            ReadOnlySpan<byte> data = _utf8Json.Span;
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
+            {
+                value = default;
+                return false;
+            }
+
+            // Segment needs to be unescaped
+            if (row.HasComplexChildren)
+            {
+                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
+
+                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
+                Debug.Assert(written > 0);
+
+                sourceUnescaped = sourceUnescaped.Slice(0, written);
+                Debug.Assert(!sourceUnescaped.IsEmpty);
+
+                return Period.TryParse(segment, out value);
+            }
+
+            return Period.TryParse(segment, out value);
         }
 
         /// <inheritdoc />

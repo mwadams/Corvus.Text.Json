@@ -42,14 +42,24 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         }
     }
 
-    public static implicit operator OtherNames(NameComponent nameComponent)
+    public static implicit operator OtherNames(in NameComponent value)
     {
-        return From(nameComponent);
+        return From(value);
     }
 
-    public static implicit operator OtherNames(NameComponentArray nameComponentArray)
+    public static implicit operator OtherNames(in NameComponentArray value)
     {
-        return From(nameComponentArray);
+        return From(value);
+    }
+
+    public static explicit operator NameComponent(in OtherNames value)
+    {
+        return new(value._parent, value._idx);
+    }
+
+    public static explicit operator NameComponentArray(in OtherNames value)
+    {
+        return new(value._parent, value._idx);
     }
 
     public TResult Match<TResult>(Func<NameComponent, TResult> nameComponent, Func<NameComponentArray, TResult> nameComponentArray, Func<OtherNames, TResult> noMatch)
