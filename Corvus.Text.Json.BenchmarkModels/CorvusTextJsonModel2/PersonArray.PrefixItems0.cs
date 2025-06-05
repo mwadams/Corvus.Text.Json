@@ -461,9 +461,7 @@ public readonly partial struct PersonArray
 
         public static class JsonSchema
         {
-            public static ReadOnlySpan<byte> SchemaLocation() => "#/prefixItems/0"u8;
-            private static ReadOnlySpan<byte> ExpectedANumberValue() => "Expected a number value."u8;
-            private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
+            private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/prefixItems/0"u8, buffer, out written);
 
             /// <summary>
             /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -484,21 +482,13 @@ public readonly partial struct PersonArray
 
                 JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-                if (tokenType != JsonTokenType.Number)
+                if (!JsonSchemaMatching.MatchTypeNumber(tokenType, __Keywords.Type, ref context))
                 {
-                    context.Matched(false, ExpectedANumberValue, schemaEvaluationPath: EscapedTypeKeyword);
                     if (!context.HasCollector)
                     {
                         context.PopSchemaLocation();
                         return;
                     }
-
-                    context.PopSchemaLocation();
-                    return;
-                }
-                else
-                {
-                    context.Matched(true, schemaEvaluationPath: EscapedTypeKeyword);
                 }
 
                 context.PopSchemaLocation();
@@ -524,6 +514,22 @@ public readonly partial struct PersonArray
                 }
             }
 
+            internal static JsonSchemaContext PushChildContext(
+                IJsonDocument parentDocument,
+                int parentDocumentIndex,
+                ref JsonSchemaContext context,
+                ReadOnlySpan<byte> propertyName,
+                JsonSchemaPathProvider? schemaEvaluationPath = null)
+            {
+                return
+                    context.PushChildContext(
+                        parentDocument,
+                        parentDocumentIndex,
+                        useEvaluatedItems: false, // We don't use evaluated items
+                        useEvaluatedProperties: false,
+                        propertyName,
+                        schemaEvaluationPath: schemaEvaluationPath);
+            }
             internal static JsonSchemaContext PushChildContext(
                 IJsonDocument parentDocument,
                 int parentDocumentIndex,

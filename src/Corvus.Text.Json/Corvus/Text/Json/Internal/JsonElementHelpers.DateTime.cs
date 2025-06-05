@@ -96,12 +96,6 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParsePeriod(ReadOnlySpan<byte> text, out Period value)
     {
-        if (text.Length != 10)
-        {
-            value = default;
-            return false;
-        }
-
         return Period.TryParse(text,out value);
     }
 
@@ -160,7 +154,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseOffsetTime(ReadOnlySpan<byte> text, out OffsetTime value)
     {
-        if (text.Length < 9)
+        if (text.Length < JsonConstants.MinimumTimeParseLength)
         {
             value = default;
             return false;
@@ -226,7 +220,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseOffsetDateTime(ReadOnlySpan<byte> text, out OffsetDateTime value)
     {
-        if (text.Length < 19)
+        if (text.Length < JsonConstants.MinimumDateTimeParseLength)
         {
             value = default;
             return false;
@@ -299,7 +293,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseOffsetDate(ReadOnlySpan<byte> text, out OffsetDate value)
     {
-        if (text.Length < 19)
+        if (text.Length < JsonConstants.MinimumDateParseLength)
         {
             value = default;
             return false;
@@ -311,7 +305,7 @@ public static partial class JsonElementHelpers
             return false;
         }
 
-        if (!ParseOffsetCore(text[11..], out int offsetSeconds))
+        if (!ParseOffsetCore(text[10..], out int offsetSeconds))
         {
             value = default;
             return false;
@@ -394,7 +388,7 @@ public static partial class JsonElementHelpers
     //   2017-06-12-07:00
     //   2017-06-12Z           (Z is short for "+00:00")
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe bool TryFormat(in OffsetDate dateTime, Span<byte> destination, out int bytesWritten)
+    private static unsafe bool TryFormat(in OffsetDate date, Span<byte> destination, out int bytesWritten)
     {
         int bytesRequired = JsonConstants.MaximumFormatOffsetDateLength;
 
@@ -403,23 +397,23 @@ public static partial class JsonElementHelpers
             bytesWritten = 0;
             return false;
         }
-        bytesWritten = bytesRequired;
 
         fixed (byte* dest = &MemoryMarshal.GetReference(destination))
         {
-            Number.WriteFourDigits((uint)dateTime.Year, dest);
+            Number.WriteFourDigits((uint)date.Year, dest);
             dest[4] = (byte)'-';
-            Number.WriteTwoDigits((uint)dateTime.Month, dest + 5);
+            Number.WriteTwoDigits((uint)date.Month, dest + 5);
             dest[7] = (byte)'-';
-            Number.WriteTwoDigits((uint)dateTime.Day, dest + 8);
+            Number.WriteTwoDigits((uint)date.Day, dest + 8);
 
-            if (dateTime.Offset == Offset.Zero)
+            if (date.Offset == Offset.Zero)
             {
-                dest[27] = (byte)'Z';
+                dest[10] = (byte)'Z';
+                bytesWritten = 11;
             }
             else
             {
-                int offsetTotalMinutes = (int)(dateTime.Offset.Ticks / TimeSpan.TicksPerMinute);
+                int offsetTotalMinutes = (int)(date.Offset.Ticks / TimeSpan.TicksPerMinute);
 
                 char sign = '+';
                 if (offsetTotalMinutes < 0)
@@ -433,10 +427,11 @@ public static partial class JsonElementHelpers
 #else
                 int offsetHours = Math.DivRem(offsetTotalMinutes, 60, out int offsetMinutes);
 #endif
-                dest[27] = (byte)sign;
-                Number.WriteTwoDigits((uint)offsetHours, dest + 28);
-                dest[30] = (byte)':';
-                Number.WriteTwoDigits((uint)offsetMinutes, dest + 31);
+                dest[10] = (byte)sign;
+                Number.WriteTwoDigits((uint)offsetHours, dest + 11);
+                dest[13] = (byte)':';
+                Number.WriteTwoDigits((uint)offsetMinutes, dest + 14);
+                bytesWritten = 16;
             }
         }
 
@@ -467,7 +462,6 @@ public static partial class JsonElementHelpers
             Number.WriteTwoDigits((uint)date.Month, dest + 5);
             dest[7] = (byte)'-';
             Number.WriteTwoDigits((uint)date.Day, dest + 8);
-            dest[10] = (byte)'T';
         }
 
         return true;
@@ -488,21 +482,21 @@ public static partial class JsonElementHelpers
             bytesWritten = 0;
             return false;
         }
-        bytesWritten = bytesRequired;
 
         fixed (byte* dest = &MemoryMarshal.GetReference(destination))
         {
-            Number.WriteTwoDigits((uint)offsetTime.Hour, dest + 11);
-            dest[13] = (byte)':';
-            Number.WriteTwoDigits((uint)offsetTime.Minute, dest + 14);
-            dest[16] = (byte)':';
-            Number.WriteTwoDigits((uint)offsetTime.Second, dest + 17);
-            dest[19] = (byte)'.';
-            Number.WriteDigits((uint)offsetTime.TickOfSecond, dest + 20, 7);
+            Number.WriteTwoDigits((uint)offsetTime.Hour, dest);
+            dest[2] = (byte)':';
+            Number.WriteTwoDigits((uint)offsetTime.Minute, dest + 3);
+            dest[5] = (byte)':';
+            Number.WriteTwoDigits((uint)offsetTime.Second, dest + 6);
+            dest[8] = (byte)'.';
+            Number.WriteDigits((uint)offsetTime.TickOfSecond, dest + 9, 7);
 
             if (offsetTime.Offset == Offset.Zero)
             {
-                dest[27] = (byte)'Z';
+                dest[16] = (byte)'Z';
+                bytesWritten = 17;
             }
             else
             {
@@ -520,10 +514,11 @@ public static partial class JsonElementHelpers
 #else
                 int offsetHours = Math.DivRem(offsetTotalMinutes, 60, out int offsetMinutes);
 #endif
-                dest[27] = (byte)sign;
-                Number.WriteTwoDigits((uint)offsetHours, dest + 28);
-                dest[30] = (byte)':';
-                Number.WriteTwoDigits((uint)offsetMinutes, dest + 31);
+                dest[16] = (byte)sign;
+                Number.WriteTwoDigits((uint)offsetHours, dest + 17);
+                dest[19] = (byte)':';
+                Number.WriteTwoDigits((uint)offsetMinutes, dest + 20);
+                bytesWritten = 22;
             }
         }
 
@@ -545,7 +540,6 @@ public static partial class JsonElementHelpers
             bytesWritten = 0;
             return false;
         }
-        bytesWritten = bytesRequired;
 
         Period period = incomingPeriod.Normalize();
 
@@ -649,6 +643,7 @@ public static partial class JsonElementHelpers
             }
         }
 
+        bytesWritten = index;
         return true;
     }
 }

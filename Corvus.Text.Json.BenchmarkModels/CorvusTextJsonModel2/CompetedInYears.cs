@@ -499,30 +499,8 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
 
     public static class JsonSchema
     {
-        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/CompetedInYears"u8;
-        private static ReadOnlySpan<byte> ExpectedAnArrayValue() => "Expected an array value."u8;
-        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeArray() => "Ignored because the value was not of type 'array'."u8;
-        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
-        private static ReadOnlySpan<byte> EscapedItemsKeyword() => "items"u8;
-
-        public static bool SchemaLocationForItemIndex(int index, Span<byte> buffer, out int written)
-        {
-            if (buffer.Length < 13)
-            {
-                written = 0;
-                return false;
-            }
-
-            "#/items/$ref/"u8.CopyTo(buffer);
-            if (!Utf8Formatter.TryFormat(index, buffer[13..], out int bytesWritten))
-            {
-                written = 0;
-                return false;
-            }
-
-            written = bytesWritten + 13;
-            return true;
-        }
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/CompetedInYears"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider<int> SchemaLocationForItems = static (_, buffer, out written) => __Keywords.Items(buffer, out written);
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -543,43 +521,49 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (tokenType != JsonTokenType.StartArray)
+            /* Array matching
+             * This would be if (tokenType != JsonTokenType.StartArray) for the non-matching case where we have array keywords
+             * to match, but no explicit type check */
+            if (!JsonSchemaMatching.MatchTypeArray(tokenType, __Keywords.Type, ref context))
             {
-                context.Matched(false, ExpectedAnArrayValue, EscapedTypeKeyword);
                 if (!context.HasCollector)
                 {
+                    context.PopSchemaLocation();
                     return;
                 }
 
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeArray, EscapedItemsKeyword);
-                context.PopSchemaLocation();
-                return;
+                // Ignore remaining array
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeArray, schemaEvaluationPath: __Keywords.Items);
             }
-
-            ArrayEnumerator arrayEnumerator = new(parentDocument, parentIndex);
-            int length = 0;
-
-            while (arrayEnumerator.MoveNext())
+            else
             {
-                JsonSchemaContext childContext = Year.JsonSchema.PushChildContext(
-                    parentDocument,
-                    arrayEnumerator.CurrentIndex,
-                    ref context,
-                    providerContext: length,
-                    schemaEvaluationPath: SchemaLocationForItemIndex);
+                ArrayEnumerator arrayEnumerator = new(parentDocument, parentIndex);
+                int length = 0;
 
-                Year.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
-                if (!childContext.IsMatch)
+                while (arrayEnumerator.MoveNext())
                 {
-                    context.Matched(false);
-                    if (!context.HasCollector)
-                    {
-                        return;
-                    }
-                }
+                    JsonSchemaContext childContext = Year.JsonSchema.PushChildContext(
+                        parentDocument,
+                        arrayEnumerator.CurrentIndex,
+                        ref context,
+                        providerContext: length,
+                        schemaEvaluationPath: SchemaLocationForItems,
+                        documentEvaluationPath: JsonSchemaMatching.ItemIndex);
 
-                context.CommitChildContext(childContext.IsMatch, ref childContext);
-                context.AddLocalEvaluatedItem(length);
+                    Year.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
+                    if (!childContext.IsMatch)
+                    {
+                        context.Matched(false);
+                        if (!context.HasCollector)
+                        {
+                            context.PopSchemaLocation();
+                            return;
+                        }
+                    }
+
+                    context.CommitChildContext(childContext.IsMatch, ref childContext);
+                    context.AddLocalEvaluatedItem(length);
+                }
             }
 
             context.PopSchemaLocation();
@@ -604,7 +588,22 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                 context.Dispose();
             }
         }
-
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    schemaEvaluationPath: schemaEvaluationPath);
+        }
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,

@@ -58,6 +58,8 @@ namespace Corvus.Text.Json
         // The same factor applies to utf-16 characters.
         public const int MaxExpansionFactorWhileEscaping = 6;
 
+        public const int MaxExpansionFactorWhileEncodingPointer = 2;
+
         // In the worst case, a single UTF-16 character could be expanded to 3 UTF-8 bytes.
         // Only surrogate pairs expand to 4 UTF-8 bytes but that is a transformation of 2 UTF-16 characters going to 4 UTF-8 bytes (factor of 2).
         // All other UTF-16 characters can be represented by either 1 or 2 UTF-8 bytes.
@@ -93,7 +95,7 @@ namespace Corvus.Text.Json
         public const int MaximumEscapedGuidLength = MaxExpansionFactorWhileEscaping * MaximumFormatGuidLength;
         public const int MaximumFormatDateTimeLength = 27;    // StandardFormat 'O', e.g. 2017-06-12T05:30:45.7680000
         public const int MaximumFormatDateLength = 10;    // StandardFormat 'O', e.g. 2017-06-12
-        public const int MaximumFormatOffsetDateLength = 10;    // StandardFormat 'O', e.g. 2017-06-12-07:00
+        public const int MaximumFormatOffsetDateLength = 16;    // StandardFormat 'O', e.g. 2017-06-12-07:00
         public const int MaximumFormatOffsetTimeLength = 22;    // StandardFormat 'O', e.g. 05:30:45.7680000-07:00
         public const int MaximumFormatPeriodLength = ((MaximumFormatUInt32Length + 1) * 7) + 13;    // StandardFormat e.g. P2147483647Y2147483647M2147483647W2147483647DT2147483647H2147483647M-2147483647.123456789S
         public const int MaximumFormatDateTimeOffsetLength = 33;  // StandardFormat 'O', e.g. 2017-06-12T05:30:45.7680000-07:00
@@ -104,6 +106,8 @@ namespace Corvus.Text.Json
         public const int MaximumDateTimeOffsetParseLength = (MaximumFormatDateTimeOffsetLength +
             (DateTimeParseNumFractionDigits - DateTimeNumFractionDigits)); // Like StandardFormat 'O' for DateTimeOffset, but allowing 9 additional (up to 16) fraction digits.
         public const int MinimumDateTimeParseLength = 10; // YYYY-MM-DD
+        public const int MinimumDateParseLength = 10; // YYYY-MM-DD
+        public const int MinimumTimeParseLength = 8; // HH:MM:SS
         public const int MaximumEscapedDateTimeOffsetParseLength = MaxExpansionFactorWhileEscaping * MaximumDateTimeOffsetParseLength;
 
         public const int MaximumLiteralLength = 5; // Must be able to fit null, true, & false.

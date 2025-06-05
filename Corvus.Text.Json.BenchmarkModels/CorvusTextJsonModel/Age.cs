@@ -60,10 +60,10 @@ public readonly struct Age : IJsonElement<Age>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, int year, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1, -1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.AddItem(year);
         Debug.Assert(cvb.MemberCount == 1);
@@ -71,7 +71,7 @@ public readonly struct Age : IJsonElement<Age>
         return documentBuilder;
     }
 
-    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+    public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
     {
         return workspace.CreateDocumentBuilder<Age, Mutable>(this);
     }
@@ -202,7 +202,6 @@ public readonly struct Age : IJsonElement<Age>
         private readonly int _idx;
         private readonly ulong _documentVersion;
 
-
         internal Mutable(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
@@ -281,7 +280,6 @@ public readonly struct Age : IJsonElement<Age>
             {
                 throw new InvalidOperationException();
             }
-
 
             if (_documentVersion != _parent.Version)
             {
@@ -448,12 +446,7 @@ public readonly struct Age : IJsonElement<Age>
 
     public static class JsonSchema
     {
-        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/Age"u8;
-        private static ReadOnlySpan<byte> ExpectedANumberValue() => "Expected a number value."u8;
-        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeNumber() => "Ignored because the value was not of type 'number'."u8;
-        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
-        private static ReadOnlySpan<byte> EscapedMinimumKeyword() => "minimum"u8;
-        private static ReadOnlySpan<byte> EscapedMaximumKeyword() => "maximum"u8;
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/Age"u8, buffer, out written);
 
         private static bool MinimumIsNegative => false;
         private static ReadOnlySpan<byte> MinimumIntegral => "0"u8;
@@ -484,72 +477,75 @@ public readonly struct Age : IJsonElement<Age>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (tokenType != JsonTokenType.Number)
+            /* Number matching
+             * This would be if (tokenType != JsonTokenType.Number) for the non-matching case where we have numeric keywords
+             * to match, but no explicit type check */
+            if (!JsonSchemaMatching.MatchTypeNumber(tokenType, __Keywords.Type, ref context))
             {
-                context.Matched(false, ExpectedANumberValue, schemaEvaluationPath: EscapedTypeKeyword);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
                     return;
                 }
 
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeNumber, schemaEvaluationPath: EscapedMinimumKeyword);
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeNumber, schemaEvaluationPath: EscapedMaximumKeyword);
-                context.PopSchemaLocation();
-                return;
-            }
-
-            ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex, false);
-            JsonElementHelpers.ParseNumber(number.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
-
-            if(JsonElementHelpers.CompareNormalizedJsonNumbers(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                MinimumIsNegative,
-                MinimumIntegral,
-                MinimumFractional,
-                MinimumExponent) < 0)
-            {
-                context.Matched(false, schemaEvaluationPath: EscapedMinimumKeyword);
-                if (!context.HasCollector)
-                {
-                    context.PopSchemaLocation();
-                    return;
-                }
+                // Ignore remaining numerics
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeNumber, schemaEvaluationPath: __Keywords.Minimum);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeNumber, schemaEvaluationPath: __Keywords.Maximum);
             }
             else
             {
-                context.Matched(true, schemaEvaluationPath: EscapedMinimumKeyword);
-            }
+                ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex, false);
+                JsonElementHelpers.ParseNumber(number.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
-            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                MaximumIsNegative,
-                MaximumIntegral,
-                MaximumFractional,
-                MaximumExponent) > 0)
-            {
-                context.Matched(false, schemaEvaluationPath: EscapedMaximumKeyword);
-                if (!context.HasCollector)
+                if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                    isNegative,
+                    integral,
+                    fractional,
+                    exponent,
+                    MinimumIsNegative,
+                    MinimumIntegral,
+                    MinimumFractional,
+                    MinimumExponent) < 0)
                 {
-                    context.PopSchemaLocation();
-                    return;
+                    context.Matched(false, schemaEvaluationPath: __Keywords.Minimum);
+                    if (!context.HasCollector)
+                    {
+                        context.PopSchemaLocation();
+                        return;
+                    }
                 }
-            }
-            else
-            {
-                context.Matched(true, schemaEvaluationPath: EscapedMaximumKeyword);
+                else
+                {
+                    context.Matched(true, schemaEvaluationPath: __Keywords.Minimum);
+                }
+
+                if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                    isNegative,
+                    integral,
+                    fractional,
+                    exponent,
+                    MaximumIsNegative,
+                    MaximumIntegral,
+                    MaximumFractional,
+                    MaximumExponent) > 0)
+                {
+                    context.Matched(false, schemaEvaluationPath: __Keywords.Maximum);
+                    if (!context.HasCollector)
+                    {
+                        context.PopSchemaLocation();
+                        return;
+                    }
+                }
+                else
+                {
+                    context.Matched(true, schemaEvaluationPath: __Keywords.Maximum);
+                }
             }
 
             context.PopSchemaLocation();
         }
 
-        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
         {
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
@@ -567,6 +563,23 @@ public readonly struct Age : IJsonElement<Age>
             {
                 context.Dispose();
             }
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    schemaEvaluationPath: schemaEvaluationPath);
         }
 
         internal static JsonSchemaContext PushChildContext(

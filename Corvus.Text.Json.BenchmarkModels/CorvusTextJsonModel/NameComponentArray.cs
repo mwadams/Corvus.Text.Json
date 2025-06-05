@@ -151,7 +151,6 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
         return EnumeratorCreator.CreateArrayEnumerator<NameComponent>(_parent, _idx);
     }
 
-
     /// <summary>
     ///   The <see cref="JsonValueKind"/> that the value is.
     /// </summary>
@@ -172,7 +171,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
     public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1, -1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
@@ -304,7 +303,6 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
         private readonly int _idx;
         private readonly ulong _documentVersion;
 
-
         internal Mutable(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
@@ -317,6 +315,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             _idx = idx;
             _documentVersion = _parent.Version;
         }
+
         /// <summary>
         ///   Get the name component at a specified index.
         /// </summary>
@@ -520,30 +519,9 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
 
     public static class JsonSchema
     {
-        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/PersonNameElementArray"u8;
-        private static ReadOnlySpan<byte> ExpectedAnArrayValue() => "Expected an array value."u8;
-        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeArray() => "Ignored because the value was not of type 'array'."u8;
-        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
-        private static ReadOnlySpan<byte> EscapedItemsKeyword() => "items"u8;
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/PersonNameElementArray"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider<int> SchemaLocationForItems = static (_, buffer, out written) => __Keywords.Items(buffer, out written);
 
-        public static bool SchemaLocationForItemIndex(int index, Span<byte> buffer, out int written)
-        {
-            if (buffer.Length < 13)
-            {
-                written = 0;
-                return false;
-            }
-
-            "#/items/$ref/"u8.CopyTo(buffer);
-            if (!Utf8Formatter.TryFormat(index, buffer[13..], out int bytesWritten))
-            {
-                written = 0;
-                return false;
-            }
-
-            written = bytesWritten + 13;
-            return true;
-        }
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -564,44 +542,50 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (tokenType != JsonTokenType.StartArray)
+
+            /* Array matching
+             * This would be if (tokenType != JsonTokenType.StartArray) for the non-matching case where we have array keywords
+             * to match, but no explicit type check */
+            if (!JsonSchemaMatching.MatchTypeArray(tokenType, __Keywords.Type, ref context))
             {
-                context.Matched(false, ExpectedAnArrayValue, EscapedTypeKeyword);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
                     return;
                 }
 
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeArray, EscapedItemsKeyword);
-                context.PopSchemaLocation();
-                return;
+                // Ignore remaining array
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeArray, schemaEvaluationPath: __Keywords.Items);
             }
-
-            ArrayEnumerator arrayEnumerator = new(parentDocument, parentIndex);
-            int length = 0;
-
-            while(arrayEnumerator.MoveNext())
+            else
             {
-                JsonSchemaContext childContext = NameComponent.JsonSchema.PushChildContext(
-                    parentDocument,
-                    arrayEnumerator.CurrentIndex,
-                    ref context,
-                    providerContext: length,
-                    schemaEvaluationPath: SchemaLocationForItemIndex);
+                ArrayEnumerator arrayEnumerator = new(parentDocument, parentIndex);
+                int length = 0;
 
-                NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
-                if (!childContext.IsMatch)
+                while (arrayEnumerator.MoveNext())
                 {
-                    context.Matched(false);
-                    if (!context.HasCollector)
-                    {
-                        return;
-                    }
-                }
+                    JsonSchemaContext childContext = NameComponent.JsonSchema.PushChildContext(
+                        parentDocument,
+                        arrayEnumerator.CurrentIndex,
+                        ref context,
+                        providerContext: length,
+                        schemaEvaluationPath: SchemaLocationForItems,
+                        documentEvaluationPath: JsonSchemaMatching.ItemIndex);
 
-                context.CommitChildContext(childContext.IsMatch, ref childContext);
-                context.AddLocalEvaluatedItem(length);
+                    NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
+                    if (!childContext.IsMatch)
+                    {
+                        context.Matched(false);
+                        if (!context.HasCollector)
+                        {
+                            context.PopSchemaLocation();
+                            return;
+                        }
+                    }
+
+                    context.CommitChildContext(childContext.IsMatch, ref childContext);
+                    context.AddLocalEvaluatedItem(length);
+                }
             }
 
             context.PopSchemaLocation();
@@ -625,6 +609,24 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             {
                 context.Dispose();
             }
+        }
+
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    schemaEvaluationPath: schemaEvaluationPath);
         }
 
         internal static JsonSchemaContext PushChildContext(

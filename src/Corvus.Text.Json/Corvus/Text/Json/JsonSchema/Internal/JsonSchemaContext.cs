@@ -251,6 +251,19 @@ namespace Corvus.Text.Json.Internal
             return PushChildContextCore(parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }
 
+        public readonly JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            bool useEvaluatedItems,
+            bool useEvaluatedProperties,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            _resultsCollector?.BeginChildContext(propertyName, schemaEvaluationPath);
+
+            return PushChildContextCore(parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+        }
+
         public readonly JsonSchemaContext PushChildContext<TProviderContext>(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
@@ -294,6 +307,24 @@ namespace Corvus.Text.Json.Internal
             JsonSchemaPathProvider? schemaEvaluationPath = null)
         {
             _resultsCollector?.Matched(isMatch, messageProvider, schemaEvaluationPath);
+            if (isMatch)
+            {
+                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
+            }
+            else
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Matched<TProviderContext>(
+            bool isMatch,
+            TProviderContext providerContext,
+            JsonSchemaMessageProvider<TProviderContext>? messageProvider = null,
+            JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath = null)
+        {
+            _resultsCollector?.Matched(isMatch, providerContext, messageProvider, schemaEvaluationPath);
             if (isMatch)
             {
                 _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;

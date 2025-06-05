@@ -42,14 +42,24 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         }
     }
 
-    public static implicit operator OtherNames(NameComponent nameComponent)
+    public static implicit operator OtherNames(in NameComponent value)
     {
-        return From(nameComponent);
+        return From(value);
     }
 
-    public static implicit operator OtherNames(NameComponentArray nameComponentArray)
+    public static implicit operator OtherNames(in NameComponentArray value)
     {
-        return From(nameComponentArray);
+        return From(value);
+    }
+
+    public static explicit operator NameComponent(in OtherNames value)
+    {
+        return new(value._parent, value._idx);
+    }
+
+    public static explicit operator NameComponentArray(in OtherNames value)
+    {
+        return new(value._parent, value._idx);
     }
 
     public TResult Match<TResult>(Func<NameComponent, TResult> nameComponent, Func<NameComponentArray, TResult> nameComponentArray, Func<OtherNames, TResult> noMatch)
@@ -91,7 +101,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, int year, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1, -1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.AddItem(year);
         Debug.Assert(cvb.MemberCount == 1);
@@ -520,13 +530,9 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public static class JsonSchema
     {
-        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/OtherNames"u8;
-
-        private static ReadOnlySpan<byte> OneOf0Location() => "#/oneOf/0/$ref"u8;
-        private static ReadOnlySpan<byte> OneOf1Location() => "#/oneOf/1/$ref"u8;
-        private static ReadOnlySpan<byte> EscapedOneOfKeyword() => "oneOf"u8;
-        private static ReadOnlySpan<byte> MatchedMoreThanOneSchema() => "Matched more than one schema."u8;
-        private static ReadOnlySpan<byte> MatchedNoSchema() => "Matched no schema."u8;
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/OtherNames"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider OneOf0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("oneOf/0/$ref"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider OneOf1SchemaEvaluationPath = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("oneOf/1/$ref"u8, buffer, out written);
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -548,7 +554,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             int oneOfMatchCount = 0;
 
             JsonSchemaContext oneOf0Context =
-                NameComponent.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf0Location);
+                NameComponent.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf0SchemaEvaluationPath);
 
             NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentIndex, ref oneOf0Context);
 
@@ -564,7 +570,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             }
 
             JsonSchemaContext oneOf1Context =
-                NameComponentArray.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf1Location);
+                NameComponentArray.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf1SchemaEvaluationPath);
 
             NameComponentArray.JsonSchema.ApplyJsonSchema(parentDocument, parentIndex, ref oneOf1Context);
 
@@ -581,15 +587,25 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
             if (oneOfMatchCount == 1)
             {
-                context.Matched(true, schemaEvaluationPath: EscapedOneOfKeyword);
+                context.Matched(true, schemaEvaluationPath: __Keywords.OneOf);
             }
             else if (oneOfMatchCount > 1)
             {
-                context.Matched(false, MatchedMoreThanOneSchema, schemaEvaluationPath: EscapedOneOfKeyword);
+                context.Matched(false, JsonSchemaMatching.MatchedMoreThanOneSchema, schemaEvaluationPath: __Keywords.OneOf);
+                if (!context.HasCollector)
+                {
+                    context.PopSchemaLocation();
+                    return;
+                }
             }
             else
             {
-                context.Matched(false, MatchedNoSchema, schemaEvaluationPath: EscapedOneOfKeyword);
+                context.Matched(false, JsonSchemaMatching.MatchedNoSchema, schemaEvaluationPath: __Keywords.OneOf);
+                if (!context.HasCollector)
+                {
+                    context.PopSchemaLocation();
+                    return;
+                }
             }
 
             context.PopSchemaLocation();
@@ -613,6 +629,24 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             {
                 context.Dispose();
             }
+        }
+
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    schemaEvaluationPath: schemaEvaluationPath);
         }
 
         internal static JsonSchemaContext PushChildContext(

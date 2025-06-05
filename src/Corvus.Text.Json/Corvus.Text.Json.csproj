@@ -85,6 +85,10 @@
   <!-- Include files under StringResourcesPath by convention unless OmitResources is set. -->
   <ItemGroup>    
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />    
+    <Compile Include="Corvus\Globalization\CharUnicodeInfo.cs" />    
+    <Compile Include="Corvus\Globalization\CharUnicodeInfoData.cs" />    
+    <Compile Include="Corvus\Globalization\IdnMapping.cs" />    
+    <Compile Include="Corvus\Globalization\StrongBidiCategory.cs" />    
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="Corvus\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
   </ItemGroup>
@@ -144,10 +148,11 @@
     <Compile Include="Corvus\Text\Json\Document\Internal\JsonDocument.PropertyMap.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\IJsonDocument.cs" />
     <Compile Include="Corvus\Text\Json\Document\ArrayEnumerator{T}.cs" />
-    <Compile Include="Corvus\Text\Json\Document\Internal\JsonSchemaContext.cs" />
+    <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaContext.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElement.JsonSchema.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElementExtensions.cs" />
-    <Compile Include="Corvus\Text\Json\Document\Internal\JsonSchemaMatcher.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatcher.cs" />
     <Compile Include="Corvus\Text\Json\Document\ObjectEnumerator{T}.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\ObjectEnumerator.cs" />
     <Compile Include="Corvus\Text\Json\Document\ParsedJsonDocument.cs" />
@@ -160,7 +165,7 @@
     <Compile Include="Corvus\Text\Json\Document\Internal\DbRow.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonDocumentOptions.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\IJsonElement.cs" />
-    <Compile Include="Corvus\Text\Json\Document\IJsonSchemaResultsCollector.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\IJsonSchemaResultsCollector.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.DateTime.Core.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.CreationAndConversion.cs" />
@@ -174,6 +179,12 @@
     <Compile Include="Corvus\Text\Json\Document\JsonValueKind.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.DateTime.cs" />
     <Compile Include="Corvus\Text\Json\Internal\Number.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.String.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Composition.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Array.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Object.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Number.cs" />
     <Compile Include="Corvus\Text\Json\UnescapedUtf8JsonString.cs" />
     <Compile Include="Corvus\Text\Json\RawUtf8JsonString.cs" />
     <Compile Include="Corvus\Text\Json\JsonConstants.cs" />

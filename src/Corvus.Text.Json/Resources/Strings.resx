@@ -842,4 +842,64 @@
   <data name="CannotCreateBuilderFromMutableDocument" xml:space="preserve">
     <value>You cannot create a mutable copy of a mutable document. Consider calling Freeze() on the source document.</value>
   </data>
+  <data name="JsonSchema_ExpectedNumberFormat" xml:space="preserve">
+    <value>Either the value is not in a supported format, or is out of bounds for</value>
+  </data>
+  <data name="JsonSchema_IgnoredNotType" xml:space="preserve">
+    <value>The keyword was ignored because the value was not of type</value>
+  </data>
+  <data name="JsonSchema_ExpectedType" xml:space="preserve">
+    <value>The value was expected to be of type</value>
+  </data>
+  <data name="JsonSchema_RequiredPropertyNotPresent" xml:space="preserve">
+    <value>Required property not present</value>
+  </data>
+  <data name="JsonSchema_RequiredPropertyPresent" xml:space="preserve">
+    <value>Required property present</value>
+  </data>
+  <data name="JsonSchema_MatchedMoreThanOneSchema" xml:space="preserve">
+    <value>The instance matched more than one schema.</value>
+  </data>
+  <data name="JsonSchema_MatchedNoSchema" xml:space="preserve">
+    <value>The instance matched no schema.</value>
+  </data>
+  <data name="ArgumentOutOfRange_IndexMustBeLessOrEqual" xml:space="preserve">
+    <value>Index was out of range. Must be non-negative and less than or equal to the size of the collection.</value>
+  </data>
+  <data name="ArgumentOutOfRange_IndexCountBuffer" xml:space="preserve">
+    <value>Index and count must refer to a location within the buffer.</value>
+  </data>
+  <data name="Argument_IdnBadLabelSize" xml:space="preserve">
+    <value>IDN labels must be between 1 and 63 characters long.</value>
+  </data>
+  <data name="Argument_InvalidCharSequence" xml:space="preserve">
+    <value>Invalid Unicode code point found at index {0}.</value>
+  </data>
+  <data name="Argument_IdnBadNameSize" xml:space="preserve">
+    <value>IDN names must be between 1 and {0} characters long.</value>
+  </data>
+  <data name="Argument_IdnBadBidi" xml:space="preserve">
+    <value>Left to right characters may not be mixed with right to left characters in IDN labels.</value>
+  </data>
+  <data name="Argument_IdnBadPunycode" xml:space="preserve">
+    <value>Invalid IDN encoded string.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIso8601Date" xml:space="preserve">
+    <value>Expected an ISO8601 Date string.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIso8601OffsetDateTime" xml:space="preserve">
+    <value>Expected an ISO8601 Offset DateTime string.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIso8601OffsetTime" xml:space="preserve">
+    <value>Expected an ISO8601 Offset Time string.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIso8601Duration" xml:space="preserve">
+    <value>Expected an ISO8601 Duration string.</value>
+  </data>
+  <data name="JsonSchema_ExpectedEmail" xml:space="preserve">
+    <value>Expected an Email string.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIdnEmail" xml:space="preserve">
+    <value>Expected an IDN Email string.</value>
+  </data>
 </root>

@@ -1,0 +1,752 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.Runtime.CompilerServices;
+
+namespace Corvus.Text.Json.Internal
+{
+    /// <summary>
+    /// Support for JSON Schema matching implementations.
+    /// </summary>
+    public static partial class JsonSchemaMatching
+    {
+        public static readonly JsonSchemaMessageProvider IgnoredNotTypeNumber = static (buffer, out written) => IgnoredNotType("number"u8, buffer, out written);
+
+        private static readonly JsonSchemaMessageProvider ExpectedTypeNumber = static (buffer, out written) => ExpectedType("number"u8, buffer, out written);
+
+        private static readonly JsonSchemaMessageProvider ExpectedInt128 = static (buffer, out written) => ExpectedNumberFormat("int128"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedUInt128 = static (buffer, out written) => ExpectedNumberFormat("uint128"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedInt64 = static (buffer, out written) => ExpectedNumberFormat("int64"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedUInt64 = static (buffer, out written) => ExpectedNumberFormat("uint64"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedInt32 = static (buffer, out written) => ExpectedNumberFormat("int32"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedUInt32 = static (buffer, out written) => ExpectedNumberFormat("uint32"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedInt16 = static (buffer, out written) => ExpectedNumberFormat("int16"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedUInt16 = static (buffer, out written) => ExpectedNumberFormat("uint16"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedSByte = static (buffer, out written) => ExpectedNumberFormat("sbyte"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedByte = static (buffer, out written) => ExpectedNumberFormat("byte"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedDouble = static (buffer, out written) => ExpectedNumberFormat("double"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedSingle = static (buffer, out written) => ExpectedNumberFormat("single"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedHalf = static (buffer, out written) => ExpectedNumberFormat("half"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedDecimal = static (buffer, out written) => ExpectedNumberFormat("decimal"u8, buffer, out written);
+
+        private const bool MinimumInt128IsNegative = true;
+        private static ReadOnlySpan<byte> MinimumInt128Integral => "170141183460469231731687303715884105728"u8;
+        private static ReadOnlySpan<byte> MinimumInt128Fractional => ""u8;
+        private const int MinimumInt128Exponent = 0;
+
+        private const bool MaximumInt128IsNegative = false;
+        private static ReadOnlySpan<byte> MaximumInt128Integral => "170141183460469231731687303715884105727"u8;
+        private static ReadOnlySpan<byte> MaximumInt128Fractional => ""u8;
+        private const int MaximumInt128Exponent = 0;
+
+        private const bool MinimumInt64IsNegative = true;
+        private static ReadOnlySpan<byte> MinimumInt64Integral => "9223372036854775808"u8;
+        private static ReadOnlySpan<byte> MinimumInt64Fractional => ""u8;
+        private const int MinimumInt64Exponent = 0;
+
+        private const bool MaximumInt64IsNegative = false;
+        private static ReadOnlySpan<byte> MaximumInt64Integral => "9223372036854775807"u8;
+        private static ReadOnlySpan<byte> MaximumInt64Fractional => ""u8;
+        private const int MaximumInt64Exponent = 0;
+
+        private const bool MinimumInt32IsNegative = true;
+        private static ReadOnlySpan<byte> MinimumInt32Integral => "2147483648"u8;
+        private static ReadOnlySpan<byte> MinimumInt32Fractional => ""u8;
+        private const int MinimumInt32Exponent = 0;
+
+        private const bool MaximumInt32IsNegative = false;
+        private static ReadOnlySpan<byte> MaximumInt32Integral => "2147483647"u8;
+        private static ReadOnlySpan<byte> MaximumInt32Fractional => ""u8;
+        private const int MaximumInt32Exponent = 0;
+
+        private const bool MinimumInt16IsNegative = true;
+        private static ReadOnlySpan<byte> MinimumInt16Integral => "32768"u8;
+        private static ReadOnlySpan<byte> MinimumInt16Fractional => ""u8;
+        private const int MinimumInt16Exponent = 0;
+
+        private const bool MaximumInt16IsNegative = false;
+        private static ReadOnlySpan<byte> MaximumInt16Integral => "32767"u8;
+        private static ReadOnlySpan<byte> MaximumInt16Fractional => ""u8;
+        private const int MaximumInt16Exponent = 0;
+
+        private const bool MinimumSByteIsNegative = true;
+        private static ReadOnlySpan<byte> MinimumSByteIntegral => "128"u8;
+        private static ReadOnlySpan<byte> MinimumSByteFractional => ""u8;
+        private const int MinimumSByteExponent = 0;
+
+        private const bool MaximumSByteIsNegative = false;
+        private static ReadOnlySpan<byte> MaximumSByteIntegral => "127"u8;
+        private static ReadOnlySpan<byte> MaximumSByteFractional => ""u8;
+        private const int MaximumSByteExponent = 0;
+
+        private const bool MinimumUInt128IsNegative = false;
+        private static ReadOnlySpan<byte> MinimumUInt128Integral => ""u8;
+        private static ReadOnlySpan<byte> MinimumUInt128Fractional => ""u8;
+        private const int MinimumUInt128Exponent = 0;
+
+        private const bool MaximumUInt128IsNegative = false;
+        private static ReadOnlySpan<byte> MaximumUInt128Integral => "340282366920938463463374607431768211455"u8;
+        private static ReadOnlySpan<byte> MaximumUInt128Fractional => ""u8;
+        private const int MaximumUInt128Exponent = 0;
+
+        private const bool MinimumUInt64IsNegative = false;
+        private static ReadOnlySpan<byte> MinimumUInt64Integral => ""u8;
+        private static ReadOnlySpan<byte> MinimumUInt64Fractional => ""u8;
+        private const int MinimumUInt64Exponent = 0;
+
+        private const bool MaximumUInt64IsNegative = false;
+        private static ReadOnlySpan<byte> MaximumUInt64Integral => "18446744073709551615"u8;
+        private static ReadOnlySpan<byte> MaximumUInt64Fractional => ""u8;
+        private const int MaximumUInt64Exponent = 0;
+
+        private const bool MinimumUInt32IsNegative = false;
+        private static ReadOnlySpan<byte> MinimumUInt32Integral => ""u8;
+        private static ReadOnlySpan<byte> MinimumUInt32Fractional => ""u8;
+        private const int MinimumUInt32Exponent = 0;
+
+        private const bool MaximumUInt32IsNegative = false;
+        private static ReadOnlySpan<byte> MaximumUInt32Integral => "4294967295"u8;
+        private static ReadOnlySpan<byte> MaximumUInt32Fractional => ""u8;
+        private const int MaximumUInt32Exponent = 0;
+
+        private const bool MinimumUInt16IsNegative = false;
+        private static ReadOnlySpan<byte> MinimumUInt16Integral => ""u8;
+        private static ReadOnlySpan<byte> MinimumUInt16Fractional => ""u8;
+        private const int MinimumUInt16Exponent = 0;
+
+        private const bool MaximumUInt16IsNegative = false;
+        private static ReadOnlySpan<byte> MaximumUInt16Integral => "65535"u8;
+        private static ReadOnlySpan<byte> MaximumUInt16Fractional => ""u8;
+        private const int MaximumUInt16Exponent = 0;
+
+        private const bool MinimumByteIsNegative = false;
+        private static ReadOnlySpan<byte> MinimumByteIntegral => ""u8;
+        private static ReadOnlySpan<byte> MinimumByteFractional => ""u8;
+        private const int MinimumByteExponent = 0;
+
+        private const bool MaximumByteIsNegative = false;
+        private static ReadOnlySpan<byte> MaximumByteIntegral => "255"u8;
+        private static ReadOnlySpan<byte> MaximumByteFractional => ""u8;
+        private const int MaximumByteExponent = 0;
+
+        private const bool MinimumDoubleIsNegative = true;
+        private static ReadOnlySpan<byte> MinimumDoubleIntegral => "17976931348623157"u8;
+        private static ReadOnlySpan<byte> MinimumDoubleFractional => ""u8;
+        private const int MinimumDoubleExponent = 291;
+
+        private const bool MaximumDoubleIsNegative = false;
+        private static ReadOnlySpan<byte> MaximumDoubleIntegral => "17976931348623157"u8;
+        private static ReadOnlySpan<byte> MaximumDoubleFractional => ""u8;
+        private const int MaximumDoubleExponent = 291;
+
+        private const bool MinimumSingleIsNegative = true;
+        private static ReadOnlySpan<byte> MinimumSingleIntegral => "340282346638528859"u8;
+        private static ReadOnlySpan<byte> MinimumSingleFractional => ""u8;
+        private const int MinimumSingleExponent = 20;
+
+        private const bool MaximumSingleIsNegative = false;
+        private static ReadOnlySpan<byte> MaximumSingleIntegral => "340282346638528859"u8;
+        private static ReadOnlySpan<byte> MaximumSingleFractional => ""u8;
+        private const int MaximumSingleExponent = 20;
+
+        private const bool MinimumHalfIsNegative = true;
+        private static ReadOnlySpan<byte> MinimumHalfIntegral => "65504"u8;
+        private static ReadOnlySpan<byte> MinimumHalfFractional => ""u8;
+        private const int MinimumHalfExponent = 0;
+
+        private const bool MaximumHalfIsNegative = false;
+        private static ReadOnlySpan<byte> MaximumHalfIntegral => "65504"u8;
+        private static ReadOnlySpan<byte> MaximumHalfFractional => ""u8;
+        private const int MaximumHalfExponent = 0;
+
+        private const bool MinimumDecimalIsNegative = true;
+        private static ReadOnlySpan<byte> MinimumDecimalIntegral => "79228162514264337593543950335"u8;
+        private static ReadOnlySpan<byte> MinimumDecimalFractional => ""u8;
+        private const int MinimumDecimalExponent = 0;
+
+        private const bool MaximumDecimalIsNegative = false;
+        private static ReadOnlySpan<byte> MaximumDecimalIntegral => "79228162514264337593543950335"u8;
+        private static ReadOnlySpan<byte> MaximumDecimalFractional => ""u8;
+        private const int MaximumDecimalExponent = 0;
+
+        [CLSCompliant(false)]
+        public static bool MatchTypeNumber(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
+        {
+            if (tokenType != JsonTokenType.Number)
+            {
+                context.Matched(false, ExpectedTypeNumber, schemaEvaluationPath: typeKeyword);
+                return false;
+            }
+            else
+            {
+                context.Matched(true, schemaEvaluationPath: typeKeyword);
+            }
+
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedInt128, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumInt128IsNegative,
+                MinimumInt128Integral,
+                MinimumInt128Fractional,
+                MinimumInt128Exponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedInt128, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumInt128IsNegative,
+                MaximumInt128Integral,
+                MaximumInt128Fractional,
+                MaximumInt128Exponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedInt128, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchUInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedUInt128, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumUInt128IsNegative,
+                MinimumUInt128Integral,
+                MinimumUInt128Fractional,
+                MinimumUInt128Exponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedUInt128, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumUInt128IsNegative,
+                MaximumUInt128Integral,
+                MaximumUInt128Fractional,
+                MaximumUInt128Exponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedUInt128, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+
+        [CLSCompliant(false)]
+        public static bool MatchInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedInt64, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumInt64IsNegative,
+                MinimumInt64Integral,
+                MinimumInt64Fractional,
+                MinimumInt64Exponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedInt64, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumInt64IsNegative,
+                MaximumInt64Integral,
+                MaximumInt64Fractional,
+                MaximumInt64Exponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedInt64, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchUInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedUInt64, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumUInt64IsNegative,
+                MinimumUInt64Integral,
+                MinimumUInt64Fractional,
+                MinimumUInt64Exponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedUInt64, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumUInt64IsNegative,
+                MaximumUInt64Integral,
+                MaximumUInt64Fractional,
+                MaximumUInt64Exponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedUInt64, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+
+        [CLSCompliant(false)]
+        public static bool MatchInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedInt32, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumInt32IsNegative,
+                MinimumInt32Integral,
+                MinimumInt32Fractional,
+                MinimumInt32Exponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedInt32, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumInt32IsNegative,
+                MaximumInt32Integral,
+                MaximumInt32Fractional,
+                MaximumInt32Exponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedInt32, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchUInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedUInt32, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumUInt32IsNegative,
+                MinimumUInt32Integral,
+                MinimumUInt32Fractional,
+                MinimumUInt32Exponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedUInt32, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumUInt32IsNegative,
+                MaximumUInt32Integral,
+                MaximumUInt32Fractional,
+                MaximumUInt32Exponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedUInt32, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedInt16, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumInt16IsNegative,
+                MinimumInt16Integral,
+                MinimumInt16Fractional,
+                MinimumInt16Exponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedInt16, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumInt16IsNegative,
+                MaximumInt16Integral,
+                MaximumInt16Fractional,
+                MaximumInt16Exponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedInt16, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchUInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedUInt16, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumUInt16IsNegative,
+                MinimumUInt16Integral,
+                MinimumUInt16Fractional,
+                MinimumUInt16Exponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedUInt16, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumUInt16IsNegative,
+                MaximumUInt16Integral,
+                MaximumUInt16Fractional,
+                MaximumUInt16Exponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedUInt16, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchSByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedSByte, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumSByteIsNegative,
+                MinimumSByteIntegral,
+                MinimumSByteFractional,
+                MinimumSByteExponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedSByte, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumSByteIsNegative,
+                MaximumSByteIntegral,
+                MaximumSByteFractional,
+                MaximumSByteExponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedSByte, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+            {
+                context.Matched(false, ExpectedByte, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumByteIsNegative,
+                MinimumByteIntegral,
+                MinimumByteFractional,
+                MinimumByteExponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedByte, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumByteIsNegative,
+                MaximumByteIntegral,
+                MaximumByteFractional,
+                MaximumByteExponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedByte, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchDouble(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumDoubleIsNegative,
+                MinimumDoubleIntegral,
+                MinimumDoubleFractional,
+                MinimumDoubleExponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedDouble, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumDoubleIsNegative,
+                MaximumDoubleIntegral,
+                MaximumDoubleFractional,
+                MaximumDoubleExponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedDouble, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchSingle(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumSingleIsNegative,
+                MinimumSingleIntegral,
+                MinimumSingleFractional,
+                MinimumSingleExponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedSingle, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumSingleIsNegative,
+                MaximumSingleIntegral,
+                MaximumSingleFractional,
+                MaximumSingleExponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedSingle, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchHalf(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumHalfIsNegative,
+                MinimumHalfIntegral,
+                MinimumHalfFractional,
+                MinimumHalfExponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedHalf, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumHalfIsNegative,
+                MaximumHalfIntegral,
+                MaximumHalfFractional,
+                MaximumHalfExponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedHalf, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchDecimal(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MinimumDecimalIsNegative,
+                MinimumDecimalIntegral,
+                MinimumDecimalFractional,
+                MinimumDecimalExponent) < 0)
+            {
+                context.Matched(false, messageProvider: ExpectedDecimal, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+                isNegative,
+                integral,
+                fractional,
+                exponent,
+                MaximumDecimalIsNegative,
+                MaximumDecimalIntegral,
+                MaximumDecimalFractional,
+                MaximumDecimalExponent) > 0)
+            {
+                context.Matched(false, messageProvider: ExpectedDecimal, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool ExpectedNumberFormat(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+        {
+            if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedNumberFormat.AsSpan(), buffer, out written))
+            {
+                return false;
+            }
+
+            return AppendSingleQuotedValue(typeName, buffer, ref written);
+        }
+    }
+}

@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Buffers.Text;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
@@ -476,30 +475,8 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
 
     public static class JsonSchema
     {
-        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/PersonNameElementArray"u8;
-        private static ReadOnlySpan<byte> ExpectedAnArrayValue() => "Expected an array value."u8;
-        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeArray() => "Ignored because the value was not of type 'array'."u8;
-        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
-        private static ReadOnlySpan<byte> EscapedItemsKeyword() => "items"u8;
-
-        private static bool SchemaLocationForItemIndex(int index, Span<byte> buffer, out int written)
-        {
-            if (buffer.Length < 13)
-            {
-                written = 0;
-                return false;
-            }
-
-            "#/items/$ref/"u8.CopyTo(buffer);
-            if (!Utf8Formatter.TryFormat(index, buffer[13..], out int bytesWritten))
-            {
-                written = 0;
-                return false;
-            }
-
-            written = bytesWritten + 13;
-            return true;
-        }
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/PersonArray"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider<int> SchemaLocationForUnevaluatedItems = static (_, buffer, out written) => __Keywords.UnevaluatedItems(buffer, out written);
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -520,86 +497,92 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (tokenType != JsonTokenType.StartArray)
+            /* Array matching
+             * This would be if (tokenType != JsonTokenType.StartArray) for the non-matching case where we have array keywords
+             * to match, but no explicit type check */
+            if (!JsonSchemaMatching.MatchTypeArray(tokenType, __Keywords.Type, ref context))
             {
-                context.Matched(false, ExpectedAnArrayValue, EscapedTypeKeyword);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
                     return;
                 }
 
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeArray, EscapedItemsKeyword);
-                context.PopSchemaLocation();
-                return;
+                // Ignore remaining array
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeArray, schemaEvaluationPath: __Keywords.PrefixItems);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeArray, schemaEvaluationPath: __Keywords.UnevaluatedItems);
             }
-
-            ArrayEnumerator arrayEnumerator = new(parentDocument, parentIndex);
-            int length = 0;
-
-            while(arrayEnumerator.MoveNext())
+            else
             {
-                switch(length)
+                ArrayEnumerator arrayEnumerator = new(parentDocument, parentIndex);
+                int length = 0;
+
+                while (arrayEnumerator.MoveNext())
                 {
-                    case 0:
+                    switch (length)
                     {
-                        JsonSchemaContext childContext = PersonArray.PrefixItems0.JsonSchema.PushChildContext(
-                            parentDocument,
-                            arrayEnumerator.CurrentIndex,
-                            ref context,
-                            providerContext: length,
-                            schemaEvaluationPath: SchemaLocationForItemIndex);
-
-                        PersonArray.PrefixItems0.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
-                        if (!childContext.IsMatch)
+                        case 0:
                         {
-                            context.CommitChildContext(false, ref childContext);
-                            if (!context.HasCollector)
+                            JsonSchemaContext childContext = PersonArray.PrefixItems0.JsonSchema.PushChildContext(
+                                parentDocument,
+                                arrayEnumerator.CurrentIndex,
+                                ref context,
+                                providerContext: length,
+                                schemaEvaluationPath: __Keywords.PrefixItemsWithIndex,
+                                documentEvaluationPath: JsonSchemaMatching.ItemIndex);
+
+                            PersonArray.PrefixItems0.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
+                            if (!childContext.IsMatch)
                             {
-                                return;
+                                context.CommitChildContext(false, ref childContext);
+                                if (!context.HasCollector)
+                                {
+                                    context.PopSchemaLocation();
+                                    return;
+                                }
                             }
-                        }
-                        else
-                        {
-                            context.CommitChildContext(true, ref childContext);
-                            context.AddLocalEvaluatedItem(length);
-                        }
-
-                        length++;
-                        break;
-                    }
-
-                    default:
-                    {
-                        JsonSchemaContext childContext = Person.JsonSchema.PushChildContext(
-                            parentDocument,
-                            arrayEnumerator.CurrentIndex,
-                            ref context,
-                            providerContext: length,
-                            schemaEvaluationPath: SchemaLocationForItemIndex);
-
-                        Person.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
-
-                        if (!childContext.IsMatch)
-                        {
-                            context.CommitChildContext(false, ref childContext);
-                            if (!context.HasCollector)
+                            else
                             {
-                                return;
+                                context.CommitChildContext(true, ref childContext);
+                                context.AddLocalEvaluatedItem(length);
                             }
-                        }
-                        else
-                        {
-                            context.CommitChildContext(true, ref childContext);
-                            context.AddLocalEvaluatedItem(length);
+
+                            length++;
+                            break;
                         }
 
-                        // Don't bother incrementing length here, because we don't care about the number
-                        // of items in the array, and we will continue to pass through the default case.
-                        break;
+                        default:
+                        {
+                            JsonSchemaContext childContext = Person.JsonSchema.PushChildContext(
+                                parentDocument,
+                                arrayEnumerator.CurrentIndex,
+                                ref context,
+                                providerContext: length,
+                                schemaEvaluationPath: SchemaLocationForUnevaluatedItems,
+                                documentEvaluationPath: JsonSchemaMatching.ItemIndex);
+
+                            Person.JsonSchema.ApplyJsonSchema(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
+
+                            if (!childContext.IsMatch)
+                            {
+                                context.CommitChildContext(false, ref childContext);
+                                if (!context.HasCollector)
+                                {
+                                    context.PopSchemaLocation();
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                context.CommitChildContext(true, ref childContext);
+                                context.AddLocalEvaluatedItem(length);
+                            }
+
+                            length++;
+                            break;
+                        }
                     }
                 }
-
             }
 
             context.PopSchemaLocation();
@@ -623,6 +606,23 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             {
                 context.Dispose();
             }
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: true, // We do use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    schemaEvaluationPath: schemaEvaluationPath);
         }
 
         internal static JsonSchemaContext PushChildContext(

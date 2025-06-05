@@ -110,6 +110,20 @@ public readonly struct Person : IJsonElement<Person>
         _parent.WriteElementTo(_idx, writer);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override bool Equals(object? obj)
+    {
+        return (obj is IJsonElement other && Equals(new Person(other.ParentDocument, other.ParentDocumentIndex)))
+            || (obj is null && this.IsNull());
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Equals<T>(T other)
+        where T : struct, IJsonElement
+    {
+        return JsonElementHelpers.DeepEquals(this, other);
+    }
+
     /// <summary>
     ///   Gets a string representation for the current value appropriate to the value type.
     /// </summary>
@@ -216,7 +230,7 @@ public readonly struct Person : IJsonElement<Person>
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1, -1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.StartObject();
         Builder.Create(ref cvb, age, name, competedInYears);
@@ -228,10 +242,9 @@ public readonly struct Person : IJsonElement<Person>
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1, -1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         Builder.BuildValue(builder, ref cvb);
-        Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }
@@ -629,28 +642,19 @@ public readonly struct Person : IJsonElement<Person>
 
     public static class JsonSchema
     {
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/Person"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider<int> RequiredSchemaEvaluationPath = static (index, buffer, out written) => JsonSchemaMatching.SchemaLocationForIndexedKeyword("required"u8, index, buffer, out written);
+        private static readonly JsonSchemaMessageProvider<int> RequiredPropertyNamePresent = static (_, buffer, out written) => JsonSchemaMatching.RequiredPropertyPresent("name"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider<int> RequiredPropertyNameNotPresent = static (_, buffer, out written) => JsonSchemaMatching.RequiredPropertyNotPresent("name"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider NameSchemaEvaluationPath = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("properties/name/$ref"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider AgeSchemaEvaluationPath = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("properties/age/$ref"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider CompetedInYearsSchemaEvaluationPath = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("properties/competedInYears/$ref"u8, buffer, out written);
+
+
         private const int NameRequiredOffset = 0;
         private const int NameRequiredBitMask = 0b0000_0000_0000_0001;
         private const int BitMaskOffset0 = NameRequiredBitMask;
 
-        private static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/Person"u8;
-        private static ReadOnlySpan<byte> Required0Location() => "#/required/0"u8;
-
-        private static ReadOnlySpan<byte> ExpectedAnObjectValue() => "Expected an object value."u8;
-        private static ReadOnlySpan<byte> RequiredPropertyNameNotPresent() => "The required property 'name' was not present."u8;
-        private static ReadOnlySpan<byte> RequiredPropertyNamePresent() => "The required property 'name' was present."u8;
-        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeObject() => "Ignored because the value was not of type 'object'."u8;
-        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
-        private static ReadOnlySpan<byte> EscapedPropertiesKeyword() => "properties"u8;
-        private static ReadOnlySpan<byte> EscapedRequiredKeyword() => "required"u8;
-        private static ReadOnlySpan<byte> EscapedNameSchemaEvaluationPath() => "#/properties/name/$ref"u8;
-        private static ReadOnlySpan<byte> EscapedNameDocumentEvaluationPath() => "#/name"u8;
-        private static ReadOnlySpan<byte> EscapedAgeSchemaEvaluationPath() => "#/properties/age/$ref"u8;
-        private static ReadOnlySpan<byte> EscapedAgeDocumentEvaluationPath() => "#/age"u8;
-        private static ReadOnlySpan<byte> EscapedCompetedInYearsSchemaEvaluationPath() => "#/properties/competedInYears/$ref"u8;
-        private static ReadOnlySpan<byte> EscapedCompetedInYearsDocumentEvaluationPath() => "#/competedInYears"u8;
-
-        // NEXT TIME: Implement the validation for Person
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
         /// </summary>
@@ -670,79 +674,87 @@ public readonly struct Person : IJsonElement<Person>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (tokenType != JsonTokenType.StartObject)
+            if (!JsonSchemaMatching.MatchTypeObject(tokenType, __Keywords.Type, ref context))
             {
-                context.Matched(false, ExpectedAnObjectValue, EscapedTypeKeyword);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
                     return;
                 }
 
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeObject, EscapedPropertiesKeyword);
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeObject, EscapedRequiredKeyword);
-                context.PopSchemaLocation();
-                return;
-            }
-
-            Span<int> seenItems = stackalloc int[1];
-
-            int propertyCount = 0;
-
-            var enumerator = new ObjectEnumerator(parentDocument, parentIndex);
-            while (enumerator.MoveNext())
-            {
-                int currentIndex = enumerator.CurrentIndex;
-                ReadOnlySpan<byte> propertyName = parentDocument.GetPropertyNameRaw(currentIndex);
-
-                if (TryGetValidator(propertyName, out JsonSchemaMatcherWithRequiredBitBuffer? validator))
-                {
-                    context.AddLocalEvaluatedProperty(propertyCount);
-                    validator(parentDocument, currentIndex, ref context, seenItems);
-
-                    if (!context.IsMatch && !context.HasCollector)
-                    {
-                        return;
-                    }
-                }
-
-                propertyCount++;
-            }
-
-            // Do a quick test to see if we have all of the required bits set in each element
-            if ((seenItems[0] ^ BitMaskOffset0) == 0)
-            {
-                if (context.HasCollector)
-                {
-                    // Add a "matched" for each of the individual matched properties
-                    context.Matched(true, RequiredPropertyNameNotPresent, Required0Location);
-                }
-
-                return;
-            }
-
-            // Sadly we don't, so we have to do the slow path
-            if (!context.HasCollector)
-            {
-                // Which we can cut short if we are not doing collections
-                context.Matched(false);
-                return;
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, __Keywords.Properties);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, __Keywords.Required);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, __Keywords.UnevaluatedProperties);
             }
             else
             {
-                // We have missed at least one of the required properties
-                // and we are doing collections, so test them all individually
-                if ((seenItems[NameRequiredOffset] & NameRequiredBitMask) == 0)
+                Span<int> seenItems = stackalloc int[1];
+
+                int propertyCount = 0;
+
+                var enumerator = new ObjectEnumerator(parentDocument, parentIndex);
+                while (enumerator.MoveNext())
                 {
-                    context.Matched(false, RequiredPropertyNameNotPresent, Required0Location);
-                    if (!context.HasCollector)
+                    int currentIndex = enumerator.CurrentIndex;
+                    ReadOnlySpan<byte> propertyName = parentDocument.GetPropertyNameRaw(currentIndex);
+
+                    if (TryGetValidator(propertyName, out JsonSchemaMatcherWithRequiredBitBuffer? validator))
                     {
-                        return;
+                        context.AddLocalEvaluatedProperty(propertyCount);
+                        validator(parentDocument, currentIndex, ref context, seenItems);
+
+                        if (!context.IsMatch && !context.HasCollector)
+                        {
+                            context.PopSchemaLocation();
+                            return;
+                        }
                     }
+
+                    if (!context.HasLocalOrAppliedEvaluatedProperty(propertyCount))
+                    {
+                        // We push and commit the child context as an optimization for "NotAny" - no need to actually validate with anything in between, just
+                        // jump straight to "isMatch: false"; but benefit from the output generation.
+                        JsonSchemaContext childContext = context.PushChildContext(parentDocument, currentIndex, false, false, propertyName: propertyName, schemaEvaluationPath: __Keywords.UnevaluatedProperties);
+                        context.CommitChildContext(isMatch: false, ref childContext);
+                        if (!context.HasCollector)
+                        {
+                            context.PopSchemaLocation();
+                            return;
+                        }
+                    }
+
+                    propertyCount++;
+                }
+
+                // Do a quick test to see if we have all of the required bits set in each element
+                if ((seenItems[0] ^ BitMaskOffset0) == 0)
+                {
+                    // Add a "matched" for each of the individual matched properties
+                    context.Matched(true, 0, RequiredPropertyNameNotPresent, RequiredSchemaEvaluationPath);
+                    context.PopSchemaLocation();
+                    return;
+                }
+
+                // Sadly we don't, so we have to do the slow path
+                if (!context.HasCollector)
+                {
+                    // Which we can cut short if we are not doing collections
+                    context.Matched(false);
+                    context.PopSchemaLocation();
+                    return;
                 }
                 else
                 {
-                    context.Matched(true, RequiredPropertyNamePresent, Required0Location);
+                    // We have missed at least one of the required properties
+                    // and we are doing collections, so test them all individually
+                    if ((seenItems[NameRequiredOffset] & NameRequiredBitMask) == 0)
+                    {
+                        context.Matched(false, 0, RequiredPropertyNameNotPresent, RequiredSchemaEvaluationPath);
+                    }
+                    else
+                    {
+                        context.Matched(true, 0, RequiredPropertyNamePresent, RequiredSchemaEvaluationPath);
+                    }
                 }
             }
 
@@ -780,8 +792,8 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
-                    schemaEvaluationPath: EscapedNameSchemaEvaluationPath,
-                    documentEvaluationPath: EscapedNameDocumentEvaluationPath);
+                    JsonPropertyNames.Name,
+                    schemaEvaluationPath: NameSchemaEvaluationPath);
 
             PersonName.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
             context.CommitChildContext(childContext.IsMatch, ref childContext);
@@ -796,8 +808,8 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
-                    schemaEvaluationPath: EscapedAgeSchemaEvaluationPath,
-                    documentEvaluationPath: EscapedAgeDocumentEvaluationPath);
+                    JsonPropertyNames.Age,
+                    schemaEvaluationPath: AgeSchemaEvaluationPath);
 
             Age.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
 
@@ -811,8 +823,8 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
-                    schemaEvaluationPath: EscapedCompetedInYearsSchemaEvaluationPath,
-                    documentEvaluationPath: EscapedCompetedInYearsDocumentEvaluationPath);
+                    JsonPropertyNames.CompetedInYears,
+                    schemaEvaluationPath: CompetedInYearsSchemaEvaluationPath);
 
             CompetedInYears.JsonSchema.ApplyJsonSchema(parentDocument, parentDocumentIndex, ref childContext);
 
@@ -824,7 +836,7 @@ public readonly struct Person : IJsonElement<Person>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: false,
+                usingEvaluatedProperties: true,
                 usingEvaluatedItems: false,
                 resultsCollector: resultsCollector);
 
@@ -837,6 +849,23 @@ public readonly struct Person : IJsonElement<Person>
             {
                 context.Dispose();
             }
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    schemaEvaluationPath: schemaEvaluationPath);
         }
 
         internal static JsonSchemaContext PushChildContext(
@@ -869,7 +898,7 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocument,
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
-                    useEvaluatedProperties: false,
+                    useEvaluatedProperties: true, // But we do use evaluated properties
                     providerContext: providerContext,
                     schemaEvaluationPath: schemaEvaluationPath,
                     documentEvaluationPath: documentEvaluationPath);

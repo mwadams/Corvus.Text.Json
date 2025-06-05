@@ -42,11 +42,6 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         }
     }
 
-    public static explicit operator string?(NameComponent value)
-    {
-        return value.GetString();
-    }
-
     public string? GetString()
     {
         CheckValidInstance();
@@ -70,7 +65,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, int year, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1, -1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.AddItem(year);
         Debug.Assert(cvb.MemberCount == 1);
@@ -210,7 +205,6 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         private readonly int _idx;
         private readonly ulong _documentVersion;
 
-
         internal Mutable(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
@@ -239,11 +233,6 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             {
                 return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
             }
-        }
-
-        public static explicit operator string?(Mutable value)
-        {
-            return value.GetString();
         }
 
         public static explicit operator Mutable(NameComponent nameComponent)
@@ -466,7 +455,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                 }
                 else
                 {
-                    valueBuilder.AddProperty(utf8Name, Utf8StringValue, escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                    valueBuilder.AddProperty(utf8Name, Utf8StringValue, escapeName, true, nameRequiresUnescaping, false);
                 }
             }
         }
@@ -474,6 +463,8 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
 
     public static class JsonSchema
     {
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/PersonNameElement"u8, buffer, out written);
+
         /// <summary>
         /// A constant for the <c>maxLength</c> keyword.
         /// </summary>
@@ -483,13 +474,6 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         /// A constant for the <c>minLength</c> keyword.
         /// </summary>
         public static readonly long MinLength = 1;
-
-        public static ReadOnlySpan<byte> SchemaLocation() => "#/$defs/PersonNameElement"u8;
-        private static ReadOnlySpan<byte> ExpectedAStringValue() => "Expected a string value."u8;
-        private static ReadOnlySpan<byte> IgnoredBecauseTheValueWasNotOfTypeString() => "Ignored because the value was not of type 'string'."u8;
-        private static ReadOnlySpan<byte> EscapedTypeKeyword() => "type"u8;
-        private static ReadOnlySpan<byte> EscapedMinLengthKeyword() => "minLength"u8;
-        private static ReadOnlySpan<byte> EscapedMaxLengthKeyword() => "maxLength"u8;
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -510,39 +494,43 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (tokenType != JsonTokenType.String)
+            /* String matching
+             * This would be if (tokenType != JsonTokenType.String) for the non-matching case where we have numeric keywords
+             * to match, but no explicit type check */
+            if (!JsonSchemaMatching.MatchTypeString(tokenType, __Keywords.Type, ref context))
             {
-                context.Matched(false, ExpectedAStringValue, schemaEvaluationPath: EscapedTypeKeyword);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
                     return;
                 }
 
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeString, schemaEvaluationPath: EscapedMinLengthKeyword);
-                context.Ignored(IgnoredBecauseTheValueWasNotOfTypeString, schemaEvaluationPath: EscapedMaxLengthKeyword);
-                context.PopSchemaLocation();
-                return;
-            }
-
-            using UnescapedUtf8JsonString stringValue = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
-            int length = JsonElementHelpers.GetUtf8StringLength(stringValue.Span);
-            if (length <= MaxLength)
-            {
-                context.Matched(true, schemaEvaluationPath: EscapedMaxLengthKeyword);
+                // Ignore remaining string
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeString, schemaEvaluationPath: __Keywords.MinLength);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeString, schemaEvaluationPath: __Keywords.MaxLength);
             }
             else
             {
-                context.Matched(false, schemaEvaluationPath: EscapedMaxLengthKeyword);
-            }
+                using UnescapedUtf8JsonString stringValue = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
+                int length = JsonElementHelpers.GetUtf8StringLength(stringValue.Span);
+                // Notice that we don't "short circuit" for the flags case, because the length test is fast.
+                if (length <= MaxLength)
+                {
+                    context.Matched(true, schemaEvaluationPath: __Keywords.MaxLength);
+                }
+                else
+                {
+                    context.Matched(false, schemaEvaluationPath: __Keywords.MaxLength);
+                }
 
-            if (length >= MinLength)
-            {
-                context.Matched(true, schemaEvaluationPath: EscapedMinLengthKeyword);
-            }
-            else
-            {
-                context.Matched(false, schemaEvaluationPath: EscapedMinLengthKeyword);
+                if (length >= MinLength)
+                {
+                    context.Matched(true, schemaEvaluationPath: __Keywords.MinLength);
+                }
+                else
+                {
+                    context.Matched(false, schemaEvaluationPath: __Keywords.MinLength);
+                }
             }
 
             context.PopSchemaLocation();

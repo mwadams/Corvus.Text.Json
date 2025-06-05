@@ -3,9 +3,9 @@
 
 namespace Corvus.Text.Json
 {
-    public delegate ReadOnlySpan<byte> JsonSchemaPathProvider();
+    public delegate bool JsonSchemaPathProvider(Span<byte> buffer, out int written);
     public delegate bool JsonSchemaPathProvider<TContext>(TContext context, Span<byte> buffer, out int written);
-    public delegate ReadOnlySpan<byte> JsonSchemaMessageProvider();
+    public delegate bool JsonSchemaMessageProvider(Span<byte> buffer, out int written);
     public delegate bool JsonSchemaMessageProvider<TContext>(TContext context, Span<byte> buffer, out int written);
 
     /// <summary>
@@ -25,6 +25,19 @@ namespace Corvus.Text.Json
         void BeginChildContext(
             JsonSchemaPathProvider? schemaEvaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null);
+
+        /// <summary>
+        /// Begin a child context.
+        /// </summary>
+        /// <param name="propertyName">The name of the property for which to begin a child context.</param>
+        /// <param name="schemaEvaluationPath">The path taken through the schema(s).</param>
+        /// <remarks>
+        /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
+        /// or abandoned with <see cref="PopChildContext"/>.
+        /// </remarks>
+        void BeginChildContext(
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null);
 
         /// <summary>
         /// Begin a child context.
@@ -54,8 +67,8 @@ namespace Corvus.Text.Json
         /// <summary>
         /// Commits the last child context.
         /// </summary>
-        /// <param name="providerContext">The context to provide to the message provider.</param>
         /// <param name="isMatch">If <see langword="true"/> then the commit indicates that the child produced a successful match.</param>
+        /// <param name="providerContext">The context to provide to the message provider.</param>
         /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
         /// <remarks>
         /// This allows the collector to update the match state, and commit any resources associated with the child context.
@@ -80,6 +93,19 @@ namespace Corvus.Text.Json
             bool isMatch,
             JsonSchemaMessageProvider? messageProvider,
             JsonSchemaPathProvider? schemaEvaluationPath);
+
+        /// <summary>
+        /// Updates the match state for the current context.
+        /// </summary>
+        /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+        /// <param name="providerContext">The context to provider to the providers.</param>
+        /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+        /// <param name="schemaEvaluationPath">The path taken through the schema(s) at which the context is being evaluated.</param>
+        void Matched<TProviderContext>(
+            bool isMatch,
+            TProviderContext providerContext,
+            JsonSchemaMessageProvider<TProviderContext>? messageProvider,
+            JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath);
 
         /// <summary>
         /// Pushes the relative or absolute schema location when evaluating a subschema.
