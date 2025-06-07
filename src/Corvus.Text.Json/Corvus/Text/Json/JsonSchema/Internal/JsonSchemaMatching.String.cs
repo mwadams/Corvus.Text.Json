@@ -111,7 +111,7 @@ namespace Corvus.Text.Json.Internal
 #endif
             try
             {
-                if (EmailPattern.IsMatch(segment))
+                if (!EmailPattern.IsMatch(segment))
                 {
                     context.Matched(false, messageProvider: ExpectedEmail, schemaEvaluationPath: keyword);
                     return false;
