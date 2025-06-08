@@ -19,8 +19,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            keywordSchemaLocation.CopyTo(buffer);
-            written = keywordSchemaLocation.Length;
+            TryCopyPath(keywordSchemaLocation, buffer, out written);
 
             if (buffer[written - 1] != (byte)'/')
             {

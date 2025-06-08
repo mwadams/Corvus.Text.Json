@@ -153,8 +153,8 @@ namespace Corvus.Text.Json.Internal
 
             char[]? charBuffer = null;
             Span<char> chars =
-                length < JsonConstants.StackallocCharThreshold
-                    ? stackalloc char[JsonConstants.StackallocCharThreshold]
+                length < JsonConstants.StackallocNonRecursiveCharThreshold
+                    ? stackalloc char[JsonConstants.StackallocNonRecursiveCharThreshold]
                     : (charBuffer = ArrayPool<char>.Shared.Rent(length)).AsSpan();
 
             try

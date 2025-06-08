@@ -11,5 +11,7 @@ namespace Corvus.Text.Json
 
         public const int StackallocByteThreshold = 256;
         public const int StackallocCharThreshold = StackallocByteThreshold / 2;
+        public const int StackallocNonRecursiveByteThreshold = 4096;
+        public const int StackallocNonRecursiveCharThreshold = StackallocNonRecursiveByteThreshold / 2;
     }
 }
