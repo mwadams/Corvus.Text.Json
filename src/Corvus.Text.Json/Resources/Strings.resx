@@ -902,4 +902,16 @@
   <data name="JsonSchema_ExpectedIdnEmail" xml:space="preserve">
     <value>Expected an IDN Email string.</value>
   </data>
+  <data name="JsonSchema_ExpectedHostname" xml:space="preserve">
+    <value>Expected an RFC1035 hostname.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIdnHostname" xml:space="preserve">
+    <value>Expected an RFC1035 IDN hostname.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIPV4" xml:space="preserve">
+    <value>Expected an RFC791 IP V4 address.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIPV6" xml:space="preserve">
+    <value>Expected an RFC2460 IP V6 address.</value>
+  </data>
 </root>

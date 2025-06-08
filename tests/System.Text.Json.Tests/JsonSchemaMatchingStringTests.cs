@@ -101,6 +101,7 @@ public class JsonSchemaMatchingStringTests
     [InlineData("χρήστης@παράδειγμα.ελ", true)]
     [InlineData("Dörte@Sörensen.example.com", true)]
     [InlineData("مثال@موقع.عر", true)]
+    [InlineData("jo@\u0640\u07fa", false)]
     public void MatchIdnEmail_ValidatesIdnEmail(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
@@ -132,8 +133,12 @@ public class JsonSchemaMatchingStringTests
     [InlineData("hostnam3", true)]
     public void MatchHostname_ValidatesHostname(string value, bool expected)
     {
-        bool result = JsonSchemaMatching.MatchHostname(Encoding.UTF8.GetBytes(value));
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchHostname(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
         Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
     }
 
     [Theory]
@@ -189,7 +194,78 @@ public class JsonSchemaMatchingStringTests
     [InlineData("hostnam3", true)]
     public void MatchIdnHostname_ValidatesIdnHostname(string value, bool expected)
     {
-        bool result = JsonSchemaMatching.MatchIdnHostname(Encoding.UTF8.GetBytes(value));
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchIdnHostname(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
         Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("::1", true)]
+    [InlineData("12345::", false)]
+    [InlineData("::abef", true)]
+    [InlineData(":abcef", false)]
+    [InlineData("1:1:1:1:1:1:1:1:1:1:1:1:1:1:1:1", false)]
+    [InlineData(":laptop", false)]
+    [InlineData("::", true)]
+    [InlineData("::42:ff:1", true)]
+    [InlineData("d6::", true)]
+    [InlineData(":2:3:4:5:6:7:8", false)]
+    [InlineData("1:2:3:4:5:6:7:", false)]
+    [InlineData(":2:3:4::8", false)]
+    [InlineData("1:d6::42", true)]
+    [InlineData("1::d6::42", false)]
+    [InlineData("1::d6:192.168.0.1", true)]
+    [InlineData("1:2::192.168.0.1", true)]
+    [InlineData("1::2:192.168.256.1", false)]
+    [InlineData("1::2:192.168.ff.1", false)]
+    [InlineData("::ffff:192.168.0.1", true)]
+    [InlineData("1:2:3:4:5:::8", false)]
+    [InlineData("1:2:3:4:5:6:7:8", true)]
+    [InlineData("1:2:3:4:5:6:7", false)]
+    [InlineData("1", false)]
+    [InlineData("127.0.0.1", false)]
+    [InlineData("1:2:3:4:1.2.3", false)]
+    [InlineData("  ::1", false)]
+    [InlineData("::1  ", false)]
+    [InlineData("fe80::/64", false)]
+    [InlineData("fe80::a%eth1", false)]
+    [InlineData("1000:1000:1000:1000:1000:1000:255.255.255.255", true)]
+    [InlineData("100:100:100:100:100:100:255.255.255.255.255", false)]
+    [InlineData("100:100:100:100:100:100:100:255.255.255.255", false)]
+    [InlineData("1:2:3:4:5:6:7:৪", false)]
+    [InlineData("1:2::192.16৪.0.1", false)]
+    public void MatchIPV6_ValidatesIPV6(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchIPV6(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("192.168.0.1", true)]
+    [InlineData("127.0.0.0.1", false)]
+    [InlineData("256.256.256.256", false)]
+    [InlineData("127.0", false)]
+    [InlineData("0x7f000001", false)]
+    [InlineData("2130706433", false)]
+    [InlineData("087.10.0.1", false)]
+    [InlineData("87.10.0.1", true)]
+    [InlineData("1২7.0.0.1", false)]
+    [InlineData("192.168.1.0/24", false)]
+
+    public void MatchIPV4_ValidatesIPV4(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchIPV4(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
     }
 }

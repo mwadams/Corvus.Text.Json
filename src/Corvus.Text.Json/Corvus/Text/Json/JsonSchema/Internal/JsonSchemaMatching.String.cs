@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Corvus.Globalization;
@@ -23,6 +22,10 @@ namespace Corvus.Text.Json.Internal
         private static readonly JsonSchemaMessageProvider ExpectedDuration = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601Duration.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedEmail = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedEmail.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedIdnEmail = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIdnEmail.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedHostname = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedHostname.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedIdnHostname = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIdnHostname.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedIPV4 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV4.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedIPV6 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV6.AsSpan(), buffer, out written);
 
         [CLSCompliant(false)]
         public static bool MatchTypeString(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
@@ -176,6 +179,19 @@ namespace Corvus.Text.Json.Internal
 #endif
         }
 
+        [CLSCompliant(false)]
+        public static bool MatchIdnHostname(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchIdnHostname(value))
+            {
+                context.Matched(false, messageProvider: ExpectedIdnHostname, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIdnHostname(ReadOnlySpan<byte> value)
         {
@@ -225,6 +241,18 @@ namespace Corvus.Text.Json.Internal
 #endif
         }
 
+        [CLSCompliant(false)]
+        public static bool MatchHostname(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchHostname(value))
+            {
+                context.Matched(false, messageProvider: ExpectedHostname, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchHostname(ReadOnlySpan<byte> value)
@@ -259,6 +287,55 @@ namespace Corvus.Text.Json.Internal
 #else
             return HostnamePattern.IsMatch(segment.ToString());
 #endif
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchIPV4(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchIPV4(value))
+            {
+                context.Matched(false, messageProvider: ExpectedIPV4, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchIPV4(ReadOnlySpan<byte> value)
+        {
+            if (value.Length > IPAddressParser.MaxIPv4StringLength)
+            {
+                return false;
+            }
+
+            return IPAddressParser.IsValidIPV4(value);
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchIPV6(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchIPV6(value))
+            {
+                context.Matched(false, messageProvider: ExpectedIPV6, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchIPV6(ReadOnlySpan<byte> value)
+        {
+
+            if (value.Length > IPAddressParser.MaxIPv6StringLength)
+            {
+                return false;
+            }
+
+            return IPAddressParser.IsValidIPV6(value);
         }
 
         private static readonly Regex EmailPattern = CreateEmailPattern();
