@@ -157,7 +157,7 @@ namespace Corvus.Text.Json.Internal
             ReadOnlySpan<byte> fractional,
             int exponent)
         {
-            return (integral.Length == 0 && fractional.Length == 0) || exponent >= 0;
+            return exponent >= 0;
         }
 
         /// <summary>
