@@ -57,6 +57,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />
+    <Compile Include="DummyDocument.cs" />
+    <Compile Include="DummyResultsCollector.cs" />
     <Compile Include="JsonDocumentBuilderCreateDynamicTests.cs" />
     <Compile Include="JsonDocumentBuilderTests.cs" />
     <Compile Include="JsonElement.MutableDynamicCloneTests.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="JsonPropertyDocumentBuilderDynamicTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderTests.cs" />
     <Compile Include="JsonSchemaContextTests.cs" />
+    <Compile Include="JsonSchemaMatchingNumberTests.cs" />
     <Compile Include="JsonSchemaMatchingStringTests.cs" />
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="System\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
