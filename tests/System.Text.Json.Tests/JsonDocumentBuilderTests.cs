@@ -4590,6 +4590,8 @@ namespace Corvus.Text.Json.Tests
             // Existing UTF-8 property name tests
             root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
+            root.SetProperty("a".AsSpan(), (ref JsonObjectBuilder o) => { o.Add("hello"u8, "there"u8); });
+            Assert.Equal("{\"hello\":\"there\"}", root.GetProperty("a").ToString());
             root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
             root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
@@ -4785,6 +4787,9 @@ namespace Corvus.Text.Json.Tests
             // ASCII property name
             root.SetProperty("b"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("b").ToString());
+
+            root.SetProperty("b".AsSpan(), (ref JsonArrayBuilder o) => { o.Add("there"u8); });
+            Assert.Equal("[\"there\"]", root.GetProperty("b").ToString());
 
             // New: string property name
             root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
@@ -5601,6 +5606,32 @@ namespace Corvus.Text.Json.Tests
             // Encoded UTF-8 property name: "foo\"bar"
             root.SetProperty("foo\"bar"u8, "baz"u8);
             Assert.Equal("baz", root.GetProperty("foo\"bar").GetString());
+        }
+
+
+        [Fact]
+        public static void SetProperty_Generic_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            using var doc2 = ParsedJsonDocument<JsonElement>.Parse("123");
+            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
+            var value = builderDoc2.RootElement;
+
+            // ASCII property name
+            root.SetProperty("a"u8, value);
+            Assert.Equal(123, root.GetProperty("a").GetInt32());
+
+            // Non-ASCII property name
+            root.SetProperty("héllo"u8, value);
+            Assert.Equal(123, root.GetProperty("héllo").GetInt32());
+
+            // Encoded UTF-8 property name: "foo\"bar"
+            root.SetProperty("foo\"bar"u8, value);
+            Assert.Equal(123, root.GetProperty("foo\"bar").GetInt32());
         }
 
         [Fact]
