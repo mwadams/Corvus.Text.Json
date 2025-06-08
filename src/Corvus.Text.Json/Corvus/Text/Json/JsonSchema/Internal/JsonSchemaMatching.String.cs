@@ -96,40 +96,27 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public static bool MatchEmail(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
         {
-            int length = Encoding.UTF8.GetMaxCharCount(value.Length);
+            if (value.Length > 320 || value.Length < 3)
+            {
+                // The maximum length of an email address is 320 characters (RFC 5321).
+                return false;
+            }
+
 
 #if NET
-            char[]? charBuffer = null;
-            Span<char> chars =
-                length < JsonConstants.StackallocCharThreshold
-                    ? stackalloc char[JsonConstants.StackallocCharThreshold]
-                    : (charBuffer = ArrayPool<char>.Shared.Rent(length)).AsSpan();
-
+            Span<char> chars = stackalloc char[JsonConstants.StackallocNonRecursiveCharThreshold];
             ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
 #else
             string segment = JsonReaderHelper.TranscodeHelper(value);
 #endif
-            try
+            if (!EmailPattern.IsMatch(segment))
             {
-                if (!EmailPattern.IsMatch(segment))
-                {
-                    context.Matched(false, messageProvider: ExpectedEmail, schemaEvaluationPath: keyword);
-                    return false;
-                }
+                context.Matched(false, messageProvider: ExpectedEmail, schemaEvaluationPath: keyword);
+                return false;
+            }
 
-                context.Matched(true, schemaEvaluationPath: keyword);
-                return true;
-            }
-            finally
-            {
-#if NET
-                if (charBuffer is not null)
-                {
-                    chars.Clear();
-                    ArrayPool<char>.Shared.Return(charBuffer);
-                }
-#endif
-            }
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
 
         }
 
@@ -149,72 +136,136 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIdnEmail(ReadOnlySpan<byte> value)
         {
+            if (value.Length > 320 || value.Length < 3)
+            {
+                // The maximum length of an email address is 320 characters (RFC 5321).
+                return false;
+            }
+
             int length = Encoding.UTF8.GetMaxCharCount(value.Length);
 
-            char[]? charBuffer = null;
-            Span<char> chars =
-                length < JsonConstants.StackallocNonRecursiveCharThreshold
-                    ? stackalloc char[JsonConstants.StackallocNonRecursiveCharThreshold]
-                    : (charBuffer = ArrayPool<char>.Shared.Rent(length)).AsSpan();
+            Span<char> chars = stackalloc char[JsonConstants.StackallocNonRecursiveCharThreshold];
+            ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
 
-            try
+            int atIndex = segment.IndexOf('@');
+
+            if (atIndex < 0)
             {
+                return false;
+            }
 
-                ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
+            // Now we need to punycode encode the Domain part of the email address, which is the part after the '@' character.
+            // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
+            Span<char> punyCodeChars = stackalloc char[254];
 
-                int atIndex = segment.IndexOf('@');
+            if (!IdnMapping.Default.GetAscii(segment.Slice(atIndex + 1), punyCodeChars, out int written))
+            {
+                return false;
+            }
 
-                if (atIndex < 0)
-                {
-                    return false;
-                }
 
-                // Now we need to punycode encode the Domain part of the email address, which is the part after the '@' character.
-                // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
-                Span<char> punyCodeChars = stackalloc char[254];
-
-                if (!IdnMapping.Default.GetAscii(segment.Slice(atIndex + 1), punyCodeChars, out int written))
-                {
-                    return false;
-                }
-
-                int newLength = atIndex + 1 + written;
-                if (chars.Length < newLength)
-                {
-                    // This is an unusual case, but we are going to have to reallocate the chars array to accommodate the punycode encoded
-                    // domain
-
-                    char[]? bytesToReturn = charBuffer;
-
-                    charBuffer = ArrayPool<char>.Shared.Rent(newLength);
-                    chars = charBuffer.AsSpan(0, newLength);
-                    segment.Slice(0, atIndex + 1).CopyTo(chars);
-                    punyCodeChars.Slice(0, written).CopyTo(chars.Slice(atIndex + 1));
-                    segment = chars;
-                    if (bytesToReturn is not null)
-                    {
-                        ArrayPool<char>.Shared.Return(bytesToReturn);
-                    }
-                }
+            int newLength = atIndex + 1 + written;
+            System.Diagnostics.Debug.Assert(chars.Length > newLength);
+            punyCodeChars.Slice(0, written).CopyTo(chars.Slice(atIndex + 1));
+            segment = chars.Slice(0, newLength);
 
 #if NET
-                return IdnEmailPattern.IsMatch(segment);
+            return IdnEmailPattern.IsMatch(segment);
 #else
-                return IdnEmailPattern.IsMatch(segment.ToString());
+            return IdnEmailPattern.IsMatch(segment.ToString());
 #endif
-            }
-            finally
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchIdnHostname(ReadOnlySpan<byte> value)
+        {
+            int length = Encoding.UTF8.GetMaxCharCount(value.Length);
+
+            if (length > 254)
             {
-                if (charBuffer is not null)
+                return false;
+            }
+
+            // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
+            // We pick 256 as it is a likely rentable buffer size
+            Span<char> chars = stackalloc char[256];
+
+            ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
+
+            if (segment.StartsWith("xn--", StringComparison.OrdinalIgnoreCase))
+            {
+                // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
+                // But it might expand with encoding
+                Span<char> decodedChars = stackalloc char[256];
+
+                if (!IdnMapping.Default.GetUnicode(segment, decodedChars, out int written))
                 {
-                    chars.Clear();
-                    ArrayPool<char>.Shared.Return(charBuffer);
+                    return false;
+                }
+
+                segment = decodedChars.Slice(0, written);
+            }
+            else
+            {
+                // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
+                // But it might expand with encoding
+                Span<char> decodedChars = stackalloc char[256];
+
+                // We are only testing that we can decode to ASCII, not using the result
+                if (!IdnMapping.Default.GetAscii(segment, decodedChars, out _))
+                {
+                    return false;
                 }
             }
+
+#if NET
+            return !InvalidIdnHostNamePattern.IsMatch(segment);
+#else
+            return !InvalidIdnHostNamePattern.IsMatch(segment.ToString());
+#endif
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchHostname(ReadOnlySpan<byte> value)
+        {
+            int length = Encoding.UTF8.GetMaxCharCount(value.Length);
+
+            if (length > 254)
+            {
+                return false;
+            }
+
+            // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
+            Span<char> chars = stackalloc char[256];
+
+            ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
+
+            if (segment.StartsWith("xn--", StringComparison.OrdinalIgnoreCase))
+            {
+                // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
+                Span<char> decodedChars = stackalloc char[256];
+
+                if (!IdnMapping.Default.GetUnicode(segment, decodedChars, out int written))
+                {
+                    return false;
+                }
+
+                segment = decodedChars.Slice(0, written);
+            }
+
+#if NET
+            return HostnamePattern.IsMatch(segment);
+#else
+            return HostnamePattern.IsMatch(segment.ToString());
+#endif
         }
 
         private static readonly Regex EmailPattern = CreateEmailPattern();
         private static readonly Regex IdnEmailPattern = CreateIdnEmailPattern();
+        private static readonly Regex HostnamePattern = CreateHostnamePattern();
+        private static readonly Regex InvalidIdnHostNamePattern = CreateInvalidIdnHostNamePattern();
+
 
 #if NET
 
@@ -223,9 +274,17 @@ namespace Corvus.Text.Json.Internal
 
         [GeneratedRegex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", RegexOptions.Compiled)]
         private static partial Regex CreateIdnEmailPattern();
+
+        [GeneratedRegex("^(?=.{1,255}$)((?!_)\\w)((((?!_)\\w)|\\b-){0,61}((?!_)\\w))?(\\.((?!_)\\w)((((?!_)\\w)|\\b-){0,61}((?!_)\\w))?)*\\.?$", RegexOptions.Compiled)]
+        private static partial Regex CreateHostnamePattern();
+
+        [GeneratedRegex("(^[\\p{Mn}\\p{Mc}\\p{Me}\\u302E\\u00b7])|.*\\u302E.*|.*[^l]\\u00b7.*|.*\\u00b7[^l].*|.*\\u00b7$|\\u0374$|\\u0375$|\\u0374[^\\p{IsGreekandCoptic}]|\\u0375[^\\p{IsGreekandCoptic}]|^\\u05F3|[^\\p{IsHebrew}]\\u05f3|^\\u05f4|[^\\p{IsHebrew}]\\u05f4|[\\u0660-\\u0669][\\u06F0-\\u06F9]|[\\u06F0-\\u06F9][\\u0660-\\u0669]|^\\u200D|[^\\uA953\\u094d\\u0acd\\u0c4d\\u0d3b\\u09cd\\u0a4d\\u0b4d\\u0bcd\\u0ccd\\u0d4d\\u1039\\u0d3c\\u0eba\\ua8f3\\ua8f4]\\u200D|^\\u30fb$|[^\\p{IsHiragana}\\p{IsKatakana}\\p{IsCJKUnifiedIdeographs}]\\u30fb|\\u30fb[^\\p{IsHiragana}\\p{IsKatakana}\\p{IsCJKUnifiedIdeographs}]|[\\u0640\\u07fa\\u3031\\u3032\\u3033\\u3034\\u3035\\u302e\\u302f\\u303b]|..--", RegexOptions.Compiled)]
+        private static partial Regex CreateInvalidIdnHostNamePattern();
 #else
         private static Regex CreateEmailPattern() => new("^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[ \\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\\[(((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|IPv6:(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])))\\])$", RegexOptions.Compiled);
         private static Regex CreateIdnEmailPattern() => new("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", RegexOptions.Compiled);
+        private static Regex CreateHostnamePattern() => new("^(?=.{1,255}$)((?!_)\\w)((((?!_)\\w)|\\b-){0,61}((?!_)\\w))?(\\.((?!_)\\w)((((?!_)\\w)|\\b-){0,61}((?!_)\\w))?)*\\.?$", RegexOptions.Compiled);
+        private static Regex CreateInvalidIdnHostNamePattern() => new("(^[\\p{Mn}\\p{Mc}\\p{Me}\\u302E\\u00b7])|.*\\u302E.*|.*[^l]\\u00b7.*|.*\\u00b7[^l].*|.*\\u00b7$|\\u0374$|\\u0375$|\\u0374[^\\p{IsGreekandCoptic}]|\\u0375[^\\p{IsGreekandCoptic}]|^\\u05F3|[^\\p{IsHebrew}]\\u05f3|^\\u05f4|[^\\p{IsHebrew}]\\u05f4|[\\u0660-\\u0669][\\u06F0-\\u06F9]|[\\u06F0-\\u06F9][\\u0660-\\u0669]|^\\u200D|[^\\uA953\\u094d\\u0acd\\u0c4d\\u0d3b\\u09cd\\u0a4d\\u0b4d\\u0bcd\\u0ccd\\u0d4d\\u1039\\u0d3c\\u0eba\\ua8f3\\ua8f4]\\u200D|^\\u30fb$|[^\\p{IsHiragana}\\p{IsKatakana}\\p{IsCJKUnifiedIdeographs}]\\u30fb|\\u30fb[^\\p{IsHiragana}\\p{IsKatakana}\\p{IsCJKUnifiedIdeographs}]|[\\u0640\\u07fa\\u3031\\u3032\\u3033\\u3034\\u3035\\u302e\\u302f\\u303b]|..--", RegexOptions.Compiled);
 #endif
     }
 }

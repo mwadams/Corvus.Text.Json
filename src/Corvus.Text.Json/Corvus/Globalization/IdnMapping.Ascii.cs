@@ -55,14 +55,17 @@ namespace Corvus.Globalization
         }
 
         // Gets ASCII (Punycode) version of the string
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, out int written) =>
             GetAscii(unicode, outputBuffer, 0, out written);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, out int written)
         {
             return GetAscii(unicode, outputBuffer, index, unicode.Length - index, out written);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, int count, out int written)
         {
             if (index < 0)
@@ -117,7 +120,7 @@ namespace Corvus.Globalization
         //
 
         private const char c_delimiter = '-';
-        private const string c_strAcePrefix = "xn--";
+        private static ReadOnlySpan<char> c_strAcePrefix => "xn--";
         private const int c_labelLimit = 63;          // Not including dots
         private const int c_defaultNameLimit = 255;   // Including dots
         private const int c_initialN = 0x80;
@@ -310,7 +313,7 @@ namespace Corvus.Globalization
                 }
 
                 // We'll need an Ace prefix
-                if (!c_strAcePrefix.AsSpan().TryCopyTo(buffer.Slice(bufferIndex)))
+                if (!c_strAcePrefix.TryCopyTo(buffer.Slice(bufferIndex)))
                 {
                     written = 0;
                     return false;

@@ -87,7 +87,8 @@
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />    
     <Compile Include="Corvus\Globalization\CharUnicodeInfo.cs" />    
     <Compile Include="Corvus\Globalization\CharUnicodeInfoData.cs" />    
-    <Compile Include="Corvus\Globalization\IdnMapping.cs" />    
+    <Compile Include="Corvus\Globalization\IdnMapping.Unicode.cs" />    
+    <Compile Include="Corvus\Globalization\IdnMapping.Ascii.cs" />    
     <Compile Include="Corvus\Globalization\StrongBidiCategory.cs" />    
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="Corvus\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
