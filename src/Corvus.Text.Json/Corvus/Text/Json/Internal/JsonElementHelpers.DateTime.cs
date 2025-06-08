@@ -333,7 +333,6 @@ public static partial class JsonElementHelpers
             bytesWritten = 0;
             return false;
         }
-        bytesWritten = bytesRequired;
 
         fixed (byte* dest = &MemoryMarshal.GetReference(destination))
         {
@@ -355,6 +354,7 @@ public static partial class JsonElementHelpers
             if (dateTime.Offset == Offset.Zero)
             {
                 dest[27] = (byte)'Z';
+                bytesWritten = 28;
             }
             else
             {
@@ -376,6 +376,7 @@ public static partial class JsonElementHelpers
                 Number.WriteTwoDigits((uint)offsetHours, dest + 28);
                 dest[30] = (byte)':';
                 Number.WriteTwoDigits((uint)offsetMinutes, dest + 31);
+                bytesWritten = 33;
             }
         }
 

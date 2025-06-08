@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Corvus.Text.Json.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NodaTime;
 using Xunit;
 using Xunit.Sdk;
 
@@ -4642,6 +4643,14 @@ namespace Corvus.Text.Json.Tests
             root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
 
+            // Non-ASCII property name
+            root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
+
+            // Encoded UTF-8 property name: "foo\"bar"
+            root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
+
             // New: string property name
             root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
@@ -4663,6 +4672,14 @@ namespace Corvus.Text.Json.Tests
             // Existing UTF-8 property name test
             root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
+
+            // Non-ASCII property name
+            root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
+
+            // Encoded UTF-8 property name: "foo\"bar"
+            root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
             // New: string property name
             root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
@@ -4694,6 +4711,15 @@ namespace Corvus.Text.Json.Tests
             // Encoded UTF-8 property name: "foo\"bar"
             root.SetProperty("foo\"bar"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("foo\"bar").ToString());
+
+            // New: string property name
+            root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
+
+            // New: ReadOnlySpan<char> property name
+            ReadOnlySpan<char> spanName = "span";
+            root.SetProperty(spanName, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
         }
 
         [Fact]
@@ -4715,6 +4741,15 @@ namespace Corvus.Text.Json.Tests
             // Encoded UTF-8 property name: "foo\"bar"
             root.SetProperty("foo\"bar"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("foo\"bar").ToString());
+
+            // New: string property name
+            root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
+
+            // New: ReadOnlySpan<char> property name
+            ReadOnlySpan<char> spanName = "span";
+            root.SetProperty(spanName, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
         }
 
         [Fact]
@@ -4728,6 +4763,15 @@ namespace Corvus.Text.Json.Tests
             // ASCII property name
             root.SetProperty("a"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("a").ToString());
+
+            // New: string property name
+            root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
+
+            // New: ReadOnlySpan<char> property name
+            ReadOnlySpan<char> spanName = "span";
+            root.SetProperty(spanName, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
         }
 
         [Fact]
@@ -4741,6 +4785,15 @@ namespace Corvus.Text.Json.Tests
             // ASCII property name
             root.SetProperty("b"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("b").ToString());
+
+            // New: string property name
+            root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
+
+            // New: ReadOnlySpan<char> property name
+            ReadOnlySpan<char> spanName = "span";
+            root.SetProperty(spanName, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
         }
 
         [Fact]
@@ -4824,6 +4877,109 @@ namespace Corvus.Text.Json.Tests
 
             root.SetProperty("héllo", dto2);
             Assert.Equal(dto2, root.GetProperty("héllo").GetDateTimeOffset());
+
+            root.SetProperty("foo\"bar"u8, dto2);
+            Assert.Equal(dto2, root.GetProperty("foo\"bar").GetDateTimeOffset());
+        }
+
+        [Fact]
+        public static void SetProperty_OffsetDateTime_Works()
+        {
+            var dto1 = new OffsetDateTime(new LocalDateTime(2024, 5, 30, 12, 34, 56), Offset.Zero);
+            var dto2 = new OffsetDateTime(new LocalDateTime(2025, 1, 1, 0, 0, 0), Offset.FromHours(2));
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", dto1);
+            Assert.Equal(dto1, root.GetProperty("a").GetOffsetDateTime());
+
+            root.SetProperty("héllo", dto2);
+            Assert.Equal(dto2, root.GetProperty("héllo").GetOffsetDateTime());
+
+            root.SetProperty("foo\"bar"u8, dto2);
+            Assert.Equal(dto2, root.GetProperty("foo\"bar").GetOffsetDateTime());
+        }
+
+        [Fact]
+        public static void SetProperty_OffsetDate_Works()
+        {
+            var dto1 = new OffsetDate(new LocalDate(2024, 5, 30), Offset.Zero);
+            var dto2 = new OffsetDate(new LocalDate(2025, 1, 1), Offset.FromHours(2));
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01Z\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", dto1);
+            Assert.Equal(dto1, root.GetProperty("a").GetOffsetDate());
+
+            root.SetProperty("héllo", dto2);
+            Assert.Equal(dto2, root.GetProperty("héllo").GetOffsetDate());
+
+            root.SetProperty("foo\"bar"u8, dto2);
+            Assert.Equal(dto2, root.GetProperty("foo\"bar").GetOffsetDate());
+        }
+
+        [Fact]
+        public static void SetProperty_LocalDate_Works()
+        {
+            var dto1 = new LocalDate(2024, 5, 30);
+            var dto2 = new LocalDate(2025, 1, 1);
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", dto1);
+            Assert.Equal(dto1, root.GetProperty("a").GetLocalDate());
+
+            root.SetProperty("héllo", dto2);
+            Assert.Equal(dto2, root.GetProperty("héllo").GetLocalDate());
+
+            root.SetProperty("foo\"bar"u8, dto2);
+            Assert.Equal(dto2, root.GetProperty("foo\"bar").GetLocalDate());
+        }
+
+        [Fact]
+        public static void SetProperty_OffsetTime_Works()
+        {
+            var dto1 = new OffsetTime(new LocalTime(12, 34, 56), Offset.Zero);
+            var dto2 = new OffsetTime(new LocalTime(0, 0, 0), Offset.FromHours(2));
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"00:00:00Z\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", dto1);
+            Assert.Equal(dto1, root.GetProperty("a").GetOffsetTime());
+
+            root.SetProperty("héllo", dto2);
+            Assert.Equal(dto2, root.GetProperty("héllo").GetOffsetTime());
+
+            root.SetProperty("foo\"bar"u8, dto2);
+            Assert.Equal(dto2, root.GetProperty("foo\"bar").GetOffsetTime());
+        }
+
+        [Fact]
+        public static void SetProperty_Period_Works()
+        {
+            var dto1 = new Period(1, 2, 3, 4, 5, 6, 7, 8 ,9, 1).Normalize();
+            var dto2 = Period.Zero;
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"P1W\"}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetProperty("a", dto1);
+            Assert.Equal(dto1, root.GetProperty("a").GetPeriod());
+
+            root.SetProperty("héllo", dto2);
+            Assert.Equal(dto2, root.GetProperty("héllo").GetPeriod());
+
+            root.SetProperty("foo\"bar"u8, dto2);
+            Assert.Equal(dto2, root.GetProperty("foo\"bar").GetPeriod());
         }
 
         [Fact]
@@ -6080,6 +6236,213 @@ namespace Corvus.Text.Json.Tests
             var nestedObject = root.GetProperty("object");
             Assert.Equal(JsonValueKind.Object, nestedObject.ValueKind);
             Assert.Equal("bar", nestedObject.GetProperty("foo").GetString());
+        }
+
+
+        [Fact]
+        public static void SetItem_Array_Creator_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[false]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root[0].ToString());
+
+            root.SetItem(1, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root[1].ToString());
+        }
+
+        [Fact]
+        public static void SetItem_Array_Creator_Nested_Object_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":[true]}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement.GetProperty("a");
+
+            root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root[0].ToString());
+
+            root.SetItem(1, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root[1].ToString());
+        }
+
+        [Fact]
+        public static void SetItem_Array_Creator_Object_Shrink_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[{\"a\":\"b\"}]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root[0].ToString());
+
+            root.SetItem(1, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root[1].ToString());
+        }
+
+        [Fact]
+        public static void SetItem_Array_Creator_Nested_Object_Shrink_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":[{\"b\": \"c\"}]}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement.GetProperty("a");
+
+            root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root[0].ToString());
+
+            root.SetItem(1, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            Assert.Equal("[\"world\"]", root[1].ToString());
+        }
+
+        [Fact]
+        public static void SetItem_Object_Creator_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[false]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
+            root.SetItem(1, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
+        }
+
+        [Fact]
+        public static void SetItem_Object_Creator_Nested_Object_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":[true]}");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement.GetProperty("a");
+
+            root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
+            root.SetItem(1, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
+        }
+
+        [Fact]
+        public static void SetItem_Object_Creator_Array_Shrink_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[{\"a\": \"b\"}]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
+            root.SetItem(1, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
+        }
+
+        [Fact]
+        public static void SetItem_Object_Creator_Nested_Object_Shrink_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\": [{\"b\": \"c\"}] }");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement.GetProperty("a");
+
+            root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
+            root.SetItem(1, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
+        }
+
+        [Fact]
+        public static void SetItem_OffsetDateTime_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2020-01-01T00:00:00Z\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            var odt1 = new OffsetDateTime(new LocalDateTime(2024, 5, 30, 12, 34, 56), Offset.Zero);
+            var odt2 = new OffsetDateTime(new LocalDateTime(2025, 1, 1, 0, 0, 0), Offset.FromHours(2));
+
+            root.SetItem(0, odt1);
+            Assert.Equal(odt1, root[0].GetOffsetDateTime());
+
+            root.SetItem(1, odt2);
+            Assert.Equal(odt2, root[1].GetOffsetDateTime());
+        }
+
+        [Fact]
+        public static void SetItem_OffsetDate_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2020-01-01Z\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            var od1 = new OffsetDate(new LocalDate(2024, 5, 30), Offset.Zero);
+            var od2 = new OffsetDate(new LocalDate(2025, 1, 1), Offset.FromHours(2));
+
+            root.SetItem(0, od1);
+            Assert.Equal(od1, root[0].GetOffsetDate());
+
+            root.SetItem(1, od2);
+            Assert.Equal(od2, root[1].GetOffsetDate());
+        }
+
+        [Fact]
+        public static void SetItem_OffsetTime_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"00:00:00Z\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            var ot1 = new OffsetTime(new LocalTime(12, 34, 56), Offset.Zero);
+            var ot2 = new OffsetTime(new LocalTime(0, 0, 0), Offset.FromHours(2));
+
+            root.SetItem(0, ot1);
+            Assert.Equal(ot1, root[0].GetOffsetTime());
+
+            root.SetItem(1, ot2);
+            Assert.Equal(ot2, root[1].GetOffsetTime());
+        }
+
+        [Fact]
+        public static void SetItem_LocalDate_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2024-05-30\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            var ld1 = new LocalDate(2024, 5, 30);
+            var ld2 = new LocalDate(2025, 1, 1);
+
+            root.SetItem(0, ld1);
+            Assert.Equal(ld1, root[0].GetLocalDate());
+
+            root.SetItem(1, ld2);
+            Assert.Equal(ld2, root[1].GetLocalDate());
+        }
+
+        [Fact]
+        public static void SetItem_Period_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"P1W\"]");
+            using var workspace = JsonWorkspace.Create();
+            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            var root = builderDoc.RootElement;
+
+            var p1 = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 1).Normalize();
+            var p2 = Period.Zero;
+
+            root.SetItem(0, p1);
+            Assert.Equal(p1, root[0].GetPeriod());
+
+            root.SetItem(1, p2);
+            Assert.Equal(p2, root[1].GetPeriod());
         }
     }
 }

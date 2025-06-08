@@ -438,7 +438,7 @@ namespace Corvus.Text.Json.Internal
             // Now do the item counts and complex children for the start. We do this now to try and do
             // all the local updates first, to avoid busting the cache.
             Span<byte> startSizeOrLengthUnion = _data.AsSpan(startIndex + SizeOrLengthOffset);
-            int currentLength = MemoryMarshal.Read<int>(startSizeOrLengthUnion) & int.MaxValue;
+            int currentLength = (int)(MemoryMarshal.Read<uint>(startSizeOrLengthUnion) & 0x7FFF_FFFFU);
             currentLength += memberCountToInsertOrRemove;
 
             if (isArray)
@@ -454,7 +454,7 @@ namespace Corvus.Text.Json.Internal
                 // one row for this condition to hold.
                 if (currentLength + 1 != numberOfRows)
                 {
-                    currentLength *= -1;
+                    currentLength = (int)((uint)currentLength | 0x8000_0000U);
                 }
             }
 
