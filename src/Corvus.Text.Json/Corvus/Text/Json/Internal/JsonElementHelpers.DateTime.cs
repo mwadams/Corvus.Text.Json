@@ -611,29 +611,31 @@ public static partial class JsonElementHelpers
 
             index += localWritten;
             destination[index++] = (byte)'M';
-            long integral = period.Milliseconds * 1000000 + period.Ticks * 100 + period.Nanoseconds;
-            long fractional = period.Seconds;
-            if (integral != 0L || fractional != 0L)
+            long fractional = period.Milliseconds * 1000000 + period.Ticks * 100 + period.Nanoseconds;
+            long integral = period.Seconds;
+            if (fractional != 0L || integral != 0L)
             {
-                if (integral < 0 || fractional < 0)
+                if (fractional < 0 || integral < 0)
                 {
                     destination[index++] = (byte)'-';
-                    integral = -integral;
                     fractional = -fractional;
+                    integral = -integral;
                 }
 
-                if (!Utf8Formatter.TryFormat(fractional, destination.Slice(index), out localWritten))
+                if (!Utf8Formatter.TryFormat(integral, destination.Slice(index), out localWritten))
                 {
                     bytesWritten = 0;
                     return false;
                 }
 
-                if (integral != 0L)
+                index += localWritten;
+
+                if (fractional != 0L)
                 {
                     destination[index++] = (byte)'.';
                     fixed (byte* dest = &MemoryMarshal.GetReference(destination))
                     {
-                        Number.WriteDigits((uint)integral, dest + index, 9);
+                        Number.WriteDigits((uint)fractional, dest + index, 9);
                     }
 
                     index += 9;

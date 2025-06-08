@@ -138,6 +138,25 @@ public struct PeriodBuilder
     /// Builds a period from the properties in this builder.
     /// </summary>
     /// <returns>The total number of nanoseconds in the period.</returns>
-    public readonly Period BuildPeriod() => new Period(this.Years, this.Months, this.Weeks, this.Days, this.Hours, this.Minutes, this.Seconds, this.Milliseconds, this.Ticks, this.Nanoseconds);
+    public readonly Period BuildPeriod()
+    {
+        long totalNanoseconds = this.Nanoseconds +
+            (Ticks * NodaConstants.NanosecondsPerTick) +
+            (Milliseconds * NodaConstants.NanosecondsPerMillisecond) +
+            (Seconds * NodaConstants.NanosecondsPerSecond) +
+            (Minutes * NodaConstants.NanosecondsPerMinute) +
+            (Hours * NodaConstants.NanosecondsPerHour) +
+            (Days * NodaConstants.NanosecondsPerDay) +
+            (Weeks * NodaConstants.NanosecondsPerWeek);
+
+        int days = (int)(totalNanoseconds / NodaConstants.NanosecondsPerDay);
+        long hours = (totalNanoseconds / NodaConstants.NanosecondsPerHour) % NodaConstants.HoursPerDay;
+        long minutes = (totalNanoseconds / NodaConstants.NanosecondsPerMinute) % NodaConstants.MinutesPerHour;
+        long seconds = (totalNanoseconds / NodaConstants.NanosecondsPerSecond) % NodaConstants.SecondsPerMinute;
+        long milliseconds = (totalNanoseconds / NodaConstants.NanosecondsPerMillisecond) % NodaConstants.MillisecondsPerSecond;
+        long nanoseconds = totalNanoseconds % NodaConstants.NanosecondsPerMillisecond;
+
+        return new Period(this.Years, this.Months, 0 /* weeks */, days, hours, minutes, seconds, milliseconds, 0 /* ticks */, nanoseconds);
+    }
 }
 
