@@ -122,6 +122,7 @@ public class JsonSchemaMatchingStringTests
     [InlineData("example.com", true)]
     [InlineData("sub.domain.example.com", true)]
     [InlineData("xn--4gbwdl.xn--wgbh1c", true)] // Punycode
+    [InlineData("xn--X", false)] // invalid punycode
     [InlineData("-a-host-name-that-starts-with--", false)] 
     [InlineData("not_a_valid_host_name", false)] 
     [InlineData("a-vvvvvvvvvvvvvvvveeeeeeeeeeeeeeeerrrrrrrrrrrrrrrryyyyyyyyyyyyyyyy-long-host-name-component", false)]

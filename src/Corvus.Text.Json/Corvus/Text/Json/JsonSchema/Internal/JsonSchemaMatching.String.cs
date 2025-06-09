@@ -290,23 +290,86 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchHostname(ReadOnlySpan<byte> value)
         {
-            int length = Encoding.UTF8.GetMaxCharCount(value.Length);
-
-            if (length > 254)
+            if (value.Length > 253)
             {
                 return false;
             }
 
             Span<byte> decoded = stackalloc byte[256];
+            int i = 0;
+            int characterCount = 0;
+            byte lastAscii = 0;
+            bool decodePunicode = false;
+            while (i < value.Length)
+            {
+                if (value[i] > 0x7F)
+                {
+                    // This is not ASCII, so give up
+                    return false;
+                }
 
-            if (!IdnMapping.Default.GetUnicode(value, decoded, out int written))
+                if (lastAscii == (byte)'-' && value[i] == (byte)'-')
+                {
+                    // Look for punicode signature
+
+                    if (characterCount != 3 ||
+                        !((value[i - 3] == (byte)'x' || value[i - 3] == (byte)'X') &&
+                          (value[i - 2] == (byte)'n' || value[i - 2] == (byte)'N')))
+                    {
+                        // Disallow "--" for non-punicode signature
+                        return false;
+                    }
+
+                    decodePunicode = true;
+                    break;
+                }
+
+                lastAscii = value[i];
+
+                if (lastAscii == (byte)'.')
+                {
+                    if (characterCount > 63)
+                    {
+                        return false;
+                    }
+
+                    characterCount = 0;
+                    i++;
+                    continue;
+                }
+
+                if (!char.IsLetterOrDigit((char)lastAscii) && !(characterCount != 0 && lastAscii == (byte)'-'))
+                {
+                    return false;
+                }
+
+                characterCount++;
+                i++;
+            }
+
+            if (decodePunicode)
+            {
+                if (!IdnMapping.Default.GetUnicode(value, decoded, out int written))
+                {
+                    return false;
+                }
+
+                scoped ReadOnlySpan<byte> segment = decoded.Slice(0, written);
+
+                return MatchDecodedHostname(segment);
+            }
+
+            if (characterCount > 63)
             {
                 return false;
             }
 
-            scoped ReadOnlySpan<byte> segment = decoded.Slice(0, written);
+            if (lastAscii == '-')
+            {
+                return false;
+            }
 
-            return MatchDecodedHostname(segment);
+            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -477,7 +540,7 @@ namespace Corvus.Text.Json.Internal
         {
             // Don't allow middle dot
             if (value == 0x30FB)
-            {                
+            {
                 return false;
             }
 
