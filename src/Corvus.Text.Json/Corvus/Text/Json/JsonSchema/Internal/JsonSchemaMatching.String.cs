@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Corvus.Globalization;
@@ -98,8 +99,23 @@ namespace Corvus.Text.Json.Internal
 
         private static ReadOnlySpan<byte> AllowedLocalCharacters => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~"u8;
 
+
+
         [CLSCompliant(false)]
         public static bool MatchEmail(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchEmail(value))
+            {
+                context.Matched(false, messageProvider: ExpectedEmail, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+
+        internal static bool MatchEmail(ReadOnlySpan<byte> value)
         {
             if (value.Length > 320 || value.Length < 3)
             {
@@ -116,6 +132,25 @@ namespace Corvus.Text.Json.Internal
             // Local part
             ReadOnlySpan<byte> segment = value.Slice(0, atIndex);
 
+            if (!MatchEmailLocalPart(segment))
+            {
+                return false;
+            }
+
+            // Domain part
+            segment = value.Slice(atIndex + 1);
+
+            if (!MatchHostname(segment))
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+
+        private static bool MatchEmailLocalPart(ReadOnlySpan<byte> segment)
+        {
             if (segment.Length > 64)
             {
                 return false;
@@ -170,20 +205,81 @@ namespace Corvus.Text.Json.Internal
                 }
             }
 
-            // Domain part
-            segment = value.Slice(atIndex + 1);
+            return true;
+        }
 
-            if (!MatchHostname(segment, keyword, ref context))
+        private static bool MatchEmailLocalPartUnicode(ReadOnlySpan<byte> segment)
+        {
+            if (segment.Length > 64)
             {
-                // If the domain part is not a valid hostname, we cannot match the email.
-                context.Matched(false, messageProvider: ExpectedEmail, schemaEvaluationPath: keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
-            return true;
+            // Skip an opening comment
+            if (segment[0] == (byte)'(')
+            {
+                int closeBracket = segment.IndexOf((byte)')');
+                if (closeBracket < 0)
+                {
+                    return false;
+                }
 
+                segment = segment.Slice(closeBracket + 1);
+
+                if (segment.Length == 0)
+                {
+                    return false;
+                }
+            }
+
+            int lastDot = -1;
+            for (int i = 0; i < segment.Length; i++)
+            {
+                byte c = segment[i];
+                if (c == (byte)'.')
+                {
+                    if (i == 0 || i == segment.Length - 1 || lastDot == i - 1)
+                    {
+                        // Dot at the start or end, or two dots in a row
+                        return false;
+                    }
+
+                    lastDot = i;
+                }
+                else if (c == (byte)'(')
+                {
+                    // This is an end comment.
+                    int closeBracket = segment.IndexOf((byte)')');
+                    if (closeBracket < 0 || closeBracket != segment.Length - 1)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+                else if (AllowedLocalCharacters.IndexOf(c) < 0)
+                {
+                    // This could be a unicode character, so let's check
+                    Rune.DecodeFromUtf8(segment.Slice(i), out Rune rune, out int bytesConsumed);
+                    if(!Rune.IsLetterOrDigit(rune))
+                    {
+                        System.Globalization.UnicodeCategory category = Rune.GetUnicodeCategory(rune);
+                        if (i == 0 ||
+                            (category != System.Globalization.UnicodeCategory.SpacingCombiningMark &&
+                             category != System.Globalization.UnicodeCategory.EnclosingMark &&
+                             category != System.Globalization.UnicodeCategory.NonSpacingMark))
+                        {
+                            return false;
+                        }
+                    }
+
+                    i += bytesConsumed - 1; // Adjust i to account for the bytes consumed by the rune
+                }
+            }
+
+            return true;
         }
+
 
         [CLSCompliant(false)]
         public static bool MatchIdnEmail(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
@@ -207,38 +303,25 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            int length = Encoding.UTF8.GetMaxCharCount(value.Length);
+            int atIndex = value.IndexOf((byte)'@');
 
-            Span<char> chars = stackalloc char[JsonConstants.StackallocNonRecursiveCharThreshold];
-            ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
+            // Local part
+            ReadOnlySpan<byte> segment = value.Slice(0, atIndex);
 
-            int atIndex = segment.IndexOf('@');
-
-            if (atIndex < 0)
+            if (!MatchEmailLocalPartUnicode(segment))
             {
                 return false;
             }
 
-            // Now we need to punycode encode the Domain part of the email address, which is the part after the '@' character.
-            // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
-            Span<char> punyCodeChars = stackalloc char[254];
+            // Domain part
+            segment = value.Slice(atIndex + 1);
 
-            if (!IdnMapping.Default.GetAscii(segment.Slice(atIndex + 1), punyCodeChars, out int written))
+            if (!MatchIdnHostname(segment))
             {
                 return false;
             }
 
-
-            int newLength = atIndex + 1 + written;
-            System.Diagnostics.Debug.Assert(chars.Length > newLength);
-            punyCodeChars.Slice(0, written).CopyTo(chars.Slice(atIndex + 1));
-            segment = chars.Slice(0, newLength);
-
-#if NET
-            return IdnEmailPattern.IsMatch(segment);
-#else
-            return IdnEmailPattern.IsMatch(segment.ToString());
-#endif
+            return true;
         }
 
         [CLSCompliant(false)]
@@ -631,16 +714,5 @@ namespace Corvus.Text.Json.Internal
 
             return IPAddressParser.IsValidIPV6(value);
         }
-
-        private static readonly Regex IdnEmailPattern = CreateIdnEmailPattern();
-
-#if NET
-
-        [GeneratedRegex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", RegexOptions.Compiled)]
-        private static partial Regex CreateIdnEmailPattern();
-
-#else
-        private static Regex CreateIdnEmailPattern() => new("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", RegexOptions.Compiled);
-#endif
     }
 }
