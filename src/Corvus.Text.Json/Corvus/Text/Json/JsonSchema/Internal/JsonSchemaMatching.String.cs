@@ -29,6 +29,7 @@ namespace Corvus.Text.Json.Internal
         private static readonly JsonSchemaMessageProvider ExpectedIPV4 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV4.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedIPV6 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV6.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedUuid = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUuid.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedUri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUri.AsSpan(), buffer, out written);
 
         [CLSCompliant(false)]
         public static bool MatchTypeString(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
@@ -735,5 +736,25 @@ namespace Corvus.Text.Json.Internal
         {
             return Utf8Parser.TryParse(value, out Guid _, out _);
         }
+
+        [CLSCompliant(false)]
+        public static bool MatchUri(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchUri(value))
+            {
+                context.Matched(false, messageProvider: ExpectedUri, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchUri(ReadOnlySpan<byte> value)
+        {
+            return false; 
+        }
+
     }
 }

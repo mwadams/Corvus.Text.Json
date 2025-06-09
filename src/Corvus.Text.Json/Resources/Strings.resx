@@ -917,4 +917,13 @@
   <data name="JsonSchema_ExpectedUuid" xml:space="preserve">
     <value>Expected an RFC4122 UUID.</value>
   </data>
+  <data name="net_uri_NeedFreshParser" xml:space="preserve">
+    <value>The URI parser instance passed into 'uriParser' parameter is already registered with the scheme name '{0}'.</value>
+  </data>
+  <data name="net_uri_AlreadyRegistered" xml:space="preserve">
+    <value>A URI scheme name '{0}' already has a registered custom parser.</value>
+  </data>
+  <data name="JsonSchema_ExpectedUri" xml:space="preserve">
+    <value>Expected an absolute URI.</value>
+  </data>
 </root>

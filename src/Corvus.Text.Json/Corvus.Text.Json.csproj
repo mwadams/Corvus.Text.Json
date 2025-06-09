@@ -212,6 +212,10 @@
     <Compile Include="Corvus\Text\Json\Reader\Utf8JsonReader.TryGet.cs" />    
     <Compile Include="Corvus\Text\Json\StackHelper.cs" />
     <Compile Include="Corvus\Text\Json\Internal\CodeGenThrowHelper.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriParser.BuiltInParser.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriParser.Syntax.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriSyntaxFlags.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriParser.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteValues.StringSegment.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\JsonWorkspaceCache.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriterCache.cs" />
