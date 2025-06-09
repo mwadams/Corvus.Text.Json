@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal
 {
-    internal static partial class JsonElementHelpers
+    public static partial class JsonElementHelpers
     {
         /// <summary>
         /// Gets an instance of an empty URI, that is configured to be <see cref="UriKind.RelativeOrAbsolute"/>.
