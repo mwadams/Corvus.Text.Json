@@ -897,21 +897,24 @@
     <value>Expected an ISO8601 Duration string.</value>
   </data>
   <data name="JsonSchema_ExpectedEmail" xml:space="preserve">
-    <value>Expected an Email string.</value>
+    <value>Expected an RFC5321 Section-4.1.2 Email string.</value>
   </data>
   <data name="JsonSchema_ExpectedIdnEmail" xml:space="preserve">
-    <value>Expected an IDN Email string.</value>
+    <value>Expected an RFC6531 IDN Email string.</value>
   </data>
   <data name="JsonSchema_ExpectedHostname" xml:space="preserve">
     <value>Expected an RFC1035 hostname.</value>
   </data>
   <data name="JsonSchema_ExpectedIdnHostname" xml:space="preserve">
-    <value>Expected an RFC1035 IDN hostname.</value>
+    <value>Expected an RFC5890 Section-2.3.2.3 IDN hostname.</value>
   </data>
   <data name="JsonSchema_ExpectedIPV4" xml:space="preserve">
-    <value>Expected an RFC791 IP V4 address.</value>
+    <value>Expected an RFC2673 IP V4 address.</value>
   </data>
   <data name="JsonSchema_ExpectedIPV6" xml:space="preserve">
-    <value>Expected an RFC2460 IP V6 address.</value>
+    <value>Expected an RFC2373 IP V6 address.</value>
+  </data>
+  <data name="JsonSchema_ExpectedUuid" xml:space="preserve">
+    <value>Expected an RFC4122 UUID.</value>
   </data>
 </root>
