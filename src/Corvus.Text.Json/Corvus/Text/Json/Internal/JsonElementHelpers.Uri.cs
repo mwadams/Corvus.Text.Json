@@ -2,12 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
-using System.Buffers.Text;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using NodaTime;
 
-namespace Corvus.Text.Json.Corvus.Text.Json.Internal
+namespace Corvus.Text.Json.Internal
 {
     internal static partial class JsonElementHelpers
     {
