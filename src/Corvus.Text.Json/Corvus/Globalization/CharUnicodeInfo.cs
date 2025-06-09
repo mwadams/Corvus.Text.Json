@@ -53,6 +53,15 @@ namespace Corvus.Globalization
             return bidiCategory;
         }
 
+        internal static StrongBidiCategory GetBidiCategory(ReadOnlySpan<byte> s, int index, out int consumed)
+        {
+            if ((uint)index >= (uint)s.Length)
+            {
+                ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
+            }
+
+            return GetBidiCategoryNoBoundsChecks((uint)GetCodePointFromString(s, index, out consumed));
+        }
 
         /////*
         //// * HELPER AND TABLE LOOKUP ROUTINES
@@ -92,6 +101,33 @@ namespace Corvus.Globalization
                         }
                     }
                 }
+            }
+
+            return codePoint;
+        }
+
+        /// <summary>
+        /// Returns the code point pointed to by index, decoding any surrogate sequence if possible.
+        /// This is similar to char.ConvertToUTF32, but the difference is that
+        /// it does not throw exceptions when invalid surrogate characters are passed in.
+        ///
+        /// WARNING: since it doesn't throw an exception it CAN return a value
+        /// in the surrogate range D800-DFFF, which is not a legal scalar value.
+        /// </summary>
+        private static int GetCodePointFromString(ReadOnlySpan<byte> s, int index, out int consumed)
+        {
+            Debug.Assert((uint)index < (uint)s.Length, "index < s.Length");
+
+            int codePoint = 0;
+            consumed = 0;
+
+            // We know the 'if' block below will always succeed, but it allows the
+            // JIT to optimize the codegen of this method.
+
+            if ((uint)index < (uint)s.Length)
+            {
+                Rune.DecodeFromUtf8(s.Slice(index), out Rune result, out consumed);
+                codePoint = result.Value;
             }
 
             return codePoint;

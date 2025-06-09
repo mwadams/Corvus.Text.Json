@@ -96,6 +96,8 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        private static ReadOnlySpan<byte> AllowedLocalCharacters => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~"u8;
+
         [CLSCompliant(false)]
         public static bool MatchEmail(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
         {
@@ -105,15 +107,75 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-
-#if NET
-            Span<char> chars = stackalloc char[JsonConstants.StackallocNonRecursiveCharThreshold];
-            ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
-#else
-            string segment = JsonReaderHelper.TranscodeHelper(value);
-#endif
-            if (!EmailPattern.IsMatch(segment))
+            int atIndex = value.IndexOf((byte)'@');
+            if (atIndex <= 0 || atIndex == value.Length - 1)
             {
+                return false;
+            }
+
+            // Local part
+            ReadOnlySpan<byte> segment = value.Slice(0, atIndex);
+
+            if (segment.Length > 64)
+            {
+                return false;
+            }
+
+            // Skip an opening comment
+            if (segment[0] == (byte)'(')
+            {
+                int closeBracket = segment.IndexOf((byte)')');
+                if (closeBracket < 0)
+                {
+                    return false;
+                }
+
+                segment = segment.Slice(closeBracket + 1);
+
+                if (segment.Length == 0)
+                {
+                    return false;
+                }
+            }
+
+            int lastDot = -1;
+            for (int i = 0; i < segment.Length; i++)
+            {
+                byte c = segment[i];
+                if (c == (byte)'.')
+                {
+                    if (i == 0 || i == segment.Length - 1 || lastDot == i - 1)
+                    {
+                        // Dot at the start or end, or two dots in a row
+                        return false;
+                    }
+
+                    lastDot = i;
+                }
+                else if (c == (byte)'(')
+                {
+                    // This is an end comment.
+                    int closeBracket = segment.IndexOf((byte)')');
+                    if (closeBracket < 0 || closeBracket != segment.Length - 1)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+                else if (AllowedLocalCharacters.IndexOf(c) < 0)
+                {
+                    // Invalid character in local part
+                    return false;
+                }
+            }
+
+            // Domain part
+            segment = value.Slice(atIndex + 1);
+
+            if (!MatchHostname(segment, keyword, ref context))
+            {
+                // If the domain part is not a valid hostname, we cannot match the email.
                 context.Matched(false, messageProvider: ExpectedEmail, schemaEvaluationPath: keyword);
                 return false;
             }
@@ -195,50 +257,21 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIdnHostname(ReadOnlySpan<byte> value)
         {
-            int length = Encoding.UTF8.GetMaxCharCount(value.Length);
-
-            if (length > 254)
+            if (value.Length > 254)
             {
                 return false;
             }
 
-            // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
-            // We pick 256 as it is a likely rentable buffer size
-            Span<char> chars = stackalloc char[256];
+            Span<byte> decoded = stackalloc byte[256];
 
-            ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
-
-            if (segment.StartsWith("xn--", StringComparison.OrdinalIgnoreCase))
+            if (!IdnMapping.Default.GetUnicode(value, decoded, out int written))
             {
-                // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
-                // But it might expand with encoding
-                Span<char> decodedChars = stackalloc char[256];
-
-                if (!IdnMapping.Default.GetUnicode(segment, decodedChars, out int written))
-                {
-                    return false;
-                }
-
-                segment = decodedChars.Slice(0, written);
-            }
-            else
-            {
-                // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
-                // But it might expand with encoding
-                Span<char> decodedChars = stackalloc char[256];
-
-                // We are only testing that we can decode to ASCII, not using the result
-                if (!IdnMapping.Default.GetAscii(segment, decodedChars, out _))
-                {
-                    return false;
-                }
+                return false;
             }
 
-#if NET
-            return !InvalidIdnHostNamePattern.IsMatch(segment);
-#else
-            return !InvalidIdnHostNamePattern.IsMatch(segment.ToString());
-#endif
+            scoped ReadOnlySpan<byte> segment = decoded.Slice(0, written);
+
+            return MatchDecodedHostname(segment);
         }
 
         [CLSCompliant(false)]
@@ -264,30 +297,228 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
-            Span<char> chars = stackalloc char[256];
+            Span<byte> decoded = stackalloc byte[256];
 
-            ReadOnlySpan<char> segment = chars.Slice(0, JsonReaderHelper.TranscodeHelper(value, chars));
-
-            if (segment.StartsWith("xn--", StringComparison.OrdinalIgnoreCase))
+            if (!IdnMapping.Default.GetUnicode(value, decoded, out int written))
             {
-                // The resulting value is not permitted to be more than 254 characters (RFC 1034/1035 on DNS).
-                Span<char> decodedChars = stackalloc char[256];
+                return false;
+            }
 
-                if (!IdnMapping.Default.GetUnicode(segment, decodedChars, out int written))
+            scoped ReadOnlySpan<byte> segment = decoded.Slice(0, written);
+
+            return MatchDecodedHostname(segment);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchDecodedHostname(ReadOnlySpan<byte> value)
+        {
+            bool wasLastDot = false;
+            int i = 0;
+            Rune previousRune = default;
+            bool hasHiraganaKatakanaOrHan = false;
+            bool hasKatakankaMiddleDot = false;
+            bool hasArabicIndicDigits = false;
+            bool hasExtendedArabicIndicDigits = false;
+
+            while (i < value.Length)
+            {
+                byte byteValue = value[i];
+                Rune.DecodeFromUtf8(value.Slice(i), out Rune rune, out int bytesConsumed);
+
+                if (i == 0)
                 {
+                    System.Globalization.UnicodeCategory category = Rune.GetUnicodeCategory(rune);
+                    if (category == System.Globalization.UnicodeCategory.SpacingCombiningMark ||
+                        category == System.Globalization.UnicodeCategory.EnclosingMark ||
+                        category == System.Globalization.UnicodeCategory.NonSpacingMark)
+                    {
+                        return false;
+                    }
+                }
+
+                i += bytesConsumed;
+
+                hasHiraganaKatakanaOrHan |= IsHiraganaKatakanaOrHanNotMiddleDot(rune.Value);
+                hasArabicIndicDigits |= IsArabicIndicDigit(rune.Value);
+                hasExtendedArabicIndicDigits |= IsExtendedArabicIndicDigit(rune.Value);
+
+                if (wasLastDot)
+                {
+                    if (!Rune.IsLetter(rune))
+                    {
+                        return false;
+                    }
+                }
+
+                if (DisallowedIdn.IndexOf(rune.Value) >= 0)
+                {
+                    // Disallowed characters in IDN
                     return false;
                 }
 
-                segment = decodedChars.Slice(0, written);
+                if (!Rune.IsLetterOrDigit(rune))
+                {
+                    if (byteValue == (byte)'.' || rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61)
+                    {
+                        if (hasKatakankaMiddleDot && !hasHiraganaKatakanaOrHan)
+                        {
+                            // If we have a Katakana middle dot, it must be have a Hiragana, Katakana or Han character.
+                            return false;
+                        }
+
+                        if (hasArabicIndicDigits && hasExtendedArabicIndicDigits)
+                        {
+                            // You are not permitted both arabic indic AND extended arabic indic
+                            return false;
+                        }
+
+                        hasHiraganaKatakanaOrHan = false;
+                        hasKatakankaMiddleDot = false;
+                        hasArabicIndicDigits = false;
+                        hasExtendedArabicIndicDigits = false;
+                        wasLastDot = true;
+                        previousRune = rune;
+                        continue;
+                    }
+
+                    hasKatakankaMiddleDot |= (rune.Value == 0x30FB);
+
+                    // First we do all the items that are allowed at the first character
+
+                    Rune lookahead = default;
+
+                    if (rune.Value == 0x0375)
+                    {
+                        // If we have a Greek Keraia, it must be followed by a Greek character.
+
+                        // If we are the last character, that's a fail
+                        if (i >= value.Length)
+                        {
+                            return false;
+                        }
+
+                        Rune.DecodeFromUtf8(value.Slice(i), out lookahead, out _);
+                        // If the next character is not Greek, that's a fail
+                        if (!IsGreek(lookahead.Value))
+                        {
+                            return false;
+                        }
+
+                        wasLastDot = false;
+                        previousRune = rune;
+                        continue;
+                    }
+
+                    // Middle dot
+                    if (rune.Value == 0x00B7)
+                    {
+                        if (previousRune.Value != 0x006C)
+                        {
+                            return false;
+                        }
+
+                        if (lookahead.Value == 0)
+                        {
+                            Rune.DecodeFromUtf8(value.Slice(i), out lookahead, out _);
+                            if (lookahead.Value != 0x006C)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+
+                    // These are all the tests which require preceding characters
+                    if (byteValue == (byte)'-')
+                    {
+                        if (i == bytesConsumed || i >= value.Length)
+                        {
+                            return false;
+                        }
+
+                        wasLastDot = false;
+                        previousRune = rune;
+                        continue;
+                    }
+
+                    // ZERO WIDTH JOINER not preceded by Virama
+                    if (rune.Value == 0x200D && !IsVirama(previousRune.Value))
+                    {
+                        return false;
+                    }
+
+                    // If we are Geresh or Gershayim, the previous rune must be Hebrew
+                    if ((rune.Value == 0x05F3 || rune.Value == 0x05F4) && !IsHebrew(previousRune.Value))
+                    {
+                        return false;
+                    }
+                }
+
+                wasLastDot = false;
+                previousRune = rune;
             }
 
-#if NET
-            return HostnamePattern.IsMatch(segment);
-#else
-            return HostnamePattern.IsMatch(segment.ToString());
-#endif
+            if (hasKatakankaMiddleDot && !hasHiraganaKatakanaOrHan)
+            {
+                // If we have a Katakana middle dot, it must be have a Hiragana, Katakana or Han character.
+                return false;
+            }
+
+            if (hasArabicIndicDigits && hasExtendedArabicIndicDigits)
+            {
+                // You are not permitted both Arabic Indic AND extended Arabic Indic
+                return false;
+            }
+
+            return true;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsHiraganaKatakanaOrHanNotMiddleDot(int value)
+        {
+            // Don't allow middle dot
+            if (value == 0x30FB)
+            {                
+                return false;
+            }
+
+            return
+                (value >= 0x30A0 && value <= 0x30FF) ||
+                (value >= 0x3040 && value <= 0x309F) ||
+                (value >= 0x3400 && value <= 0x4DB5) ||
+                (value >= 0x4E00 && value <= 0x9FCB) ||
+                (value >= 0xF900 && value <= 0xFA6A);
+        }
+
+        private static ReadOnlySpan<int> DisallowedIdn =>
+            [0x0640, 0x07FA, 0x302E, 0x302F,
+            0x3031, 0x3032, 0x3033, 0x3034,
+            0x3035, 0x303B];
+
+        private static ReadOnlySpan<int> ViramaTable =>
+            [0x094D, 0x09CD, 0x0A4D, 0x0ACD,
+            0x0B4D, 0x0BCD, 0x0C4D, 0x0CCD,
+            0x0D3B, 0x0D3C, 0x0D4D, 0x0DCA,
+            0x0E3A, 0x0EBA, 0x0F84, 0x1039,
+            0x103A, 0x1714, 0x1715, 0x1734,
+            0x17D2, 0x1A60, 0x1B44, 0x1BAA,
+            0x1BAB, 0x1BF2, 0x1BF3, 0x2D7F,
+            0xA806, 0xA82C, 0xA8C4, 0xA953,
+            0xA9C0, 0xAAF6, 0xABED, 0x10A3F,
+            0x11046, 0x11070, 0x1107F, 0x110B9,
+            0x11133, 0x11134, 0x111C0, 0x11235,
+            0x112EA, 0x1134D, 0x11442, 0x114C2,
+            0x115BF, 0x1163F, 0x116B6, 0x1172B,
+            0x11839, 0x1193D, 0x1193E, 0x119E0,
+            0x11A34, 0x11A47, 0x11A99, 0x11C3F,
+            0x11D44, 0x11D45, 0x11D97];
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsHebrew(int value) => (value >= 0x0590 && value <= 0x05FF);
+        private static bool IsGreek(int value) => (value >= 0x0370 && value <= 0x03FF) || (value >= 0x1F00 && value <= 0x1FFF);
+
+        private static bool IsArabicIndicDigit(int value) => (value >= 0x0660 && value <= 0x0669);
+        private static bool IsExtendedArabicIndicDigit(int value) => (value >= 0x06F0 && value <= 0x06F9);
+        private static bool IsVirama(int value) => ViramaTable.IndexOf(value) >= 0;
 
         [CLSCompliant(false)]
         public static bool MatchIPV4(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
@@ -338,30 +569,15 @@ namespace Corvus.Text.Json.Internal
             return IPAddressParser.IsValidIPV6(value);
         }
 
-        private static readonly Regex EmailPattern = CreateEmailPattern();
         private static readonly Regex IdnEmailPattern = CreateIdnEmailPattern();
-        private static readonly Regex HostnamePattern = CreateHostnamePattern();
-        private static readonly Regex InvalidIdnHostNamePattern = CreateInvalidIdnHostNamePattern();
-
 
 #if NET
-
-        [GeneratedRegex("^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[ \\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?|\\[(((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|IPv6:(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])))\\])$", RegexOptions.Compiled)]
-        private static partial Regex CreateEmailPattern();
 
         [GeneratedRegex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", RegexOptions.Compiled)]
         private static partial Regex CreateIdnEmailPattern();
 
-        [GeneratedRegex("^(?=.{1,255}$)((?!_)\\w)((((?!_)\\w)|\\b-){0,61}((?!_)\\w))?(\\.((?!_)\\w)((((?!_)\\w)|\\b-){0,61}((?!_)\\w))?)*\\.?$", RegexOptions.Compiled)]
-        private static partial Regex CreateHostnamePattern();
-
-        [GeneratedRegex("(^[\\p{Mn}\\p{Mc}\\p{Me}\\u302E\\u00b7])|.*\\u302E.*|.*[^l]\\u00b7.*|.*\\u00b7[^l].*|.*\\u00b7$|\\u0374$|\\u0375$|\\u0374[^\\p{IsGreekandCoptic}]|\\u0375[^\\p{IsGreekandCoptic}]|^\\u05F3|[^\\p{IsHebrew}]\\u05f3|^\\u05f4|[^\\p{IsHebrew}]\\u05f4|[\\u0660-\\u0669][\\u06F0-\\u06F9]|[\\u06F0-\\u06F9][\\u0660-\\u0669]|^\\u200D|[^\\uA953\\u094d\\u0acd\\u0c4d\\u0d3b\\u09cd\\u0a4d\\u0b4d\\u0bcd\\u0ccd\\u0d4d\\u1039\\u0d3c\\u0eba\\ua8f3\\ua8f4]\\u200D|^\\u30fb$|[^\\p{IsHiragana}\\p{IsKatakana}\\p{IsCJKUnifiedIdeographs}]\\u30fb|\\u30fb[^\\p{IsHiragana}\\p{IsKatakana}\\p{IsCJKUnifiedIdeographs}]|[\\u0640\\u07fa\\u3031\\u3032\\u3033\\u3034\\u3035\\u302e\\u302f\\u303b]|..--", RegexOptions.Compiled)]
-        private static partial Regex CreateInvalidIdnHostNamePattern();
 #else
-        private static Regex CreateEmailPattern() => new("^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[ \\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\\[(((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|IPv6:(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])))\\])$", RegexOptions.Compiled);
         private static Regex CreateIdnEmailPattern() => new("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", RegexOptions.Compiled);
-        private static Regex CreateHostnamePattern() => new("^(?=.{1,255}$)((?!_)\\w)((((?!_)\\w)|\\b-){0,61}((?!_)\\w))?(\\.((?!_)\\w)((((?!_)\\w)|\\b-){0,61}((?!_)\\w))?)*\\.?$", RegexOptions.Compiled);
-        private static Regex CreateInvalidIdnHostNamePattern() => new("(^[\\p{Mn}\\p{Mc}\\p{Me}\\u302E\\u00b7])|.*\\u302E.*|.*[^l]\\u00b7.*|.*\\u00b7[^l].*|.*\\u00b7$|\\u0374$|\\u0375$|\\u0374[^\\p{IsGreekandCoptic}]|\\u0375[^\\p{IsGreekandCoptic}]|^\\u05F3|[^\\p{IsHebrew}]\\u05f3|^\\u05f4|[^\\p{IsHebrew}]\\u05f4|[\\u0660-\\u0669][\\u06F0-\\u06F9]|[\\u06F0-\\u06F9][\\u0660-\\u0669]|^\\u200D|[^\\uA953\\u094d\\u0acd\\u0c4d\\u0d3b\\u09cd\\u0a4d\\u0b4d\\u0bcd\\u0ccd\\u0d4d\\u1039\\u0d3c\\u0eba\\ua8f3\\ua8f4]\\u200D|^\\u30fb$|[^\\p{IsHiragana}\\p{IsKatakana}\\p{IsCJKUnifiedIdeographs}]\\u30fb|\\u30fb[^\\p{IsHiragana}\\p{IsKatakana}\\p{IsCJKUnifiedIdeographs}]|[\\u0640\\u07fa\\u3031\\u3032\\u3033\\u3034\\u3035\\u302e\\u302f\\u303b]|..--", RegexOptions.Compiled);
 #endif
     }
 }

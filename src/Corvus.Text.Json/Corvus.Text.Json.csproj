@@ -87,6 +87,7 @@
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />    
     <Compile Include="Corvus\Globalization\CharUnicodeInfo.cs" />    
     <Compile Include="Corvus\Globalization\CharUnicodeInfoData.cs" />    
+    <Compile Include="Corvus\Globalization\IdnMapping.Unicode.UTF8.cs" />    
     <Compile Include="Corvus\Globalization\IdnMapping.Unicode.cs" />    
     <Compile Include="Corvus\Globalization\IdnMapping.Ascii.cs" />    
     <Compile Include="Corvus\Globalization\StrongBidiCategory.cs" />    
@@ -297,6 +298,9 @@
     <Compile Include="$(CoreLibSharedDir)System\Text\UnicodeDebug.cs" Link="System\Text\UnicodeDebug.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Text\UnicodeUtility.cs" Link="System\Text\UnicodeUtility.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Text\Unicode\Utf16Utility.cs" Link="System\Text\Unicode\Utf16Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Corvus\Globalization\IdnMapping.Unicode.UTF8.cs" />
   </ItemGroup>
 
   <!-- Application tfms (.NETCoreApp, .NETFramework) need to use the same or higher version of .NETStandard's dependencies. -->

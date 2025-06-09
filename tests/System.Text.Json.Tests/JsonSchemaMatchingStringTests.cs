@@ -82,6 +82,12 @@ public class JsonSchemaMatchingStringTests
 
     [Theory]
     [InlineData("user@example.com", true)]
+    [InlineData("(allows leading comment)user@example.com", true)]
+    [InlineData("user(allows trailing comment)@example.com", true)]
+    [InlineData("(allows leading comment)user(and allows trailing comment)@example.com", true)]
+    [InlineData("(user@example.com", false)]
+    [InlineData("user(akdjsd@example.com", false)]
+    [InlineData("u:ser@example.com", false)]
     [InlineData("invalid-email", false)]
     public void MatchEmail_ValidatesEmail(string value, bool expected)
     {

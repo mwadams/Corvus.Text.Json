@@ -34,17 +34,17 @@ namespace Corvus.Globalization
     public sealed partial class IdnMapping
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, out int written) =>
+        public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, out int written) =>
            GetUnicode(ascii, outputBuffer, 0, out written);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, out int written)
+        public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, out int written)
         {
             return GetUnicode(ascii, outputBuffer, index, ascii.Length - index, out written);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, out int written)
+        public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, out int written)
         {
             if (index < 0)
             {
@@ -85,7 +85,7 @@ namespace Corvus.Globalization
             return GetUnicodeInvariant(ascii, outputBuffer, index, count, out written);
         }
 
-        private bool GetUnicodeInvariant(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, out int written)
+        private bool GetUnicodeInvariant(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, out int written)
         {
             if (index > 0 || count < ascii.Length)
             {
@@ -108,6 +108,8 @@ namespace Corvus.Globalization
             return true;
         }
 
+        private static ReadOnlySpan<byte> c_strAcePrefixUtf8 => "xn--"u8;
+
         /* PunycodeDecode() converts Punycode to Unicode.  The input is  */
         /* represented as an array of ASCII code points, and the output   */
         /* will be represented as an array of Unicode code points.  The   */
@@ -124,7 +126,7 @@ namespace Corvus.Globalization
         /* output already in the proper case, but their flags will be set */
         /* appropriately so that applying the flags would be harmless.    */
 
-        private static bool PunycodeDecode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, out int written)
+        private static bool PunycodeDecode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, out int written)
         {
             written = 0;
 
@@ -136,7 +138,7 @@ namespace Corvus.Globalization
             }
 
             // Throw if we're too long
-            if (ascii.Length > c_defaultNameLimit - (IsDot(ascii[^1]) ? 0 : 1))
+            if (ascii.Length > c_defaultNameLimit - (LastCharacterIsDot(ascii) ? 0 : 1))
             {
                 written = 0;
                 return false;
@@ -149,7 +151,7 @@ namespace Corvus.Globalization
             while (iNextDot < ascii.Length)
             {
                 // Find end of this segment
-                iNextDot = ascii.Slice(iAfterLastDot).IndexOf('.');
+                iNextDot = ascii.Slice(iAfterLastDot).IndexOf((byte)'.');
                 if (iNextDot < 0 || iNextDot > ascii.Length)
                 {
                     iNextDot = ascii.Length;
@@ -181,8 +183,8 @@ namespace Corvus.Globalization
                 }
 
                 // See if this section's ASCII or ACE
-                if (ascii.Length < c_strAcePrefix.Length + iAfterLastDot ||
-                    ascii.Slice(iAfterLastDot, c_strAcePrefix.Length).CompareTo(c_strAcePrefix, StringComparison.OrdinalIgnoreCase) != 0)
+                if (ascii.Length < c_strAcePrefixUtf8.Length + iAfterLastDot ||
+                    !EqualAcePrefix(ascii.Slice(iAfterLastDot, c_strAcePrefixUtf8.Length)))
                 {
                     // Its ASCII, copy it
                     int length = iNextDot - iAfterLastDot;
@@ -199,11 +201,11 @@ namespace Corvus.Globalization
                 else
                 {
                     // Not ASCII, bump up iAfterLastDot to be after ACE Prefix
-                    iAfterLastDot += c_strAcePrefix.Length;
+                    iAfterLastDot += c_strAcePrefixUtf8.Length;
 
                     // Get number of basic code points (where delimiter is)
                     // numBasicCodePoints < 0 if there're no basic code points
-                    int iTemp = ascii.Slice(iNextDot - 1).LastIndexOf(c_delimiter);
+                    int iTemp = ascii.Slice(iNextDot - 1).LastIndexOf((byte)'-');
 
                     // Trailing - not allowed
                     if (iTemp == iNextDot - 1)
@@ -238,7 +240,7 @@ namespace Corvus.Globalization
                             }
 
                             // When appending make sure they get lower cased
-                            outputBuffer[written++] = (char)(IsAsciiLetterUpper(ascii[copyAscii]) ? ascii[copyAscii] - 'A' + 'a' : ascii[copyAscii]);
+                            outputBuffer[written++] = (byte)(IsAsciiLetterUpper(ascii[copyAscii]) ? ascii[copyAscii] - 'A' + 'a' : ascii[copyAscii]);
                         }
                     }
 
@@ -255,7 +257,7 @@ namespace Corvus.Globalization
                     int w, k;
 
                     // no Supplementary characters yet
-                    int numSurrogatePairs = 0;
+                    int surrogatePairLength = 0;
 
                     // Main loop, read rest of ascii
                     while (asciiIndex < iNextDot)
@@ -275,7 +277,7 @@ namespace Corvus.Globalization
                                 return false;
                             }
 
-                            // decode the digit from the next char
+                            // decode the digit from the next byte
                             if (!DecodeDigit(ascii[asciiIndex++], out int digit))
                             {
                                 written = 0;
@@ -303,20 +305,20 @@ namespace Corvus.Globalization
                             w *= (c_punycodeBase - t);
                         }
 
-                        bias = Adapt(i - oldi, (written - iOutputAfterLastDot - numSurrogatePairs) + 1, oldi == 0);
+                        bias = Adapt(i - oldi, (written - iOutputAfterLastDot - surrogatePairLength) + 1, oldi == 0);
 
                         /* i was supposed to wrap around from output.Length to 0,   */
                         /* incrementing n each time, so we'll fix that now: */
-                        Debug.Assert((written - iOutputAfterLastDot - numSurrogatePairs) + 1 > 0,
+                        Debug.Assert((written - iOutputAfterLastDot - surrogatePairLength) + 1 > 0,
                             "[IdnMapping.punycode_decode]Expected to have added > 0 characters this segment");
-                        if (i / ((written - iOutputAfterLastDot - numSurrogatePairs) + 1) > c_maxint - n)
+                        if (i / ((written - iOutputAfterLastDot - surrogatePairLength) + 1) > c_maxint - n)
                         {
                             written = 0;
                             return false;
                         }
 
-                        n += (int)(i / (written - iOutputAfterLastDot - numSurrogatePairs + 1));
-                        i %= (written - iOutputAfterLastDot - numSurrogatePairs + 1);
+                        n += (int)(i / (written - iOutputAfterLastDot - surrogatePairLength + 1));
+                        i %= (written - iOutputAfterLastDot - surrogatePairLength + 1);
 
                         // Make sure n is legal
                         if (n < 0 || n > 0x10ffff || (n >= 0xD800 && n <= 0xDFFF))
@@ -329,34 +331,34 @@ namespace Corvus.Globalization
                         int iUseInsertLocation;
 
                         // If we have supplementary characters
-                        if (numSurrogatePairs > 0)
+                        if (surrogatePairLength > 0)
                         {
                             // Hard way, we have supplementary characters
                             int iCount;
-                            for (iCount = i, iUseInsertLocation = iOutputAfterLastDot; iCount > 0; iCount--, iUseInsertLocation++)
+                            for (iCount = i, iUseInsertLocation = iOutputAfterLastDot; iCount > 0; iCount--)
                             {
                                 // If its a surrogate, we have to go one more
                                 // (We are guaranteed to be inside the outBuffer range so we don't
                                 // need to test the index here);
-                                if (char.IsSurrogate(outputBuffer[iUseInsertLocation]))
-                                    iUseInsertLocation++;
+
+                                Rune.DecodeFromUtf8(outputBuffer.Slice(iUseInsertLocation), out _, out int bytesConsumed);
+                                iUseInsertLocation += bytesConsumed;
                             }
                         }
                         else
                         {
-                            // No Supplementary chars yet, just add i
+                            // No Supplementary bytes yet, just add i
                             iUseInsertLocation = iOutputAfterLastDot + i;
                         }
 
-                        // Insert it
+                        int prevWritten = written;
                         if (!ConvertFromUtf32AndInsert(outputBuffer, iUseInsertLocation, n, ref written))
                         {
                             return false;
                         }
 
-                        // If it was a surrogate increment our counter
-                        if (IsSupplementary(n))
-                            numSurrogatePairs++;
+                        // If it was a surrogate increment our counter                        
+                        surrogatePairLength += (written - prevWritten) - 1;
 
                         // Index gets updated
                         i++;
@@ -365,8 +367,8 @@ namespace Corvus.Globalization
                     // Do BIDI testing
                     bool bRightToLeft = false;
 
-                    // Check for RTL.  If right-to-left, then 1st & last chars must be RTL
-                    StrongBidiCategory eBidi = CharUnicodeInfo.GetBidiCategory(outputBuffer.Slice(0, written), iOutputAfterLastDot);
+                    // Check for RTL.  If right-to-left, then 1st & last bytes must be RTL
+                    StrongBidiCategory eBidi = CharUnicodeInfo.GetBidiCategory(outputBuffer.Slice(0, written), iOutputAfterLastDot, out _);
                     if (eBidi == StrongBidiCategory.StrongRightToLeft)
                     {
                         // It has to be right to left.
@@ -376,18 +378,17 @@ namespace Corvus.Globalization
                     // Check the rest of them to make sure RTL/LTR is consistent
                     for (int iTest = iOutputAfterLastDot; iTest < written; iTest++)
                     {
-                        // This might happen if we run into a pair
-                        if (char.IsLowSurrogate(outputBuffer[iTest]))
-                            continue;
-
                         // Check to see if its LTR
-                        eBidi = CharUnicodeInfo.GetBidiCategory(outputBuffer, iTest);
+                        eBidi = CharUnicodeInfo.GetBidiCategory(outputBuffer, iTest, out int localConsumed);
                         if ((bRightToLeft && eBidi == StrongBidiCategory.StrongLeftToRight) ||
                             (!bRightToLeft && eBidi == StrongBidiCategory.StrongRightToLeft))
                         {
                             written = 0;
                             return false;
                         }
+
+                        // Skip to
+                        iTest += localConsumed - 1;
                     }
 
                     // Its also a requirement that the last one be RTL if 1st is RTL
@@ -408,14 +409,14 @@ namespace Corvus.Globalization
 
                 // Done with this segment, add dot if necessary
                 if (iNextDot != ascii.Length)
-                    outputBuffer[written++] = '.';
+                    outputBuffer[written++] = (byte)'.';
 
                 iAfterLastDot = iNextDot + 1;
                 iOutputAfterLastDot = written;
             }
 
             // Throw if we're too long
-            if (written > c_defaultNameLimit - (IsDot(outputBuffer[written - 1]) ? 0 : 1))
+            if (written > c_defaultNameLimit - (IsDot(outputBuffer.Slice(written - 1)) ? 0 : 1))
             {
                 written = 0;
                 return false;
@@ -425,7 +426,16 @@ namespace Corvus.Globalization
             return true;
         }
 
-        private static bool ConvertFromUtf32AndInsert(Span<char> outputBuffer, int index, int utf32, ref int written)
+        internal static bool EqualAcePrefix(ReadOnlySpan<byte> readOnlySpan)
+        {
+            Debug.Assert(readOnlySpan.Length >= c_strAcePrefixUtf8.Length, "[IdnMapping.EqualAcePrefix]Expected readOnlySpan to be at least as long as c_strAcePrefixUtf8.");
+            return (readOnlySpan[0] == (byte)'x' || readOnlySpan[0] == (byte)'X') &&
+                   (readOnlySpan[1] == (byte)'n' || readOnlySpan[1] == (byte)'N') &&
+                   readOnlySpan[2] == (byte)'-' &&
+                   readOnlySpan[3] == (byte)'-';
+        }
+
+        private static bool ConvertFromUtf32AndInsert(Span<byte> outputBuffer, int index, int utf32, ref int written)
         {
             Debug.Assert(index >= 0 && index <= outputBuffer.Length, "[IdnMapping.ConvertFromUtf32AndInsert]Expected index to be within bounds of outputBuffer.");
             if (!Rune.TryCreate(utf32, out Rune rune))
@@ -434,8 +444,8 @@ namespace Corvus.Globalization
                 return false;
             }
 
-            Span<char> buffer = stackalloc char[2]; // Max UTF16 chars per rune
-            int localWritten = rune.EncodeToUtf16(buffer);
+            Span<byte> buffer = stackalloc byte[4]; // Max UTF8 bytes per rune
+            int localWritten = rune.EncodeToUtf8(buffer);
             if (outputBuffer.Length < written + localWritten)
             {
                 written = 0;
@@ -455,28 +465,112 @@ namespace Corvus.Globalization
         // point (for use in representing integers) in the range 0 to */
         // c_punycodeBase-1, or <0 if cp is does not represent a value. */
 
-        private static bool DecodeDigit(char cp, out int decoded)
+        private static bool DecodeDigit(byte cp, out int decoded)
         {
             if (IsAsciiDigit(cp))
             {
-                decoded = cp - '0' + 26;
+                decoded = cp - (byte)'0' + 26;
                 return true;
             }
 
             // Two flavors for case differences
             if (IsAsciiLetterLower(cp))
             {
-                decoded = cp - 'a';
+                decoded = cp - (byte)'a';
                 return true;
             }
 
             if (IsAsciiLetterUpper(cp))
             {
-                decoded = cp - 'A';
+                decoded = cp - (byte)'A';
                 return true;
             }
 
             decoded = -1;
+            return false;
+        }
+
+        private static bool ValidateStd3(byte c, bool bNextToDot)
+        {
+            // Check for illegal characters
+            return !(c <= (byte)',' || c == (byte)'/' || (c >= (byte)':' && c <= (byte)'@') ||      // Lots of characters not allowed
+                (c >= (byte)'[' && c <= (byte)'`') || (c >= (byte)'{' && c <= (byte)0x7F) ||
+                (c == (byte)'-' && bNextToDot));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsAsciiLetterUpper(byte v)
+        {
+            return IsBetween(v, (byte)'A', (byte)'Z');
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsAsciiDigit(byte v)
+        {
+            return IsBetween(v, (byte)'0', (byte)'9');
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsAsciiLetterLower(byte v)
+        {
+            return IsBetween(v, (byte)'a', (byte)'z');
+        }
+
+        /// <summary>Indicates whether a character is within the specified inclusive range.</summary>
+        /// <param name="c">The character to evaluate.</param>
+        /// <param name="minInclusive">The lower bound, inclusive.</param>
+        /// <param name="maxInclusive">The upper bound, inclusive.</param>
+        /// <returns>true if <paramref name="c"/> is within the specified range; otherwise, false.</returns>
+        /// <remarks>
+        /// The method does not validate that <paramref name="maxInclusive"/> is greater than or equal
+        /// to <paramref name="minInclusive"/>.  If <paramref name="maxInclusive"/> is less than
+        /// <paramref name="minInclusive"/>, the behavior is undefined.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsBetween(byte c, byte minInclusive, byte maxInclusive) =>
+            (uint)(c - minInclusive) <= (uint)(maxInclusive - minInclusive);
+
+        // Is it a dot?
+        // are we U+002E (., full stop), U+3002 (ideographic full stop), U+FF0E (fullwidth full stop), or
+        // U+FF61 (halfwidth ideographic full stop).
+        // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
+        private static bool IsDot(ReadOnlySpan<byte> ascii)
+        {
+            if (ascii[0] == (byte)'.')
+            {
+                return true;
+            }
+
+            if (ascii.Length > 1)
+            {
+                Rune.DecodeLastFromUtf8(ascii, out Rune rune, out _);
+                if (rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        }
+
+        // Is it a dot?
+        // are we U+002E (., full stop), U+3002 (ideographic full stop), U+FF0E (fullwidth full stop), or
+        // U+FF61 (halfwidth ideographic full stop).
+        // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
+        private static bool LastCharacterIsDot(ReadOnlySpan<byte> ascii)
+        {
+            if (ascii[^1] == (byte)'.')
+            {
+                return true;
+            }
+
+            if (Rune.DecodeLastFromUtf8(ascii.Slice(ascii.Length - 2), out Rune rune, out _) == System.Buffers.OperationStatus.Done)
+            {
+               return rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61;
+            }
+
             return false;
         }
     }
