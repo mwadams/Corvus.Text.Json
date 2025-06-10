@@ -935,4 +935,7 @@
   <data name="JsonSchema_ExpectedIriReference" xml:space="preserve">
     <value>Expected an IRI reference.</value>
   </data>
+  <data name="JsonSchema_ExpectedUriTemplate" xml:space="preserve">
+    <value>Expected an RFC6570 URI Template.</value>
+  </data>
 </root>

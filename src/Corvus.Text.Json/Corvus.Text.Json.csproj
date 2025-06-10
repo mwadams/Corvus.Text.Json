@@ -199,6 +199,7 @@
     <Compile Include="Corvus\Text\Json\Reader\Utf8JsonReader.TryGet.cs" />    
     <Compile Include="Corvus\Text\Json\StackHelper.cs" />
     <Compile Include="Corvus\Text\Json\Internal\CodeGenThrowHelper.cs" />
+    <Compile Include="Corvus\Text\Json\UriTemplate\Utf8UriTemplate.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8IriHelper.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8JsonUriInfo.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8Uri.cs" />

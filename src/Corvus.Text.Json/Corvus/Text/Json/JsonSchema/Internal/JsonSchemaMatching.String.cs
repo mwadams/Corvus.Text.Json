@@ -1,10 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers.Text;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using Corvus.Globalization;
 
 namespace Corvus.Text.Json.Internal
@@ -33,6 +31,7 @@ namespace Corvus.Text.Json.Internal
         private static readonly JsonSchemaMessageProvider ExpectedUriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriReference.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedIri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIri.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedIriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIriReference.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedUriTemplate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriTemplate.AsSpan(), buffer, out written);
 
         [CLSCompliant(false)]
         public static bool MatchTypeString(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
@@ -785,7 +784,7 @@ namespace Corvus.Text.Json.Internal
         {
             if (!MatchIri(value))
             {
-                context.Matched(false, messageProvider: ExpectedUri, schemaEvaluationPath: keyword);
+                context.Matched(false, messageProvider: ExpectedIri, schemaEvaluationPath: keyword);
                 return false;
             }
 
@@ -836,21 +835,6 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchUriReference(ReadOnlySpan<byte> value)
         {
-            // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
-            // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
-            // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
-            // of a problem because a lot of relative Uris of the kind you come across on the web
-            // look exactly like Unix file paths.)
-            // https://github.com/dotnet/runtime/issues/22718
-            // However, this only needs to be a problem if you insist that the Uri is absolute.
-            // If you accept either absolute or relative Uris, it will interpret "/abc" as a
-            // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
-            // if you pass UriKind.Absolute when parsing.
-            // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
-            // and then rejecting relative Uris. This causes this method to reject "/abc" on all
-            // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
-            // "abc".
-
             if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: false, allowUNCPath: false))
             {
                 // We may need the extra tests for empty fragment etc.
@@ -865,7 +849,7 @@ namespace Corvus.Text.Json.Internal
         {
             if (!MatchIriReference(value))
             {
-                context.Matched(false, messageProvider: ExpectedUriReference, schemaEvaluationPath: keyword);
+                context.Matched(false, messageProvider: ExpectedIriReference, schemaEvaluationPath: keyword);
                 return false;
             }
 
@@ -876,24 +860,32 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIriReference(ReadOnlySpan<byte> value)
         {
-            // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
-            // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
-            // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
-            // of a problem because a lot of relative Uris of the kind you come across on the web
-            // look exactly like Unix file paths.)
-            // https://github.com/dotnet/runtime/issues/22718
-            // However, this only needs to be a problem if you insist that the Uri is absolute.
-            // If you accept either absolute or relative Uris, it will interpret "/abc" as a
-            // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
-            // if you pass UriKind.Absolute when parsing.
-            // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
-            // and then rejecting relative Uris. This causes this method to reject "/abc" on all
-            // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
-            // "abc".
-
             if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false))
             {
-                // We may need the extra tests for empty fragment etc.
+                return false;
+            }
+
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchUriTemplate(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchUriTemplate(value))
+            {
+                context.Matched(false, messageProvider: ExpectedUriReference, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchUriTemplate(ReadOnlySpan<byte> value)
+        {
+            if (!Utf8UriTemplate.Validate(value))
+            {
                 return false;
             }
 

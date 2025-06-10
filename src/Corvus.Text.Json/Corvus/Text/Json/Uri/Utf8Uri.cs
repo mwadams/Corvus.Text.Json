@@ -195,6 +195,12 @@ namespace Corvus.Text.Json.Internal
             return syntax.InFact(Utf8UriSyntaxFlags.FileLikeUri);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool ValidatePathQueryAndFragmentSegment(ReadOnlySpan<byte> uriString, bool iriParsing)
+        {
+            return ValidateRelativeReference(uriString, iriParsing);
+        }
+
         private static unsafe bool ValidateRelativeReference(ReadOnlySpan<byte> uriString, bool iriParsing)
         {
             int length = uriString.Length;
