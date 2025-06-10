@@ -210,13 +210,19 @@ namespace Corvus.Text.Json.Internal
                 fixed (byte* str = uriString)
                 {
                     Check result = CheckCanonical(str, ref idx, length, (queryIdx >= 0) ? (byte)'?' : (hashIdx >= 0) ? (byte)'#' : c_EOL, iriParsing, queryIdx >= 0, hashIdx >= 0);
-                    if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
+                    if ((result & (Check.BackslashInPath | Check.ReservedFound | Check.NotIriCanonical)) != 0)
                     {
                         return false;
                     }
 
                     if ((result & Check.DisplayCanonical) == 0)
                     {
+                        return false;
+                    }
+
+                    if (!iriParsing && (result & Check.FoundNonAscii) != 0)
+                    {
+                        // If we are not Iri parsing, we cannot have non-ascii characters in the path
                         return false;
                     }
                 }
@@ -822,17 +828,22 @@ namespace Corvus.Text.Json.Internal
                         cF |= Flags.QueryNotCanonical;
                     }
 
-                    if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
-                    {
-                        cF |= Flags.E_QueryNotCanonical;
-                    }
-
                     if (IriParsing(syntax) && ((result & (Check.DisplayCanonical | Check.EscapedCanonical | Check.BackslashInPath
                                 | Check.FoundNonAscii | Check.NotIriCanonical))
                                 == (Check.DisplayCanonical | Check.FoundNonAscii)))
                     {
                         cF |= Flags.QueryIriCanonical;
                     }
+
+                    if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
+                    {
+
+                        if ((cF & Flags.QueryIriCanonical) == 0)
+                        {
+                            cF |= Flags.E_QueryNotCanonical;
+                        }
+                    }
+
                 }
             }
 
@@ -850,16 +861,19 @@ namespace Corvus.Text.Json.Internal
                         cF |= Flags.FragmentNotCanonical;
                     }
 
-                    if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
-                    {
-                        cF |= Flags.E_FragmentNotCanonical;
-                    }
-
                     if (IriParsing(syntax) && ((result & (Check.DisplayCanonical | Check.EscapedCanonical | Check.BackslashInPath
                                 | Check.FoundNonAscii | Check.NotIriCanonical))
                                 == (Check.DisplayCanonical | Check.FoundNonAscii)))
                     {
                         cF |= Flags.FragmentIriCanonical;
+                    }
+
+                    if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
+                    {
+                        if ((cF & Flags.FragmentIriCanonical) == 0)
+                        {
+                            cF |= Flags.E_FragmentNotCanonical;
+                        }
                     }
                 }
             }
