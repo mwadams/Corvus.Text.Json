@@ -1,13 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
+#if NET
 using System.Buffers;
+#endif
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using static Corvus.Text.Json.Internal.Utf8Uri;
 
 namespace Corvus.Text.Json.Internal
 {
@@ -39,6 +37,8 @@ namespace Corvus.Text.Json.Internal
             E_QueryNotCanonical = 0x800,
             E_FragmentNotCanonical = 0x1000,
             E_CannotDisplayCanonical = 0x1F80,
+
+            E_NonCanonical = E_UserNotCanonical | E_HostNotCanonical | E_PortNotCanonical | E_PathNotCanonical | E_QueryNotCanonical | E_FragmentNotCanonical | E_CannotDisplayCanonical,
 
 
             ShouldBeCompressed = 0x2000,
@@ -127,7 +127,7 @@ namespace Corvus.Text.Json.Internal
             {
                 // If it looks as a relative Uri, custom factory is ignored
                 if (!requireAbsolute && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
-                    return true;
+                    return ValidateRelativeReference(uriString, allowIri);
 
                 return false;
             }
@@ -155,9 +155,14 @@ namespace Corvus.Text.Json.Internal
             return (flags & Flags.ImplicitFile) != 0;
         }
 
+        private static bool IsDosPath(Flags flags)
+        {
+            return (flags & Flags.DosPath) != 0;
+        }
+
         private static bool UserDrivenParsing(Flags flags)
         {
-                return (flags & Flags.UserDrivenParsing) != 0;
+            return (flags & Flags.UserDrivenParsing) != 0;
         }
 
         private static Flags HostType(Flags flags)
@@ -165,6 +170,10 @@ namespace Corvus.Text.Json.Internal
             return flags & Flags.HostTypeMask;
         }
 
+        private static bool IsError(Flags flags)
+        {
+            return (flags & Flags.ErrorOrParsingRecursion) != 0;
+        }
 
         private static bool NotAny(Flags allFlags, Flags checkFlags)
         {
@@ -186,6 +195,72 @@ namespace Corvus.Text.Json.Internal
             return syntax.InFact(Utf8UriSyntaxFlags.FileLikeUri);
         }
 
+        private static unsafe bool ValidateRelativeReference(ReadOnlySpan<byte> uriString, bool iriParsing)
+        {
+            int length = uriString.Length;
+
+            int idx = 0;
+            int queryIdx = uriString.IndexOf((byte)'?');
+
+            int hashIdx = uriString.IndexOf((byte)'#');
+
+            if (idx < length && uriString[idx] is not ((byte)'?' or (byte)'#'))
+            {
+                // Check the path
+                fixed (byte* str = uriString)
+                {
+                    Check result = CheckCanonical(str, ref idx, length, (queryIdx >= 0) ? (byte)'?' : (hashIdx >= 0) ? (byte)'#' : c_EOL, iriParsing, queryIdx >= 0, hashIdx >= 0);
+                    if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
+                    {
+                        return false;
+                    }
+
+                    if ((result & Check.DisplayCanonical) == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (idx < length && uriString[idx] == '?')
+            {
+                // Move past the deliimiter
+                idx++;
+                if (idx < length)
+                {
+                    // Check the query
+                    fixed (byte* str = uriString)
+                    {
+                        Check result = CheckCanonical(str, ref idx, length, (hashIdx >= 0) ? (byte)'#' : c_EOL, iriParsing, queryIdx >= 0, hashIdx >= 0);
+                        if ((result & (Check.BackslashInPath | Check.ReservedFound | Check.NotIriCanonical)) != 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            if (idx < length && uriString[idx] == '#')
+            {
+                // Move past the deliimiter
+                idx++;
+                if (idx < length)
+                {
+                    // Check the fragment
+                    fixed (byte* str = uriString)
+                    {
+                        Check result = CheckCanonical(str, ref idx, length, c_EOL, iriParsing, queryIdx >= 0, hashIdx >= 0);
+                        if ((result & (Check.BackslashInPath | Check.ReservedFound | Check.NotIriCanonical)) != 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+
+        }
 
         private static bool ValidateCore(Utf8UriParsingError err, ref Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, bool requireAbsolute, bool allowUNCPath)
         {
@@ -229,12 +304,9 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            bool hasUnicode = false;
-
             if (IriParsing(syntax) && CheckForUnicodeOrEscapedUnreserved(uriString))
             {
                 flags |= Flags.HasUnicode;
-                hasUnicode = true;
             }
 
             bool success = true;
@@ -261,16 +333,15 @@ namespace Corvus.Text.Json.Internal
                         success = false;
                     }
                     else
+                    {
                         success = true;
+                    }
                     // will return from here
 
-                    if (hasUnicode)
+                    // In this scenario we need to parse the whole string
+                    if (!ValidateRemaining(err, ref flags, syntax, uriKind, uriString))
                     {
-                        // In this scenario we need to parse the whole string
-                        if (!ValidateRemaining(err, ref flags, syntax, uriKind, uriString))
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
                 else
@@ -310,13 +381,10 @@ namespace Corvus.Text.Json.Internal
                             success = false;
                         }
 
-                        if (hasUnicode)
+                        // In this scenario we need to parse the whole string
+                        if (!ValidateRemaining(err, ref flags, syntax, uriKind, uriString))
                         {
-                            // In this scenario we need to parse the whole string
-                            if (!ValidateRemaining(err, ref flags, syntax, uriKind, uriString))
-                            {
-                                return false;
-                            }
+                            return false;
                         }
                     }
                     // will return from here
@@ -351,14 +419,14 @@ namespace Corvus.Text.Json.Internal
 
         //
         //
-        // The method is called when we have to access _info members.
-        // This will create the _info based on the copied parser context.
+        // The method is called when we have to access info members.
+        // This will create the info based on the copied parser context.
         // If multi-threading, this method may do duplicated yet harmless work.
         //
         private static unsafe Utf8UriInfo CreateUriInfo(Utf8UriParser syntax, ref Flags flags, ReadOnlySpan<byte> uriString)
         {
             Utf8UriInfo info = new Utf8UriInfo();
-            
+
             // This will be revisited in ParseRemaining but for now just have it at least uriString.Length
             info.Offset.End = (ushort)uriString.Length;
 
@@ -489,9 +557,6 @@ namespace Corvus.Text.Json.Internal
             bool notEmpty = false;
             // Note we already checked on general port syntax in ParseMinimal()
 
-            // If iri parsing is on with unicode chars then the end of parsed host
-            // points to _originalUnicodeString and not uriString
-
             if (idx < info.Offset.End)
             {
                 fixed (byte* userString = uriString)
@@ -563,8 +628,6 @@ namespace Corvus.Text.Json.Internal
                 goto Done;
 
             // Do we have to continue building Iri'zed string from original string
-            bool buildIriStringFromPath = InFact(flags, Flags.HasUnicode);
-
             int idx = info.Offset.Scheme;
             int length = uriString.Length;
             Check result = Check.None;
@@ -619,10 +682,6 @@ namespace Corvus.Text.Json.Internal
                 }
             }
             //
-            // Delay canonical Host checking to avoid creation of a host string
-            // Will do that on demand.
-            //
-            //
             // We have already checked on the port in EnsureUriInfo() that calls CreateUriInfo
             //
             //
@@ -632,7 +691,7 @@ namespace Corvus.Text.Json.Internal
             // so restart parsing from there and make info.Offset.Path as uriString.Length
 
             idx = info.Offset.Path;
-          
+
             if (IsImplicitFile(flags) || (syntaxFlags & Utf8UriSyntaxFlags.MayHaveQuery) == 0)
             {
                 idx = uriString.Length;
@@ -646,18 +705,174 @@ namespace Corvus.Text.Json.Internal
                 }
             }
 
+            fixed (byte* str = uriString)
+            {
+                if (IsImplicitFile(flags) || ((syntaxFlags & (Utf8UriSyntaxFlags.MayHaveQuery | Utf8UriSyntaxFlags.MayHaveFragment)) == 0))
+                {
+                    result = CheckCanonical(str, ref idx, length, c_EOL, syntax, ref flags);
+                }
+                else
+                {
+                    result = CheckCanonical(str, ref idx, length, (((syntaxFlags & Utf8UriSyntaxFlags.MayHaveQuery) != 0)
+                        ? (byte)'?' : syntax.InFact(Utf8UriSyntaxFlags.MayHaveFragment) ? (byte)'#' : c_EOL), syntax, ref flags);
+                }
+
+                // ATTN:
+                // This may render problems for unknown schemes, but in general for an authority based Uri
+                // (that has slashes) a path should start with "/"
+                // This becomes more interesting knowing how a file uri is used in "file://c:/path"
+                // It will be converted to file:///c:/path
+                //
+                // However, even more interesting is that vsmacros://c:\path will not add the third slash in the _canoical_ case
+                //
+                // We use special syntax flag to check if the path is rooted, i.e. has a first slash
+                //
+                if (((flags & Flags.AuthorityFound) != 0) && ((syntaxFlags & Utf8UriSyntaxFlags.PathIsRooted) != 0)
+                    && (info.Offset.Path == length || (str[info.Offset.Path] != '/' && str[info.Offset.Path] != (byte)'\\')))
+                {
+                    cF |= Flags.FirstSlashAbsent;
+                }
+            }
+            // Check the need for compression or backslashes conversion
+            // we included IsDosPath since it may come with other than FILE uri, for ex. scheme://C:\path
+            // (This is very unfortunate that the original design has included that feature)
+            bool nonCanonical = false;
+            if (IsDosPath(flags) || (((flags & Flags.AuthorityFound) != 0) &&
+                (((syntaxFlags & (Utf8UriSyntaxFlags.CompressPath | Utf8UriSyntaxFlags.ConvertPathSlashes)) != 0) ||
+                syntax.InFact(Utf8UriSyntaxFlags.UnEscapeDotsAndSlashes))))
+            {
+                if (((result & Check.DotSlashEscaped) != 0) && syntax.InFact(Utf8UriSyntaxFlags.UnEscapeDotsAndSlashes))
+                {
+                    cF |= (Flags.E_PathNotCanonical | Flags.PathNotCanonical);
+                    nonCanonical = true;
+                }
+
+                if (((syntaxFlags & (Utf8UriSyntaxFlags.ConvertPathSlashes)) != 0) && (result & Check.BackslashInPath) != 0)
+                {
+                    cF |= (Flags.E_PathNotCanonical | Flags.PathNotCanonical);
+                    nonCanonical = true;
+                }
+
+                if (((syntaxFlags & (Utf8UriSyntaxFlags.CompressPath)) != 0) && ((cF & Flags.E_PathNotCanonical) != 0 ||
+                    (result & Check.DotSlashAttn) != 0))
+                {
+                    cF |= Flags.ShouldBeCompressed;
+                }
+
+                if ((result & Check.BackslashInPath) != 0)
+                    cF |= Flags.BackslashInPath;
+            }
+            else if ((result & Check.BackslashInPath) != 0)
+            {
+                // for a "generic" path '\' should be escaped
+                cF |= Flags.E_PathNotCanonical;
+                nonCanonical = true;
+            }
+
+            if ((result & Check.DisplayCanonical) == 0)
+            {
+                // For implicit file the user string is usually in perfect display format,
+                // Hence, ignoring complains from CheckCanonical()
+                // V1 compat. In fact we should simply ignore dontEscape parameter for Implicit file.
+                // Currently we don't.
+                if (((flags & Flags.ImplicitFile) == 0) || ((flags & Flags.UserEscaped) != 0) ||
+                    (result & Check.ReservedFound) != 0)
+                {
+                    //means it's found as escaped or has unescaped Reserved Characters
+                    cF |= Flags.PathNotCanonical;
+                    nonCanonical = true;
+                }
+            }
+
+            if (((flags & Flags.ImplicitFile) != 0) && (result & (Check.ReservedFound | Check.EscapedCanonical)) != 0)
+            {
+                // need to escape reserved chars or re-escape '%' if an "escaped sequence" was found
+                result &= ~Check.EscapedCanonical;
+            }
+
+            if ((result & Check.EscapedCanonical) == 0)
+            {
+                //means it's found as not completely escaped
+                cF |= Flags.E_PathNotCanonical;
+            }
+
+            if (IriParsing(syntax) && !nonCanonical && ((result & (Check.DisplayCanonical | Check.EscapedCanonical
+                            | Check.FoundNonAscii | Check.NotIriCanonical))
+                            == (Check.DisplayCanonical | Check.FoundNonAscii)))
+            {
+                cF |= Flags.PathIriCanonical;
+            }
+
+            //
+            //Now we've got to parse the Query if any. Note that Query requires the presence of '?'
+            //
+
             info.Offset.Query = (ushort)idx;
-            info.Offset.Fragment = (ushort)uriString.Length; // There is no fragment in DisablePathAndQueryCanonicalization mode
-            info.Offset.End = (ushort)uriString.Length;
+
+            fixed (byte* str = uriString)
+            {
+                if (idx < length && str[idx] == '?')
+                {
+                    ++idx; // This is to exclude first '?' character from checking
+                    result = CheckCanonical(str, ref idx, length, ((syntaxFlags & (Utf8UriSyntaxFlags.MayHaveFragment)) != 0)
+                        ? (byte)'#' : c_EOL, syntax, ref flags);
+
+                    if ((result & Check.DisplayCanonical) == 0)
+                    {
+                        cF |= Flags.QueryNotCanonical;
+                    }
+
+                    if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
+                    {
+                        cF |= Flags.E_QueryNotCanonical;
+                    }
+
+                    if (IriParsing(syntax) && ((result & (Check.DisplayCanonical | Check.EscapedCanonical | Check.BackslashInPath
+                                | Check.FoundNonAscii | Check.NotIriCanonical))
+                                == (Check.DisplayCanonical | Check.FoundNonAscii)))
+                    {
+                        cF |= Flags.QueryIriCanonical;
+                    }
+                }
+            }
+
+            info.Offset.Fragment = (ushort)idx;
+
+            fixed (byte* str = uriString)
+            {
+                if (idx < length && str[idx] == (byte)'#')
+                {
+                    ++idx; // This is to exclude first '#' character from checking
+                    //We don't using c_DummyChar since want to allow '?' and '#' as unescaped
+                    result = CheckCanonical(str, ref idx, length, c_EOL, syntax, ref flags);
+                    if ((result & Check.DisplayCanonical) == 0)
+                    {
+                        cF |= Flags.FragmentNotCanonical;
+                    }
+
+                    if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
+                    {
+                        cF |= Flags.E_FragmentNotCanonical;
+                    }
+
+                    if (IriParsing(syntax) && ((result & (Check.DisplayCanonical | Check.EscapedCanonical | Check.BackslashInPath
+                                | Check.FoundNonAscii | Check.NotIriCanonical))
+                                == (Check.DisplayCanonical | Check.FoundNonAscii)))
+                    {
+                        cF |= Flags.FragmentIriCanonical;
+                    }
+                }
+            }
+            info.Offset.End = (ushort)idx;
+
         Done:
             cF |= Flags.AllUriInfoSet;
 
-            // ACTUALLY DETERMINE WHAT WE ARE ABOUT!
-            return true;
+            return (cF & Flags.E_NonCanonical) == 0;
         }
 
         //
-        // Used by ParseRemaining as well by InternalIsWellFormedOriginalString
+        // Used by ParseRemaining
         //
         private static unsafe Check CheckCanonical(byte* str, ref int idx, int end, byte delim, Utf8UriParser syntax, ref Flags flags)
         {
@@ -668,9 +883,9 @@ namespace Corvus.Text.Json.Internal
 
             byte c;
             int i = idx;
-            for (; i < end; )
+            for (; i < end;)
             {
-                Rune.DecodeFromUtf8(new ReadOnlySpan<byte>(str + i, end - i), out Rune rune, out int bytesConsumed);
+                int bytesConsumed = 1;
                 c = str[i];
                 // Control chars usually should be escaped in any case
                 if (c <= (byte)'\x1F' || (c >= (byte)'\x7F' && c <= (byte)'\x9F'))
@@ -684,11 +899,12 @@ namespace Corvus.Text.Json.Internal
                     if (iriParsing)
                     {
                         res |= Check.FoundNonAscii;
+                        Rune.DecodeFromUtf8(new ReadOnlySpan<byte>(str + i, end - i), out Rune rune, out bytesConsumed);
 
                         if (!Utf8IriHelper.CheckIriUnicodeRange((uint)rune.Value, true))
                         {
                             res |= Check.NotIriCanonical;
-                        }                        
+                        }
                     }
 
                     if (!needsEscaping) needsEscaping = true;
@@ -754,6 +970,154 @@ namespace Corvus.Text.Json.Internal
                     // If we have an IRI with Flags.HasUnicode, we need to set Check.NotIriCanonical so that the
                     // path, query, and fragment will be validated.
                     if ((flags & Flags.HasUnicode) != 0)
+                    {
+                        res |= Check.NotIriCanonical;
+                    }
+                }
+                else if (c >= (byte)'{' && c <= (byte)'}') // includes '{', '|', '}'
+                {
+                    needsEscaping = true;
+                }
+                else if (c == (byte)'%')
+                {
+                    if (!foundEscaping) foundEscaping = true;
+                    int unescaped = 0;
+                    //try unescape a byte hex escaping
+                    if (i + 2 < end && (unescaped = Utf8UriHelper.DecodeHexChars(str[i + 1], str[i + 2])) != c_DummyChar)
+                    {
+                        if (c == (byte)'.' || c == (byte)'/' || c == (byte)'\\')
+                        {
+                            res |= Check.DotSlashEscaped;
+                        }
+
+                        i += bytesConsumed + 2;
+                        continue;
+                    }
+
+                    // otherwise we follow to non escaped case
+                    if (!needsEscaping)
+                    {
+                        needsEscaping = true;
+                    }
+                }
+
+                i += bytesConsumed;
+            }
+
+            if (foundEscaping)
+            {
+                if (!needsEscaping)
+                {
+                    res |= Check.EscapedCanonical;
+                }
+            }
+            else
+            {
+                res |= Check.DisplayCanonical;
+                if (!needsEscaping)
+                {
+                    res |= Check.EscapedCanonical;
+                }
+            }
+            idx = i;
+            return res;
+        }
+
+        // Used by relative reference validation
+        private static unsafe Check CheckCanonical(byte* str, ref int idx, int end, byte delim, bool iriParsing, bool mayHaveQuery, bool mayHaveFragment)
+        {
+            Check res = Check.None;
+            bool needsEscaping = false;
+            bool foundEscaping = false;
+
+            byte c;
+            int i = idx;
+            for (; i < end;)
+            {
+                int bytesConsumed = 1;
+                c = str[i];
+                // Control chars usually should be escaped in any case
+                if (c <= (byte)'\x1F' || (c >= (byte)'\x7F' && c <= (byte)'\x9F'))
+                {
+                    needsEscaping = true;
+                    foundEscaping = true;
+                    res |= Check.ReservedFound;
+                }
+                else if (c > '~')
+                {
+                    if (iriParsing)
+                    {
+                        res |= Check.FoundNonAscii;
+                        Rune.DecodeFromUtf8(new ReadOnlySpan<byte>(str + i, end - i), out Rune rune, out bytesConsumed);
+
+                        if (!Utf8IriHelper.CheckIriUnicodeRange((uint)rune.Value, true))
+                        {
+                            res |= Check.NotIriCanonical;
+                        }
+                    }
+
+                    if (!needsEscaping) needsEscaping = true;
+                }
+                else if (c == delim)
+                {
+                    break;
+                }
+                else if (delim == (byte)'?' && c == (byte)'#' && mayHaveFragment)
+                {
+                    // this is a special case when deciding on Query/Fragment
+                    break;
+                }
+                else if (c == (byte)'?')
+                {
+                    if (!mayHaveQuery && delim != c_EOL)
+                    {
+                        // If found as reserved this char is not suitable for safe unescaped display
+                        // Will need to escape it when both escaping and unescaping the string
+                        res |= Check.ReservedFound;
+                        foundEscaping = true;
+                        needsEscaping = true;
+                    }
+                }
+                else if (c == (byte)'#')
+                {
+                    needsEscaping = true;
+                    if (!mayHaveFragment)
+                    {
+                        // If found as reserved this char is not suitable for safe unescaped display
+                        // Will need to escape it when both escaping and unescaping the string
+                        res |= Check.ReservedFound;
+                        foundEscaping = true;
+                    }
+                }
+                else if (c == (byte)'/' || c == (byte)'\\')
+                {
+                    if ((res & Check.BackslashInPath) == 0 && c == (byte)'\\')
+                    {
+                        res |= Check.BackslashInPath;
+                    }
+                    if ((res & Check.DotSlashAttn) == 0 && i + 1 != end && (str[i + 1] == (byte)'/' || str[i + 1] == (byte)'\\'))
+                    {
+                        res |= Check.DotSlashAttn;
+                    }
+                }
+                else if (c == (byte)'.')
+                {
+                    if ((res & Check.DotSlashAttn) == 0 && i + 1 == end || str[i + 1] == (byte)'.' || str[i + 1] == (byte)'/'
+                        || str[i + 1] == (byte)'\\' || str[i + 1] == (byte)'?' || str[i + 1] == (byte)'#')
+                    {
+                        res |= Check.DotSlashAttn;
+                    }
+                }
+                else if (((c <= (byte)'"' && c != (byte)'!') || (c >= (byte)'[' && c <= (byte)'^') || c == (byte)'>'
+                        || c == (byte)'<' || c == (byte)'`'))
+                {
+                    if (!needsEscaping) needsEscaping = true;
+
+                    // The check above validates only that we have valid IRI characters, which is not enough to
+                    // conclude that we have a valid canonical IRI.
+                    // If we have an IRI with Flags.HasUnicode, we need to set Check.NotIriCanonical so that the
+                    // path, query, and fragment will be validated.
+                    if (iriParsing)
                     {
                         res |= Check.NotIriCanonical;
                     }
@@ -1297,7 +1661,7 @@ namespace Corvus.Text.Json.Internal
                 // We must ensure that known schemes do use a server-based authority
                 {
                     Utf8UriParsingError err = Utf8UriParsingError.None;
-                    
+
                     idx = CheckAuthorityHelper(pUriString, idx, length, ref err, ref flags, syntax); // REMOVED THE NEWHOST STRING MODIFICATION
                     if (err != Utf8UriParsingError.None)
                         return err;
@@ -1320,15 +1684,6 @@ namespace Corvus.Text.Json.Internal
                         }
 #endif
                     }
-
-                    //// I THINK WE CAN REMOVE THE NEWHOST STRING MODIFICATION
-                    //// (From CheckAuthorityHelper) because we are not in fact going
-                    //// to use the results of that; but I may be wrong! We may need to rent
-                    //// and return a buffer instead.
-                    ////if (newHost is not null)
-                    ////{
-                    ////    uriString = newHost;
-                    ////}
                 }
 
                 // The Path (or Port) parsing index is reloaded on demand in CreateUriInfo when accessing a Uri property

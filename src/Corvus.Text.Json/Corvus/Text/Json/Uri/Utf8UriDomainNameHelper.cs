@@ -4,6 +4,7 @@
 #if NET
 using System.Buffers;
 using System.Runtime.CompilerServices;
+using System.Text.Unicode;
 #endif
 
 namespace Corvus.Text.Json.Internal
@@ -18,33 +19,29 @@ namespace Corvus.Text.Json.Internal
             SearchValues.Create("-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz."u8);
 
         // For IRI, we're accepting anything non-ascii (except 0x80-0x9F), so invert the condition to search for invalid ascii characters.
-        private static readonly SearchValues<byte> s_iriInvalidChars = SearchValues.Create(
-            [0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
-            0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
-            (byte)' ', (byte)'!', (byte)'\\', (byte)'\"', (byte)'#', (byte)'$', (byte)'%', (byte)'&', (byte)'\'', (byte)'(', (byte)')', (byte)'*',
-            (byte)'+', (byte)',', (byte)'/', (byte)':', (byte)';', (byte)'<', (byte)'=', (byte)'>', (byte)'?', (byte)'@', (byte)'[', (byte)']',
-            (byte)'^', (byte)'`', (byte)'{', (byte)'|', (byte)'}', (byte)'~', 0x007F,
-            0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087, 0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F,
-            0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097, 0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F]);
+        private static readonly SearchValues<char> s_iriInvalidChars = SearchValues.Create(
+            "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000A\u000B\u000C\u000D\u000E\u000F" +
+            "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F" +
+            " !\"#$%&'()*+,/:;<=>?@[\\]^`{|}~\u007F" +
+            "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008A\u008B\u008C\u008D\u008E\u008F" +
+            "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009A\u009B\u009C\u009D\u009E\u009F");
 #else
         // Takes into account the additional legal domain name characters '-' and '_'
         // Note that '_' char is formally invalid but is historically in use, especially on corpnets
         private static ReadOnlySpan<byte> s_validChars => "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz."u8;
 
         // For IRI, we're accepting anything non-ascii (except 0x80-0x9F), so invert the condition to search for invalid ascii characters.
-        private static ReadOnlySpan<byte> s_iriInvalidChars =>
-            [0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
-            0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
-            (byte)' ', (byte)'!', (byte)'\\', (byte)'\"', (byte)'#', (byte)'$', (byte)'%', (byte)'&', (byte)'\'', (byte)'(', (byte)')', (byte)'*',
-            (byte)'+', (byte)',', (byte)'/', (byte)':', (byte)';', (byte)'<', (byte)'=', (byte)'>', (byte)'?', (byte)'@', (byte)'[', (byte)']',
-            (byte)'^', (byte)'`', (byte)'{', (byte)'|', (byte)'}', (byte)'~', 0x007F,
-            0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087, 0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F,
-            0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097, 0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F];
+        private static ReadOnlySpan<char> s_iriInvalidChars =>
+            "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000A\u000B\u000C\u000D\u000E\u000F" +
+            "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F" +
+            " !\"#$%&'()*+,/:;<=>?@[\\]^`{|}~\u007F" +
+            "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008A\u008B\u008C\u008D\u008E\u008F" +
+            "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009A\u009B\u009C\u009D\u009E\u009F";
 #endif
         public static bool IsValid(ReadOnlySpan<byte> hostname, bool iri, bool notImplicitFile, out int length)
         {
             int invalidCharOrDelimiterIndex = iri
-                ? hostname.IndexOfAny(s_iriInvalidChars)
+                ? IndexOfAny(hostname, s_iriInvalidChars)
                 : Utf8Uri.IndexOfAnyExcept(hostname, s_validChars);
 
             if (invalidCharOrDelimiterIndex >= 0)
@@ -131,6 +128,41 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+#if NET
+        private static int IndexOfAny(ReadOnlySpan<byte> hostname, SearchValues<char> s_iriInvalidChars)
+        {
+            for(int i = 0; i < hostname.Length;)
+            {
+                Rune.DecodeFromUtf8(hostname.Slice(i), out Rune result, out int bytesConsumed);                
+                if (s_iriInvalidChars.Contains((char)result.Value))
+                {
+                    return i; // Return the start index of the invalid character
+                }
+
+                i += bytesConsumed;
+
+            }
+
+            return -1;
+        }
+#else
+        private static int IndexOfAny(ReadOnlySpan<byte> hostname, ReadOnlySpan<char> s_iriInvalidChars)
+        {
+            for(int i = 0; i < hostname.Length;)
+            {
+                Rune.DecodeFromUtf8(hostname.Slice(i), out Rune result, out int bytesConsumed);                
+                if (s_iriInvalidChars.IndexOf((char)result.Value) >= 0)
+                {
+                    return i; // Return the start index of the invalid character
+                }
+
+                i += bytesConsumed;
+
+            }
+
+            return -1;
+        }
+#endif
         private static int IndexOfIriDot(ReadOnlySpan<byte> hostname)
         {
             for (int i = 0; i < hostname.Length;)
@@ -151,6 +183,8 @@ namespace Corvus.Text.Json.Internal
                 {
                     return i;
                 }
+
+                i += bytesConsumed;
 
             }
 

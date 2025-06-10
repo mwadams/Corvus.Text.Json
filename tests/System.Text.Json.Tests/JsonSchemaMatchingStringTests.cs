@@ -305,6 +305,7 @@ public class JsonSchemaMatchingStringTests
 
     [Theory]
     [InlineData("http://foo.bar/?baz=qux#quux", true)]
+    [InlineData("http://foo.bar/?baz=qux#qu\\ux", false)] // Non-canonical fragment
     [InlineData("http://foo.com/blah_(wikipedia)_blah#cite-1", true)]
     [InlineData("http://foo.bar/?q=Test%20URL-encoded%20stuff", true)]
     [InlineData("http://xn--nw2a.xn--j6w193g/", true)]
@@ -329,6 +330,45 @@ public class JsonSchemaMatchingStringTests
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
         bool result = JsonSchemaMatching.MatchUri(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("http://foo.bar/?baz=qux#quux", true)]
+    [InlineData("//foo.bar/?baz=qux#quux", true)]
+    [InlineData("/abc", true)]
+    [InlineData("\\\\WINDOWS\\fileshare", false)]
+    [InlineData("abc", true)]
+    [InlineData("#fragment", true)]
+    [InlineData("#frag\\ment", false)]
+    public void MatchUriReference_ValidatesUriReference(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchUriReference(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+
+    [Theory]
+    [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
+    [InlineData("http://ƒøø.com/blah_(wîkïpédiå)_blah#ßité-1", true)]
+    [InlineData("http://ƒøø.ßår/?q=Test%20URL-encoded%20stuff", true)]
+    [InlineData("http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com", true)]
+    [InlineData("http://[2001:0db8:85a3:0000:0000:8a2e:0370:7334]", true)]
+    [InlineData("http://2001:0db8:85a3:0000:0000:8a2e:0370:7334", false)]
+    [InlineData("/abc", false)]
+    [InlineData("\\\\WINDOWS\\filëßåré", false)]
+    [InlineData("âππ", false)]
+    public void MatchIri_ValidatesIri(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchIri(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
