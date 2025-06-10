@@ -8,6 +8,21 @@ namespace Corvus.Text.Json.Internal
 {
     internal static partial class IPv6AddressHelper
     {
+        internal static unsafe bool IsValid(byte* name, int start, int end, bool disallowScope)
+        {
+            if (name[start] != '[')
+            {
+                return false;
+            }
+
+            end = new ReadOnlySpan<byte>(name + start, end - start).IndexOf((byte)']');
+            if (end <= 0)
+            {
+                return false;
+            }
+
+            return IsValidStrict(name, start, end + start + 1, disallowScope);
+        }
         //
         // IsValidStrict
         //
@@ -38,8 +53,8 @@ namespace Corvus.Text.Json.Internal
         //  Nothing
         //
 
-        //  Remarks: MUST NOT be used unless all input indexes are verified and trusted.
-        //           start must be next to '[' position, or error is reported
+            //  Remarks: MUST NOT be used unless all input indexes are verified and trusted.
+            //           start must be next to '[' position, or error is reported
         internal static unsafe bool IsValidStrict(byte* name, int start, int end, bool disallowScope)
         {
             // Number of components in this IPv6 address

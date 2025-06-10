@@ -302,4 +302,35 @@ public class JsonSchemaMatchingStringTests
         collector.AssertState();
         context.Dispose();
     }
+
+    [Theory]
+    [InlineData("http://foo.bar/?baz=qux#quux", true)]
+    [InlineData("http://foo.com/blah_(wikipedia)_blah#cite-1", true)]
+    [InlineData("http://foo.bar/?q=Test%20URL-encoded%20stuff", true)]
+    [InlineData("http://xn--nw2a.xn--j6w193g/", true)]
+    [InlineData("http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com", true)]
+    [InlineData("http://223.255.255.254", true)]
+    [InlineData("ftp://ftp.is.co.za/rfc/rfc1808.txt", true)]
+    [InlineData("http://www.ietf.org/rfc/rfc2396.txt", true)]
+    [InlineData("ldap://[2001:db8::7]/c=GB?objectClass?one", true)]
+    [InlineData("mailto:John.Doe@example.com", true)]
+    [InlineData("news:comp.infosystems.www.servers.unix", true)]
+    [InlineData("tel:+1-816-555-1212", true)]
+    [InlineData("urn:oasis:names:specification:docbook:dtd:xml:4.1.2", true)]
+    [InlineData("//foo.bar/?baz=qux#quux", false)]
+    [InlineData("/abc", false)]
+    [InlineData("\\\\WINDOWS\\fileshare", false)]
+    [InlineData("abc", false)]
+    [InlineData("http:// shouldfail.com", false)]
+    [InlineData(":// should fail", false)]
+    [InlineData("bar,baz:foo", false)]
+    public void MatchUri_ValidatesUri(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchUri(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
 }

@@ -604,7 +604,7 @@ namespace Corvus.Globalization
         // are we U+002E (., full stop), U+3002 (ideographic full stop), U+FF0E (fullwidth full stop), or
         // U+FF61 (halfwidth ideographic full stop).
         // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
-        private static bool IsDot(char c) =>
+        internal static bool IsDot(char c) =>
             c == '.' || c == '\u3002' || c == '\uFF0E' || c == '\uFF61';
 
         private static bool IsSupplementary(int cTest) =>

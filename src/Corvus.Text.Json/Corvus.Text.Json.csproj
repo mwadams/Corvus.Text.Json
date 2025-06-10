@@ -76,25 +76,12 @@
     <Compile Include="$(CoreLibSharedDir)System\Index.cs" Link="System\Index.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Range.cs" Link="System\Range.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Numerics\Hashing\HashHelpers.cs" Link="System\Numerics\Hashing\HashHelpers.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\Ascii.cs" />
   </ItemGroup>
   
   <PropertyGroup>
     <NoWarn Condition="'$(TargetFramework)' == 'netstandard2.0'">$(NoWarn);nullable</NoWarn>
   </PropertyGroup>
-
-  <!-- Include files under StringResourcesPath by convention unless OmitResources is set. -->
-  <ItemGroup>    
-    <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />    
-    <Compile Include="Corvus\Globalization\CharUnicodeInfo.cs" />    
-    <Compile Include="Corvus\Globalization\CharUnicodeInfoData.cs" />    
-    <Compile Include="Corvus\Globalization\IdnMapping.Unicode.UTF8.cs" />    
-    <Compile Include="Corvus\Globalization\IdnMapping.Unicode.cs" />    
-    <Compile Include="Corvus\Globalization\IdnMapping.Ascii.cs" />    
-    <Compile Include="Corvus\Globalization\StrongBidiCategory.cs" />    
-    <!-- Include common SR helper when resources are included. -->
-    <Compile Include="Corvus\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <Compile Include="Corvus\NodaTimeExtensions\GregorianYearMonthDayCalculator.cs" />
@@ -212,10 +199,21 @@
     <Compile Include="Corvus\Text\Json\Reader\Utf8JsonReader.TryGet.cs" />    
     <Compile Include="Corvus\Text\Json\StackHelper.cs" />
     <Compile Include="Corvus\Text\Json\Internal\CodeGenThrowHelper.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8IriHelper.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8JsonUriInfo.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8Uri.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriComponents.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriDomainNameHelper.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriFormat.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriHelper.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriKind.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriParser.BuiltInParser.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriParser.Syntax.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriParsingError.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriSyntaxFlags.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriParser.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriUncNameHelper.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriUnescapeMode.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteValues.StringSegment.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\JsonWorkspaceCache.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriterCache.cs" />
@@ -256,6 +254,19 @@
     <!--<Compile Include="System\ReflectionExtensions.cs" />-->
     <Compile Include="$(CommonPath)System\Obsoletions.cs" Link="Common\System\Obsoletions.cs" />
     <Compile Include="Corvus\ThrowHelper.cs" />
+    <Compile Include="Corvus\Globalization\CharUnicodeInfo.cs" />
+    <Compile Include="Corvus\Globalization\CharUnicodeInfoData.cs" />
+    <Compile Include="Corvus\Globalization\IdnMapping.Unicode.UTF8.cs" />
+    <Compile Include="Corvus\Globalization\IdnMapping.Unicode.cs" />
+    <Compile Include="Corvus\Globalization\IdnMapping.Ascii.cs" />
+    <Compile Include="Corvus\Globalization\StrongBidiCategory.cs" />
+  </ItemGroup>
+
+  <!-- Include files under StringResourcesPath by convention unless OmitResources is set. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />
+    <!-- Include common SR helper when resources are included. -->
+    <Compile Include="Corvus\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">

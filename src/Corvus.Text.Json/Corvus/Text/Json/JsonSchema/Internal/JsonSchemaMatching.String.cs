@@ -30,6 +30,9 @@ namespace Corvus.Text.Json.Internal
         private static readonly JsonSchemaMessageProvider ExpectedIPV6 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV6.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedUuid = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUuid.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedUri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUri.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedUriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriReference.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedIri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIri.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedIriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIriReference.AsSpan(), buffer, out written);
 
         [CLSCompliant(false)]
         public static bool MatchTypeString(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
@@ -753,8 +756,148 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchUri(ReadOnlySpan<byte> value)
         {
-            return false; 
+            // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
+            // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
+            // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
+            // of a problem because a lot of relative Uris of the kind you come across on the web
+            // look exactly like Unix file paths.)
+            // https://github.com/dotnet/runtime/issues/22718
+            // However, this only needs to be a problem if you insist that the Uri is absolute.
+            // If you accept either absolute or relative Uris, it will interpret "/abc" as a
+            // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
+            // if you pass UriKind.Absolute when parsing.
+            // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
+            // and then rejecting relative Uris. This causes this method to reject "/abc" on all
+            // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
+            // "abc".
+
+            if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: false, allowUNCPath: false))
+            {
+                // We may need the extra tests here
+                return false;
+            }
+
+            return true;
         }
 
+        [CLSCompliant(false)]
+        public static bool MatchIri(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchIri(value))
+            {
+                context.Matched(false, messageProvider: ExpectedUri, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchIri(ReadOnlySpan<byte> value)
+        {
+            // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
+            // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
+            // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
+            // of a problem because a lot of relative Uris of the kind you come across on the web
+            // look exactly like Unix file paths.)
+            // https://github.com/dotnet/runtime/issues/22718
+            // However, this only needs to be a problem if you insist that the Uri is absolute.
+            // If you accept either absolute or relative Uris, it will interpret "/abc" as a
+            // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
+            // if you pass UriKind.Absolute when parsing.
+            // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
+            // and then rejecting relative Uris. This causes this method to reject "/abc" on all
+            // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
+            // "abc".
+
+            if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: true, allowUNCPath: false))
+            {
+                // We may need the extra tests here
+                return false;
+            }
+
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchUriReference(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchUriReference(value))
+            {
+                context.Matched(false, messageProvider: ExpectedUriReference, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchUriReference(ReadOnlySpan<byte> value)
+        {
+            // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
+            // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
+            // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
+            // of a problem because a lot of relative Uris of the kind you come across on the web
+            // look exactly like Unix file paths.)
+            // https://github.com/dotnet/runtime/issues/22718
+            // However, this only needs to be a problem if you insist that the Uri is absolute.
+            // If you accept either absolute or relative Uris, it will interpret "/abc" as a
+            // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
+            // if you pass UriKind.Absolute when parsing.
+            // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
+            // and then rejecting relative Uris. This causes this method to reject "/abc" on all
+            // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
+            // "abc".
+
+            if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: false, allowUNCPath: false))
+            {
+                // We may need the extra tests for empty fragment etc.
+                return false;
+            }
+
+            return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchIriReference(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchIriReference(value))
+            {
+                context.Matched(false, messageProvider: ExpectedUriReference, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchIriReference(ReadOnlySpan<byte> value)
+        {
+            // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
+            // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
+            // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
+            // of a problem because a lot of relative Uris of the kind you come across on the web
+            // look exactly like Unix file paths.)
+            // https://github.com/dotnet/runtime/issues/22718
+            // However, this only needs to be a problem if you insist that the Uri is absolute.
+            // If you accept either absolute or relative Uris, it will interpret "/abc" as a
+            // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
+            // if you pass UriKind.Absolute when parsing.
+            // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
+            // and then rejecting relative Uris. This causes this method to reject "/abc" on all
+            // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
+            // "abc".
+
+            if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false))
+            {
+                // We may need the extra tests for empty fragment etc.
+                return false;
+            }
+
+            return true;
+        }
     }
 }

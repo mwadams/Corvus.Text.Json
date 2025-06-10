@@ -926,4 +926,13 @@
   <data name="JsonSchema_ExpectedUri" xml:space="preserve">
     <value>Expected an absolute URI.</value>
   </data>
+  <data name="JsonSchema_ExpectedUriReference" xml:space="preserve">
+    <value>Expected a URI reference.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIri" xml:space="preserve">
+    <value>Expected an absolute IRI.</value>
+  </data>
+  <data name="JsonSchema_ExpectedIriReference" xml:space="preserve">
+    <value>Expected an IRI reference.</value>
+  </data>
 </root>

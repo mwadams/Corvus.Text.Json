@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -90,46 +89,6 @@ namespace Corvus.Text.Json.Internal
             // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
             // "abc".
             return Uri.TryCreate(text, UriKind.RelativeOrAbsolute, out value);
-        }
-
-        public static bool ValidateUri(ReadOnlySpan<byte> value)
-        {
-            // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
-            // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
-            // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
-            // of a problem because a lot of relative Uris of the kind you come across on the web
-            // look exactly like Unix file paths.)
-            // https://github.com/dotnet/runtime/issues/22718
-            // However, this only needs to be a problem if you insist that the Uri is absolute.
-            // If you accept either absolute or relative Uris, it will interpret "/abc" as a
-            // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
-            // if you pass UriKind.Absolute when parsing.
-            // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
-            // and then rejecting relative Uris. This causes this method to reject "/abc" on all
-            // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
-            // "abc".
-
-            // FINALLY: it needs to be an ABSOLUTE URI
-            return false;
-        }
-
-        public static bool ValidateUriReference(ReadOnlySpan<byte> value)
-        {
-            // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
-            // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
-            // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
-            // of a problem because a lot of relative Uris of the kind you come across on the web
-            // look exactly like Unix file paths.)
-            // https://github.com/dotnet/runtime/issues/22718
-            // However, this only needs to be a problem if you insist that the Uri is absolute.
-            // If you accept either absolute or relative Uris, it will interpret "/abc" as a
-            // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
-            // if you pass UriKind.Absolute when parsing.
-            // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
-            // and then rejecting relative Uris. This causes this method to reject "/abc" on all
-            // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
-            // "abc".
-            return false;
         }
     }
 }

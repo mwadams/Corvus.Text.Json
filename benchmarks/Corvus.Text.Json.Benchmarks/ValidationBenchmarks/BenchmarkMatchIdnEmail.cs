@@ -15,9 +15,9 @@ namespace ValidationBenchmarks;
 [MemoryDiagnoser]
 public class BenchmarkMatchIdnEmail
 {
-    private System.Text.Json.JsonDocument _cjsEmail;
+    private System.Text.Json.JsonDocument? _cjsEmail;
     private JsonIdnEmail _cjsEmailElement;
-    private ParsedJsonDocument<JsonElement> _ctjEmail;
+    private ParsedJsonDocument<JsonElement>? _ctjEmail;
 
     [GlobalSetup]
     public void GlobalSetup()
@@ -30,8 +30,8 @@ public class BenchmarkMatchIdnEmail
     [GlobalCleanup]
     public void GlobalCleanup()
     {
-        _cjsEmail.Dispose();
-        _ctjEmail.Dispose();
+        _cjsEmail?.Dispose();
+        _ctjEmail?.Dispose();
     }
 
     [Benchmark(Baseline = true)]
@@ -45,7 +45,7 @@ public class BenchmarkMatchIdnEmail
     public bool ValidateCorvusTextJson()
     {
         // This is normally all wrapped up in codegen; you don't have to do this yourself.
-        JsonSchemaContext context = JsonSchemaContext.BeginContext(_ctjEmail, 0, false, false);
+        JsonSchemaContext context = JsonSchemaContext.BeginContext(_ctjEmail!, 0, false, false);
 
         try
         {

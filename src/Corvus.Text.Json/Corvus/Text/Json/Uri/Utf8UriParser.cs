@@ -79,5 +79,12 @@ namespace Corvus.Text.Json.Internal
         protected virtual void OnRegister(string schemeName, int defaultPort)
         {
         }
+
+        public virtual Utf8UriParser InternalOnNewUri(Utf8UriParsingError err, ref Utf8Uri.Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString)
+        {
+            return this;
+        }
+
+       public virtual bool InternalValidate(Utf8UriParsingError err, ref Utf8Uri.Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString) => true;
     }
 }

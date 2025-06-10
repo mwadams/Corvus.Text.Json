@@ -127,7 +127,7 @@ namespace Corvus.Text.Json.Internal
         }
 
         private const int c_MaxCapacity = 512;
-        //schemeStr must be in lower case!
+
         internal static Utf8UriParser FindOrFetchAsUnknownV1Syntax(string lwrCaseScheme)
         {
             // check may be other thread just added one
