@@ -89,6 +89,7 @@ public class JsonSchemaMatchingStringTests
     [InlineData("user(akdjsd@example.com", false)]
     [InlineData("u:ser@example.com", false)]
     [InlineData("invalid-email", false)]
+    [InlineData("用户@例子.广告", false)]
     public void MatchEmail_ValidatesEmail(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
@@ -101,6 +102,11 @@ public class JsonSchemaMatchingStringTests
 
     [Theory]
     [InlineData("用户@例子.广告", true)]
+    [InlineData("(allows leading comment)用户@例子.广告", true)]
+    [InlineData("用户(allows trailing comment)@例子.广告", true)]
+    [InlineData("(allows leading comment)用户(and allows trailing comment)@例子.广告", true)]
+    [InlineData("(用户@例子.广告", false)]
+    [InlineData("用户(sdk@例子.广告", false)]
     [InlineData("ಬೆಂಬಲ@ಡೇಟಾಮೇಲ್.ಭಾರತ", true)]
     [InlineData("अजय@डाटा.भारत", true)]
     [InlineData("квіточка@пошта.укр", true)]
@@ -138,6 +144,7 @@ public class JsonSchemaMatchingStringTests
     [InlineData("h0stn4me", true)]
     [InlineData("1host", true)]
     [InlineData("hostnam3", true)]
+    [InlineData("실례.테스트", false)]
     public void MatchHostname_ValidatesHostname(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
@@ -325,6 +332,7 @@ public class JsonSchemaMatchingStringTests
     [InlineData("http:// shouldfail.com", false)]
     [InlineData(":// should fail", false)]
     [InlineData("bar,baz:foo", false)]
+    [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", false)]
     public void MatchUri_ValidatesUri(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
@@ -343,6 +351,7 @@ public class JsonSchemaMatchingStringTests
     [InlineData("abc", true)]
     [InlineData("#fragment", true)]
     [InlineData("#frag\\ment", false)]
+    [InlineData("#ƒrägmênt", false)]
     public void MatchUriReference_ValidatesUriReference(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
@@ -369,6 +378,25 @@ public class JsonSchemaMatchingStringTests
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
         bool result = JsonSchemaMatching.MatchIri(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+
+    [Theory]
+    [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
+    [InlineData("//ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
+    [InlineData("/âππ", true)]
+    [InlineData("\\\\WINDOWS\\filëßåré", false)]
+    [InlineData("âππ", true)]
+    [InlineData("#ƒrägmênt", true)]
+    [InlineData("#ƒräg\\mênt", false)]
+    public void MatchIriReference_ValidatesIriReference(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchIriReference(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
