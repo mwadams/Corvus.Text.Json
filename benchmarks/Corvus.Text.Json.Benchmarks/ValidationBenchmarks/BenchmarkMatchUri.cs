@@ -13,31 +13,31 @@ namespace ValidationBenchmarks;
 /// Construct elements from a JSON element.
 /// </summary>
 [MemoryDiagnoser]
-public class BenchmarkMatchIdnEmail
+public class BenchmarkMatchUri
 {
-    private System.Text.Json.JsonDocument? _cjsEmail;
-    private JsonIdnEmail _cjsEmailElement;
-    private ParsedJsonDocument<JsonElement>? _ctjEmail;
+    private System.Text.Json.JsonDocument? _cjsUri;
+    private JsonUri _cjsUriElement;
+    private ParsedJsonDocument<JsonElement>? _ctjUri;
 
     [GlobalSetup]
     public void GlobalSetup()
     {
-        _cjsEmail = System.Text.Json.JsonDocument.Parse("\"Dörte@Sörensen.example.com\"");
-        _ctjEmail = ParsedJsonDocument<JsonElement>.Parse("\"Dörte@Sörensen.example.com\"");
-        _cjsEmailElement = JsonIdnEmail.FromJson(_cjsEmail.RootElement);
+        _cjsUri = System.Text.Json.JsonDocument.Parse("\"http://foo.bar/?q=Test%20URL-encoded%20stuff\"");
+        _ctjUri = ParsedJsonDocument<JsonElement>.Parse("\"http://foo.bar/?q=Test%20URL-encoded%20stuff\"");
+        _cjsUriElement = JsonUri.FromJson(_cjsUri.RootElement);
     }
 
     [GlobalCleanup]
     public void GlobalCleanup()
     {
-        _cjsEmail?.Dispose();
-        _ctjEmail?.Dispose();
+        _cjsUri?.Dispose();
+        _ctjUri?.Dispose();
     }
 
     [Benchmark(Baseline = true)]
     public bool ValidateCorvusJsonSchema()
     {
-        ValidationContext result = ValidateWithoutCoreType.TypeIdnEmail(_cjsEmailElement, ValidationContext.ValidContext, ValidationLevel.Flag);
+        ValidationContext result = ValidateWithoutCoreType.TypeUri(_cjsUriElement, ValidationContext.ValidContext, ValidationLevel.Flag);
         return result.IsValid;
     }
 
@@ -45,11 +45,11 @@ public class BenchmarkMatchIdnEmail
     public bool ValidateCorvusTextJson()
     {
         // This is normally all wrapped up in codegen; you don't have to do this yourself.
-        JsonSchemaContext context = JsonSchemaContext.BeginContext(_ctjEmail!, 0, false, false);
+        JsonSchemaContext context = JsonSchemaContext.BeginContext(_ctjUri!, 0, false, false);
 
         try
         {
-            return JsonSchemaMatching.MatchIdnEmail("Dörte@Sörensen.example.com"u8, DummyPathProvider, ref context);
+            return JsonSchemaMatching.MatchUri("http://foo.bar/?q=Test%20URL-encoded%20stuff"u8, DummyPathProvider, ref context);
         }
         finally
         {
