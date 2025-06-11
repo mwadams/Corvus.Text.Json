@@ -78,5 +78,75 @@ namespace Corvus.Text.Json.Internal
 
             return true;
         }
+
+        public static bool ValidateRelative(ReadOnlySpan<byte> span)
+        {
+            int i = 0;
+            int length = span.Length;
+
+            // Parse non-negative-integer (origin-specification)
+            if (i >= length) return false;
+            if (span[i] == (byte)'0')
+            {
+                i++;
+            }
+            else if (IsNonZeroDigit(span[i]))
+            {
+                i++;
+                while (i < length && IsDigit(span[i]))
+                {
+                    i++;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            // Optional index-manipulation
+            if (i < length && (span[i] == (byte)'+' || span[i] == (byte)'-'))
+            {
+                i++;
+                // Must be positive-integer (no leading zero)
+                if (i >= length || !IsNonZeroDigit(span[i])) return false;
+                i++;
+                while (i < length && IsDigit(span[i]))
+                {
+                    i++;
+                }
+            }
+
+            // Must be followed by either '#' or a valid json-pointer
+            if (i == length)
+            {
+                // No '#' or json-pointer, valid
+                return true;
+            }
+
+            if (span[i] == (byte)'#')
+            {
+                // '#' must be the last character
+                return i + 1 == length;
+            }
+            else if (span[i] == (byte)'/' || i == length)
+            {
+                // json-pointer: *( "/" reference-token )
+                // Use Utf8JsonPointer.Validate for the remainder
+                return Utf8JsonPointer.Validate(span.Slice(i));
+            }
+            else if (i == length)
+            {
+                // End of input, but no '#' or json-pointer
+                return false;
+            }
+            else
+            {
+                // Invalid character after origin-specification/index-manipulation
+                return false;
+            }
+
+            static bool IsDigit(byte b) => b >= (byte)'0' && b <= (byte)'9';
+            static bool IsNonZeroDigit(byte b) => b >= (byte)'1' && b <= (byte)'9';
+        }
     }
 }

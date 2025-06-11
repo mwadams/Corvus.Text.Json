@@ -938,4 +938,10 @@
   <data name="JsonSchema_ExpectedUriTemplate" xml:space="preserve">
     <value>Expected an RFC6570 URI Template.</value>
   </data>
+  <data name="JsonSchema_ExpectedJsonPointer" xml:space="preserve">
+    <value>Expected an RFC6901 JSON Pointer.</value>
+  </data>
+  <data name="JsonSchema_ExpectedRelativeJsonPointer" xml:space="preserve">
+    <value>Expected a Relative JSON Pointer. (https://json-schema.org/draft/2020-12/relative-json-pointer).</value>
+  </data>
 </root>

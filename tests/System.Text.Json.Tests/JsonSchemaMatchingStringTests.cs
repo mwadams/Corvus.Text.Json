@@ -525,4 +525,27 @@ public class JsonSchemaMatchingStringTests
         collector.AssertState();
         context.Dispose();
     }
+
+    [Theory]
+    [InlineData("1", true)]
+    [InlineData("0/foo/bar", true)]
+    [InlineData("2/0/baz/1/zip", true)]
+    [InlineData("0#", true)]
+    [InlineData("/foo/bar", false)]
+    [InlineData("-1/foo/bar", false)]
+    [InlineData("+1/foo/bar", false)]
+    [InlineData("0##", false)]
+    [InlineData("01/a", false)]
+    [InlineData("01#", false)]
+    [InlineData("", false)]
+    [InlineData("120/foo/bar", true)]
+    public void MatchRelativeJsonPointer_ValidatesRelativeJsonPointer(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchRelativeJsonPointer(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
 }
