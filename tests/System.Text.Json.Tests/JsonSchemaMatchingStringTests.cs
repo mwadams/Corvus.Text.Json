@@ -482,4 +482,47 @@ public class JsonSchemaMatchingStringTests
         collector.AssertState();
         context.Dispose();
     }
+
+    [Theory]
+    [InlineData("/foo/bar~0/baz~1/%a", true)]
+    [InlineData("/foo/bar~", false)]
+    [InlineData("/foo//bar", true)]
+    [InlineData("/foo/bar/", true)]
+    [InlineData("", true)]
+    [InlineData("/foo", true)]
+    [InlineData("/foo/0", true)]
+    [InlineData("/", true)]
+    [InlineData("/a~1b", true)]
+    [InlineData("/c%d", true)]
+    [InlineData("/e^f", true)]
+    [InlineData("/g|h", true)]
+    [InlineData("/i\\j", true)]
+    [InlineData("/k\"l", true)]
+    [InlineData("/ ", true)]
+    [InlineData("/m~0n", true)]
+    [InlineData("/foo/-", true)]
+    [InlineData("/foo/-/bar", true)]
+    [InlineData("/~1~0~0~1~1", true)]
+    [InlineData("/~1.1", true)]
+    [InlineData("/~0.1", true)]
+    [InlineData("#", false)]
+    [InlineData("#/", false)]
+    [InlineData("#a", false)]
+    [InlineData("/~0~", false)]
+    [InlineData("/~0/~", false)]
+    [InlineData("/~2", false)]
+    [InlineData("/~-1", false)]
+    [InlineData("/~~", false)]
+    [InlineData("a", false)]
+    [InlineData("0", false)]
+    [InlineData("a/a", false)]
+    public void MatchJsonPointer_ValidatesJsonPointer(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchJsonPointer(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
 }

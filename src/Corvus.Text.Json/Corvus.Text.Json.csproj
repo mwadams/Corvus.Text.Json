@@ -201,6 +201,7 @@
     <Compile Include="Corvus\Text\Json\Internal\CodeGenThrowHelper.cs" />
     <Compile Include="Corvus\Text\Json\UriTemplate\Utf8UriTemplate.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8IriHelper.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8JsonPointer.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8JsonUriInfo.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8Uri.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriComponents.cs" />

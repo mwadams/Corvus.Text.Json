@@ -891,5 +891,29 @@ namespace Corvus.Text.Json.Internal
 
             return true;
         }
+
+        [CLSCompliant(false)]
+        public static bool MatchJsonPointer(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchJsonPointer(value))
+            {
+                context.Matched(false, messageProvider: ExpectedUriReference, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchJsonPointer(ReadOnlySpan<byte> value)
+        {
+            if (!Utf8JsonPointer.Validate(value))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
