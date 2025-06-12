@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 
@@ -1004,8 +1003,45 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
+            return GetRawValueAsStringUnsafe(index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private string GetRawValueAsStringUnsafe(int index)
+        {
             ReadOnlyMemory<byte> segment = GetRawValueUnsafe(index, includeQuotes: true);
             return JsonReaderHelper.TranscodeHelper(segment.Span);
+        }
+
+        string IJsonDocument.ToString(int index)
+        {
+            CheckNotDisposed();
+            
+            switch (_parsedData.GetJsonTokenType(index))
+            {
+                case JsonTokenType.None:
+                case JsonTokenType.Null:
+                    return string.Empty;
+                case JsonTokenType.True:
+                    return bool.TrueString;
+                case JsonTokenType.False:
+                    return bool.FalseString;
+                case JsonTokenType.Number:
+                case JsonTokenType.StartArray:
+                case JsonTokenType.StartObject:
+                {
+                    // null parent should have hit the None case
+                    return GetRawValueAsStringUnsafe(index);
+                }
+                case JsonTokenType.String:
+                    return GetStringUnsafe(index, JsonTokenType.String)!;
+                case JsonTokenType.Comment:
+                case JsonTokenType.EndArray:
+                case JsonTokenType.EndObject:
+                default:
+                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{_parsedData.GetJsonTokenType(index)}");
+                    return string.Empty;
+            }
         }
 
         /// <inheritdoc />
@@ -1460,6 +1496,12 @@ namespace Corvus.Text.Json
             int entityLength = complexObjectRow.HasPropertyMap ? GetLengthOfEndToken(complexObjectRow.SizeOrLengthOrPropertyMapIndex) : complexObjectRow.RawSizeOrLength;
             db.AppendExternal(complexObjectRow.TokenType, index, entityLength, complexObjectRow.NumberOfRows);
             return count;
+        }
+
+        int IJsonDocument.GetHashCode(int index)
+        {
+            CheckNotDisposed();
+            return GetHashCodeUnsafe(index);
         }
     }
 }

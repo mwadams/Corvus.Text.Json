@@ -61,10 +61,9 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendBinaryOperator(typeDeclaration, "bool", "!=", "return !left.DeepEquals(right);", "<c>True</c> if the values are not equal.")
                         .AppendFromFactoryMethod(typeDeclaration)
                         .AppendEqualsOverloads(typeDeclaration)
-//                      TODO: we are working on this now
-                        //.AppendWriteToMethod(typeDeclaration)
-                        //.AppendGetHashCodeAndToStringMethods(typeDeclaration)
-                        //.AppendValidateMethodForNoValidation(typeDeclaration)
+                        .AppendWriteToMethod(typeDeclaration)
+                        .AppendGetHashCodeAndToStringMethods(typeDeclaration, false)
+                        //.AppendMatchMethodForNoMatchKeywords(typeDeclaration)
                         //.AppendMatchMethods(typeDeclaration)
                         //.AppendTryGetMethods(typeDeclaration)
                         //.PopValidationClassNameAndScope()

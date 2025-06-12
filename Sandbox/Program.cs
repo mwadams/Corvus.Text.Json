@@ -1,8 +1,6 @@
 ﻿using Benchmark.CorvusTextJson2;
 using Corvus.Text.Json;
 
-System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("(?<a>)(?<b>)(?<-1>)(?<-2>)}", System.Text.RegularExpressions.RegexOptions.None);
-
 Console.WriteLine();
 Console.WriteLine("************");
 Console.WriteLine();
@@ -120,12 +118,12 @@ Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is a match
 
 
 
-Console.WriteLine(documentB1.RootElement.DeepEquals(documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
+Console.WriteLine(documentB1.RootElement.Equals(documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
 
 documentB1.RootElement.EnsurePropertyMap();
 documentB2.RootElement.EnsurePropertyMap();
 
-Console.WriteLine(documentB1.RootElement.DeepEquals(documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
+Console.WriteLine(documentB1.RootElement.Equals(documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -406,3 +404,5 @@ catch (InvalidOperationException ex)
 {
     Console.WriteLine($"Caught expected exception: {ex.Message}");
 }
+
+bool result = person == lastName;

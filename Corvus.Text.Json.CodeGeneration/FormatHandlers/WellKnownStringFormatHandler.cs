@@ -120,60 +120,161 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
     }
 
     /// <inheritdoc/>
-    public bool AppendFormatAssertion(CodeGenerator generator, string format, string formatKeywordExpression, string valueIdentifier, string validationContextIdentifier)
+    public bool AppendFormatAssertion(CodeGenerator generator, string format, string formatKeywordProviderExpression, string valueIdentifier, string validationContextIdentifier)
     {
         switch (format)
         {
             case "date":
-                generator.AppendLineIndent();
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchDate(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "date-time":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchDateTime(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "time":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchTime(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "duration":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchDuration(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "email":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchEmail(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "idn-email":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIdnEmail(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "hostname":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchHostname(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "idn-hostname":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIdnHostname(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "ipv4":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIPV4(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "ipv6":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIPV6(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "uuid":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchUuid(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "uri":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchUri(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "uri-template":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchUriTemplate(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "uri-reference":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchUriReference(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "iri":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIri(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "iri-reference":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIriReference(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "json-pointer":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchJsonPointer(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "relative-json-pointer":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchRelativeJsonPointer(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
             case "regex":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchRegex(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
                 return true;
             case "corvus-base64-content":
-                return true;
+                // TODO
+                return false;
             case "corvus-base64-content-pre201909":
-                return true;
+                // TODO
+                return false;
             case "corvus-base64-string":
-                return true;
+                // TODO
+                return false;
             case "corvus-base64-string-pre201909":
-                return true;
+                // TODO
+                return false;
             case "corvus-json-content":
-                return true;
+                // TODO
+                return false;
             case "corvus-json-content-pre201909":
-                return true;
+                // TODO
+                return false;
             default:
                 return false;
         }

@@ -69,6 +69,26 @@ public readonly partial struct PersonArray
             return result;
         }
 
+        public static bool operator ==(PrefixItems0 left, PrefixItems0 right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PrefixItems0 left, PrefixItems0 right)
+        {
+            return !left.Equals(right);
+        }
+
+        public static bool operator ==(PrefixItems0 left, JsonElement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PrefixItems0 left, JsonElement right)
+        {
+            return !left.Equals(right);
+        }
+
         public static PrefixItems0 From<T>(in T instance)
         where T : struct, IJsonElement<T>
         {
@@ -89,6 +109,20 @@ public readonly partial struct PersonArray
         public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
         {
             return workspace.CreateDocumentBuilder<PrefixItems0, Mutable>(this);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object? obj)
+        {
+            return (obj is IJsonElement other && Equals(new PrefixItems0(other.ParentDocument, other.ParentDocumentIndex)))
+                || (obj is null && this.IsNull());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals<T>(T other)
+            where T : struct, IJsonElement
+        {
+            return JsonElementHelpers.DeepEquals(this, other);
         }
 
         /// <summary>
@@ -149,31 +183,23 @@ public readonly partial struct PersonArray
         /// </exception>
         public override string ToString()
         {
-            switch (TokenType)
+            if (_parent is null)
             {
-                case JsonTokenType.None:
-                case JsonTokenType.Null:
-                    return string.Empty;
-                case JsonTokenType.True:
-                    return bool.TrueString;
-                case JsonTokenType.False:
-                    return bool.FalseString;
-                case JsonTokenType.Number:
-                case JsonTokenType.StartArray:
-                case JsonTokenType.StartObject:
-                {
-                    // null parent should have hit the None case
-                    return _parent.GetRawValueAsString(_idx);
-                }
-                case JsonTokenType.String:
-                    return _parent.GetString(_idx, JsonTokenType.String)!;
-                case JsonTokenType.Comment:
-                case JsonTokenType.EndArray:
-                case JsonTokenType.EndObject:
-                default:
-                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                    return string.Empty;
+                return string.Empty;
             }
+
+            return _parent.ToString(_idx);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            if (_parent == null)
+            {
+                return 0;
+            }
+
+            return _parent.GetHashCode(_idx);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -277,6 +303,31 @@ public readonly partial struct PersonArray
                 return result;
             }
 
+            public static implicit operator JsonElement(Mutable person)
+            {
+                return JsonElement.From(person);
+            }
+
+            public static bool operator ==(Mutable left, Mutable right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(Mutable left, Mutable right)
+            {
+                return !left.Equals(right);
+            }
+
+            public static bool operator ==(Mutable left, JsonElement right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(Mutable left, JsonElement right)
+            {
+                return !left.Equals(right);
+            }
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
             {
@@ -303,6 +354,20 @@ public readonly partial struct PersonArray
             }
 
             void IJsonElement.CheckValidInstance() => CheckValidInstance();
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override bool Equals(object? obj)
+            {
+                return (obj is IJsonElement other && Equals(new PrefixItems0(other.ParentDocument, other.ParentDocumentIndex)))
+                    || (obj is null && this.IsNull());
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool Equals<T>(T other)
+                where T : struct, IJsonElement
+            {
+                return JsonElementHelpers.DeepEquals(this, other);
+            }
 
             /// <summary>
             ///   Write the element into the provided writer as a JSON value.
@@ -362,31 +427,23 @@ public readonly partial struct PersonArray
             /// </exception>
             public override string ToString()
             {
-                switch (TokenType)
+                if (_parent == null || _documentVersion != _parent.Version)
                 {
-                    case JsonTokenType.None:
-                    case JsonTokenType.Null:
-                        return string.Empty;
-                    case JsonTokenType.True:
-                        return bool.TrueString;
-                    case JsonTokenType.False:
-                        return bool.FalseString;
-                    case JsonTokenType.Number:
-                    case JsonTokenType.StartArray:
-                    case JsonTokenType.StartObject:
-                    {
-                        // null parent should have hit the None case
-                        return _parent.GetRawValueAsString(_idx);
-                    }
-                    case JsonTokenType.String:
-                        return _parent.GetString(_idx, JsonTokenType.String)!;
-                    case JsonTokenType.Comment:
-                    case JsonTokenType.EndArray:
-                    case JsonTokenType.EndObject:
-                    default:
-                        Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                        return string.Empty;
+                    return string.Empty;
                 }
+
+                return _parent.ToString(_idx);
+            }
+
+            /// <inheritdoc/>
+            public override int GetHashCode()
+            {
+                if (_parent == null)
+                {
+                    return 0;
+                }
+
+                return _parent.GetHashCode(_idx);
             }
 
 #if NET
@@ -482,7 +539,7 @@ public readonly partial struct PersonArray
 
                 JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-                if (!JsonSchemaMatching.MatchTypeNumber(tokenType, __Keywords.Type, ref context))
+                if (!JsonSchemaMatching.MatchTypeNumber(tokenType, Keywords_230108d7f4a74123bc27f0a38784d172.Type, ref context))
                 {
                     if (!context.HasCollector)
                     {

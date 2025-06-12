@@ -3,6 +3,7 @@
 
 using System.Buffers;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.Unicode;
@@ -78,27 +79,29 @@ namespace System
             return ComputeHash32OrdinalIgnoreCaseSlow(ref Unsafe.AddByteOffset(ref data, byteOffset), (int)ucount, p0, p1);
         }
 
-        private static int ComputeHash32OrdinalIgnoreCaseSlow(ref char data, int count, uint p0, uint p1)
+        private static unsafe int ComputeHash32OrdinalIgnoreCaseSlow(ref char data, int count, uint p0, uint p1)
         {
             Debug.Assert(count > 0);
 
             char[]? borrowedArr = null;
             Span<char> scratch = (uint)count <= 64 ? stackalloc char[64] : (borrowedArr = ArrayPool<char>.Shared.Rent(count));
-
-            int charsWritten = Globalization.Ordinal.ToUpperOrdinal(new ReadOnlySpan<char>(ref data, count), scratch);
-            Debug.Assert(charsWritten == count); // invariant case conversion should involve simple folding; preserve code unit count
-
-            // Slice the array to the size returned by ToUpperInvariant.
-            // Multiplication below will not overflow since going from positive Int32 to UInt32.
-            int hash = ComputeHash32(ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(scratch)), (uint)charsWritten * 2, p0, p1);
-
-            // Return the borrowed array if necessary.
-            if (borrowedArr != null)
+            fixed(char* c = &data)
             {
-                ArrayPool<char>.Shared.Return(borrowedArr);
-            }
+                int charsWritten = new ReadOnlySpan<char>(c, count).ToUpperInvariant(scratch);
+                Debug.Assert(charsWritten == count); // invariant case conversion should involve simple folding; preserve code unit count
 
-            return hash;
+                // Slice the array to the size returned by ToUpperInvariant.
+                // Multiplication below will not overflow since going from positive Int32 to UInt32.
+                int hash = ComputeHash32(ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(scratch)), (uint)charsWritten * 2, p0, p1);
+
+                // Return the borrowed array if necessary.
+                if (borrowedArr != null)
+                {
+                    ArrayPool<char>.Shared.Return(borrowedArr);
+                }
+
+                return hash;
+            }
         }
     }
 }

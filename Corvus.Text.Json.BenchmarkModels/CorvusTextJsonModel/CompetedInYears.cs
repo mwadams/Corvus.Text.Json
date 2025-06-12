@@ -26,6 +26,27 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         _idx = idx;
     }
 
+    public static bool operator ==(CompetedInYears left, CompetedInYears right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(CompetedInYears left, CompetedInYears right)
+    {
+        return !left.Equals(right);
+    }
+
+    public static bool operator ==(CompetedInYears left, JsonElement right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(CompetedInYears left, JsonElement right)
+    {
+        return !left.Equals(right);
+    }
+
+
     /// <summary>
     ///   Get the name component at a specified index.
     /// </summary>
@@ -128,6 +149,20 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         return documentBuilder;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override bool Equals(object? obj)
+    {
+        return (obj is IJsonElement other && Equals(new CompetedInYears(other.ParentDocument, other.ParentDocumentIndex)))
+            || (obj is null && this.IsNull());
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Equals<T>(T other)
+        where T : struct, IJsonElement
+    {
+        return JsonElementHelpers.DeepEquals(this, other);
+    }
+
     /// <summary>
     ///   Write the element into the provided writer as a JSON value.
     /// </summary>
@@ -186,31 +221,23 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
     /// </exception>
     public override string ToString()
     {
-        switch (TokenType)
+        if (_parent is null)
         {
-            case JsonTokenType.None:
-            case JsonTokenType.Null:
-                return string.Empty;
-            case JsonTokenType.True:
-                return bool.TrueString;
-            case JsonTokenType.False:
-                return bool.FalseString;
-            case JsonTokenType.Number:
-            case JsonTokenType.StartArray:
-            case JsonTokenType.StartObject:
-            {
-                // null parent should have hit the None case
-                return _parent.GetRawValueAsString(_idx);
-            }
-            case JsonTokenType.String:
-                return _parent.GetString(_idx, JsonTokenType.String)!;
-            case JsonTokenType.Comment:
-            case JsonTokenType.EndArray:
-            case JsonTokenType.EndObject:
-            default:
-                Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                return string.Empty;
+            return string.Empty;
         }
+
+        return _parent.ToString(_idx);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        if (_parent == null)
+        {
+            return 0;
+        }
+
+        return _parent.GetHashCode(_idx);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -273,7 +300,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
 
         internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
 
-        internal static Builder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
+        internal static Builder Create(IMutableJsonDocument parentDocument, int initialElementCount)
         {
             ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
             return new Builder(builder);
@@ -365,6 +392,49 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             }
         }
 
+        public static explicit operator Mutable(CompetedInYears competedInYears)
+        {
+            if (competedInYears._parent is not IMutableJsonDocument doc)
+            {
+                CodeGenThrowHelper.ThrowFormatException();
+                // We will never get here
+                return default;
+            }
+
+            return new(doc, competedInYears._idx);
+        }
+
+        public static implicit operator CompetedInYears(Mutable competedInYears)
+        {
+            return new(competedInYears._parent, competedInYears._idx);
+        }
+
+        public static implicit operator JsonElement(Mutable person)
+        {
+            return JsonElement.From(person);
+        }
+
+        public static bool operator ==(Mutable left, Mutable right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, Mutable right)
+        {
+            return !left.Equals(right);
+        }
+
+        public static bool operator ==(Mutable left, JsonElement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, JsonElement right)
+        {
+            return !left.Equals(right);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
         {
@@ -391,6 +461,21 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         }
 
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object? obj)
+        {
+            return (obj is IJsonElement other && Equals(new CompetedInYears(other.ParentDocument, other.ParentDocumentIndex)))
+                || (obj is null && this.IsNull());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals<T>(T other)
+            where T : struct, IJsonElement
+        {
+            return JsonElementHelpers.DeepEquals(this, other);
+        }
+
 
         /// <summary>
         ///   Write the element into the provided writer as a JSON value.
@@ -450,31 +535,23 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         /// </exception>
         public override string ToString()
         {
-            switch (TokenType)
+            if (_parent == null || _documentVersion != _parent.Version)
             {
-                case JsonTokenType.None:
-                case JsonTokenType.Null:
-                    return string.Empty;
-                case JsonTokenType.True:
-                    return bool.TrueString;
-                case JsonTokenType.False:
-                    return bool.FalseString;
-                case JsonTokenType.Number:
-                case JsonTokenType.StartArray:
-                case JsonTokenType.StartObject:
-                {
-                    // null parent should have hit the None case
-                    return _parent.GetRawValueAsString(_idx);
-                }
-                case JsonTokenType.String:
-                    return _parent.GetString(_idx, JsonTokenType.String)!;
-                case JsonTokenType.Comment:
-                case JsonTokenType.EndArray:
-                case JsonTokenType.EndObject:
-                default:
-                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                    return string.Empty;
+                return string.Empty;
             }
+
+            return _parent.ToString(_idx);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            if (_parent == null)
+            {
+                return 0;
+            }
+
+            return _parent.GetHashCode(_idx);
         }
 
 #if NET
@@ -500,7 +577,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
     public static class JsonSchema
     {
         private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/CompetedInYears"u8, buffer, out written);
-        private static readonly JsonSchemaPathProvider<int> SchemaLocationForItems = static (_, buffer, out written) => __Keywords.Items(buffer, out written);
+        private static readonly JsonSchemaPathProvider<int> SchemaLocationForItems = static (_, buffer, out written) => Keywords_9857823edfdd454b8bdf0af5fa37e392.Items(buffer, out written);
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -524,7 +601,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             /* Array matching
              * This would be if (tokenType != JsonTokenType.StartArray) for the non-matching case where we have array keywords
              * to match, but no explicit type check */
-            if (!JsonSchemaMatching.MatchTypeArray(tokenType, __Keywords.Type, ref context))
+            if (!JsonSchemaMatching.MatchTypeArray(tokenType, Keywords_9857823edfdd454b8bdf0af5fa37e392.Type, ref context))
             {
                 if (!context.HasCollector)
                 {
@@ -533,7 +610,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                 }
 
                 // Ignore remaining array
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeArray, schemaEvaluationPath: __Keywords.Items);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeArray, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.Items);
             }
             else
             {

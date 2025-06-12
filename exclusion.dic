@@ -22,3 +22,5 @@ behaviors
 autocap
 capcount
 captop
+unescape
+numerics

@@ -6,7 +6,8 @@ using Corvus.Text.Json.Internal;
 
 namespace Benchmark.CorvusTextJson
 {
-    internal static class __Keywords
+    // In generation, we need to create a unique Keywords
+    internal static class Keywords_9857823edfdd454b8bdf0af5fa37e392
     {
         public static readonly JsonSchemaPathProvider Format = (buffer, out written) => JsonSchemaMatching.TryCopyPath("format"u8, buffer, out written);
         public static readonly JsonSchemaPathProvider Items = (buffer, out written) => JsonSchemaMatching.TryCopyPath("items"u8, buffer, out written);

@@ -59,6 +59,12 @@
     <Compile Include="$(CoreLibSharedDir)System\Runtime\Versioning\PlatformAttributes.cs" Link="System\Runtime\Versioning\PlatformAttributes.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Compile Include="$(CoreLibSharedDir)System\Marvin.cs" Link="System\Marvin.cs" />
+    <Compile Include="$(CoreLibSharedDir)System\Marvin.OrdinalIgnoreCase.cs" Link="System\Marvin.OrdinalIgnoreCase.cs" />
+    <Compile Include="Corvus\Text\Json\Document\Internal\HashCode.NetStandard.cs" />
+  </ItemGroup>
+
   <!-- Adds ObsoleteAttribute to projects that need to apply downlevel Obsoletions with DiagnosticId and UrlFormat -->
   <Choose>
     <When Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -140,6 +146,9 @@
     <Compile Include="Corvus\Text\Json\Document\Internal\IJsonDocument.cs" />
     <Compile Include="Corvus\Text\Json\Document\ArrayEnumerator{T}.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonElementForBooleanFalseSchema.Mutable.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonElementForBooleanFalseSchema.JsonSchema.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonElementForBooleanFalseSchema.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\IPAddressParser.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\IPV4AddressHelper.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\IPV6AddressHelper.cs" />

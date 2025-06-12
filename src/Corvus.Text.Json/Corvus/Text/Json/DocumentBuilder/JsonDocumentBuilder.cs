@@ -979,8 +979,45 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
+            return GetRawValueAsStringUnsafe(index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private string GetRawValueAsStringUnsafe(int index)
+        {
             using RawUtf8JsonString segment = GetRawValueUnsafe(index, includeQuotes: true);
             return JsonReaderHelper.TranscodeHelper(segment.Span);
+        }
+
+        string IJsonDocument.ToString(int index)
+        {
+            CheckNotDisposed();
+
+            switch (_parsedData.GetJsonTokenType(index))
+            {
+                case JsonTokenType.None:
+                case JsonTokenType.Null:
+                    return string.Empty;
+                case JsonTokenType.True:
+                    return bool.TrueString;
+                case JsonTokenType.False:
+                    return bool.FalseString;
+                case JsonTokenType.Number:
+                case JsonTokenType.StartArray:
+                case JsonTokenType.StartObject:
+                {
+                    // null parent should have hit the None case
+                    return GetRawValueAsStringUnsafe(index);
+                }
+                case JsonTokenType.String:
+                    return GetStringUnsafe(index, JsonTokenType.String)!;
+                case JsonTokenType.Comment:
+                case JsonTokenType.EndArray:
+                case JsonTokenType.EndObject:
+                default:
+                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{_parsedData.GetJsonTokenType(index)}");
+                    return string.Empty;
+            }
         }
 
         string IJsonDocument.GetPropertyRawValueAsString(int valueIndex)
@@ -1078,11 +1115,8 @@ namespace Corvus.Text.Json
 
         private void WriteElementToUnsafe(
             int index,
-            Utf8JsonWriter writer,
-            bool writeRaw = false)
+            Utf8JsonWriter writer)
         {
-            bool forceEncoding = writer.Options.Encoder != _workspace.Options.Encoder;
-
             DbRow row = _parsedData.Get(index);
 
             switch (row.TokenType)
@@ -1341,6 +1375,32 @@ namespace Corvus.Text.Json
             return false;
         }
 
+        bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value)
+        {
+            CheckNotDisposed();
+
+            if (TryGetNamedPropertyValueUnsafe(
+                index,
+                propertyName,
+                out int valueIndex))
+            {
+#if NET
+                value = TElement.CreateInstance(this, valueIndex);
+#else
+                value = JsonElementHelpers.CreateInstance<TElement>(this, valueIndex);
+#endif
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        int IJsonDocument.GetHashCode(int index)
+        {
+            CheckNotDisposed();
+            return GetHashCodeUnsafe(index);
+        }
 
         int IJsonDocument.BuildRentedMetadataDb(int index, JsonWorkspace workspace, out byte[] rentedBacking)
         {

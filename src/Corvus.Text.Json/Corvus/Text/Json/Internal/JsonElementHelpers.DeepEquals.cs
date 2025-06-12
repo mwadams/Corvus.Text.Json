@@ -43,9 +43,10 @@ namespace Corvus.Text.Json.Internal
             where TLeft : struct, IJsonElement
             where TRight : struct, IJsonElement
         {
-            // We check valid instances once at the top, and then use the document directly throughout
-            element1.CheckValidInstance();
-            element2.CheckValidInstance();
+            if (element1.ParentDocument == null)
+            {
+                return element2.ParentDocument == null;
+            }
 
             JsonValueKind kind = element1.ValueKind;
 

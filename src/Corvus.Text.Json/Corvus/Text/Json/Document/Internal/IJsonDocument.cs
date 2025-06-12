@@ -19,6 +19,8 @@ namespace Corvus.Text.Json.Internal
 
         bool IsImmutable { get; }
 
+        int GetHashCode(int index);
+        string ToString(int index);
         JsonTokenType GetJsonTokenType(int index);
         JsonElement GetArrayIndexElement(int currentIndex, int arrayIndex);
         TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex) where TElement : struct, IJsonElement<TElement>;
@@ -27,6 +29,7 @@ namespace Corvus.Text.Json.Internal
         bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value);
         bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value);
         bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value) where TElement : struct, IJsonElement<TElement>;
+        bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value) where TElement : struct, IJsonElement<TElement>;
         string? GetString(int index, JsonTokenType expectedType);
         UnescapedUtf8JsonString GetUtf8JsonString(int index, JsonTokenType expectedType);
         bool TryGetValue(int index, [NotNullWhen(true)] out byte[]? value);

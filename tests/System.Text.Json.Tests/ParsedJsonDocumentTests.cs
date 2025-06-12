@@ -777,7 +777,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public static void DeepEqualsInOrder()
+        public static void EqualsInOrder()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
@@ -786,15 +786,15 @@ namespace Corvus.Text.Json.Tests
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
 
             {
-                Assert.True(doc.RootElement.DeepEquals(doc2.RootElement));
-                Assert.True(doc.RootElement.DeepEquals(doc3.RootElement));
-                Assert.True(doc.RootElement.DeepEquals(doc4.RootElement));
-                Assert.True(doc3.RootElement.DeepEquals(doc4.RootElement));
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+                Assert.True(doc.RootElement.Equals(doc3.RootElement));
+                Assert.True(doc.RootElement.Equals(doc4.RootElement));
+                Assert.True(doc3.RootElement.Equals(doc4.RootElement));
             }
         }
 
         [Fact]
-        public static void DeepEqualsOutOfOrder()
+        public static void EqualsOutOfOrder()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals2))
@@ -802,15 +802,15 @@ namespace Corvus.Text.Json.Tests
             using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
             {
-                Assert.True(doc.RootElement.DeepEquals(doc2.RootElement));
-                Assert.True(doc.RootElement.DeepEquals(doc3.RootElement));
-                Assert.True(doc.RootElement.DeepEquals(doc4.RootElement));
-                Assert.True(doc3.RootElement.DeepEquals(doc4.RootElement));
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+                Assert.True(doc.RootElement.Equals(doc3.RootElement));
+                Assert.True(doc.RootElement.Equals(doc4.RootElement));
+                Assert.True(doc3.RootElement.Equals(doc4.RootElement));
             }
         }
 
         [Fact]
-        public static void DeepEqualsOutOfOrder_RightEscaped()
+        public static void EqualsOutOfOrder_RightEscaped()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
                 """
@@ -824,12 +824,12 @@ namespace Corvus.Text.Json.Tests
                 ))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             {
-                Assert.True(doc.RootElement.DeepEquals(doc2.RootElement));
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
             }
         }
 
         [Fact]
-        public static void DeepEquals_NotEquals()
+        public static void Equals_NotEquals()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
@@ -837,9 +837,143 @@ namespace Corvus.Text.Json.Tests
             using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
             {
-                Assert.False(doc.RootElement.DeepEquals(doc2.RootElement));
-                Assert.False(doc.RootElement.DeepEquals(doc4.RootElement));
-                Assert.False(doc3.RootElement.DeepEquals(doc4.RootElement));
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+                Assert.False(doc.RootElement.Equals(doc4.RootElement));
+                Assert.False(doc3.RootElement.Equals(doc4.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void OperatorEqualsInOrder()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
+
+            {
+                Assert.True(doc.RootElement == doc2.RootElement);
+                Assert.True(doc.RootElement == doc3.RootElement);
+                Assert.True(doc.RootElement == doc4.RootElement);
+                Assert.True(doc3.RootElement == doc4.RootElement);
+            }
+        }
+
+        [Fact]
+        public static void OperatorEqualsOutOfOrder()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals2))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
+            {
+                Assert.True(doc.RootElement == doc2.RootElement);
+                Assert.True(doc.RootElement == doc3.RootElement);
+                Assert.True(doc.RootElement == doc4.RootElement);
+                Assert.True(doc3.RootElement == doc4.RootElement);
+            }
+        }
+
+        [Fact]
+        public static void OperatorEqualsOutOfOrder_RightEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo": "hello", "bar": "world" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "f\u006fo": "hello" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement == doc2.RootElement);
+            }
+        }
+
+        [Fact]
+        public static void OperatorEquals_NotEquals()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
+            {
+                Assert.False(doc.RootElement == doc2.RootElement);
+                Assert.False(doc.RootElement == doc4.RootElement);
+                Assert.False(doc3.RootElement == doc4.RootElement);
+            }
+        }
+
+        [Fact]
+        public static void OperatorNotEqualsInOrder()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
+
+            {
+                Assert.False(doc.RootElement != doc2.RootElement);
+                Assert.False(doc.RootElement != doc3.RootElement);
+                Assert.False(doc.RootElement != doc4.RootElement);
+                Assert.False(doc3.RootElement != doc4.RootElement);
+            }
+        }
+
+        [Fact]
+        public static void OperatorNotEqualsOutOfOrder()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals2))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
+            {
+                Assert.False(doc.RootElement != doc2.RootElement);
+                Assert.False(doc.RootElement != doc3.RootElement);
+                Assert.False(doc.RootElement != doc4.RootElement);
+                Assert.False(doc3.RootElement != doc4.RootElement);
+            }
+        }
+
+        [Fact]
+        public static void OperatorNotEqualsOutOfOrder_RightEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo": "hello", "bar": "world" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "f\u006fo": "hello" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement != doc2.RootElement);
+            }
+        }
+
+        [Fact]
+        public static void OperatorNotEquals_NotEquals()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
+            {
+                Assert.True(doc.RootElement != doc2.RootElement);
+                Assert.True(doc.RootElement != doc4.RootElement);
+                Assert.True(doc3.RootElement != doc4.RootElement);
             }
         }
 

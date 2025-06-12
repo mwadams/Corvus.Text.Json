@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>Preview</LangVersion>
+    <NoWarn>$(NoWarn);CS8500;CS8969;IDE0065;IDE0290;IDE0079;IDE0130;IDE1006;IDE0130</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

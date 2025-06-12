@@ -39,8 +39,8 @@ public sealed class WellKnownTypeNameHeuristic : IBuiltInTypeNameHeuristic
         }
         else if (typeDeclaration.LocatedSchema.Location.Equals(WellKnownTypeDeclarations.JsonNotAny.LocatedSchema.Location))
         {
-            typeDeclaration.SetDotnetNamespace("Corvus.Json");
-            typeDeclaration.SetDotnetTypeName("JsonNotAny");
+            typeDeclaration.SetDotnetNamespace("Corvus.Text.Json");
+            typeDeclaration.SetDotnetTypeName("JsonElementForBooleanFalseSchema");
             written = 0;
             return true;
         }

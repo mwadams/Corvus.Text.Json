@@ -4,6 +4,7 @@
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace System.Collections.Generic
 {
@@ -235,6 +236,18 @@ namespace System.Collections.Generic
                 ArrayPool<T>.Shared.Return(toReturn);
 #endif
             }
+        }
+
+        internal unsafe void Sort()
+        {
+#if NET
+            _span.Slice(0, _pos).Sort();
+#else
+            T[] buffer = ArrayPool<T>.Shared.Rent(_pos);
+            _span.Slice(0, _pos).CopyTo(buffer);
+            Array.Sort(buffer, 0, _pos);
+            buffer.AsSpan(0, _pos).CopyTo(_span);
+#endif
         }
     }
 }

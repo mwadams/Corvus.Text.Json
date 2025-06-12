@@ -25,6 +25,26 @@ public readonly struct Age : IJsonElement<Age>
         _idx = idx;
     }
 
+    public static bool operator ==(Age left, Age right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Age left, Age right)
+    {
+        return !left.Equals(right);
+    }
+
+    public static bool operator ==(Age left, JsonElement right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Age left, JsonElement right)
+    {
+        return !left.Equals(right);
+    }
+
     /// <summary>
     ///   The <see cref="JsonValueKind"/> that the value is.
     /// </summary>
@@ -74,6 +94,20 @@ public readonly struct Age : IJsonElement<Age>
     public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
     {
         return workspace.CreateDocumentBuilder<Age, Mutable>(this);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override bool Equals(object? obj)
+    {
+        return (obj is IJsonElement other && Equals(new Age(other.ParentDocument, other.ParentDocumentIndex)))
+            || (obj is null && this.IsNull());
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Equals<T>(T other)
+        where T : struct, IJsonElement
+    {
+        return JsonElementHelpers.DeepEquals(this, other);
     }
 
     /// <summary>
@@ -134,31 +168,23 @@ public readonly struct Age : IJsonElement<Age>
     /// </exception>
     public override string ToString()
     {
-        switch (TokenType)
+        if (_parent is null)
         {
-            case JsonTokenType.None:
-            case JsonTokenType.Null:
-                return string.Empty;
-            case JsonTokenType.True:
-                return bool.TrueString;
-            case JsonTokenType.False:
-                return bool.FalseString;
-            case JsonTokenType.Number:
-            case JsonTokenType.StartArray:
-            case JsonTokenType.StartObject:
-            {
-                // null parent should have hit the None case
-                return _parent.GetRawValueAsString(_idx);
-            }
-            case JsonTokenType.String:
-                return _parent.GetString(_idx, JsonTokenType.String)!;
-            case JsonTokenType.Comment:
-            case JsonTokenType.EndArray:
-            case JsonTokenType.EndObject:
-            default:
-                Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                return string.Empty;
+            return string.Empty;
         }
+
+        return _parent.ToString(_idx);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        if (_parent == null)
+        {
+            return 0;
+        }
+
+        return _parent.GetHashCode(_idx);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -262,6 +288,31 @@ public readonly struct Age : IJsonElement<Age>
             return result;
         }
 
+        public static implicit operator JsonElement(Mutable person)
+        {
+            return JsonElement.From(person);
+        }
+
+        public static bool operator ==(Mutable left, Mutable right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, Mutable right)
+        {
+            return !left.Equals(right);
+        }
+
+        public static bool operator ==(Mutable left, JsonElement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, JsonElement right)
+        {
+            return !left.Equals(right);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
         {
@@ -288,6 +339,31 @@ public readonly struct Age : IJsonElement<Age>
         }
 
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object? obj)
+        {
+            return (obj is IJsonElement other && Equals(new Age(other.ParentDocument, other.ParentDocumentIndex)))
+                || (obj is null && this.IsNull());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals<T>(T other)
+            where T : struct, IJsonElement
+        {
+            return JsonElementHelpers.DeepEquals(this, other);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            if (_parent == null)
+            {
+                return 0;
+            }
+
+            return _parent.GetHashCode(_idx);
+        }
 
         /// <summary>
         ///   Write the element into the provided writer as a JSON value.
@@ -347,31 +423,12 @@ public readonly struct Age : IJsonElement<Age>
         /// </exception>
         public override string ToString()
         {
-            switch (TokenType)
+            if (_parent == null || _documentVersion != _parent.Version)
             {
-                case JsonTokenType.None:
-                case JsonTokenType.Null:
-                    return string.Empty;
-                case JsonTokenType.True:
-                    return bool.TrueString;
-                case JsonTokenType.False:
-                    return bool.FalseString;
-                case JsonTokenType.Number:
-                case JsonTokenType.StartArray:
-                case JsonTokenType.StartObject:
-                {
-                    // null parent should have hit the None case
-                    return _parent.GetRawValueAsString(_idx);
-                }
-                case JsonTokenType.String:
-                    return _parent.GetString(_idx, JsonTokenType.String)!;
-                case JsonTokenType.Comment:
-                case JsonTokenType.EndArray:
-                case JsonTokenType.EndObject:
-                default:
-                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                    return string.Empty;
+                return string.Empty;
             }
+
+            return _parent.ToString(_idx);
         }
 
 #if NET
@@ -480,7 +537,7 @@ public readonly struct Age : IJsonElement<Age>
             /* Number matching
              * This would be if (tokenType != JsonTokenType.Number) for the non-matching case where we have numeric keywords
              * to match, but no explicit type check */
-            if (!JsonSchemaMatching.MatchTypeNumber(tokenType, __Keywords.Type, ref context))
+            if (!JsonSchemaMatching.MatchTypeNumber(tokenType, Keywords_230108d7f4a74123bc27f0a38784d172.Type, ref context))
             {
                 if (!context.HasCollector)
                 {
@@ -489,8 +546,8 @@ public readonly struct Age : IJsonElement<Age>
                 }
 
                 // Ignore remaining numerics
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeNumber, schemaEvaluationPath: __Keywords.Minimum);
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeNumber, schemaEvaluationPath: __Keywords.Maximum);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeNumber, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Minimum);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeNumber, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Maximum);
             }
             else
             {
@@ -507,7 +564,7 @@ public readonly struct Age : IJsonElement<Age>
                     MinimumFractional,
                     MinimumExponent) < 0)
                 {
-                    context.Matched(false, schemaEvaluationPath: __Keywords.Minimum);
+                    context.Matched(false, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Minimum);
                     if (!context.HasCollector)
                     {
                         context.PopSchemaLocation();
@@ -516,7 +573,7 @@ public readonly struct Age : IJsonElement<Age>
                 }
                 else
                 {
-                    context.Matched(true, schemaEvaluationPath: __Keywords.Minimum);
+                    context.Matched(true, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Minimum);
                 }
 
                 if (JsonElementHelpers.CompareNormalizedJsonNumbers(
@@ -529,7 +586,7 @@ public readonly struct Age : IJsonElement<Age>
                     MaximumFractional,
                     MaximumExponent) > 0)
                 {
-                    context.Matched(false, schemaEvaluationPath: __Keywords.Maximum);
+                    context.Matched(false, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Maximum);
                     if (!context.HasCollector)
                     {
                         context.PopSchemaLocation();
@@ -538,7 +595,7 @@ public readonly struct Age : IJsonElement<Age>
                 }
                 else
                 {
-                    context.Matched(true, schemaEvaluationPath: __Keywords.Maximum);
+                    context.Matched(true, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Maximum);
                 }
             }
 

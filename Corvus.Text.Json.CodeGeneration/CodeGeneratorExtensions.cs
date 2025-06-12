@@ -734,6 +734,101 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendLineIndent("}");
         }
 
+        /// <summary>
+        /// Append the WriteTo() method.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration for which to produce the method.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendWriteToMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            return generator
+            .ReserveName("WriteTo")
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <inheritdoc/>")
+            .AppendLineIndent("public void WriteTo(Utf8JsonWriter writer)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("_parent.WriteElementTo(_idx, writer);")
+            .PopIndent()
+            .AppendLineIndent("}");
+        }
+
+        /// <summary>
+        /// Appends the GetHashCode() and ToString() methods.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration for which to append the methods.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendGetHashCodeAndToStringMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            generator
+                .ReserveNameIfNotReserved("GetHashCode")
+                .ReserveNameIfNotReserved("ToString")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                    /// <inheritdoc/>
+                    public override int GetHashCode()
+                    {
+                        if (_parent == null)
+                        {
+                            return 0;
+                        }
+
+                        return _parent.GetHashCode(_idx);
+                    }
+                    """)
+                .AppendSeparatorLine();
+
+
+            if (forMutable)
+            {
+                return generator
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public override string ToString()
+                        {
+                            if (_parent == null || _documentVersion != _parent.Version)
+                            {
+                                return string.Empty;
+                            }
+
+                            return _parent.ToString(_idx);
+                        }
+                        """);
+            }
+            else
+            {
+                return generator
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public override string ToString()
+                        {
+                            if (_parent is null)
+                            {
+                                return string.Empty;
+                            }
+
+                            return _parent.ToString(_idx);
+                        }
+                        """);
+            }
+        }
+
         private static string[] NormalizeAndSplitBlockIntoLines(string block, bool removeBlankLines = false)
         {
             string normalizedBlock = block.Replace("\r\n", "\n");

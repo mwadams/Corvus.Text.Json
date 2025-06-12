@@ -70,6 +70,31 @@ namespace Corvus.Text.Json
             }
         }
 
+        public static bool operator ==(JsonElement left, JsonElement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(JsonElement left, JsonElement right)
+        {
+            return !left.Equals(right);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object? obj)
+        {
+            return (obj is IJsonElement other && Equals(new JsonElement(other.ParentDocument, other.ParentDocumentIndex)))
+                || (obj is null && this.IsNull());
+        }
+
+        [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals<T>(T other)
+            where T : struct, IJsonElement
+        {
+            return JsonElementHelpers.DeepEquals(this, other);
+        }
+
         [CLSCompliant(false)]
         public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
         {
@@ -87,24 +112,6 @@ namespace Corvus.Text.Json
             where T : struct, IJsonElement<T>
         {
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
-        }
-
-        /// <summary>
-        /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
-        /// </summary>
-        /// <param name="parentDocument">The parent document.</param>
-        /// <param name="parentIndex">The parent index.</param>
-        /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
-        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
-        {
-            // You're not allowed to ask about non-value-like entities
-            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
-                JsonTokenType.None or
-                JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
-
-            context.Matched(true);
         }
 
         /// <summary>
@@ -1738,32 +1745,23 @@ namespace Corvus.Text.Json
         /// </exception>
         public override string ToString()
         {
-            switch (TokenType)
+            if (_parent is null)
             {
-                case JsonTokenType.None:
-                case JsonTokenType.Null:
-                    return string.Empty;
-                case JsonTokenType.True:
-                    return bool.TrueString;
-                case JsonTokenType.False:
-                    return bool.FalseString;
-                case JsonTokenType.Number:
-                case JsonTokenType.StartArray:
-                case JsonTokenType.StartObject:
-                    {
-                        // null parent should have hit the None case
-                        Debug.Assert(_parent != null);
-                        return _parent.GetRawValueAsString(_idx);
-                    }
-                case JsonTokenType.String:
-                    return _parent.GetString(_idx, JsonTokenType.String)!;
-                case JsonTokenType.Comment:
-                case JsonTokenType.EndArray:
-                case JsonTokenType.EndObject:
-                default:
-                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                    return string.Empty;
+                return string.Empty;
             }
+
+            return _parent.ToString(_idx);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            if (_parent is null)
+            {
+                return 0;
+            }
+
+            return _parent.GetHashCode(_idx);
         }
 
         /// <summary>
@@ -1828,5 +1826,99 @@ namespace Corvus.Text.Json
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         JsonValueKind IJsonElement.ValueKind => ValueKind;
+    }
+
+    public static class JsonSchema
+    {
+        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
+        {
+            JsonSchemaContext context = JsonSchemaContext.BeginContext(
+                parentDocument,
+                parentIndex,
+                usingEvaluatedProperties: false,
+                usingEvaluatedItems: false,
+                resultsCollector: resultsCollector);
+
+            try
+            {
+                ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                return context.IsMatch;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
+        /// </summary>
+        /// <param name="parentDocument">The parent document.</param>
+        /// <param name="parentIndex">The parent index.</param>
+        /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
+        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        {
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            context.Matched(true);
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    schemaEvaluationPath: schemaEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContext<TContext>(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            TContext providerContext,
+            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath,
+                    providerContext: providerContext);
+        }
     }
 }

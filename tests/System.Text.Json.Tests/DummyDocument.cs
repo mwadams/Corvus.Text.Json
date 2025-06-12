@@ -73,4 +73,13 @@ internal class DummyDocument : IJsonDocument
     public bool ValueIsEscaped(int index, bool isPropertyName) { return false; }
     public void WriteElementTo(int index, Utf8JsonWriter writer) { }
     public void WritePropertyName(int index, Utf8JsonWriter writer) { }
+
+    public int GetHashCode(int index) => default;
+    public string ToString(int index) => string.Empty;
+    public bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value)
+        where TElement : struct, IJsonElement<TElement>
+    {
+        value = default;
+        return false;
+    }
 }

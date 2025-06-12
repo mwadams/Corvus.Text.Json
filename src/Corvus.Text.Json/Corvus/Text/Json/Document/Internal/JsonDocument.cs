@@ -8,8 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
 using NodaTime;
-
-
+using System.Collections.Generic;
 
 #if NET
 using System.Globalization;
@@ -234,7 +233,7 @@ namespace Corvus.Text.Json.Internal
             return row.HasComplexChildren;
         }
 
-        protected void Enlarge(int v, [NotNull] ref byte[]? byteArray)
+        protected static void Enlarge(int v, [NotNull] ref byte[]? byteArray)
         {
             if (byteArray is null)
             {
@@ -1370,5 +1369,157 @@ namespace Corvus.Text.Json.Internal
                 }
             }
         }
+
+        protected int GetHashCodeUnsafe(int index)
+        {
+            return _parsedData.GetJsonTokenType(index) switch
+            {
+                JsonTokenType.StartArray => GetHashCodeForArray(index),
+                JsonTokenType.StartObject => GetHashCodeForObject(index),
+                JsonTokenType.Number => GetHashCodeForNumber(index),
+                JsonTokenType.String => GetHashCodeForString(index),
+                JsonTokenType.PropertyName => GetHashCodeForProperty(index),
+                JsonTokenType.True => true.GetHashCode(),
+                JsonTokenType.False => false.GetHashCode(),
+                JsonTokenType.Null => s_nullHashCode,
+                _ => s_undefinedHashCode,
+            };
+
+        }
+
+        private int GetHashCodeForProperty(int index)
+        {
+            HashCode code = default;
+            code.Add(GetHashCodeForString(index));
+            code.Add(GetHashCodeUnsafe(index + DbRow.Size));
+            return code.ToHashCode();
+        }
+
+        private int GetHashCodeForString(int index)
+        {
+            ReadOnlySpan<byte> value = GetRawSimpleValueUnsafe(index, false).Span;
+            // We need to unescape and convert to char, in order to get the same
+            // hash code as the equivalent string.
+            char[]? charBuffer = null;
+            int length = Encoding.UTF8.GetMaxCharCount(value.Length);
+
+            Span<char> buffer = length < JsonConstants.StackallocNonRecursiveCharThreshold ? stackalloc char[length]
+                : (charBuffer = ArrayPool<char>.Shared.Rent(length)).AsSpan();
+
+            int written = 0;
+
+            try
+            {
+                written = JsonReaderHelper.TranscodeHelper(value, buffer);
+                return string.GetHashCode(buffer.Slice(written));
+            }
+            finally
+            {
+                if (charBuffer is not null)
+                {
+                    if (written > 0)
+                    {
+                        // Clear the buffer to avoid leaking sensitive information.
+                        Array.Clear(charBuffer, 0, written);
+                    }
+
+                    ArrayPool<char>.Shared.Return(charBuffer);
+                }
+            }
+        }
+
+        private int GetHashCodeForNumber(int index)
+        {
+            // We convert to a normalized JSON number, then get the hash code for that.
+            ReadOnlySpan<byte> numberValue = GetRawSimpleValueUnsafe(index, false).Span;
+            JsonElementHelpers.ParseNumber(numberValue, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
+
+            HashCode code = default;
+            code.Add(isNegative);
+            code.AddBytes(integral);
+            code.AddBytes(fractional);
+            code.Add(exponent);
+
+            return code.ToHashCode();
+        }
+
+        private int GetHashCodeForObject(int index)
+        {
+            // We have to be a JSON document!
+            Debug.Assert(this is IJsonDocument);
+
+            ObjectEnumerator enumerator = new((IJsonDocument)this, index);
+
+            DbRow row = _parsedData.Get(index);
+            int arrayLength = row.SizeOrLengthOrPropertyMapIndex;
+
+            // This is likely to be recursive, so we are conservative in our stack buffer
+            // Build a list of hashes of all the properties (name/value pairs).
+            using ValueListBuilder<int> valueListBuilder = new(stackalloc int[JsonConstants.StackallocByteThreshold / sizeof(int)]);
+
+            while (enumerator.MoveNext())
+            {
+                valueListBuilder.Append(GetHashCodeUnsafe(enumerator.CurrentIndex));
+            }
+
+            // Then sort them by hash code for stability
+            // (as we are property order independent)
+            valueListBuilder.Sort();
+
+            // Then build the hash from the ordered list
+            HashCode hash = default;
+
+            ReadOnlySpan<int> span = valueListBuilder.AsSpan();
+            for(int i = 0; i < span.Length; ++i)
+            {
+                hash.Add(span[i]);
+            }
+
+            return hash.ToHashCode();
+
+        }
+
+        private int GetHashCodeForArray(int index)
+        {
+            HashCode hash = default;
+
+            // We have to be a JSON document!
+            Debug.Assert(this is IJsonDocument);
+
+            ArrayEnumerator enumerator = new((IJsonDocument)this, index);
+            while(enumerator.MoveNext())
+            {
+                hash.Add(GetHashCodeUnsafe(enumerator.CurrentIndex));
+            }
+
+            return hash.ToHashCode();
+        }
+
+        /// <summary>
+        /// Gets the null hash code.
+        /// </summary>
+        internal static readonly int s_nullHashCode = CreateNullHashCode();
+
+        /// <summary>
+        /// Gets the undefined hash code.
+        /// </summary>
+        internal static readonly int s_undefinedHashCode = CreateUndefinedHashCode();
+
+        private static int CreateNullHashCode()
+        {
+            HashCode code = default;
+            code.Add((object?)null);
+            return code.ToHashCode();
+        }
+
+        private static int CreateUndefinedHashCode()
+        {
+            HashCode code = default;
+
+            // We'll pick a random value and use it as our undefined hash code.
+            code.Add(Guid.NewGuid());
+            return code.ToHashCode();
+        }
+
     }
 }

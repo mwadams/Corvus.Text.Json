@@ -166,7 +166,11 @@ namespace Corvus.Text.Json
         /// </returns>
         public override string ToString()
         {
-            Value.CheckValidInstance();
+            if (Value.ParentDocument is null)
+            {
+                return string.Empty;
+            }
+
             return Value.ParentDocument.GetPropertyRawValueAsString(Value.ParentDocumentIndex);
         }
 

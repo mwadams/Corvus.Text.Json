@@ -13,23 +13,6 @@ namespace Corvus.Text.Json
     public static class JsonElementExtensions
     {
         /// <summary>
-        /// Performs a deep equality comparison between two <see cref="IJsonElement{T}"/> instance.
-        /// </summary>
-        /// <typeparam name="TLeft">The type of the left <see cref="IJsonElement{T}"/>.</typeparam>
-        /// <typeparam name="TRight">The type of the right <see cref="IJsonElement{T}"/>.</typeparam>
-        /// <param name="left">The left instance.</param>
-        /// <param name="right">The right instance.</param>
-        /// <returns><see langword="true"/> if the elements are equal.</returns>
-        [CLSCompliant(false)]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool DeepEquals<TLeft, TRight>(this TLeft left, in TRight right)
-            where TLeft : struct, IJsonElement<TLeft>
-            where TRight : struct, IJsonElement<TRight>
-        {
-            return JsonElementHelpers.DeepEquals(left, right);
-        }
-
-        /// <summary>
         /// Gets a value indicating whether this value is null.
         /// </summary>
         /// <typeparam name="T">The type of the value to check.</typeparam>
@@ -39,7 +22,7 @@ namespace Corvus.Text.Json
         public static bool IsNull<T>(this T value)
         where T : struct, IJsonElement
         {
-            return value.TokenType is JsonTokenType.Null;
+            return value.ParentDocument is not null && value.TokenType is JsonTokenType.Null;
         }
 
         /// <summary>
@@ -52,7 +35,7 @@ namespace Corvus.Text.Json
         public static bool IsUndefined<T>(this T value)
             where T : struct, IJsonElement
         {
-            return value.TokenType is not JsonTokenType.None;
+            return value.ParentDocument is null || value.TokenType is not JsonTokenType.None;
         }
 
         /// <summary>
@@ -65,7 +48,7 @@ namespace Corvus.Text.Json
         public static bool IsNotNull<T>(this T value)
             where T : struct, IJsonElement
         {
-            return value.TokenType is not JsonTokenType.Null;
+            return value.ParentDocument is not null && value.TokenType is not JsonTokenType.Null;
         }
 
         /// <summary>
@@ -78,7 +61,7 @@ namespace Corvus.Text.Json
         public static bool IsNotUndefined<T>(this T value)
             where T : struct, IJsonElement
         {
-            return value.TokenType is not JsonTokenType.None;
+            return value.ParentDocument is not null && value.TokenType is not JsonTokenType.None;
         }
 
         /// <summary>
@@ -91,7 +74,7 @@ namespace Corvus.Text.Json
         public static bool IsNullOrUndefined<T>(this T value)
             where T : struct, IJsonElement
         {
-            return value.TokenType is JsonTokenType.None or JsonTokenType.Null;
+            return value.ParentDocument is null || value.TokenType is JsonTokenType.None or JsonTokenType.Null;
         }
 
         /// <summary>
@@ -104,7 +87,7 @@ namespace Corvus.Text.Json
         public static bool IsNotNullOrUndefined<T>(this T value)
             where T : struct, IJsonElement
         {
-            return value.TokenType is not JsonTokenType.None and not JsonTokenType.Null;
+            return value.ParentDocument is not null && value.TokenType is not JsonTokenType.None and not JsonTokenType.Null;
         }
 
         /// <summary>

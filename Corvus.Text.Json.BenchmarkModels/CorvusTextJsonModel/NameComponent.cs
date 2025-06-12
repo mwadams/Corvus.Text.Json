@@ -41,6 +41,25 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
         }
     }
+    public static bool operator ==(NameComponent left, NameComponent right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(NameComponent left, NameComponent right)
+    {
+        return !left.Equals(right);
+    }
+
+    public static bool operator ==(NameComponent left, JsonElement right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(NameComponent left, JsonElement right)
+    {
+        return !left.Equals(right);
+    }
 
     public string? GetString()
     {
@@ -76,6 +95,20 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
         return workspace.CreateDocumentBuilder<NameComponent, Mutable>(this);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override bool Equals(object? obj)
+    {
+        return (obj is IJsonElement other && Equals(new NameComponent(other.ParentDocument, other.ParentDocumentIndex)))
+            || (obj is null && this.IsNull());
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Equals<T>(T other)
+        where T : struct, IJsonElement
+    {
+        return JsonElementHelpers.DeepEquals(this, other);
     }
 
     /// <summary>
@@ -136,31 +169,23 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     /// </exception>
     public override string ToString()
     {
-        switch (TokenType)
+        if (_parent is null)
         {
-            case JsonTokenType.None:
-            case JsonTokenType.Null:
-                return string.Empty;
-            case JsonTokenType.True:
-                return bool.TrueString;
-            case JsonTokenType.False:
-                return bool.FalseString;
-            case JsonTokenType.Number:
-            case JsonTokenType.StartArray:
-            case JsonTokenType.StartObject:
-            {
-                // null parent should have hit the None case
-                return _parent.GetRawValueAsString(_idx);
-            }
-            case JsonTokenType.String:
-                return _parent.GetString(_idx, JsonTokenType.String)!;
-            case JsonTokenType.Comment:
-            case JsonTokenType.EndArray:
-            case JsonTokenType.EndObject:
-            default:
-                Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                return string.Empty;
+            return string.Empty;
         }
+
+        return _parent.ToString(_idx);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        if (_parent == null)
+        {
+            return 0;
+        }
+
+        return _parent.GetHashCode(_idx);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -265,6 +290,31 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             return result;
         }
 
+        public static implicit operator JsonElement(Mutable person)
+        {
+            return JsonElement.From(person);
+        }
+
+        public static bool operator ==(Mutable left, Mutable right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, Mutable right)
+        {
+            return !left.Equals(right);
+        }
+
+        public static bool operator ==(Mutable left, JsonElement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, JsonElement right)
+        {
+            return !left.Equals(right);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
         {
@@ -304,6 +354,20 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             CheckValidInstance();
 
             return _parent.GetUtf8JsonString(_idx, JsonTokenType.String);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object? obj)
+        {
+            return (obj is IJsonElement other && Equals(new NameComponent(other.ParentDocument, other.ParentDocumentIndex)))
+                || (obj is null && this.IsNull());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals<T>(T other)
+            where T : struct, IJsonElement
+        {
+            return JsonElementHelpers.DeepEquals(this, other);
         }
 
         /// <summary>
@@ -364,31 +428,23 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         /// </exception>
         public override string ToString()
         {
-            switch (TokenType)
+            if (_parent == null || _documentVersion != _parent.Version)
             {
-                case JsonTokenType.None:
-                case JsonTokenType.Null:
-                    return string.Empty;
-                case JsonTokenType.True:
-                    return bool.TrueString;
-                case JsonTokenType.False:
-                    return bool.FalseString;
-                case JsonTokenType.Number:
-                case JsonTokenType.StartArray:
-                case JsonTokenType.StartObject:
-                {
-                    // null parent should have hit the None case
-                    return _parent.GetRawValueAsString(_idx);
-                }
-                case JsonTokenType.String:
-                    return _parent.GetString(_idx, JsonTokenType.String)!;
-                case JsonTokenType.Comment:
-                case JsonTokenType.EndArray:
-                case JsonTokenType.EndObject:
-                default:
-                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                    return string.Empty;
+                return string.Empty;
             }
+
+            return _parent.ToString(_idx);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            if (_parent == null)
+            {
+                return 0;
+            }
+
+            return _parent.GetHashCode(_idx);
         }
 
 #if NET
@@ -497,7 +553,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             /* String matching
              * This would be if (tokenType != JsonTokenType.String) for the non-matching case where we have numeric keywords
              * to match, but no explicit type check */
-            if (!JsonSchemaMatching.MatchTypeString(tokenType, __Keywords.Type, ref context))
+            if (!JsonSchemaMatching.MatchTypeString(tokenType, Keywords_9857823edfdd454b8bdf0af5fa37e392.Type, ref context))
             {
                 if (!context.HasCollector)
                 {
@@ -506,8 +562,8 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                 }
 
                 // Ignore remaining string
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeString, schemaEvaluationPath: __Keywords.MinLength);
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeString, schemaEvaluationPath: __Keywords.MaxLength);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeString, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MinLength);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeString, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MaxLength);
             }
             else
             {
@@ -516,20 +572,20 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                 // Notice that we don't "short circuit" for the flags case, because the length test is fast.
                 if (length <= MaxLength)
                 {
-                    context.Matched(true, schemaEvaluationPath: __Keywords.MaxLength);
+                    context.Matched(true, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MaxLength);
                 }
                 else
                 {
-                    context.Matched(false, schemaEvaluationPath: __Keywords.MaxLength);
+                    context.Matched(false, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MaxLength);
                 }
 
                 if (length >= MinLength)
                 {
-                    context.Matched(true, schemaEvaluationPath: __Keywords.MinLength);
+                    context.Matched(true, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MinLength);
                 }
                 else
                 {
-                    context.Matched(false, schemaEvaluationPath: __Keywords.MinLength);
+                    context.Matched(false, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MinLength);
                 }
             }
 

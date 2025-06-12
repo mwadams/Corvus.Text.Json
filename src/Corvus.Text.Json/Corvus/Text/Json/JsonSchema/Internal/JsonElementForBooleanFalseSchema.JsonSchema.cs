@@ -10,7 +10,7 @@ namespace Corvus.Text.Json
     /// <summary>
     ///   Represents a specific JSON value within a <see cref="JsonDocument"/>.
     /// </summary>
-    public readonly partial struct JsonElement
+    public readonly partial struct JsonElementForBooleanFalseSchema
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)

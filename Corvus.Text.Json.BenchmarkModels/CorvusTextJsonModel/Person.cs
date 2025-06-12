@@ -88,6 +88,31 @@ public readonly struct Person : IJsonElement<Person>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
+    public static implicit operator JsonElement(Person person)
+    {
+        return JsonElement.From(person);
+    }
+
+    public static bool operator ==(Person left, Person right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Person left, Person right)
+    {
+        return !left.Equals(right);
+    }
+
+    public static bool operator ==(Person left, JsonElement right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Person left, JsonElement right)
+    {
+        return !left.Equals(right);
+    }
+
     /// <summary>
     ///   Write the element into the provided writer as a JSON value.
     /// </summary>
@@ -103,8 +128,6 @@ public readonly struct Person : IJsonElement<Person>
     /// </exception>
     public void WriteTo(Utf8JsonWriter writer)
     {
-        ////ArgumentNullException.ThrowIfNull(writer);
-
         CheckValidInstance();
 
         _parent.WriteElementTo(_idx, writer);
@@ -160,31 +183,23 @@ public readonly struct Person : IJsonElement<Person>
     /// </exception>
     public override string ToString()
     {
-        switch (TokenType)
+        if (_parent is null)
         {
-            case JsonTokenType.None:
-            case JsonTokenType.Null:
-                return string.Empty;
-            case JsonTokenType.True:
-                return bool.TrueString;
-            case JsonTokenType.False:
-                return bool.FalseString;
-            case JsonTokenType.Number:
-            case JsonTokenType.StartArray:
-            case JsonTokenType.StartObject:
-            {
-                // null parent should have hit the None case
-                return _parent.GetRawValueAsString(_idx);
-            }
-            case JsonTokenType.String:
-                return _parent.GetString(_idx, JsonTokenType.String)!;
-            case JsonTokenType.Comment:
-            case JsonTokenType.EndArray:
-            case JsonTokenType.EndObject:
-            default:
-                Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                return string.Empty;
+            return string.Empty;
         }
+
+        return _parent.ToString(_idx);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        if (_parent == null)
+        {
+            return 0;
+        }
+
+        return _parent.GetHashCode(_idx);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -269,7 +284,7 @@ public readonly struct Person : IJsonElement<Person>
             _documentVersion = _parent.Version;
         }
 
-        public PersonName.Mutable Name
+        public readonly PersonName.Mutable Name
         {
             get
             {
@@ -282,7 +297,7 @@ public readonly struct Person : IJsonElement<Person>
             }
         }
 
-        public Age.Mutable Age
+        public readonly Age.Mutable Age
         {
             get
             {
@@ -295,7 +310,7 @@ public readonly struct Person : IJsonElement<Person>
             }
         }
 
-        public CompetedInYears.Mutable CompetedInYears
+        public readonly CompetedInYears.Mutable CompetedInYears
         {
             get
             {
@@ -380,10 +395,10 @@ public readonly struct Person : IJsonElement<Person>
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public JsonValueKind ValueKind => TokenType.ToValueKind();
+        public readonly JsonValueKind ValueKind => TokenType.ToValueKind();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private JsonTokenType TokenType
+        private readonly JsonTokenType TokenType
         {
             get
             {
@@ -410,8 +425,47 @@ public readonly struct Person : IJsonElement<Person>
             return new(person._parent, person._idx);
         }
 
+        public static implicit operator JsonElement(Mutable person)
+        {
+            return JsonElement.From(person);
+        }
+
+        public static bool operator ==(Mutable left, Mutable right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, Mutable right)
+        {
+            return !left.Equals(right);
+        }
+
+        public static bool operator ==(Mutable left, JsonElement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, JsonElement right)
+        {
+            return !left.Equals(right);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        public override readonly bool Equals(object? obj)
+        {
+            return (obj is IJsonElement other && Equals(new Person(other.ParentDocument, other.ParentDocumentIndex)))
+                || (obj is null && this.IsNull());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly bool Equals<T>(T other)
+            where T : struct, IJsonElement
+        {
+            return JsonElementHelpers.DeepEquals(this, other);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
         {
             return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
         }
@@ -422,7 +476,7 @@ public readonly struct Person : IJsonElement<Person>
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
         }
 
-        private void CheckValidInstance()
+        private readonly void CheckValidInstance()
         {
             if (_parent == null)
             {
@@ -435,7 +489,7 @@ public readonly struct Person : IJsonElement<Person>
             }
         }
 
-        void IJsonElement.CheckValidInstance() => CheckValidInstance();
+        readonly void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
         /// <summary>
         ///   Write the element into the provided writer as a JSON value.
@@ -450,7 +504,7 @@ public readonly struct Person : IJsonElement<Person>
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public void WriteTo(Utf8JsonWriter writer)
+        public readonly void WriteTo(Utf8JsonWriter writer)
         {
             ////ArgumentNullException.ThrowIfNull(writer);
 
@@ -493,33 +547,25 @@ public readonly struct Person : IJsonElement<Person>
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public override string ToString()
+        public override readonly string ToString()
         {
-            switch (TokenType)
+            if (_parent == null || _documentVersion != _parent.Version)
             {
-                case JsonTokenType.None:
-                case JsonTokenType.Null:
-                    return string.Empty;
-                case JsonTokenType.True:
-                    return bool.TrueString;
-                case JsonTokenType.False:
-                    return bool.FalseString;
-                case JsonTokenType.Number:
-                case JsonTokenType.StartArray:
-                case JsonTokenType.StartObject:
-                {
-                    // null parent should have hit the None case
-                    return _parent.GetRawValueAsString(_idx);
-                }
-                case JsonTokenType.String:
-                    return _parent.GetString(_idx, JsonTokenType.String)!;
-                case JsonTokenType.Comment:
-                case JsonTokenType.EndArray:
-                case JsonTokenType.EndObject:
-                default:
-                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                    return string.Empty;
+                return string.Empty;
             }
+
+            return _parent.ToString(_idx);
+        }
+
+        /// <inheritdoc/>
+        public override readonly int GetHashCode()
+        {
+            if (_parent == null)
+            {
+                return 0;
+            }
+
+            return _parent.GetHashCode(_idx);
         }
 
 #if NET
@@ -527,19 +573,19 @@ public readonly struct Person : IJsonElement<Person>
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"Person.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+        private readonly string DebuggerDisplay => $"Person.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IJsonDocument IJsonElement.ParentDocument => _parent;
+        readonly IJsonDocument IJsonElement.ParentDocument => _parent;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        int IJsonElement.ParentDocumentIndex => _idx;
+        readonly int IJsonElement.ParentDocumentIndex => _idx;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        JsonTokenType IJsonElement.TokenType => TokenType;
+        readonly JsonTokenType IJsonElement.TokenType => TokenType;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        JsonValueKind IJsonElement.ValueKind => ValueKind;
+        readonly JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
 
 
@@ -598,7 +644,7 @@ public readonly struct Person : IJsonElement<Person>
 
         internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
 
-        internal static Builder Create(IMutableJsonDocument parentDocument, int targetIndex, int initialElementCount)
+        internal static Builder Create(IMutableJsonDocument parentDocument, int initialElementCount)
         {
             ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
             return new Builder(builder);
@@ -674,7 +720,7 @@ public readonly struct Person : IJsonElement<Person>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            if (!JsonSchemaMatching.MatchTypeObject(tokenType, __Keywords.Type, ref context))
+            if (!JsonSchemaMatching.MatchTypeObject(tokenType, Keywords_9857823edfdd454b8bdf0af5fa37e392.Type, ref context))
             {
                 if (!context.HasCollector)
                 {
@@ -682,9 +728,9 @@ public readonly struct Person : IJsonElement<Person>
                     return;
                 }
 
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, __Keywords.Properties);
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, __Keywords.Required);
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, __Keywords.UnevaluatedProperties);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, Keywords_9857823edfdd454b8bdf0af5fa37e392.Properties);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, Keywords_9857823edfdd454b8bdf0af5fa37e392.Required);
+                context.Ignored(JsonSchemaMatching.IgnoredNotTypeObject, Keywords_9857823edfdd454b8bdf0af5fa37e392.UnevaluatedProperties);
             }
             else
             {
@@ -714,7 +760,7 @@ public readonly struct Person : IJsonElement<Person>
                     {
                         // We push and commit the child context as an optimization for "NotAny" - no need to actually validate with anything in between, just
                         // jump straight to "isMatch: false"; but benefit from the output generation.
-                        JsonSchemaContext childContext = context.PushChildContext(parentDocument, currentIndex, false, false, propertyName: propertyName, schemaEvaluationPath: __Keywords.UnevaluatedProperties);
+                        JsonSchemaContext childContext = context.PushChildContext(parentDocument, currentIndex, false, false, propertyName: propertyName, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.UnevaluatedProperties);
                         context.CommitChildContext(isMatch: false, ref childContext);
                         if (!context.HasCollector)
                         {

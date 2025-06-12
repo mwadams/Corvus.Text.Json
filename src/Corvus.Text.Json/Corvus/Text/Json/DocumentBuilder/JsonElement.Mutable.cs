@@ -350,6 +350,41 @@ namespace Corvus.Text.Json
                 return new(value._parent, value._idx);
             }
 
+            public static bool operator ==(Mutable left, Mutable right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(Mutable left, Mutable right)
+            {
+                return !left.Equals(right);
+            }
+
+            public static bool operator ==(Mutable left, JsonElement right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(Mutable left, JsonElement right)
+            {
+                return !left.Equals(right);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override bool Equals(object? obj)
+            {
+                return (obj is IJsonElement other && Equals(new JsonElement(other.ParentDocument, other.ParentDocumentIndex)))
+                    || (obj is null && this.IsNull());
+            }
+
+            [CLSCompliant(false)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool Equals<T>(T other)
+                where T : struct, IJsonElement
+            {
+                return JsonElementHelpers.DeepEquals(this, other);
+            }
+
             [CLSCompliant(false)]
             public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
             {
@@ -2185,32 +2220,18 @@ namespace Corvus.Text.Json
                     return string.Empty;
                 }
 
-                switch (TokenType)
+                return _parent.ToString(_idx);
+            }
+
+            /// <inheritdoc />
+            public override int GetHashCode()
+            {
+                if (_parent is null)
                 {
-                    case JsonTokenType.None:
-                    case JsonTokenType.Null:
-                        return string.Empty;
-                    case JsonTokenType.True:
-                        return bool.TrueString;
-                    case JsonTokenType.False:
-                        return bool.FalseString;
-                    case JsonTokenType.Number:
-                    case JsonTokenType.StartArray:
-                    case JsonTokenType.StartObject:
-                    {
-                        // null parent should have hit the None case
-                        Debug.Assert(_parent != null);
-                        return _parent.GetRawValueAsString(_idx);
-                    }
-                    case JsonTokenType.String:
-                        return GetString()!;
-                    case JsonTokenType.Comment:
-                    case JsonTokenType.EndArray:
-                    case JsonTokenType.EndObject:
-                    default:
-                        Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                        return string.Empty;
+                    return 0;
                 }
+
+                return _parent.GetHashCode(_idx);
             }
 
             /// <summary>

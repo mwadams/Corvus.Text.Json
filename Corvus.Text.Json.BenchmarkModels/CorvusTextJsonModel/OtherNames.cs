@@ -62,6 +62,27 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         return new(value._parent, value._idx);
     }
 
+    public static bool operator ==(OtherNames left, OtherNames right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(OtherNames left, OtherNames right)
+    {
+        return !left.Equals(right);
+    }
+
+    public static bool operator ==(OtherNames left, JsonElement right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(OtherNames left, JsonElement right)
+    {
+        return !left.Equals(right);
+    }
+
+
     public TResult Match<TResult>(Func<NameComponent, TResult> nameComponent, Func<NameComponentArray, TResult> nameComponentArray, Func<OtherNames, TResult> noMatch)
     {
         if (NameComponent.JsonSchema.IsMatch(_parent, _idx))
@@ -112,6 +133,20 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
         return workspace.CreateDocumentBuilder<OtherNames, Mutable>(this);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override bool Equals(object? obj)
+    {
+        return (obj is IJsonElement other && Equals(new OtherNames(other.ParentDocument, other.ParentDocumentIndex)))
+            || (obj is null && this.IsNull());
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Equals<T>(T other)
+        where T : struct, IJsonElement
+    {
+        return JsonElementHelpers.DeepEquals(this, other);
     }
 
     /// <summary>
@@ -172,31 +207,23 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     /// </exception>
     public override string ToString()
     {
-        switch (TokenType)
+        if (_parent is null)
         {
-            case JsonTokenType.None:
-            case JsonTokenType.Null:
-                return string.Empty;
-            case JsonTokenType.True:
-                return bool.TrueString;
-            case JsonTokenType.False:
-                return bool.FalseString;
-            case JsonTokenType.Number:
-            case JsonTokenType.StartArray:
-            case JsonTokenType.StartObject:
-            {
-                // null parent should have hit the None case
-                return _parent.GetRawValueAsString(_idx);
-            }
-            case JsonTokenType.String:
-                return _parent.GetString(_idx, JsonTokenType.String)!;
-            case JsonTokenType.Comment:
-            case JsonTokenType.EndArray:
-            case JsonTokenType.EndObject:
-            default:
-                Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                return string.Empty;
+            return string.Empty;
         }
+
+        return _parent.ToString(_idx);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        if (_parent == null)
+        {
+            return 0;
+        }
+
+        return _parent.GetHashCode(_idx);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -301,6 +328,45 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             return result;
         }
 
+        public static implicit operator JsonElement(Mutable person)
+        {
+            return JsonElement.From(person);
+        }
+
+        public static bool operator ==(Mutable left, Mutable right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, Mutable right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator ==(Mutable left, JsonElement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Mutable left, JsonElement right)
+        {
+            return left.Equals(right);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object? obj)
+        {
+            return (obj is IJsonElement other && Equals(new OtherNames(other.ParentDocument, other.ParentDocumentIndex)))
+                || (obj is null && this.IsNull());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals<T>(T other)
+            where T : struct, IJsonElement
+        {
+            return JsonElementHelpers.DeepEquals(this, other);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
         {
@@ -386,31 +452,23 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         /// </exception>
         public override string ToString()
         {
-            switch (TokenType)
+            if (_parent == null || _documentVersion != _parent.Version)
             {
-                case JsonTokenType.None:
-                case JsonTokenType.Null:
-                    return string.Empty;
-                case JsonTokenType.True:
-                    return bool.TrueString;
-                case JsonTokenType.False:
-                    return bool.FalseString;
-                case JsonTokenType.Number:
-                case JsonTokenType.StartArray:
-                case JsonTokenType.StartObject:
-                {
-                    // null parent should have hit the None case
-                    return _parent.GetRawValueAsString(_idx);
-                }
-                case JsonTokenType.String:
-                    return _parent.GetString(_idx, JsonTokenType.String)!;
-                case JsonTokenType.Comment:
-                case JsonTokenType.EndArray:
-                case JsonTokenType.EndObject:
-                default:
-                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                    return string.Empty;
+                return string.Empty;
             }
+
+            return _parent.ToString(_idx);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            if (_parent == null)
+            {
+                return 0;
+            }
+
+            return _parent.GetHashCode(_idx);
         }
 
 #if NET
@@ -587,11 +645,11 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
             if (oneOfMatchCount == 1)
             {
-                context.Matched(true, schemaEvaluationPath: __Keywords.OneOf);
+                context.Matched(true, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.OneOf);
             }
             else if (oneOfMatchCount > 1)
             {
-                context.Matched(false, JsonSchemaMatching.MatchedMoreThanOneSchema, schemaEvaluationPath: __Keywords.OneOf);
+                context.Matched(false, JsonSchemaMatching.MatchedMoreThanOneSchema, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.OneOf);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
@@ -600,7 +658,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             }
             else
             {
-                context.Matched(false, JsonSchemaMatching.MatchedNoSchema, schemaEvaluationPath: __Keywords.OneOf);
+                context.Matched(false, JsonSchemaMatching.MatchedNoSchema, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.OneOf);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();

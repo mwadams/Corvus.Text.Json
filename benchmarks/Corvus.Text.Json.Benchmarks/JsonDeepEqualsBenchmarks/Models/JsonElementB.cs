@@ -1259,33 +1259,14 @@ namespace Corvus.Text.Json
         /// </exception>
         public override string ToString()
         {
-            switch (TokenType)
+            if (_parent is null)
             {
-                case JsonTokenType.None:
-                case JsonTokenType.Null:
-                    return string.Empty;
-                case JsonTokenType.True:
-                    return bool.TrueString;
-                case JsonTokenType.False:
-                    return bool.FalseString;
-                case JsonTokenType.Number:
-                case JsonTokenType.StartArray:
-                case JsonTokenType.StartObject:
-                    {
-                        // null parent should have hit the None case
-                        Debug.Assert(_parent != null);
-                        return _parent!.GetRawValueAsString(_idx);
-                    }
-                case JsonTokenType.String:
-                    return GetString()!;
-                case JsonTokenType.Comment:
-                case JsonTokenType.EndArray:
-                case JsonTokenType.EndObject:
-                default:
-                    Debug.Fail($"No handler for {nameof(JsonTokenType)}.{TokenType}");
-                    return string.Empty;
+                return string.Empty;
             }
+
+            return _parent.ToString(_idx);
         }
+
 
         /// <summary>
         ///   Get a JsonElementB which can be safely stored beyond the lifetime of the
