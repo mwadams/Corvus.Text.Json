@@ -1,8 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Xunit;
+using System.Text.RegularExpressions;
 using Corvus.Text.Json.Internal;
+using Xunit;
 
 namespace Corvus.Text.Json.Tests;
 
@@ -21,7 +22,7 @@ public class JsonSchemaMatchingStringTests
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
         bool result = JsonSchemaMatching.MatchTypeString(tokenType, DummyPathProvider, ref context);
-        Assert.Equal(expected, result);        
+        Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
     }
@@ -129,8 +130,8 @@ public class JsonSchemaMatchingStringTests
     [InlineData("sub.domain.example.com", true)]
     [InlineData("xn--4gbwdl.xn--wgbh1c", true)] // Punycode
     [InlineData("xn--X", false)] // invalid punycode
-    [InlineData("-a-host-name-that-starts-with--", false)] 
-    [InlineData("not_a_valid_host_name", false)] 
+    [InlineData("-a-host-name-that-starts-with--", false)]
+    [InlineData("not_a_valid_host_name", false)]
     [InlineData("a-vvvvvvvvvvvvvvvveeeeeeeeeeeeeeeerrrrrrrrrrrrrrrryyyyyyyyyyyyyyyy-long-host-name-component", false)]
     [InlineData("-hostname", false)]
     [InlineData("hostname-", false)]
@@ -544,6 +545,19 @@ public class JsonSchemaMatchingStringTests
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
         bool result = JsonSchemaMatching.MatchRelativeJsonPointer(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("([abc])+\\s+$", true)]
+    [InlineData("^(abc]", false)]
+    public void MatchRegex_ValidatesRegex(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaMatching.MatchRegex(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();

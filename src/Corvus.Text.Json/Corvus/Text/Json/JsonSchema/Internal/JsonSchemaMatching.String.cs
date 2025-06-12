@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Buffers;
 using System.Buffers.Text;
 using System.Runtime.CompilerServices;
 using Corvus.Globalization;
@@ -34,6 +35,7 @@ namespace Corvus.Text.Json.Internal
         private static readonly JsonSchemaMessageProvider ExpectedUriTemplate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriTemplate.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedJsonPointer.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedRelativeJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRelativeJsonPointer.AsSpan(), buffer, out written);
+        private static readonly JsonSchemaMessageProvider ExpectedRegex = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRegex.AsSpan(), buffer, out written);
 
         [CLSCompliant(false)]
         public static bool MatchTypeString(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
@@ -940,6 +942,56 @@ namespace Corvus.Text.Json.Internal
             }
 
             return true;
+        }
+
+        [CLSCompliant(false)]
+        public static bool MatchRegex(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        {
+            if (!MatchRegex(value))
+            {
+                context.Matched(false, messageProvider: ExpectedRegex, schemaEvaluationPath: keyword);
+                return false;
+            }
+
+            context.Matched(true, schemaEvaluationPath: keyword);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool MatchRegex(ReadOnlySpan<byte> value)
+        {
+            char[]? charBuffer = null;
+            int length = Encoding.UTF8.GetMaxCharCount(value.Length);
+
+            Span<char> buffer = length < JsonConstants.StackallocNonRecursiveCharThreshold ? stackalloc char[length]
+                : (charBuffer = ArrayPool<char>.Shared.Rent(length)).AsSpan();
+
+            int written = 0;
+
+            try
+            {
+                written = JsonReaderHelper.TranscodeHelper(value, buffer);
+
+                if (!JsonRegexValidator.Validate(buffer.Slice(0, written), JsonRegexOptions.ECMAScript))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            finally
+            {
+                if (charBuffer is not null)
+                {
+                    if (written > 0)
+                    {
+                        // Clear the buffer to avoid leaking sensitive information.
+                        Array.Clear(charBuffer, 0, written);
+                    }
+
+                    ArrayPool<char>.Shared.Return(charBuffer);
+                }
+            }
         }
     }
 }

@@ -90,6 +90,8 @@
     <Compile Include="Corvus\NodaTimeExtensions\Utf8ValueCursor.cs" />
     <Compile Include="Corvus\NodaTimeExtensions\ValueCursor.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Collections\HashHelpers.cs" Link="Common\System\Collections\HashHelpers.cs" />
+    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.cs" Link="Common\System\Collections\Generic\ValueListBuilder.cs" />
+    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.Pop.cs" Link="Common\System\Collections\Generic\ValueListBuilder.Pop.cs" />
     <Compile Include="$(CommonPath)System\HexConverter.cs" Link="Common\System\HexConverter.cs" />
     <Compile Include="$(CommonPath)System\Net\ArrayBuffer.cs" Link="Common\System\Net\ArrayBuffer.cs" />
     <Compile Include="$(CommonPath)System\Text\ValueStringBuilder.cs" Link="Common\ValueStringBuilder.cs" />
@@ -177,6 +179,14 @@
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Array.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Object.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Number.cs" />
+    <Compile Include="Corvus\Text\Json\Regex\JsonRegexCaseBehavior.cs" />
+    <Compile Include="Corvus\Text\Json\Regex\JsonRegexCharClass.cs" />
+    <Compile Include="Corvus\Text\Json\Regex\JsonRegexNode.cs" />
+    <Compile Include="Corvus\Text\Json\Regex\JsonRegexNodeKind.cs" />
+    <Compile Include="Corvus\Text\Json\Regex\JsonRegexOpCode.cs" />
+    <Compile Include="Corvus\Text\Json\Regex\JsonRegexOptions.cs" />
+    <Compile Include="Corvus\Text\Json\Regex\JsonRegexValidator.cs" />
+    <Compile Include="Corvus\Text\Json\Regex\JsonRegexReplacement.cs" />
     <Compile Include="Corvus\Text\Json\UnescapedUtf8JsonString.cs" />
     <Compile Include="Corvus\Text\Json\RawUtf8JsonString.cs" />
     <Compile Include="Corvus\Text\Json\JsonConstants.cs" />

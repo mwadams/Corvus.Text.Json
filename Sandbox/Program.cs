@@ -1,6 +1,8 @@
 ﻿using Benchmark.CorvusTextJson2;
 using Corvus.Text.Json;
 
+System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("(?<a>)(?<b>)(?<-1>)(?<-2>)}", System.Text.RegularExpressions.RegexOptions.None);
+
 Console.WriteLine();
 Console.WriteLine("************");
 Console.WriteLine();

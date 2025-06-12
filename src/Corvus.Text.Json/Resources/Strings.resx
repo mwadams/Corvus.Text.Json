@@ -944,4 +944,7 @@
   <data name="JsonSchema_ExpectedRelativeJsonPointer" xml:space="preserve">
     <value>Expected a Relative JSON Pointer. (https://json-schema.org/draft/2020-12/relative-json-pointer).</value>
   </data>
+  <data name="JsonSchema_ExpectedRegex" xml:space="preserve">
+    <value>Expected a regular expression specification.</value>
+  </data>
 </root>
