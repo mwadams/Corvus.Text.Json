@@ -97,35 +97,6 @@ namespace Corvus.Text.Json.Internal
             _scheme = string.Empty;
         }
 
-        private static void FetchSyntax(Utf8UriParser syntax, string lwrCaseSchemeName, int defaultPort)
-        {
-            if (syntax.SchemeName.Length != 0)
-                throw new InvalidOperationException(SR.Format(SR.net_uri_NeedFreshParser, syntax.SchemeName));
-
-            lock (s_table)
-            {
-                syntax._flags &= ~Utf8UriSyntaxFlags.V1_UnknownUri;
-                Utf8UriParser? oldSyntax = (Utf8UriParser?)s_table[lwrCaseSchemeName];
-                if (oldSyntax != null)
-                    throw new InvalidOperationException(SR.Format(SR.net_uri_AlreadyRegistered, oldSyntax.SchemeName));
-
-                oldSyntax = (Utf8UriParser?)s_tempTable[syntax.SchemeName];
-                if (oldSyntax != null)
-                {
-                    // optimization on schemeName, will try to keep the first reference
-                    lwrCaseSchemeName = oldSyntax._scheme;
-                    s_tempTable.Remove(lwrCaseSchemeName);
-                }
-
-                syntax.OnRegister(lwrCaseSchemeName, defaultPort);
-                syntax._scheme = lwrCaseSchemeName;
-                syntax.CheckSetIsSimpleFlag();
-                syntax._port = defaultPort;
-
-                s_table[syntax.SchemeName] = syntax;
-            }
-        }
-
         private const int c_MaxCapacity = 512;
 
         internal static Utf8UriParser FindOrFetchAsUnknownV1Syntax(string lwrCaseScheme)
@@ -150,39 +121,6 @@ namespace Corvus.Text.Json.Internal
                 syntax = new BuiltInUriParser(lwrCaseScheme, NoDefaultPort, UnknownV1SyntaxFlags);
                 s_tempTable[lwrCaseScheme] = syntax;
                 return syntax;
-            }
-        }
-
-        internal static Utf8UriParser? GetSyntax(string lwrCaseScheme) =>
-            (Utf8UriParser?)(s_table[lwrCaseScheme] ?? s_tempTable[lwrCaseScheme]);
-
-        //
-        // Builtin and User Simple syntaxes do not need custom validation/parsing (i.e. virtual method calls),
-        //
-        internal bool IsSimple
-        {
-            get
-            {
-                return InFact(Utf8UriSyntaxFlags.SimpleUserSyntax);
-            }
-        }
-
-        internal void CheckSetIsSimpleFlag()
-        {
-            Type type = this.GetType();
-
-            if (type == typeof(GenericUriParser)
-                || type == typeof(HttpStyleUriParser)
-                || type == typeof(FtpStyleUriParser)
-                || type == typeof(FileStyleUriParser)
-                || type == typeof(NewsStyleUriParser)
-                || type == typeof(GopherStyleUriParser)
-                || type == typeof(NetPipeStyleUriParser)
-                || type == typeof(NetTcpStyleUriParser)
-                || type == typeof(LdapStyleUriParser)
-                )
-            {
-                _flags |= Utf8UriSyntaxFlags.SimpleUserSyntax;
             }
         }
 

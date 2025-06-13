@@ -325,81 +325,33 @@ namespace Corvus.Text.Json.Internal
 
             if (syntax != null)
             {
-                if (syntax.IsSimple)
+                if ((err = PrivateParseMinimal(uriString, ref flags, ref syntax)) != Utf8UriParsingError.None)
                 {
-                    if ((err = PrivateParseMinimal(uriString, ref flags, ref syntax)) != Utf8UriParsingError.None)
+                    if (uriKind != Utf8UriKind.Absolute && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
                     {
-                        if (uriKind != Utf8UriKind.Absolute && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
-                        {
-                            // RFC 3986 Section 5.4.2 - http:(relativeUri) may be considered a valid relative Uri.
-                            syntax = null!; // convert to relative uri
-                            flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
-                            return true;
-                        }
-                        else
-                            success = false;
-                    }
-                    else if (uriKind == Utf8UriKind.Relative)
-                    {
-                        // Here we know that we can create an absolute Uri, but the user has requested only a relative one
-                        success = false;
+                        // RFC 3986 Section 5.4.2 - http:(relativeUri) may be considered a valid relative Uri.
+                        syntax = null!; // convert to relative uri
+                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
+                        return true;
                     }
                     else
-                    {
-                        success = true;
-                    }
-                    // will return from here
-
-                    // In this scenario we need to parse the whole string
-                    if (!ValidateRemaining(err, ref flags, syntax, uriKind, uriString))
-                    {
-                        return false;
-                    }
+                        success = false;
+                }
+                else if (uriKind == Utf8UriKind.Relative)
+                {
+                    // Here we know that we can create an absolute Uri, but the user has requested only a relative one
+                    success = false;
                 }
                 else
                 {
-                    // offer custom parser to create a parsing context
-                    syntax = syntax.InternalOnNewUri(err, ref flags, ref syntax, uriKind, uriString);
+                    success = true;
+                }
+                // will return from here
 
-                    // in case they won't call us
-                    flags |= Flags.UserDrivenParsing;
-
-                    // Ask a registered type to validate this uri
-                    success = syntax.InternalValidate(err, ref flags, ref syntax, uriKind, uriString);
-
-                    if (!success)
-                    {
-                        // Can we still take it as a relative Uri?
-                        if (uriKind != Utf8UriKind.Absolute && err != Utf8UriParsingError.None
-                            && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
-                        {
-                            syntax = null!; // convert it to relative
-                            success = true;
-                            flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
-                        }
-                    }
-                    else // success == true
-                    {
-                        if (err != Utf8UriParsingError.None || InFact(flags, Flags.ErrorOrParsingRecursion))
-                        {
-                            // User parser took over on an invalid Uri
-                            // we use = here to clear all parsing flags for a uri that we think is invalid.
-                            flags = Flags.UserDrivenParsing | (flags & Flags.UserEscaped);
-                        }
-                        else if (uriKind == Utf8UriKind.Relative)
-                        {
-                            // Here we know that custom parser can create an absolute Uri, but the user has requested only a
-                            // relative one
-                            success = false;
-                        }
-
-                        // In this scenario we need to parse the whole string
-                        if (!ValidateRemaining(err, ref flags, syntax, uriKind, uriString))
-                        {
-                            return false;
-                        }
-                    }
-                    // will return from here
+                // In this scenario we need to parse the whole string
+                if (!ValidateRemaining(err, ref flags, syntax, uriKind, uriString))
+                {
+                    return false;
                 }
             }
             // If we encountered any parsing errors that indicate this may be a relative Uri,
