@@ -810,6 +810,177 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
+        public static void EqualsOutOfOrder_LeftEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "f\u006fo": "hello" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo": "hello", "bar": "world" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsArray_MismatchedLength()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                [ "bar", "foo" ]
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                [ "bar", "foo", "baz" ]
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void Equals_MismatchedTypes()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "foo" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                [ "bar", "foo", "baz" ]
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void Equals_MismatchedTypesBoolean()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                true
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                false
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void Equals_MatchTypesNull()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                null
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                null
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void Equals_MatchedTypesBooleanTrue()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                true
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                true
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void Equals_MatchedTypesBooleanFalse()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                false
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                false
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsArray_MismatchedValue()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                [ "bar", "foo" ]
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                [ "bar", "baz" ]
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsOutOfOrder_BothEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "f\u006fo": "hello" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "f\u006fo": "hello", "bar": "world" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
         public static void EqualsOutOfOrder_RightEscaped()
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
@@ -825,6 +996,196 @@ namespace Corvus.Text.Json.Tests
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             {
                 Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsOutOfOrder_RightEscapedLong()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo_but_this_should_be_long_enough_to_cause_a_shared_array_allocation_0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789": "hello", "bar": "world" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                {  "bar": "world", "fo\u006f_but_this_should_be_long_enough_to_cause_a_shared_array_allocation_0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789": "hello" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsOutOfOrder_RightValueEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo": "hello", "bar": "world" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hell\u006f" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsOutOfOrder_LeftValueEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hell\u006f" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo": "hello", "bar": "world" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsOutOfOrder_BothValuesEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hell\u006f" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo": "hell\u006f", "bar": "world" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.True(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsOutOfOrder_NotEquals_RightEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hello" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "fo\u006f": "yo", "bar": "world" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsOutOfOrder_NotEquals_LeftEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "fo\u006f": "yo", "bar": "world" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hello" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsOutOfOrder_NotEqualsBothValuesEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hell\u006f" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "foo": "y\u006f", "bar": "world" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsInOrder_NotEqualsBothValuesEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hell\u006f" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "y\u006f" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsInOrder_NotEqualsLeftValueEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hell\u006f" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "yo" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
+            }
+        }
+
+        [Fact]
+        public static void EqualsInOrder_NotEqualsRightValueEscaped()
+        {
+            using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "hello" }
+                """
+                ))
+            using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(
+                """
+                { "bar": "world", "foo": "yo" }
+                """
+                ))
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            {
+                Assert.False(doc.RootElement.Equals(doc2.RootElement));
             }
         }
 
@@ -961,6 +1322,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.False(doc.RootElement != doc2.RootElement);
             }
         }
+
 
         [Fact]
         public static void OperatorNotEquals_NotEquals()
