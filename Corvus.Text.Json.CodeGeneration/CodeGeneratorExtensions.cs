@@ -490,8 +490,6 @@ namespace Corvus.Text.Json.CodeGeneration
                 return generator;
             }
 
-            CoreTypes impliedCoreTypes = typeDeclaration.ImpliedCoreTypesOrAny();
-
             return generator
                 .AppendSeparatorLine()
                 .AppendLineIndent("/// <summary>")
@@ -572,6 +570,14 @@ namespace Corvus.Text.Json.CodeGeneration
                                         .Append(" = ")
                                         .Append(typeDeclaration.DotnetTypeName())
                                         .AppendLine(".ParseValue(\"null\"u8);"),
+                JsonValueKind.True => generator
+                                        .Append(" = ")
+                                        .Append(typeDeclaration.DotnetTypeName())
+                                        .AppendLine(".ParseValue(\"true\"u8);"),
+                JsonValueKind.False => generator
+                                        .Append(" = ")
+                                        .Append(typeDeclaration.DotnetTypeName())
+                                        .AppendLine(".ParseValue(\"false\"u8);"),
                 _ => generator
                         .Append(" = ")
                         .Append(typeDeclaration.DotnetTypeName())
@@ -585,9 +591,9 @@ namespace Corvus.Text.Json.CodeGeneration
         /// Append a property which gets the <see cref="JsonValueKind"/> for the instance.
         /// </summary>
         /// <param name="generator">The code generator.</param>
-        /// <param name="typeDeclaration">The type declaration for which to emit the property.</param>
+        /// 
         /// <returns>A reference to the generator having completed the operation.</returns>
-        public static CodeGenerator AppendValueKindProperty(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        public static CodeGenerator AppendValueKindProperty(this CodeGenerator generator)
         {
             if (generator.IsCancellationRequested)
             {
@@ -605,9 +611,9 @@ namespace Corvus.Text.Json.CodeGeneration
         /// Append a property which gets the <c>JsonTokenType</c> for the instance.
         /// </summary>
         /// <param name="generator">The code generator.</param>
-        /// <param name="typeDeclaration">The type declaration for which to emit the property.</param>
+        /// 
         /// <returns>A reference to the generator having completed the operation.</returns>
-        public static CodeGenerator AppendTokenTypeProperty(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        public static CodeGenerator AppendTokenTypeProperty(this CodeGenerator generator)
         {
             if (generator.IsCancellationRequested)
             {
@@ -619,6 +625,26 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendSeparatorLine()
                 .AppendLineIndent("[DebuggerBrowsable(DebuggerBrowsableState.Never)]")
                 .AppendLineIndent("private JsonTokenType TokenType => _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;");
+        }
+
+        public static CodeGenerator AppendCheckValidInstance(this CodeGenerator generator)
+        {
+            return generator
+                .ReserveName("CheckValidInstance")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                """
+                private void CheckValidInstance()
+                {
+                    if (_parent == null)
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+
+                void IJsonElement.CheckValidInstance() => CheckValidInstance();                
+                """
+                );
         }
 
         /// <summary>
@@ -647,7 +673,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     /// <returns>An instance of this type, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     """)
-                .AppendIndent("public static ", typeDeclaration.DotnetTypeName()," From<T>(in T instance)")
+                .AppendIndent("public static ", typeDeclaration.DotnetTypeName(), " From<T>(in T instance)")
                 .PushIndent()
                     .AppendLine("where T : struct, IJsonElement<T>")
                 .PopIndent()
@@ -658,7 +684,59 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendLineIndent("}");
         }
 
+        /// <summary>
+        /// Appends the From static factory method.
+        /// to JsonAny.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration to which to convert.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendCreateInstance(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
 
+            return generator
+                .ReserveName("CreateInstance")
+                .AppendSeparatorLine()
+                .AppendIndent("public static ", typeDeclaration.DotnetTypeName(), " IJsonElement<", typeDeclaration.DotnetTypeName(), ">(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);");
+        }
+
+        /// <summary>
+        /// Appends the From static factory method.
+        /// to JsonAny.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration to which to convert.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendJsonElementConversionOperator(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            return generator
+                .ReserveName("FromJson")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                    /// <summary>
+                    /// Converts the instance to a JsonElement.
+                    /// </summary>
+                    /// <param name="value">The instance of this type.</param>
+                    /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
+                    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                    """)
+                .AppendIndent("public static implicit operator JsonElement(", typeDeclaration.DotnetTypeName(), " instance)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("return JsonElement.From(instance);")
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
         /// <summary>
         /// Append the Equals() method overloads.
         /// </summary>
@@ -738,9 +816,9 @@ namespace Corvus.Text.Json.CodeGeneration
         /// Append the WriteTo() method.
         /// </summary>
         /// <param name="generator">The code generator.</param>
-        /// <param name="typeDeclaration">The type declaration for which to produce the method.</param>
+        /// 
         /// <returns>A reference to the generator having completed the operation.</returns>
-        public static CodeGenerator AppendWriteToMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        public static CodeGenerator AppendWriteToMethod(this CodeGenerator generator)
         {
             if (generator.IsCancellationRequested)
             {
@@ -766,7 +844,7 @@ namespace Corvus.Text.Json.CodeGeneration
         /// <param name="generator">The code generator.</param>
         /// <param name="typeDeclaration">The type declaration for which to append the methods.</param>
         /// <returns>A reference to the generator having completed the operation.</returns>
-        public static CodeGenerator AppendGetHashCodeAndToStringMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable)
+        public static CodeGenerator AppendGetHashCodeAndToStringMethods(this CodeGenerator generator, bool forMutable)
         {
             if (generator.IsCancellationRequested)
             {
@@ -827,6 +905,91 @@ namespace Corvus.Text.Json.CodeGeneration
                         }
                         """);
             }
+        }
+
+        /// <summary>
+        /// Append a standard debugger display attribute.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendDebuggerDisplay(this CodeGenerator generator, string? debuggerString = null)
+        {
+            return generator
+                .AppendLineIndent("[DebuggerDisplay(\"", debuggerString ?? "{DebuggerDisplay,nq}", "\")]");
+        }
+
+        /// <summary>
+        /// Append a standard debugger display property for the type declaration.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendDebuggerDisplayProperty(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        {
+            return generator
+                .ReserveName("DebuggerDisplay")
+                .AppendLineIndent("[DebuggerBrowsable(DebuggerBrowsableState.Never)]")
+                .AppendLineIndent("private string DebuggerDisplay => $\"", typeDeclaration.DotnetTypeName(), ": ValueKind = {ValueKind} : \\\"{ToString()}\\\"\";");
+        }
+
+        public static CodeGenerator AppendIJsonElementExplicitImplementation(this CodeGenerator generator)
+        {
+            return generator
+                .ReserveNameIfNotReserved("ParentDocument")
+                .ReserveNameIfNotReserved("ParentDocumentIndex")
+                .ReserveNameIfNotReserved("TokenType")
+                .ReserveNameIfNotReserved("ValueKind")
+                .AppendBlockIndent(
+                """
+                [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+                IJsonDocument IJsonElement.ParentDocument => _parent;
+
+                [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+                int IJsonElement.ParentDocumentIndex => _idx;
+
+                [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+                JsonTokenType IJsonElement.TokenType => TokenType;
+
+                [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+                JsonValueKind IJsonElement.ValueKind => ValueKind;
+                """);
+        }
+
+        public static CodeGenerator AppendCommonCreateDocumentBuilders(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        {
+            // We only expect 1 row for a simple type.
+            int initialCapacity = 1;
+
+            if ((typeDeclaration.ImpliedCoreTypes() & (CoreTypes.Object | CoreTypes.Array)) != 0)
+            {
+                // But we allow a default initial capacity of 30 for objects or arrays
+                initialCapacity = 30;
+
+            }
+
+            return generator
+                .ReserveNameIfNotReserved("CreateDocumentBuilder")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                $$"""
+                public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+                    JsonWorkspace workspace, Builder.Source value, int initialCapacity = {{initialCapacity}})
+                {
+                    // Create the document builder without a MetadataDb
+                    JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+                    ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+                    value.AddAsItem(ref cvb);
+                    Debug.Assert(cvb.MemberCount == 1);
+                    ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+                    return documentBuilder;
+                }
+                """)
+                .AppendSeparatorLine()
+                .AppendLineIndent("public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("return workspace.CreateDocumentBuilder<", typeDeclaration.DotnetTypeName(), ", Mutable>(this);")
+                .PopIndent()
+                .AppendLineIndent("}");
         }
 
         private static string[] NormalizeAndSplitBlockIntoLines(string block, bool removeBlankLines = false)

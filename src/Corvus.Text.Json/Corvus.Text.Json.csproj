@@ -130,6 +130,7 @@
     <Compile Include="Corvus\Runtime\InteropServices\JsonMarshal.cs" />
     <!--<Compile Include="Corvus\Text\Json\AppContextSwitchHelper.cs" />-->
     <Compile Include="Corvus\Text\Json\BitStack.cs" />
+    <Compile Include="Corvus\Text\Json\Compatibility\Polyfills.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\IMutableJsonElement{T}.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\ComplexValueBuilder.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\IMutableJsonDocument.cs" />
@@ -220,9 +221,10 @@
     <Compile Include="Corvus\Text\Json\StackHelper.cs" />
     <Compile Include="Corvus\Text\Json\Internal\CodeGenThrowHelper.cs" />
     <Compile Include="Corvus\Text\Json\UriTemplate\Utf8UriTemplate.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\JsonReference.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8IriHelper.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8JsonPointer.cs" />
-    <Compile Include="Corvus\Text\Json\Uri\Utf8JsonUriInfo.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Utf8UriOffset.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8Uri.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriComponents.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriDomainNameHelper.cs" />

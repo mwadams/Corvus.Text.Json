@@ -80,5 +80,20 @@ namespace Corvus.Text.Json.CodeGeneration
             return generator
                 .PopMetadata(JsonPropertyNamesEscapedClassNameKey);
         }
+
+        public static CodeGenerator AppendIsSchemaMatchMethod(this CodeGenerator generator)
+        {
+            return generator
+                .ReserveName("IsSchemaMatch")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+                    {
+                        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+                    }
+                    """);
+        }
     }
 }

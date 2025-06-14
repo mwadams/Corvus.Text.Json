@@ -14,7 +14,7 @@ namespace ValidationBenchmarks;
 public class BenchmarkBuild
 {
     [Benchmark(Baseline = true)]
-    public bool BuildJsonObject()
+    public System.Text.Json.Nodes.JsonObject BuildJsonObject()
     {
         System.Text.Json.Nodes.JsonObject jsonObject =
         [
@@ -27,11 +27,11 @@ public class BenchmarkBuild
             new ("competedInYears", new System.Text.Json.Nodes.JsonArray(2012, 2016, 2024))])),
         ];
 
-        return true;
+        return jsonObject;
     }
 
     [Benchmark]
-    public bool BuildCorvusJsonSchema()
+    public Person BuildCorvusJsonSchema()
     {
         Person person = Person.Create(
             age: 51,
@@ -41,15 +41,15 @@ public class BenchmarkBuild
                 otherNames: ["Francis", "James"]),
             competedInYears: [2012, 2016, 2024]);
 
-        return true;
+        return person;
     }
 
     [Benchmark]
-    public bool BuildCorvusTextJson()
+    public Benchmark.CorvusTextJson.Person.Mutable BuildCorvusTextJson()
     {
         using Corvus.Text.Json.JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
 
-        using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateDocument(
+        using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateDocumentBuilder(
             workspace,
             age: 51,
             name: new(static (ref personName) =>
@@ -70,6 +70,6 @@ public class BenchmarkBuild
                 competedInYears.Add(2024);
             }));
 
-        return true;
+        return person.RootElement;
     }
 }

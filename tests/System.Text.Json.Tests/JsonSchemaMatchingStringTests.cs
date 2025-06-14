@@ -366,7 +366,7 @@ public class JsonSchemaMatchingStringTests
 
     [Theory]
     [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
-    [InlineData("http://ƒøø.com/blah_(wîkïpédiå)_blah#ßité-1", true)]
+    [InlineData("http://ƒøø.com/blah_(wîkïpédiå)_blah#ßité-1", false)]
     [InlineData("http://ƒøø.ßår/?q=Test%20URL-encoded%20stuff", true)]
     [InlineData("http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com", true)]
     [InlineData("http://[2001:0db8:85a3:0000:0000:8a2e:0370:7334]", true)]

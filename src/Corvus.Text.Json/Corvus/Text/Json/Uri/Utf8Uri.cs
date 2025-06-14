@@ -111,6 +111,56 @@ namespace Corvus.Text.Json.Internal
             FoundNonAscii = 0x8
         }
 
+        internal static bool ParseUriInfo(ReadOnlySpan<byte> uriString, Utf8UriKind uriKind, bool requireAbsolute, bool allowIri, bool allowUNCPath, out Utf8UriOffset uriInfo, out Flags resultFlags)
+        {
+            Utf8UriParser? syntax = null;
+            Flags flags = Flags.Zero;
+            Utf8UriParsingError err = ParseScheme(uriString, ref flags, ref syntax);
+
+            if ((flags & Flags.HasUnicode) != 0 && !allowIri)
+            {
+                uriInfo = default;
+                resultFlags = flags;
+                return false;
+            }
+
+            // We won't use User factory for these errors
+            if (uriKind != Utf8UriKind.Absolute && err != Utf8UriParsingError.None)
+            {
+                // If it looks as a relative Uri, custom factory is ignored
+                if (!requireAbsolute && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
+                {
+                    resultFlags = flags | Flags.UserEscaped;
+                    return GetUriInfoForRelativeReference(uriString, allowIri, out uriInfo);
+                    
+                }
+
+                uriInfo = default;
+                resultFlags = flags;
+                return false;
+            }
+
+            // Cannot be relative Uri if came here
+            Debug.Assert(syntax != null);
+            bool result = ParseCore(err, ref flags, ref syntax, uriKind, uriString, requireAbsolute, allowUNCPath, out uriInfo);
+            if (!result)
+            {
+                uriInfo = default;
+                resultFlags = flags;
+                return false;
+            }
+
+            if ((flags & Flags.HasUnicode) != 0 && !allowIri)
+            {
+                uriInfo = default;
+                resultFlags = flags;
+                return false;
+            }
+
+            resultFlags = flags;
+            return true;
+        }
+
         internal static bool Validate(ReadOnlySpan<byte> uriString, Utf8UriKind uriKind, bool requireAbsolute, bool allowIri, bool allowUNCPath)
         {
             Utf8UriParser? syntax = null;
@@ -201,15 +251,60 @@ namespace Corvus.Text.Json.Internal
             return ValidateRelativeReference(uriString, iriParsing);
         }
 
+        private static unsafe bool GetUriInfoForRelativeReference(ReadOnlySpan<byte> uriString, bool iriParsing, out Utf8UriOffset uriInfo)
+        {
+            Utf8UriOffset info = default;
+            int length = uriString.Length;
+
+            info.End = (ushort)length;
+            int queryIdx = uriString.IndexOf((byte)'?');
+            int hashIdx = uriString.IndexOf((byte)'#');
+
+
+            if (hashIdx > 0)
+            {
+                info.Fragment = (ushort)hashIdx;
+            }
+            else
+            {
+                info.Fragment = info.End;
+            }
+
+            if (queryIdx > 0)
+            {
+                info.Query = (ushort)queryIdx;
+            }
+            else
+            {
+                info.Query = info.Fragment;
+            }
+
+            int idx = 0;
+            if (ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, queryIdx, hashIdx))
+            {
+                uriInfo = info;
+                return true;
+            }
+
+            uriInfo = default;
+            return false;
+        }
+
         private static unsafe bool ValidateRelativeReference(ReadOnlySpan<byte> uriString, bool iriParsing)
         {
             int length = uriString.Length;
 
             int idx = 0;
             int queryIdx = uriString.IndexOf((byte)'?');
-
             int hashIdx = uriString.IndexOf((byte)'#');
 
+            return ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, queryIdx, hashIdx);
+
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static unsafe bool ValidateRelativeReferenceCore(ReadOnlySpan<byte> uriString, bool iriParsing, int length, ref int idx, int queryIdx, int hashIdx)
+        {
             if (idx < length && uriString[idx] is not ((byte)'?' or (byte)'#'))
             {
                 // Check the path
@@ -236,7 +331,7 @@ namespace Corvus.Text.Json.Internal
 
             if (idx < length && uriString[idx] == '?')
             {
-                // Move past the deliimiter
+                // Move past the delimiter
                 idx++;
                 if (idx < length)
                 {
@@ -271,8 +366,119 @@ namespace Corvus.Text.Json.Internal
             }
 
             return true;
-
         }
+
+        private static bool ParseCore(Utf8UriParsingError err, ref Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, bool requireAbsolute, bool allowUNCPath, out Utf8UriOffset uriInfo)
+        {
+            Utf8UriOffset info = default;
+            info.End = (ushort)uriString.Length;
+
+            if (err == Utf8UriParsingError.None)
+            {
+                if (IsImplicitFile(flags))
+                {
+                    // V1 compat
+                    // A relative Uri wins over implicit UNC path unless the UNC path is of the form "\\something" and
+                    // uriKind != Absolute
+                    // A relative Uri wins over implicit Unix path unless uriKind == Absolute
+                    if (NotAny(flags, Flags.DosPath) &&
+                        uriKind != Utf8UriKind.Absolute &&
+                       ((uriKind == Utf8UriKind.Relative || (uriString.Length >= 2 && (uriString[0] != (byte)'\\' || uriString[1] != (byte)'\\')))
+#if NET
+                    || (!OperatingSystem.IsWindows() && InFact(flags, Flags.UnixPath))
+#endif
+                    ))
+                    {
+                        syntax = null!; //make it be relative Uri
+                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
+                        uriInfo = info;
+                        return requireAbsolute ? false : true;
+                        // Otherwise an absolute file Uri wins when it's of the form "\\something"
+                    }
+                    //
+                    // V1 compat issue
+                    // We should support relative Uris of the form c:\bla or c:/bla
+                    //
+                    else if (uriKind == Utf8UriKind.Relative && InFact(flags, Flags.DosPath))
+                    {
+                        syntax = null!; //make it be relative Uri
+                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri                        
+                        uriInfo = info;
+                        return requireAbsolute ? false : true;
+                        // Otherwise an absolute file Uri wins when it's of the form "c:\something"
+                    }
+                }
+            }
+            else if (err > Utf8UriParsingError.LastRelativeUriOkErrIndex)
+            {
+                //This is a fatal error based solely on scheme name parsing
+                uriInfo = default;
+                return false;
+            }
+
+            if (IriParsing(syntax) && CheckForUnicodeOrEscapedUnreserved(uriString))
+            {
+                flags |= Flags.HasUnicode;
+            }
+
+            bool success = true;
+
+            if (syntax != null)
+            {
+                if ((err = PrivateParseMinimal(uriString, ref flags, ref syntax)) != Utf8UriParsingError.None)
+                {
+                    if (uriKind != Utf8UriKind.Absolute && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
+                    {
+                        // RFC 3986 Section 5.4.2 - http:(relativeUri) may be considered a valid relative Uri.
+                        syntax = null!; // convert to relative uri
+                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
+                        uriInfo = info;
+                        return true;
+                    }
+                    else
+                        success = false;
+                }
+                else if (uriKind == Utf8UriKind.Relative)
+                {
+                    // Here we know that we can create an absolute Uri, but the user has requested only a relative one
+                    success = false;
+                }
+                else
+                {
+                    success = true;
+                }
+                // will return from here
+
+                // In this scenario we need to parse the whole string
+                if (!success || !ValidateRemaining(err, ref flags, syntax, uriKind, uriString, out info))
+                {
+                    uriInfo = default;
+                    return false;
+                }
+            }
+            // If we encountered any parsing errors that indicate this may be a relative Uri,
+            // and we'll allow relative Uri's, then create one.
+            else if (err != Utf8UriParsingError.None && uriKind != Utf8UriKind.Absolute
+                && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
+            {
+                success = true;
+                flags &= (Flags.UserEscaped | Flags.HasUnicode); // the only flags that makes sense for a relative uri
+            }
+            else
+            {
+                success = false;
+            }
+
+            if (!allowUNCPath && (flags & Flags.UncPath) != 0)
+            {
+                uriInfo = default;
+                return false;
+            }
+
+            uriInfo = success ? info : default;
+            return success;
+        }
+
 
         private static bool ValidateCore(Utf8UriParsingError err, ref Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, bool requireAbsolute, bool allowUNCPath)
         {
@@ -349,7 +555,7 @@ namespace Corvus.Text.Json.Internal
                 // will return from here
 
                 // In this scenario we need to parse the whole string
-                if (!ValidateRemaining(err, ref flags, syntax, uriKind, uriString))
+                if (!success || !ValidateRemaining(err, ref flags, syntax, uriKind, uriString, out _))
                 {
                     return false;
                 }
@@ -375,7 +581,7 @@ namespace Corvus.Text.Json.Internal
             return success;
         }
 
-        private static Utf8UriInfo EnsureUriInfo(Utf8UriParser syntax, ref Flags flags, ReadOnlySpan<byte> uriString)
+        private static Utf8UriOffset EnsureUriInfo(Utf8UriParser syntax, ref Flags flags, ReadOnlySpan<byte> uriString)
         {
             Debug.Assert((flags & Flags.MinimalUriInfoSet) == 0);
             return CreateUriInfo(syntax, ref flags, uriString);
@@ -387,12 +593,12 @@ namespace Corvus.Text.Json.Internal
         // This will create the info based on the copied parser context.
         // If multi-threading, this method may do duplicated yet harmless work.
         //
-        private static unsafe Utf8UriInfo CreateUriInfo(Utf8UriParser syntax, ref Flags flags, ReadOnlySpan<byte> uriString)
+        private static unsafe Utf8UriOffset CreateUriInfo(Utf8UriParser syntax, ref Flags flags, ReadOnlySpan<byte> uriString)
         {
-            Utf8UriInfo info = new Utf8UriInfo();
+            Utf8UriOffset info = new Utf8UriOffset();
 
             // This will be revisited in ParseRemaining but for now just have it at least uriString.Length
-            info.Offset.End = (ushort)uriString.Length;
+            info.End = (ushort)uriString.Length;
 
             if (UserDrivenParsing(flags))
                 goto Done;
@@ -408,7 +614,7 @@ namespace Corvus.Text.Json.Internal
                 while (Utf8UriHelper.IsLWS(uriString[idx]))
                 {
                     ++idx;
-                    ++info.Offset.Scheme;
+                    ++info.Scheme;
                 }
 
                 if (InFact(flags, Flags.UncPath))
@@ -430,7 +636,7 @@ namespace Corvus.Text.Json.Internal
 
                 while (uriString[idx++] != (byte)':')
                 {
-                    ++info.Offset.Scheme;
+                    ++info.Scheme;
                 }
 
                 if ((flags & Flags.AuthorityFound) != 0)
@@ -455,7 +661,7 @@ namespace Corvus.Text.Json.Internal
 
             // Some schemes (mailto) do not have Authority-based syntax, still they do have a port
             if (syntax.DefaultPort != Utf8UriParser.NoDefaultPort)
-                info.Offset.PortValue = (ushort)syntax.DefaultPort;
+                info.PortValue = (ushort)syntax.DefaultPort;
 
             //Here we set the indexes for already parsed components
             if ((flags & Flags.HostTypeMask) == Flags.UnknownHostType
@@ -463,9 +669,10 @@ namespace Corvus.Text.Json.Internal
                 )
             {
                 //there is no Authority component defined
-                info.Offset.User = (ushort)(flags & Flags.IndexMask);
-                info.Offset.Host = info.Offset.User;
-                info.Offset.Path = info.Offset.User;
+                info.User = (ushort)(flags & Flags.IndexMask);
+                info.Host = info.User;
+                info.Path = info.User;
+                info.Port = info.User;
                 flags &= ~Flags.IndexMask;
                 if (notCanonicalScheme)
                 {
@@ -474,13 +681,13 @@ namespace Corvus.Text.Json.Internal
                 goto Done;
             }
 
-            info.Offset.User = (ushort)idx;
+            info.User = (ushort)idx;
 
             //Basic Host Type does not have userinfo and port
             if (HostType(flags) == Flags.BasicHostType)
             {
-                info.Offset.Host = (ushort)idx;
-                info.Offset.Path = (ushort)(flags & Flags.IndexMask);
+                info.Host = (ushort)idx;
+                info.Path = (ushort)(flags & Flags.IndexMask);
                 flags &= ~Flags.IndexMask;
                 goto Done;
             }
@@ -493,11 +700,11 @@ namespace Corvus.Text.Json.Internal
                     ++idx;
                 }
                 ++idx;
-                info.Offset.Host = (ushort)idx;
+                info.Host = (ushort)idx;
             }
             else
             {
-                info.Offset.Host = (ushort)idx;
+                info.Host = (ushort)idx;
             }
 
             //Now reload the end of the parsed host
@@ -515,22 +722,22 @@ namespace Corvus.Text.Json.Internal
             }
 
             //Guessing this is a path start
-            info.Offset.Path = (ushort)idx;
+            info.Path = (ushort)idx;
 
             // parse Port if any. The new spec allows a port after ':' to be empty (assuming default?)
             bool notEmpty = false;
             // Note we already checked on general port syntax in ParseMinimal()
 
-            if (idx < info.Offset.End)
+            if (idx < info.End)
             {
                 fixed (byte* userString = uriString)
                 {
                     if (userString[idx] == (byte)':')
                     {
                         int port = 0;
-
+                        info.Port = (ushort)idx;
                         //Check on some non-canonical cases http://host:0324/, http://host:03, http://host:0, etc
-                        if (++idx < info.Offset.End)
+                        if (++idx < info.End)
                         {
                             port = userString[idx] - (byte)'0';
                             if ((uint)port <= ((byte)'9' - (byte)'0'))
@@ -540,7 +747,7 @@ namespace Corvus.Text.Json.Internal
                                 {
                                     flags |= (Flags.PortNotCanonical | Flags.E_PortNotCanonical);
                                 }
-                                for (++idx; idx < info.Offset.End; ++idx)
+                                for (++idx; idx < info.End; ++idx)
                                 {
                                     int val = userString[idx] - (byte)'0';
                                     if ((uint)val > ((byte)'9' - (byte)'0'))
@@ -553,7 +760,7 @@ namespace Corvus.Text.Json.Internal
                         }
                         if (notEmpty && syntax.DefaultPort != port)
                         {
-                            info.Offset.PortValue = (ushort)port;
+                            info.PortValue = (ushort)port;
                             flags |= Flags.NotDefaultPort;
                         }
                         else
@@ -562,7 +769,7 @@ namespace Corvus.Text.Json.Internal
                             //not follow to canonical rules
                             flags |= (Flags.PortNotCanonical | Flags.E_PortNotCanonical);
                         }
-                        info.Offset.Path = (ushort)idx;
+                        info.Path = (ushort)idx;
                     }
                 }
             }
@@ -579,12 +786,11 @@ namespace Corvus.Text.Json.Internal
         //  - continues parsing starting the path position
         //  - Sets the offsets of remaining components
         //  - Sets the Canonicalization flags if applied
-        //  - Will NOT create MoreInfo members
         //
-        private unsafe static bool ValidateRemaining(Utf8UriParsingError err, ref Flags flags, Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString)
+        private unsafe static bool ValidateRemaining(Utf8UriParsingError err, ref Flags flags, Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, out Utf8UriOffset uriInfo)
         {
             // ensure we parsed up to the path
-            Utf8UriInfo info = EnsureUriInfo(syntax, ref flags, uriString);
+            Utf8UriOffset info = EnsureUriInfo(syntax, ref flags, uriString);
 
             Flags cF = Flags.Zero;
 
@@ -592,7 +798,7 @@ namespace Corvus.Text.Json.Internal
                 goto Done;
 
             // Do we have to continue building Iri'zed string from original string
-            int idx = info.Offset.Scheme;
+            int idx = info.Scheme;
             int length = uriString.Length;
             Check result = Check.None;
             Utf8UriSyntaxFlags syntaxFlags = syntax.Flags;
@@ -627,8 +833,8 @@ namespace Corvus.Text.Json.Internal
                 //Check the form of the user info
                 if ((flags & Flags.HasUserInfo) != 0)
                 {
-                    idx = info.Offset.User;
-                    result = CheckCanonical(str, ref idx, info.Offset.Host, (byte)'@', syntax, ref flags);
+                    idx = info.User;
+                    result = CheckCanonical(str, ref idx, info.Host, (byte)'@', syntax, ref flags);
                     if ((result & Check.DisplayCanonical) == 0)
                     {
                         cF |= Flags.UserNotCanonical;
@@ -652,22 +858,9 @@ namespace Corvus.Text.Json.Internal
             // Parsing the Path if any
             //
             // For iri parsing if we found unicode the idx has offset into _originalUnicodeString..
-            // so restart parsing from there and make info.Offset.Path as uriString.Length
+            // so restart parsing from there and make info.Path as uriString.Length
 
-            idx = info.Offset.Path;
-
-            if (IsImplicitFile(flags) || (syntaxFlags & Utf8UriSyntaxFlags.MayHaveQuery) == 0)
-            {
-                idx = uriString.Length;
-            }
-            else
-            {
-                idx = uriString.IndexOf((byte)'?');
-                if (idx == -1)
-                {
-                    idx = uriString.Length;
-                }
-            }
+            idx = info.Path;
 
             fixed (byte* str = uriString)
             {
@@ -692,7 +885,7 @@ namespace Corvus.Text.Json.Internal
                 // We use special syntax flag to check if the path is rooted, i.e. has a first slash
                 //
                 if (((flags & Flags.AuthorityFound) != 0) && ((syntaxFlags & Utf8UriSyntaxFlags.PathIsRooted) != 0)
-                    && (info.Offset.Path == length || (str[info.Offset.Path] != '/' && str[info.Offset.Path] != (byte)'\\')))
+                    && (info.Path == length || (str[info.Path] != '/' && str[info.Path] != (byte)'\\')))
                 {
                     cF |= Flags.FirstSlashAbsent;
                 }
@@ -771,7 +964,7 @@ namespace Corvus.Text.Json.Internal
             //Now we've got to parse the Query if any. Note that Query requires the presence of '?'
             //
 
-            info.Offset.Query = (ushort)idx;
+            info.Query = (ushort)idx;
 
             fixed (byte* str = uriString)
             {
@@ -805,7 +998,7 @@ namespace Corvus.Text.Json.Internal
                 }
             }
 
-            info.Offset.Fragment = (ushort)idx;
+            info.Fragment = (ushort)idx;
 
             fixed (byte* str = uriString)
             {
@@ -835,11 +1028,12 @@ namespace Corvus.Text.Json.Internal
                     }
                 }
             }
-            info.Offset.End = (ushort)idx;
+            info.End = (ushort)idx;
 
         Done:
             cF |= Flags.AllUriInfoSet;
 
+            uriInfo = info;
             return (cF & Flags.E_NonCanonical) == 0;
         }
 
@@ -1923,9 +2117,9 @@ namespace Corvus.Text.Json.Internal
 #else
         internal static bool ContainsAnyInRange(ReadOnlySpan<byte> source, byte start, byte end)
         {
-            for(int i = 0; i < source.Length; ++i)
+            for (int i = 0; i < source.Length; ++i)
             {
-                if (source[i]  >= start && source[i] <= end)
+                if (source[i] >= start && source[i] <= end)
                 {
                     return true;
                 }
@@ -2029,7 +2223,7 @@ namespace Corvus.Text.Json.Internal
 #if NET
             return Ascii.EqualsIgnoreCase(uriString.Slice(0, asciiSpan.Length), asciiSpan);
 #else
-            for(int i = 0; i < asciiSpan.Length; i++)
+            for (int i = 0; i < asciiSpan.Length; i++)
             {
                 if (uriString[i] != asciiSpan[i] && char.ToLowerInvariant((char)uriString[i]) != char.ToLowerInvariant((char)asciiSpan[i]))
                 {
@@ -2050,7 +2244,7 @@ namespace Corvus.Text.Json.Internal
 #if NET
             return Ascii.EqualsIgnoreCase(uriString, asciiSpan);
 #else
-            for(int i = 0; i < asciiSpan.Length; i++)
+            for (int i = 0; i < asciiSpan.Length; i++)
             {
                 if (uriString[i] != asciiSpan[i] && char.ToLowerInvariant((char)uriString[i]) != char.ToLowerInvariant((char)asciiSpan[i]))
                 {

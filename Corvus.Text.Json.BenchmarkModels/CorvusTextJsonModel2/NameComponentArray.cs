@@ -15,7 +15,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    internal NameComponentArray(IJsonDocument parent, int idx)
+    private NameComponentArray(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -194,12 +194,12 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
         }
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source value, int initialCapacity = 1)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        Builder.BuildValue(builder, ref cvb);
+        value.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;

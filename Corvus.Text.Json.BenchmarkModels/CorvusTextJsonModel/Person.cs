@@ -38,7 +38,7 @@ public readonly struct Person : IJsonElement<Person>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Name, out PersonName value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out PersonName value))
             {
                 return value;
             }
@@ -51,7 +51,7 @@ public readonly struct Person : IJsonElement<Person>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Age, out Age value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Age, out Age value))
             {
                 return value;
             }
@@ -64,7 +64,7 @@ public readonly struct Person : IJsonElement<Person>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.CompetedInYears, out CompetedInYears value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYears, out CompetedInYears value))
             {
                 return value;
             }
@@ -242,7 +242,7 @@ public readonly struct Person : IJsonElement<Person>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -254,7 +254,7 @@ public readonly struct Person : IJsonElement<Person>
         return documentBuilder;
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -288,7 +288,7 @@ public readonly struct Person : IJsonElement<Person>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Name, out PersonName.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out PersonName.Mutable value))
                 {
                     return value;
                 }
@@ -301,7 +301,7 @@ public readonly struct Person : IJsonElement<Person>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Age, out Age.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Age, out Age.Mutable value))
                 {
                     return value;
                 }
@@ -314,7 +314,7 @@ public readonly struct Person : IJsonElement<Person>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.CompetedInYears, out CompetedInYears.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYears, out CompetedInYears.Mutable value))
                 {
                     return value;
                 }
@@ -328,7 +328,7 @@ public readonly struct Person : IJsonElement<Person>
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Name, out Mutable element))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out Mutable element))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);
@@ -350,7 +350,7 @@ public readonly struct Person : IJsonElement<Person>
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.Age, out Mutable element))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Age, out Mutable element))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);
@@ -372,7 +372,7 @@ public readonly struct Person : IJsonElement<Person>
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.CompetedInYears, out Mutable element))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYears, out Mutable element))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);

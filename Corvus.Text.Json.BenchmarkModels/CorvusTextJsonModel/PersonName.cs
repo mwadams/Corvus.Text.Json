@@ -38,7 +38,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out NameComponent value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponent value))
             {
                 return value;
             }
@@ -51,7 +51,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.LastName, out NameComponent value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out NameComponent value))
             {
                 return value;
             }
@@ -64,7 +64,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out OtherNames value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames value))
             {
                 return value;
             }
@@ -286,7 +286,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out NameComponent.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out NameComponent.Mutable value))
                 {
                     return value;
                 }
@@ -299,7 +299,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.LastName, out NameComponent.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out NameComponent.Mutable value))
                 {
                     return value;
                 }
@@ -312,7 +312,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out OtherNames.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out OtherNames.Mutable value))
                 {
                     return value;
                 }
@@ -326,7 +326,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.FirstName, out Mutable element))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Mutable element))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);
@@ -348,7 +348,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.LastName, out Mutable element))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out Mutable element))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);
@@ -370,7 +370,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNamesEscaped.OtherNames, out Mutable element))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNames, out Mutable element))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);

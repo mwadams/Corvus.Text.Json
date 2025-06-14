@@ -14,7 +14,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    internal OtherNames(IJsonDocument parent, int idx)
+    private OtherNames(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -54,12 +54,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public static explicit operator NameComponent(in OtherNames value)
     {
-        return new(value._parent, value._idx);
+        return NameComponent.From(value);
     }
 
     public static explicit operator NameComponentArray(in OtherNames value)
     {
-        return new(value._parent, value._idx);
+        return NameComponentArray.From(value);
     }
 
     public static bool operator ==(OtherNames left, OtherNames right)
@@ -119,12 +119,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, int year, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source value, int initialCapacity = 1)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        cvb.AddItem(year);
+        value.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -169,6 +169,18 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         CheckValidInstance();
 
         _parent.WriteElementTo(_idx, writer);
+    }
+
+    public bool TryGetAsNameComponent(out NameComponent result)
+    {
+        result = NameComponent.From(this);
+        return result.IsSchemaMatch();
+    }
+
+    public bool TryGetAsNameComponentArray(out NameComponentArray result)
+    {
+        result = NameComponentArray.From(this);
+        return result.IsSchemaMatch();
     }
 
     /// <summary>

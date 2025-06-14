@@ -5,6 +5,8 @@ Console.WriteLine();
 Console.WriteLine("************");
 Console.WriteLine();
 
+JsonReference reference = JsonReference.Create("note:example%20Schemas/Person.json?foo=bar#/$defs/Person"u8);
+
 // Parse a document in the usual way
 using ParsedJsonDocument<JsonElement> documentB1 = ParsedJsonDocument<JsonElement>.Parse(
         """
@@ -282,7 +284,7 @@ Console.WriteLine(builder.RootElement.ToString());
 
 int[] years = [2012, 2016, 2024];
 
-using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocument(
+using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocumentBuilder(
     workspace,
     age: 51,
     name: new(static (ref personName) =>
@@ -313,7 +315,7 @@ Console.WriteLine();
 
 Console.WriteLine(docBuilder.RootElement.ToString());
 
-using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocument(
+using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocumentBuilder(
     workspace,
     age: 51,
     name: new((ref personName) =>
@@ -347,7 +349,7 @@ Person.Mutable mutablePerson = docBuilder.RootElement;
 Person person = docBuilder.RootElement;
 Person.Mutable isItOK = (Person.Mutable)person; // This will throw if `person` wasn't created in a mutable document.
 
-using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocument(
+using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocumentBuilder(
     workspace,
     age: person.Age, // Happily assign an existing instance, will not copy
     name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
@@ -406,3 +408,5 @@ catch (InvalidOperationException ex)
 }
 
 bool result = person == lastName;
+
+var nameComponentBuilder = NameComponent.CreateDocumentBuilder(workspace, "foo"u8);

@@ -1308,6 +1308,7 @@ namespace Corvus.Text.Json
 #if NET
         public static JsonElementB CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElementB(parentDocument, parentDocumentIndex);
 #endif
+        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null) => true;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => $"JsonElementB: ValueKind = {ValueKind} : \"{ToString()}\"";

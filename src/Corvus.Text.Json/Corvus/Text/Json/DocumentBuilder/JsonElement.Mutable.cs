@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 
@@ -294,7 +293,7 @@ namespace Corvus.Text.Json
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private JsonTokenType TokenType
+            private readonly JsonTokenType TokenType
             {
                 get
                 {
@@ -308,7 +307,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public JsonValueKind ValueKind => TokenType.ToValueKind();
+            public readonly JsonValueKind ValueKind => TokenType.ToValueKind();
 
             /// <summary>
             ///   Get the value at a specified index when the current value is a
@@ -323,7 +322,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public Mutable this[int index]
+            public readonly Mutable this[int index]
             {
                 get
                 {
@@ -340,7 +339,7 @@ namespace Corvus.Text.Json
 
             public static explicit operator Mutable(JsonElement value)
             {
-                if (value._parent is not IMutableJsonDocument doc)
+                if (value._parent is not IMutableJsonDocument)
                 {
                     ThrowHelper.ThrowFormatException();
                     // We will never get here
@@ -371,7 +370,7 @@ namespace Corvus.Text.Json
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool Equals(object? obj)
+            public override readonly bool Equals(object? obj)
             {
                 return (obj is IJsonElement other && Equals(new JsonElement(other.ParentDocument, other.ParentDocumentIndex)))
                     || (obj is null && this.IsNull());
@@ -379,14 +378,14 @@ namespace Corvus.Text.Json
 
             [CLSCompliant(false)]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool Equals<T>(T other)
+            public readonly bool Equals<T>(T other)
                 where T : struct, IJsonElement
             {
                 return JsonElementHelpers.DeepEquals(this, other);
             }
 
             [CLSCompliant(false)]
-            public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+            public readonly JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
             {
                 return workspace.CreateDocumentBuilder<Mutable, Mutable>(this);
             }
@@ -413,7 +412,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public int GetArrayLength()
+            public readonly int GetArrayLength()
             {
                 CheckValidInstance();
 
@@ -430,7 +429,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public int GetPropertyCount()
+            public readonly int GetPropertyCount()
             {
                 CheckValidInstance();
 
@@ -464,7 +463,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public Mutable GetProperty(string propertyName)
+            public readonly Mutable GetProperty(string propertyName)
             {
                 ArgumentNullException.ThrowIfNull(propertyName);
 
@@ -504,7 +503,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public Mutable GetProperty(ReadOnlySpan<char> propertyName)
+            public readonly Mutable GetProperty(ReadOnlySpan<char> propertyName)
             {
                 if (TryGetProperty(propertyName, out Mutable property))
                 {
@@ -544,7 +543,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="EnumerateObject"/>
-            public Mutable GetProperty(ReadOnlySpan<byte> utf8PropertyName)
+            public readonly Mutable GetProperty(ReadOnlySpan<byte> utf8PropertyName)
             {
                 if (TryGetProperty(utf8PropertyName, out Mutable property))
                 {
@@ -584,7 +583,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="EnumerateObject"/>
-            public bool TryGetProperty(string propertyName, out Mutable value)
+            public readonly bool TryGetProperty(string propertyName, out Mutable value)
             {
                 ArgumentNullException.ThrowIfNull(propertyName);
 
@@ -618,7 +617,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetProperty(ReadOnlySpan<char> propertyName, out Mutable value)
+            public readonly bool TryGetProperty(ReadOnlySpan<char> propertyName, out Mutable value)
             {
                 CheckValidInstance();
 
@@ -654,7 +653,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, out Mutable value)
+            public readonly bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, out Mutable value)
             {
                 CheckValidInstance();
 
@@ -675,17 +674,19 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool GetBoolean()
+            public readonly bool GetBoolean()
             {
                 // CheckValidInstance is redundant.  Asking for the type will
                 // return None, which then throws the same exception in the return statement.
 
                 JsonTokenType type = TokenType;
 
+#pragma warning disable IDE0075 // Simplify conditional expression
                 return
                     type == JsonTokenType.True ? true :
                     type == JsonTokenType.False ? false :
                     ThrowJsonElementWrongTypeException(type);
+#pragma warning restore IDE0075 // Simplify conditional expression
 
                 static bool ThrowJsonElementWrongTypeException(JsonTokenType actualType)
                 {
@@ -707,14 +708,14 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public string? GetString()
+            public readonly string? GetString()
             {
                 CheckValidInstance();
 
                 return _parent.GetString(_idx, JsonTokenType.String);
             }
 
-            public UnescapedUtf8JsonString GetUtf8String()
+            public readonly UnescapedUtf8JsonString GetUtf8String()
             {
                 CheckValidInstance();
 
@@ -738,7 +739,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetBytesFromBase64([NotNullWhen(true)] out byte[]? value)
+            public readonly bool TryGetBytesFromBase64([NotNullWhen(true)] out byte[]? value)
             {
                 CheckValidInstance();
 
@@ -762,7 +763,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public byte[] GetBytesFromBase64()
+            public readonly byte[] GetBytesFromBase64()
             {
                 if (!TryGetBytesFromBase64(out byte[]? value))
                 {
@@ -790,7 +791,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public bool TryGetSByte(out sbyte value)
+            public readonly bool TryGetSByte(out sbyte value)
             {
                 CheckValidInstance();
 
@@ -811,7 +812,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public sbyte GetSByte()
+            public readonly sbyte GetSByte()
             {
                 if (TryGetSByte(out sbyte value))
                 {
@@ -838,7 +839,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetByte(out byte value)
+            public readonly bool TryGetByte(out byte value)
             {
                 CheckValidInstance();
 
@@ -861,7 +862,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public byte GetByte()
+            public readonly byte GetByte()
             {
                 if (TryGetByte(out byte value))
                 {
@@ -888,7 +889,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetInt16(out short value)
+            public readonly bool TryGetInt16(out short value)
             {
                 CheckValidInstance();
 
@@ -908,7 +909,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public short GetInt16()
+            public readonly short GetInt16()
             {
                 if (TryGetInt16(out short value))
                 {
@@ -936,7 +937,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public bool TryGetUInt16(out ushort value)
+            public readonly bool TryGetUInt16(out ushort value)
             {
                 CheckValidInstance();
 
@@ -960,7 +961,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public ushort GetUInt16()
+            public readonly ushort GetUInt16()
             {
                 if (TryGetUInt16(out ushort value))
                 {
@@ -987,7 +988,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetInt32(out int value)
+            public readonly bool TryGetInt32(out int value)
             {
                 CheckValidInstance();
 
@@ -1007,7 +1008,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public int GetInt32()
+            public readonly int GetInt32()
             {
                 if (!TryGetInt32(out int value))
                 {
@@ -1035,7 +1036,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public bool TryGetUInt32(out uint value)
+            public readonly bool TryGetUInt32(out uint value)
             {
                 CheckValidInstance();
 
@@ -1059,7 +1060,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public uint GetUInt32()
+            public readonly uint GetUInt32()
             {
                 if (!TryGetUInt32(out uint value))
                 {
@@ -1086,7 +1087,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetInt64(out long value)
+            public readonly bool TryGetInt64(out long value)
             {
                 CheckValidInstance();
 
@@ -1109,7 +1110,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public long GetInt64()
+            public readonly long GetInt64()
             {
                 if (!TryGetInt64(out long value))
                 {
@@ -1137,7 +1138,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public bool TryGetUInt64(out ulong value)
+            public readonly bool TryGetUInt64(out ulong value)
             {
                 CheckValidInstance();
 
@@ -1161,7 +1162,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public ulong GetUInt64()
+            public readonly ulong GetUInt64()
             {
                 if (!TryGetUInt64(out ulong value))
                 {
@@ -1197,7 +1198,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetDouble(out double value)
+            public readonly bool TryGetDouble(out double value)
             {
                 CheckValidInstance();
 
@@ -1228,7 +1229,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public double GetDouble()
+            public readonly double GetDouble()
             {
                 if (!TryGetDouble(out double value))
                 {
@@ -1264,7 +1265,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetSingle(out float value)
+            public readonly bool TryGetSingle(out float value)
             {
                 CheckValidInstance();
 
@@ -1295,7 +1296,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public float GetSingle()
+            public readonly float GetSingle()
             {
                 if (!TryGetSingle(out float value))
                 {
@@ -1323,7 +1324,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="GetRawText"/>
-            public bool TryGetDecimal(out decimal value)
+            public readonly bool TryGetDecimal(out decimal value)
             {
                 CheckValidInstance();
 
@@ -1347,7 +1348,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="GetRawText"/>
-            public decimal GetDecimal()
+            public readonly decimal GetDecimal()
             {
                 if (!TryGetDecimal(out decimal value))
                 {
@@ -1376,7 +1377,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="GetRawText"/>
-            public bool TryGetInt128(out Int128 value)
+            public readonly bool TryGetInt128(out Int128 value)
             {
                 CheckValidInstance();
 
@@ -1400,7 +1401,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="GetRawText"/>
-            public Int128 GetInt128()
+            public readonly Int128 GetInt128()
             {
                 if (!TryGetInt128(out Int128 value))
                 {
@@ -1429,7 +1430,7 @@ namespace Corvus.Text.Json
             /// </exception>
             /// <seealso cref="GetRawText"/>
             [CLSCompliant(false)]
-            public bool TryGetUInt128(out UInt128 value)
+            public readonly bool TryGetUInt128(out UInt128 value)
             {
                 CheckValidInstance();
 
@@ -1454,7 +1455,7 @@ namespace Corvus.Text.Json
             /// </exception>
             /// <seealso cref="GetRawText"/>
             [CLSCompliant(false)]
-            public UInt128 GetUInt128()
+            public readonly UInt128 GetUInt128()
             {
                 if (!TryGetUInt128(out UInt128 value))
                 {
@@ -1482,7 +1483,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="GetRawText"/>
-            public bool TryGetHalf(out Half value)
+            public readonly bool TryGetHalf(out Half value)
             {
                 CheckValidInstance();
 
@@ -1506,7 +1507,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="GetRawText"/>
-            public Half GetHalf()
+            public readonly Half GetHalf()
             {
                 if (!TryGetHalf(out Half value))
                 {
@@ -1534,7 +1535,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetLocalDate(out LocalDate value)
+            public readonly bool TryGetLocalDate(out LocalDate value)
             {
                 CheckValidInstance();
 
@@ -1558,7 +1559,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public LocalDate GetLocalDate()
+            public readonly LocalDate GetLocalDate()
             {
                 if (!TryGetLocalDate(out LocalDate value))
                 {
@@ -1585,7 +1586,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetOffsetTime(out OffsetTime value)
+            public readonly bool TryGetOffsetTime(out OffsetTime value)
             {
                 CheckValidInstance();
 
@@ -1609,7 +1610,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public OffsetTime GetOffsetTime()
+            public readonly OffsetTime GetOffsetTime()
             {
                 if (!TryGetOffsetTime(out OffsetTime value))
                 {
@@ -1636,7 +1637,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetOffsetDateTime(out OffsetDateTime value)
+            public readonly bool TryGetOffsetDateTime(out OffsetDateTime value)
             {
                 CheckValidInstance();
 
@@ -1660,7 +1661,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public OffsetDateTime GetOffsetDateTime()
+            public readonly OffsetDateTime GetOffsetDateTime()
             {
                 if (!TryGetOffsetDateTime(out OffsetDateTime value))
                 {
@@ -1687,7 +1688,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetOffsetDate(out OffsetDate value)
+            public readonly bool TryGetOffsetDate(out OffsetDate value)
             {
                 CheckValidInstance();
 
@@ -1711,7 +1712,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public OffsetDate GetOffsetDate()
+            public readonly OffsetDate GetOffsetDate()
             {
                 if (!TryGetOffsetDate(out OffsetDate value))
                 {
@@ -1738,7 +1739,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetPeriod(out Period value)
+            public readonly bool TryGetPeriod(out Period value)
             {
                 CheckValidInstance();
 
@@ -1762,7 +1763,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public Period GetPeriod()
+            public readonly Period GetPeriod()
             {
                 if (!TryGetPeriod(out Period value))
                 {
@@ -1789,7 +1790,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetDateTime(out DateTime value)
+            public readonly bool TryGetDateTime(out DateTime value)
             {
                 CheckValidInstance();
 
@@ -1813,7 +1814,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public DateTime GetDateTime()
+            public readonly DateTime GetDateTime()
             {
                 if (!TryGetDateTime(out DateTime value))
                 {
@@ -1840,7 +1841,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetDateTimeOffset(out DateTimeOffset value)
+            public readonly bool TryGetDateTimeOffset(out DateTimeOffset value)
             {
                 CheckValidInstance();
 
@@ -1864,7 +1865,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public DateTimeOffset GetDateTimeOffset()
+            public readonly DateTimeOffset GetDateTimeOffset()
             {
                 if (!TryGetDateTimeOffset(out DateTimeOffset value))
                 {
@@ -1891,7 +1892,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public bool TryGetGuid(out Guid value)
+            public readonly bool TryGetGuid(out Guid value)
             {
                 CheckValidInstance();
 
@@ -1915,7 +1916,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             /// <seealso cref="ToString"/>
-            public Guid GetGuid()
+            public readonly Guid GetGuid()
             {
                 if (!TryGetGuid(out Guid value))
                 {
@@ -1925,14 +1926,14 @@ namespace Corvus.Text.Json
                 return value;
             }
 
-            internal string GetPropertyName()
+            internal readonly string GetPropertyName()
             {
                 CheckValidInstance();
 
                 return _parent.GetNameOfPropertyValue(_idx);
             }
 
-            internal ReadOnlySpan<byte> GetPropertyNameRaw()
+            internal readonly ReadOnlySpan<byte> GetPropertyNameRaw()
             {
                 CheckValidInstance();
 
@@ -1948,28 +1949,28 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public string GetRawText()
+            public readonly string GetRawText()
             {
                 CheckValidInstance();
 
                 return _parent.GetRawValueAsString(_idx);
             }
 
-            internal RawUtf8JsonString GetRawValue()
+            internal readonly RawUtf8JsonString GetRawValue()
             {
                 CheckValidInstance();
 
                 return _parent.GetRawValue(_idx, includeQuotes: true);
             }
 
-            internal string GetPropertyRawText()
+            internal readonly string GetPropertyRawText()
             {
                 CheckValidInstance();
 
                 return _parent.GetPropertyRawValueAsString(_idx);
             }
 
-            internal bool ValueIsEscaped
+            internal readonly bool ValueIsEscaped
             {
                 get
                 {
@@ -1979,7 +1980,7 @@ namespace Corvus.Text.Json
                 }
             }
 
-            internal ReadOnlySpan<byte> ValueSpan
+            internal readonly ReadOnlySpan<byte> ValueSpan
             {
                 get
                 {
@@ -2009,7 +2010,7 @@ namespace Corvus.Text.Json
             ///   This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
             ///   the result of calling <see cref="GetString" />, but avoids creating the string instance.
             /// </remarks>
-            public bool ValueEquals(string? text)
+            public readonly bool ValueEquals(string? text)
             {
                 // CheckValidInstance is done in the helper
 
@@ -2037,7 +2038,7 @@ namespace Corvus.Text.Json
             ///   <paramref name="utf8Text" /> with the result of calling <see cref="GetString" />, but avoids creating the
             ///   string instances.
             /// </remarks>
-            public bool ValueEquals(ReadOnlySpan<byte> utf8Text)
+            public readonly bool ValueEquals(ReadOnlySpan<byte> utf8Text)
             {
                 // CheckValidInstance is done in the helper
 
@@ -2067,7 +2068,7 @@ namespace Corvus.Text.Json
             ///   This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
             ///   the result of calling <see cref="GetString" />, but avoids creating the string instance.
             /// </remarks>
-            public bool ValueEquals(ReadOnlySpan<char> text)
+            public readonly bool ValueEquals(ReadOnlySpan<char> text)
             {
                 // CheckValidInstance is done in the helper
 
@@ -2082,21 +2083,21 @@ namespace Corvus.Text.Json
                 return TextEqualsHelper(text, isPropertyName: false);
             }
 
-            internal bool TextEqualsHelper(ReadOnlySpan<byte> utf8Text, bool isPropertyName, bool shouldUnescape)
+            internal readonly bool TextEqualsHelper(ReadOnlySpan<byte> utf8Text, bool isPropertyName, bool shouldUnescape)
             {
                 CheckValidInstance();
 
                 return _parent.TextEquals(_idx, utf8Text, isPropertyName, shouldUnescape);
             }
 
-            internal bool TextEqualsHelper(ReadOnlySpan<char> text, bool isPropertyName)
+            internal readonly bool TextEqualsHelper(ReadOnlySpan<char> text, bool isPropertyName)
             {
                 CheckValidInstance();
 
                 return _parent.TextEquals(_idx, text, isPropertyName);
             }
 
-            internal bool ValueIsEscapedHelper(bool isPropertyName)
+            internal readonly bool ValueIsEscapedHelper(bool isPropertyName)
             {
                 CheckValidInstance();
 
@@ -2116,7 +2117,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public void WriteTo(Utf8JsonWriter writer)
+            public readonly void WriteTo(Utf8JsonWriter writer)
             {
                 ArgumentNullException.ThrowIfNull(writer);
 
@@ -2138,7 +2139,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public ArrayEnumerator<Mutable> EnumerateArray()
+            public readonly ArrayEnumerator<Mutable> EnumerateArray()
             {
                 CheckValidInstance();
 
@@ -2165,7 +2166,7 @@ namespace Corvus.Text.Json
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
             [CLSCompliant(false)]
-            public ObjectEnumerator<Mutable> EnumerateObject()
+            public readonly ObjectEnumerator<Mutable> EnumerateObject()
             {
                 CheckValidInstance();
 
@@ -2213,7 +2214,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public override string ToString()
+            public override readonly string ToString()
             {
                 if (_parent == null || _documentVersion != _parent.Version)
                 {
@@ -2224,7 +2225,7 @@ namespace Corvus.Text.Json
             }
 
             /// <inheritdoc />
-            public override int GetHashCode()
+            public override readonly int GetHashCode()
             {
                 if (_parent is null)
                 {
@@ -2242,7 +2243,7 @@ namespace Corvus.Text.Json
             ///   A JsonElement which can be safely stored beyond the lifetime of the
             ///   original <see cref="IMutableJsonDocument"/>.
             /// </returns>
-            public JsonElement Clone()
+            public readonly JsonElement Clone()
             {
                 CheckValidInstance();
 
@@ -4192,7 +4193,7 @@ namespace Corvus.Text.Json
             }
 #endif
 
-            private void CheckValidInstance()
+            private readonly void CheckValidInstance()
             {
                 if (_parent == null)
                 {
@@ -4205,26 +4206,28 @@ namespace Corvus.Text.Json
                 }
             }
 
-            void IJsonElement.CheckValidInstance() => CheckValidInstance();
+            readonly void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
             static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new Mutable(parentDocument, parentDocumentIndex);
 #endif
 
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private string DebuggerDisplay => $"JsonElement.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+            public readonly bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null) => JsonSchema.IsMatch(_parent, _idx, resultsCollector);
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IJsonDocument IJsonElement.ParentDocument => _parent;
+            private readonly string DebuggerDisplay => $"JsonElement.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            int IJsonElement.ParentDocumentIndex => _idx;
+            readonly IJsonDocument IJsonElement.ParentDocument => _parent;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            JsonTokenType IJsonElement.TokenType => TokenType;
+            readonly int IJsonElement.ParentDocumentIndex => _idx;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            JsonValueKind IJsonElement.ValueKind => ValueKind;
+            readonly JsonTokenType IJsonElement.TokenType => TokenType;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            readonly JsonValueKind IJsonElement.ValueKind => ValueKind;
         }
     }
 }

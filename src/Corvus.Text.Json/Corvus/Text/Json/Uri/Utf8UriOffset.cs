@@ -5,18 +5,13 @@ using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json.Internal
 {
-    internal ref struct Utf8UriInfo
-    {
-        public Utf8UriOffset Offset;
-    };
-
-
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal ref struct Utf8UriOffset
+    internal struct Utf8UriOffset
     {
         public ushort Scheme;
         public ushort User;
         public ushort Host;
+        public ushort Port;
         public ushort PortValue;
         public ushort Path;
         public ushort Query;

@@ -7,7 +7,9 @@ using BenchmarkDotNet.Attributes;
 using CommunityToolkit.HighPerformance.Buffers;
 using Corvus.Text.Json;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace BuildAndWriteBenchmarks;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Construct elements from a JSON element.
@@ -63,7 +65,7 @@ public class BenchmarkBuildAndWrite
     {
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using JsonDocumentBuilder<Person.Mutable> person = Person.CreateDocument(
+        using JsonDocumentBuilder<Person.Mutable> person = Person.CreateDocumentBuilder(
             workspace,
             age: 51,
             name: new(static (ref personName) =>

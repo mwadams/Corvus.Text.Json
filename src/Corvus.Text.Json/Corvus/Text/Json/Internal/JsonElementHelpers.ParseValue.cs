@@ -99,6 +99,6 @@ namespace Corvus.Text.Json.Internal
             bool ret = ParsedJsonDocument<T>.TryParseValue(ref reader, out ParsedJsonDocument<T>? document, shouldThrow: false, useArrayPools: false);
             element = document?.RootElement;
             return ret;
-        }
+        }       
     }
 }

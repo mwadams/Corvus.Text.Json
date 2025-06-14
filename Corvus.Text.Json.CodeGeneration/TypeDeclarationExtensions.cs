@@ -563,6 +563,18 @@ public static class TypeDeclarationExtensions
     /// <param name="typeDeclaration">The type declaration.</param>
     /// <returns>The curiously recursive interface name in the form <c>IJsonElement&lt;DotNetTypeName()&gt;</c>.</returns>
 
+    public static string GetIJsonElementInterface(this TypeDeclaration typeDeclaration, bool isMutable)
+    {
+        return isMutable ? GetIMutableJsonElementInterface(typeDeclaration) : GetIJsonElementInterface(typeDeclaration);
+    }
+
+
+    /// <summary>
+    /// Gets the IJsonElement interface implemented by the type.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <returns>The curiously recursive interface name in the form <c>IJsonElement&lt;DotNetTypeName()&gt;</c>.</returns>
+
     public static string GetIJsonElementInterface(this TypeDeclaration typeDeclaration)
     {
         return $"IJsonElement<{typeDeclaration.DotnetTypeName()}>";

@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Corvus.Text.Json.Internal
 {
@@ -223,18 +222,18 @@ namespace Corvus.Text.Json.Internal
                 +"\u3041\u3097\u3099\u30A0\u30A1\u30FB\u30FC\u3100\u3105\u312D\u3131\u318F\u3190\u31B8\u31F0\u321D\u3220\u3244\u3251\u327C\u327F\u32CC\u32D0\u32FF\u3300\u3377\u337B\u33DE\u33E0\u33FF\u3400\u4DB6\u4E00\u9FA6\uA000\uA48D\uA490\uA4C7\uAC00\uD7A4\uF900\uFA2E\uFA30\uFA6B\uFB00\uFB07\uFB13\uFB18\uFB1D\uFB37\uFB38\uFB3D\uFB3E\uFB3F\uFB40\uFB42\uFB43\uFB45\uFB46\uFBB2\uFBD3\uFD3E\uFD50\uFD90\uFD92\uFDC8\uFDF0\uFDFD\uFE00\uFE10\uFE20\uFE24\uFE62\uFE63\uFE64\uFE67\uFE69\uFE6A\uFE70\uFE75\uFE76\uFEFD\uFF04\uFF05\uFF0B\uFF0C\uFF10\uFF1A\uFF1C\uFF1F\uFF21\uFF3B\uFF3E\uFF3F\uFF40\uFF5B\uFF5C\uFF5D\uFF5E\uFF5F\uFF66\uFFBF\uFFC2\uFFC8\uFFCA\uFFD0\uFFD2\uFFD8\uFFDA\uFFDD\uFFE0\uFFE7\uFFE8\uFFEF\uFFFC\uFFFE"],
         ];
 
-        public static bool ValidateCategoryName(ReadOnlySpan<char> categoryName, bool invert)
+        public static bool ValidateCategoryName(ReadOnlySpan<char> categoryName)
         {
             if (!HasKey(s_definedCategories, categoryName) ||
                 categoryName.SequenceEqual(InternalRegexIgnoreCase))
             {
-                return ValidateRangesFromProperty(categoryName, invert);
+                return ValidateRangesFromProperty(categoryName);
             }
 
             return true;
         }
 
-        private static bool ValidateRangesFromProperty(ReadOnlySpan<char> capname, bool invert)
+        private static bool ValidateRangesFromProperty(ReadOnlySpan<char> capname)
         {
             int min = 0;
             int max = s_propTable.Length;
@@ -321,31 +320,27 @@ namespace Corvus.Text.Json.Internal
         {
             Debug.Assert((uint)comparison <= char.MaxValue);
 
-            switch (char.GetUnicodeCategory((char)comparison))
+            return char.GetUnicodeCategory((char)comparison) switch
             {
-                case UnicodeCategory.ClosePunctuation:
-                case UnicodeCategory.ConnectorPunctuation:
-                case UnicodeCategory.Control:
-                case UnicodeCategory.DashPunctuation:
-                case UnicodeCategory.DecimalDigitNumber:
-                case UnicodeCategory.FinalQuotePunctuation:
-                case UnicodeCategory.InitialQuotePunctuation:
-                case UnicodeCategory.LineSeparator:
-                case UnicodeCategory.OpenPunctuation:
-                case UnicodeCategory.OtherNumber:
-                case UnicodeCategory.OtherPunctuation:
-                case UnicodeCategory.ParagraphSeparator:
-                case UnicodeCategory.SpaceSeparator:
-                    // All chars in these categories meet the criteria that the only way
-                    // `char.ToLower(toTest, AnyCulture) == charInAboveCategory` is when
-                    // toTest == charInAboveCategory.
-                    return false;
-
-                default:
-                    // We don't know (without testing the character against every other
-                    // character), so assume it does.
-                    return true;
-            }
+                // All chars in these categories meet the criteria that the only way
+                // `char.ToLower(toTest, AnyCulture) == charInAboveCategory` is when
+                // toTest == charInAboveCategory.
+                UnicodeCategory.ClosePunctuation or
+                UnicodeCategory.ConnectorPunctuation or
+                UnicodeCategory.Control or
+                UnicodeCategory.DashPunctuation or
+                UnicodeCategory.DecimalDigitNumber or
+                UnicodeCategory.FinalQuotePunctuation or
+                UnicodeCategory.InitialQuotePunctuation or
+                UnicodeCategory.LineSeparator or
+                UnicodeCategory.OpenPunctuation or
+                UnicodeCategory.OtherNumber or
+                UnicodeCategory.OtherPunctuation or
+                UnicodeCategory.ParagraphSeparator or
+                UnicodeCategory.SpaceSeparator => false,
+                _ => true,// We don't know (without testing the character against every other
+                          // character), so assume it does.
+            };
         }
     }
 }

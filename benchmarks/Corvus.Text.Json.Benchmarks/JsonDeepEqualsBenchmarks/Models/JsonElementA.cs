@@ -1302,6 +1302,7 @@ namespace Corvus.Text.Json
         }
 
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
+        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null) => true;
 
 #if NET
         public static JsonElementA CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElementA(parentDocument, parentDocumentIndex);

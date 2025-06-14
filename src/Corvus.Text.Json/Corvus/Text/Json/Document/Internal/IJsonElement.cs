@@ -33,5 +33,7 @@ namespace Corvus.Text.Json.Internal
         void CheckValidInstance();
 
         void WriteTo(Utf8JsonWriter writer);
+
+        bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null);
     }
 }

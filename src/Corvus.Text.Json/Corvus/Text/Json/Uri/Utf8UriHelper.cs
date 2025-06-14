@@ -12,9 +12,12 @@ namespace Corvus.Text.Json.Internal
         // true for all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~'
         public static readonly SearchValues<char> Unreserved =
             SearchValues.Create("-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~");
+        public static readonly SearchValues<byte> UnreservedBytes =
+            SearchValues.Create("-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"u8);
 #else
         // true for all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~'
         public static ReadOnlySpan<char> Unreserved => "-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
+        public static ReadOnlySpan<byte> UnreservedBytes => "-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"u8;
 #endif
         internal static bool IsLWS(byte b)
         {

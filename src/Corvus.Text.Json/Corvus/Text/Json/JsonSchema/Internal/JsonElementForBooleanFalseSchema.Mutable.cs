@@ -13,7 +13,7 @@ namespace Corvus.Text.Json
         ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
         /// </summary>
         [DebuggerDisplay("{DebuggerDisplay,nq}")]
-        public partial struct Mutable : IMutableJsonElement<Mutable>
+        public readonly partial struct Mutable : IMutableJsonElement<Mutable>
         {
             private readonly IMutableJsonDocument _parent;
             private readonly int _idx;
@@ -34,7 +34,7 @@ namespace Corvus.Text.Json
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private JsonTokenType TokenType
+            private readonly JsonTokenType TokenType
             {
                 get
                 {
@@ -80,7 +80,7 @@ namespace Corvus.Text.Json
 
             public static explicit operator Mutable(JsonElementForBooleanFalseSchema value)
             {
-                if (value._parent is not IMutableJsonDocument doc)
+                if (value._parent is not IMutableJsonDocument)
                 {
                     ThrowHelper.ThrowFormatException();
                     // We will never get here
@@ -118,14 +118,14 @@ namespace Corvus.Text.Json
 
             [CLSCompliant(false)]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool Equals<T>(T other)
+            public readonly bool Equals<T>(T other)
                 where T : struct, IJsonElement
             {
                 return JsonElementHelpers.DeepEquals(this, other);
             }
 
             [CLSCompliant(false)]
-            public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+            public readonly JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
             {
                 return workspace.CreateDocumentBuilder<Mutable, Mutable>(this);
             }
@@ -199,7 +199,7 @@ namespace Corvus.Text.Json
             /// <exception cref="ObjectDisposedException">
             ///   The parent <see cref="JsonDocument"/> has been disposed.
             /// </exception>
-            public override string ToString()
+            public override readonly string ToString()
             {
                 if (_parent == null || _documentVersion != _parent.Version)
                 {
@@ -210,7 +210,7 @@ namespace Corvus.Text.Json
             }
 
             /// <inheritdoc />
-            public override int GetHashCode()
+            public override readonly int GetHashCode()
             {
                 if (_parent is null)
                 {
@@ -228,14 +228,14 @@ namespace Corvus.Text.Json
             ///   A JsonElement which can be safely stored beyond the lifetime of the
             ///   original <see cref="IMutableJsonDocument"/>.
             /// </returns>
-            public JsonElement Clone()
+            public readonly JsonElement Clone()
             {
                 CheckValidInstance();
 
                 return _parent.CloneElement(_idx);
             }
 
-            private void CheckValidInstance()
+            private readonly void CheckValidInstance()
             {
                 if (_parent == null)
                 {
@@ -254,14 +254,16 @@ namespace Corvus.Text.Json
             static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new Mutable(parentDocument, parentDocumentIndex);
 #endif
 
+            public readonly bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null) => JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string DebuggerDisplay => $"JsonElementForBooleanFalseSchema.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IJsonDocument IJsonElement.ParentDocument => _parent;
+            readonly IJsonDocument IJsonElement.ParentDocument => _parent;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            int IJsonElement.ParentDocumentIndex => _idx;
+            readonly int IJsonElement.ParentDocumentIndex => _idx;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             JsonTokenType IJsonElement.TokenType => TokenType;

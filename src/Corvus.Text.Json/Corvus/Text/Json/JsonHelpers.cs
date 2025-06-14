@@ -6,7 +6,6 @@ using System.Collections;
 #endif
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {

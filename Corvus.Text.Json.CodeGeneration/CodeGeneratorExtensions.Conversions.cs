@@ -3,15 +3,62 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Web;
 using Corvus.Json.CodeGeneration;
-using Microsoft.CodeAnalysis.CSharp;
+
 
 namespace Corvus.Text.Json.CodeGeneration
 {
     internal static partial class CodeGeneratorExtensions
     {
+        /// <summary>
+        /// Appends <c>TryGet()</c> methods for composition types.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="rootDeclaration">The type declaration which is the basis of the composition types.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendTryGetAsCompositionTypeMethods(
+            this CodeGenerator generator,
+            TypeDeclaration rootDeclaration)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            HashSet<string> visitedTypes = [];
+
+            foreach (TypeDeclaration t in rootDeclaration.CompositionTypeDeclarations())
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                if (!visitedTypes.Add(t.FullyQualifiedDotnetTypeName()))
+                {
+                    continue;
+                }
+
+                string methodName = generator.GetMethodNameInScope("TryGetAs", suffix: t.DotnetTypeName());
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("/// <summary>")
+                    .AppendLineIndent("/// Gets the value as a <see cref=\"", t.FullyQualifiedDotnetTypeName(), "\" />.")
+                    .AppendLineIndent("/// </summary>")
+                    .AppendLineIndent("/// <param name=\"result\">The result of the conversions.</param>")
+                    .AppendLineIndent("/// <returns><see langword=\"true\" /> if the conversion was valid.</returns>")
+                    .AppendLineIndent("public bool ", methodName, "(out ", t.FullyQualifiedDotnetTypeName(), " result)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("result = ", t.FullyQualifiedDotnetTypeName(), ".From(this);")
+                        .AppendLineIndent("return result.IsSchemaMatch();")
+                    .PopIndent()
+                    .AppendLineIndent("}");
+            }
+
+            return generator;
+        }
+
         /// <summary>
         /// Appends conversions from dotnet type of the <paramref name="rootDeclaration"/>
         /// to the composition types.
@@ -149,18 +196,19 @@ namespace Corvus.Text.Json.CodeGeneration
                 string implictOrExplicitFrom = isImplicitFrom ? "implicit" : "explicit";
                 string implictOrExplicitTo = isImplicitTo ? "implicit" : "explicit";
 
+                string subschemaTypeName = subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName();
                 generator
                     .AppendSeparatorLine()
                     .AppendLineIndent("/// <summary>")
                     .AppendLineIndent("/// Conversion to <see cref=\"", subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName(), "\"/>.")
                     .AppendLineIndent("/// </summary>")
                     .AppendLineIndent("/// <param name=\"value\">The value from which to convert.</param>")
-                    .AppendIndent("public static ", implictOrExplicitTo, " operator ", subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName(), "(")
+                    .AppendIndent("public static ", implictOrExplicitTo, " operator ", subschemaTypeName, "(")
                     .Append(rootDeclaration.DotnetTypeName())
                     .AppendLine(" value)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("return new(value._parent, value._idx);")
+                        .AppendLineIndent("return ", subschemaTypeName, "From(value);")
                     .PopIndent()
                     .AppendLineIndent("}");
 

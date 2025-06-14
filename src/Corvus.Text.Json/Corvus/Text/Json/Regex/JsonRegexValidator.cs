@@ -3,9 +3,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace Corvus.Text.Json.Internal
 {
@@ -566,7 +564,7 @@ namespace Corvus.Text.Json.Internal
                                     return false;
                                 }
 
-                                if (!JsonRegexCharClass.ValidateCategoryName(propertyName, ch != 'p'))
+                                if (!JsonRegexCharClass.ValidateCategoryName(propertyName))
                                 {
                                     return false;
                                 }
@@ -1139,7 +1137,7 @@ namespace Corvus.Text.Json.Internal
                         return false;
                     }
 
-                    if (!JsonRegexCharClass.ValidateCategoryName(propertyName, ch != 'p'))
+                    if (!JsonRegexCharClass.ValidateCategoryName(propertyName))
                     {
                         node = JsonRegexNode.Null;
                         return false;

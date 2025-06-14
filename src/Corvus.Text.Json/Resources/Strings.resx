@@ -947,4 +947,7 @@
   <data name="JsonSchema_ExpectedRegex" xml:space="preserve">
     <value>Expected a regular expression specification.</value>
   </data>
+  <data name="InvalidJsonReference" xml:space="preserve">
+    <value>The value is not a valid JSON reference.</value>
+  </data>
 </root>

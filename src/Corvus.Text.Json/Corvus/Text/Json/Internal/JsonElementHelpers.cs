@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
-using System.Buffers.Text;
 
 
 #if !NET
@@ -10,8 +9,6 @@ using System.Collections.Concurrent;
 #endif
 
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 
 #if !NET
 using System.Reflection;

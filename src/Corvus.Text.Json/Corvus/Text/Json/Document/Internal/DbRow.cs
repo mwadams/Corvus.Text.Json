@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#pragma warning disable IDE0032 // We do not want to use autoproperties here.
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -103,6 +104,6 @@ namespace Corvus.Text.Json.Internal
         }
 
         internal bool IsSimpleValue => TokenType >= JsonTokenType.PropertyName;
-        internal bool HasPropertyMap => this._sizeLengthOrPropertyMapIndexUnion <= 0;
+        internal bool HasPropertyMap => _sizeLengthOrPropertyMapIndexUnion <= 0;
     }
 }

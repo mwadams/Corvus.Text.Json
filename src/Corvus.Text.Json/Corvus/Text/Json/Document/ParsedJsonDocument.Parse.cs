@@ -731,7 +731,7 @@ namespace Corvus.Text.Json
                 }
             }
 
-            return new ParsedJsonDocument<T>(utf8Json, database, isDisposable: false);
+            return new ParsedJsonDocument<T>(utf8Json, database, isDisposable: false);            
         }
 
         private static ArraySegment<byte> ReadToEnd(Stream stream)
