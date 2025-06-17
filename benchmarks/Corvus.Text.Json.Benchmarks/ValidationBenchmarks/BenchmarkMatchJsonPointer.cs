@@ -51,7 +51,7 @@ public class BenchmarkMatchJsonPointer
 
         try
         {            
-            return JsonSchemaMatching.MatchJsonPointer("/foo/-/bar/~1~0.1~0~1~1"u8, DummyPathProvider, ref context);
+            return JsonSchemaEvaluation.MatchJsonPointer("/foo/-/bar/~1~0.1~0~1~1"u8, "dummy"u8, ref context);
         }
         finally
         {

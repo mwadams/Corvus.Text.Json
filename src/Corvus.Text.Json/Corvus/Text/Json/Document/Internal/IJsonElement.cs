@@ -34,6 +34,6 @@ namespace Corvus.Text.Json.Internal
 
         void WriteTo(Utf8JsonWriter writer);
 
-        bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null);
+        bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null);
     }
 }

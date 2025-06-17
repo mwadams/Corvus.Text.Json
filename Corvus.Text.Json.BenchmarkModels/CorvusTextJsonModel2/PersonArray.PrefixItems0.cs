@@ -203,9 +203,9 @@ public readonly partial struct PersonArray
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
         {
-            return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+            return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
         }
         private void CheckValidInstance()
         {
@@ -329,9 +329,9 @@ public readonly partial struct PersonArray
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+            public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
             {
-                return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+                return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
             }
 
             public static Mutable From<T>(in T instance)
@@ -518,7 +518,7 @@ public readonly partial struct PersonArray
 
         public static class JsonSchema
         {
-            private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/prefixItems/0"u8, buffer, out written);
+            private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/prefixItems/0"u8, buffer, out written);
 
             /// <summary>
             /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -526,7 +526,7 @@ public readonly partial struct PersonArray
             /// <param name="parentDocument">The parent document.</param>
             /// <param name="parentIndex">The parent index.</param>
             /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
-            internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+            internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
             {
                 // You're not allowed to ask about non-value-like entities
                 Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
@@ -539,7 +539,7 @@ public readonly partial struct PersonArray
 
                 JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-                if (!JsonSchemaMatching.MatchTypeNumber(tokenType, Keywords_230108d7f4a74123bc27f0a38784d172.Type, ref context))
+                if (!JsonSchemaEvaluation.MatchTypeNumber(tokenType, "type"u8, ref context))
                 {
                     if (!context.HasCollector)
                     {
@@ -551,7 +551,7 @@ public readonly partial struct PersonArray
                 context.PopSchemaLocation();
             }
 
-            internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
+            internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
             {
                 JsonSchemaContext context = JsonSchemaContext.BeginContext(
                     parentDocument,
@@ -562,7 +562,7 @@ public readonly partial struct PersonArray
 
                 try
                 {
-                    ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                    Evaluate(parentDocument, parentIndex, ref context);
                     return context.IsMatch;
                 }
                 finally
@@ -585,7 +585,7 @@ public readonly partial struct PersonArray
                         useEvaluatedItems: false, // We don't use evaluated items
                         useEvaluatedProperties: false,
                         propertyName,
-                        schemaEvaluationPath: schemaEvaluationPath);
+                        reducedEvaluationPath: schemaEvaluationPath);
             }
             internal static JsonSchemaContext PushChildContext(
                 IJsonDocument parentDocument,

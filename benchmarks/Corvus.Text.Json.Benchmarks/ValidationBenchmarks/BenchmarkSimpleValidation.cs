@@ -47,6 +47,6 @@ public class BenchmarkSimpleValidation
     [Benchmark]
     public bool ValidateCorvusTextJson()
     {
-        return documentB1!.RootElement.IsSchemaMatch();
+        return documentB1!.RootElement.EvaluateSchema();
     }
 }

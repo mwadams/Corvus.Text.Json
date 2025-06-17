@@ -8,22 +8,22 @@ namespace Corvus.Text.Json.Internal
     /// <summary>
     /// Support for JSON Schema matching implementations.
     /// </summary>
-    public static partial class JsonSchemaMatching
+    public static partial class JsonSchemaEvaluation
     {
         public static readonly JsonSchemaMessageProvider IgnoredNotTypeObject = static (buffer, out written) => IgnoredNotType("object"u8, buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedTypeObject = static (buffer, out written) => ExpectedType("object"u8, buffer, out written);
 
         [CLSCompliant(false)]
-        public static bool MatchTypeObject(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
+        public static bool MatchTypeObject(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
         {
             if (tokenType != JsonTokenType.StartObject)
             {
-                context.Matched(false, ExpectedTypeObject, schemaEvaluationPath: typeKeyword);
+                context.EvaluatedKeyword(false, ExpectedTypeObject, typeKeyword);
                 return false;
             }
             else
             {
-                context.Matched(true, schemaEvaluationPath: typeKeyword);
+                context.EvaluatedKeyword(true, null, typeKeyword);
             }
 
             return true;

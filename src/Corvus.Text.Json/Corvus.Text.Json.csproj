@@ -90,6 +90,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Corvus\Collections\Generic\ValueStack.cs" />
+    <Compile Include="Corvus\Collections\Generic\ValueStack.Pop.cs" />
     <Compile Include="Corvus\NodaTimeExtensions\GregorianYearMonthDayCalculator.cs" />
     <Compile Include="Corvus\NodaTimeExtensions\Period.cs" />
     <Compile Include="Corvus\NodaTimeExtensions\PeriodBuilder.cs" />
@@ -130,7 +132,11 @@
     <Compile Include="Corvus\Runtime\InteropServices\JsonMarshal.cs" />
     <!--<Compile Include="Corvus\Text\Json\AppContextSwitchHelper.cs" />-->
     <Compile Include="Corvus\Text\Json\BitStack.cs" />
+    <Compile Include="Corvus\Text\Json\Compatibility\CompatibilityResultsCollector.cs" />
     <Compile Include="Corvus\Text\Json\Compatibility\Polyfills.cs" />
+    <Compile Include="Corvus\Text\Json\Compatibility\ValidationContext.cs" />
+    <Compile Include="Corvus\Text\Json\Compatibility\ValidationLevel.cs" />
+    <Compile Include="Corvus\Text\Json\Compatibility\ValidationResult.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\IMutableJsonElement{T}.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\ComplexValueBuilder.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\IMutableJsonDocument.cs" />
@@ -190,6 +196,9 @@
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Array.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Object.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaMatching.Number.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaResultsCollectorCache.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsCollector.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsLevel.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexCaseBehavior.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexCharClass.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexNode.cs" />

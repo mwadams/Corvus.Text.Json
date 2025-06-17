@@ -81,17 +81,17 @@ namespace Corvus.Text.Json.CodeGeneration
                 .PopMetadata(JsonPropertyNamesEscapedClassNameKey);
         }
 
-        public static CodeGenerator AppendIsSchemaMatchMethod(this CodeGenerator generator)
+        public static CodeGenerator AppendEvaluateSchemaMethod(this CodeGenerator generator)
         {
             return generator
-                .ReserveName("IsSchemaMatch")
+                .ReserveName("EvaluateSchema")
                 .AppendSeparatorLine()
                 .AppendBlockIndent(
                     """
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+                    public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
                     {
-                        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+                        return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
                     }
                     """);
         }

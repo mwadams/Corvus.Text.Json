@@ -13,8 +13,6 @@ public class JsonSchemaMatchingNumberTests
         return JsonSchemaContext.BeginContext(new DummyDocument(tokenType), 0, false, false, collector);
     }
 
-    private bool DummyPathProvider(Span<byte> buffer, out int written) { written = 0; return true; }
-
     [Theory]
     [InlineData(JsonTokenType.Number, true)]
     [InlineData(JsonTokenType.String, false)]
@@ -22,7 +20,7 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchTypeNumber(tokenType, DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchTypeNumber(tokenType, "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -38,12 +36,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchInt32(
+        bool result = JsonSchemaEvaluation.MatchInt32(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -60,12 +58,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchInt32(
+        bool result = JsonSchemaEvaluation.MatchInt32(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -81,12 +79,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchUInt32(
+        bool result = JsonSchemaEvaluation.MatchUInt32(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -103,12 +101,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchUInt32(
+        bool result = JsonSchemaEvaluation.MatchUInt32(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -125,12 +123,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchInt16(
+        bool result = JsonSchemaEvaluation.MatchInt16(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -147,12 +145,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchInt16(
+        bool result = JsonSchemaEvaluation.MatchInt16(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -168,12 +166,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchUInt16(
+        bool result = JsonSchemaEvaluation.MatchUInt16(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -190,12 +188,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchSByte(
+        bool result = JsonSchemaEvaluation.MatchSByte(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -212,12 +210,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchSByte(
+        bool result = JsonSchemaEvaluation.MatchSByte(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -233,12 +231,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchByte(
+        bool result = JsonSchemaEvaluation.MatchByte(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -255,12 +253,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchByte(
+        bool result = JsonSchemaEvaluation.MatchByte(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -277,12 +275,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchInt64(
+        bool result = JsonSchemaEvaluation.MatchInt64(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -299,12 +297,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchInt64(
+        bool result = JsonSchemaEvaluation.MatchInt64(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -320,12 +318,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchUInt64(
+        bool result = JsonSchemaEvaluation.MatchUInt64(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -342,12 +340,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchUInt64(
+        bool result = JsonSchemaEvaluation.MatchUInt64(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -364,12 +362,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchInt128(
+        bool result = JsonSchemaEvaluation.MatchInt128(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -386,12 +384,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchInt128(
+        bool result = JsonSchemaEvaluation.MatchInt128(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -407,12 +405,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchUInt128(
+        bool result = JsonSchemaEvaluation.MatchUInt128(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -429,12 +427,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchUInt128(
+        bool result = JsonSchemaEvaluation.MatchUInt128(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -457,12 +455,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchDouble(
+        bool result = JsonSchemaEvaluation.MatchDouble(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -485,12 +483,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchSingle(
+        bool result = JsonSchemaEvaluation.MatchSingle(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -513,12 +511,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchHalf(
+        bool result = JsonSchemaEvaluation.MatchHalf(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
@@ -541,12 +539,12 @@ public class JsonSchemaMatchingNumberTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.Number);
-        bool result = JsonSchemaMatching.MatchDecimal(
+        bool result = JsonSchemaEvaluation.MatchDecimal(
             isNegative,
             System.Text.Encoding.UTF8.GetBytes(integral),
             System.Text.Encoding.UTF8.GetBytes(fractional),
             exponent,
-            DummyPathProvider,
+            "dummy"u8,
             ref context);
         Assert.Equal(expected, result);
         collector.AssertState();

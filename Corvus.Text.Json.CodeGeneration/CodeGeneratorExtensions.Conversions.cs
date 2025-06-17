@@ -51,7 +51,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("{")
                     .PushIndent()
                         .AppendLineIndent("result = ", t.FullyQualifiedDotnetTypeName(), ".From(this);")
-                        .AppendLineIndent("return result.IsSchemaMatch();")
+                        .AppendLineIndent("return result.EvaluateSchema();")
                     .PopIndent()
                     .AppendLineIndent("}");
             }

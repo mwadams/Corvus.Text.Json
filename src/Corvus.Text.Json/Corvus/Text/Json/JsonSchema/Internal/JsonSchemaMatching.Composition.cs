@@ -6,7 +6,7 @@ namespace Corvus.Text.Json.Internal
     /// <summary>
     /// Support for JSON Schema matching implementations.
     /// </summary>
-    public static partial class JsonSchemaMatching
+    public static partial class JsonSchemaEvaluation
     {
         public static readonly JsonSchemaMessageProvider MatchedMoreThanOneSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedMoreThanOneSchema.AsSpan(), buffer, out written);
         public static readonly JsonSchemaMessageProvider MatchedNoSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedNoSchema.AsSpan(), buffer, out written);

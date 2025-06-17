@@ -49,14 +49,12 @@ public class BenchmarkMatchIdnEmail
 
         try
         {
-            return JsonSchemaMatching.MatchIdnEmail("Dörte@Sörensen.example.com"u8, DummyPathProvider, ref context);
+            return JsonSchemaEvaluation.MatchIdnEmail("Dörte@Sörensen.example.com"u8, "dummy"u8, ref context);
         }
         finally
         {
             context.Dispose();
         }
     }
-
-    private static bool DummyPathProvider(Span<byte> buffer, out int written) { written = 0; return true; }
 
 }

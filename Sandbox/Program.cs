@@ -112,11 +112,11 @@ using ParsedJsonDocument<Person> documentB7 = ParsedJsonDocument<Person>.Parse(
         }
         """);
 
-Console.WriteLine(documentB3.RootElement.IsSchemaMatch() ? "Person B3 is a match" : "Person B3 is not a match");
-Console.WriteLine(documentB4.RootElement.IsSchemaMatch() ? "Person B4 is a match" : "Person B4 is not a match");
-Console.WriteLine(documentB5.RootElement.IsSchemaMatch() ? "Person B5 is a match" : "Person B5 is not a match");
-Console.WriteLine(documentB6.RootElement.IsSchemaMatch() ? "Person B6 is a match" : "Person B6 is not a match");
-Console.WriteLine(documentB7.RootElement.IsSchemaMatch() ? "Person B7 is a match" : "Person B7 is not a match");
+Console.WriteLine(documentB3.RootElement.EvaluateSchema() ? "Person B3 is a match" : "Person B3 is not a match");
+Console.WriteLine(documentB4.RootElement.EvaluateSchema() ? "Person B4 is a match" : "Person B4 is not a match");
+Console.WriteLine(documentB5.RootElement.EvaluateSchema() ? "Person B5 is a match" : "Person B5 is not a match");
+Console.WriteLine(documentB6.RootElement.EvaluateSchema() ? "Person B6 is a match" : "Person B6 is not a match");
+Console.WriteLine(documentB7.RootElement.EvaluateSchema() ? "Person B7 is a match" : "Person B7 is not a match");
 
 
 

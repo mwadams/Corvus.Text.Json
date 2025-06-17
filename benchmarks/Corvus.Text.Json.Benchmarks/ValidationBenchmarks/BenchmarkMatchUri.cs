@@ -49,14 +49,11 @@ public class BenchmarkMatchUri
 
         try
         {
-            return JsonSchemaMatching.MatchUri("http://foo.bar/?q=Test%20URL-encoded%20stuff"u8, DummyPathProvider, ref context);
+            return JsonSchemaEvaluation.MatchUri("http://foo.bar/?q=Test%20URL-encoded%20stuff"u8, "dummy"u8, ref context);
         }
         finally
         {
             context.Dispose();
         }
     }
-
-    private static bool DummyPathProvider(Span<byte> buffer, out int written) { written = 0; return true; }
-
 }

@@ -34,6 +34,7 @@ namespace Corvus.Text.Json.Internal
 
         private readonly IJsonSchemaResultsCollector? _resultsCollector;
         private readonly int _offset;
+        private readonly int _sequenceNumber;
 
         private int[]? _rentedBuffer;
         private uint _lengthAndUsingFeatures;
@@ -68,13 +69,14 @@ namespace Corvus.Text.Json.Internal
         }
 
 
-        private JsonSchemaContext(int[]? rentedBuffer, uint lengthAndUsingFeatures, int offset, int evaluatedCount, IJsonSchemaResultsCollector? resultsCollector = null)
+        private JsonSchemaContext(int sequenceNumber, int[]? rentedBuffer, uint lengthAndUsingFeatures, int offset, int evaluatedCount, IJsonSchemaResultsCollector? resultsCollector = null)
         {
+            _sequenceNumber = sequenceNumber;
             _rentedBuffer = rentedBuffer;
             _offset = offset;
             _resultsCollector = resultsCollector;
             _lengthAndUsingFeatures =
-                lengthAndUsingFeatures                
+                lengthAndUsingFeatures
                 | (uint)UsingFeatures.IsMatch; // But always  valid
 
 #if NET
@@ -181,7 +183,7 @@ namespace Corvus.Text.Json.Internal
             IJsonSchemaResultsCollector? resultsCollector = null)
             where T : IJsonDocument
         {
-            resultsCollector?.BeginChildContext();
+            int sequenceNumber = resultsCollector?.BeginChildContext() ?? 0;
 
             uint usingFeatures = usingEvaluatedProperties ? (uint)UsingFeatures.EvaluatedProperties : 0;
             usingFeatures |= usingEvaluatedItems ? (uint)UsingFeatures.EvaluatedItems : 0;
@@ -191,6 +193,7 @@ namespace Corvus.Text.Json.Internal
             if (usingEvaluatedProperties && valueKind == JsonTokenType.StartObject)
             {
                 return new JsonSchemaContext(
+                    sequenceNumber,
                     null,
                     usingFeatures,
                     offset: 0,
@@ -201,6 +204,7 @@ namespace Corvus.Text.Json.Internal
             if (usingEvaluatedItems && valueKind == JsonTokenType.StartArray)
             {
                 return new JsonSchemaContext(
+                    sequenceNumber,
                     null,
                     usingFeatures,
                     offset: 0,
@@ -209,6 +213,7 @@ namespace Corvus.Text.Json.Internal
             }
 
             return new JsonSchemaContext(
+                sequenceNumber,
                 null,
                 usingFeatures,
                 offset: 0,
@@ -246,9 +251,9 @@ namespace Corvus.Text.Json.Internal
             JsonSchemaPathProvider? schemaEvaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null)
         {
-            _resultsCollector?.BeginChildContext(schemaEvaluationPath, documentEvaluationPath);
+            int sequenceNumber = _resultsCollector?.BeginChildContext(schemaEvaluationPath, documentEvaluationPath) ?? 0;
 
-            return PushChildContextCore(parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+            return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }
 
         public readonly JsonSchemaContext PushChildContext(
@@ -256,12 +261,12 @@ namespace Corvus.Text.Json.Internal
             int parentDocumentIndex,
             bool useEvaluatedItems,
             bool useEvaluatedProperties,
-            ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            ReadOnlySpan<byte> escapedPropertyName,
+            JsonSchemaPathProvider? reducedEvaluationPath = null)
         {
-            _resultsCollector?.BeginChildContext(propertyName, schemaEvaluationPath);
+            int sequenceNumber = _resultsCollector?.BeginChildContext(escapedPropertyName, reducedEvaluationPath) ?? 0;
 
-            return PushChildContextCore(parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+            return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }
 
         public readonly JsonSchemaContext PushChildContext<TProviderContext>(
@@ -273,9 +278,9 @@ namespace Corvus.Text.Json.Internal
             JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath = null,
             JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath = null)
         {
-            _resultsCollector?.BeginChildContext(providerContext, schemaEvaluationPath, documentEvaluationPath);
+            int sequenceNumber = _resultsCollector?.BeginChildContext(providerContext, schemaEvaluationPath, documentEvaluationPath) ?? 0;
 
-            return PushChildContextCore(parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+            return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }
 
         /// <summary>
@@ -283,12 +288,13 @@ namespace Corvus.Text.Json.Internal
         /// </summary>
         /// <remarks>
         /// Note that this does not apply the evaluated properties/items from the child context
-        /// to the parent context.
+        /// to the parent context, but is expected to merge any messages produced in the
+        /// child context.
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CommitChildContext(bool isMatch, ref readonly JsonSchemaContext childContext, JsonSchemaMessageProvider? messageProvider = null)
         {
-            _resultsCollector?.CommitChildContext(isMatch, messageProvider);
+            _resultsCollector?.CommitChildContext(_sequenceNumber, isMatch, messageProvider);
             _rentedBuffer = childContext._rentedBuffer;
             if (isMatch)
             {
@@ -301,12 +307,9 @@ namespace Corvus.Text.Json.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Matched(
-            bool isMatch,
-            JsonSchemaMessageProvider? messageProvider = null,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        public void EvaluatedBooleanSchema(bool isMatch)
         {
-            _resultsCollector?.Matched(isMatch, messageProvider, schemaEvaluationPath);
+            _resultsCollector?.EvaluatedBooleanSchema(isMatch, null);
             if (isMatch)
             {
                 _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
@@ -318,13 +321,12 @@ namespace Corvus.Text.Json.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Matched<TProviderContext>(
+        public void EvaluatedKeyword(
             bool isMatch,
-            TProviderContext providerContext,
-            JsonSchemaMessageProvider<TProviderContext>? messageProvider = null,
-            JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath = null)
+            JsonSchemaMessageProvider? messageProvider,
+            ReadOnlySpan<byte> unescapedKeyword)
         {
-            _resultsCollector?.Matched(isMatch, providerContext, messageProvider, schemaEvaluationPath);
+            _resultsCollector?.EvaluatedKeyword(isMatch, messageProvider, unescapedKeyword);
             if (isMatch)
             {
                 _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
@@ -336,20 +338,111 @@ namespace Corvus.Text.Json.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void Ignored(
-            JsonSchemaMessageProvider? messageProvider = null,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        public void EvaluatedKeyword<TProviderContext>(
+            bool isMatch,
+            TProviderContext providerContext,
+            JsonSchemaMessageProvider<TProviderContext>? messageProvider,
+             ReadOnlySpan<byte> unescapedKeyword)
         {
-            _resultsCollector?.Ignored(messageProvider, schemaEvaluationPath);
+            _resultsCollector?.EvaluatedKeyword(isMatch, providerContext, messageProvider, unescapedKeyword);
+            if (isMatch)
+            {
+                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
+            }
+            else
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void Ignored<TProviderContext>(
-            TProviderContext providerContext,
-            JsonSchemaMessageProvider<TProviderContext>? messageProvider = null,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        public void EvaluatedKeywordForProperty(
+            bool isMatch,
+            JsonSchemaMessageProvider? messageProvider,
+            ReadOnlySpan<byte> propertyName,
+            ReadOnlySpan<byte> unescapedKeyword)
         {
-            _resultsCollector?.Ignored(providerContext, messageProvider, schemaEvaluationPath);
+            _resultsCollector?.EvaluatedKeywordForProperty(isMatch, messageProvider, propertyName, unescapedKeyword);
+            if (isMatch)
+            {
+                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
+            }
+            else
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void EvaluatedKeywordForProperty<TProviderContext>(
+            bool isMatch,
+            TProviderContext providerContext,
+            JsonSchemaMessageProvider<TProviderContext>? messageProvider,
+            ReadOnlySpan<byte> propertyName,
+            ReadOnlySpan<byte> unescapedKeyword)
+        {
+            _resultsCollector?.EvaluatedKeywordForProperty(isMatch, providerContext, messageProvider, propertyName, unescapedKeyword);
+            if (isMatch)
+            {
+                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
+            }
+            else
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void EvaluatedKeywordPath(
+            bool isMatch,
+            JsonSchemaMessageProvider messageProvider,
+            JsonSchemaPathProvider keywordPath)
+        {
+            _resultsCollector?.EvaluatedKeywordPath(isMatch, messageProvider, keywordPath);
+            if (isMatch)
+            {
+                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
+            }
+            else
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void EvaluatedKeywordPath<TProviderContext>(
+            bool isMatch,
+            TProviderContext providerContext,
+            JsonSchemaMessageProvider<TProviderContext> messageProvider,
+            JsonSchemaPathProvider<TProviderContext> keywordPath)
+        {
+            _resultsCollector?.EvaluatedKeywordPath(isMatch, providerContext, messageProvider, keywordPath);
+            if (isMatch)
+            {
+                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
+            }
+            else
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly void IgnoredKeyword(
+            JsonSchemaMessageProvider? messageProvider,
+            ReadOnlySpan<byte> encodedKeyword)
+        {
+            _resultsCollector?.IgnoredKeyword(messageProvider, encodedKeyword);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly void IgnoredKeyword<TProviderContext>(
+            TProviderContext providerContext,
+            JsonSchemaMessageProvider<TProviderContext>? messageProvider,
+            ReadOnlySpan<byte> unescapedKeyword)
+        {
+            _resultsCollector?.IgnoredKeyword(providerContext, messageProvider, unescapedKeyword);
         }
 
         /// <summary>
@@ -358,7 +451,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void PopChildContext(ref readonly JsonSchemaContext childContext)
         {
-            _resultsCollector?.PopChildContext();
+            _resultsCollector?.PopChildContext(_sequenceNumber);
             _rentedBuffer = childContext._rentedBuffer;
         }
 
@@ -510,7 +603,7 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
-        private readonly JsonSchemaContext PushChildContextCore(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties)
+        private readonly JsonSchemaContext PushChildContextCore(int sequenceNumber, IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties)
         {
             bool usesEvaluatedProperties = UseEvaluatedProperties || useEvaluatedProperties;
             bool usesEvaluatedItems = UseEvaluatedItems || useEvaluatedItems;
@@ -525,6 +618,7 @@ namespace Corvus.Text.Json.Internal
                 if (usesEvaluatedProperties && tokenType == JsonTokenType.StartObject)
                 {
                     return new JsonSchemaContext(
+                        sequenceNumber,
                         _rentedBuffer,
                         _lengthAndUsingFeatures | usingFeatures & ~(uint)UsingFeatures.IsDisposable,
                         offset: Length,
@@ -534,6 +628,7 @@ namespace Corvus.Text.Json.Internal
                 if (usesEvaluatedItems && tokenType == JsonTokenType.StartArray)
                 {
                     return new JsonSchemaContext(
+                        sequenceNumber,
                         _rentedBuffer,
                         _lengthAndUsingFeatures | usingFeatures & ~(uint)UsingFeatures.IsDisposable,
                         offset: Length,
@@ -542,6 +637,7 @@ namespace Corvus.Text.Json.Internal
             }
 
             return new JsonSchemaContext(
+                sequenceNumber,
                 _rentedBuffer,
                 _lengthAndUsingFeatures & ~(uint)UsingFeatures.IsDisposable,
                 offset: Length,

@@ -4212,7 +4212,7 @@ namespace Corvus.Text.Json
             static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new Mutable(parentDocument, parentDocumentIndex);
 #endif
 
-            public readonly bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null) => JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+            public readonly bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null) => JsonSchema.Evaluate(_parent, _idx, resultsCollector);
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly string DebuggerDisplay => $"JsonElement.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";

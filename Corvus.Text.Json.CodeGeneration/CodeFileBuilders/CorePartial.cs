@@ -65,7 +65,7 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendEqualsOverloads(typeDeclaration)
                         .AppendWriteToMethod()
                         .AppendGetHashCodeAndToStringMethods(false)
-                        .AppendIsSchemaMatchMethod()
+                        .AppendEvaluateSchemaMethod()
                         .AppendCheckValidInstance()
                         .AppendCreateInstance(typeDeclaration)
                         .AppendDebuggerDisplayProperty(typeDeclaration)

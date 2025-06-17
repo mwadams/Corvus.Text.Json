@@ -9,7 +9,7 @@ namespace Corvus.Text.Json.Internal
     /// <summary>
     /// Support for JSON Schema matching implementations.
     /// </summary>
-    public static partial class JsonSchemaMatching
+    public static partial class JsonSchemaEvaluation
     {
         public static bool SchemaLocationForIndexedKeyword(ReadOnlySpan<byte> keywordSchemaLocation, int index, Span<byte> buffer, out int written)
         {

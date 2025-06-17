@@ -56,12 +56,12 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
     [Benchmark]
     public bool ValidateCorvusTextJson()
     {
-        return documentB1!.RootElement.IsSchemaMatch();
+        return documentB1!.RootElement.EvaluateSchema();
     }
 
     [Benchmark]
     public bool ValidateCorvusTextJsonDynamic()
     {
-        return documentB2!.RootElement.IsSchemaMatch();
+        return documentB2!.RootElement.EvaluateSchema();
     }
 }

@@ -85,12 +85,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public TResult Match<TResult>(Func<NameComponent, TResult> nameComponent, Func<NameComponentArray, TResult> nameComponentArray, Func<OtherNames, TResult> noMatch)
     {
-        if (NameComponent.JsonSchema.IsMatch(_parent, _idx))
+        if (NameComponent.JsonSchema.Evaluate(_parent, _idx))
         {
             return nameComponent(NameComponent.From(this));
         }
 
-        if (NameComponentArray.JsonSchema.IsMatch(_parent, _idx))
+        if (NameComponentArray.JsonSchema.Evaluate(_parent, _idx))
         {
             return nameComponentArray(NameComponentArray.From(this));
         }
@@ -100,12 +100,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public TResult Match<TContext, TResult>(TContext context, Func<TContext, NameComponent, TResult> nameComponent, Func<TContext, NameComponentArray, TResult> nameComponentArray, Func<TContext, OtherNames, TResult> noMatch)
     {
-        if (NameComponent.JsonSchema.IsMatch(_parent, _idx))
+        if (NameComponent.JsonSchema.Evaluate(_parent, _idx))
         {
             return nameComponent(context, NameComponent.From(this));
         }
 
-        if (NameComponentArray.JsonSchema.IsMatch(_parent, _idx))
+        if (NameComponentArray.JsonSchema.Evaluate(_parent, _idx))
         {
             return nameComponentArray(context, NameComponentArray.From(this));
         }
@@ -174,13 +174,13 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     public bool TryGetAsNameComponent(out NameComponent result)
     {
         result = NameComponent.From(this);
-        return result.IsSchemaMatch();
+        return result.EvaluateSchema();
     }
 
     public bool TryGetAsNameComponentArray(out NameComponentArray result)
     {
         result = NameComponentArray.From(this);
-        return result.IsSchemaMatch();
+        return result.EvaluateSchema();
     }
 
     /// <summary>
@@ -239,9 +239,9 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+    public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
     {
-        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+        return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
     }
 
     private void CheckValidInstance()
@@ -380,9 +380,9 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
         {
-            return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+            return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
         }
 
         public static Mutable From<T>(in T instance)
@@ -600,9 +600,9 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public static class JsonSchema
     {
-        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/OtherNames"u8, buffer, out written);
-        private static readonly JsonSchemaPathProvider OneOf0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("oneOf/0/$ref"u8, buffer, out written);
-        private static readonly JsonSchemaPathProvider OneOf1SchemaEvaluationPath = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("oneOf/1/$ref"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/OtherNames"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider OneOf0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("oneOf/0/$ref"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider OneOf1SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("oneOf/1/$ref"u8, buffer, out written);
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -610,7 +610,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         /// <param name="parentDocument">The parent document.</param>
         /// <param name="parentIndex">The parent index.</param>
         /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
-        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
         {
             // You're not allowed to ask about non-value-like entities
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
@@ -626,7 +626,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             JsonSchemaContext oneOf0Context =
                 NameComponent.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf0SchemaEvaluationPath);
 
-            NameComponent.JsonSchema.ApplyJsonSchema(parentDocument, parentIndex, ref oneOf0Context);
+            NameComponent.JsonSchema.Evaluate(parentDocument, parentIndex, ref oneOf0Context);
 
             if (oneOf0Context.IsMatch)
             {
@@ -642,7 +642,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             JsonSchemaContext oneOf1Context =
                 NameComponentArray.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf1SchemaEvaluationPath);
 
-            NameComponentArray.JsonSchema.ApplyJsonSchema(parentDocument, parentIndex, ref oneOf1Context);
+            NameComponentArray.JsonSchema.Evaluate(parentDocument, parentIndex, ref oneOf1Context);
 
             if (oneOf1Context.IsMatch)
             {
@@ -657,11 +657,11 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
             if (oneOfMatchCount == 1)
             {
-                context.Matched(true, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.OneOf);
+                context.EvaluatedKeyword(true, null, "oneOf"u8);
             }
             else if (oneOfMatchCount > 1)
             {
-                context.Matched(false, JsonSchemaMatching.MatchedMoreThanOneSchema, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.OneOf);
+                context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedMoreThanOneSchema, "oneOf"u8);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
@@ -670,7 +670,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             }
             else
             {
-                context.Matched(false, JsonSchemaMatching.MatchedNoSchema, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.OneOf);
+                context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedNoSchema, "oneOf"u8);
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
@@ -681,7 +681,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             context.PopSchemaLocation();
         }
 
-        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
         {
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
@@ -692,7 +692,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
             try
             {
-                ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                Evaluate(parentDocument, parentIndex, ref context);
                 return context.IsMatch;
             }
             finally
@@ -716,7 +716,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    schemaEvaluationPath: schemaEvaluationPath);
+                    reducedEvaluationPath: schemaEvaluationPath);
         }
 
         internal static JsonSchemaContext PushChildContext(

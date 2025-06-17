@@ -11,7 +11,7 @@ namespace Corvus.Text.Json.Internal
     /// <summary>
     /// Support for JSON Schema matching implementations.
     /// </summary>
-    public static partial class JsonSchemaMatching
+    public static partial class JsonSchemaEvaluation
     {
         public static readonly JsonSchemaMessageProvider IgnoredNotTypeString = static (buffer, out written) => IgnoredNotType("string"u8, buffer, out written);
 
@@ -38,71 +38,71 @@ namespace Corvus.Text.Json.Internal
         private static readonly JsonSchemaMessageProvider ExpectedRegex = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRegex.AsSpan(), buffer, out written);
 
         [CLSCompliant(false)]
-        public static bool MatchTypeString(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
+        public static bool MatchTypeString(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
         {
             if (tokenType != JsonTokenType.String)
             {
-                context.Matched(false, ExpectedTypeString, schemaEvaluationPath: typeKeyword);
+                context.EvaluatedKeyword(false, ExpectedTypeString, typeKeyword);
                 return false;
             }
             else
             {
-                context.Matched(true, schemaEvaluationPath: typeKeyword);
+                context.EvaluatedKeyword(true, null, typeKeyword);
             }
 
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchDate(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchDate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.TryParseLocalDate(value, out _))
             {
-                context.Matched(false, messageProvider: ExpectedDate, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedDate, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchDateTime(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchDateTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.TryParseOffsetDateTime(value, out _))
             {
-                context.Matched(false, messageProvider: ExpectedDateTime, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedDateTime, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
 
         [CLSCompliant(false)]
-        public static bool MatchTime(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.TryParseOffsetTime(value, out _))
             {
-                context.Matched(false, messageProvider: ExpectedTime, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedTime, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchDuration(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchDuration(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.TryParsePeriod(value, out _))
             {
-                context.Matched(false, messageProvider: ExpectedDuration, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedDuration, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -111,15 +111,15 @@ namespace Corvus.Text.Json.Internal
 
 
         [CLSCompliant(false)]
-        public static bool MatchEmail(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchEmail(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchEmail(value))
             {
-                context.Matched(false, messageProvider: ExpectedEmail, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedEmail, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -291,15 +291,15 @@ namespace Corvus.Text.Json.Internal
 
 
         [CLSCompliant(false)]
-        public static bool MatchIdnEmail(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchIdnEmail(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchIdnEmail(value))
             {
-                context.Matched(false, messageProvider: ExpectedIdnEmail, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedIdnEmail, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -334,15 +334,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchIdnHostname(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchIdnHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchIdnHostname(value))
             {
-                context.Matched(false, messageProvider: ExpectedIdnHostname, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedIdnHostname, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -367,15 +367,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchHostname(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchHostname(value))
             {
-                context.Matched(false, messageProvider: ExpectedHostname, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedHostname, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -676,15 +676,15 @@ namespace Corvus.Text.Json.Internal
         private static bool IsVirama(int value) => ViramaTable.IndexOf(value) >= 0;
 
         [CLSCompliant(false)]
-        public static bool MatchIPV4(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchIPV4(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchIPV4(value))
             {
-                context.Matched(false, messageProvider: ExpectedIPV4, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedIPV4, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -700,15 +700,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchIPV6(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchIPV6(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchIPV6(value))
             {
-                context.Matched(false, messageProvider: ExpectedIPV6, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedIPV6, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -725,15 +725,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchUuid(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchUuid(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchUuid(value))
             {
-                context.Matched(false, messageProvider: ExpectedUuid, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUuid, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -744,15 +744,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchUri(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchUri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchUri(value))
             {
-                context.Matched(false, messageProvider: ExpectedUri, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUri, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -784,15 +784,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchIri(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchIri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchIri(value))
             {
-                context.Matched(false, messageProvider: ExpectedIri, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedIri, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -824,15 +824,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchUriReference(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchUriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchUriReference(value))
             {
-                context.Matched(false, messageProvider: ExpectedUriReference, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUriReference, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -849,15 +849,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchIriReference(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchIriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchIriReference(value))
             {
-                context.Matched(false, messageProvider: ExpectedIriReference, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedIriReference, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -873,15 +873,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchUriTemplate(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchUriTemplate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchUriTemplate(value))
             {
-                context.Matched(false, messageProvider: ExpectedUriTemplate, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUriTemplate, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -897,15 +897,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchJsonPointer(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchJsonPointer(value))
             {
-                context.Matched(false, messageProvider: ExpectedJsonPointer, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedJsonPointer, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -921,15 +921,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchRelativeJsonPointer(value))
             {
-                context.Matched(false, messageProvider: ExpectedRelativeJsonPointer, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedRelativeJsonPointer, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
@@ -945,15 +945,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         [CLSCompliant(false)]
-        public static bool MatchRegex(ReadOnlySpan<byte> value, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchRegex(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!MatchRegex(value))
             {
-                context.Matched(false, messageProvider: ExpectedRegex, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedRegex, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 

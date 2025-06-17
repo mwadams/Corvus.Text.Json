@@ -188,9 +188,9 @@ public readonly struct Age : IJsonElement<Age>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+    public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
     {
-        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+        return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
     }
     private void CheckValidInstance()
     {
@@ -314,9 +314,9 @@ public readonly struct Age : IJsonElement<Age>
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
         {
-            return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+            return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
         }
 
         public static Mutable From<T>(in T instance)
@@ -503,7 +503,7 @@ public readonly struct Age : IJsonElement<Age>
 
     public static class JsonSchema
     {
-        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/Age"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Age"u8, buffer, out written);
 
         private static bool MinimumIsNegative => false;
         private static ReadOnlySpan<byte> MinimumIntegral => "0"u8;
@@ -521,7 +521,7 @@ public readonly struct Age : IJsonElement<Age>
         /// <param name="parentDocument">The parent document.</param>
         /// <param name="parentIndex">The parent index.</param>
         /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
-        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
         {
             // You're not allowed to ask about non-value-like entities
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
@@ -537,7 +537,7 @@ public readonly struct Age : IJsonElement<Age>
             /* Number matching
              * This would be if (tokenType != JsonTokenType.Number) for the non-matching case where we have numeric keywords
              * to match, but no explicit type check */
-            if (!JsonSchemaMatching.MatchTypeNumber(tokenType, Keywords_230108d7f4a74123bc27f0a38784d172.Type, ref context))
+            if (!JsonSchemaEvaluation.MatchTypeNumber(tokenType, "type"u8, ref context))
             {
                 if (!context.HasCollector)
                 {
@@ -546,8 +546,8 @@ public readonly struct Age : IJsonElement<Age>
                 }
 
                 // Ignore remaining numerics
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeNumber, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Minimum);
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeNumber, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Maximum);
+                context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeNumber, "minimum"u8);
+                context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeNumber, "maximum"u8);
             }
             else
             {
@@ -564,7 +564,7 @@ public readonly struct Age : IJsonElement<Age>
                     MinimumFractional,
                     MinimumExponent) < 0)
                 {
-                    context.Matched(false, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Minimum);
+                    context.EvaluatedKeyword(false, null, "minimum"u8);
                     if (!context.HasCollector)
                     {
                         context.PopSchemaLocation();
@@ -573,7 +573,7 @@ public readonly struct Age : IJsonElement<Age>
                 }
                 else
                 {
-                    context.Matched(true, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Minimum);
+                    context.EvaluatedKeyword(true, null, "minimum"u8);
                 }
 
                 if (JsonElementHelpers.CompareNormalizedJsonNumbers(
@@ -586,7 +586,7 @@ public readonly struct Age : IJsonElement<Age>
                     MaximumFractional,
                     MaximumExponent) > 0)
                 {
-                    context.Matched(false, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Maximum);
+                    context.EvaluatedKeyword(false, null, "maximum"u8);
                     if (!context.HasCollector)
                     {
                         context.PopSchemaLocation();
@@ -595,14 +595,14 @@ public readonly struct Age : IJsonElement<Age>
                 }
                 else
                 {
-                    context.Matched(true, schemaEvaluationPath: Keywords_230108d7f4a74123bc27f0a38784d172.Maximum);
+                    context.EvaluatedKeyword(true, null, "maximum"u8);
                 }
             }
 
             context.PopSchemaLocation();
         }
 
-        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
+        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
         {
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
@@ -613,7 +613,7 @@ public readonly struct Age : IJsonElement<Age>
 
             try
             {
-                ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                Evaluate(parentDocument, parentIndex, ref context);
                 return context.IsMatch;
             }
             finally
@@ -636,7 +636,7 @@ public readonly struct Age : IJsonElement<Age>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    schemaEvaluationPath: schemaEvaluationPath);
+                    reducedEvaluationPath: schemaEvaluationPath);
         }
 
         internal static JsonSchemaContext PushChildContext(

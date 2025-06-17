@@ -8,7 +8,7 @@ namespace Corvus.Text.Json.Internal
     /// <summary>
     /// Support for JSON Schema matching implementations.
     /// </summary>
-    public static partial class JsonSchemaMatching
+    public static partial class JsonSchemaEvaluation
     {
         public static readonly JsonSchemaPathProvider<int> ItemIndex = static (index, buffer, out written) => AppendIndex(index, buffer, out written);
 
@@ -37,16 +37,16 @@ namespace Corvus.Text.Json.Internal
         private static readonly JsonSchemaMessageProvider ExpectedTypeArray = static (buffer, out written) => ExpectedType("array"u8, buffer, out written);
 
         [CLSCompliant(false)]
-        public static bool MatchTypeArray(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
+        public static bool MatchTypeArray(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
         {
             if (tokenType != JsonTokenType.StartArray)
             {
-                context.Matched(false, ExpectedTypeArray, schemaEvaluationPath: typeKeyword);
+                context.EvaluatedKeyword(false, ExpectedTypeArray, typeKeyword);
                 return false;
             }
             else
             {
-                context.Matched(true, schemaEvaluationPath: typeKeyword);
+                context.EvaluatedKeyword(true, null, typeKeyword);
             }
 
             return true;

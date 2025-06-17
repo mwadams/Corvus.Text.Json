@@ -189,9 +189,9 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+    public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
     {
-        return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+        return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
     }
 
     private void CheckValidInstance()
@@ -316,9 +316,9 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
         {
-            return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+            return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
         }
 
         public static Mutable From<T>(in T instance)
@@ -519,7 +519,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
 
     public static class JsonSchema
     {
-        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaMatching.TryCopyPath("#/$defs/PersonNameElement"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/PersonNameElement"u8, buffer, out written);
 
         /// <summary>
         /// A constant for the <c>maxLength</c> keyword.
@@ -537,7 +537,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         /// <param name="parentDocument">The parent document.</param>
         /// <param name="parentIndex">The parent index.</param>
         /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
-        internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
         {
             // You're not allowed to ask about non-value-like entities
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
@@ -553,7 +553,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             /* String matching
              * This would be if (tokenType != JsonTokenType.String) for the non-matching case where we have numeric keywords
              * to match, but no explicit type check */
-            if (!JsonSchemaMatching.MatchTypeString(tokenType, Keywords_9857823edfdd454b8bdf0af5fa37e392.Type, ref context))
+            if (!JsonSchemaEvaluation.MatchTypeString(tokenType, "type"u8, ref context))
             {
                 if (!context.HasCollector)
                 {
@@ -562,8 +562,8 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                 }
 
                 // Ignore remaining string
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeString, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MinLength);
-                context.Ignored(JsonSchemaMatching.IgnoredNotTypeString, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MaxLength);
+                context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeString, "minLength"u8);
+                context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeString, "maxLength"u8);
             }
             else
             {
@@ -572,27 +572,27 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                 // Notice that we don't "short circuit" for the flags case, because the length test is fast.
                 if (length <= MaxLength)
                 {
-                    context.Matched(true, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MaxLength);
+                    context.EvaluatedKeyword(true, null, "maxLength"u8);
                 }
                 else
                 {
-                    context.Matched(false, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MaxLength);
+                    context.EvaluatedKeyword(false, null, "maxLength"u8);
                 }
 
                 if (length >= MinLength)
                 {
-                    context.Matched(true, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MinLength);
+                    context.EvaluatedKeyword(true, null, "minLength"u8);
                 }
                 else
                 {
-                    context.Matched(false, schemaEvaluationPath: Keywords_9857823edfdd454b8bdf0af5fa37e392.MinLength);
+                    context.EvaluatedKeyword(false, null, "minLength"u8);
                 }
             }
 
             context.PopSchemaLocation();
         }
 
-        internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
         {
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
@@ -603,7 +603,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
 
             try
             {
-                ApplyJsonSchema(parentDocument, parentIndex, ref context);
+                Evaluate(parentDocument, parentIndex, ref context);
                 return context.IsMatch;
             }
             finally

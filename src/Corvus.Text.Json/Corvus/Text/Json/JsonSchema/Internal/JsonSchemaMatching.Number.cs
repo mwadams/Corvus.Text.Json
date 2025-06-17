@@ -8,7 +8,7 @@ namespace Corvus.Text.Json.Internal
     /// <summary>
     /// Support for JSON Schema matching implementations.
     /// </summary>
-    public static partial class JsonSchemaMatching
+    public static partial class JsonSchemaEvaluation
     {
         public static readonly JsonSchemaMessageProvider IgnoredNotTypeNumber = static (buffer, out written) => IgnoredNotType("number"u8, buffer, out written);
 
@@ -170,27 +170,27 @@ namespace Corvus.Text.Json.Internal
         private const int MaximumDecimalExponent = 0;
 
         [CLSCompliant(false)]
-        public static bool MatchTypeNumber(JsonTokenType tokenType, JsonSchemaPathProvider typeKeyword, ref JsonSchemaContext context)
+        public static bool MatchTypeNumber(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
         {
             if (tokenType != JsonTokenType.Number)
             {
-                context.Matched(false, ExpectedTypeNumber, schemaEvaluationPath: typeKeyword);
+                context.EvaluatedKeyword(false, ExpectedTypeNumber, typeKeyword);
                 return false;
             }
             else
             {
-                context.Matched(true, schemaEvaluationPath: typeKeyword);
+                context.EvaluatedKeyword(true, null, typeKeyword);
             }
 
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedInt128, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedInt128, keyword);
                 return false;
             }
 
@@ -204,7 +204,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumInt128Fractional,
                 MinimumInt128Exponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedInt128, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedInt128, keyword);
                 return false;
             }
 
@@ -218,20 +218,20 @@ namespace Corvus.Text.Json.Internal
                 MaximumInt128Fractional,
                 MaximumInt128Exponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedInt128, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedInt128, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchUInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchUInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedUInt128, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedUInt128, keyword);
                 return false;
             }
 
@@ -245,7 +245,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumUInt128Fractional,
                 MinimumUInt128Exponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedUInt128, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUInt128, keyword);
                 return false;
             }
 
@@ -259,21 +259,21 @@ namespace Corvus.Text.Json.Internal
                 MaximumUInt128Fractional,
                 MaximumUInt128Exponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedUInt128, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUInt128, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
 
         [CLSCompliant(false)]
-        public static bool MatchInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedInt64, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedInt64, keyword);
                 return false;
             }
 
@@ -287,7 +287,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumInt64Fractional,
                 MinimumInt64Exponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedInt64, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedInt64, keyword);
                 return false;
             }
 
@@ -301,20 +301,20 @@ namespace Corvus.Text.Json.Internal
                 MaximumInt64Fractional,
                 MaximumInt64Exponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedInt64, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedInt64, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchUInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchUInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedUInt64, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedUInt64, keyword);
                 return false;
             }
 
@@ -328,7 +328,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumUInt64Fractional,
                 MinimumUInt64Exponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedUInt64, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUInt64, keyword);
                 return false;
             }
 
@@ -342,21 +342,21 @@ namespace Corvus.Text.Json.Internal
                 MaximumUInt64Fractional,
                 MaximumUInt64Exponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedUInt64, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUInt64, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
 
         [CLSCompliant(false)]
-        public static bool MatchInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedInt32, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedInt32, keyword);
                 return false;
             }
 
@@ -370,7 +370,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumInt32Fractional,
                 MinimumInt32Exponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedInt32, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedInt32, keyword);
                 return false;
             }
 
@@ -384,20 +384,20 @@ namespace Corvus.Text.Json.Internal
                 MaximumInt32Fractional,
                 MaximumInt32Exponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedInt32, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedInt32, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchUInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchUInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedUInt32, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedUInt32, keyword);
                 return false;
             }
 
@@ -411,7 +411,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumUInt32Fractional,
                 MinimumUInt32Exponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedUInt32, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUInt32, keyword);
                 return false;
             }
 
@@ -425,20 +425,20 @@ namespace Corvus.Text.Json.Internal
                 MaximumUInt32Fractional,
                 MaximumUInt32Exponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedUInt32, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUInt32, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedInt16, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedInt16, keyword);
                 return false;
             }
 
@@ -452,7 +452,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumInt16Fractional,
                 MinimumInt16Exponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedInt16, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedInt16, keyword);
                 return false;
             }
 
@@ -466,20 +466,20 @@ namespace Corvus.Text.Json.Internal
                 MaximumInt16Fractional,
                 MaximumInt16Exponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedInt16, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedInt16, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchUInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchUInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedUInt16, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedUInt16, keyword);
                 return false;
             }
 
@@ -493,7 +493,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumUInt16Fractional,
                 MinimumUInt16Exponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedUInt16, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUInt16, keyword);
                 return false;
             }
 
@@ -507,20 +507,20 @@ namespace Corvus.Text.Json.Internal
                 MaximumUInt16Fractional,
                 MaximumUInt16Exponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedUInt16, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedUInt16, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchSByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchSByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedSByte, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedSByte, keyword);
                 return false;
             }
 
@@ -534,7 +534,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumSByteFractional,
                 MinimumSByteExponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedSByte, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedSByte, keyword);
                 return false;
             }
 
@@ -548,20 +548,20 @@ namespace Corvus.Text.Json.Internal
                 MaximumSByteFractional,
                 MaximumSByteExponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedSByte, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedSByte, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
             {
-                context.Matched(false, ExpectedByte, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, ExpectedByte, keyword);
                 return false;
             }
 
@@ -575,7 +575,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumByteFractional,
                 MinimumByteExponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedByte, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedByte, keyword);
                 return false;
             }
 
@@ -589,16 +589,16 @@ namespace Corvus.Text.Json.Internal
                 MaximumByteFractional,
                 MaximumByteExponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedByte, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedByte, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchDouble(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchDouble(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (JsonElementHelpers.CompareNormalizedJsonNumbers(
                 isNegative,
@@ -610,7 +610,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumDoubleFractional,
                 MinimumDoubleExponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedDouble, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedDouble, keyword);
                 return false;
             }
 
@@ -624,16 +624,16 @@ namespace Corvus.Text.Json.Internal
                 MaximumDoubleFractional,
                 MaximumDoubleExponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedDouble, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedDouble, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchSingle(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchSingle(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (JsonElementHelpers.CompareNormalizedJsonNumbers(
                 isNegative,
@@ -645,7 +645,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumSingleFractional,
                 MinimumSingleExponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedSingle, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedSingle, keyword);
                 return false;
             }
 
@@ -659,16 +659,16 @@ namespace Corvus.Text.Json.Internal
                 MaximumSingleFractional,
                 MaximumSingleExponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedSingle, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedSingle, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchHalf(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchHalf(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (JsonElementHelpers.CompareNormalizedJsonNumbers(
                 isNegative,
@@ -680,7 +680,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumHalfFractional,
                 MinimumHalfExponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedHalf, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedHalf, keyword);
                 return false;
             }
 
@@ -694,16 +694,16 @@ namespace Corvus.Text.Json.Internal
                 MaximumHalfFractional,
                 MaximumHalfExponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedHalf, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedHalf, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 
         [CLSCompliant(false)]
-        public static bool MatchDecimal(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, JsonSchemaPathProvider keyword, ref JsonSchemaContext context)
+        public static bool MatchDecimal(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
             if (JsonElementHelpers.CompareNormalizedJsonNumbers(
                 isNegative,
@@ -715,7 +715,7 @@ namespace Corvus.Text.Json.Internal
                 MinimumDecimalFractional,
                 MinimumDecimalExponent) < 0)
             {
-                context.Matched(false, messageProvider: ExpectedDecimal, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedDecimal, keyword);
                 return false;
             }
 
@@ -729,11 +729,11 @@ namespace Corvus.Text.Json.Internal
                 MaximumDecimalFractional,
                 MaximumDecimalExponent) > 0)
             {
-                context.Matched(false, messageProvider: ExpectedDecimal, schemaEvaluationPath: keyword);
+                context.EvaluatedKeyword(false, messageProvider: ExpectedDecimal, keyword);
                 return false;
             }
 
-            context.Matched(true, schemaEvaluationPath: keyword);
+            context.EvaluatedKeyword(true, null, keyword);
             return true;
         }
 

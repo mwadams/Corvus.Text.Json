@@ -11,101 +11,197 @@ namespace Corvus.Text.Json
     /// <summary>
     /// Implemented by types that accumulate the results of a JSON Schema evaluation.
     /// </summary>
-    public interface IJsonSchemaResultsCollector
+    public interface IJsonSchemaResultsCollector : IDisposable
     {
         /// <summary>
         /// Begin a child context.
         /// </summary>
-        /// <param name="schemaEvaluationPath">The path taken through the schema(s).</param>
+        /// <param name="reducedEvaluationPath">The path taken through the schema(s).</param>
         /// <param name="documentEvaluationPath">The path in the JSON document instance.</param>
+        /// <returns>The sequence number of the child context.</returns>
         /// <remarks>
+        /// <para>
         /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
         /// or abandoned with <see cref="PopChildContext"/>.
+        /// </para>
+        /// <para>
+        /// In DEBUG builds, the sequence number returned by the call to <see cref="BeginChildContext"/> is passed to the commit or pop methods and validated
+        /// to ensure that completion operations are carried out in the expected order.
+        /// </para>
+        /// <para>
+        /// Note that <paramref name="reducedEvaluationPath"/> is applied to the schemaPath and the evaluation path to take us through
+        /// to the actual schema that will be applied e.g. <c>items/$ref</c> but NOT the path to the schema itself, which will be applied
+        /// when the schema is evaluated, using <see cref="PushSchemaLocation(JsonSchemaPathProvider)"/>.
+        /// </para>
         /// </remarks>
-        void BeginChildContext(
-            JsonSchemaPathProvider? schemaEvaluationPath = null,
+        int BeginChildContext(
+            JsonSchemaPathProvider? reducedEvaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null);
 
         /// <summary>
-        /// Begin a child context.
+        /// Begin a child context for a property evaluation.
         /// </summary>
         /// <param name="propertyName">The name of the property for which to begin a child context.</param>
-        /// <param name="schemaEvaluationPath">The path taken through the schema(s).</param>
+        /// <param name="reducedEvaluationPath">The fully reduced evaluation path for the keyword.</param>
+        /// <returns>The sequence number of the child context.</returns>
         /// <remarks>
+        /// <para>
         /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
         /// or abandoned with <see cref="PopChildContext"/>.
+        /// </para>
+        /// <para>
+        /// Note that <paramref name="reducedEvaluationPath"/> is applied to the schemaPath and the evaluation path to take us through
+        /// to the actual schema that will be applied e.g. <c>items/$ref</c> but NOT the path to the schema itself, which will be applied
+        /// when the schema is evaluated, using <see cref="PushSchemaLocation(JsonSchemaPathProvider)"/>.
+        /// </para>
         /// </remarks>
-        void BeginChildContext(
+        int BeginChildContext(
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null);
+            JsonSchemaPathProvider? reducedEvaluationPath = null);
 
         /// <summary>
         /// Begin a child context.
         /// </summary>
         /// <param name="providerContext">The context to be passed to the path provider.</param>
-        /// <param name="schemaEvaluationPath">The path taken through the schema(s) at which the child context is being evaluated.</param>
+        /// <param name="reducedEvaluationPath">The path taken through the schema(s) at which the child context is being evaluated.</param>
         /// <param name="documentEvaluationPath">The path in the JSON document instance at which the child context is being evaluated.</param>
+        /// <returns>The sequence number of the child context.</returns>
         /// <remarks>
+        /// <para>
         /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
         /// or abandoned with <see cref="PopChildContext"/>.
+        /// </para>
+        /// <para>
+        /// A child context operates like a stack. You *must* pop/commit child contexts in *reverse order* of that in which you Begin()
+        /// a child context. The sequence number returned by <see cref="BeginChildContext{TProviderContext}"/> and passed in to
+        /// <see cref="CommitChildContext"/> or <see cref="PopChildContext(int)"/> is used to enforce this
+        /// </para>
+        /// <para>
+        /// Note that <paramref name="reducedEvaluationPath"/> is applied to the schemaPath and the evaluation path to take us through
+        /// to the actual schema that will be applied e.g. <c>items/$ref</c> but NOT the path to the schema itself, which will be applied
+        /// when the schema is evaluated, using <see cref="PushSchemaLocation(JsonSchemaPathProvider)"/>.
+        /// </para>
         /// </remarks>
-        void BeginChildContext<TProviderContext>(
+        int BeginChildContext<TProviderContext>(
             TProviderContext providerContext,
-            JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath,
+            JsonSchemaPathProvider<TProviderContext>? reducedEvaluationPath,
             JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath);
 
         /// <summary>
         /// Commits the last child context.
         /// </summary>
+        /// <param name="sequenceNumber">The sequence number of the child context to commit.</param>
         /// <param name="isMatch">If <see langword="true"/> then the commit indicates that the child produced a successful match.</param>
         /// <param name="messageProvider">The (optional) provider for a JSON validation message.</param>
         /// <remarks>
         /// This allows the collector to update the match state, and commit any resources associated with the child context.
         /// </remarks>
-        void CommitChildContext(bool isMatch, JsonSchemaMessageProvider? messageProvider);
+        void CommitChildContext(
+            int sequenceNumber,
+            bool isMatch,
+            JsonSchemaMessageProvider? messageProvider);
 
         /// <summary>
         /// Commits the last child context.
         /// </summary>
+        /// <param name="sequenceNumber">The sequence number of the child context to commit.</param>
         /// <param name="isMatch">If <see langword="true"/> then the commit indicates that the child produced a successful match.</param>
         /// <param name="providerContext">The context to provide to the message provider.</param>
         /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
         /// <remarks>
         /// This allows the collector to update the match state, and commit any resources associated with the child context.
         /// </remarks>
-        void CommitChildContext<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider);
+        void CommitChildContext<TProviderContext>(
+            int sequenceNumber,
+            bool isMatch,
+            TProviderContext providerContext,
+            JsonSchemaMessageProvider<TProviderContext>? messageProvider);
 
         /// <summary>
         /// Abandons the last child context.
         /// </summary>
+        /// <param name="sequenceNumber">The sequence number of the child context to commit.</param>
         /// <remarks>
         /// This will not update the match state, and allows the collector to release any resources associated with the child context.
         /// </remarks>
-        void PopChildContext();
+        void PopChildContext(int sequenceNUmber);
 
         /// <summary>
-        /// Updates the match state for the current context.
+        /// Updates the match state for the given evaluated keyword.
         /// </summary>
         /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
         /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
-        /// <param name="schemaEvaluationPath">The path taken through the schema(s) at which the context is being evaluated.</param>
-        void Matched(
+        /// <param name="encodedKeyword">The keyword that was evaluated.</param>
+        void EvaluatedKeyword(
             bool isMatch,
             JsonSchemaMessageProvider? messageProvider,
-            JsonSchemaPathProvider? schemaEvaluationPath);
+            ReadOnlySpan<byte> encodedKeyword);
 
         /// <summary>
-        /// Updates the match state for the current context.
+        /// Updates the match state for the given evaluated keyword.
         /// </summary>
         /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
         /// <param name="providerContext">The context to provider to the providers.</param>
         /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
-        /// <param name="schemaEvaluationPath">The path taken through the schema(s) at which the context is being evaluated.</param>
-        void Matched<TProviderContext>(
+        /// <param name="encodedKeyword">The keyword that was evaluated.</param>
+        void EvaluatedKeyword<TProviderContext>(
             bool isMatch,
             TProviderContext providerContext,
             JsonSchemaMessageProvider<TProviderContext>? messageProvider,
-            JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath);
+            ReadOnlySpan<byte> encodedKeyword);
+
+        /// <summary>
+        /// Updates the match state for the given keyword evaluated against the given property.
+        /// </summary>
+        /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+        /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+        /// <param name="propertyName">The name of the property for which to begin a child context.</param>
+        /// <param name="encodedKeyword">The keyword that was evaluated.</param>
+        void EvaluatedKeywordForProperty(
+            bool isMatch,
+            JsonSchemaMessageProvider? messageProvider,
+            ReadOnlySpan<byte> propertyName,
+            ReadOnlySpan<byte> encodedKeyword);
+
+        /// <summary>
+        /// Updates the match state for the given keyword evaluated against the given property.
+        /// </summary>
+        /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+        /// <param name="providerContext">The context to provider to the providers.</param>
+        /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+        /// <param name="propertyName">The name of the property for which to begin a child context.</param>
+        /// <param name="encodedKeyword">The keyword that was evaluated.</param>
+        void EvaluatedKeywordForProperty<TProviderContext>(
+            bool isMatch,
+            TProviderContext providerContext,
+            JsonSchemaMessageProvider<TProviderContext>? messageProvider,
+            ReadOnlySpan<byte> propertyName,
+            ReadOnlySpan<byte> encodedKeyword);
+
+        /// <summary>
+        /// Updates the match state for the given evaluated keyword.
+        /// </summary>
+        /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+        /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+        /// <param name="encodedKeywordPath">The keyword and its sub-path that was evaluated.</param>
+        /// <remarks>
+        /// This is used when the entity evaluated was a sub-element of the keyword (e.g. the index of the first name in the array
+        /// for the <c>required</c> keyword, would produce <c>required/0</c> as the <paramref name="encodedKeywordPath"/>).
+        /// </remarks>
+        void EvaluatedKeywordPath(bool isMatch, JsonSchemaMessageProvider messageProvider, JsonSchemaPathProvider encodedKeywordPath);
+
+        /// <summary>
+        /// Updates the match state for the given evaluated keyword.
+        /// </summary>
+        /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+        /// <param name="providerContext">The context to provider to the providers.</param>
+        /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+        /// <param name="encodedKeywordPath">The keyword and its sub-path that was evaluated.</param>
+        /// <remarks>
+        /// This is used when the entity evaluated was a sub-element of the keyword (e.g. the index of the first name in the array
+        /// for the <c>required</c> keyword, would produce <c>required/0</c> as the <paramref name="encodedKeywordPath"/>).
+        /// </remarks>
+        void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext? providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> encodedKeywordPath);
 
         /// <summary>
         /// Pushes the relative or absolute schema location when evaluating a subschema.
@@ -130,20 +226,41 @@ namespace Corvus.Text.Json
         /// Indicates that a schema keyword was ignored.
         /// </summary>
         /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
-        /// <param name="schemaEvaluationPath">The path taken through the schema(s) at which the keyword is ignored.</param>
-        void Ignored(
+        /// <param name="encodedKeyword">The keyword that is ignored.</param>
+        void IgnoredKeyword(
             JsonSchemaMessageProvider? messageProvider,
-            JsonSchemaPathProvider? schemaEvaluationPath);
+            ReadOnlySpan<byte> encodedKeyword);
 
         /// <summary>
         /// Indicates that a schema keyword was ignored.
         /// </summary>
         /// <param name="providerContext">The context to provide to the message provider.</param>
         /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
-        /// <param name="schemaEvaluationPath">The path taken through the schema(s) at which the keyword is ignored.</param>
-        void Ignored<TProviderContext>(
+        /// <param name="encodedKeyword">The keyword that is ignored.</param>
+        void IgnoredKeyword<TProviderContext>(
             TProviderContext providerContext,
             JsonSchemaMessageProvider<TProviderContext>? messageProvider,
-            JsonSchemaPathProvider? schemaEvaluationPath);
+            ReadOnlySpan<byte> encodedKeyword);
+
+        /// <summary>
+        /// Indicates that a boolean schema was evaluated.
+        /// </summary>
+        /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+        /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+        /// <remarks>
+        /// This is used when evaluating a schema of the form <c>true</c> or <c>false</c>.
+        /// </remarks>
+        void EvaluatedBooleanSchema(bool isMatch, JsonSchemaMessageProvider? messageProvider);
+
+        /// <summary>
+        /// Indicates that a boolean schema was evaluated.
+        /// </summary>
+        /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+        /// <param name="providerContext">The context to provide to the message provider.</param>
+        /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+        /// <remarks>
+        /// This is used when evaluating a schema of the form <c>true</c> or <c>false</c>.
+        /// </remarks>
+        void EvaluatedBooleanSchema<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider);
     }
 }

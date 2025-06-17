@@ -49,14 +49,11 @@ public class BenchmarkMatchIri
 
         try
         {
-            return JsonSchemaMatching.MatchIri("http://ƒøø.ßår/?∂éœ=πîx#πîüx"u8, DummyPathProvider, ref context);
+            return JsonSchemaEvaluation.MatchIri("http://ƒøø.ßår/?∂éœ=πîx#πîüx"u8, "dummy"u8, ref context);
         }
         finally
         {
             context.Dispose();
         }
     }
-
-    private static bool DummyPathProvider(Span<byte> buffer, out int written) { written = 0; return true; }
-
 }

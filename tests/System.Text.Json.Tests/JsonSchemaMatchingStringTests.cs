@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Text.RegularExpressions;
 using Corvus.Text.Json.Internal;
 using Xunit;
 
@@ -21,13 +20,11 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchTypeString(tokenType, DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchTypeString(tokenType, "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
     }
-
-    private bool DummyPathProvider(Span<byte> buffer, out int written) { written = 0; return true; }
 
     [Theory]
     [InlineData("2023-06-01", true)]
@@ -36,7 +33,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchDate(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchDate(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -49,7 +46,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchDateTime(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchDateTime(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -62,7 +59,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchTime(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchTime(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -75,7 +72,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchDuration(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchDuration(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -95,7 +92,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchEmail(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchEmail(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -119,7 +116,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchIdnEmail(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchIdnEmail(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -150,7 +147,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchHostname(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchHostname(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -211,7 +208,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchIdnHostname(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchIdnHostname(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -256,7 +253,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchIPV6(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchIPV6(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -278,7 +275,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchIPV4(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchIPV4(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -305,7 +302,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchUuid(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchUuid(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -338,7 +335,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchUri(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchUri(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -357,7 +354,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchUriReference(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchUriReference(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -378,7 +375,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchIri(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchIri(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -397,7 +394,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchIriReference(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchIriReference(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -478,7 +475,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchUriTemplate(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchUriTemplate(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -521,7 +518,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchJsonPointer(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchJsonPointer(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -544,7 +541,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchRelativeJsonPointer(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchRelativeJsonPointer(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -557,7 +554,7 @@ public class JsonSchemaMatchingStringTests
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaMatching.MatchRegex(Encoding.UTF8.GetBytes(value), DummyPathProvider, ref context);
+        bool result = JsonSchemaEvaluation.MatchRegex(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();

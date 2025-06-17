@@ -13,9 +13,9 @@ namespace Corvus.Text.Json
     public readonly partial struct JsonElementForBooleanFalseSchema
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsSchemaMatch(IJsonSchemaResultsCollector? resultsCollector = null)
+        public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
         {
-            return JsonSchema.IsMatch(_parent, _idx, resultsCollector);
+            return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Corvus.Text.Json
         /// </summary>
         public static class JsonSchema
         {
-            internal static void ApplyJsonSchema(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+            internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
             {
                 // You're not allowed to ask about non-value-like entities
                 Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
@@ -32,28 +32,12 @@ namespace Corvus.Text.Json
                     JsonTokenType.EndArray or
                     JsonTokenType.PropertyName);
 
-                context.Matched(true);
+                context.EvaluatedBooleanSchema(false);
             }
 
-            internal static bool IsMatch(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
+            internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
             {
-                JsonSchemaContext context = JsonSchemaContext.BeginContext(
-                    parentDocument,
-                    parentIndex,
-                    usingEvaluatedProperties: false,
-                    usingEvaluatedItems: false,
-                    resultsCollector: resultsCollector);
-
-                try
-                {
-                    ApplyJsonSchema(parentDocument, parentIndex, ref context);
-                    return context.IsMatch;
-                }
-                finally
-                {
-                    context.Dispose();
-
-                }
+                return false;
             }
 
             /// <summary>
