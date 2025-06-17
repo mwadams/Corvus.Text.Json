@@ -29,7 +29,8 @@ namespace Corvus.Text.Json.Compatibility
 
         void IDisposable.Dispose() => throw new NotImplementedException();
         int IJsonSchemaResultsCollector.BeginChildContext(JsonSchemaPathProvider? schemaEvaluationPath, JsonSchemaPathProvider? documentEvaluationPath) => throw new NotImplementedException();
-        int IJsonSchemaResultsCollector.BeginChildContext(ReadOnlySpan<byte> propertyName, JsonSchemaPathProvider? reducedEvaluationPath) => throw new NotImplementedException();
+        int IJsonSchemaResultsCollector.BeginChildContext(ReadOnlySpan<byte> escapedPropertyName, JsonSchemaPathProvider? reducedEvaluationPath) => throw new NotImplementedException();
+        int IJsonSchemaResultsCollector.BeginChildContextUnescaped(ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider? reducedEvaluationPath) => throw new NotImplementedException();
         int IJsonSchemaResultsCollector.BeginChildContext<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath) => throw new NotImplementedException();
         void IJsonSchemaResultsCollector.CommitChildContext(int sequenceNumber, bool isMatch, JsonSchemaMessageProvider? messageProvider) => throw new NotImplementedException();
         void IJsonSchemaResultsCollector.CommitChildContext<TProviderContext>(int sequenceNumber, bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider) => throw new NotImplementedException();

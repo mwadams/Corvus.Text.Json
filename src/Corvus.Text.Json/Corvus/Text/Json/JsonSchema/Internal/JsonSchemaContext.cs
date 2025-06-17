@@ -269,6 +269,19 @@ namespace Corvus.Text.Json.Internal
             return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }
 
+        public readonly JsonSchemaContext PushChildContextUnescaped(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            bool useEvaluatedItems,
+            bool useEvaluatedProperties,
+            ReadOnlySpan<byte> unescapedPropertyName,
+            JsonSchemaPathProvider? reducedEvaluationPath = null)
+        {
+            int sequenceNumber = _resultsCollector?.BeginChildContextUnescaped(unescapedPropertyName, reducedEvaluationPath) ?? 0;
+
+            return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+        }
+
         public readonly JsonSchemaContext PushChildContext<TProviderContext>(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
@@ -294,7 +307,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CommitChildContext(bool isMatch, ref readonly JsonSchemaContext childContext, JsonSchemaMessageProvider? messageProvider = null)
         {
-            _resultsCollector?.CommitChildContext(_sequenceNumber, isMatch, messageProvider);
+            _resultsCollector?.CommitChildContext(childContext._sequenceNumber, isMatch, messageProvider);
             _rentedBuffer = childContext._rentedBuffer;
             if (isMatch)
             {
@@ -451,7 +464,7 @@ namespace Corvus.Text.Json.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void PopChildContext(ref readonly JsonSchemaContext childContext)
         {
-            _resultsCollector?.PopChildContext(_sequenceNumber);
+            _resultsCollector?.PopChildContext(childContext._sequenceNumber);
             _rentedBuffer = childContext._rentedBuffer;
         }
 
@@ -563,6 +576,12 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        public void Commit()
+        {
+            // Tell the collector we have been commited
+            _resultsCollector?.CommitChildContext(_sequenceNumber, IsMatch, null);
+        }
+
         public void Dispose()
         {
             if (_rentedBuffer != null && IsDisposable)
@@ -622,7 +641,8 @@ namespace Corvus.Text.Json.Internal
                         _rentedBuffer,
                         _lengthAndUsingFeatures | usingFeatures & ~(uint)UsingFeatures.IsDisposable,
                         offset: Length,
-                        evaluatedCount: parentDocument.GetPropertyCount(parentDocumentIndex));
+                        evaluatedCount: parentDocument.GetPropertyCount(parentDocumentIndex),
+                        resultsCollector: _resultsCollector);
                 }
 
                 if (usesEvaluatedItems && tokenType == JsonTokenType.StartArray)
@@ -632,7 +652,8 @@ namespace Corvus.Text.Json.Internal
                         _rentedBuffer,
                         _lengthAndUsingFeatures | usingFeatures & ~(uint)UsingFeatures.IsDisposable,
                         offset: Length,
-                        evaluatedCount: parentDocument.GetArrayLength(parentDocumentIndex));
+                        evaluatedCount: parentDocument.GetArrayLength(parentDocumentIndex),
+                        resultsCollector: _resultsCollector);
                 }
             }
 
@@ -641,7 +662,8 @@ namespace Corvus.Text.Json.Internal
                 _rentedBuffer,
                 _lengthAndUsingFeatures & ~(uint)UsingFeatures.IsDisposable,
                 offset: Length,
-                evaluatedCount: -1);
+                evaluatedCount: -1,
+                resultsCollector: _resultsCollector);
         }
         private int EnsureBitBufferLengths(int count)
         {

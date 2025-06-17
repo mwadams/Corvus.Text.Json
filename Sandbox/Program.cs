@@ -410,3 +410,13 @@ catch (InvalidOperationException ex)
 bool result = person == lastName;
 
 var nameComponentBuilder = NameComponent.CreateDocumentBuilder(workspace, "foo"u8);
+
+
+JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
+person.EvaluateSchema(collector);
+
+JsonSchemaResultsCollector.ResultsEnumerator enumerator = collector.EnumerateResults();
+while (enumerator.MoveNext())
+{
+    JsonSchemaResultsCollector.Result resultItem = enumerator.Current;    
+}

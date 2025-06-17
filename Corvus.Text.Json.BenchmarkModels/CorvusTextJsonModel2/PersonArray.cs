@@ -181,18 +181,6 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
         }
     }
-
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        Builder.BuildValue(builder, ref cvb);
-        Debug.Assert(cvb.MemberCount == 1);
-        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
     public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source value, int initialCapacity = 1)
     {
         // Create the document builder without a MetadataDb
@@ -684,6 +672,23 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
         {
             return
                 context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: true, // We do use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    reducedEvaluationPath: schemaEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContextUnescaped(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContextUnescaped(
                     parentDocument,
                     parentDocumentIndex,
                     useEvaluatedItems: true, // We do use evaluated items

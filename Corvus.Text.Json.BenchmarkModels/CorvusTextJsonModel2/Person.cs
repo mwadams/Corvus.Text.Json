@@ -15,7 +15,7 @@ public readonly struct Person : IJsonElement<Person>
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    private Person(IJsonDocument parent, int idx)
+    internal Person(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -207,7 +207,6 @@ public readonly struct Person : IJsonElement<Person>
     {
         return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
     }
-
     private void CheckValidInstance()
     {
         if (_parent == null)
@@ -249,22 +248,12 @@ public readonly struct Person : IJsonElement<Person>
         return documentBuilder;
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        Builder.BuildValue(builder, ref cvb);
-        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source value, int initialCapacity = 1)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        value.AddAsItem(ref cvb);
+        source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -770,7 +759,6 @@ public readonly struct Person : IJsonElement<Person>
                     if (!context.HasLocalOrAppliedEvaluatedProperty(propertyCount))
                     {
                         context.EvaluatedKeywordForProperty(false, null, propertyName, "unevaluatedProperties"u8);
-
                         if (!context.HasCollector)
                         {
                             context.PopSchemaLocation();
@@ -843,7 +831,7 @@ public readonly struct Person : IJsonElement<Person>
         private static void MatchName(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
         {
             JsonSchemaContext childContext =
-                PersonName.JsonSchema.PushChildContext(
+                PersonName.JsonSchema.PushChildContextUnescaped(
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
@@ -859,7 +847,7 @@ public readonly struct Person : IJsonElement<Person>
         private static void MatchAge(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
         {
             JsonSchemaContext childContext =
-                Age.JsonSchema.PushChildContext(
+                Age.JsonSchema.PushChildContextUnescaped(
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
@@ -874,7 +862,7 @@ public readonly struct Person : IJsonElement<Person>
         private static void MatchCompetedInYears(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
         {
             JsonSchemaContext childContext =
-                CompetedInYears.JsonSchema.PushChildContext(
+                CompetedInYears.JsonSchema.PushChildContextUnescaped(
                     parentDocument,
                     parentDocumentIndex,
                     ref context,
@@ -915,6 +903,23 @@ public readonly struct Person : IJsonElement<Person>
         {
             return
                 context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    reducedEvaluationPath: schemaEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContextUnescaped(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContextUnescaped(
                     parentDocument,
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items

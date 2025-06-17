@@ -153,6 +153,121 @@ namespace Corvus.Text.Json
         }
 #endif
 
+        /// <summary>
+        /// Encodes the ~ encoding in a pointer.
+        /// </summary>
+        /// <param name="unencodedFragment">The encoded fragment.</param>
+        /// <param name="fragment">The span into which to write the result.</param>
+        /// <returns><see langword="true"/> if the value could be written.</returns>
+        public static bool TryUnescapeAndEncodePointer(ReadOnlySpan<byte> unencodedFragment, Span<byte> fragment, out int written)
+        {
+            int idx = unencodedFragment.IndexOf((byte)'\\');
+            if (idx < 0)
+            {
+                return TryEncodePointer(unencodedFragment, fragment, out written);
+            }
+
+            if (!TryEncodePointer(unencodedFragment.Slice(0, idx), fragment, out int encodedWritten))
+            {
+                written = 0;
+                return false;
+            }
+
+            byte[]? buffer = null;
+            int length = unencodedFragment.Length - idx;
+            Span<byte> unescapedSegment =
+                length > JsonConstants.StackallocByteThreshold
+                ? (buffer = ArrayPool<byte>.Shared.Rent(length))
+                : stackalloc byte[JsonConstants.StackallocByteThreshold];
+
+            try
+            {
+                if (!TryUnescape(unencodedFragment.Slice(idx), unescapedSegment, out int unencodedWritten))
+                {
+                    written = 0;
+                    return false;
+                }
+
+                ReadOnlySpan<byte> toEncode = unescapedSegment.Slice(0, unencodedWritten);
+
+                if (!TryEncodePointer(toEncode, fragment.Slice(encodedWritten), out int encodedWritten2))
+                {
+                    written = 0;
+                    return false;
+                }
+
+                written = encodedWritten + encodedWritten2;
+                return true;
+            }
+            finally
+            {
+                if (buffer is not null)
+                {
+                    // Could contain sensitive data
+                    buffer.AsSpan().Clear();
+                    ArrayPool<byte>.Shared.Return(buffer);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Encodes the ~ encoding in a pointer.
+        /// </summary>
+        /// <param name="unencodedFragment">The encoded fragment.</param>
+        /// <param name="fragment">The span into which to write the result.</param>
+        /// <returns>The length of the decoded fragment.</returns>
+        public static bool TryEncodePointer(ReadOnlySpan<byte> unencodedFragment, Span<byte> fragment, out int written)
+        {
+            int readIndex = 0;
+            int writeIndex = 0;
+
+            if (fragment.Length < unencodedFragment.Length)
+            {
+                written = 0;
+                return false;
+            }
+
+            while (readIndex < unencodedFragment.Length && writeIndex < fragment.Length)
+            {              
+                if (unencodedFragment[readIndex] == (byte)'~')
+                {
+                    fragment[writeIndex] = (byte)'~';
+                    if (fragment.Length < writeIndex + 1)
+                    {
+                        written = 0;
+                        return false;
+                    }
+
+                    fragment[writeIndex + 1] = (byte)'0';
+                    readIndex += 1;
+                    writeIndex += 2;
+                }
+                else if (unencodedFragment[readIndex] == '/')
+                {
+                    fragment[writeIndex] = (byte)'~';
+                    if (fragment.Length < writeIndex + 1)
+                    {
+                        written = 0;
+                        return false;
+                    }
+
+                    fragment[writeIndex + 1] = (byte)'1';
+                    readIndex += 1;
+                    writeIndex += 2;
+                }
+                else
+                {
+                    fragment[writeIndex] = unencodedFragment[readIndex];
+                    readIndex++;
+                    writeIndex++;
+                }
+            }
+
+            written = writeIndex;
+            return readIndex == unencodedFragment.Length;
+        }
+
         public static bool TryGetFloatingPointConstant(ReadOnlySpan<byte> span, out float value)
         {
             if (span.Length == 3)

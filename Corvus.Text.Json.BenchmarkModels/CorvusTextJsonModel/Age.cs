@@ -80,12 +80,12 @@ public readonly struct Age : IJsonElement<Age>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, int year, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        cvb.AddItem(year);
+        source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -631,6 +631,23 @@ public readonly struct Age : IJsonElement<Age>
         {
             return
                 context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    reducedEvaluationPath: schemaEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContextUnescaped(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContextUnescaped(
                     parentDocument,
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items

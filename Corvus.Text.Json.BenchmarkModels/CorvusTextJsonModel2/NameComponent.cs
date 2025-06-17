@@ -14,7 +14,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    private NameComponent(IJsonDocument parent, int idx)
+    internal NameComponent(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -81,12 +81,12 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source value, int initialCapacity = 1)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        value.AddAsItem(ref cvb);
+        source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -96,7 +96,6 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     {
         return workspace.CreateDocumentBuilder<NameComponent, Mutable>(this);
     }
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
@@ -617,6 +616,40 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    reducedEvaluationPath: schemaEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContextUnescaped(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContextUnescaped(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    reducedEvaluationPath: schemaEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
             JsonSchemaPathProvider? schemaEvaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null)
         {
@@ -648,6 +681,5 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                     documentEvaluationPath: documentEvaluationPath,
                     providerContext: providerContext);
         }
-
     }
 }

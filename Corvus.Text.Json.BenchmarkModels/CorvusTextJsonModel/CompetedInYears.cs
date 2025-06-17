@@ -112,11 +112,6 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         }
     }
 
-    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
-    {
-        return workspace.CreateDocumentBuilder<CompetedInYears, Mutable>(this);
-    }
-
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
@@ -138,15 +133,20 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Build builder, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        Builder.BuildValue(builder, ref cvb);
+        source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
+    }
+
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocumentBuilder<CompetedInYears, Mutable>(this);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -677,6 +677,24 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                     propertyName,
                     reducedEvaluationPath: schemaEvaluationPath);
         }
+
+        internal static JsonSchemaContext PushChildContextUnescaped(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContextUnescaped(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    reducedEvaluationPath: schemaEvaluationPath);
+        }
+
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,

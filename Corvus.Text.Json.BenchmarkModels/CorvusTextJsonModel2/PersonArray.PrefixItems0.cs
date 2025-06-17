@@ -587,6 +587,23 @@ public readonly partial struct PersonArray
                         propertyName,
                         reducedEvaluationPath: schemaEvaluationPath);
             }
+            internal static JsonSchemaContext PushChildContextUnescaped(
+                IJsonDocument parentDocument,
+                int parentDocumentIndex,
+                ref JsonSchemaContext context,
+                ReadOnlySpan<byte> propertyName,
+                JsonSchemaPathProvider? schemaEvaluationPath = null)
+            {
+                return
+                    context.PushChildContextUnescaped(
+                        parentDocument,
+                        parentDocumentIndex,
+                        useEvaluatedItems: false, // We don't use evaluated items
+                        useEvaluatedProperties: false,
+                        propertyName,
+                        reducedEvaluationPath: schemaEvaluationPath);
+            }
+
             internal static JsonSchemaContext PushChildContext(
                 IJsonDocument parentDocument,
                 int parentDocumentIndex,

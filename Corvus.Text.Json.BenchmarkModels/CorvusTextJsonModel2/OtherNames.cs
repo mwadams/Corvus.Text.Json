@@ -14,7 +14,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    private OtherNames(IJsonDocument parent, int idx)
+    internal OtherNames(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -54,12 +54,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public static explicit operator NameComponent(in OtherNames value)
     {
-        return NameComponent.From(value);
+        return new(value._parent, value._idx);
     }
 
     public static explicit operator NameComponentArray(in OtherNames value)
     {
-        return NameComponentArray.From(value);
+        return new(value._parent, value._idx);
     }
 
     public static bool operator ==(OtherNames left, OtherNames right)
@@ -119,12 +119,12 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source value, int initialCapacity = 1)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        value.AddAsItem(ref cvb);
+        source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -169,18 +169,6 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         CheckValidInstance();
 
         _parent.WriteElementTo(_idx, writer);
-    }
-
-    public bool TryGetAsNameComponent(out NameComponent result)
-    {
-        result = NameComponent.From(this);
-        return result.EvaluateSchema();
-    }
-
-    public bool TryGetAsNameComponentArray(out NameComponentArray result)
-    {
-        result = NameComponentArray.From(this);
-        return result.EvaluateSchema();
     }
 
     /// <summary>
@@ -701,7 +689,6 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             }
         }
 
-
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
@@ -719,7 +706,24 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                     reducedEvaluationPath: schemaEvaluationPath);
         }
 
-        internal static JsonSchemaContext PushChildContext(
+        internal static JsonSchemaContext PushChildContextUnescaped(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContextUnescaped(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    reducedEvaluationPath: schemaEvaluationPath);
+        }
+
+       internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,

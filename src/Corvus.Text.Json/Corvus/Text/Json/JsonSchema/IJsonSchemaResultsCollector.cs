@@ -41,7 +41,7 @@ namespace Corvus.Text.Json
         /// <summary>
         /// Begin a child context for a property evaluation.
         /// </summary>
-        /// <param name="propertyName">The name of the property for which to begin a child context.</param>
+        /// <param name="escapedPropertyName">The escaped name of the property for which to begin a child context.</param>
         /// <param name="reducedEvaluationPath">The fully reduced evaluation path for the keyword.</param>
         /// <returns>The sequence number of the child context.</returns>
         /// <remarks>
@@ -56,7 +56,28 @@ namespace Corvus.Text.Json
         /// </para>
         /// </remarks>
         int BeginChildContext(
-            ReadOnlySpan<byte> propertyName,
+            ReadOnlySpan<byte> escapedPropertyName,
+            JsonSchemaPathProvider? reducedEvaluationPath = null);
+
+        /// <summary>
+        /// Begin a child context for a property evaluation.
+        /// </summary>
+        /// <param name="unescapedPropertyName">The name of the property for which to begin a child context.</param>
+        /// <param name="reducedEvaluationPath">The fully reduced evaluation path for the keyword.</param>
+        /// <returns>The sequence number of the child context.</returns>
+        /// <remarks>
+        /// <para>
+        /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
+        /// or abandoned with <see cref="PopChildContext"/>.
+        /// </para>
+        /// <para>
+        /// Note that <paramref name="reducedEvaluationPath"/> is applied to the schemaPath and the evaluation path to take us through
+        /// to the actual schema that will be applied e.g. <c>items/$ref</c> but NOT the path to the schema itself, which will be applied
+        /// when the schema is evaluated, using <see cref="PushSchemaLocation(JsonSchemaPathProvider)"/>.
+        /// </para>
+        /// </remarks>
+        int BeginChildContextUnescaped(
+            ReadOnlySpan<byte> unescapedPropertyName,
             JsonSchemaPathProvider? reducedEvaluationPath = null);
 
         /// <summary>
@@ -201,7 +222,7 @@ namespace Corvus.Text.Json
         /// This is used when the entity evaluated was a sub-element of the keyword (e.g. the index of the first name in the array
         /// for the <c>required</c> keyword, would produce <c>required/0</c> as the <paramref name="encodedKeywordPath"/>).
         /// </remarks>
-        void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext? providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> encodedKeywordPath);
+        void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> encodedKeywordPath);
 
         /// <summary>
         /// Pushes the relative or absolute schema location when evaluating a subschema.

@@ -8,7 +8,7 @@ namespace Corvus.Text.Json.Internal
     /// <summary>
     ///   An enumerable and enumerator for the contents of a JSON array.
     /// </summary>
-    [DebuggerDisplay("{CurrentIndex,nq}")]
+    [DebuggerDisplay("{Current,nq}")]
     [CLSCompliant(false)]
     public struct ArrayEnumerator
     {

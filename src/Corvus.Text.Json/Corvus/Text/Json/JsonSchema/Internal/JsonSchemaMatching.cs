@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers.Text;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal
@@ -57,33 +58,25 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Tries to copy the path to the output buffer.
+        /// </summary>
+        /// <remarks>
+        /// The path must be a fully canonical URI.
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryCopyPath(ReadOnlySpan<byte> readOnlySpan, Span<byte> buffer, out int written)
         {
+            Debug.Assert(Utf8Uri.Validate(readOnlySpan, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false));
+
             if (readOnlySpan.Length * JsonConstants.MaxExpansionFactorWhileEncodingPointer > buffer.Length)
             {
                 written = 0;
                 return false;
             }
 
-            int index = readOnlySpan.IndexOfAny("~/"u8);
-            if (index < 0)
-            {
-                readOnlySpan.CopyTo(buffer);
-                written = readOnlySpan.Length;
-            }
-            else
-            {
-                written = 0;
-                if (index > 0)
-                {
-                    readOnlySpan[..index].CopyTo(buffer);
-                    written = index;
-                }
-
-                written = written + EncodePointer(readOnlySpan[index..], buffer[index..]);
-            }
-
+            readOnlySpan.CopyTo(buffer);
+            written = readOnlySpan.Length;
             return true;
         }
 
@@ -124,44 +117,6 @@ namespace Corvus.Text.Json.Internal
             written += value.Length;
             buffer[written++] = (byte)'\'';
             return true;
-        }
-
-        /// <summary>
-        /// Encodes the ~ encoding in a pointer.
-        /// </summary>
-        /// <param name="unencodedFragment">The encoded fragment.</param>
-        /// <param name="fragment">The span into which to write the result.</param>
-        /// <returns>The length of the decoded fragment.</returns>
-        private static int EncodePointer(ReadOnlySpan<byte> unencodedFragment, Span<byte> fragment)
-        {
-            int readIndex = 0;
-            int writeIndex = 0;
-
-            while (readIndex < unencodedFragment.Length)
-            {
-                if (unencodedFragment[readIndex] == (byte)'~')
-                {
-                    fragment[writeIndex] = (byte)'~';
-                    fragment[writeIndex + 1] = (byte)'0';
-                    readIndex += 1;
-                    writeIndex += 2;
-                }
-                else if (unencodedFragment[readIndex] == '/')
-                {
-                    fragment[writeIndex] = (byte)'~';
-                    fragment[writeIndex + 1] = (byte)'1';
-                    readIndex += 1;
-                    writeIndex += 2;
-                }
-                else
-                {
-                    fragment[writeIndex] = unencodedFragment[readIndex];
-                    readIndex++;
-                    writeIndex++;
-                }
-            }
-
-            return writeIndex;
         }
     }
 }

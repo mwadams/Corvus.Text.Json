@@ -10,12 +10,12 @@ using Corvus.Text.Json.Internal;
 namespace Benchmark.CorvusTextJson2;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly struct NameComponentArray : IJsonElement<NameComponentArray>
+public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
-    private NameComponentArray(IJsonDocument parent, int idx)
+    internal NameComponentArray(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
         // on the enumerators (when initialized as `default`) can
@@ -194,12 +194,12 @@ public readonly struct NameComponentArray : IJsonElement<NameComponentArray>
         }
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source value, int initialCapacity = 1)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        value.AddAsItem(ref cvb);
+        source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -579,6 +579,7 @@ public readonly struct NameComponentArray : IJsonElement<NameComponentArray>
         private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/PersonNameElementArray"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider<int> SchemaLocationForItems = static (_, buffer, out written) => JsonSchemaEvaluation.TryCopyPath("items/$ref"u8, buffer, out written);
 
+
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
         /// </summary>
@@ -602,7 +603,7 @@ public readonly struct NameComponentArray : IJsonElement<NameComponentArray>
             /* Array matching
              * This would be if (tokenType != JsonTokenType.StartArray) for the non-matching case where we have array keywords
              * to match, but no explicit type check */
-            if (!JsonSchemaEvaluation.MatchTypeArray(tokenType, "type"u8, ref context))
+            if (!JsonSchemaEvaluation.MatchTypeArray(tokenType, "array"u8, ref context))
             {
                 if (!context.HasCollector)
                 {
@@ -630,6 +631,7 @@ public readonly struct NameComponentArray : IJsonElement<NameComponentArray>
 
                     NameComponent.JsonSchema.Evaluate(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
                     context.CommitChildContext(childContext.IsMatch, ref childContext);
+
                     if (!childContext.IsMatch && !context.HasCollector)
                     {
                         context.PopSchemaLocation();
@@ -663,7 +665,6 @@ public readonly struct NameComponentArray : IJsonElement<NameComponentArray>
             }
         }
 
-
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
@@ -673,6 +674,23 @@ public readonly struct NameComponentArray : IJsonElement<NameComponentArray>
         {
             return
                 context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    propertyName,
+                    reducedEvaluationPath: schemaEvaluationPath);
+        }
+
+        internal static JsonSchemaContext PushChildContextUnescaped(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            ReadOnlySpan<byte> propertyName,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
+        {
+            return
+                context.PushChildContextUnescaped(
                     parentDocument,
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
