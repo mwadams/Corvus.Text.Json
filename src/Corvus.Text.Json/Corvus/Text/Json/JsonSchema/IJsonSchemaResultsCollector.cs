@@ -112,21 +112,24 @@ namespace Corvus.Text.Json
         /// Commits the last child context.
         /// </summary>
         /// <param name="sequenceNumber">The sequence number of the child context to commit.</param>
-        /// <param name="isMatch">If <see langword="true"/> then the commit indicates that the child produced a successful match.</param>
+        /// <param name="parentIsMatch">If <see langword="true"/> then the parent commit indicates a successful match.</param>
+        /// <param name="childIsMatch">If <see langword="true"/> then the commit indicates that the child produced a successful match.</param>
         /// <param name="messageProvider">The (optional) provider for a JSON validation message.</param>
         /// <remarks>
         /// This allows the collector to update the match state, and commit any resources associated with the child context.
         /// </remarks>
         void CommitChildContext(
             int sequenceNumber,
-            bool isMatch,
+            bool parentIsMatch,
+            bool childIsMatch,
             JsonSchemaMessageProvider? messageProvider);
 
         /// <summary>
         /// Commits the last child context.
         /// </summary>
         /// <param name="sequenceNumber">The sequence number of the child context to commit.</param>
-        /// <param name="isMatch">If <see langword="true"/> then the commit indicates that the child produced a successful match.</param>
+        /// <param name="parentIsMatch">If <see langword="true"/> then the parent commit indicates a successful match.</param>
+        /// <param name="childIsMatch">If <see langword="true"/> then the commit indicates that the child produced a successful match.</param>
         /// <param name="providerContext">The context to provide to the message provider.</param>
         /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
         /// <remarks>
@@ -134,7 +137,8 @@ namespace Corvus.Text.Json
         /// </remarks>
         void CommitChildContext<TProviderContext>(
             int sequenceNumber,
-            bool isMatch,
+            bool parentIsMatch,
+            bool childIsMatch,
             TProviderContext providerContext,
             JsonSchemaMessageProvider<TProviderContext>? messageProvider);
 

@@ -13,5 +13,11 @@ namespace System.Collections.Generic
             _pos--;
             return Span[_pos];
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T Peek()
+        {
+            return Span[_pos - 1];
+        }
     }
 }

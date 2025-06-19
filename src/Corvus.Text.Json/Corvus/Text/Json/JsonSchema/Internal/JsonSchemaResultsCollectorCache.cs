@@ -11,11 +11,11 @@ namespace Corvus.Text.Json.Internal
     internal static class JsonSchemaResultsCollectorCache
     {
         [ThreadStatic]
-        private static ThreadLocalState? t_threadLocalState;
+        private static ThreadLocalState? s_threadLocalState;
 
         public static JsonSchemaResultsCollector RentResultsCollector(JsonSchemaResultsLevel level = JsonSchemaResultsLevel.Basic, int initialCapacity = 30)
         {
-            ThreadLocalState state = t_threadLocalState ??= new();
+            ThreadLocalState state = s_threadLocalState ??= new();
             JsonSchemaResultsCollector collector;
 
             if (state.RentedCollectors++ == 0)
@@ -35,8 +35,8 @@ namespace Corvus.Text.Json.Internal
 
         public static void ReturnResultsCollector(JsonSchemaResultsCollector collector)
         {
-            Debug.Assert(t_threadLocalState != null);
-            ThreadLocalState state = t_threadLocalState;
+            Debug.Assert(s_threadLocalState != null);
+            ThreadLocalState state = s_threadLocalState;
 
             collector.ResetAllStateForCacheReuse();
 

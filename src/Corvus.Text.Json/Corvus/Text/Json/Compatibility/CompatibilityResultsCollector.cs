@@ -19,8 +19,6 @@ namespace Corvus.Text.Json.Compatibility
 
 
 
-        // Gets the version of the results, so we can avoid a copy if it is not updated
-        public int ResultsVersion => throw new NotImplementedException();
 
         internal bool IsValid => throw new NotImplementedException();
 
@@ -32,8 +30,8 @@ namespace Corvus.Text.Json.Compatibility
         int IJsonSchemaResultsCollector.BeginChildContext(ReadOnlySpan<byte> escapedPropertyName, JsonSchemaPathProvider? reducedEvaluationPath) => throw new NotImplementedException();
         int IJsonSchemaResultsCollector.BeginChildContextUnescaped(ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider? reducedEvaluationPath) => throw new NotImplementedException();
         int IJsonSchemaResultsCollector.BeginChildContext<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath) => throw new NotImplementedException();
-        void IJsonSchemaResultsCollector.CommitChildContext(int sequenceNumber, bool isMatch, JsonSchemaMessageProvider? messageProvider) => throw new NotImplementedException();
-        void IJsonSchemaResultsCollector.CommitChildContext<TProviderContext>(int sequenceNumber, bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider) => throw new NotImplementedException();
+        void IJsonSchemaResultsCollector.CommitChildContext(int sequenceNumber, bool parentIsMatch, bool childIsMatch, JsonSchemaMessageProvider? messageProvider) => throw new NotImplementedException();
+        void IJsonSchemaResultsCollector.CommitChildContext<TProviderContext>(int sequenceNumber, bool parentIsMatch, bool childIsMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider) => throw new NotImplementedException();
         void IJsonSchemaResultsCollector.PopChildContext(int sequenceNUmber) => throw new NotImplementedException();
         void IJsonSchemaResultsCollector.IgnoredKeyword(JsonSchemaMessageProvider? messageProvider, ReadOnlySpan<byte> unescapedKeyword) => throw new NotImplementedException();
         void IJsonSchemaResultsCollector.IgnoredKeyword<TProviderContext>(TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider, ReadOnlySpan<byte> unescapedKeyword) => throw new NotImplementedException();

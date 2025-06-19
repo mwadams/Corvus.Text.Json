@@ -409,14 +409,52 @@ catch (InvalidOperationException ex)
 
 bool result = person == lastName;
 
-var nameComponentBuilder = NameComponent.CreateDocumentBuilder(workspace, "foo"u8);
+JsonDocumentBuilder<NameComponent.Mutable> nameComponentBuilder = NameComponent.CreateDocumentBuilder(workspace, "foo"u8);
+
+EvaluateAndWriteResults(person, JsonSchemaResultsLevel.Basic);
+EvaluateAndWriteResults(person, JsonSchemaResultsLevel.Detailed);
+EvaluateAndWriteResults(person, JsonSchemaResultsLevel.Verbose);
+
+string brokenJson =
+    """
+    {
+        "age": 51,
+        "name": {
+            "firstName": "Michael",
+            "lastName": 123,
+            "otherNames": ["Francis", "James"]
+        },
+        "competedInYears": [2012, 2016, 2024]
+    }
+    """;
+
+using var brokenPersonDoc = ParsedJsonDocument<Person>.Parse(brokenJson);
+var brokenPerson = brokenPersonDoc.RootElement;
+
+EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Basic);
+EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Detailed);
+EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Verbose);
 
 
-JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
-person.EvaluateSchema(collector);
-
-JsonSchemaResultsCollector.ResultsEnumerator enumerator = collector.EnumerateResults();
-while (enumerator.MoveNext())
+static void EvaluateAndWriteResults(Person person, JsonSchemaResultsLevel level)
 {
-    JsonSchemaResultsCollector.Result resultItem = enumerator.Current;    
+    JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(level);
+    bool personEvaluationResult = person.EvaluateSchema(collector);
+
+    JsonSchemaResultsCollector.ResultsEnumerator enumerator = collector.EnumerateResults();
+
+    Console.WriteLine();
+    Console.WriteLine("************");
+    Console.WriteLine($"Evaluated {level}: {personEvaluationResult}\r\n{person.ToString()}");
+    Console.WriteLine();
+    Console.WriteLine("== Results ==");
+    Console.WriteLine();
+
+    while (enumerator.MoveNext())
+    {
+        JsonSchemaResultsCollector.Result resultItem = enumerator.Current;
+        Console.WriteLine($"Evaluated: {resultItem.IsMatch}\r\n\tMessage: \"{resultItem.GetMessageText()}\"\r\n\tat ({resultItem.GetEvaluationLocationText()}, {resultItem.GetSchemaEvaluationLocationText()}, {resultItem.GetDocumentEvaluationLocationText()})");
+    }
+
+    Console.WriteLine("************");
 }

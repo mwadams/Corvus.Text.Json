@@ -1356,7 +1356,6 @@ namespace Corvus.Text.Json
 
         }
 
-        // TODO: figure out how to bridge from the non-mutable to mutable document in this deferral case
         bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement.Mutable value)
         {
             CheckNotDisposed();

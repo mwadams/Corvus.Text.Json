@@ -619,12 +619,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             if (oneOf0Context.IsMatch)
             {
                 oneOfMatchCount++;
-                context.CommitChildContext(isMatch: true, ref oneOf0Context);
                 context.ApplyEvaluated(ref oneOf0Context);
-            }
-            else
-            {
-                context.PopChildContext(ref oneOf0Context);
             }
 
             JsonSchemaContext oneOf1Context =
@@ -635,21 +630,22 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             if (oneOf1Context.IsMatch)
             {
                 oneOfMatchCount++;
-                context.CommitChildContext(true, ref oneOf1Context);
                 context.ApplyEvaluated(ref oneOf1Context);
-            }
-            else
-            {
-                context.PopChildContext(ref oneOf1Context);
             }
 
             if (oneOfMatchCount == 1)
             {
+                context.CommitChildContext(true, ref oneOf1Context);
+                context.CommitChildContext(true, ref oneOf0Context);
                 context.EvaluatedKeyword(true, null, "oneOf"u8);
+
             }
             else if (oneOfMatchCount > 1)
             {
+                context.CommitChildContext(false, ref oneOf1Context);
+                context.CommitChildContext(false, ref oneOf0Context);
                 context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedMoreThanOneSchema, "oneOf"u8);
+
                 if (!context.HasCollector)
                 {
                     context.PopSchemaLocation();
@@ -658,6 +654,8 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             }
             else
             {
+                context.CommitChildContext(false, ref oneOf1Context);
+                context.CommitChildContext(false, ref oneOf0Context);
                 context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedNoSchema, "oneOf"u8);
                 if (!context.HasCollector)
                 {

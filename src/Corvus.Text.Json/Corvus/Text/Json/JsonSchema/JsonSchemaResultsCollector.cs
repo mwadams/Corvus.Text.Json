@@ -15,6 +15,10 @@ namespace Corvus.Text.Json
         private const int MaxMessageLength = 1024;
         private const int ResultHeaderSize = 4;
         private const int MaxPathSegmentLength = 1024;
+        private const int MaxUriBaseLength = 4096;
+        // We assume an initial estimate of 32 bytes per path segment, and 128 bytes per message
+        private const int BytesPerPathSegment = 32;
+        private const int BytesPerMessage = 128;
 
         [StructLayout(LayoutKind.Sequential)]
         internal readonly struct ValueRange
@@ -24,6 +28,7 @@ namespace Corvus.Text.Json
 
             public ValueRange(int start, int end)
             {
+                Debug.Assert(start <= end);
                 Start = start;
                 End = end;
             }
@@ -32,25 +37,28 @@ namespace Corvus.Text.Json
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private readonly struct ValueRangeWithCommitIndex
+        private readonly struct ValueRangeWithCommitIndexAndSequenceNumber
         {
             public readonly int Start;
             public readonly int End;
             public readonly int CommitIndex;
+            public readonly int SequenceNumber;
 
-            public ValueRangeWithCommitIndex(int start, int end, int commitIndex)
+            public ValueRangeWithCommitIndexAndSequenceNumber(int start, int end, int commitIndex, int sequenceNumber)
             {
+                Debug.Assert(start <= end);
                 Start = start;
                 End = end;
                 CommitIndex = commitIndex;
+                SequenceNumber = sequenceNumber;
             }
 
             public int Length => End - Start;
         }
 
-        // We assume an initial estimate of 32 bytes per path segment, and 128 bytes per message
-        private const int s_bytesPerPathSegment = 32;
-        private const int s_bytesPerMessage = 128;
+        private readonly bool _rented;
+        private bool _isDisposed;
+
         private byte[] _utf8StringBacking;
         private int _utf8StringBackingLength;
 
@@ -61,13 +69,9 @@ namespace Corvus.Text.Json
         private byte[] _evaluationPath;
         private byte[] _schemaEvaluationPath;
         private byte[] _documentEvaluationPath;
-        private int _evaluationPathLength;
-        private int _schemaEvaluationPathLength;
-        private int _documentEvaluationPathLength;
         private int _sequenceNumber;
 
-        private readonly bool _rented;
-        private readonly JsonSchemaResultsLevel _level;
+        private JsonSchemaResultsLevel _level;
 
         // indices for the end of the path stack at each level
 
@@ -77,7 +81,7 @@ namespace Corvus.Text.Json
         ValueStack<ValueRange> _evaluationPathStack;
         ValueStack<ValueRange> _documentEvaluationPathStack;
         ValueStack<ValueRange> _schemaEvaluationPathStack;
-        ValueStack<ValueRangeWithCommitIndex> _resultStack;
+        ValueStack<ValueRangeWithCommitIndexAndSequenceNumber> _resultStack;
         ValueStack<ValueRange> _committedResultStack;
 
         internal JsonSchemaResultsCollector(bool rented, JsonSchemaResultsLevel level, int estimatedCapacity = 30)
@@ -93,29 +97,22 @@ namespace Corvus.Text.Json
 
             // We will allow an additional "MaxPathSegmentLength" of capacity to avoid
             // enlarging with our max test each time.
-            int pathCapacity = (estimatedCapacity * s_bytesPerPathSegment) + MaxPathSegmentLength;
+            int pathCapacity = (estimatedCapacity * BytesPerPathSegment) + MaxPathSegmentLength;
+
+            _schemaEvaluationPath = ArrayPool<byte>.Shared.Rent(pathCapacity + MaxUriBaseLength);
 
             _evaluationPath = ArrayPool<byte>.Shared.Rent(pathCapacity);
-            _schemaEvaluationPath = ArrayPool<byte>.Shared.Rent(pathCapacity);
             _documentEvaluationPath = ArrayPool<byte>.Shared.Rent(pathCapacity);
 
-            if (level == JsonSchemaResultsLevel.Basic)
-            {
-                _utf8StringBackingLength = -1;
-                _utf8StringBacking = [];
-            }
-            else
-            {
-                int messageCapacity = estimatedCapacity * s_bytesPerMessage;
-                _utf8StringBacking = ArrayPool<byte>.Shared.Rent(messageCapacity);
-            }
+            int messageCapacity = estimatedCapacity * BytesPerMessage;
+            _utf8StringBacking = ArrayPool<byte>.Shared.Rent(messageCapacity);
 
             // We will just use the default max depth for a JSON document for the evaluation path depth
             _evaluationPathStack = new ValueStack<ValueRange>(JsonDocumentOptions.DefaultMaxDepth);
             _documentEvaluationPathStack = new ValueStack<ValueRange>(JsonDocumentOptions.DefaultMaxDepth);
             _schemaEvaluationPathStack = new ValueStack<ValueRange>(JsonDocumentOptions.DefaultMaxDepth);
 
-            _resultStack = new ValueStack<ValueRangeWithCommitIndex>(JsonDocumentOptions.DefaultMaxDepth);
+            _resultStack = new ValueStack<ValueRangeWithCommitIndexAndSequenceNumber>(JsonDocumentOptions.DefaultMaxDepth);
             _committedResultStack = new ValueStack<ValueRange>(JsonDocumentOptions.DefaultMaxDepth);
         }
 
@@ -174,8 +171,13 @@ namespace Corvus.Text.Json
             public ReadOnlySpan<byte> SchemaEvaluationLocation => _collector.GetResultString(_schemaEvaluationLocation);
             public ReadOnlySpan<byte> DocumentEvaluationLocation => _collector.GetResultString(_documentEvaluationLocation);
 
+            public string GetMessageText() => JsonReaderHelper.GetTextFromUtf8(Message);
+            public string GetEvaluationLocationText() => JsonReaderHelper.GetTextFromUtf8(EvaluationLocation);
+            public string GetSchemaEvaluationLocationText() => JsonReaderHelper.GetTextFromUtf8(SchemaEvaluationLocation);
+            public string GetDocumentEvaluationLocationText() => JsonReaderHelper.GetTextFromUtf8(DocumentEvaluationLocation);
+
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private string DebuggerDisplay => $"Match: {IsMatch} {JsonReaderHelper.GetTextFromUtf8(Message)}{(Message.Length > 0 ? " " : "")}({JsonReaderHelper.GetTextFromUtf8(EvaluationLocation)}, {JsonReaderHelper.GetTextFromUtf8(DocumentEvaluationLocation)}, {JsonReaderHelper.GetTextFromUtf8(SchemaEvaluationLocation)})";
+            private string DebuggerDisplay => _collector is null ? "" : $"Match: {IsMatch} {JsonReaderHelper.GetTextFromUtf8(Message)}{(Message.Length > 0 ? " " : "")}({JsonReaderHelper.GetTextFromUtf8(EvaluationLocation)}, {JsonReaderHelper.GetTextFromUtf8(DocumentEvaluationLocation)}, {JsonReaderHelper.GetTextFromUtf8(SchemaEvaluationLocation)})";
         }
 
         /// <summary>
@@ -186,22 +188,26 @@ namespace Corvus.Text.Json
         public struct ResultsEnumerator
         {
             private readonly JsonSchemaResultsCollector _collector;
-            private int _curIdx;
-            private int _endIdx;
+            private readonly int _endIdx; // end of the committed result stack range
+            private int _curIdx; // the current index in the committed result stack range
+            private int _curResultIdx; // the current index in the current result range
+            private int _endResultIdx; // the end index in the current result range
 
             public ResultsEnumerator(JsonSchemaResultsCollector collector)
             {
                 _collector = collector;
                 _curIdx = -1;
+                _curResultIdx = -1;
+                _endResultIdx = -1;
                 _endIdx = collector._committedResultStack.Length;
             }
 
             /// <inheritdoc />
-            public Result Current
+            public readonly Result Current
             {
                 get
                 {
-                    return _curIdx < _endIdx ? _collector.ReadResult(_curIdx) : default;
+                    return _curResultIdx >= 0 && _curResultIdx < _endResultIdx ? _collector.ReadResult(_curResultIdx) : default;
                 }
             }
 
@@ -209,36 +215,75 @@ namespace Corvus.Text.Json
             public void Dispose()
             {
                 _curIdx = -1;
+                _curResultIdx = -1;
             }
 
             /// <inheritdoc />
             public void Reset()
             {
-                _curIdx = _endIdx;
+                _curIdx = -1;
+                _curResultIdx = -1;
             }
 
             /// <inheritdoc />
             public bool MoveNext()
             {
-                if (_curIdx >= _endIdx)
+                if (_curResultIdx < _endResultIdx)
                 {
-                    return false;
+                    _curResultIdx = _collector.GetNextResultIndex(_curResultIdx);
                 }
 
-                _curIdx++;
+                if (_curResultIdx >= _endResultIdx)
+                {
+                    _curIdx++;
 
-                return _curIdx < _endIdx;
+                    if (_curIdx >= _endIdx)
+                    {
+                        // We have reached the end of the results
+                        return false;
+                    }
+
+                    ValueRange range = _collector.ReadResultRange(_curIdx);
+                    _curResultIdx = range.Start;
+                    _endResultIdx = range.End;
+                    Debug.Assert(_curResultIdx < _endResultIdx, "There should never be an empty committed result range.");
+                }
+
+                return _curResultIdx < _endResultIdx;
             }
         }
 
+        /// <summary>
+        /// Enumerate the results from this collector.
+        /// </summary>
+        /// <returns>An enumerator for the results from the collector.</returns>
         [CLSCompliant(false)]
         public ResultsEnumerator EnumerateResults()
         {
             return new(this);
         }
 
+        public int GetResultCount()
+        {
+            int count = 0;
+            ResultsEnumerator enumerator = EnumerateResults();
+            while(enumerator.MoveNext())
+            {
+                count++;
+            }
+
+            return count;
+        }
+
         public void Dispose()
         {
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            _isDisposed = true;
+
             if (_rented)
             {
                 JsonSchemaResultsCollectorCache.ReturnResultsCollector(this);
@@ -271,7 +316,9 @@ namespace Corvus.Text.Json
 
         internal void Reset(JsonSchemaResultsLevel level, int estimatedCapacity)
         {
-            int pathCapacity = estimatedCapacity * s_bytesPerPathSegment; // we will assume 30 characters per path segment
+            _isDisposed = false;
+
+            int pathCapacity = estimatedCapacity * BytesPerPathSegment; // we will assume 30 characters per path segment
 
             if (_documentEvaluationPath.Length < pathCapacity)
             {
@@ -301,35 +348,31 @@ namespace Corvus.Text.Json
             }
 
 
-            _documentEvaluationPathLength = 0;
-            _schemaEvaluationPathLength = 0;
-            _evaluationPathLength = 0;
+            _currentEvaluationPathRange = default;
+            _currentSchemaEvaluationPathRange = default;
+            _currentDocumentEvaluationPathRange = default;
 
+            _level = level;
+            int messageCapacity;
             if (level == JsonSchemaResultsLevel.Basic)
             {
-                if (_utf8StringBackingLength != -1)
-                {
-                    // We only need to clear the length we have used because this
-                    // is a grow-only buffer
-                    _utf8StringBacking.AsSpan(0, _utf8StringBacking.Length).Clear();
-                    ArrayPool<byte>.Shared.Return(_utf8StringBacking);
-                    _utf8StringBackingLength = -1;
-                }
+                messageCapacity = pathCapacity * 3;
             }
             else
             {
-                int messageCapacity = estimatedCapacity * s_bytesPerMessage;
-                if (_utf8StringBacking.Length < messageCapacity)
-                {
-                    // We only need to clear the length we have used because this
-                    // is a grow-only buffer
-                    _utf8StringBacking.AsSpan(0, _utf8StringBacking.Length).Clear();
-                    ArrayPool<byte>.Shared.Return(_utf8StringBacking);
-                    _utf8StringBacking = ArrayPool<byte>.Shared.Rent(messageCapacity);
-                }
-
-                _utf8StringBackingLength = 0;
+                messageCapacity = estimatedCapacity * BytesPerMessage + (pathCapacity * 3);
             }
+
+            if (_utf8StringBacking.Length < messageCapacity)
+            {
+                // We only need to clear the length we have used because this
+                // is a grow-only buffer
+                _utf8StringBacking.AsSpan(0, _utf8StringBacking.Length).Clear();
+                ArrayPool<byte>.Shared.Return(_utf8StringBacking);
+                _utf8StringBacking = ArrayPool<byte>.Shared.Rent(messageCapacity);
+            }
+
+            _utf8StringBackingLength = 0;
 
             // And reset the stacks
             _evaluationPathStack.Length = 0;
@@ -341,14 +384,11 @@ namespace Corvus.Text.Json
 
         internal void ResetAllStateForCacheReuse()
         {
-            _documentEvaluationPathLength = 0;
-            _schemaEvaluationPathLength = 0;
-            _evaluationPathLength = 0;
-            if (_utf8StringBackingLength >= 0)
-            {
-                _utf8StringBackingLength = 0;
-            }
+            _currentDocumentEvaluationPathRange = default;
+            _currentSchemaEvaluationPathRange = default;
+            _currentDocumentEvaluationPathRange = default;
 
+            _utf8StringBackingLength = 0;
             _evaluationPathStack.Length = 0;
             _documentEvaluationPathStack.Length = 0;
             _schemaEvaluationPathStack.Length = 0;
@@ -365,6 +405,8 @@ namespace Corvus.Text.Json
          */
         private void WriteResult(bool match, JsonSchemaMessageProvider? messageProvider)
         {
+            Debug.Assert(_resultStack.Length != 0, "No parent context.");
+
             bool writeMessage = EnsureCapacityForResult(match);
             int written = 0;
 
@@ -380,6 +422,8 @@ namespace Corvus.Text.Json
 
         private void WriteResult<TProviderContext>(bool match, TProviderContext context, JsonSchemaMessageProvider<TProviderContext>? messageProvider)
         {
+            Debug.Assert(_resultStack.Length != 0, "No parent context.");
+
             bool writeMessage = EnsureCapacityForResult(match);
             int written = 0;
 
@@ -409,81 +453,100 @@ namespace Corvus.Text.Json
 
             int writtenAndMatch = written | (match ? 0x2000_0000 : 0x1000_0000);
 
+            int start = _utf8StringBackingLength;
+
 #if NET
-            BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(0, 4), writtenAndMatch);
+            BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), writtenAndMatch);
 #else
-            BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(0, 4), writtenAndMatch);
+            BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), writtenAndMatch);
 #endif
             _utf8StringBackingLength += written + ResultHeaderSize;
-
-            // Pop the current context
-            ValueRangeWithCommitIndex valueRange = _resultStack.Pop();
-            // And push it back with the updated end
-            _resultStack.Append(new ValueRangeWithCommitIndex(valueRange.Start, _utf8StringBackingLength, valueRange.CommitIndex));
 
             // Finally, write the paths to the results - first the header containing the length,
             // then the rest of the string
 #if NET
-            BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(0, 4), _currentEvaluationPathRange.Length);
+            BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentEvaluationPathRange.Length);
 #else
-            BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(0, 4), _currentEvaluationPathRange.Length);
+            BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentEvaluationPathRange.Length);
 #endif
             _evaluationPath.AsSpan(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.Length)
                 .CopyTo(_utf8StringBacking.AsSpan(_utf8StringBackingLength + ResultHeaderSize));
             _utf8StringBackingLength += _currentEvaluationPathRange.Length + ResultHeaderSize;
 
 #if NET
-            BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(0, 4), _currentDocumentEvaluationPathRange.Length);
+            BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentDocumentEvaluationPathRange.Length);
 #else
-            BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(0, 4), _currentDocumentEvaluationPathRange.Length);
+            BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentDocumentEvaluationPathRange.Length);
 #endif
             _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.Length)
                 .CopyTo(_utf8StringBacking.AsSpan(_utf8StringBackingLength + ResultHeaderSize));
             _utf8StringBackingLength += _currentDocumentEvaluationPathRange.Length + ResultHeaderSize;
 
 #if NET
-            BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(0, 4), _currentSchemaEvaluationPathRange.Length);
+            BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentSchemaEvaluationPathRange.Length);
 #else
-            BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(0, 4), _currentSchemaEvaluationPathRange.Length);
+            BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentSchemaEvaluationPathRange.Length);
 #endif
             _schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.Start, _currentSchemaEvaluationPathRange.Length)
                 .CopyTo(_utf8StringBacking.AsSpan(_utf8StringBackingLength + ResultHeaderSize));
             _utf8StringBackingLength += _currentSchemaEvaluationPathRange.Length + ResultHeaderSize;
+
+            ValueRangeWithCommitIndexAndSequenceNumber range = _resultStack.Peek();
+            _resultStack.Append(new ValueRangeWithCommitIndexAndSequenceNumber(start, _utf8StringBackingLength, range.CommitIndex, _sequenceNumber));
         }
 
-        private Result ReadResult(int index)
+        private ValueRange ReadResultRange(int index)
         {
             Debug.Assert(index >= 0 && index < _committedResultStack.Length);
 
-            ValueRange resultRange = _committedResultStack[index];
-            int curIndex = resultRange.Start;
+            return _committedResultStack[index];
+        }
+
+        private int GetNextResultIndex(int startIndex)
+        {
+            int curIndex = startIndex;
+            int header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
+            int length = header & 0x0FFF_FFFF;
+            curIndex += 4 + length;
+            header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
+            length = header & 0x0FFF_FFFF;
+            curIndex += 4 + length;
+            header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
+            length = header & 0x0FFF_FFFF;
+            curIndex += 4 + length;
+            header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
+            length = header & 0x0FFF_FFFF;
+            curIndex += 4 + length;
+            return curIndex;
+        }
+
+        private Result ReadResult(int startIndex)
+        {
+            int curIndex = startIndex;
 
             // First, read the initial header
             int header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
             bool isMatch = (header & 0x3000_0000) == 0x2000_0000; // 0b0010 is match true, 0b0001 is match false
-            int length = header & 0x7FFF_FFFF;
+            int length = header & 0x0FFF_FFFF;
 
             ValueRange messageRange = new(curIndex + 4, curIndex + 4 + length);
             curIndex += 4 + length;
 
             header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
-            length = header & 0x7FFF_FFFF;
+            length = header & 0x0FFF_FFFF;
             ValueRange evaluationLocationRange = new(curIndex + 4, curIndex + 4 + length);
             curIndex += 4 + length;
 
             header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
-            length = header & 0x7FFF_FFFF;
+            length = header & 0x0FFF_FFFF;
             ValueRange documentEvaluationLocationRange = new(curIndex + 4, curIndex + 4 + length);
             curIndex += 4 + length;
 
             header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
-            length = header & 0x7FFF_FFFF;
+            length = header & 0x0FFF_FFFF;
             ValueRange schemaEvaluationLocationRange = new(curIndex + 4, curIndex + 4 + length);
-            curIndex += 4 + length;
 
-            Debug.Assert(curIndex == resultRange.End);
-
-            return new(this, isMatch, messageRange, evaluationLocationRange, schemaEvaluationLocationRange, documentEvaluationLocationRange);
+            return new(this, isMatch, evaluationLocationRange, schemaEvaluationLocationRange, documentEvaluationLocationRange, messageRange);
         }
 
         private ReadOnlySpan<byte> GetResultString(ValueRange message) => message.Start >= 0 && message.Length < _utf8StringBacking.Length ? _utf8StringBacking.AsSpan(message.Start, message.Length) : default;
@@ -533,180 +596,193 @@ namespace Corvus.Text.Json
             if (newCapacity == toReturn.Length) newCapacity = int.MaxValue;
 
             backing = ArrayPool<byte>.Shared.Rent(newCapacity);
-            Buffer.BlockCopy(toReturn, 0, backing, 0, toReturn.Length);
 
-            // This could be security sensitive, so we clear the array
-            toReturn.AsSpan(0, usedLength).Clear();
-            ArrayPool<byte>.Shared.Return(toReturn);
+            if (toReturn.Length > 0)
+            {
+                Buffer.BlockCopy(toReturn, 0, backing, 0, toReturn.Length);
+
+                // This could be security sensitive, so we clear the array
+                toReturn.AsSpan(0, usedLength).Clear();
+                ArrayPool<byte>.Shared.Return(toReturn);
+            }
         }
 
         private void AppendToEvaluationPath(JsonSchemaPathProvider path)
         {
-            if (_evaluationPathLength + MaxPathSegmentLength > _evaluationPath.Length)
+            if (_currentEvaluationPathRange.End + MaxPathSegmentLength > _evaluationPath.Length)
             {
-                Enlarge(MaxPathSegmentLength, ref _evaluationPath, _evaluationPathLength);
+                Enlarge(MaxPathSegmentLength, ref _evaluationPath, _currentEvaluationPathRange.End);
             }
 
-            if (!path(_evaluationPath.AsSpan(_evaluationPathLength), out int written))
+            _evaluationPath[_currentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(_evaluationPath.AsSpan(_currentEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _evaluationPathLength += written;
-            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _evaluationPathLength);
+            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
         }
 
         private void AppendToEvaluationPath<T>(T context, JsonSchemaPathProvider<T> path)
         {
-            if (_evaluationPathLength + MaxPathSegmentLength > _evaluationPath.Length)
+            if (_currentEvaluationPathRange.End + MaxPathSegmentLength > _evaluationPath.Length)
             {
-                Enlarge(MaxPathSegmentLength, ref _evaluationPath, _evaluationPathLength);
+                Enlarge(MaxPathSegmentLength, ref _evaluationPath, _currentEvaluationPathRange.End);
             }
 
-            if (!path(context, _evaluationPath.AsSpan(_evaluationPathLength), out int written))
+            _evaluationPath[_currentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(context, _evaluationPath.AsSpan(_currentEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _evaluationPathLength += written;
-            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _evaluationPathLength);
+            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
         }
 
         private void AppendToSchemaEvaluationPath(JsonSchemaPathProvider path)
         {
-            if (_schemaEvaluationPathLength + MaxPathSegmentLength > _schemaEvaluationPath.Length)
+            if (_currentSchemaEvaluationPathRange.End + MaxPathSegmentLength > _schemaEvaluationPath.Length)
             {
-                Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _schemaEvaluationPathLength);
+                Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _currentSchemaEvaluationPathRange.End);
             }
 
-            if (!path(_schemaEvaluationPath.AsSpan(_schemaEvaluationPathLength), out int written))
+            _schemaEvaluationPath[_currentSchemaEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(_schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _schemaEvaluationPathLength += written;
-            _currentSchemaEvaluationPathRange = new ValueRange(_currentSchemaEvaluationPathRange.Start, _schemaEvaluationPathLength);
+            _currentSchemaEvaluationPathRange = new ValueRange(_currentSchemaEvaluationPathRange.Start, _currentSchemaEvaluationPathRange.End + written + 1);
         }
 
         private void AppendToSchemaEvaluationPath<T>(T context, JsonSchemaPathProvider<T> path)
         {
-            if (_schemaEvaluationPathLength + MaxPathSegmentLength > _schemaEvaluationPath.Length)
+            if (_currentSchemaEvaluationPathRange.End + MaxPathSegmentLength > _schemaEvaluationPath.Length)
             {
-                Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _schemaEvaluationPathLength);
+                Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _currentSchemaEvaluationPathRange.End);
             }
 
-            if (!path(context, _schemaEvaluationPath.AsSpan(_schemaEvaluationPathLength), out int written))
+            _schemaEvaluationPath[_currentSchemaEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(context, _schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _schemaEvaluationPathLength += written;
-            _currentSchemaEvaluationPathRange = new ValueRange(_currentSchemaEvaluationPathRange.Start, _schemaEvaluationPathLength);
+            _currentSchemaEvaluationPathRange = new ValueRange(_currentSchemaEvaluationPathRange.Start, _currentSchemaEvaluationPathRange.End + written + 1);
         }
 
         private void AppendToDocumentEvaluationPath(JsonSchemaPathProvider path)
         {
-            if (_documentEvaluationPathLength + MaxPathSegmentLength > _documentEvaluationPath.Length)
+            if (_currentDocumentEvaluationPathRange.End + MaxPathSegmentLength > _documentEvaluationPath.Length)
             {
-                Enlarge(MaxPathSegmentLength, ref _documentEvaluationPath, _documentEvaluationPathLength);
+                Enlarge(MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
             }
 
-            if (!path(_documentEvaluationPath.AsSpan(_documentEvaluationPathLength), out int written))
+            _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _documentEvaluationPathLength += written;
-            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _documentEvaluationPathLength);
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
         }
 
         private void AppendToDocumentEvaluationPath<T>(T context, JsonSchemaPathProvider<T> path)
         {
-            if (_documentEvaluationPathLength + MaxPathSegmentLength > _documentEvaluationPath.Length)
+            if (_currentDocumentEvaluationPathRange.End + MaxPathSegmentLength > _documentEvaluationPath.Length)
             {
-                Enlarge(MaxPathSegmentLength, ref _documentEvaluationPath, _documentEvaluationPathLength);
+                Enlarge(MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
             }
 
-            if (!path(context, _documentEvaluationPath.AsSpan(_documentEvaluationPathLength), out int written))
+            _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(context, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _documentEvaluationPathLength += written;
-            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _documentEvaluationPathLength);
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
         }
 
         private void UnescapeEncodeAndAppendToDocumentEvaluationPath(ReadOnlySpan<byte> escapedAndUnencodedPropertyName)
         {
             int length = (escapedAndUnencodedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileEncodingPointer);
 
-            if (_documentEvaluationPathLength + length > _documentEvaluationPath.Length)
+            if (_currentDocumentEvaluationPathRange.End + length > _documentEvaluationPath.Length)
             {
-                Enlarge(length, ref _documentEvaluationPath, _documentEvaluationPathLength);
+                Enlarge(length, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
             }
 
+            _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
 
-            if (!JsonReaderHelper.TryUnescapeAndEncodePointer(escapedAndUnencodedPropertyName, _documentEvaluationPath.AsSpan(_documentEvaluationPathLength), out int written))
+            if (!JsonReaderHelper.TryUnescapeAndEncodePointer(escapedAndUnencodedPropertyName, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _documentEvaluationPathLength += written;
-            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _documentEvaluationPathLength);
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
         }
 
         private void EncodeAndAppendToDocumentEvaluationPath(ReadOnlySpan<byte> unencodedPropertyName)
         {
             int length = (unencodedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileEncodingPointer);
 
-            if (_documentEvaluationPathLength + length > _documentEvaluationPath.Length)
+            if (_currentDocumentEvaluationPathRange.End + length > _documentEvaluationPath.Length)
             {
-                Enlarge(length, ref _documentEvaluationPath, _documentEvaluationPathLength);
+                Enlarge(length, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
             }
 
-            if (!JsonReaderHelper.TryEncodePointer(unencodedPropertyName, _documentEvaluationPath.AsSpan(_documentEvaluationPathLength), out int written))
+            _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!JsonReaderHelper.TryEncodePointer(unencodedPropertyName, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _documentEvaluationPathLength += written;
-            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _documentEvaluationPathLength);
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
         }
 
         private void EncodeAndAppendToSchemaEvaluationPath(ReadOnlySpan<byte> unencodedPropertyName)
         {
             int length = (unencodedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileEncodingPointer);
 
-            if (_schemaEvaluationPathLength + length > _schemaEvaluationPath.Length)
+            if (_currentSchemaEvaluationPathRange.End + length > _schemaEvaluationPath.Length)
             {
-                Enlarge(length, ref _schemaEvaluationPath, _schemaEvaluationPathLength);
+                Enlarge(length, ref _schemaEvaluationPath, _currentSchemaEvaluationPathRange.End);
             }
 
-            if (!JsonReaderHelper.TryEncodePointer(unencodedPropertyName, _schemaEvaluationPath.AsSpan(_schemaEvaluationPathLength), out int written))
+            _schemaEvaluationPath[_currentSchemaEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!JsonReaderHelper.TryEncodePointer(unencodedPropertyName, _schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _schemaEvaluationPathLength += written;
-            _currentSchemaEvaluationPathRange = new ValueRange(_currentSchemaEvaluationPathRange.Start, _schemaEvaluationPathLength);
+            _currentSchemaEvaluationPathRange = new ValueRange(_currentSchemaEvaluationPathRange.Start, _currentSchemaEvaluationPathRange.End + written + 1);
         }
 
         private void EncodeAndAppendToEvaluationPath(ReadOnlySpan<byte> unencodedPropertyName)
         {
             int length = (unencodedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileEncodingPointer);
 
-            if (_schemaEvaluationPathLength + length > _schemaEvaluationPath.Length)
+            if (_currentEvaluationPathRange.End + length > _evaluationPath.Length)
             {
-                Enlarge(length, ref _schemaEvaluationPath, _schemaEvaluationPathLength);
+                Enlarge(length, ref _evaluationPath, _currentEvaluationPathRange.End);
             }
 
-            if (!JsonReaderHelper.TryEncodePointer(unencodedPropertyName, _schemaEvaluationPath.AsSpan(_schemaEvaluationPathLength), out int written))
+            _evaluationPath[_currentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!JsonReaderHelper.TryEncodePointer(unencodedPropertyName, _evaluationPath.AsSpan(_currentEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _schemaEvaluationPathLength += written;
-            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _schemaEvaluationPathLength);
+            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
         }
 
 
@@ -733,7 +809,7 @@ namespace Corvus.Text.Json
             // There are no current results for this context (hence our result stack has 0 length)
             // But we also record the committed result stack at this point, in case we wish to pop and unwind it later.
             _resultStack.Append(
-                new ValueRangeWithCommitIndex(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length));
+                new ValueRangeWithCommitIndexAndSequenceNumber(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length, _sequenceNumber));
 
             _sequenceNumber++;
             return _sequenceNumber;
@@ -762,7 +838,7 @@ namespace Corvus.Text.Json
             // There are no current results for this context (hence our result stack has 0 length)
             // But we also record the committed result stack at this point, in case we wish to pop and unwind it later.
             _resultStack.Append(
-                new ValueRangeWithCommitIndex(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length));
+                new ValueRangeWithCommitIndexAndSequenceNumber(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length, _sequenceNumber));
 
             _sequenceNumber++;
             return _sequenceNumber;
@@ -788,7 +864,7 @@ namespace Corvus.Text.Json
             // There are no current results for this context (hence our result stack has 0 length)
             // But we also record the committed result stack at this point, in case we wish to pop and unwind it later.
             _resultStack.Append(
-                new ValueRangeWithCommitIndex(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length));
+                new ValueRangeWithCommitIndexAndSequenceNumber(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length, _sequenceNumber));
 
             _sequenceNumber++;
             return _sequenceNumber;
@@ -814,20 +890,28 @@ namespace Corvus.Text.Json
             // There are no current results for this context (hence our result stack has 0 length)
             // But we also record the committed result stack at this point, in case we wish to pop and unwind it later.
             _resultStack.Append(
-                new ValueRangeWithCommitIndex(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length));
+                new ValueRangeWithCommitIndexAndSequenceNumber(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length, _sequenceNumber));
 
             _sequenceNumber++;
             return _sequenceNumber;
         }
 
-        void IJsonSchemaResultsCollector.CommitChildContext(int sequenceNumber, bool isMatch, JsonSchemaMessageProvider? messageProvider)
+        void IJsonSchemaResultsCollector.CommitChildContext(int sequenceNumber, bool parentIsMatch, bool childIsMatch, JsonSchemaMessageProvider? messageProvider)
         {
             IsConsistent(sequenceNumber);
-            WriteResult(isMatch, messageProvider);
 
-            // Commit the results
-            ValueRangeWithCommitIndex range = _resultStack.Pop();
-            _committedResultStack.Append(new ValueRange(range.Start, range.End));
+            if (parentIsMatch && _level != JsonSchemaResultsLevel.Verbose)
+            {
+                PopChildContextUnsafe();
+                return;
+            }
+
+            if (!parentIsMatch || _level == JsonSchemaResultsLevel.Verbose)
+            {
+                WriteResult(childIsMatch, messageProvider);
+            }
+
+            CommitCurrentResults();
 
             // Pop the paths off the stack
             _currentEvaluationPathRange = _evaluationPathStack.Pop();
@@ -836,35 +920,68 @@ namespace Corvus.Text.Json
             _sequenceNumber--;
         }
 
-        void IJsonSchemaResultsCollector.CommitChildContext<TProviderContext>(int sequenceNumber, bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider)
+        void IJsonSchemaResultsCollector.CommitChildContext<TProviderContext>(int sequenceNumber, bool parentIsMatch, bool childIsMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider)
         {
             IsConsistent(sequenceNumber);
-            WriteResult(isMatch, providerContext, messageProvider);
 
-            // Commit the results
-            ValueRangeWithCommitIndex range = _resultStack.Pop();
-            _committedResultStack.Append(new ValueRange(range.Start, range.End));
+            if (parentIsMatch && _level != JsonSchemaResultsLevel.Verbose)
+            {
+                PopChildContextUnsafe();
+                return;
+            }
+
+            if (!parentIsMatch || _level == JsonSchemaResultsLevel.Verbose)
+            {
+                WriteResult(childIsMatch, providerContext, messageProvider);
+            }
+
+            CommitCurrentResults();
 
             // Pop the paths off the stack
             _currentEvaluationPathRange = _evaluationPathStack.Pop();
             _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
             _currentDocumentEvaluationPathRange = _documentEvaluationPathStack.Pop();
             _sequenceNumber--;
+        }
+
+        private void CommitCurrentResults()
+        {
+            while (_resultStack.Peek().SequenceNumber == _sequenceNumber)
+            {
+                // Also, pop the results off the stack
+                ValueRangeWithCommitIndexAndSequenceNumber range = _resultStack.Pop();
+                if (range.Length > 0)
+                {
+                    _committedResultStack.Append(new ValueRange(range.Start, range.End));
+                }
+            }
         }
 
         void IJsonSchemaResultsCollector.PopChildContext(int sequenceNumber)
         {
             IsConsistent(sequenceNumber);
 
+            PopChildContextUnsafe();
+        }
+
+        private void PopChildContextUnsafe()
+        {
             // Pop the paths off the stack
             _currentEvaluationPathRange = _evaluationPathStack.Pop();
             _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
             _currentDocumentEvaluationPathRange = _documentEvaluationPathStack.Pop();
 
             // Also, pop the results off the stack
-            ValueRangeWithCommitIndex range = _resultStack.Pop();
+            // There must be at least one.
+            ValueRangeWithCommitIndexAndSequenceNumber range = default;
+            while (_resultStack.Peek().SequenceNumber == _sequenceNumber)
+            {
+                range = _resultStack.Pop();
+            }
+
             // And ensure we roll back any commits
             _committedResultStack.Length = range.CommitIndex;
+            _utf8StringBackingLength = range.Start;
             _sequenceNumber--;
         }
 
@@ -877,7 +994,7 @@ namespace Corvus.Text.Json
 
                 EncodeAndAppendToEvaluationPath(unescapedKeyword);
 
-                WriteResult(match: true, messageProvider);
+                WriteResult(match: true, messageProvider: messageProvider);
 
                 _currentEvaluationPathRange = _evaluationPathStack.Pop();
                 _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
@@ -893,14 +1010,14 @@ namespace Corvus.Text.Json
 
                 EncodeAndAppendToEvaluationPath(unescapedKeyword);
 
-                WriteResult(match: true, providerContext, messageProvider);
+                WriteResult(match: true, context: providerContext, messageProvider: messageProvider);
 
                 _currentEvaluationPathRange = _evaluationPathStack.Pop();
                 _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
             }
         }
 
-        void IJsonSchemaResultsCollector.EvaluatedKeyword (bool isMatch, JsonSchemaMessageProvider? messageProvider, ReadOnlySpan<byte> unescapedKeyword)
+        void IJsonSchemaResultsCollector.EvaluatedKeyword(bool isMatch, JsonSchemaMessageProvider? messageProvider, ReadOnlySpan<byte> unescapedKeyword)
         {
             if (!isMatch || _level == JsonSchemaResultsLevel.Verbose)
             {
@@ -910,7 +1027,7 @@ namespace Corvus.Text.Json
                 EncodeAndAppendToEvaluationPath(unescapedKeyword);
                 EncodeAndAppendToSchemaEvaluationPath(unescapedKeyword);
 
-                WriteResult(match: isMatch, messageProvider);
+                WriteResult(match: isMatch, messageProvider: messageProvider);
 
                 _currentEvaluationPathRange = _evaluationPathStack.Pop();
                 _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
@@ -927,7 +1044,7 @@ namespace Corvus.Text.Json
                 EncodeAndAppendToEvaluationPath(unescapedKeyword);
                 EncodeAndAppendToSchemaEvaluationPath(unescapedKeyword);
 
-                WriteResult(match: isMatch, providerContext, messageProvider);
+                WriteResult(match: isMatch, context: providerContext, messageProvider: messageProvider);
 
                 _currentEvaluationPathRange = _evaluationPathStack.Pop();
                 _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
@@ -944,7 +1061,7 @@ namespace Corvus.Text.Json
                 AppendToEvaluationPath(keywordPath);
                 AppendToSchemaEvaluationPath(keywordPath);
 
-                WriteResult(match: isMatch, messageProvider);
+                WriteResult(match: isMatch, messageProvider: messageProvider);
 
                 _currentEvaluationPathRange = _evaluationPathStack.Pop();
                 _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
@@ -961,7 +1078,7 @@ namespace Corvus.Text.Json
                 AppendToEvaluationPath(providerContext, keywordPath);
                 AppendToSchemaEvaluationPath(providerContext, keywordPath);
 
-                WriteResult(match: isMatch, providerContext, messageProvider);
+                WriteResult(match: isMatch, context: providerContext, messageProvider: messageProvider);
 
                 _currentEvaluationPathRange = _evaluationPathStack.Pop();
                 _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
@@ -980,7 +1097,7 @@ namespace Corvus.Text.Json
                 EncodeAndAppendToSchemaEvaluationPath(unescapedKeyword);
                 EncodeAndAppendToDocumentEvaluationPath(propertyName);
 
-                WriteResult(match: isMatch, messageProvider);
+                WriteResult(match: isMatch, messageProvider: messageProvider);
 
                 _currentEvaluationPathRange = _evaluationPathStack.Pop();
                 _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
@@ -1000,7 +1117,7 @@ namespace Corvus.Text.Json
                 EncodeAndAppendToSchemaEvaluationPath(unescapedKeyword);
                 EncodeAndAppendToDocumentEvaluationPath(propertyName);
 
-                WriteResult(match: isMatch, providerContext, messageProvider);
+                WriteResult(match: isMatch, context: providerContext, messageProvider: messageProvider);
 
                 _currentEvaluationPathRange = _evaluationPathStack.Pop();
                 _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
@@ -1012,7 +1129,7 @@ namespace Corvus.Text.Json
         {
             if (!isMatch || _level == JsonSchemaResultsLevel.Verbose)
             {
-                WriteResult(match: isMatch, messageProvider);
+                WriteResult(match: isMatch, messageProvider: messageProvider);
             }
         }
 
@@ -1020,7 +1137,7 @@ namespace Corvus.Text.Json
         {
             if (!isMatch || _level == JsonSchemaResultsLevel.Verbose)
             {
-                WriteResult(match: isMatch, providerContext, messageProvider);
+                WriteResult(match: isMatch, context: providerContext, messageProvider: messageProvider);
             }
         }
 
@@ -1033,13 +1150,12 @@ namespace Corvus.Text.Json
 
         void IJsonSchemaResultsCollector.PushSchemaLocation(JsonSchemaPathProvider relativeOrAbsoluteSchemaLocation)
         {
-            int start = _currentSchemaEvaluationPathRange.Start + _currentSchemaEvaluationPathRange.Length;
-            if (start + MaxPathSegmentLength > _schemaEvaluationPath.Length)
+            if (_currentSchemaEvaluationPathRange.End + MaxUriBaseLength > _schemaEvaluationPath.Length)
             {
-                Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _schemaEvaluationPathLength);
+                Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _currentSchemaEvaluationPathRange.End);
             }
 
-            if (!relativeOrAbsoluteSchemaLocation(_schemaEvaluationPath.AsSpan(start), out int written))
+            if (!relativeOrAbsoluteSchemaLocation(_schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
@@ -1047,19 +1163,18 @@ namespace Corvus.Text.Json
             _evaluationPathStack.Append(_currentEvaluationPathRange);
             _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
             _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
-            _currentSchemaEvaluationPathRange = new(start, start + written);
+            _currentSchemaEvaluationPathRange = new(_currentSchemaEvaluationPathRange.End, _currentSchemaEvaluationPathRange.End + written);
         }
 
 
         void IJsonSchemaResultsCollector.PushSchemaLocation<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> relativeOrAbsoluteSchemaLocation)
         {
-            int start = _currentSchemaEvaluationPathRange.Start + _currentSchemaEvaluationPathRange.Length;
-            if (start + MaxPathSegmentLength > _schemaEvaluationPath.Length)
+            if (_currentSchemaEvaluationPathRange.End + MaxUriBaseLength > _schemaEvaluationPath.Length)
             {
-                Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _schemaEvaluationPathLength);
+                Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _currentSchemaEvaluationPathRange.End);
             }
 
-            if (!relativeOrAbsoluteSchemaLocation(providerContext, _schemaEvaluationPath.AsSpan(start), out int written))
+            if (!relativeOrAbsoluteSchemaLocation(providerContext, _schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
@@ -1067,7 +1182,7 @@ namespace Corvus.Text.Json
             _evaluationPathStack.Append(_currentEvaluationPathRange);
             _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
             _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
-            _currentSchemaEvaluationPathRange = new(start, start + written);
+            _currentSchemaEvaluationPathRange = new(_currentSchemaEvaluationPathRange.End, _currentSchemaEvaluationPathRange.End + written);
         }
 
 
@@ -1080,5 +1195,9 @@ namespace Corvus.Text.Json
                 || (_evaluationPathStack.Length == _documentEvaluationPathStack.Length && _evaluationPathStack.Length == _schemaEvaluationPathStack.Length));
             Debug.Assert(sequenceNumber == _sequenceNumber, "A context has been completed out-of-order");
         }
+
+        internal string SchemaLocation => JsonReaderHelper.GetTextFromUtf8(_schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.Start, _currentSchemaEvaluationPathRange.Length));
+        internal string DocumentLocation => JsonReaderHelper.GetTextFromUtf8(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.Length));
+        internal string EvaluationLocation => JsonReaderHelper.GetTextFromUtf8(_evaluationPath.AsSpan(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.Length));
     }
 }

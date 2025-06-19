@@ -773,7 +773,7 @@ public readonly struct Person : IJsonElement<Person>
                 if ((seenItems[0] ^ BitMaskOffset0) == 0)
                 {
                     // Add a "matched" for each of the individual matched properties
-                    context.EvaluatedKeywordPath(true, 0, RequiredPropertyNameNotPresent, RequiredSchemaEvaluationPath);
+                    context.EvaluatedKeywordPath(true, 0, RequiredPropertyNamePresent, RequiredSchemaEvaluationPath);
                     context.PopSchemaLocation();
                     return;
                 }

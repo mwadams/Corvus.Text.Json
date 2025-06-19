@@ -305,15 +305,30 @@ namespace Corvus.Text.Json.Internal
         /// child context.
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void CommitChildContext<TProviderContext>(bool isMatch, ref readonly JsonSchemaContext childContext, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider = null)
+        {
+            _resultsCollector?.CommitChildContext(childContext._sequenceNumber, parentIsMatch: isMatch, childIsMatch: childContext.IsMatch, providerContext, messageProvider);
+            _rentedBuffer = childContext._rentedBuffer;
+            if (!isMatch)
+            {
+                _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
+            }
+        }
+
+        /// <summary>
+        /// Commits the most recently pushed child context.
+        /// </summary>
+        /// <remarks>
+        /// Note that this does not apply the evaluated properties/items from the child context
+        /// to the parent context, but is expected to merge any messages produced in the
+        /// child context.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CommitChildContext(bool isMatch, ref readonly JsonSchemaContext childContext, JsonSchemaMessageProvider? messageProvider = null)
         {
-            _resultsCollector?.CommitChildContext(childContext._sequenceNumber, isMatch, messageProvider);
+            _resultsCollector?.CommitChildContext(childContext._sequenceNumber, parentIsMatch: isMatch, childIsMatch: childContext.IsMatch, messageProvider);
             _rentedBuffer = childContext._rentedBuffer;
-            if (isMatch)
-            {
-                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
-            }
-            else
+            if (!isMatch)
             {
                 _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
             }
@@ -323,11 +338,7 @@ namespace Corvus.Text.Json.Internal
         public void EvaluatedBooleanSchema(bool isMatch)
         {
             _resultsCollector?.EvaluatedBooleanSchema(isMatch, null);
-            if (isMatch)
-            {
-                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
-            }
-            else
+            if (!isMatch)
             {
                 _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
             }
@@ -340,11 +351,7 @@ namespace Corvus.Text.Json.Internal
             ReadOnlySpan<byte> unescapedKeyword)
         {
             _resultsCollector?.EvaluatedKeyword(isMatch, messageProvider, unescapedKeyword);
-            if (isMatch)
-            {
-                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
-            }
-            else
+            if (!isMatch)
             {
                 _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
             }
@@ -358,11 +365,7 @@ namespace Corvus.Text.Json.Internal
              ReadOnlySpan<byte> unescapedKeyword)
         {
             _resultsCollector?.EvaluatedKeyword(isMatch, providerContext, messageProvider, unescapedKeyword);
-            if (isMatch)
-            {
-                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
-            }
-            else
+            if (!isMatch)
             {
                 _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
             }
@@ -376,11 +379,7 @@ namespace Corvus.Text.Json.Internal
             ReadOnlySpan<byte> unescapedKeyword)
         {
             _resultsCollector?.EvaluatedKeywordForProperty(isMatch, messageProvider, propertyName, unescapedKeyword);
-            if (isMatch)
-            {
-                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
-            }
-            else
+            if (!isMatch)
             {
                 _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
             }
@@ -395,11 +394,7 @@ namespace Corvus.Text.Json.Internal
             ReadOnlySpan<byte> unescapedKeyword)
         {
             _resultsCollector?.EvaluatedKeywordForProperty(isMatch, providerContext, messageProvider, propertyName, unescapedKeyword);
-            if (isMatch)
-            {
-                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
-            }
-            else
+            if (!isMatch)
             {
                 _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
             }
@@ -413,11 +408,7 @@ namespace Corvus.Text.Json.Internal
             JsonSchemaPathProvider keywordPath)
         {
             _resultsCollector?.EvaluatedKeywordPath(isMatch, messageProvider, keywordPath);
-            if (isMatch)
-            {
-                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
-            }
-            else
+            if (!isMatch)
             {
                 _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
             }
@@ -431,11 +422,7 @@ namespace Corvus.Text.Json.Internal
             JsonSchemaPathProvider<TProviderContext> keywordPath)
         {
             _resultsCollector?.EvaluatedKeywordPath(isMatch, providerContext, messageProvider, keywordPath);
-            if (isMatch)
-            {
-                _lengthAndUsingFeatures |= (uint)UsingFeatures.IsMatch;
-            }
-            else
+            if (!isMatch)
             {
                 _lengthAndUsingFeatures &= ~(uint)UsingFeatures.IsMatch;
             }
@@ -574,12 +561,6 @@ namespace Corvus.Text.Json.Internal
                 }
 #endif
             }
-        }
-
-        public void Commit()
-        {
-            // Tell the collector we have been commited
-            _resultsCollector?.CommitChildContext(_sequenceNumber, IsMatch, null);
         }
 
         public void Dispose()

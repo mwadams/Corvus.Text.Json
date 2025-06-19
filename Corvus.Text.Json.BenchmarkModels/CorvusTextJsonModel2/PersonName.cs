@@ -689,7 +689,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
 
     public static class JsonSchema
     {
-        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Age"u8, buffer, out written);
+        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider<int> RequiredSchemaEvaluationPath = static (index, buffer, out written) => JsonSchemaEvaluation.SchemaLocationForIndexedKeyword("required"u8, index, buffer, out written);
         private static readonly JsonSchemaPathProvider FirstNameSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("firstName/$ref"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider LastNameSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("lastName/$ref"u8, buffer, out written);
@@ -765,7 +765,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
                 if ((seenItems[0] ^ BitMaskOffset0) == 0)
                 {
                     // Add a "matched" for each of the individual matched properties
-                    context.EvaluatedKeywordPath(true, 0, RequiredPropertyFirstNameNotPresent, RequiredSchemaEvaluationPath);
+                    context.EvaluatedKeywordPath(true, 0, RequiredPropertyFirstNamePresent, RequiredSchemaEvaluationPath);
                     context.PopSchemaLocation();
                     return;
                 }

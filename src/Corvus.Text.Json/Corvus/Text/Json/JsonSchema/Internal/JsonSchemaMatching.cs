@@ -113,7 +113,7 @@ namespace Corvus.Text.Json.Internal
 
             buffer[written++] = (byte)' ';
             buffer[written++] = (byte)'\'';
-            value.CopyTo(buffer);
+            value.CopyTo(buffer[written..]);
             written += value.Length;
             buffer[written++] = (byte)'\'';
             return true;
