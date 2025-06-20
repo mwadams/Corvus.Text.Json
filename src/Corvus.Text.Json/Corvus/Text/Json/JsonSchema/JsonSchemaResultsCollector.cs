@@ -554,7 +554,7 @@ namespace Corvus.Text.Json
         private bool EnsureCapacityForResult(bool match)
         {
             int messageLength = 0;
-            if (_level == JsonSchemaResultsLevel.Verbose || (match && _level >= JsonSchemaResultsLevel.Detailed))
+            if (_level == JsonSchemaResultsLevel.Verbose || (!match && _level >= JsonSchemaResultsLevel.Detailed))
             {
                 // we are only writing messages if we are either verbose, or detailed and we have a match.
                 messageLength = MaxMessageLength;

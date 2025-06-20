@@ -47,7 +47,7 @@ namespace Corvus.Text.Json.Internal
             }
             else
             {
-                context.EvaluatedKeyword(true, null, typeKeyword);
+                context.EvaluatedKeyword(true, ExpectedTypeString, typeKeyword);
             }
 
             return true;
@@ -62,7 +62,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedDate, keyword);
             return true;
         }
 
@@ -75,7 +75,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedDateTime, keyword);
             return true;
         }
 
@@ -89,7 +89,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedTime, keyword);
             return true;
         }
 
@@ -102,7 +102,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedDuration, keyword);
             return true;
         }
 
@@ -119,7 +119,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedEmail, keyword);
             return true;
         }
 
@@ -299,7 +299,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedIdnEmail, keyword);
             return true;
         }
 
@@ -342,7 +342,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedIdnHostname, keyword);
             return true;
         }
 
@@ -375,7 +375,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedHostname, keyword);
             return true;
         }
 
@@ -684,7 +684,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedIPV4, keyword);
             return true;
         }
 
@@ -708,7 +708,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedIPV6, keyword);
             return true;
         }
 
@@ -733,7 +733,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedUuid, keyword);
             return true;
         }
 
@@ -752,7 +752,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedUri, keyword);
             return true;
         }
 
@@ -792,7 +792,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedIri, keyword);
             return true;
         }
 
@@ -832,7 +832,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedUriReference, keyword);
             return true;
         }
 
@@ -857,7 +857,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedIriReference, keyword);
             return true;
         }
 
@@ -881,7 +881,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedUriTemplate, keyword);
             return true;
         }
 
@@ -905,7 +905,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedJsonPointer, keyword);
             return true;
         }
 
@@ -929,7 +929,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedRelativeJsonPointer, keyword);
             return true;
         }
 
@@ -953,7 +953,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedRegex, keyword);
             return true;
         }
 

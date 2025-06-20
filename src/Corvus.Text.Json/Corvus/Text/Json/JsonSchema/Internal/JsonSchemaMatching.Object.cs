@@ -23,7 +23,7 @@ namespace Corvus.Text.Json.Internal
             }
             else
             {
-                context.EvaluatedKeyword(true, null, typeKeyword);
+                context.EvaluatedKeyword(true, ExpectedTypeObject, typeKeyword);
             }
 
             return true;

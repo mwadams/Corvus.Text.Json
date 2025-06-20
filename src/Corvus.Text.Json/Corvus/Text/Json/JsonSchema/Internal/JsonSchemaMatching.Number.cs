@@ -179,7 +179,7 @@ namespace Corvus.Text.Json.Internal
             }
             else
             {
-                context.EvaluatedKeyword(true, null, typeKeyword);
+                context.EvaluatedKeyword(true, ExpectedTypeNumber, typeKeyword);
             }
 
             return true;
@@ -222,7 +222,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedInt128, keyword);
             return true;
         }
 
@@ -263,7 +263,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedUInt128, keyword);
             return true;
         }
 
@@ -305,7 +305,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedInt64, keyword);
             return true;
         }
 
@@ -346,7 +346,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedUInt64, keyword);
             return true;
         }
 
@@ -388,7 +388,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedInt32, keyword);
             return true;
         }
 
@@ -429,7 +429,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedUInt32, keyword);
             return true;
         }
 
@@ -470,7 +470,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedInt16, keyword);
             return true;
         }
 
@@ -511,7 +511,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedUInt16, keyword);
             return true;
         }
 
@@ -552,7 +552,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedSByte, keyword);
             return true;
         }
 
@@ -593,7 +593,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedByte, keyword);
             return true;
         }
 
@@ -628,7 +628,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedDouble, keyword);
             return true;
         }
 
@@ -663,7 +663,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedSingle, keyword);
             return true;
         }
 
@@ -698,7 +698,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedHalf, keyword);
             return true;
         }
 
@@ -733,7 +733,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            context.EvaluatedKeyword(true, null, keyword);
+            context.EvaluatedKeyword(true, ExpectedDecimal, keyword);
             return true;
         }
 

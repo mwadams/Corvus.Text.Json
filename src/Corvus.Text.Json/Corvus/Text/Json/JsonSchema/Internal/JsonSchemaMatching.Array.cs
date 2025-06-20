@@ -19,10 +19,8 @@ namespace Corvus.Text.Json.Internal
                 written = 0;
                 return false;
             }
-
             
-            buffer[0] = (byte)'/';
-            if (!Utf8Formatter.TryFormat(index, buffer[1..], out int bytesWritten))
+            if (!Utf8Formatter.TryFormat(index, buffer, out int bytesWritten))
             {
                 written = 0;
                 return false;
@@ -46,7 +44,7 @@ namespace Corvus.Text.Json.Internal
             }
             else
             {
-                context.EvaluatedKeyword(true, null, typeKeyword);
+                context.EvaluatedKeyword(true, ExpectedTypeArray, typeKeyword);
             }
 
             return true;
