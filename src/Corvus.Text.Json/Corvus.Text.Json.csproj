@@ -105,32 +105,10 @@
     <Compile Include="$(CommonPath)System\Text\ValueStringBuilder.cs" Link="Common\ValueStringBuilder.cs" />
     <Compile Include="$(CommonPath)System\Text\Json\IByteBufferWriter.cs" Link="Common\System\Text\Json\IByteBufferWriter.cs" />
     <Compile Include="$(CommonPath)System\Text\Json\PooledByteBufferWriter.cs" Link="Common\System\Text\Json\PooledByteBufferWriter.cs" />
-    <!--<Compile Include="..\Common\JsonCamelCaseNamingPolicy.cs" Link="Common\System\Text\Json\JsonCamelCaseNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonNamingPolicy.cs" Link="Common\System\Text\Json\JsonNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonAttribute.cs" Link="Common\System\Text\Json\Serialization\JsonAttribute.cs" />-->
     <Compile Include="..\Common\JsonCommentHandling.cs" Link="Common\System\Text\Json\JsonCommentHandling.cs" />
     <Compile Include="..\Common\JsonConstants.cs" Link="Common\System\Text\Json\JsonConstants.cs" />
-    <!--<Compile Include="..\Common\JsonHelpers.cs" Link="Common\System\Text\Json\JsonHelpers.cs" />-->
-    <!--<Compile Include="..\Common\JsonIgnoreCondition.cs" Link="Common\System\Text\Json\Serialization\JsonIgnoreCondition.cs" />
-    <Compile Include="..\Common\JsonKebabCaseLowerNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonKebabCaseLowerNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonKebabCaseUpperNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonKebabCaseUpperNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonKnownNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonKnownNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonKnownReferenceHandler.cs" Link="Common\System\Text\Json\Serialization\JsonKnownReferenceHandler.cs" />
-    <Compile Include="..\Common\JsonNumberHandling.cs" Link="Common\System\Text\Json\Serialization\JsonNumberHandling.cs" />
-    <Compile Include="..\Common\JsonObjectCreationHandling.cs" Link="Common\System\Text\Json\Serialization\JsonObjectCreationHandling.cs" />
-    <Compile Include="..\Common\JsonSeparatorNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonSeparatorNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonSerializableAttribute.cs" Link="Common\System\Text\Json\Serialization\JsonSerializableAttribute.cs" />
-    <Compile Include="..\Common\JsonSerializerDefaults.cs" Link="Common\System\Text\Json\Serialization\JsonSerializerDefaults.cs" />
-    <Compile Include="..\Common\JsonSnakeCaseLowerNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonSnakeCaseLowerNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonSnakeCaseUpperNamingPolicy.cs" Link="Common\System\Text\Json\Serialization\JsonSnakeCaseUpperNamingPolicy.cs" />
-    <Compile Include="..\Common\JsonSourceGenerationMode.cs" Link="Common\System\Text\Json\Serialization\JsonSourceGenerationMode.cs" />
-    <Compile Include="..\Common\JsonSourceGenerationOptionsAttribute.cs" Link="Common\System\Text\Json\Serialization\JsonSourceGenerationOptionsAttribute.cs" />
-    <Compile Include="..\Common\JsonUnknownTypeHandling.cs" Link="Common\System\Text\Json\Serialization\JsonUnknownTypeHandling.cs" />
-    <Compile Include="..\Common\JsonUnmappedMemberHandling.cs" Link="Common\System\Text\Json\Serialization\JsonUnmappedMemberHandling.cs" />
-    <Compile Include="..\Common\ReflectionExtensions.cs" Link="Common\System\Text\Json\Serialization\ReflectionExtensions.cs" />-->
     <Compile Include="..\Common\ThrowHelper.cs" Link="Common\System\Text\Json\ThrowHelper.cs" />
     <Compile Include="Corvus\Runtime\InteropServices\JsonMarshal.cs" />
-    <!--<Compile Include="Corvus\Text\Json\AppContextSwitchHelper.cs" />-->
     <Compile Include="Corvus\Text\Json\BitStack.cs" />
     <Compile Include="Corvus\Text\Json\Compatibility\Polyfills.cs" />
     <Compile Include="Corvus\Text\Json\Compatibility\ValidationContext.cs" />
@@ -283,8 +261,6 @@
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteValues.SignedNumber.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteValues.String.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteValues.UnsignedNumber.cs" />
-    <!--<Compile Include="System\ReflectionExtensions.cs" />-->
-    <Compile Include="$(CommonPath)System\Obsoletions.cs" Link="Common\System\Obsoletions.cs" />
     <Compile Include="Corvus\ThrowHelper.cs" />
     <Compile Include="Corvus\Globalization\CharUnicodeInfo.cs" />
     <Compile Include="Corvus\Globalization\CharUnicodeInfoData.cs" />
@@ -302,7 +278,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <!--<Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ReferenceEqualityComparer.cs" />-->
     <Compile Include="$(CoreLibSharedDir)System\Runtime\CompilerServices\IsExternalInit.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Runtime\Versioning\RequiresPreviewFeaturesAttribute.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\DynamicDependencyAttribute.cs" />
@@ -314,25 +289,12 @@
     <Compile Include="$(CoreLibSharedDir)System\Reflection\NullabilityInfoContext.cs" />
   </ItemGroup>
 
-  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    --><!-- Dependencies for System.Collections.Generic.OrderedDictionary --><!--
-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\DebugViewDictionaryItem.cs" Link="Common\System\Collections\Generic\DebugViewDictionaryItem.cs" />
-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ICollectionDebugView.cs" Link="Common\System\Collections\Generic\ICollectionDebugView.cs" />
-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\IDictionaryDebugView.cs" Link="Common\System\Collections\Generic\IDictionaryDebugView.cs" />
-    <Compile Include="$(CoreLibSharedDir)System\Collections\ObjectModel\CollectionHelpers.cs" Link="Common\System\Collections\ObjectModel\CollectionHelpers.cs" />
-    <Compile Include="$(CommonPath)System\Collections\Generic\EnumerableHelpers.cs" Link="Common\System\Collections\Generic\EnumerableHelpers.cs" />
-    <Compile Include="$(LibrariesProjectRoot)System.Collections\src\System\Collections\Generic\OrderedDictionary.cs" Link="Common\System\Collections\Generic\OrderedDictionary.cs" />
-    <Compile Include="$(LibrariesProjectRoot)System.Collections\src\System\Collections\ThrowHelper.cs" Link="Common\System\Collections\ThrowHelper.cs" />
-    <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\FeatureSwitchDefinitionAttribute.cs" />
-  </ItemGroup>-->
-
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
     <Compile Include="Corvus\Text\Json\Reader\JsonReaderHelper.net8.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Compile Include="$(CommonPath)System\IO\StreamExtensions.netstandard.cs" Link="Common\System\IO\StreamExtensions.netstandard.cs" />
-    <!--<Compile Include="Corvus\Collections\Generic\StackExtensions.netstandard.cs" />-->
     <Compile Include="$(CommonPath)System\Buffers\ArrayBufferWriter.cs" Link="Common\System\Buffers\ArrayBufferWriter.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\StringSyntaxAttribute.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Diagnostics\CodeAnalysis\RequiresDynamicCodeAttribute.cs" />

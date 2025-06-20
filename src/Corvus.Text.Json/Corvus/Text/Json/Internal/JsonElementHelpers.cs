@@ -46,6 +46,7 @@ namespace Corvus.Text.Json.Internal
                     return JsonValueKind.Undefined;
             }
         }
+
         public static int GetUtf8StringLength(ReadOnlySpan<byte> span)
         {
             if (span.Length == 0)

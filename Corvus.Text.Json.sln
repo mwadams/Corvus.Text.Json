@@ -5,17 +5,17 @@ VisualStudioVersion = 17.14.36017.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json", "src\Corvus.Text.Json\Corvus.Text.Json.csproj", "{55D05545-E5C0-48F7-93D2-AC1DB4EEF7EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.Tests", "tests\System.Text.Json.Tests\Corvus.Text.Json.Tests.csproj", "{D0E8EC57-5A81-B944-A349-AF662ACCC4FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.Tests", "tests\Corvus.Text.Json.Tests\Corvus.Text.Json.Tests.csproj", "{D0E8EC57-5A81-B944-A349-AF662ACCC4FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtilities", "Common\tests\TestUtilities\TestUtilities.csproj", "{C17D7348-533D-1D6E-88EA-DBF44A5DA46D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.Benchmarks", "benchmarks\Corvus.Text.Json.Benchmarks\Corvus.Text.Json.Benchmarks.csproj", "{A86618F0-D580-4534-BDB1-84A4489663B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{59630D4A-6410-41FC-A0DC-08546B23B08B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "src\Sandbox\Sandbox.csproj", "{59630D4A-6410-41FC-A0DC-08546B23B08B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.BenchmarkModels", "Corvus.Text.Json.BenchmarkModels\Corvus.Text.Json.BenchmarkModels.csproj", "{2B83D422-81C2-47EF-A715-BA7EBFEA34C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.BenchmarkModels", "benchmarks\Corvus.Text.Json.BenchmarkModels\Corvus.Text.Json.BenchmarkModels.csproj", "{2B83D422-81C2-47EF-A715-BA7EBFEA34C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.CodeGeneration", "Corvus.Text.Json.CodeGeneration\Corvus.Text.Json.CodeGeneration.csproj", "{EFE31EEA-BCE0-4958-AC55-E4081E763A3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.CodeGeneration", "src\Corvus.Text.Json.CodeGeneration\Corvus.Text.Json.CodeGeneration.csproj", "{EFE31EEA-BCE0-4958-AC55-E4081E763A3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
