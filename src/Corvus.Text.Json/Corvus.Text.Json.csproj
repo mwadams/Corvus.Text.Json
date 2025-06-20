@@ -132,7 +132,6 @@
     <Compile Include="Corvus\Runtime\InteropServices\JsonMarshal.cs" />
     <!--<Compile Include="Corvus\Text\Json\AppContextSwitchHelper.cs" />-->
     <Compile Include="Corvus\Text\Json\BitStack.cs" />
-    <Compile Include="Corvus\Text\Json\Compatibility\CompatibilityResultsCollector.cs" />
     <Compile Include="Corvus\Text\Json\Compatibility\Polyfills.cs" />
     <Compile Include="Corvus\Text\Json\Compatibility\ValidationContext.cs" />
     <Compile Include="Corvus\Text\Json\Compatibility\ValidationLevel.cs" />

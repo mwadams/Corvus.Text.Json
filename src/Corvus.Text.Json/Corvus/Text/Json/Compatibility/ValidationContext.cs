@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Corvus.Text.Json.Compatibility
 {
+    /// <summary>
+    /// Represents the context for a JSON schema validation operation, including validity and results.
+    /// </summary>
     public readonly struct ValidationContext
     {
         /// <summary>
@@ -20,23 +23,13 @@ namespace Corvus.Text.Json.Compatibility
         internal ValidationContext(bool isValid)
         {
             IsValid = isValid;
-            Results = [];
-        }
-
-        internal ValidationContext(CompatibilityResultsCollector collector)
-        {
-            // Capture it at the moment we were given the collector
-            IsValid = collector.IsValid;
-            Results = collector.CloneResults();
-            Collector = collector;
         }
 
         // This is the constructor for when the results collection has not changed
-        internal ValidationContext(CompatibilityResultsCollector collector, IReadOnlyList<ValidationResult> results)
+        internal ValidationContext(bool isMatch, JsonSchemaResultsCollector collector)
         {
             // Capture it at the moment we were given the collector
-            IsValid = collector.IsValid;
-            Results = results;
+            IsValid = isMatch;
             Collector = collector;
         }
 
@@ -45,8 +38,22 @@ namespace Corvus.Text.Json.Compatibility
         /// <summary>
         /// Gets the validation results.
         /// </summary>
-        public IReadOnlyList<ValidationResult> Results { get; }
+        public IReadOnlyList<ValidationResult> Results => BuildResults(Collector);
 
-        internal CompatibilityResultsCollector Collector { get; }
+        internal JsonSchemaResultsCollector? Collector { get; }
+
+        private IReadOnlyList<ValidationResult> BuildResults(JsonSchemaResultsCollector? collector) => throw new NotImplementedException();
+
+        internal static JsonSchemaResultsLevel MapLevel(ValidationLevel level)
+        {
+            return level switch
+            {
+                // Do not allow Flag
+                ValidationLevel.Basic => JsonSchemaResultsLevel.Basic,
+                ValidationLevel.Detailed => JsonSchemaResultsLevel.Detailed,
+                ValidationLevel.Verbose => JsonSchemaResultsLevel.Verbose,
+                _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
+            };
+        }
     }
 }

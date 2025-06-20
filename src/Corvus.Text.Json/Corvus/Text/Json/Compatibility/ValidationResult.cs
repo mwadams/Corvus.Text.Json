@@ -5,13 +5,13 @@ using System.Diagnostics;
 
 namespace Corvus.Text.Json.Compatibility
 {
+    /// <summary>
+    /// Represents the result of a single JSON schema validation, including validity, message, and locations.
+    /// </summary>
     public readonly struct ValidationResult
     {
-        private readonly CompatibilityResultsCollector _collector;
-        private readonly uint _messageIdxAndIsValid;
-        private readonly int _validationLocationIdx;
-        private readonly int _schemaLocationIdx;
-        private readonly int _documentLocationIdx;
+        private readonly JsonSchemaResultsCollector _collector;
+        private readonly int _resultIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationResult"/> struct.
@@ -19,25 +19,44 @@ namespace Corvus.Text.Json.Compatibility
         /// <param name="valid">A value indicating whether this is a valid result.</param>
         /// <param name="messageRange">The error message.</param>
         /// <param name="location">The location of the result.</param>
-        internal ValidationResult(CompatibilityResultsCollector collector, bool valid, int messageIdx, int validationLocationIdx, int schemaLocationIdx, int documentLocationIdx)
+        internal ValidationResult(JsonSchemaResultsCollector collector, int resultIndex)
         {
-            Debug.Assert((uint)messageIdx < 0x8000_0000);
+            Debug.Assert(resultIndex >= 0);
 
             _collector = collector;
-            _messageIdxAndIsValid = (uint)messageIdx | 0x8000_0000U;
-            _validationLocationIdx = validationLocationIdx;
-            _schemaLocationIdx = schemaLocationIdx;
-            _documentLocationIdx = documentLocationIdx;
+            _resultIndex = resultIndex;
         }
 
-        public bool Valid => (_messageIdxAndIsValid & 0x8000_0000U) != 0;
+        public bool Valid
+        {
+            get
+            {
+                var result = _collector.ReadResult(_resultIndex);
+                return result.IsMatch;
+            }
+        }
 
-        public LocationTuple Location => new(_collector.GetUtf8String(_validationLocationIdx), _collector.GetUtf8String(_schemaLocationIdx), _collector.GetUtf8String(_documentLocationIdx));
+        public LocationTuple Location
+        {
+            get
+            {
+                var result = _collector.ReadResult(_resultIndex);
+                return new LocationTuple(result.EvaluationLocation, result.SchemaEvaluationLocation, result.DocumentEvaluationLocation);
+            }
+        }
 
-        public string? Message => MessageIdx >= 0 ? JsonReaderHelper.GetTextFromUtf8(_collector.GetUtf8String(_validationLocationIdx)) : null;
+        public string? Message
+        {
+            get
+            {
+                var result = _collector.ReadResult(_resultIndex);
+                return result.GetMessageText();
+            }
+        }
 
-        private int MessageIdx => (int)(_messageIdxAndIsValid & int.MaxValue);
-
+        /// <summary>
+        /// Represents the locations associated with a validation result, including validation, schema, and document locations.
+        /// </summary>
         public readonly ref struct LocationTuple
         {
             private readonly ReadOnlySpan<byte> _validationLocation;

@@ -9,6 +9,9 @@ using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
+    /// <summary>
+    /// Collects and manages results from JSON schema validation operations.
+    /// </summary>
     public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     {
         // Maximum message length is 1024 bytes
@@ -20,6 +23,9 @@ namespace Corvus.Text.Json
         private const int BytesPerPathSegment = 32;
         private const int BytesPerMessage = 128;
 
+        /// <summary>
+        /// Represents a range of values in the results buffer.
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         internal readonly struct ValueRange
         {
@@ -36,6 +42,9 @@ namespace Corvus.Text.Json
             public int Length => End - Start;
         }
 
+        /// <summary>
+        /// Represents a range of values in the results buffer, including commit index and sequence number.
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         private readonly struct ValueRangeWithCommitIndexAndSequenceNumber
         {
@@ -139,6 +148,9 @@ namespace Corvus.Text.Json
             return new(false, level, estimatedCapacity);
         }
 
+        /// <summary>
+        /// Represents a single result from a JSON schema validation operation.
+        /// </summary>
         [DebuggerDisplay("{DebuggerDisplay,nq}")]
         public readonly ref struct Result
         {
@@ -181,7 +193,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   An enumerable and enumerator for the results.
+        /// Enumerates the results from a <see cref="JsonSchemaResultsCollector"/>.
         /// </summary>
         [DebuggerDisplay("{Current,nq}")]
         [CLSCompliant(false)]
@@ -520,7 +532,7 @@ namespace Corvus.Text.Json
             return curIndex;
         }
 
-        private Result ReadResult(int startIndex)
+        internal Result ReadResult(int startIndex)
         {
             int curIndex = startIndex;
 

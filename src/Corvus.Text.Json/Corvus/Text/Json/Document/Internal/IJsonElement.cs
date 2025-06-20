@@ -15,25 +15,36 @@ namespace Corvus.Text.Json.Internal
         IJsonDocument ParentDocument { get; }
 
         /// <summary>
-        /// The handle identifying the IJsonElement in
-        /// its parent document.
+        /// Gets the handle identifying the <see cref="IJsonElement"/> in its parent document.
         /// </summary>
         int ParentDocumentIndex { get; }
 
         /// <summary>
-        /// The JSON Token type of the element.
+        /// Gets the JSON Token type of the element.
         /// </summary>
         JsonTokenType TokenType { get; }
 
         /// <summary>
-        /// The JSON Value Kind of the element.
+        /// Gets the JSON Value Kind of the element.
         /// </summary>
         JsonValueKind ValueKind { get; }
 
+        /// <summary>
+        /// Checks that this instance is valid.
+        /// </summary>
         void CheckValidInstance();
 
+        /// <summary>
+        /// Writes this element to the specified <see cref="Utf8JsonWriter"/>.
+        /// </summary>
+        /// <param name="writer">The writer to which to write the element.</param>
         void WriteTo(Utf8JsonWriter writer);
 
+        /// <summary>
+        /// Evaluates the schema for this element.
+        /// </summary>
+        /// <param name="resultsCollector">The results collector for schema evaluation (optional).</param>
+        /// <returns><c>true</c> if the schema evaluation succeeded; otherwise, <c>false</c>.</returns>
         bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null);
     }
 }

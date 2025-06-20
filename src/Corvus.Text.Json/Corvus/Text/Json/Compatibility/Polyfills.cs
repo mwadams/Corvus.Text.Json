@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Generic;
 using System.IO;
 using Corvus.Text.Json.Internal;
 
@@ -126,9 +127,9 @@ namespace Corvus.Text.Json.Compatibility
                     return new(element.EvaluateSchema());
                 }
 
-                CompatibilityResultsCollector collector = context.Collector;
-                element.EvaluateSchema(collector);
-                return new(collector, context.Results);
+                JsonSchemaResultsCollector collector = context.Collector ?? JsonSchemaResultsCollector.Create(ValidationContext.MapLevel(validationLevel));
+                bool isMatch = element.EvaluateSchema(collector);
+                return new(isMatch && context.IsValid, collector);
             }
         }
     }
