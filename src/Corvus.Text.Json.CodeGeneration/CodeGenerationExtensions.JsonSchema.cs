@@ -81,6 +81,39 @@ namespace Corvus.Text.Json.CodeGeneration
                 .PopMetadata(JsonPropertyNamesEscapedClassNameKey);
         }
 
+
+        /// <summary>
+        /// Gets the validation class name.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <returns>The validation class name.</returns>
+        public static string JsonSchemaClassName(this CodeGenerator generator)
+        {
+            if (generator.TryPeekMetadata(JsonSchemaClassNameKey, out (string, string)? value) &&
+                value is (string className, string _))
+            {
+                return className;
+            }
+
+            throw new InvalidOperationException("The validation class name has not been created.");
+        }
+
+        /// <summary>
+        /// Gets the validation class scope.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <returns>The fully-qualified validation class scope.</returns>
+        public static string JsonSchemaClassScope(this CodeGenerator generator)
+        {
+            if (generator.TryPeekMetadata(JsonSchemaClassNameKey, out (string, string)? value) &&
+                value is (string _, string scope))
+            {
+                return scope;
+            }
+
+            throw new InvalidOperationException("The validation class scope  has not been created.");
+        }
+
         public static CodeGenerator AppendEvaluateSchemaMethod(this CodeGenerator generator)
         {
             return generator

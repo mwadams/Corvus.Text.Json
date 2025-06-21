@@ -83,7 +83,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
     }
 
 
-    public TResult Match<TResult>(Func<NameComponent, TResult> nameComponent, Func<NameComponentArray, TResult> nameComponentArray, Func<OtherNames, TResult> noMatch)
+    public TResult Match<TResult>(Matcher<NameComponent, TResult> nameComponent, Matcher<NameComponentArray, TResult> nameComponentArray, Matcher<OtherNames, TResult> noMatch)
     {
         if (NameComponent.JsonSchema.Evaluate(_parent, _idx))
         {
@@ -98,19 +98,43 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         return noMatch(this);
     }
 
-    public TResult Match<TContext, TResult>(TContext context, Func<TContext, NameComponent, TResult> nameComponent, Func<TContext, NameComponentArray, TResult> nameComponentArray, Func<TContext, OtherNames, TResult> noMatch)
+    public TResult Match<TContext, TResult>(in TContext context, Matcher<NameComponent, TContext, TResult> nameComponent, Matcher<NameComponentArray, TContext, TResult> nameComponentArray, Matcher<OtherNames, TContext, TResult> noMatch)
     {
         if (NameComponent.JsonSchema.Evaluate(_parent, _idx))
         {
-            return nameComponent(context, NameComponent.From(this));
+            return nameComponent(NameComponent.From(this), context);
         }
 
         if (NameComponentArray.JsonSchema.Evaluate(_parent, _idx))
         {
-            return nameComponentArray(context, NameComponentArray.From(this));
+            return nameComponentArray(NameComponentArray.From(this), context);
         }
 
-        return noMatch(context, this);
+        return noMatch(this, context);
+    }
+
+    public bool TryGetAsNameComponent(out NameComponent value)
+    {
+        if (NameComponent.JsonSchema.Evaluate(_parent, _idx))
+        {
+            value = NameComponent.From(this);
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryGetAsNameComponentArray(out NameComponentArray value)
+    {
+        if (NameComponentArray.JsonSchema.Evaluate(_parent, _idx))
+        {
+            value = NameComponentArray.From(this);
+            return true;
+        }
+
+        value = default;
+        return false;
     }
 
     public static OtherNames From<T>(in T instance)

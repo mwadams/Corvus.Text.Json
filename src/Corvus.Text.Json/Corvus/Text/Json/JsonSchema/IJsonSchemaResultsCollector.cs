@@ -3,9 +3,64 @@
 
 namespace Corvus.Text.Json
 {
+    /// <summary>
+    /// Provides a path segment for a JSON Schema location or instance path.
+    /// </summary>
+    /// <param name="buffer">
+    /// The buffer to which the path segment should be written as UTF-8 bytes.
+    /// </param>
+    /// <param name="written">
+    /// When this method returns, contains the number of bytes written to <paramref name="buffer"/>.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the path segment was successfully written to the buffer; otherwise, <see langword="false"/>.
+    /// </returns>
     public delegate bool JsonSchemaPathProvider(Span<byte> buffer, out int written);
+
+    /// <summary>
+    /// Provides a path segment for a JSON Schema location or instance path, using a context value.
+    /// </summary>
+    /// <typeparam name="TContext">The type of the context value.</typeparam>
+    /// <param name="context">The context value used to generate the path segment.</param>
+    /// <param name="buffer">
+    /// The buffer to which the path segment should be written as UTF-8 bytes.
+    /// </param>
+    /// <param name="written">
+    /// When this method returns, contains the number of bytes written to <paramref name="buffer"/>.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the path segment was successfully written to the buffer; otherwise, <see langword="false"/>.
+    /// </returns>
     public delegate bool JsonSchemaPathProvider<TContext>(TContext context, Span<byte> buffer, out int written);
+
+    /// <summary>
+    /// Provides a message for a JSON Schema validation result.
+    /// </summary>
+    /// <param name="buffer">
+    /// The buffer to which the message should be written as UTF-8 bytes.
+    /// </param>
+    /// <param name="written">
+    /// When this method returns, contains the number of bytes written to <paramref name="buffer"/>.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the message was successfully written to the buffer; otherwise, <see langword="false"/>.
+    /// </returns>
     public delegate bool JsonSchemaMessageProvider(Span<byte> buffer, out int written);
+
+    /// <summary>
+    /// Provides a message for a JSON Schema validation result, using a context value.
+    /// </summary>
+    /// <typeparam name="TContext">The type of the context value.</typeparam>
+    /// <param name="context">The context value used to generate the message.</param>
+    /// <param name="buffer">
+    /// The buffer to which the message should be written as UTF-8 bytes.
+    /// </param>
+    /// <param name="written">
+    /// When this method returns, contains the number of bytes written to <paramref name="buffer"/>.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the message was successfully written to the buffer; otherwise, <see langword="false"/>.
+    /// </returns>
     public delegate bool JsonSchemaMessageProvider<TContext>(TContext context, Span<byte> buffer, out int written);
 
     /// <summary>

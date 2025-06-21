@@ -563,9 +563,9 @@ public static class TypeDeclarationExtensions
     /// <param name="typeDeclaration">The type declaration.</param>
     /// <returns>The curiously recursive interface name in the form <c>IJsonElement&lt;DotNetTypeName()&gt;</c>.</returns>
 
-    public static string GetIJsonElementInterface(this TypeDeclaration typeDeclaration, bool isMutable)
+    public static string GetIJsonElementInterface(this TypeDeclaration typeDeclaration, bool forMutable)
     {
-        return isMutable ? GetIMutableJsonElementInterface(typeDeclaration) : GetIJsonElementInterface(typeDeclaration);
+        return forMutable ? GetIMutableJsonElementInterface(typeDeclaration) : GetIJsonElementInterface(typeDeclaration);
     }
 
 

@@ -3,8 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0;netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <!-- For this project, we want warnings if there are public APIs/types without properly formatted XML comments. -->
-    <SkipIntellisenseNoWarnCS1591>true</SkipIntellisenseNoWarnCS1591>
     <NoWarn>$(NoWarn);CS8969</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <!-- Only upgrade NuGetAudit warnings to errors for official builds. -->
@@ -87,6 +85,38 @@
   
   <PropertyGroup>
     <NoWarn Condition="'$(TargetFramework)' == 'netstandard2.0'">$(NoWarn);nullable</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -176,6 +206,7 @@
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaResultsCollectorCache.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsCollector.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsLevel.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Matcher.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexCaseBehavior.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexCharClass.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexNode.cs" />

@@ -406,7 +406,11 @@ public readonly struct Person : IJsonElement<Person>
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="person"></param>
+        /// <exception cref=""
         public static explicit operator Mutable(Person person)
         {
             if (person._parent is not IMutableJsonDocument doc)
@@ -471,7 +475,7 @@ public readonly struct Person : IJsonElement<Person>
         }
 
         public static Mutable From<T>(in T instance)
-        where T : struct, IMutableJsonElement<T>
+            where T : struct, IMutableJsonElement<T>
         {
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
         }

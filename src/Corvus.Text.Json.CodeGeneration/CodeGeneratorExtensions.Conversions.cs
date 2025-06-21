@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 
 
@@ -50,8 +51,16 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("public bool ", methodName, "(out ", t.FullyQualifiedDotnetTypeName(), " result)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("result = ", t.FullyQualifiedDotnetTypeName(), ".From(this);")
-                        .AppendLineIndent("return result.EvaluateSchema();")
+                        .AppendLineIndent("if (", t.FullyQualifiedDotnetTypeName(), ".", generator.JsonSchemaClassName(), ".Evaluate(_parent, _idx))")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("result = ", t.FullyQualifiedDotnetTypeName(), ".From(this);")
+                            .AppendLineIndent("return true;")
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("result = default;")
+                        .AppendLineIndent("return false;")
                     .PopIndent()
                     .AppendLineIndent("}");
             }
@@ -193,8 +202,8 @@ namespace Corvus.Text.Json.CodeGeneration
                     return false;
                 }
 
-                string implictOrExplicitFrom = isImplicitFrom ? "implicit" : "explicit";
-                string implictOrExplicitTo = isImplicitTo ? "implicit" : "explicit";
+                string implicitOrExplicitFrom = isImplicitFrom ? "implicit" : "explicit";
+                string implicitOrExplicitTo = isImplicitTo ? "implicit" : "explicit";
 
                 string subschemaTypeName = subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName();
                 generator
@@ -203,7 +212,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("/// Conversion to <see cref=\"", subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName(), "\"/>.")
                     .AppendLineIndent("/// </summary>")
                     .AppendLineIndent("/// <param name=\"value\">The value from which to convert.</param>")
-                    .AppendIndent("public static ", implictOrExplicitTo, " operator ", subschemaTypeName, "(")
+                    .AppendIndent("public static ", implicitOrExplicitTo, " operator ", subschemaTypeName, "(")
                     .Append(rootDeclaration.DotnetTypeName())
                     .AppendLine(" value)")
                     .AppendLineIndent("{")
@@ -218,7 +227,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("/// Conversion from <see cref=\"", subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName(), "\"/>.")
                     .AppendLineIndent("/// </summary>")
                     .AppendLineIndent("/// <param name=\"value\">The value from which to convert.</param>")
-                    .AppendIndent("public static ", implictOrExplicitFrom, " operator ", rootDeclaration.DotnetTypeName(), "(")
+                    .AppendIndent("public static ", implicitOrExplicitFrom, " operator ", rootDeclaration.DotnetTypeName(), "(")
                     .Append(subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName())
                     .AppendLine(" value)")
                     .AppendLineIndent("{")
@@ -228,6 +237,611 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("}");
 
                 return true;
+            }
+        }
+
+
+        /// <summary>
+        /// Appends the pattern-matching methods.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration to which to append the method.</param>
+        /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendMatchMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable = false)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            int matchOverloadIndex = 0;
+            if (typeDeclaration.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> allOf)
+            {
+                foreach (IAllOfSubschemaValidationKeyword keyword in allOf.Keys)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return generator;
+                    }
+
+                    var subschema = allOf[keyword].Distinct().ToList();
+                    if (subschema.Count > 1)
+                    {
+                        AppendMatchCompositionMethod(generator, typeDeclaration, subschema, includeContext: true, matchOverloadIndex++, forMutable);
+                        AppendMatchCompositionMethod(generator, typeDeclaration, subschema, includeContext: false, matchOverloadIndex++, forMutable);
+                    }
+                }
+            }
+
+            if (typeDeclaration.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> anyOf)
+            {
+                foreach (IAnyOfSubschemaValidationKeyword keyword in anyOf.Keys)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return generator;
+                    }
+
+                    var subschema = anyOf[keyword].Distinct().ToList();
+                    if (subschema.Count > 1)
+                    {
+                        AppendMatchCompositionMethod(generator, typeDeclaration, subschema, includeContext: true, matchOverloadIndex++, forMutable);
+                        AppendMatchCompositionMethod(generator, typeDeclaration, subschema, includeContext: false, matchOverloadIndex++, forMutable);
+                    }
+                }
+            }
+
+            if (typeDeclaration.OneOfCompositionTypes() is IReadOnlyDictionary<IOneOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> oneOf)
+            {
+                foreach (IOneOfSubschemaValidationKeyword keyword in oneOf.Keys)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return generator;
+                    }
+
+                    var subschema = oneOf[keyword].Distinct().ToList();
+                    if (subschema.Count > 1)
+                    {
+                        AppendMatchCompositionMethod(generator, typeDeclaration, subschema, includeContext: true, matchOverloadIndex++, forMutable);
+                        AppendMatchCompositionMethod(generator, typeDeclaration, subschema, includeContext: false, matchOverloadIndex++, forMutable);
+                    }
+                }
+            }
+
+            if (typeDeclaration.AnyOfConstantValues() is IReadOnlyDictionary<IAnyOfConstantValidationKeyword, JsonElement[]> anyOfConstant)
+            {
+                foreach (IAnyOfConstantValidationKeyword keyword in anyOfConstant.Keys)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return generator;
+                    }
+
+                    JsonElement[] constantValues = [.. anyOfConstant[keyword].Distinct()];
+                    if (constantValues.Length > 1)
+                    {
+                        AppendMatchConstantMethod(generator, keyword, constantValues, includeContext: true, matchOverloadIndex: matchOverloadIndex++);
+                        AppendMatchConstantMethod(generator, keyword, constantValues, includeContext: false, matchOverloadIndex: matchOverloadIndex++);
+                    }
+                }
+            }
+
+            if (typeDeclaration.IfSubschemaType() is SingleSubschemaKeywordTypeDeclaration ifSubschema)
+            {
+                AppendMatchIfMethod(generator, typeDeclaration, ifSubschema, includeContext: true, matchOverloadIndex++);
+                AppendMatchIfMethod(generator, typeDeclaration, ifSubschema, includeContext: false, matchOverloadIndex++);
+            }
+
+            return generator;
+
+            static void AppendMatchCompositionMethod(CodeGenerator generator, TypeDeclaration typeDeclaration, IReadOnlyCollection<TypeDeclaration> subschema, bool includeContext, int matchOverloadIndex, bool forMutable)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                string scopeName = $"Match{matchOverloadIndex}";
+
+                generator
+                    .ReserveNameIfNotReserved("Match")
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                    """
+                /// <summary>
+                /// Matches the value against the composed values, and returns the result of calling the provided match function for the first match found.
+                /// </summary>
+                """);
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendLineIndent("/// <typeparam name=\"TContext\">The immutable context to pass in to the match function.</typeparam>");
+                }
+
+                generator
+                    .AppendLineIndent("/// <typeparam name=\"TResult\">The result of calling the match function.</typeparam>");
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendLineIndent("/// <param name=\"context\">The context to pass to the match function.</param>")
+                        .ReserveNameIfNotReserved("context", childScope: scopeName);
+                }
+
+                // Reserve the parameter names we are going to require
+                generator
+                    .ReserveNameIfNotReserved("defaultMatch", childScope: scopeName);
+
+                string[] parameterNames = new string[subschema.Count];
+
+                int i = 0;
+                foreach (TypeDeclaration match in subschema)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    // This is the parameter name for the match match method.
+                    string matchTypeName = match.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName();
+                    string matchParamName = generator.GetUniqueParameterNameInScope(match.ReducedTypeDeclaration().ReducedType.DotnetTypeName(), childScope: scopeName, prefix: "match");
+
+                    parameterNames[i++] = matchParamName;
+
+                    generator
+                        .AppendLineIndent("/// <param name=\"", matchParamName, "\">Match a <see cref=\"", matchTypeName, "\"/>.</param>");
+                }
+
+                generator
+                    .AppendLineIndent("/// <param name=\"defaultMatch\">Match any other value.</param>")
+                    .AppendLineIndent("/// <returns>An instance of the value returned by the match function.</returns>")
+                    .AppendLineIndent("public TResult Match<", includeContext ? "TContext, " : string.Empty, "TResult>(")
+                    .PushMemberScope(scopeName, ScopeType.Method)
+                    .PushIndent();
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendIndent("in TContext context");
+                }
+
+                i = 0;
+                foreach (TypeDeclaration match in subschema)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    if (i > 0 || includeContext)
+                    {
+                        generator
+                            .AppendLine(",");
+                    }
+
+                    generator
+                        .AppendIndent(
+                            "Matcher<",
+                            match.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName(),
+                            includeContext ? ", TIn" : string.Empty,
+                            ", TOut> ",
+                            parameterNames[i++]);
+                }
+
+                generator
+                    .AppendLine(",")
+                    .AppendLineIndent(
+                        "Matcher<",
+                        typeDeclaration.FullyQualifiedDotnetTypeName(),
+                        forMutable ? ".Mutable" : "",
+                        includeContext ? ", TIn" : string.Empty,
+                        ", TOut> defaultMatch)")
+                    .PopIndent()
+                    .AppendLineIndent("{")
+                    .PushIndent();
+
+                i = 0;
+                foreach (TypeDeclaration match in subschema)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    string matchTypeName = match.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName();
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("if (", matchTypeName, ".", generator.JsonSchemaClassName(), ".Evaluate(_parent, _idx))")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("return ", parameterNames[i], "(", matchTypeName, ".From(this));")
+                        .PopIndent()
+                        .AppendLineIndent("}");
+                    i++;
+                }
+
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("return defaultMatch(this", includeContext ? ", context" : string.Empty, ");")
+                    .PopMemberScope()
+                    .PopIndent()
+                    .AppendLineIndent("}");
+            }
+
+            static void AppendMatchConstantMethod(CodeGenerator generator, IAnyOfConstantValidationKeyword keyword, JsonElement[] constValues, bool includeContext, int matchOverloadIndex)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                string scopeName = $"Match{matchOverloadIndex}";
+
+                generator
+                    .ReserveNameIfNotReserved("Match")
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                    """
+                /// <summary>
+                /// Matches the value against the constant values, and returns the result of calling the provided match function for the first match found.
+                /// </summary>
+                """);
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendLineIndent("/// <typeparam name=\"TIn\">The immutable context to pass in to the match function.</typeparam>");
+                }
+
+                generator
+                    .AppendLineIndent("/// <typeparam name=\"TOut\">The result of calling the match function.</typeparam>");
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendLineIndent("/// <param name=\"context\">The context to pass to the match function.</param>")
+                        .ReserveNameIfNotReserved("context", childScope: scopeName);
+                }
+
+                // Reserve the parameter names we are going to require
+                generator
+                    .ReserveNameIfNotReserved("defaultMatch", childScope: scopeName);
+
+                int count = constValues.Length;
+                string[] parameterNames = new string[count];
+                string[] constFields = new string[count];
+
+                for (int i = 1; i <= count; ++i)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    JsonElement constValue = constValues[i - 1];
+
+                    string matchParamName = GetUniqueParameterName(generator, scopeName, constValue, i);
+                    string constField =
+                        generator.GetPropertyNameInScope(
+                            keyword.Keyword,
+                            rootScope: generator.JsonSchemaClassScope(),
+                            suffix: count > 1 ? i.ToString() : null);
+
+                    parameterNames[i - 1] = matchParamName;
+                    constFields[i - 1] = constField;
+
+                    generator
+                        .AppendIndent("/// <param name=\"", matchParamName, "\">Match ")
+                        .AppendOrdinalName(i)
+                        .AppendLine(" item.</param>");
+                }
+
+                generator
+                    .AppendLineIndent("/// <param name=\"defaultMatch\">Match any other value.</param>")
+                    .AppendLineIndent("/// <returns>An instance of the value returned by the match function.</returns>")
+                    .AppendLineIndent("public TOut Match<", includeContext ? "TIn, " : string.Empty, "TOut>(")
+                    .PushMemberScope(scopeName, ScopeType.Method)
+                    .PushIndent();
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendIndent("in TIn context");
+                }
+
+                for (int i = 0; i < count; ++i)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    if (i > 0 || includeContext)
+                    {
+                        generator
+                            .AppendLine(",");
+                    }
+
+                    generator
+                        .AppendIndent(
+                            "Func<",
+                            includeContext ? "TIn, " : string.Empty,
+                            "TOut> ",
+                            parameterNames[i]);
+                }
+
+                generator
+                    .AppendLine(",")
+                    .AppendLineIndent(
+                        "Func<",
+                        includeContext ? "TIn, " : string.Empty,
+                        "TOut> defaultMatch)")
+                    .PopIndent()
+                    .AppendLineIndent("{")
+                    .PushIndent();
+
+                for (int i = 0; i < count; ++i)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("if (this.Equals(", generator.JsonSchemaClassName(), ".", constFields[i], "))")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("return ", parameterNames[i], "(", includeContext ? "context);" : ");")
+                        .PopIndent()
+                        .AppendLineIndent("}");
+                }
+
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("return defaultMatch(", includeContext ? "context" : string.Empty, ");")
+                    .PopMemberScope()
+                    .PopIndent()
+                    .AppendLineIndent("}");
+            }
+
+            static string GetUniqueParameterName(CodeGenerator generator, string scopeName, JsonElement constValue, int index)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return string.Empty;
+                }
+
+                return constValue.ValueKind switch
+                {
+                    JsonValueKind.Object => generator.GetUniqueParameterNameInScope("matchObjectValue", childScope: scopeName, suffix: index.ToString()),
+                    JsonValueKind.Array => generator.GetUniqueParameterNameInScope("matchArrayValue", childScope: scopeName, suffix: index.ToString()),
+                    JsonValueKind.String => generator.GetUniqueParameterNameInScope(constValue.GetString()!, childScope: scopeName, prefix: "match"),
+                    JsonValueKind.Number => generator.GetUniqueParameterNameInScope(constValue.GetRawText().Replace(".", "point"), childScope: scopeName, prefix: "matchNumber"),
+                    JsonValueKind.True => generator.GetUniqueParameterNameInScope("matchTrue", childScope: scopeName),
+                    JsonValueKind.False => generator.GetUniqueParameterNameInScope("matchFalse", childScope: scopeName),
+                    JsonValueKind.Null => generator.GetUniqueParameterNameInScope("matchNull", childScope: scopeName),
+                    _ => throw new InvalidOperationException($"Unsupported JsonValueKind: {constValue.ValueKind}"),
+                };
+            }
+
+            static void AppendMatchIfMethod(CodeGenerator generator, TypeDeclaration typeDeclaration, SingleSubschemaKeywordTypeDeclaration ifSubschema, bool includeContext, int matchOverloadIndex)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                SingleSubschemaKeywordTypeDeclaration? thenDeclaration = typeDeclaration.ThenSubschemaType();
+                SingleSubschemaKeywordTypeDeclaration? elseDeclaration = typeDeclaration.ElseSubschemaType();
+
+                if (thenDeclaration is null && elseDeclaration is null)
+                {
+                    return;
+                }
+
+                string scopeName = $"Match{matchOverloadIndex}";
+
+                generator
+                    .ReserveNameIfNotReserved("Match")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("/// <summary>")
+                    .AppendLineIndent(
+                        "/// Matches the value against the 'if' type, and returns the result of calling the provided match function for");
+                if (thenDeclaration is not null)
+                {
+                    generator
+                        .AppendLineIndent("/// the 'then' type if the match is successful", elseDeclaration is not null ? " or" : ".");
+                }
+
+                if (elseDeclaration is not null)
+                {
+                    generator
+                        .AppendLineIndent("/// the 'else' type if the match is not successful.");
+                }
+
+                generator
+                    .AppendLineIndent("/// </summary>");
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendLineIndent("/// <typeparam name=\"TIn\">The immutable context to pass in to the match function.</typeparam>");
+                }
+
+                generator
+                    .AppendLineIndent("/// <typeparam name=\"TOut\">The result of calling the match function.</typeparam>");
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendLineIndent("/// <param name=\"context\">The context to pass to the match function.</param>")
+                        .ReserveNameIfNotReserved("context", childScope: scopeName);
+                }
+
+                string? thenMatchParamName = null;
+
+                if (thenDeclaration is SingleSubschemaKeywordTypeDeclaration thenSubschema)
+                {
+                    // This is the parameter name for the if match method.
+                    string? thenMatchTypeName = thenSubschema.ReducedType.FullyQualifiedDotnetTypeName();
+                    thenMatchParamName = generator.GetUniqueParameterNameInScope(thenMatchTypeName, childScope: scopeName, prefix: "match");
+
+                    generator
+                        .AppendLineIndent("/// <param name=\"", thenMatchParamName, "\">Match a <see cref=\"", thenMatchTypeName, "\"/>.</param>");
+                }
+
+                string? elseMatchParamName = null;
+                if (elseDeclaration is SingleSubschemaKeywordTypeDeclaration elseSubschema)
+                {
+                    // This is the parameter name for the if match method.
+                    string? elseMatchTypeName = elseSubschema.ReducedType.FullyQualifiedDotnetTypeName();
+                    elseMatchParamName = generator.GetUniqueParameterNameInScope(elseMatchTypeName, childScope: scopeName, prefix: "match");
+
+                    generator
+                        .AppendLineIndent("/// <param name=\"", elseMatchParamName, "\">Match a <see cref=\"", elseMatchTypeName, "\"/>.</param>");
+                }
+
+                if (elseMatchParamName is null)
+                {
+                    generator
+                        .AppendLineIndent("/// <param name=\"defaultMatch\">Default match if the 'if' schema did not match.</param>");
+                }
+
+                if (thenMatchParamName is null)
+                {
+                    generator
+                        .AppendLineIndent("/// <param name=\"defaultMatch\">Default match if the 'if' schema matched.</param>");
+                }
+
+                generator
+                    .AppendLineIndent("/// <returns>An instance of the value returned by the match function.</returns>")
+                    .AppendLineIndent("public TOut Match<", includeContext ? "TIn, " : string.Empty, "TOut>(")
+                    .PushMemberScope(scopeName, ScopeType.Method)
+                    .PushIndent();
+
+                if (includeContext)
+                {
+                    generator
+                        .AppendIndent("in TIn context");
+                }
+
+                if (thenDeclaration is SingleSubschemaKeywordTypeDeclaration thenSubschema2 &&
+                    thenMatchParamName is string thenMatchParamName2)
+                {
+                    if (includeContext)
+                    {
+                        generator
+                            .AppendLine(",");
+                    }
+
+                    generator
+                        .AppendIndent(
+                            "Matcher<",
+                            thenSubschema2.ReducedType.FullyQualifiedDotnetTypeName(),
+                            includeContext ? ", TIn" : string.Empty,
+                            ", TOut> ",
+                            thenMatchParamName2);
+                }
+
+                if (elseDeclaration is SingleSubschemaKeywordTypeDeclaration elseSubschema2 &&
+                    elseMatchParamName is string elseMatchParamName2)
+                {
+                    if (thenDeclaration is not null || includeContext)
+                    {
+                        generator
+                            .AppendLine(",");
+                    }
+
+                    generator
+                        .AppendIndent(
+                            "Matcher<",
+                            elseSubschema2.ReducedType.FullyQualifiedDotnetTypeName(),
+                            includeContext ? ", TIn" : string.Empty,
+                            ", TOut> ",
+                            elseMatchParamName2);
+                }
+
+                if (thenDeclaration is null || elseDeclaration is null)
+                {
+                    generator
+                        .AppendLine(",")
+                        .AppendIndent(
+                            "Matcher<",
+                            typeDeclaration.DotnetTypeName(),
+                            includeContext ? ", TIn" : string.Empty,
+                            ", TOut> defaultMatch");
+                }
+
+                generator
+                    .AppendLine(")")
+                    .PopIndent()
+                    .AppendLineIndent("{")
+                    .PushIndent();
+
+                string matchTypeName = ifSubschema.ReducedType.FullyQualifiedDotnetTypeName();
+
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent(
+                        matchTypeName,
+                        " ifValue = this.As<",
+                        matchTypeName,
+                        ">();");
+
+                if (thenDeclaration is not null)
+                {
+                    generator
+                        .AppendLineIndent("if (ifValue.IsValid())");
+                }
+                else
+                {
+                    generator
+                        .AppendLineIndent("if (!ifValue.IsValid())");
+                }
+
+                if (thenDeclaration is SingleSubschemaKeywordTypeDeclaration thenDeclaration3 &&
+                    thenMatchParamName is string thenMatchParam3)
+                {
+                    generator
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("return ", thenMatchParam3, "(this.As<", thenDeclaration3.ReducedType.FullyQualifiedDotnetTypeName(), ">()", includeContext ? ", context" : string.Empty, ");")
+                        .PopIndent()
+                        .AppendLineIndent("}");
+                }
+
+                if (elseDeclaration is SingleSubschemaKeywordTypeDeclaration elseDeclaration3 &&
+                    elseMatchParamName is string elseMatchParam3)
+                {
+                    if (thenDeclaration is not null)
+                    {
+                        generator
+                            .AppendLineIndent("else");
+                    }
+
+                    generator
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("return ", elseMatchParam3, "(this.As<", elseDeclaration3.ReducedType.FullyQualifiedDotnetTypeName(), ">()", includeContext ? ", context" : string.Empty, ");")
+                        .PopIndent()
+                        .AppendLineIndent("}");
+                }
+
+                if (thenDeclaration is null || elseDeclaration is null)
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("return defaultMatch(this", includeContext ? ", context" : string.Empty, ");");
+                }
+
+                generator
+                    .PopMemberScope()
+                    .PopIndent()
+                    .AppendLineIndent("}");
             }
         }
     }

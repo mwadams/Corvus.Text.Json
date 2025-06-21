@@ -47,7 +47,7 @@ public sealed class CorePartial : ICodeFileBuilder
                         typeDeclaration.DotnetAccessibility(),
                         typeDeclaration.DotnetTypeName(),
                         interfaces: [
-                            typeDeclaration.GetIJsonElementInterface(isMutable: false)
+                            typeDeclaration.GetIJsonElementInterface(forMutable: false)
                             ])
                         .PushJsonSchemaClassNameAndScope()
                         .AppendBackingFields()
@@ -64,7 +64,7 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendFromFactoryMethod(typeDeclaration)
                         .AppendEqualsOverloads(typeDeclaration)
                         .AppendWriteToMethod()
-                        .AppendGetHashCodeAndToStringMethods(false)
+                        .AppendGetHashCodeAndToStringMethods(forMutable: false)
                         .AppendEvaluateSchemaMethod()
                         .AppendCheckValidInstance()
                         .AppendCreateInstance(typeDeclaration)
@@ -72,6 +72,7 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendIJsonElementExplicitImplementation()
                         .AppendCommonCreateDocumentBuilders(typeDeclaration)
                         .AppendTryGetAsCompositionTypeMethods(typeDeclaration)
+                        .AppendMatchMethods(typeDeclaration)
                         .PopJsonSchemaClassNameAndScope()
                     .EndClassOrStructDeclaration()
                 .EndTypeDeclarationNesting(typeDeclaration)
