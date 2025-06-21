@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace Corvus.Text.Json.Internal
 {
     /// <summary>
-    ///   An enumerable and enumerator for the contents of a JSON array.
+    /// Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document.
     /// </summary>
     [DebuggerDisplay("{Current,nq}")]
     [CLSCompliant(false)]
@@ -26,7 +26,9 @@ namespace Corvus.Text.Json.Internal
             _endIdxOrVersion = _initialIndex + _targetDocument.GetDbSize(_initialIndex, includeEndElement: false);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the current index within the JSON array.
+        /// </summary>
         public int CurrentIndex
         {
             get
@@ -35,19 +37,26 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Releases resources used by the enumerator.
+        /// </summary>
         public void Dispose()
         {
             _curIdx = _endIdxOrVersion;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets the enumerator to its initial position, which is before the first element in the collection.
+        /// </summary>
         public void Reset()
         {
             _curIdx = -1;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Advances the enumerator to the next element of the collection.
+        /// </summary>
+        /// <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
         public bool MoveNext()
         {
             if (_curIdx >= _endIdxOrVersion)

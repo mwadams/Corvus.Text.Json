@@ -7,17 +7,17 @@ using System.Runtime.InteropServices;
 namespace Corvus
 {
     /// <summary>
-    /// Netstandard2.0 polyfills for BitConverter.
+    /// Provides polyfills for <see cref="System.BitConverter"/> methods for .NET Standard 2.0, enabling conversion between primitive types and byte arrays or spans.
     /// </summary>
     [CLSCompliant(false)]
     public static class BitConverterEx
     {
         /// <summary>
-        /// Converts a Boolean into a span of bytes.
+        /// Converts a <see cref="bool"/> value into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted Boolean.</param>
-        /// <param name="value">The Boolean to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <param name="destination">The span to receive the bytes representing the converted Boolean.</param>
+        /// <param name="value">The Boolean value to convert.</param>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, bool value)
         {
             if (destination.Length < sizeof(byte))
@@ -30,11 +30,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a character into a span of bytes.
+        /// Converts a <see cref="char"/> value into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted character.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted character.</param>
         /// <param name="value">The character to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, char value)
         {
             if (destination.Length < sizeof(char))
@@ -47,11 +47,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a 16-bit signed integer into a span of bytes.
+        /// Converts a 16-bit signed integer (<see cref="short"/>) into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted 16-bit signed integer.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted value.</param>
         /// <param name="value">The 16-bit signed integer to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, short value)
         {
             if (destination.Length < sizeof(short))
@@ -64,11 +64,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a 32-bit signed integer into a span of bytes.
+        /// Converts a 32-bit signed integer (<see cref="int"/>) into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted 32-bit signed integer.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted value.</param>
         /// <param name="value">The 32-bit signed integer to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, int value)
         {
             if (destination.Length < sizeof(int))
@@ -81,11 +81,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a 64-bit signed integer into a span of bytes.
+        /// Converts a 64-bit signed integer (<see cref="long"/>) into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted 64-bit signed integer.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted value.</param>
         /// <param name="value">The 64-bit signed integer to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, long value)
         {
             if (destination.Length < sizeof(long))
@@ -98,11 +98,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a 16-bit unsigned integer into a span of bytes.
+        /// Converts a 16-bit unsigned integer (<see cref="ushort"/>) into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted 16-bit unsigned integer.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted value.</param>
         /// <param name="value">The 16-bit unsigned integer to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, ushort value)
         {
             if (destination.Length < sizeof(ushort))
@@ -115,11 +115,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a 32-bit unsigned integer into a span of bytes.
+        /// Converts a 32-bit unsigned integer (<see cref="uint"/>) into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted 32-bit unsigned integer.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted value.</param>
         /// <param name="value">The 32-bit unsigned integer to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, uint value)
         {
             if (destination.Length < sizeof(uint))
@@ -134,8 +134,8 @@ namespace Corvus
         /// <summary>
         /// Returns the specified 64-bit unsigned integer value as an array of bytes.
         /// </summary>
-        /// <param name="value">The number to convert.</param>
-        /// <returns>An array of bytes with length 8.</returns>
+        /// <param name="value">The 64-bit unsigned integer to convert.</param>
+        /// <returns>An array of bytes with length 8 representing the value.</returns>
         public static byte[] GetBytes(ulong value)
         {
             byte[] bytes = new byte[sizeof(ulong)];
@@ -144,11 +144,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a 64-bit unsigned integer into a span of bytes.
+        /// Converts a 64-bit unsigned integer (<see cref="ulong"/>) into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted 64-bit unsigned integer.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted value.</param>
         /// <param name="value">The 64-bit unsigned integer to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, ulong value)
         {
             if (destination.Length < sizeof(ulong))
@@ -163,8 +163,8 @@ namespace Corvus
         /// <summary>
         /// Returns the specified single-precision floating point value as an array of bytes.
         /// </summary>
-        /// <param name="value">The number to convert.</param>
-        /// <returns>An array of bytes with length 4.</returns>
+        /// <param name="value">The single-precision floating point value to convert.</param>
+        /// <returns>An array of bytes with length 4 representing the value.</returns>
         public static byte[] GetBytes(float value)
         {
             byte[] bytes = new byte[sizeof(float)];
@@ -173,11 +173,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a single-precision floating-point value into a span of bytes.
+        /// Converts a single-precision floating-point value (<see cref="float"/>) into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted single-precision floating-point value.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted value.</param>
         /// <param name="value">The single-precision floating-point value to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, float value)
         {
             if (destination.Length < sizeof(float))
@@ -192,8 +192,8 @@ namespace Corvus
         /// <summary>
         /// Returns the specified double-precision floating point value as an array of bytes.
         /// </summary>
-        /// <param name="value">The number to convert.</param>
-        /// <returns>An array of bytes with length 8.</returns>
+        /// <param name="value">The double-precision floating point value to convert.</param>
+        /// <returns>An array of bytes with length 8 representing the value.</returns>
         public static byte[] GetBytes(double value)
         {
             byte[] bytes = new byte[sizeof(double)];
@@ -202,11 +202,11 @@ namespace Corvus
         }
 
         /// <summary>
-        /// Converts a double-precision floating-point value into a span of bytes.
+        /// Converts a double-precision floating-point value (<see cref="double"/>) into a span of bytes.
         /// </summary>
-        /// <param name="destination">When this method returns, the bytes representing the converted double-precision floating-point value.</param>
+        /// <param name="destination">The span to receive the bytes representing the converted value.</param>
         /// <param name="value">The double-precision floating-point value to convert.</param>
-        /// <returns><see langword="true"/> if the conversion was successful; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryWriteBytes(Span<byte> destination, double value)
         {
             if (destination.Length < sizeof(double))

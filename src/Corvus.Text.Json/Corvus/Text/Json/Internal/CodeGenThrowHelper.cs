@@ -6,6 +6,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides helper methods for throwing exceptions in code generation and runtime scenarios for Corvus.Text.Json.
+    /// This class centralizes exception creation and throwing logic to ensure consistent error handling and messaging.
+    /// </summary>
     public static partial class CodeGenThrowHelper
     {
         // If the exception source is this value, the serializer will re-throw as JsonException.
@@ -280,34 +284,63 @@ namespace Corvus.Text.Json.Internal
         }
     }
 
+    /// <summary>
+    /// Specifies the numeric type used in code generation scenarios.
+    /// </summary>
     public enum CodeGenNumericType
     {
+        /// <summary>Represents an 8-bit unsigned integer.</summary>
         Byte,
+        /// <summary>Represents an 8-bit signed integer.</summary>
         SByte,
+        /// <summary>Represents a 16-bit signed integer.</summary>
         Int16,
+        /// <summary>Represents a 32-bit signed integer.</summary>
         Int32,
+        /// <summary>Represents a 64-bit signed integer.</summary>
         Int64,
+        /// <summary>Represents a 128-bit signed integer.</summary>
         Int128,
+        /// <summary>Represents a 16-bit unsigned integer.</summary>
         UInt16,
+        /// <summary>Represents a 32-bit unsigned integer.</summary>
         UInt32,
+        /// <summary>Represents a 64-bit unsigned integer.</summary>
         UInt64,
+        /// <summary>Represents a 128-bit unsigned integer.</summary>
         UInt128,
+        /// <summary>Represents a 16-bit floating point number.</summary>
         Half,
+        /// <summary>Represents a 32-bit floating point number.</summary>
         Single,
+        /// <summary>Represents a 64-bit floating point number.</summary>
         Double,
+        /// <summary>Represents a 128-bit decimal number.</summary>
         Decimal
     }
 
+    /// <summary>
+    /// Specifies the data type used in code generation scenarios.
+    /// </summary>
     public enum CodeGenDataType
     {
+        /// <summary>Represents a boolean value.</summary>
         Boolean,
+        /// <summary>Represents a date-only value.</summary>
         DateOnly,
+        /// <summary>Represents a date and time value.</summary>
         DateTime,
+        /// <summary>Represents a date and time with offset value.</summary>
         DateTimeOffset,
+        /// <summary>Represents a time-only value.</summary>
         TimeOnly,
+        /// <summary>Represents a time span value.</summary>
         TimeSpan,
+        /// <summary>Represents a base64-encoded string.</summary>
         Base64String,
+        /// <summary>Represents a GUID value.</summary>
         Guid,
+        /// <summary>Represents a version value.</summary>
         Version,
     }
 }

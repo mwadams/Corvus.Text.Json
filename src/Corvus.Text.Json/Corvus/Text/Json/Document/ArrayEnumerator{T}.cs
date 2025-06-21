@@ -9,8 +9,9 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json
 {
     /// <summary>
-    ///   An enumerable and enumerator for the contents of a JSON array.
+    /// Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document.
     /// </summary>
+    /// <typeparam name="TItem">The type of the JSON element to enumerate, which must implement <see cref="IJsonElement{TItem}"/>.</typeparam>
     [DebuggerDisplay("{Current,nq}")]
     [CLSCompliant(false)]
     public struct ArrayEnumerator<TItem> : IEnumerable<TItem>, IEnumerator<TItem>
@@ -30,7 +31,9 @@ namespace Corvus.Text.Json
             _endIdxOrVersion = _initialIndex + _targetDocument.GetDbSize(_initialIndex, includeEndElement: false);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the current element in the collection.
+        /// </summary>
         public TItem Current
         {
             get
@@ -49,12 +52,9 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        ///   Returns an enumerator that iterates through a collection.
+        /// Returns an enumerator that iterates through the JSON array.
         /// </summary>
-        /// <returns>
-        ///   An <see cref="ArrayEnumerator"/> value that can be used to iterate
-        ///   through the array.
-        /// </returns>
+        /// <returns>An <see cref="ArrayEnumerator{TItem}"/> value that can be used to iterate through the array.</returns>
         public ArrayEnumerator<TItem> GetEnumerator()
         {
             ArrayEnumerator<TItem> ator = this;
@@ -68,13 +68,17 @@ namespace Corvus.Text.Json
         /// <inheritdoc />
         IEnumerator<TItem> IEnumerable<TItem>.GetEnumerator() => GetEnumerator();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Releases resources used by the enumerator.
+        /// </summary>
         public void Dispose()
         {
             _curIdx = _endIdxOrVersion;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets the enumerator to its initial position, which is before the first element in the collection.
+        /// </summary>
         public void Reset()
         {
             _curIdx = -1;
@@ -83,7 +87,10 @@ namespace Corvus.Text.Json
         /// <inheritdoc />
         object IEnumerator.Current => Current;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Advances the enumerator to the next element of the collection.
+        /// </summary>
+        /// <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
         public bool MoveNext()
         {
             if (_curIdx >= _endIdxOrVersion)

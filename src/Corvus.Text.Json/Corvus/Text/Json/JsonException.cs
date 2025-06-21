@@ -4,8 +4,9 @@
 namespace Corvus.Text.Json
 {
     /// <summary>
-    /// Defines a custom exception object that is thrown when invalid JSON text is encountered, when the defined maximum depth is passed,
-    /// or the JSON text is not compatible with the type of a property on an object.
+    /// Represents errors that occur during JSON parsing, reading, or writing operations.
+    /// This exception is thrown when invalid JSON text is encountered, when the defined maximum depth is exceeded,
+    /// or when the JSON text is not compatible with the type of a property on an object.
     /// </summary>
     public class JsonException : Exception
     {
@@ -13,12 +14,12 @@ namespace Corvus.Text.Json
         internal string? _message;
 
         /// <summary>
-        /// Creates a new exception object to relay error information to the user.
+        /// Initializes a new instance of the <see cref="JsonException"/> class with a specified error message, path, line number, byte position, and a reference to the inner exception that is the cause of this exception.
         /// </summary>
         /// <param name="message">The context specific error message.</param>
+        /// <param name="path">The path where the invalid JSON was encountered.</param>
         /// <param name="lineNumber">The line number at which the invalid JSON was encountered (starting at 0) when deserializing.</param>
         /// <param name="bytePositionInLine">The byte count within the current line where the invalid JSON was encountered (starting at 0).</param>
-        /// <param name="path">The path where the invalid JSON was encountered.</param>
         /// <param name="innerException">The exception that caused the current exception.</param>
         /// <remarks>
         /// Note that the <paramref name="bytePositionInLine"/> counts the number of bytes (i.e. UTF-8 code units) and not characters or scalars.
@@ -32,7 +33,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        /// Creates a new exception object to relay error information to the user.
+        /// Initializes a new instance of the <see cref="JsonException"/> class with a specified error message, path, line number, and byte position.
         /// </summary>
         /// <param name="message">The context specific error message.</param>
         /// <param name="path">The path where the invalid JSON was encountered.</param>
@@ -50,7 +51,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        /// Creates a new exception object to relay error information to the user.
+        /// Initializes a new instance of the <see cref="JsonException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
         /// </summary>
         /// <param name="message">The context specific error message.</param>
         /// <param name="innerException">The exception that caused the current exception.</param>
@@ -60,7 +61,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        /// Creates a new exception object to relay error information to the user.
+        /// Initializes a new instance of the <see cref="JsonException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The context specific error message.</param>
         public JsonException(string? message) : base(message)
@@ -69,10 +70,9 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        /// Creates a new exception object to relay error information to the user.
+        /// Initializes a new instance of the <see cref="JsonException"/> class.
         /// </summary>
         public JsonException() : base() { }
-
 
         /// <summary>
         /// Specifies that 'try' logic should append Path information to the exception message.
@@ -80,17 +80,17 @@ namespace Corvus.Text.Json
         internal bool AppendPathInformation { get; set; }
 
         /// <summary>
-        /// The number of lines read so far before the exception (starting at 0).
+        /// Gets the number of lines read so far before the exception (starting at 0).
         /// </summary>
         public long? LineNumber { get; internal set; }
 
         /// <summary>
-        /// The number of bytes read within the current line before the exception (starting at 0).
+        /// Gets the number of bytes read within the current line before the exception (starting at 0).
         /// </summary>
         public long? BytePositionInLine { get; internal set; }
 
         /// <summary>
-        /// The path within the JSON where the exception was encountered.
+        /// Gets the path within the JSON where the exception was encountered.
         /// </summary>
         public string? Path { get; internal set; }
 

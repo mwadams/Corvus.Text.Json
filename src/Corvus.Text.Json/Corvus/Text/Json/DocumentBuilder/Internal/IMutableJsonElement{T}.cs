@@ -4,13 +4,11 @@
 namespace Corvus.Text.Json.Internal
 {
     /// <summary>
-    /// An interface implemented by mutable JSON elements.
+    /// Represents a mutable JSON element of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type implementing the interface.</typeparam>
     /// <remarks>
-    /// Note that immutable elements are ephemeral. If their
-    /// underlying document is modified, they may no longer be valid,
-    /// and their behaviour is undefined.
+    /// Note that mutable elements are ephemeral. If their underlying document is modified, they may no longer be valid, and their behaviour is undefined.
     /// </remarks>
     [CLSCompliant(false)]
     public interface IMutableJsonElement<T> : IJsonElement<T>

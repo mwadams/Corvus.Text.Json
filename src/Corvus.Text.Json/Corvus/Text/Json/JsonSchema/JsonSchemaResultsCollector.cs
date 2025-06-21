@@ -11,7 +11,8 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json
 {
     /// <summary>
-    /// Collects and manages results from JSON schema validation operations.
+    /// Collects and manages results from JSON schema validation operations, supporting pooling and efficient memory usage.
+    /// This class is not thread-safe and should be used by a single consumer at a time.
     /// </summary>
     public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     {
@@ -128,29 +129,29 @@ namespace Corvus.Text.Json
 
 
         /// <summary>
-        /// Creates an instance of a <see cref="JsonWorkspace"/>, rented from the pool.
+        /// Creates an instance of a <see cref="JsonSchemaResultsCollector"/> rented from the pool.
         /// </summary>
         /// <param name="level">Controls the verbosity of the results output.</param>
-        /// <param name="estimatedCapacity">An estimate of the number of results rows that will produce.</param>
-        /// <returns>The <see cref="JsonSchemaResultsCollector"/>.</returns>
+        /// <param name="estimatedCapacity">An estimate of the number of results rows that will be produced.</param>
+        /// <returns>The <see cref="JsonSchemaResultsCollector"/> instance.</returns>
         public static JsonSchemaResultsCollector Create(JsonSchemaResultsLevel level, int estimatedCapacity = 30)
         {
             return JsonSchemaResultsCollectorCache.RentResultsCollector(level, estimatedCapacity);
         }
 
         /// <summary>
-        /// Creates an instance of a <see cref="JsonWorkspace"/>.
+        /// Creates an instance of a <see cref="JsonSchemaResultsCollector"/> that is not pooled.
         /// </summary>
         /// <param name="level">Controls the verbosity of the results output.</param>
-        /// <param name="estimatedCapacity">An estimate of the number of results rows that will produce.</param>
-        /// <returns>The <see cref="JsonSchemaResultsCollector"/>.</returns>
+        /// <param name="estimatedCapacity">An estimate of the number of results rows that will be produced.</param>
+        /// <returns>The <see cref="JsonSchemaResultsCollector"/> instance.</returns>
         public static JsonSchemaResultsCollector CreateUnrented(JsonSchemaResultsLevel level, int estimatedCapacity = 30)
         {
             return new(false, level, estimatedCapacity);
         }
 
         /// <summary>
-        /// Represents a single result from a JSON schema validation operation.
+        /// Represents a single result from a JSON schema validation operation, including match status and evaluation locations.
         /// </summary>
         [DebuggerDisplay("{DebuggerDisplay,nq}")]
         public readonly struct Result
@@ -177,16 +178,43 @@ namespace Corvus.Text.Json
                 _message = message;
             }
 
+            /// <summary>
+            /// Gets a value indicating whether the schema evaluation was a match.
+            /// </summary>
             public bool IsMatch { get; }
 
+            /// <summary>
+            /// Gets the message for this result as a UTF-8 byte span.
+            /// </summary>
             public ReadOnlySpan<byte> Message => _collector.GetResultString(_message);
+            /// <summary>
+            /// Gets the evaluation location for this result as a UTF-8 byte span.
+            /// </summary>
             public ReadOnlySpan<byte> EvaluationLocation => _collector.GetResultString(_evaluationLocation);
+            /// <summary>
+            /// Gets the schema evaluation location for this result as a UTF-8 byte span.
+            /// </summary>
             public ReadOnlySpan<byte> SchemaEvaluationLocation => _collector.GetResultString(_schemaEvaluationLocation);
+            /// <summary>
+            /// Gets the document evaluation location for this result as a UTF-8 byte span.
+            /// </summary>
             public ReadOnlySpan<byte> DocumentEvaluationLocation => _collector.GetResultString(_documentEvaluationLocation);
 
+            /// <summary>
+            /// Gets the message for this result as a string.
+            /// </summary>
             public string GetMessageText() => JsonReaderHelper.GetTextFromUtf8(Message);
+            /// <summary>
+            /// Gets the evaluation location for this result as a string.
+            /// </summary>
             public string GetEvaluationLocationText() => JsonReaderHelper.GetTextFromUtf8(EvaluationLocation);
+            /// <summary>
+            /// Gets the schema evaluation location for this result as a string.
+            /// </summary>
             public string GetSchemaEvaluationLocationText() => JsonReaderHelper.GetTextFromUtf8(SchemaEvaluationLocation);
+            /// <summary>
+            /// Gets the document evaluation location for this result as a string.
+            /// </summary>
             public string GetDocumentEvaluationLocationText() => JsonReaderHelper.GetTextFromUtf8(DocumentEvaluationLocation);
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -194,7 +222,7 @@ namespace Corvus.Text.Json
         }
 
         /// <summary>
-        /// Enumerates the results from a <see cref="JsonSchemaResultsCollector"/>.
+        /// Enumerates the results from a <see cref="JsonSchemaResultsCollector"/>. Not thread-safe.
         /// </summary>
         [DebuggerDisplay("{Current,nq}")]
         [CLSCompliant(false)]
@@ -215,7 +243,9 @@ namespace Corvus.Text.Json
                 _endResultIdx = collector._committedResultStack.Length;
             }
 
-            /// <inheritdoc />
+            /// <summary>
+            /// Gets the current <see cref="Result"/> in the enumeration.
+            /// </summary>
             public readonly Result Current
             {
                 get
@@ -264,6 +294,9 @@ namespace Corvus.Text.Json
         /// Enumerate the results from this collector.
         /// </summary>
         /// <returns>An enumerator for the results from the collector.</returns>
+        /// <remarks>
+        /// The enumerator is not thread-safe and should not be used concurrently from multiple threads.
+        /// </remarks>
         [CLSCompliant(false)]
         public ResultsEnumerator EnumerateResults()
         {
