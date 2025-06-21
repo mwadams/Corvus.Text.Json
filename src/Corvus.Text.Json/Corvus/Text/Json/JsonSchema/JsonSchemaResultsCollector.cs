@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -152,7 +153,7 @@ namespace Corvus.Text.Json
         /// Represents a single result from a JSON schema validation operation.
         /// </summary>
         [DebuggerDisplay("{DebuggerDisplay,nq}")]
-        public readonly ref struct Result
+        public readonly struct Result
         {
             private readonly JsonSchemaResultsCollector _collector;
             private readonly ValueRange _evaluationLocation;
@@ -197,21 +198,21 @@ namespace Corvus.Text.Json
         /// </summary>
         [DebuggerDisplay("{Current,nq}")]
         [CLSCompliant(false)]
-        public struct ResultsEnumerator
+        public struct ResultsEnumerator : IEnumerable<Result>, IEnumerator<Result>
         {
             private readonly JsonSchemaResultsCollector _collector;
-            private readonly int _endIdx; // end of the committed result stack range
-            private int _curIdx; // the current index in the committed result stack range
-            private int _curResultIdx; // the current index in the current result range
-            private int _endResultIdx; // the end index in the current result range
+            private int _endResultIdx; // end of the committed result stack range
+            private int _curResultIdx; // the current index in the committed result stack range
 
-            public ResultsEnumerator(JsonSchemaResultsCollector collector)
+            /// <summary>
+            /// Creates an instance of a <see cref="ResultsEnumerator"/>.
+            /// </summary>
+            /// <param name="collector">The parent collector.</param>
+            internal ResultsEnumerator(JsonSchemaResultsCollector collector)
             {
                 _collector = collector;
-                _curIdx = -1;
                 _curResultIdx = -1;
-                _endResultIdx = -1;
-                _endIdx = collector._committedResultStack.Length;
+                _endResultIdx = collector._committedResultStack.Length;
             }
 
             /// <inheritdoc />
@@ -224,45 +225,39 @@ namespace Corvus.Text.Json
             }
 
             /// <inheritdoc />
+            object IEnumerator.Current => Current;
+
+            /// <inheritdoc />
             public void Dispose()
             {
-                _curIdx = -1;
-                _curResultIdx = -1;
+                _endResultIdx = -1;
             }
 
             /// <inheritdoc />
             public void Reset()
             {
-                _curIdx = -1;
                 _curResultIdx = -1;
             }
 
             /// <inheritdoc />
             public bool MoveNext()
             {
-                if (_curResultIdx < _endResultIdx)
-                {
-                    _curResultIdx = _collector.GetNextResultIndex(_curResultIdx);
-                }
+                _curResultIdx++;
 
                 if (_curResultIdx >= _endResultIdx)
                 {
-                    _curIdx++;
-
-                    if (_curIdx >= _endIdx)
-                    {
-                        // We have reached the end of the results
-                        return false;
-                    }
-
-                    ValueRange range = _collector.ReadResultRange(_curIdx);
-                    _curResultIdx = range.Start;
-                    _endResultIdx = range.End;
-                    Debug.Assert(_curResultIdx < _endResultIdx, "There should never be an empty committed result range.");
+                    // We have reached the end of the results
+                    return false;
                 }
 
-                return _curResultIdx < _endResultIdx;
+                return true;
             }
+
+            /// <inheritdoc/>
+            public IEnumerator<Result> GetEnumerator() => GetEnumerator();
+
+            /// <inheritdoc/>
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
         /// <summary>
@@ -277,14 +272,7 @@ namespace Corvus.Text.Json
 
         public int GetResultCount()
         {
-            int count = 0;
-            ResultsEnumerator enumerator = EnumerateResults();
-            while(enumerator.MoveNext())
-            {
-                count++;
-            }
-
-            return count;
+            return _committedResultStack.Length;
         }
 
         public void Dispose()
@@ -514,27 +502,14 @@ namespace Corvus.Text.Json
             return _committedResultStack[index];
         }
 
-        private int GetNextResultIndex(int startIndex)
+        internal Result ReadResult(int resultIndex)
         {
-            int curIndex = startIndex;
-            int header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
-            int length = header & 0x0FFF_FFFF;
-            curIndex += 4 + length;
-            header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
-            length = header & 0x0FFF_FFFF;
-            curIndex += 4 + length;
-            header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
-            length = header & 0x0FFF_FFFF;
-            curIndex += 4 + length;
-            header = BitConverter.ToInt32(_utf8StringBacking, curIndex);
-            length = header & 0x0FFF_FFFF;
-            curIndex += 4 + length;
-            return curIndex;
-        }
+            Debug.Assert(resultIndex >= 0 && resultIndex < _committedResultStack.Length, "Invalid result index.");
+            var range = _committedResultStack[resultIndex];
+            Debug.Assert(range.Length > 0, "Result range must have a positive length.");
 
-        internal Result ReadResult(int startIndex)
-        {
-            int curIndex = startIndex;
+
+            int curIndex = range.Start;
 
             // First, read the initial header
             int header = BitConverter.ToInt32(_utf8StringBacking, curIndex);

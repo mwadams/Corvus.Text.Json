@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Corvus.Text.Json.Compatibility
 {
@@ -42,7 +43,24 @@ namespace Corvus.Text.Json.Compatibility
 
         internal JsonSchemaResultsCollector? Collector { get; }
 
-        private IReadOnlyList<ValidationResult> BuildResults(JsonSchemaResultsCollector? collector) => throw new NotImplementedException();
+        private static ReadOnlyCollection<ValidationResult> BuildResults(JsonSchemaResultsCollector? collector)
+        {
+            if (collector is null)
+            {
+                return new ReadOnlyCollection<ValidationResult>(Array.Empty<ValidationResult>());
+            }
+
+            var result = new List<ValidationResult>();
+            int index = 0;
+            JsonSchemaResultsCollector.ResultsEnumerator enumerator = collector.EnumerateResults();
+            while (enumerator.MoveNext())
+            {
+                result.Add(new ValidationResult(collector, index));
+                index++;
+            }
+
+            return new ReadOnlyCollection<ValidationResult>(result);
+        }
 
         internal static JsonSchemaResultsLevel MapLevel(ValidationLevel level)
         {
