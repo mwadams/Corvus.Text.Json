@@ -302,9 +302,9 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             o.EndArray();
         }
 
-        public void Add(ReadOnlySpan<byte> name)
+        public void Add(Person.Builder.Source person)
         {
-            _builder.AddItem(name);
+            person.AddAsItem(ref _builder);
         }
     }
 

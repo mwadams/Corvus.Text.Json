@@ -83,7 +83,7 @@ namespace Corvus.Text.Json.CodeGeneration
 
 
         /// <summary>
-        /// Gets the validation class name.
+        /// Gets the JsonSchema class name.
         /// </summary>
         /// <param name="generator">The code generator.</param>
         /// <returns>The validation class name.</returns>
@@ -99,7 +99,7 @@ namespace Corvus.Text.Json.CodeGeneration
         }
 
         /// <summary>
-        /// Gets the validation class scope.
+        /// Gets the JsonSchema class scope.
         /// </summary>
         /// <param name="generator">The code generator.</param>
         /// <returns>The fully-qualified validation class scope.</returns>
@@ -113,6 +113,7 @@ namespace Corvus.Text.Json.CodeGeneration
 
             throw new InvalidOperationException("The validation class scope  has not been created.");
         }
+
 
         public static CodeGenerator AppendEvaluateSchemaMethod(this CodeGenerator generator)
         {

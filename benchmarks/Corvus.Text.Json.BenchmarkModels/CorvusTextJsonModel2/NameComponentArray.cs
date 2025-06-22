@@ -315,10 +315,11 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             o.EndArray();
         }
 
-        public void Add(ReadOnlySpan<byte> name)
+        public void Add(NameComponent.Builder.Source nameComponent)
         {
-            _builder.AddItem(name);
+            nameComponent.AddAsItem(ref _builder);
         }
+
     }
 
 

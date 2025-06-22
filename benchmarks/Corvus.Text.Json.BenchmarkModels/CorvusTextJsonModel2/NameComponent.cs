@@ -472,9 +472,10 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     {
         public readonly ref struct Source
         {
-            public NameComponent Instance { get; }
+            internal NameComponent Instance { get; }
 
-            public ReadOnlySpan<byte> Utf8StringValue { get; }
+            internal ReadOnlySpan<byte> Utf8StringValue { get; }
+            internal string? StringValue { get; }
 
             public Source(NameComponent instance)
             {
@@ -488,14 +489,26 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                 Utf8StringValue = utf8StringValue;
             }
 
+            public Source(string stringValue)
+            {
+                Instance = default;
+                Utf8StringValue = default;
+                StringValue = stringValue;
+            }
+
             public static implicit operator Source(NameComponent instance) => new(instance);
             public static implicit operator Source(ReadOnlySpan<byte> instance) => new(instance);
+            public static implicit operator Source(string instance) => new(instance);
 
             internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
             {
                 if (Instance.ValueKind != JsonValueKind.Undefined)
                 {
                     valueBuilder.AddItem(Instance);
+                }
+                else if (StringValue is string s)
+                {
+                    valueBuilder.AddItem(s);
                 }
                 else
                 {
@@ -508,6 +521,10 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
                 if (Instance.ValueKind != JsonValueKind.Undefined)
                 {
                     valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
+                }
+                else if (StringValue is string s)
+                {
+                    valueBuilder.AddItem(s);
                 }
                 else
                 {

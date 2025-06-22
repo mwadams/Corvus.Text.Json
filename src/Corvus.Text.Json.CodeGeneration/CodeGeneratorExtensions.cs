@@ -448,6 +448,44 @@ namespace Corvus.Text.Json.CodeGeneration
         }
 
         /// <summary>
+        /// Emits the start of a ref struct declaration.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the beginning of the struct declaration.</param>
+        /// <param name="accessibility">The accessibility for the generated type.</param>
+        /// <param name="dotnetTypeName">The .NET type name for the ref struct.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator BeginRefStruct(
+            this CodeGenerator generator,
+            GeneratedTypeAccessibility accessibility,
+            string dotnetTypeName)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            string accessibilityString = accessibility switch
+            {
+                GeneratedTypeAccessibility.Public => "public",
+                GeneratedTypeAccessibility.Internal => "internal",
+                GeneratedTypeAccessibility.Private => "private",
+                _ => throw new ArgumentOutOfRangeException(nameof(accessibility)),
+            };
+
+            generator.ReserveNameIfNotReserved(dotnetTypeName);
+            generator
+                .AppendIndent(accessibilityString, " ref struct ")
+                .AppendLine(dotnetTypeName);
+
+            return generator
+                .AppendLineIndent("{")
+                .PushMemberScope(dotnetTypeName, ScopeType.Type)
+                .ReserveNameIfNotReserved(dotnetTypeName) // Reserve the name of the containing scope in its own scope
+                .PushIndent();
+        }
+
+
+        /// <summary>
         /// Emits the end of a class or struct declaration.
         /// </summary>
         /// <param name="generator">The generator to which to append the end of the struct declaration.</param>

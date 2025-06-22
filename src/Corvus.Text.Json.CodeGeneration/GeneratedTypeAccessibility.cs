@@ -18,4 +18,9 @@ public enum GeneratedTypeAccessibility
     /// The generated types should be <see langword="internal"/>.
     /// </summary>
     Internal,
+
+    /// <summary>
+    /// The generated types should be <see langword="private"/>.
+    /// </summary>
+    Private
 }
