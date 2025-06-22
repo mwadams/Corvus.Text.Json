@@ -7,12 +7,13 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using Corvus.Text.Json.Internal;
 using Corvus.Text.Json.Tests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Sdk;
-using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json
 {
@@ -227,6 +228,10 @@ namespace Corvus.Text.Json
                 sequences.Add(sequence);
             }
             return sequences;
+        }
+        public static ReadOnlySequence<byte> GetSequence(IEnumerable<byte[]> json)
+        {
+            return BufferFactory.Create(json.ToArray());
         }
 
         internal static ReadOnlySequence<byte> SegmentInto(ReadOnlyMemory<byte> data, int segmentCount)
