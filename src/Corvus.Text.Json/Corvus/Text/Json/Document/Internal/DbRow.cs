@@ -3,6 +3,7 @@
 
 #pragma warning disable IDE0032 // We do not want to use autoproperties here.
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json.Internal
@@ -78,6 +79,7 @@ namespace Corvus.Text.Json.Internal
             Debug.Assert((byte)jsonTokenType < 1 << 4, "The token type is out of the valid range");
             Debug.Assert(externalIndex >= 0, "The location must be >= 0");
             Debug.Assert(workspaceDocumentIndex >= 0, "The parent document index must be >= 0");
+            Debug.Assert(Unsafe.SizeOf<DbRow>() == Size);
 
             _locationAndFromExternalDocumentUnion = (uint)externalIndex | 0x8000_0000U; // Add the sign bit to indicate that this is from an external document.
             _sizeLengthOrPropertyMapIndexUnion = sizeOrLength;
