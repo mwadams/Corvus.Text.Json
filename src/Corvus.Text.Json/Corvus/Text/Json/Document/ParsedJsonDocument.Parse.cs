@@ -174,7 +174,7 @@ namespace Corvus.Text.Json
         internal static ParsedJsonDocument<T> ParseValue(string json, JsonDocumentOptions options)
         {
             Debug.Assert(json != null);
-            return ParseValue(json.AsMemory(), options);
+            return ParseValue(json.AsSpan(), options);
         }
 
         /// <summary>
@@ -267,16 +267,15 @@ namespace Corvus.Text.Json
             }
         }
 
-        internal static ParsedJsonDocument<T> ParseValue(ReadOnlyMemory<char> json, JsonDocumentOptions options)
+        internal static ParsedJsonDocument<T> ParseValue(ReadOnlySpan<char> json, JsonDocumentOptions options)
         {
-            ReadOnlySpan<char> jsonChars = json.Span;
-            int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(jsonChars);
+            int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(json);
             byte[] owned;
             byte[] utf8Bytes = ArrayPool<byte>.Shared.Rent(expectedByteCount);
 
             try
             {
-                int actualByteCount = JsonReaderHelper.GetUtf8FromText(jsonChars, utf8Bytes);
+                int actualByteCount = JsonReaderHelper.GetUtf8FromText(json, utf8Bytes);
                 Debug.Assert(expectedByteCount == actualByteCount);
 
                 owned = new byte[actualByteCount];

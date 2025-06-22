@@ -2043,13 +2043,13 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Initialize()
         {
-            Number = ParsedJsonDocument<JsonElement>.Parse(@"1").RootElement.Clone();
-            True = ParsedJsonDocument<JsonElement>.Parse(@"true").RootElement.Clone();
-            False = ParsedJsonDocument<JsonElement>.Parse(@"false").RootElement.Clone();
-            String = ParsedJsonDocument<JsonElement>.Parse(@"""Hello""").RootElement.Clone();
-            Array = ParsedJsonDocument<JsonElement>.Parse(@"[2, false, true, ""Goodbye""]").RootElement.Clone();
-            Object = ParsedJsonDocument<JsonElement>.Parse(@"{}").RootElement.Clone();
-            Null = ParsedJsonDocument<JsonElement>.Parse(@"null").RootElement.Clone();
+            Number = JsonElement.Parse(@"1");
+            True = JsonElement.Parse(@"true");
+            False = JsonElement.Parse(@"false");
+            String = JsonElement.Parse(@"""Hello""");
+            Array = JsonElement.Parse(@"[2, false, true, ""Goodbye""]");
+            Object = JsonElement.Parse(@"{}");
+            Null = JsonElement.Parse(@"null");
         }
 
         public void Verify()
@@ -2101,11 +2101,10 @@ namespace Corvus.Text.Json.Serialization.Tests
         {
             Array = new JsonElement[]
             {
-                ParsedJsonDocument<JsonElement>.Parse(@"1").RootElement.Clone(),
-                ParsedJsonDocument<JsonElement>.Parse(@"true").RootElement.Clone(),
-                ParsedJsonDocument<JsonElement>.Parse(@"false").RootElement.Clone(),
-                ParsedJsonDocument<JsonElement>.Parse(@"""Hello""").RootElement.Clone()
-            };
+                JsonElement.Parse(@"1"),
+                JsonElement.Parse(@"true"),
+                JsonElement.Parse(@"false"),
+                JsonElement.Parse(@"""Hello""")            };
         }
 
         public void Verify()
@@ -2154,8 +2153,8 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Initialize()
         {
-            Array = ParsedJsonDocument<JsonElement>.Parse(s_array).RootElement.Clone();
-            Object = ParsedJsonDocument<JsonElement>.Parse(s_object).RootElement.Clone();
+            Array = JsonElement.Parse(s_array);
+            Object = JsonElement.Parse(s_object);
         }
 
         public void Verify()

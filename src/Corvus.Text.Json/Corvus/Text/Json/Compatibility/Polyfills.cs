@@ -61,7 +61,7 @@ namespace Corvus.Text.Json.Compatibility
             public static T Parse(ReadOnlyMemory<char> value, JsonDocumentOptions options = default)
             {
                 // This is the unrented path/
-                ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value, options);
+                ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value.Span, options);
                 return document.RootElement;
             }
 
