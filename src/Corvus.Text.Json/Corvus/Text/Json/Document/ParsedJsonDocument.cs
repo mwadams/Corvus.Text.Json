@@ -726,28 +726,7 @@ namespace Corvus.Text.Json
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-            if (!JsonHelpers.IsValidDateTimeOffsetParseLength(segment.Length))
-            {
-                value = default;
-                return false;
-            }
-
-            // Segment needs to be unescaped
-            if (row.HasComplexChildren)
-            {
-                return JsonReaderHelper.TryGetEscapedDateTime(segment, out value);
-            }
-
-            Debug.Assert(segment.IndexOf(JsonConstants.BackSlash) == -1);
-
-            if (JsonHelpers.TryParseAsISO(segment, out DateTime tmp))
-            {
-                value = tmp;
-                return true;
-            }
-
-            value = default;
-            return false;
+            return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
         }
 
         /// <inheritdoc />
@@ -762,28 +741,7 @@ namespace Corvus.Text.Json
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-            if (!JsonHelpers.IsValidDateTimeOffsetParseLength(segment.Length))
-            {
-                value = default;
-                return false;
-            }
-
-            // Segment needs to be unescaped
-            if (row.HasComplexChildren)
-            {
-                return JsonReaderHelper.TryGetEscapedDateTimeOffset(segment, out value);
-            }
-
-            Debug.Assert(segment.IndexOf(JsonConstants.BackSlash) == -1);
-
-            if (JsonHelpers.TryParseAsISO(segment, out DateTimeOffset tmp))
-            {
-                value = tmp;
-                return true;
-            }
-
-            value = default;
-            return false;
+            return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
         }
 
         bool IJsonDocument.TryGetValue(int index, out OffsetDateTime value)
@@ -797,28 +755,7 @@ namespace Corvus.Text.Json
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
-            {
-                value = default;
-                return false;
-            }
-
-            // Segment needs to be unescaped
-            if (row.HasComplexChildren)
-            {
-                Debug.Assert(segment.Length <= JsonConstants.MaximumEscapedDateTimeOffsetParseLength);
-                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
-
-                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
-                Debug.Assert(written > 0);
-
-                sourceUnescaped = sourceUnescaped.Slice(0, written);
-                Debug.Assert(!sourceUnescaped.IsEmpty);
-
-                return JsonElementHelpers.TryParseOffsetDateTime(segment, out value);
-            }
-
-            return JsonElementHelpers.TryParseOffsetDateTime(segment, out value);
+            return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
         }
 
         bool IJsonDocument.TryGetValue(int index, out OffsetDate value)
@@ -838,22 +775,7 @@ namespace Corvus.Text.Json
                 return false;
             }
 
-            // Segment needs to be unescaped
-            if (row.HasComplexChildren)
-            {
-                Debug.Assert(segment.Length <= JsonConstants.MaximumEscapedDateTimeOffsetParseLength);
-                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
-
-                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
-                Debug.Assert(written > 0);
-
-                sourceUnescaped = sourceUnescaped.Slice(0, written);
-                Debug.Assert(!sourceUnescaped.IsEmpty);
-
-                return JsonElementHelpers.TryParseOffsetDate(segment, out value);
-            }
-
-            return JsonElementHelpers.TryParseOffsetDate(segment, out value);
+            return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
         }
 
 
@@ -868,28 +790,7 @@ namespace Corvus.Text.Json
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
-            {
-                value = default;
-                return false;
-            }
-
-            // Segment needs to be unescaped
-            if (row.HasComplexChildren)
-            {
-                Debug.Assert(segment.Length <= JsonConstants.MaximumEscapedDateTimeOffsetParseLength);
-                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
-
-                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
-                Debug.Assert(written > 0);
-
-                sourceUnescaped = sourceUnescaped.Slice(0, written);
-                Debug.Assert(!sourceUnescaped.IsEmpty);
-
-                return JsonElementHelpers.TryParseOffsetTime(segment, out value);
-            }
-
-            return JsonElementHelpers.TryParseOffsetTime(segment, out value);
+            return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
         }
 
         bool IJsonDocument.TryGetValue(int index, out LocalDate value)
@@ -903,27 +804,7 @@ namespace Corvus.Text.Json
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
-            {
-                value = default;
-                return false;
-            }
-
-            // Segment needs to be unescaped
-            if (row.HasComplexChildren)
-            {
-                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
-
-                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
-                Debug.Assert(written > 0);
-
-                sourceUnescaped = sourceUnescaped.Slice(0, written);
-                Debug.Assert(!sourceUnescaped.IsEmpty);
-
-                return JsonElementHelpers.TryParseLocalDate(segment, out value);
-            }
-
-            return JsonElementHelpers.TryParseLocalDate(segment, out value);
+            return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
         }
 
         bool IJsonDocument.TryGetValue(int index, out Period value)
@@ -937,27 +818,7 @@ namespace Corvus.Text.Json
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-            if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
-            {
-                value = default;
-                return false;
-            }
-
-            // Segment needs to be unescaped
-            if (row.HasComplexChildren)
-            {
-                Span<byte> sourceUnescaped = stackalloc byte[JsonConstants.MaximumEscapedDateTimeOffsetParseLength];
-
-                JsonReaderHelper.Unescape(segment, sourceUnescaped, out int written);
-                Debug.Assert(written > 0);
-
-                sourceUnescaped = sourceUnescaped.Slice(0, written);
-                Debug.Assert(!sourceUnescaped.IsEmpty);
-
-                return Period.TryParse(segment, out value);
-            }
-
-            return Period.TryParse(segment, out value);
+            return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
         }
 
         /// <inheritdoc />
