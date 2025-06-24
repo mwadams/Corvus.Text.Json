@@ -48,3 +48,7 @@ Polyfills
 cref
 Impl
 callback
+uuid
+Impl
+netstandard
+numerics

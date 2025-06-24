@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -12,261 +13,543 @@ namespace Corvus.Text.Json
 {
     public readonly partial struct JsonElement
     {
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, JsonObjectBuilder.Build builder, int estimatedMemberCount = 30)
+        public readonly ref struct Source
         {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
-            JsonObjectBuilder.BuildValue(builder, ref cvb);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private enum Kind
+            {
+                // We only need to include the kinds we
+                // actually need!
+                Unknown,
+                JsonElement,
+                Null,
+                True,
+                False,
+                NumericSimpleType,
+                FormattedNumber,
+                StringSimpleType,
+                RawUtf8StringRequiresUnescaping,
+                RawUtf8StringNotRequiresUnescaping,
+                Utf8String,
+                Utf16String,
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, JsonArrayBuilder.Build builder, int estimatedMemberCount = 30)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
-            JsonArrayBuilder.BuildValue(builder, ref cvb);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+                // Add additional kinds for composed schema builders
+                JsonArrayBuilderInstance,
+                JsonObjectBuilderInstance,
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, string value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private readonly Kind _kind;
+            private readonly JsonElement _jsonElement;
+            private readonly SimpleTypesBacking _simpleTypeBacking;
+            private readonly ReadOnlySpan<byte> _utf8Backing;
+            private readonly ReadOnlySpan<char> _utf16Backing;
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, ReadOnlySpan<char> value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            // Add additional backing fields for composed object/array builders
+            // We have two here for object builder and array builder
+            // Because we could be either
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, ReadOnlySpan<byte> value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            // NEXT TIME: build a JsonArrayBuilder<T> and a JsonObjectBuilder<T> where we have distinct
+            // value types
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilderRawString(JsonWorkspace workspace, ReadOnlySpan<byte> value, bool requiresUnescaping)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value, false, requiresUnescaping);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private readonly JsonArrayBuilder.Build? _arrayBuilder;
+            private readonly JsonObjectBuilder.Build? _objectBuilder;
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, bool value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(JsonElement jsonElement)
+            {
+                _jsonElement = jsonElement;
+                _kind = Kind.JsonElement;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilderNull(JsonWorkspace workspace)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItemNull();
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(Kind kind)
+            {
+                Debug.Assert(kind is Kind.Null or Kind.True or Kind.False);
+                _kind = kind;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilderFormattedNumber(JsonWorkspace workspace, ReadOnlySpan<byte> formattedNumber)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItemFormattedNumber(formattedNumber);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(ReadOnlySpan<byte> value)
+            {
+                _utf8Backing = value;
+                _kind = Kind.Utf8String;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, long value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(ReadOnlySpan<char> value)
+            {
+                _utf16Backing = value;
+                _kind = Kind.Utf16String;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, ulong value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(ReadOnlySpan<byte> value, Kind kind)
+            {
+                Debug.Assert(kind is Kind.FormattedNumber);
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, int value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+                _utf8Backing = value;
+                _kind = kind;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, uint value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(ReadOnlySpan<byte> value, bool requiresUnescaping)
+            {
+                _utf8Backing = value;
+                _kind = requiresUnescaping ? Kind.RawUtf8StringRequiresUnescaping : Kind.RawUtf8StringNotRequiresUnescaping;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, short value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(long value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, ushort value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(int value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, sbyte value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(short value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, byte value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(sbyte value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, double value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(ulong value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, float value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(uint value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, decimal value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(ushort value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
+
+            private Source(byte value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
+
+            private Source(decimal value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
+
+            private Source(double value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
+
+            private Source(float value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
+
+            private Source(DateTimeOffset value)
+            {                
+                //                                                                We inject the actual formatting code from the formatter infrastructure
+                //                                                                                                                     |
+                //                                                                                              /---------------------------------------------\
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                // ... and also get the kind to use from there
+                //                 |
+                //      /-------------------\
+                _kind = Kind.StringSimpleType;
+            }
+
+            private Source(DateTime value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.StringSimpleType;
+            }
+
+            private Source(OffsetDateTime value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetDateTime(v, buffer, out written));
+                _kind = Kind.StringSimpleType;
+            }
+
+            private Source(OffsetDate value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetDate(v, buffer, out written));
+                _kind = Kind.StringSimpleType;
+            }
+
+            private Source(OffsetTime value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetTime(v, buffer, out written));
+                _kind = Kind.StringSimpleType;
+            }
+
+            private Source(LocalDate value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatLocalDate(v, buffer, out written));
+                _kind = Kind.StringSimpleType;
+            }
+
+            private Source(Corvus.Text.Json.Period value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatPeriod(v, buffer, out written));
+                _kind = Kind.StringSimpleType;
+            }
+
+            private Source(Guid value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+                _kind = Kind.StringSimpleType;
+            }
+
+            private Source(Uri value)
+            {
+                _utf16Backing = value.OriginalString.AsSpan();
+                _kind = Kind.Utf16String;
+            }
 
 #if NET
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Int128 value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(Int128 value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, UInt128 value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(UInt128 value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 
-        [CLSCompliant(false)]
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Half value)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, 1);
-            cvb.AddItem(value);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
+            private Source(Half value)
+            {
+                SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written));
+                _kind = Kind.NumericSimpleType;
+            }
 #endif
 
+            // If the core types offer Array, we provide this constructor
+            // (It will be a JsonArrayBuilder<T> if the array has a strong single type)
+            public Source(JsonArrayBuilder.Build value)
+            {
+                _arrayBuilder = value;
+                _kind = Kind.JsonArrayBuilderInstance;
+            }
+
+            // If the core types offer Object, we provide this constructor
+            // (It will be a JsonObjectBuilder<T> if the object has a strong single property type i.e. it is a map of string to SomeType)
+            public Source(JsonObjectBuilder.Build value)
+            {
+                _objectBuilder = value;
+                _kind = Kind.JsonObjectBuilderInstance;
+            }
+
+            // One conversion for each IJsonElement type
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(in JsonElement value)
+            {
+                // This would normally be
+                //return new(JsonElement.From(value));
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(ReadOnlySpan<byte> value)
+            {
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(ReadOnlySpan<char> value)
+            {
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(string value)
+            {
+                return new(value.AsSpan());
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(DateTimeOffset value)
+            {
+                return new(value);
+            }
+
+            public static implicit operator Source(DateTime value)
+            {
+                return new(value);
+            }
+
+            public static implicit operator Source(OffsetDateTime value)
+            {
+                return new(value);
+            }
+
+            public static implicit operator Source(OffsetDate value)
+            {
+                return new(value);
+            }
+
+            public static implicit operator Source(OffsetTime value)
+            {
+                return new(value);
+            }
+
+
+            public static implicit operator Source(LocalDate value)
+            {
+                return new(value);
+            }
+
+            public static implicit operator Source(Corvus.Text.Json.Period value)
+            {
+                return new(value);
+            }
+
+            public static implicit operator Source(Guid value)
+            {
+                return new(value);
+            }
+
+            public static implicit operator Source(Uri value)
+            {
+                return new(value);
+            }
+
+            // If the CoreTypes offer nullable, we add this method
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Source Null()
+            {
+                return new(Kind.Null);
+            }
+
+            // If the CoreTypes offer string, we add this method
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
+            {
+                return new(value, requiresUnescaping);
+            }
+
+            // If the CoreTypes offer number, we add this method
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Source FormattedNumber(ReadOnlySpan<byte> value)
+            {
+                return new(value, Kind.FormattedNumber);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(bool value)
+            {
+                return new(value ? Kind.True : Kind.False);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(long value)
+            {
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(int value)
+            {
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(short value)
+            {
+                return new(value);
+            }
+
+            [CLSCompliant(false)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(sbyte value)
+            {
+                return new(value);
+            }
+
+            [CLSCompliant(false)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(ulong value)
+            {
+                return new(value);
+            }
+
+            [CLSCompliant(false)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(uint value)
+            {
+                return new(value);
+            }
+
+            [CLSCompliant(false)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(ushort value)
+            {
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(byte value)
+            {
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(decimal value)
+            {
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(double value)
+            {
+                return new(value);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator Source(float value)
+            {
+                return new(value);
+            }
+
+#if NET
+            public static implicit operator Source(Int128 value)
+            {
+                return new(value);
+            }
+
+            [CLSCompliant(false)]
+            public static implicit operator Source(UInt128 value)
+            {
+                return new(value);
+            }
+
+            public static implicit operator Source(Half value)
+            {
+                return new(value);
+            }
+#endif
+            public void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+            {
+                switch (_kind)
+                {
+                    case Kind.JsonElement:
+                        valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                        break;
+                    case Kind.Null:
+                        valueBuilder.AddPropertyNull(utf8Name, escapeName, nameRequiresUnescaping);
+                        break;
+                    case Kind.True:
+                        valueBuilder.AddProperty(utf8Name, true, escapeName, nameRequiresUnescaping);
+                        break;
+                    case Kind.False:
+                        valueBuilder.AddProperty(utf8Name, false, escapeName, nameRequiresUnescaping);
+                        break;
+                    case Kind.NumericSimpleType:
+                        valueBuilder.AddPropertyFormattedNumber(utf8Name, _simpleTypeBacking.Span(), escapeName, nameRequiresUnescaping);
+                        break;
+                    case Kind.FormattedNumber:
+                        valueBuilder.AddPropertyFormattedNumber(utf8Name, _utf8Backing, escapeName, nameRequiresUnescaping);
+                        break;
+                    case Kind.StringSimpleType:
+                        valueBuilder.AddProperty(utf8Name, _simpleTypeBacking.Span(), escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                        break;
+                    case Kind.RawUtf8StringRequiresUnescaping:
+                        valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: true);
+                        break;
+                    case Kind.RawUtf8StringNotRequiresUnescaping:
+                        valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                        break;
+                    case Kind.Utf8String:
+                        valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                        break;
+                    case Kind.Utf16String:
+                        valueBuilder.AddProperty(utf8Name, _utf16Backing, escapeName, nameRequiresUnescaping);
+                        break;
+                    case Kind.JsonArrayBuilderInstance:
+                        valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                        break;
+                    case Kind.JsonObjectBuilderInstance:
+                        valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                        break;
+                    default:
+                        Debug.Fail("Unrecognized kind.");
+                        break;
+                }
+            }
+
+            public void AddAsItem(ref ComplexValueBuilder valueBuilder)
+            {
+                switch (_kind)
+                {
+                    case Kind.JsonElement:
+                        valueBuilder.AddItem(_jsonElement);
+                        break;
+                    case Kind.Null:
+                        valueBuilder.AddItemNull();
+                        break;
+                    case Kind.True:
+                        valueBuilder.AddItem(true);
+                        break;
+                    case Kind.False:
+                        valueBuilder.AddItem(false);
+                        break;
+                    case Kind.NumericSimpleType:
+                        valueBuilder.AddItemFormattedNumber(_simpleTypeBacking.Span());
+                        break;
+                    case Kind.FormattedNumber:
+                        valueBuilder.AddItemFormattedNumber(_utf8Backing);
+                        break;
+                    case Kind.StringSimpleType:
+                        valueBuilder.AddItem(_simpleTypeBacking.Span());
+                        break;
+                    case Kind.RawUtf8StringRequiresUnescaping:
+                        valueBuilder.AddItem(_utf8Backing, escapeValue: false, requiresUnescaping: true);
+                        break;
+                    case Kind.RawUtf8StringNotRequiresUnescaping:
+                        valueBuilder.AddItem(_utf8Backing, escapeValue: false, requiresUnescaping: false);
+                        break;
+                    case Kind.Utf8String:
+                        valueBuilder.AddItem(_utf8Backing, escapeValue: true, requiresUnescaping: false);
+                        break;
+                    case Kind.Utf16String:
+                        valueBuilder.AddItem(_utf16Backing);
+                        break;
+                    case Kind.JsonArrayBuilderInstance:
+                        valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o));
+                        break;
+                    case Kind.JsonObjectBuilderInstance:
+                        valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o));
+                        break;
+                    default:
+                        Debug.Fail("Unrecognized kind.");
+                        break;
+                }
+            }
+        }
+
+        [CLSCompliant(false)]
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int estimatedMemberCount = 30)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+            source.AddAsItem(ref cvb);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
 
         /// <summary>
         ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.

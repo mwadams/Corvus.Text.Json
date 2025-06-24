@@ -171,15 +171,15 @@ namespace Corvus.Text.Json.Internal
         /// <typeparam name="T"></typeparam>
         /// <param name="parentDocument"></param>
         /// <param name="parentDocumentIndex"></param>
-        /// <param name="usingEvaluatedProperties"></param>
         /// <param name="usingEvaluatedItems"></param>
+        /// <param name="usingEvaluatedProperties"></param>
         /// <param name="resultsCollector"></param>
         /// <returns></returns>
         public static JsonSchemaContext BeginContext<T>(
             T parentDocument,
             int parentDocumentIndex,
-            bool usingEvaluatedProperties,
             bool usingEvaluatedItems,
+            bool usingEvaluatedProperties,
             IJsonSchemaResultsCollector? resultsCollector = null)
             where T : IJsonDocument
         {

@@ -69,7 +69,7 @@ public readonly partial struct PersonSchema
         /// <summary>
         /// Gets the schema location from which this type was generated.
         /// </summary>
-        public static string SchemaLocation { get; } = "#/$defs/NameComponentArray";
+        public static string SchemaLocation { get; } = "#/$defs/NameComponentArrayBuilder";
 
         /// <summary>
         /// Gets a Null instance.

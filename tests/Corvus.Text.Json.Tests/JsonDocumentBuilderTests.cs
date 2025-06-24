@@ -3863,7 +3863,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder =
                 JsonElement.CreateDocumentBuilder(
                     workspace,
-                    (ref JsonArrayBuilder arrayBuilder) => arrayBuilder.Add(true));
+                    new((ref JsonArrayBuilder arrayBuilder) => arrayBuilder.Add(true)));
             Assert.False(mutableBuilder.IsImmutable);
             mutableBuilder.Freeze();
             Assert.True(mutableBuilder.IsImmutable);
@@ -6062,7 +6062,7 @@ namespace Corvus.Text.Json.Tests
             // Build an array using every method on JsonArrayBuilder
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                (ref JsonArrayBuilder arrayBuilder) =>
+                new((ref JsonArrayBuilder arrayBuilder) =>
                 {
                     // Add primitive types
                     arrayBuilder.Add(true);
@@ -6109,7 +6109,7 @@ namespace Corvus.Text.Json.Tests
                     });
 
                     arrayBuilder.Add(parsedDoc.RootElement);
-                });
+                }));
 
             var root = doc.RootElement;
 
@@ -6173,7 +6173,7 @@ namespace Corvus.Text.Json.Tests
             // Build an object using every method on JsonObjectBuilder
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                (ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonObjectBuilder objBuilder) =>
                 {
                     // Add primitive types
                     objBuilder.Add("boolTrue"u8, true);
@@ -6219,7 +6219,7 @@ namespace Corvus.Text.Json.Tests
                     {
                         ob.Add("foo"u8, "bar"u8);
                     });
-                });
+                }));
 
             var root = doc.RootElement;
 

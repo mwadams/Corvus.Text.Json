@@ -2,6 +2,8 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Corvus.Json.CodeGeneration;
 
 namespace Corvus.Text.Json.CodeGeneration;
@@ -36,9 +38,12 @@ public interface INumberFormatHandler : IFormatHandler
         IKeyword? formatKeyword);
 
     /// <summary>
-    /// Gets the .NET BCL type name for the given C# numeric langword, or BCL type name.
+    /// Get the preferred numeric type for a format.
     /// </summary>
-    /// <param name="langword">The .NET numeric langword.</param>
-    /// <returns>The JSON string form suffix (e.g. <see langword="long"/> becomes <c>Int64</c>.</returns>
-    string? GetTypeNameForNumericLangwordOrTypeName(string langword);
+    /// <param name="format">The format for which to determine the preferred numeric type.</param>
+    /// <param name="typeName">The preferred type name, or <see langword="null"/> if there was no preferred numeric type for this format.</param>
+    /// <param name="isNetOnly"><see langword="true"/> if the format is for .NET only (not available on netstandard2.0).</param>
+    /// <param name="netStandardFallback">The name of the netstandard fallback type, if <paramref name="isNetOnly"/> is <see langword="true"/>.</param>
+    /// <returns><see langword="true"/> if the instance handled this format.</returns>
+    bool TryGetNumericTypeName(string format, [NotNullWhen(true)] out string? typeName, out bool isNetOnly, out string? netStandardFallback);
 }

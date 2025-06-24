@@ -338,7 +338,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     return generator;
                 }
 
-                generator.EndClassOrStructDeclaration();
+                generator.EndClassStructOrEnumDeclaration();
                 current = current.Parent();
             }
 
@@ -453,8 +453,48 @@ namespace Corvus.Text.Json.CodeGeneration
         /// <param name="generator">The generator to which to append the beginning of the struct declaration.</param>
         /// <param name="accessibility">The accessibility for the generated type.</param>
         /// <param name="dotnetTypeName">The .NET type name for the ref struct.</param>
+        /// <param name="isReadOnly">If <see langword="true"/>, this will generate a <c>readonly</c> struct.</param>
         /// <returns>A reference to the generator having completed the operation.</returns>
         public static CodeGenerator BeginRefStruct(
+            this CodeGenerator generator,
+            GeneratedTypeAccessibility accessibility,
+            string dotnetTypeName,
+            bool isReadOnly = false)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            string accessibilityString = accessibility switch
+            {
+                GeneratedTypeAccessibility.Public => "public",
+                GeneratedTypeAccessibility.Internal => "internal",
+                GeneratedTypeAccessibility.Private => "private",
+                _ => throw new ArgumentOutOfRangeException(nameof(accessibility)),
+            };
+
+            generator.ReserveNameIfNotReserved(dotnetTypeName);
+            generator
+                .AppendIndent(isReadOnly ? " readonly" : "")
+                .AppendIndent(accessibilityString, " ref struct ")
+                .AppendLine(dotnetTypeName);
+
+            return generator
+                .AppendLineIndent("{")
+                .PushMemberScope(dotnetTypeName, ScopeType.Type)
+                .ReserveNameIfNotReserved(dotnetTypeName) // Reserve the name of the containing scope in its own scope
+                .PushIndent();
+        }
+
+        /// <summary>
+        /// Emits the start of an enum declaration.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the beginning of the struct declaration.</param>
+        /// <param name="accessibility">The accessibility for the generated type.</param>
+        /// <param name="dotnetTypeName">The .NET type name for the enum.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator BeginEnum(
             this CodeGenerator generator,
             GeneratedTypeAccessibility accessibility,
             string dotnetTypeName)
@@ -474,7 +514,7 @@ namespace Corvus.Text.Json.CodeGeneration
 
             generator.ReserveNameIfNotReserved(dotnetTypeName);
             generator
-                .AppendIndent(accessibilityString, " ref struct ")
+                .AppendIndent(accessibilityString, " enum ")
                 .AppendLine(dotnetTypeName);
 
             return generator
@@ -484,13 +524,12 @@ namespace Corvus.Text.Json.CodeGeneration
                 .PushIndent();
         }
 
-
         /// <summary>
         /// Emits the end of a class or struct declaration.
         /// </summary>
         /// <param name="generator">The generator to which to append the end of the struct declaration.</param>
         /// <returns>A reference to the generator having completed the operation.</returns>
-        public static CodeGenerator EndClassOrStructDeclaration(this CodeGenerator generator)
+        public static CodeGenerator EndClassStructOrEnumDeclaration(this CodeGenerator generator)
         {
             if (generator.IsCancellationRequested)
             {
@@ -1120,7 +1159,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendBlockIndent(
                 $$"""
                 public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-                    JsonWorkspace workspace, Builder.Source value, int initialCapacity = {{initialCapacity}})
+                    JsonWorkspace workspace, in Builder.Source value, int initialCapacity = {{initialCapacity}})
                 {
                     // Create the document builder without a MetadataDb
                     JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);

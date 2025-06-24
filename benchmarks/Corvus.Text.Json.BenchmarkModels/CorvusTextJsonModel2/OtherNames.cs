@@ -143,7 +143,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -515,97 +515,133 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
 
-
-    public ref struct Builder
+    public readonly ref struct Source
     {
-        public readonly ref struct Source
+        private enum Kind
         {
-            public JsonElement JsonElementInstance { get; }
+            Unknown,
+            JsonElement,
+            StringSimpleType,
+            RawUtf8StringRequiresUnescaping,
+            RawUtf8StringNotRequiresUnescaping,
+            Utf8String,
+            Utf16String,
+            NameComponentArrayBuilder
+        }
 
-            public ReadOnlySpan<byte> NameComponentSpan { get; }
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly SimpleTypesBacking _simpleTypeBacking;
+        private readonly ReadOnlySpan<byte> _utf8Backing;
+        private readonly ReadOnlySpan<char> _utf16Backing;
+        private readonly NameComponentArray.Builder.Build? NameComponentArrayBuilderInstance { get; }
 
-            public NameComponentArray.Builder.Build? NameComponentArrayBuilder { get; }
+        private Source(JsonElement jsonElement)
+        {
+            _jsonElement = jsonElement;
+            _kind = Kind.JsonElement;
+        }
 
-            public Source(OtherNames instance)
+        private Source(ReadOnlySpan<byte> value)
+        {
+            _utf8Backing = value;
+            _kind = Kind.Utf8String;
+        }
+
+        private Source(ReadOnlySpan<char> value)
+        {
+            _utf16Backing = value;
+            _kind = Kind.Utf16String;
+        }
+
+        private Source(ReadOnlySpan<byte> value, bool requiresUnescaping)
+        {
+            _utf8Backing = value;
+            _kind = requiresUnescaping ? Kind.RawUtf8StringRequiresUnescaping : Kind.RawUtf8StringNotRequiresUnescaping;
+        }
+
+        public Source(NameComponentArray.Builder.Build value)
+        {
+            NameComponentArrayBuilderInstance = value;
+            _kind = Kind.NameComponentArrayBuilder;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(OtherNames instance) => new(JsonElement.From(instance));
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(NameComponentArray instance) => new(JsonElement.From(instance));
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(NameComponent instance) => new(JsonElement.From(instance));
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(NameComponentArray.Builder.Build instance) => new(instance);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(ReadOnlySpan<byte> value) => new(value);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(ReadOnlySpan<char> value) => new(value);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(string value) => new(value.AsSpan());
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping) => new(value, requiresUnescaping);
+
+        public void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch (_kind)
             {
-                JsonElementInstance = JsonElement.From(instance);
-                NameComponentSpan = default;
-                NameComponentArrayBuilder = default;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.StringSimpleType:
+                    valueBuilder.AddProperty(utf8Name, _simpleTypeBacking.Span(), escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                    break;
+                case Kind.RawUtf8StringRequiresUnescaping:
+                    valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: true);
+                    break;
+                case Kind.RawUtf8StringNotRequiresUnescaping:
+                    valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                    break;
+                case Kind.Utf8String:
+                    valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                    break;
+                case Kind.Utf16String:
+                    valueBuilder.AddProperty(utf8Name, _utf16Backing, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.NameComponentArrayBuilder:
+                    valueBuilder.AddProperty(utf8Name, NameComponentArrayBuilderInstance!, static (b, ref o) => NameComponentArray.Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
             }
+        }
 
-            public Source(NameComponent instance)
+        public void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
             {
-                JsonElementInstance = JsonElement.From(instance);
-                NameComponentSpan = default;
-                NameComponentArrayBuilder = default;
-            }
-
-            public Source(NameComponentArray instance)
-            {
-                JsonElementInstance = JsonElement.From(instance);
-                NameComponentSpan = default;
-                NameComponentArrayBuilder = default;
-            }
-
-            public Source(ReadOnlySpan<byte> instance)
-            {
-                JsonElementInstance = default;
-                NameComponentSpan = instance;
-                NameComponentArrayBuilder = default;
-            }
-
-            public Source(NameComponentArray.Builder.Build instance)
-            {
-                JsonElementInstance = default;
-                NameComponentSpan = default;
-                NameComponentArrayBuilder = instance;
-            }
-
-            public static implicit operator Source(OtherNames instance) => new(instance);
-            public static implicit operator Source(NameComponentArray instance) => new(instance);
-            public static implicit operator Source(NameComponent instance) => new(instance);
-            public static implicit operator Source(ReadOnlySpan<byte> instance) => new(instance);
-            public static implicit operator Source(NameComponentArray.Builder.Build instance) => new(instance);
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                // Where we might be one of multiple JsonElement types, we flatten into a single JsonElement value
-                // in the source. Note that where we can be only *one* JsonElement type, we just use the instance
-                // directly.
-                // We can always check Undefined for instances, nullability for builders,
-                // and use the individual values for primitives (you don't need separate primitives for each
-                // instance of e.g. a string value - just the one true string value).
-                if (JsonElementInstance.ValueKind != JsonValueKind.Undefined)
-                {
-                    valueBuilder.AddItem(JsonElementInstance);
-                }
-                else if (NameComponentArrayBuilder is NameComponentArray.Builder.Build nameComponentArrayBuilder)
-                {
-                    NameComponentArray.Builder.Source source = new(nameComponentArrayBuilder);
-                    source.AddAsItem(ref valueBuilder);
-                }
-                else
-                {
-                    valueBuilder.AddItem(NameComponentSpan);
-                }
-            }
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
-            {
-
-                if (JsonElementInstance.ValueKind != JsonValueKind.Undefined)
-                {
-                    valueBuilder.AddProperty(utf8Name, JsonElementInstance, escapeName, nameRequiresUnescaping);
-                }
-                else if (NameComponentArrayBuilder is NameComponentArray.Builder.Build nameComponentArrayBuilder)
-                {
-                    NameComponentArray.Builder.Source source = new(nameComponentArrayBuilder);
-                    source.AddAsProperty(utf8Name, ref valueBuilder, escapeName);
-                }
-                else
-                {
-                    valueBuilder.AddProperty(utf8Name, NameComponentSpan, escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
-                }
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.StringSimpleType:
+                    valueBuilder.AddItem(_simpleTypeBacking.Span());
+                    break;
+                case Kind.RawUtf8StringRequiresUnescaping:
+                    valueBuilder.AddItem(_utf8Backing, escapeValue: false, requiresUnescaping: true);
+                    break;
+                case Kind.RawUtf8StringNotRequiresUnescaping:
+                    valueBuilder.AddItem(_utf8Backing, escapeValue: false, requiresUnescaping: false);
+                    break;
+                case Kind.Utf8String:
+                    valueBuilder.AddItem(_utf8Backing, escapeValue: true, requiresUnescaping: false);
+                    break;
+                case Kind.Utf16String:
+                    valueBuilder.AddItem(_utf16Backing);
+                    break;
+                case Kind.NameComponentArrayBuilder:
+                    valueBuilder.AddItem(NameComponentArrayBuilderInstance!, static (b, ref o) => NameComponentArray.Builder.BuildValue(b, ref o));
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
             }
         }
     }
@@ -628,8 +664,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
                 JsonTokenType.None or
                 JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
+                JsonTokenType.EndArray);
 
             context.PushSchemaLocation(SchemaLocation);
 
@@ -696,8 +731,8 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: false,
                 usingEvaluatedItems: false,
+                usingEvaluatedProperties: false,
                 resultsCollector: resultsCollector);
 
             try

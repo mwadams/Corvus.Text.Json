@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Buffers.Text;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
@@ -133,7 +132,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -246,65 +245,90 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
     }
 
+    public readonly ref struct Source
+    {
+        private enum Kind
+        {
+            Unknown,
+            JsonElement,
+            ArrayBuilder,
+            Int32Array
+        }
+
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly Builder.Build? _arrayBuilder;
+        private readonly ReadOnlySpan<int> _int32Array;
+
+        private Source(JsonElement instance)
+        {
+            _jsonElement = instance;
+            _kind = Kind.JsonElement;
+        }
+
+        public Source(Builder.Build builder)
+        {
+            _arrayBuilder = builder;
+            _kind = Kind.ArrayBuilder;
+        }
+
+        public Source(ReadOnlySpan<int> value)
+        {
+            _int32Array = value;
+            _kind = Kind.Int32Array;
+        }
+
+        public static implicit operator Source(CompetedInYears instance) => new(JsonElement.From(instance));
+        public static implicit operator Source(Builder.Build instance) => new(instance);
+        public static implicit operator Source(ReadOnlySpan<int> instance) => new(instance);
+
+        public static Source FromArray(ReadOnlySpan<int> value) => new(value);
+
+
+        internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (context, ref o) => Builder.BuildValue(context, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.Int32Array:
+                    valueBuilder.AddPropertyArrayValue(utf8Name, _int32Array, escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
+            }
+        }
+
+        internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddItem(_arrayBuilder!, static (context, ref o) => Builder.BuildValue(context, ref o));
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
+            }
+        }
+    }
+
+    // If there were more than one we would distinguish the array builder and the object builder
     public ref struct Builder
     {
         public delegate void Build(ref Builder builder);
 
-        public readonly ref struct Source
-        {
-            public Build? Builder { get; }
-
-            public CompetedInYears Instance { get; }
-
-            public Source(CompetedInYears instance)
-            {
-                Builder = null;
-                Instance = instance;
-            }
-
-            public Source(Build builder)
-            {
-                Builder = builder;
-                Instance = default;
-            }
-
-            public static implicit operator Source(CompetedInYears instance) => new(instance);
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
-            {
-                if (Builder is Build competedInYearsBuilder)
-                {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(competedInYearsBuilder, ref o), escapeName, nameRequiresUnescaping);
-                }
-                else
-                {
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
-                }
-            }
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                if (Builder is Build competedInYearsBuilder)
-                {
-                    valueBuilder.AddItem((ref o) => BuildValue(competedInYearsBuilder, ref o));
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddItem(Instance);
-                }
-            }
-        }
-
         private ComplexValueBuilder _builder;
 
         internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
-
-        internal static Builder Create(IMutableJsonDocument parentDocument, int initialElementCount)
-        {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
-            return new Builder(builder);
-        }
 
         internal static void BuildValue(Build value, ref ComplexValueBuilder o)
         {
@@ -315,9 +339,21 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             o.EndArray();
         }
 
-        public void Add(Year.Builder.Source year)
+        internal static void BuildValue(ReadOnlySpan<int> value, ref ComplexValueBuilder o)
         {
-            year.AddAsItem(ref _builder);
+            o.StartArray();
+
+            foreach(int i in value)
+            {
+                o.AddItem(i);
+            }
+
+            o.EndArray();
+        }
+
+        public void Add(Year.Source nameComponent)
+        {
+            nameComponent.AddAsItem(ref _builder);
         }
     }
 
@@ -591,8 +627,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
                 JsonTokenType.None or
                 JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
+                JsonTokenType.EndArray);
 
             context.PushSchemaLocation(SchemaLocation);
 
@@ -647,8 +682,8 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: false,
                 usingEvaluatedItems: false,
+                usingEvaluatedProperties: false,
                 resultsCollector: resultsCollector);
 
             try

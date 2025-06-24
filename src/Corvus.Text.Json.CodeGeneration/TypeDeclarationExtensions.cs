@@ -4,9 +4,47 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Corvus.Text.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration;
+using Corvus.Json.CodeGeneration.Keywords;
 
 namespace Corvus.Text.Json.CodeGeneration;
+
+/// <summary>
+/// Represents a numeric type name with fallback for .NET Standard.   
+/// </summary>
+public readonly struct NumericTypeName
+{
+    /// <summary>
+    /// Gets the name of the numeric type.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this is a .NET only type.
+    /// </summary>
+    [MemberNotNullWhen(true, nameof(NetStandardFallbackName))]
+    public bool IsNetOnly { get; }
+
+    /// <summary>
+    /// Gets the name of the numeric type for the netstandard fallback.
+    /// </summary>
+    public string? NetStandardFallbackName { get; }
+
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NumericTypeName"/> struct.
+    /// </summary>
+    /// <param name="name">The name of the numeric type.</param>
+    /// <param name="isNetOnly">A value indicating whether this is a .NET only type.</param>
+    public NumericTypeName(string name, bool isNetOnly, string? netStandardFallbackName)
+    {
+        this.Name = name;
+        this.IsNetOnly = isNetOnly;
+        NetStandardFallbackName = netStandardFallbackName;
+    }
+}
 
 /// <summary>
 /// Extension methods for <see cref="TypeDeclaration"/>.
@@ -27,6 +65,7 @@ public static class TypeDeclarationExtensions
     private const string AddExplicitUsingsKey = "CSharp_LanguageProvider_AddExplicitUsings";
     private const string DefaultAccessibilityKey = "CSharp_LanguageProvider_DefaultAccessibilityKey";
     private const string AccessibilityKey = "CSharp_LanguageProvider_AccessibilityKey";
+    private const string BuilderSourcesKey = "CSharp_LanguageProvider_BuilderSources";
 
     /// <summary>
     /// Sets the relevant metadata from the <see cref="CSharpLanguageProvider.Options"/>.
@@ -243,14 +282,62 @@ public static class TypeDeclarationExtensions
     }
 
     /// <summary>
+    /// Gets the type names from which the Builder.Source can be created for the the type declaration.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <returns>The array of types from which this can be converted.</returns>
+    public static TypeDeclaration[] BuilderSources(this TypeDeclaration typeDeclaration)
+    {
+        if (!typeDeclaration.TryGetMetadata(BuilderSourcesKey, out TypeDeclaration[]? sources))
+        {
+            sources = GetBuilderSources(typeDeclaration);
+            typeDeclaration.SetMetadata(BuilderSourcesKey, sources);
+        }
+
+        return sources ?? [];
+
+        static TypeDeclaration[] GetBuilderSources(TypeDeclaration rootDeclaration)
+        {
+            HashSet<TypeDeclaration> sources = [];
+
+            // Short cicuit if cannot reduce to AnyOf or OneOf
+            if(!rootDeclaration.CanReduceToAnyOf() && !rootDeclaration.CanReduceToOneOf())
+            {
+                return [];
+            }
+
+            Queue<TypeDeclaration> typesToProcess = [];
+
+            typesToProcess.Enqueue(rootDeclaration);
+
+            while (typesToProcess.Count > 0)
+            {
+                TypeDeclaration subschema = typesToProcess.Dequeue();
+
+                if (!sources.Add(subschema) || subschema.DoNotGenerate())
+                {
+                    // We've already seen it.
+                    continue;
+                }
+
+                AppendCompositionSources(typesToProcess, rootDeclaration, subschema);
+            }
+
+            // We don't want the root declaration in the set
+            sources.Remove(rootDeclaration);
+            return [.. sources.OrderBy(t => t.FullyQualifiedDotnetTypeName())];
+        }
+    }
+
+    /// <summary>
     /// Gets the preferred .NET numeric type (e.g. int, double, long etc) for the type declaration.
     /// </summary>
     /// <param name="typeDeclaration">The type declaration.</param>
     /// <returns>The preferred .NET numeric type name for the type declaration, or <see langword="null"/> if
     /// this was not a numeric type.</returns>
-    public static string? PreferredDotnetNumericTypeName(this TypeDeclaration typeDeclaration)
+    public static NumericTypeName? PreferredDotnetNumericTypeName(this TypeDeclaration typeDeclaration)
     {
-        if (!typeDeclaration.TryGetMetadata(PreferredDotnetNumericTypeNameKey, out string? numericTypeName))
+        if (!typeDeclaration.TryGetMetadata(PreferredDotnetNumericTypeNameKey, out NumericTypeName? numericTypeName))
         {
             numericTypeName = GetNumericTypeName(typeDeclaration);
             typeDeclaration.SetMetadata(PreferredDotnetNumericTypeNameKey, numericTypeName);
@@ -258,7 +345,7 @@ public static class TypeDeclarationExtensions
 
         return numericTypeName;
 
-        static string? GetNumericTypeName(TypeDeclaration typeDeclaration)
+        static NumericTypeName? GetNumericTypeName(TypeDeclaration typeDeclaration)
         {
             if (typeDeclaration.ArrayItemsType() is ArrayItemsTypeDeclaration arrayItemsType)
             {
@@ -266,27 +353,21 @@ public static class TypeDeclarationExtensions
             }
 
             if ((typeDeclaration.ImpliedCoreTypesOrAny() & (CoreTypes.Number | CoreTypes.Integer)) != 0)
-            {
+            {                
                 string? candidateFormat = typeDeclaration.Format();
 
-                return candidateFormat switch
+                if (candidateFormat is string format &&
+                    FormatHandlerRegistry.Instance.NumberFormatHandlers.TryGetNumericTypeName(format, out string? typeName, out bool isNetOnly, out string? netStandardFallback))
                 {
-                    "double" => "double",
-                    "decimal" => "decimal",
-                    "half" => "Half",
-                    "single" => "float",
-                    "byte" => "byte",
-                    "int16" => "short",
-                    "int32" => "int",
-                    "int64" => "long",
-                    "int128" => "Int128",
-                    "sbyte" => "sbyte",
-                    "uint16" => "ushort",
-                    "uint32" => "uint",
-                    "uint64" => "ulong",
-                    "uint128" => "UInt128",
-                    _ => (typeDeclaration.ImpliedCoreTypes() & CoreTypes.Integer) != 0 ? "long" : "double",
-                };
+                    return new NumericTypeName(
+                        typeName,
+                        isNetOnly,
+                        netStandardFallback);
+                }
+                else
+                {
+                    return new((typeDeclaration.ImpliedCoreTypes() & CoreTypes.Integer) != 0 ? "long" : "double", false, null);
+                }
             }
 
             return null;
@@ -589,5 +670,99 @@ public static class TypeDeclarationExtensions
     public static string GetIMutableJsonElementInterface(this TypeDeclaration typeDeclaration)
     {
         return $"IMutableJsonElement<{typeDeclaration.DotnetTypeName()}>";
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the type declaration can be reduced to an <c>anyOf</c> match.
+    /// </summary>
+    /// <param name="that">The type declaration.</param>
+    /// <returns><see langword="true"/> if the type can be reduced.</returns>
+    public static bool CanReduceToAnyOf(this TypeDeclaration that)
+    {
+        if (!that.BuildComplete)
+        {
+            throw new InvalidOperationException("You cannot use CanReduceToAnyOf during the type build process.");
+        }
+
+        if (!that.TryGetMetadata(nameof(CanReduceToAnyOf), out bool canReduce))
+        {
+            canReduce = CanReduceTo<IAnyOfValidationKeyword>(that.LocatedSchema);
+            that.SetMetadata(nameof(CanReduceToAnyOf), canReduce);
+        }
+
+        return canReduce;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the type declaration can be reduced to a <c>oneOf</c> match.
+    /// </summary>
+    /// <param name="that">The type declaration.</param>
+    /// <returns><see langword="true"/> if the type can be reduced.</returns>
+    public static bool CanReduceToOneOf(this TypeDeclaration that)
+    {
+        if (!that.BuildComplete)
+        {
+            throw new InvalidOperationException("You cannot use CanReduceToOneOf during the type build process.");
+        }
+
+        if (!that.TryGetMetadata(nameof(CanReduceToOneOf), out bool canReduce))
+        {
+            canReduce = CanReduceTo<IOneOfValidationKeyword>(that.LocatedSchema);
+            that.SetMetadata(nameof(CanReduceToOneOf), canReduce);
+        }
+
+        return canReduce;
+    }
+
+    private static bool CanReduceTo<T>(LocatedSchema locatedSchema)
+    {
+        if (locatedSchema.IsBooleanSchema)
+        {
+            return false;
+        }
+
+        IKeyword? hidesSiblingsKeyword = locatedSchema.Vocabulary.Keywords
+                .FirstOrDefault(k => k is IHidesSiblingsKeyword && locatedSchema.Schema.HasKeyword(k));
+
+        if (hidesSiblingsKeyword is IKeyword k)
+        {
+            // We have a keyword that hides its siblings
+            // is it something that blocks reduction?
+            return k.CanReduce(locatedSchema.Schema);
+        }
+
+        // If we have more than one keyword of the type we are reducing to,
+        // then we cannot reduce.
+        if (locatedSchema.Vocabulary.Keywords.Where(k => k is T).Count() > 1)
+        {
+            return false;
+        }
+
+        return locatedSchema.Vocabulary.Keywords.Where(k => k is not T).All(
+                k => k.CanReduce(locatedSchema.Schema));
+    }
+
+    private static void AppendCompositionSources(
+        Queue<TypeDeclaration> typesToProcess,
+        TypeDeclaration rootType,
+        TypeDeclaration sourceType)
+    {
+        if (sourceType.CanReduceToAnyOf() && sourceType.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> anyOf)
+        {
+            // Defer any of until all the AllOf have been processed so we prefer an implicit to the allOf types
+            foreach (TypeDeclaration subschema in anyOf.SelectMany(k => k.Value))
+            {
+                typesToProcess.Enqueue(subschema.ReducedTypeDeclaration().ReducedType);
+            }
+        }
+
+        if (sourceType.CanReduceToOneOf() && sourceType.OneOfCompositionTypes() is IReadOnlyDictionary<IOneOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> oneOf)
+        {
+            // Defer any of until all the AllOf have been processed so we prefer an implicit to the allOf types
+            foreach (TypeDeclaration subschema in oneOf.SelectMany(k => k.Value))
+            {
+                typesToProcess.Enqueue(subschema.ReducedTypeDeclaration().ReducedType);
+            }
+        }
     }
 }

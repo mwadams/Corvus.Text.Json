@@ -40,7 +40,8 @@ namespace Corvus.Text.Json.Internal
         [CLSCompliant(false)]
         public static bool MatchTypeString(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
         {
-            if (tokenType != JsonTokenType.String)
+            // Allow property names for strings
+            if (tokenType is not JsonTokenType.String or JsonTokenType.PropertyName)
             {
                 context.EvaluatedKeyword(false, ExpectedTypeString, typeKeyword);
                 return false;

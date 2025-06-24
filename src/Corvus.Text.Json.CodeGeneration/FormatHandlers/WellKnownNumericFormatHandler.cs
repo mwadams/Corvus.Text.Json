@@ -2,6 +2,8 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
@@ -183,29 +185,6 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
     }
 
     /// <inheritdoc/>
-    public string? GetTypeNameForNumericLangwordOrTypeName(string langword)
-    {
-        return langword switch
-        {
-            "byte" => "Byte",
-            "decimal" => "Decimal",
-            "double" => "Double",
-            "short" => "Int16",
-            "int" => "Int32",
-            "long" => "Int64",
-            "Int128" => "Int128",
-            "sbyte" => "SByte",
-            "Half" => "Half",
-            "float" => "Single",
-            "ushort" => "UInt16",
-            "uint" => "UInt32",
-            "ulong" => "UInt64",
-            "UInt128" => "UInt128",
-            _ => null,
-        };
-    }
-
-    /// <inheritdoc/>
     public JsonValueKind? GetExpectedValueKind(string format)
     {
         if (IsIntegerFormat(format) || IsFloatingPointFormat(format))
@@ -217,9 +196,131 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
     }
 
     /// <inheritdoc/>
-    public bool AppendFormatConstructors(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    public bool AppendFormatSourceConstructors(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConstructorParameters)
     {
-        return false;
+        switch (format)
+        {
+            case "byte":
+                if (seenConstructorParameters.Add("byte"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(byte value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "uint16":
+                if (seenConstructorParameters.Add("ushort"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(ushort value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "uint32":
+                if (seenConstructorParameters.Add("uint"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(uint value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "uint64":
+                if (seenConstructorParameters.Add("ulong"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(ulong value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "uint128":
+                if (seenConstructorParameters.Add("UInt128"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("private Source(UInt128 value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }")
+                        .AppendLine("#endif");
+                }
+                return true;
+            case "sbyte":
+                if (seenConstructorParameters.Add("sbyte"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(sbyte value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "int16":
+                if (seenConstructorParameters.Add("short"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(short value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "int32":
+                if (seenConstructorParameters.Add("int"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(int value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "int64":
+                if (seenConstructorParameters.Add("long"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(long value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "int128":
+                if (seenConstructorParameters.Add("Int128"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("private Source(Int128 value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }")
+                        .AppendLine("#endif");
+                }
+                return true;
+            case "half":
+                if (seenConstructorParameters.Add("Half"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("private Source(Half value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }")
+                        .AppendLine("#endif");
+                }
+                return true;
+            case "single":
+                if (seenConstructorParameters.Add("float"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(float value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "double":
+                if (seenConstructorParameters.Add("double"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(double value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            case "decimal":
+                if (seenConstructorParameters.Add("decimal"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(decimal value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }");
+                }
+                return true;
+            default:
+                return false;
+        }
     }
 
     /// <inheritdoc/>
@@ -288,7 +389,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
         JsonElementHelpers.ParseNumber(number, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
         generator.AppendLineIndent("private const bool ", isNegativeField, " = ", isNegative ? "true" : "false", ";");
-        generator.AppendLineIndent("private static ", integralProperty, " => \"", GetTextFromUtf8(integral) ,"\"u8;");
+        generator.AppendLineIndent("private static ", integralProperty, " => \"", GetTextFromUtf8(integral), "\"u8;");
         generator.AppendLineIndent("private static ", fractionalProperty, " => \"", GetTextFromUtf8(fractional), "\"u8;");
         generator.AppendLineIndent("private const int ", exponentField, " = ", exponent.ToString(), ";");
 
@@ -300,18 +401,18 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 #if NET
         return Encoding.UTF8.GetString(utf8Text);
 #else
-            if (utf8Text.IsEmpty)
-            {
-                return string.Empty;
-            }
+        if (utf8Text.IsEmpty)
+        {
+            return string.Empty;
+        }
 
-            unsafe
+        unsafe
+        {
+            fixed (byte* bytePtr = utf8Text)
             {
-                fixed (byte* bytePtr = utf8Text)
-                {
-                    return Encoding.UTF8.GetString(bytePtr, utf8Text.Length);
-                }
+                return Encoding.UTF8.GetString(bytePtr, utf8Text.Length);
             }
+        }
 #endif
     }
 
@@ -345,5 +446,229 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
             "decimal" => true,
             _ => false,
         };
+    }
+
+    public bool TryGetNumericTypeName(string format, [NotNullWhen(true)] out string? typeName, out bool isNetOnly, out string? netStandardFallback)
+    {
+        switch (format)
+        {
+            case "double":
+                typeName = "double";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "decimal":
+                typeName = "decimal";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "half":
+                typeName = "Half";
+                netStandardFallback = "double";
+                isNetOnly = true;
+                return true;
+            case "single":
+                typeName = "float";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "byte":
+                typeName = "byte";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "int16":
+                typeName = "short";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "int32":
+                typeName = "int";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "int64":
+                typeName = "long";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "int128":
+                typeName = "Int128";
+                netStandardFallback = "long";
+                isNetOnly = true;
+                return true;
+            case "sbyte":
+                typeName = "sbyte";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "uint16":
+                typeName = "ushort";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "uint32":
+                typeName = "uint";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "uint64":
+                typeName = "ulong";
+                netStandardFallback = null;
+                isNetOnly = false;
+                return true;
+            case "uint128":
+                typeName = "UInt128";
+                netStandardFallback = "ulong";
+                isNetOnly = true;
+                return true;
+            default:
+                typeName = null;
+                netStandardFallback = null;
+                isNetOnly = false;
+                return false;
+        }
+        ;
+    }
+
+    public bool AppendFormatSourceConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
+    {
+        switch (format)
+        {
+            case "byte":
+                if (seenConversionOperators.Add("byte"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(byte value) => new (value);");
+                }
+                return true;
+            case "uint16":
+                if (seenConversionOperators.Add("ushort"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(ushort value) => new (value);");
+                }
+                return true;
+            case "uint32":
+                if (seenConversionOperators.Add("uint"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(uint value) => new (value);");
+                }
+                return true;
+            case "uint64":
+                if (seenConversionOperators.Add("ulong"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(ulong value) => new (value);");
+                }
+                return true;
+            case "uint128":
+                if (seenConversionOperators.Add("UInt128"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(UInt128 value) => new (value);")
+                        .AppendLine("#endif");
+                }
+                return true;
+            case "sbyte":
+                if (seenConversionOperators.Add("sbyte"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(sbyte value) => new (value);");
+                }
+                return true;
+            case "int16":
+                if (seenConversionOperators.Add("short"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(short value) => new (value);");
+                }
+                return true;
+            case "int32":
+                if (seenConversionOperators.Add("int"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(int value) => new (value);");
+                }
+                return true;
+            case "int64":
+                if (seenConversionOperators.Add("long"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(long value) => new (value);");
+                }
+                return true;
+            case "int128":
+                if (seenConversionOperators.Add("Int128"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(Int128 value) => new (value);")
+                        .AppendLine("#endif");
+                }
+                return true;
+            case "half":
+                if (seenConversionOperators.Add("Half"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(Half value) => new (value);")
+                        .AppendLine("#endif");
+                }
+                return true;
+            case "single":
+                if (seenConversionOperators.Add("float"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(float value) => new (value);");
+                }
+                return true;
+            case "double":
+                if (seenConversionOperators.Add("double"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(double value) => new (value);");
+                }
+                return true;
+            case "decimal":
+                if (seenConversionOperators.Add("decimal"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(decimal value) => new (value);");
+                }
+                return true;
+            default:
+                return false;
+        }
     }
 }

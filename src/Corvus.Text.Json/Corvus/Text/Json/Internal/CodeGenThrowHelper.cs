@@ -67,6 +67,12 @@ namespace Corvus.Text.Json.Internal
             throw GetInvalidOperationException(message);
         }
 
+        [DoesNotReturn]
+        public static void ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst()
+        {
+            throw GetInvalidOperationException(SR.PrefixTupleMustBeCreatedFirst);
+        }
+
         private static InvalidOperationException GetInvalidOperationException(string message)
         {
             return new InvalidOperationException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };

@@ -181,7 +181,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
         }
     }
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source value, int initialCapacity = 1)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source value, int initialCapacity = 1)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -232,66 +232,79 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
-    public ref struct Builder
+    public readonly ref struct Source
     {
-        public delegate void Build(ref Builder builder);
-
-        public readonly ref struct Source
+        private enum Kind
         {
-            public Build? Builder { get; }
+            Unknown,
+            JsonElement,
+            ArrayBuilder
+        }
 
-            public PersonArray Instance { get; }
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly Builder.Build? _arrayBuilder;
 
-            public Source(PersonArray instance)
+        public Source(JsonElement instance)
+        {
+            _jsonElement = instance;
+            _kind = Kind.JsonElement;
+        }
+
+        public Source(Builder.Build builder)
+        {
+            _arrayBuilder = builder;
+            _kind = Kind.ArrayBuilder;
+        }
+
+        public static implicit operator Source(PersonArray instance) => new(JsonElement.From(instance));
+        public static implicit operator Source(Builder.Build instance) => new(instance);
+
+        internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch (_kind)
             {
-                Builder = null;
-                Instance = instance;
-            }
-
-            public Source(Build builder)
-            {
-                Builder = builder;
-                Instance = default;
-            }
-
-            public static implicit operator Source(PersonArray instance) => new(instance);
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
-            {
-                if (Builder is Build builder)
-                {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(builder, ref o), escapeName, nameRequiresUnescaping);
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
-                }
-            }
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                if (Builder is Build builder)
-                {
-                    valueBuilder.AddItem((ref o) => BuildValue(builder, ref o));
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddItem(Instance);
-                }
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (context, ref o) => Builder.BuildValue(context, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
             }
         }
+
+        internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddItem(_arrayBuilder!, static (context, ref o) => Builder.BuildValue(context, ref o));
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Builder for <see cref="PersonArray"/> instances.
+    /// </summary>
+    public ref struct Builder
+    {
+        private bool _addedPrefixItems = false;
+
+        public delegate void Build(ref Builder builder);
 
         private ComplexValueBuilder _builder;
 
         internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
-
-        internal static Builder Create(IMutableJsonDocument parentDocument, int initialElementCount)
-        {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
-            return new Builder(builder);
-        }
 
         internal static void BuildValue(Build value, ref ComplexValueBuilder o)
         {
@@ -302,12 +315,22 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             o.EndArray();
         }
 
-        public void Add(Person.Builder.Source person)
+        public void CreateTuple(in PrefixItems0.Source value)
         {
-            person.AddAsItem(ref _builder);
+            value.AddAsItem(ref _builder);
+            _addedPrefixItems = true;
+        }
+
+        public void Add(in Person.Source value)
+        {
+            if (!_addedPrefixItems)
+            {
+                CodeGenThrowHelper.ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst();
+            }
+
+            value.AddAsItem(ref _builder);
         }
     }
-
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct Mutable : IMutableJsonElement<Mutable>
@@ -545,8 +568,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
                 JsonTokenType.None or
                 JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
+                JsonTokenType.EndArray);
 
             context.PushSchemaLocation(SchemaLocation);
 
@@ -648,8 +670,8 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: false,
                 usingEvaluatedItems: false,
+                usingEvaluatedProperties: false,
                 resultsCollector: resultsCollector);
 
             try

@@ -58,6 +58,7 @@
     <Compile Include="NameHeuristics\WellKnownTypeNameHeuristic.cs" />
     <Compile Include="NullableAttributes.cs" />
     <Compile Include="PropertyDeclarationExtensions.cs" />
+    <Compile Include="SimpleTypeAndFormatterAndKind.cs" />
     <Compile Include="ThrowHelper.cs" />
     <Compile Include="TypeDeclarationExtensions.cs" />
   </ItemGroup>

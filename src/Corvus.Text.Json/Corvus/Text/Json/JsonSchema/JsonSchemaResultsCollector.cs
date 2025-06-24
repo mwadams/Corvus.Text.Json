@@ -284,7 +284,7 @@ namespace Corvus.Text.Json
             }
 
             /// <inheritdoc/>
-            public IEnumerator<Result> GetEnumerator() => GetEnumerator();
+            public IEnumerator<Result> GetEnumerator() => this;
 
             /// <inheritdoc/>
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

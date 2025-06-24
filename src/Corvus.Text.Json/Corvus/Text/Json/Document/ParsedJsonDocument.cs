@@ -315,7 +315,18 @@ namespace Corvus.Text.Json
 
             JsonTokenType tokenType = row.TokenType;
 
-            CheckExpectedType(expectedType, tokenType);
+            if (expectedType != JsonTokenType.None)
+            {
+                CheckExpectedType(expectedType, tokenType);
+            }
+            else
+            {
+                if (tokenType is not JsonTokenType.String or JsonTokenType.PropertyName)
+                {
+                    ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.String, tokenType);
+                }
+            }
+
 
             ReadOnlyMemory<byte> segment = _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
@@ -369,6 +380,16 @@ namespace Corvus.Text.Json
             Debug.Assert(_parsedData.Get(index - DbRow.Size).TokenType is JsonTokenType.PropertyName);
 
             return GetRawSimpleValueUnsafe(index - DbRow.Size, false).Span;
+        }
+
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        JsonElement IJsonDocument.GetPropertyName(int index)
+        {
+            CheckNotDisposed();
+            Debug.Assert(_parsedData.Get(index - DbRow.Size).TokenType is JsonTokenType.PropertyName);
+
+            return new JsonElement(this, index - DbRow.Size);
         }
 
         /// <inheritdoc />

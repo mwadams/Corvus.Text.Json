@@ -74,6 +74,12 @@ namespace Corvus.Text.Json
         }
 
         [DoesNotReturn]
+        public static void ThrowArgumentOutOfRangeException_IndexMustBeLessOrEqual(string paramName)
+        {
+            throw new ArgumentOutOfRangeException(paramName, SR.ArgumentOutOfRange_IndexMustBeLessOrEqual);
+        }
+
+        [DoesNotReturn]
         public static void ThrowArgumentException_InvalidOffLen()
         {
             throw new ArgumentException(SR.Argument_InvalidOffLen);

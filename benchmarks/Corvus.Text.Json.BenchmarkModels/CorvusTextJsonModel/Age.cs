@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
@@ -80,7 +81,7 @@ public readonly struct Age : IJsonElement<Age>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -452,51 +453,84 @@ public readonly struct Age : IJsonElement<Age>
     }
 
 
-    public ref struct Builder
+    public readonly ref struct Source
     {
-        public readonly ref struct Source
+        private enum Kind
         {
-            public Age Instance { get; }
+            JsonElement,
+            NumericSimpleType,
+            FormattedNumber,
+        }
 
-            public int Int32Value { get; }
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly SimpleTypesBacking _simpleTypeBacking;
+        private readonly ReadOnlySpan<byte> _utf8Backing;
 
-            public Source(Age instance)
+        private Source(JsonElement jsonElement)
+        {
+            _jsonElement = jsonElement;
+            _kind = Kind.JsonElement;
+        }
+
+        private Source(ReadOnlySpan<byte> value, Kind kind)
+        {
+            Debug.Assert(kind is Kind.FormattedNumber);
+
+            _utf8Backing = value;
+            _kind = kind;
+        }
+
+        private Source(int value)
+        {
+            SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+            _kind = Kind.NumericSimpleType;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(Age instance) => new(JsonElement.From(instance));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(int instance) => new(instance);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Source FormattedNumber(ReadOnlySpan<byte> value) => new(value, Kind.FormattedNumber);
+
+        public void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch (_kind)
             {
-                Instance = instance;
-                Int32Value = default;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddPropertyFormattedNumber(utf8Name, _simpleTypeBacking.Span(), escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddPropertyFormattedNumber(utf8Name, _utf8Backing, escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
             }
+        }
 
-            public Source(int int32Value)
+        public void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
             {
-                Instance = default;
-                Int32Value = int32Value;
-            }
-
-            public static implicit operator Source(Age instance) => new(instance);
-            public static implicit operator Source(int instance) => new(instance);
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                if (Instance.ValueKind != JsonValueKind.Undefined)
-                {
-                    valueBuilder.AddItem(Instance);
-                }
-                else
-                {
-                    valueBuilder.AddItem(Int32Value);
-                }
-            }
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
-            {
-                if (Instance.ValueKind != JsonValueKind.Undefined)
-                {
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
-                }
-                else
-                {
-                    valueBuilder.AddProperty(utf8Name, Int32Value, escapeName, nameRequiresUnescaping);
-                }
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddItemFormattedNumber(_simpleTypeBacking.Span());
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddItemFormattedNumber(_utf8Backing);
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
             }
         }
     }
@@ -527,8 +561,7 @@ public readonly struct Age : IJsonElement<Age>
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
                 JsonTokenType.None or
                 JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
+                JsonTokenType.EndArray);
 
             context.PushSchemaLocation(SchemaLocation);
 
@@ -607,8 +640,8 @@ public readonly struct Age : IJsonElement<Age>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: false,
                 usingEvaluatedItems: false,
+                usingEvaluatedProperties: false,
                 resultsCollector: resultsCollector);
 
             try

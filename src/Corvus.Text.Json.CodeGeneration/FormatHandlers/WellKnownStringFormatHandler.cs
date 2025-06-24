@@ -2,12 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.Internal;
 using Microsoft.CodeAnalysis.CSharp;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Corvus.Text.Json.CodeGeneration;
 
@@ -23,6 +22,210 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
     /// <inheritdoc/>
     public uint Priority => 100_000;
+
+    /// <inheritdoc/>
+    public bool AppendFormatSourceConstructors(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConstructorParameters)
+    {
+        switch (format)
+        {
+            case "date":
+                if (seenConstructorParameters.Add("LocalDate"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(LocalDate value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatLocalDate(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                }
+                return true;
+            case "date-time":
+                if (seenConstructorParameters.Add("OffsetDateTime"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(OffsetDateTime value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetDateTime(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                }
+
+                if (seenConstructorParameters.Add("DateTimeOffset"))
+                {
+                    generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("private Source(DateTimeOffset value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                }
+                return true;
+            case "time":
+                if (seenConstructorParameters.Add("OffsetTime"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                       .AppendLineIndent("private Source(OffsetTime value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetTime(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                }
+                return true;
+            case "duration":
+                if (seenConstructorParameters.Add("Period"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private Source(Period value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatPeriod(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                }
+                return true;
+            case "ipv4":
+                return true;
+            case "ipv6":
+                return true;
+            case "uuid":
+                if (seenConstructorParameters.Add("Guid"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                       .AppendLineIndent("private Source(Guid value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                }
+                return true;
+            case "uri":
+                if (seenConstructorParameters.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                       .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
+                }
+                return true;
+            case "uri-reference":
+                if (seenConstructorParameters.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                       .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
+                }
+                return true;
+            case "iri":
+                if (seenConstructorParameters.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                       .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
+                }
+                return true;
+            case "iri-reference":
+                if (seenConstructorParameters.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                       .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
+                }
+                return true;
+            case "regex":
+                return true;
+            default:
+                return false;
+        }
+        ;
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatSourceConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
+    {
+        switch (format)
+        {
+            case "date":
+                if (seenConversionOperators.Add("LocalDate"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(LocalDate value) => new (value);");
+                }                
+                return true;
+            case "date-time":
+                if (seenConversionOperators.Add("OffsetDateTime"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator Source(OffsetDateTime value) => new (value);");
+                }
+                return true;
+
+            case "time":
+                if (seenConversionOperators.Add("OffsetTime"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(OffsetTime value) => new (value);");
+                }
+                return true;
+
+            case "duration":
+                if (seenConversionOperators.Add("Period"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator Source(Period value) => new (value);");
+                }
+                return true;
+
+            case "ipv4":
+                return true;
+
+            case "ipv6":
+                return true;
+
+            case "uuid":
+                if (seenConversionOperators.Add("Guid"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator Source(Guid value) => new (value);");
+                }
+                return true;
+
+            case "uri":
+                if (seenConversionOperators.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Source(Uri value) => new (value);");
+                }
+                return true;
+
+            case "uri-reference":
+                if (seenConversionOperators.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator Source(Uri value) => new (value);");
+                }
+                return true;
+
+            case "iri":
+                if (seenConversionOperators.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator Source(Uri value) => new (value);");
+                }
+                return true;
+
+            case "iri-reference":
+                if (seenConversionOperators.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator Source(Uri value) => new (value);");
+                }
+                return true;
+
+            case "regex":
+                return true;
+
+            default:
+                return false;
+        }
+    }
 
     /// <inheritdoc/>
     public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)

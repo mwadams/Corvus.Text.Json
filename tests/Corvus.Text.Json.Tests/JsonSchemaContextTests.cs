@@ -59,7 +59,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeArrayDocument() : CreateSmallArrayDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
             // Act
             foreach(int item in evaluateIndices)
@@ -87,7 +87,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeObjectDocument() : CreateSmallObjectDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
             // Act
             foreach (int item in evaluateIndices)
@@ -115,7 +115,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeArrayDocument() : CreateSmallArrayDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
             JsonSchemaContext childContext = context.PushChildContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
 
@@ -148,7 +148,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeObjectDocument() : CreateSmallObjectDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
             JsonSchemaContext childContext = context.PushChildContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
 
@@ -181,7 +181,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeArrayDocument() : CreateSmallArrayDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
 
             // Act
@@ -215,7 +215,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeObjectDocument() : CreateSmallObjectDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
             // Act
             JsonSchemaContext childContext = context.PushChildContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
@@ -248,7 +248,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeArrayDocument() : CreateSmallArrayDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
 
             // Act
@@ -283,7 +283,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeObjectDocument() : CreateSmallObjectDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
             // Act
             foreach (int item in evaluateIndices)
@@ -315,7 +315,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeArrayDocument() : CreateSmallArrayDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
 
             // Act
@@ -353,7 +353,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using ParsedJsonDocument<JsonElement> document = useLargeDocument ? CreateLargeObjectDocument() : CreateSmallObjectDocument();
             (IJsonDocument parentDocument, int parentIndex) = JsonElementHelpers.GetParentDocumentAndIndex(document.RootElement);
-            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedProperties, usingEvaluatedItems);
+            using JsonSchemaContext context = JsonSchemaContext.BeginContext(parentDocument, parentIndex, usingEvaluatedItems, usingEvaluatedProperties);
 
             // Act
             foreach (int item in evaluateIndices)

@@ -27,6 +27,26 @@ public readonly struct Person : IJsonElement<Person>
     }
 
     /// <summary>
+    /// Gets the number of properties in the instance.
+    /// </summary>
+    /// <returns>The number of properties in the instance.</returns>
+    public int GetPropertyCount()
+    {
+        CheckValidInstance();
+        return _parent.GetPropertyCount(_idx);
+    }
+
+    /// <summary>
+    /// Gets an enumerator for the properties in the object.
+    /// </summary>
+    /// <returns></returns>
+    public ObjectEnumerator<JsonElement> GetObjectEnumerator()
+    {
+        CheckValidInstance();
+        return EnumeratorCreator.CreateObjectEnumerator<JsonElement>(_parent, _idx);
+    }
+
+    /// <summary>
     ///   The <see cref="JsonValueKind"/> that the value is.
     /// </summary>
     /// <exception cref="ObjectDisposedException">
@@ -236,7 +256,7 @@ public readonly struct Person : IJsonElement<Person>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Age.Source age, in PersonName.Source name, in CompetedInYears.Source competedInYears, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -248,7 +268,7 @@ public readonly struct Person : IJsonElement<Person>
         return documentBuilder;
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -283,6 +303,27 @@ public readonly struct Person : IJsonElement<Person>
             _idx = idx;
             _documentVersion = _parent.Version;
         }
+
+        /// <summary>
+        /// Gets the number of properties in the instance.
+        /// </summary>
+        /// <returns>The number of properties in the instance.</returns>
+        public int GetPropertyCount()
+        {
+            CheckValidInstance();
+            return _parent.GetPropertyCount(_idx);
+        }
+
+        /// <summary>
+        /// Gets an enumerator for the properties in the object.
+        /// </summary>
+        /// <returns></returns>
+        public ObjectEnumerator<JsonElement.Mutable> GetObjectEnumerator()
+        {
+            CheckValidInstance();
+            return EnumeratorCreator.CreateObjectEnumerator<JsonElement.Mutable>(_parent, _idx);
+        }
+
 
         public readonly PersonName.Mutable Name
         {
@@ -323,7 +364,7 @@ public readonly struct Person : IJsonElement<Person>
             }
         }
 
-        public void SetName(in PersonName.Builder.Source value)
+        public void SetName(in PersonName.Source value)
         {
             CheckValidInstance();
 
@@ -345,7 +386,7 @@ public readonly struct Person : IJsonElement<Person>
             _documentVersion = _parent.Version;
         }
 
-        public void SetAge(in Age.Builder.Source value)
+        public void SetAge(in Age.Source value)
         {
             CheckValidInstance();
 
@@ -367,7 +408,7 @@ public readonly struct Person : IJsonElement<Person>
             _documentVersion = _parent.Version;
         }
 
-        public void SetCompetedInYears(in CompetedInYears.Builder.Source value)
+        public void SetCompetedInYears(in CompetedInYears.Source value)
         {
             CheckValidInstance();
 
@@ -406,7 +447,11 @@ public readonly struct Person : IJsonElement<Person>
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="person"></param>
+        /// <exception cref=""
         public static explicit operator Mutable(Person person)
         {
             if (person._parent is not IMutableJsonDocument doc)
@@ -471,7 +516,7 @@ public readonly struct Person : IJsonElement<Person>
         }
 
         public static Mutable From<T>(in T instance)
-        where T : struct, IMutableJsonElement<T>
+            where T : struct, IMutableJsonElement<T>
         {
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
         }
@@ -588,67 +633,75 @@ public readonly struct Person : IJsonElement<Person>
         readonly JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
 
+    public readonly ref struct Source
+    {
+        private enum Kind
+        {
+            Unknown,
+            JsonElement,
+            PersonBuilderInstance,
+        }
+
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly Person.Builder.Build? _objectBuilder;
+
+        private Source(JsonElement instance)
+        {
+            _jsonElement = instance;
+            _kind = Kind.JsonElement;
+        }
+
+        public Source(Person.Builder.Build builder)
+        {
+            _objectBuilder = builder;
+            _kind = Kind.PersonBuilderInstance;
+        }
+
+        public static implicit operator Source(Person instance) => new(JsonElement.From(instance));
+
+        internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch(_kind)
+            {
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.PersonBuilderInstance:
+                    valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (context, ref o) => Person.Builder.BuildValue(context, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonElement:
+                    Debug.Assert(_jsonElement.ValueKind != JsonValueKind.Undefined);
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.PersonBuilderInstance:
+                    Debug.Assert(_objectBuilder is not null);
+                    valueBuilder.AddItem(_objectBuilder!, static (context, ref o) => Person.Builder.BuildValue(context, ref o));
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+    }
 
     public ref struct Builder
     {
         public delegate void Build(ref Builder builder);
 
-        public readonly ref struct Source
-        {
-            public Build? Builder { get; }
-
-            public Person Instance { get; }
-
-            public Source(Person instance)
-            {
-                Builder = null;
-                Instance = instance;
-            }
-
-            public Source(Build builder)
-            {
-                Builder = builder;
-                Instance = default;
-            }
-
-            public static implicit operator Source(Person instance) => new(instance);
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
-            {
-                if (Builder is Build personBuilder)
-                {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(personBuilder, ref o), escapeName, nameRequiresUnescaping);
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
-                }
-            }
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                if (Builder is Build personBuilder)
-                {
-                    valueBuilder.AddItem((ref o) => BuildValue(personBuilder, ref o));
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddItem(Instance);
-                }
-            }
-        }
-
         private ComplexValueBuilder _builder;
 
         internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
-
-        internal static Builder Create(IMutableJsonDocument parentDocument, int initialElementCount)
-        {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
-            return new Builder(builder);
-        }
 
         internal static void BuildValue(Build value, ref ComplexValueBuilder o)
         {
@@ -659,12 +712,12 @@ public readonly struct Person : IJsonElement<Person>
             o.EndObject();
         }
 
-        public void Create(in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears)
+        public void Create(in Age.Source age, in PersonName.Source name, in CompetedInYears.Source competedInYears)
         {
             Create(ref _builder, age, name, competedInYears);
         }
 
-        internal static void Create(ref ComplexValueBuilder builder, in Age.Builder.Source age, in PersonName.Builder.Source name, in CompetedInYears.Builder.Source competedInYears)
+        internal static void Create(ref ComplexValueBuilder builder, in Age.Source age, in PersonName.Source name, in CompetedInYears.Source competedInYears)
         {
             age.AddAsProperty(JsonPropertyNamesEscaped.Age, ref builder, escapeName: false);
             name.AddAsProperty(JsonPropertyNamesEscaped.Name, ref builder, escapeName: false);
@@ -713,8 +766,7 @@ public readonly struct Person : IJsonElement<Person>
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
                 JsonTokenType.None or
                 JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
+                JsonTokenType.EndArray);
 
             context.PushSchemaLocation(SchemaLocation);
 
@@ -750,16 +802,6 @@ public readonly struct Person : IJsonElement<Person>
                         validator(parentDocument, currentIndex, ref context, seenItems);
 
                         if (!context.IsMatch && !context.HasCollector)
-                        {
-                            context.PopSchemaLocation();
-                            return;
-                        }
-                    }
-
-                    if (!context.HasLocalOrAppliedEvaluatedProperty(propertyCount))
-                    {
-                        context.EvaluatedKeywordForProperty(false, null, propertyName, "unevaluatedProperties"u8);
-                        if (!context.HasCollector)
                         {
                             context.PopSchemaLocation();
                             return;
@@ -879,8 +921,8 @@ public readonly struct Person : IJsonElement<Person>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: true,
                 usingEvaluatedItems: false,
+                usingEvaluatedProperties: false,
                 resultsCollector: resultsCollector);
 
             try
@@ -958,7 +1000,7 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocument,
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
-                    useEvaluatedProperties: true, // But we do use evaluated properties
+                    useEvaluatedProperties: false, // But we do use evaluated properties
                     providerContext: providerContext,
                     schemaEvaluationPath: schemaEvaluationPath,
                     documentEvaluationPath: documentEvaluationPath);

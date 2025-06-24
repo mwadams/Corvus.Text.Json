@@ -76,9 +76,9 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendIJsonElementExplicitImplementation()
                             .AppendMatchMethods(typeDeclaration, forMutable: true)
                             .AppendTryGetAsCompositionTypeMethods(typeDeclaration)
-                        .EndClassOrStructDeclaration()
+                        .EndClassStructOrEnumDeclaration()
                     .PopJsonSchemaClassNameAndScope()
-                    .EndClassOrStructDeclaration()
+                    .EndClassStructOrEnumDeclaration()
                 .EndTypeDeclarationNesting(typeDeclaration)
                 .EndNamespace()
             .EndFile(typeDeclaration, string.Empty);

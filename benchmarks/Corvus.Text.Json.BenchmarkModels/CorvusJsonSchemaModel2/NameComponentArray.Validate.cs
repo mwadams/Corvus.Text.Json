@@ -35,7 +35,7 @@ public readonly partial struct NameComponentArray
                 result = result.UsingStack();
             }
 
-            result = result.PushSchemaLocation("#/$defs/NameComponentArray");
+            result = result.PushSchemaLocation("#/$defs/NameComponentArrayBuilder");
         }
 
         JsonValueKind valueKind = this.ValueKind;

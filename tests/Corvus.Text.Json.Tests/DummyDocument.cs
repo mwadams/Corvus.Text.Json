@@ -82,4 +82,6 @@ internal class DummyDocument : IJsonDocument
         value = default;
         return false;
     }
+
+    public JsonElement GetPropertyName(int index) => default;
 }

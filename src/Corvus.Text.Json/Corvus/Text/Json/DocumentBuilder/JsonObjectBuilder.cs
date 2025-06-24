@@ -15,7 +15,7 @@ namespace Corvus.Text.Json
 
         internal JsonObjectBuilder(ComplexValueBuilder builder) : this() => _builder = builder;
 
-        internal static void BuildValue(Build value, ref ComplexValueBuilder valueBuilder)
+        public static void BuildValue(Build value, ref ComplexValueBuilder valueBuilder)
         {
             valueBuilder.StartObject();
             JsonObjectBuilder objectBuilder = new(valueBuilder);

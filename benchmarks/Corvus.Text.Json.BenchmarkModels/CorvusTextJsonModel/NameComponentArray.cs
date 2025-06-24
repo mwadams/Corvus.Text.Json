@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Buffers.Text;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json;
@@ -194,7 +193,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
         }
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -245,66 +244,76 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
+    public readonly ref struct Source
+    {
+        private enum Kind
+        {
+            Unknown,
+            JsonElement,
+            ArrayBuilder
+        }
+
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly Builder.Build? _arrayBuilder;
+
+        public Source(JsonElement instance)
+        {
+            _jsonElement = instance;
+            _kind = Kind.JsonElement;
+        }
+
+        public Source(Builder.Build builder)
+        {
+            _arrayBuilder = builder;
+            _kind = Kind.ArrayBuilder;
+        }
+
+        public static implicit operator Source(NameComponentArray instance) => new(JsonElement.From(instance));
+        public static implicit operator Source(Builder.Build instance) => new(instance);
+
+        internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (context, ref o) => Builder.BuildValue(context, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
+            }
+        }
+
+        internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddItem(_arrayBuilder!, static (context, ref o) => Builder.BuildValue(context, ref o));
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
+            }
+        }
+    }
+
+
+    // If there were more than one we would distinguish the array builder and the object builder
     public ref struct Builder
     {
         public delegate void Build(ref Builder builder);
 
-        public readonly ref struct Source
-        {
-            public Build? Builder { get; }
-
-            public NameComponentArray Instance { get; }
-
-            public Source(NameComponentArray instance)
-            {
-                Builder = null;
-                Instance = instance;
-            }
-
-            public Source(Build builder)
-            {
-                Builder = builder;
-                Instance = default;
-            }
-
-            public static implicit operator Source(NameComponentArray instance) => new(instance);
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
-            {
-                if (Builder is Build builder)
-                {
-                    valueBuilder.AddProperty(utf8Name, (ref o) => BuildValue(builder, ref o), escapeName, nameRequiresUnescaping);
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
-                }
-            }
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                if (Builder is Build builder)
-                {
-                    valueBuilder.AddItem((ref o) => BuildValue(builder, ref o));
-                }
-                else
-                {
-                    Debug.Assert(Instance.ValueKind != JsonValueKind.Undefined);
-                    valueBuilder.AddItem(Instance);
-                }
-            }
-        }
-
         private ComplexValueBuilder _builder;
 
         internal Builder(ComplexValueBuilder builder) : this() => _builder = builder;
-
-        internal static Builder Create(IMutableJsonDocument parentDocument, int initialElementCount)
-        {
-            ComplexValueBuilder builder = ComplexValueBuilder.Create(parentDocument, initialElementCount);
-            return new Builder(builder);
-        }
 
         internal static void BuildValue(Build value, ref ComplexValueBuilder o)
         {
@@ -315,12 +324,11 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             o.EndArray();
         }
 
-        public void Add(ReadOnlySpan<byte> name)
+        public void Add(NameComponent.Source nameComponent)
         {
-            _builder.AddItem(name);
+            nameComponent.AddAsItem(ref _builder);
         }
     }
-
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct Mutable : IMutableJsonElement<Mutable>
@@ -592,8 +600,7 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
                 JsonTokenType.None or
                 JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
+                JsonTokenType.EndArray);
 
             context.PushSchemaLocation(SchemaLocation);
 
@@ -650,8 +657,8 @@ public readonly struct NameComponentArray: IJsonElement<NameComponentArray>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: false,
                 usingEvaluatedItems: false,
+                usingEvaluatedProperties: false,
                 resultsCollector: resultsCollector);
 
             try

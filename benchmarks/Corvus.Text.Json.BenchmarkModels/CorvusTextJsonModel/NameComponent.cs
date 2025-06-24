@@ -81,7 +81,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, Builder.Source source, int initialCapacity = 30)
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -468,51 +468,137 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
     }
 
 
-    public ref struct Builder
+    public readonly ref struct Source
     {
-        public readonly ref struct Source
+        private enum Kind
         {
-            public NameComponent Instance { get; }
+            Unknown,
+            JsonElement,
+            StringSimpleType,
+            RawUtf8StringRequiresUnescaping,
+            RawUtf8StringNotRequiresUnescaping,
+            Utf8String,
+            Utf16String,
+            ArrayBuilder
+        }
 
-            public ReadOnlySpan<byte> Utf8StringValue { get; }
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly SimpleTypesBacking _simpleTypeBacking;
+        private readonly ReadOnlySpan<byte> _utf8Backing;
+        private readonly ReadOnlySpan<char> _utf16Backing;
 
-            public Source(NameComponent instance)
+
+        private Source(JsonElement instance)
+        {
+            _jsonElement = instance;
+            _kind = Kind.JsonElement;
+        }
+
+        private Source(ReadOnlySpan<byte> value)
+        {
+            _utf8Backing = value;
+            _kind = Kind.Utf8String;
+        }
+
+        private Source(ReadOnlySpan<char> value)
+        {
+            _utf16Backing = value;
+            _kind = Kind.Utf16String;
+        }
+
+        private Source(ReadOnlySpan<byte> value, bool requiresUnescaping)
+        {
+            _utf8Backing = value;
+            _kind = requiresUnescaping ? Kind.RawUtf8StringRequiresUnescaping : Kind.RawUtf8StringNotRequiresUnescaping;
+        }
+
+
+        // One conversion for each IJsonElement type
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(in NameComponent value)
+        {
+            return new(JsonElement.From(value));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(ReadOnlySpan<byte> value)
+        {
+            return new(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(ReadOnlySpan<char> value)
+        {
+            return new(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(string value)
+        {
+            return new(value.AsSpan());
+        }
+
+        // If the CoreTypes offer string, we add this method
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
+        {
+            return new(value, requiresUnescaping);
+        }
+
+        public void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch (_kind)
             {
-                Instance = instance;
-                Utf8StringValue = default;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.StringSimpleType:
+                    valueBuilder.AddProperty(utf8Name, _simpleTypeBacking.Span(), escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                    break;
+                case Kind.RawUtf8StringRequiresUnescaping:
+                    valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: true);
+                    break;
+                case Kind.RawUtf8StringNotRequiresUnescaping:
+                    valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                    break;
+                case Kind.Utf8String:
+                    valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                    break;
+                case Kind.Utf16String:
+                    valueBuilder.AddProperty(utf8Name, _utf16Backing, escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
             }
+        }
 
-            public Source(ReadOnlySpan<byte> utf8StringValue)
+        public void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
             {
-                Instance = default;
-                Utf8StringValue = utf8StringValue;
-            }
-
-            public static implicit operator Source(NameComponent instance) => new(instance);
-            public static implicit operator Source(ReadOnlySpan<byte> instance) => new(instance);
-
-            internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-            {
-                if (Instance.ValueKind != JsonValueKind.Undefined)
-                {
-                    valueBuilder.AddItem(Instance);
-                }
-                else
-                {
-                    valueBuilder.AddItem(Utf8StringValue);
-                }
-            }
-
-            internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
-            {
-                if (Instance.ValueKind != JsonValueKind.Undefined)
-                {
-                    valueBuilder.AddProperty(utf8Name, Instance, escapeName, nameRequiresUnescaping);
-                }
-                else
-                {
-                    valueBuilder.AddProperty(utf8Name, Utf8StringValue, escapeName, true, nameRequiresUnescaping, false);
-                }
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.StringSimpleType:
+                    valueBuilder.AddItem(_simpleTypeBacking.Span());
+                    break;
+                case Kind.RawUtf8StringRequiresUnescaping:
+                    valueBuilder.AddItem(_utf8Backing, escapeValue: false, requiresUnescaping: true);
+                    break;
+                case Kind.RawUtf8StringNotRequiresUnescaping:
+                    valueBuilder.AddItem(_utf8Backing, escapeValue: false, requiresUnescaping: false);
+                    break;
+                case Kind.Utf8String:
+                    valueBuilder.AddItem(_utf8Backing, escapeValue: true, requiresUnescaping: false);
+                    break;
+                case Kind.Utf16String:
+                    valueBuilder.AddItem(_utf16Backing);
+                    break;
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
             }
         }
     }
@@ -543,8 +629,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
                 JsonTokenType.None or
                 JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
+                JsonTokenType.EndArray);
 
             context.PushSchemaLocation(SchemaLocation);
 
@@ -567,7 +652,7 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             }
             else
             {
-                using UnescapedUtf8JsonString stringValue = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
+                using UnescapedUtf8JsonString stringValue = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.None);
                 int length = JsonElementHelpers.GetUtf8StringLength(stringValue.Span);
                 // Notice that we don't "short circuit" for the flags case, because the length test is fast.
                 if (length <= MaxLength)
@@ -597,8 +682,8 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
                 parentDocument,
                 parentIndex,
-                usingEvaluatedProperties: false,
                 usingEvaluatedItems: false,
+                usingEvaluatedProperties: false,
                 resultsCollector: resultsCollector);
 
             try

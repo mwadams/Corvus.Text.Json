@@ -950,4 +950,7 @@
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>
+  <data name="PrefixTupleMustBeCreatedFirst" xml:space="preserve">
+    <value>The prefix tuple must be added first.</value>
+  </data>
 </root>

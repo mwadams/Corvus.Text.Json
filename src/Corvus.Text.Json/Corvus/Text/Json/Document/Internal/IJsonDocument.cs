@@ -133,6 +133,11 @@ namespace Corvus.Text.Json.Internal
         /// <param name="index">The index of the element.</param>
         /// <param name="expectedType">The expected JSON token type.</param>
         /// <returns>The UTF-8 JSON string value.</returns>
+        /// <remarks>
+        /// You are permitted to pass <see cref="JsonTokenType.None"/> as the
+        /// <paramref name="expectedType"/> which will check both
+        /// String and PropertyName as valid types.
+        /// </remarks>
         UnescapedUtf8JsonString GetUtf8JsonString(int index, JsonTokenType expectedType);
 
         /// <summary>
@@ -334,6 +339,13 @@ namespace Corvus.Text.Json.Internal
         /// <param name="index">The index of the property.</param>
         /// <returns>The raw property name as a byte span.</returns>
         ReadOnlySpan<byte> GetPropertyNameRaw(int index);
+
+        /// <summary>
+        /// Gets the property name as a JSON element.
+        /// </summary>
+        /// <param name="index">The index of the property.</param>
+        /// <returns>The raw property name as a byte span.</returns>
+        JsonElement GetPropertyName(int index);
 
         /// <summary>
         /// Gets the raw value of the element at the specified index as a string.
