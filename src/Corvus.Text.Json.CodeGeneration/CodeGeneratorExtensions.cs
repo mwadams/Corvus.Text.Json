@@ -382,6 +382,52 @@ namespace Corvus.Text.Json.CodeGeneration
         }
 
         /// <summary>
+        /// Emits the start of a public static class declaration.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the beginning of the struct declaration.</param>
+        /// <param name="dotnetTypeName">The .NET type name for the partial struct.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator BeginPublicStaticClassDeclaration(this CodeGenerator generator, string dotnetTypeName)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            string name = generator.GetTypeNameInScope(dotnetTypeName);
+            return generator
+                .AppendIndent("public static class ")
+                .AppendLine(name)
+                .AppendLineIndent("{")
+                .PushMemberScope(name, ScopeType.Type)
+                .ReserveNameIfNotReserved(name) // Reserve the name of the containing scope in its own scope
+                .PushIndent();
+        }
+
+        /// <summary>
+        /// Emits the start of a public static class declaration.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the beginning of the struct declaration.</param>
+        /// <param name="dotnetTypeName">The .NET type name for the partial struct.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator BeginPrivateStaticClassDeclaration(this CodeGenerator generator, string dotnetTypeName)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            string name = generator.GetTypeNameInScope(dotnetTypeName);
+            return generator
+                .AppendIndent("private static class ")
+                .AppendLine(name)
+                .AppendLineIndent("{")
+                .PushMemberScope(name, ScopeType.Type)
+                .ReserveNameIfNotReserved(name) // Reserve the name of the containing scope in its own scope
+                .PushIndent();
+        }
+
+        /// <summary>
         /// Emits the start of a partial struct declaration.
         /// </summary>
         /// <param name="generator">The generator to which to append the beginning of the struct declaration.</param>

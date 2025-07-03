@@ -78,6 +78,8 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendTryGetAsCompositionTypeMethods(typeDeclaration)
                         .AppendMatchMethods(typeDeclaration)
                         .AppendSourceAndBuilder(typeDeclaration)
+                        .AppendJsonPropertyNames(typeDeclaration)
+                        .AppendJsonPropertyNamesEscaped(typeDeclaration)
                         .PopSourceClassNameAndScope()
                         .PopBuilderClassNameAndScope()
                         .PopJsonPropertyNamesClassNameAndScope()

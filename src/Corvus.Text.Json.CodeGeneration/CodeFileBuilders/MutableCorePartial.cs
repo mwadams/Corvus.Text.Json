@@ -47,8 +47,10 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                         typeDeclaration.DotnetAccessibility(),
                         typeDeclaration.DotnetTypeName())
                         .PushJsonSchemaClassNameAndScope()
-                        .PushJsonPropertyNamesClassNameAndScope()
                         .PushJsonPropertyNamesEscapedClassNameAndScope()
+                        .PushJsonPropertyNamesClassNameAndScope()
+                        .PushBuilderClassNameAndScope()
+                        .PushSourceClassNameAndScope()
                         // Begin the mutable part of the declaration
                         .BeginReadonlyPartialStructDeclaration(
                             GeneratedTypeAccessibility.Public,
@@ -79,7 +81,11 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendMatchMethods(typeDeclaration, forMutable: true)
                             .AppendTryGetAsCompositionTypeMethods(typeDeclaration)
                         .EndClassStructOrEnumDeclaration()
-                    .PopJsonSchemaClassNameAndScope()
+                        .PopSourceClassNameAndScope()
+                        .PopBuilderClassNameAndScope()
+                        .PopJsonPropertyNamesClassNameAndScope()
+                        .PopJsonPropertyNamesEscapedClassNameAndScope()
+                        .PopJsonSchemaClassNameAndScope()
                     .EndClassStructOrEnumDeclaration()
                 .EndTypeDeclarationNesting(typeDeclaration)
                 .EndNamespace()

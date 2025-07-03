@@ -24,6 +24,7 @@
     <Compile Include="CodeFileBuilders\MutableCorePartial.cs" />
     <Compile Include="CodeFileBuilders\CorePartial.cs" />
     <Compile Include="CodeGenerationExtensions.JsonSchema.cs" />
+    <Compile Include="CodeGeneratorExtensions Object.cs" />
     <Compile Include="CodeGeneratorExtensions.Builder.cs" />
     <Compile Include="CodeGeneratorExtensions.Operators.cs" />
     <Compile Include="CodeGeneratorExtensions.Conversions.cs" />

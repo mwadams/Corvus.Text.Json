@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
-using static Corvus.Text.Json.CodeGeneration.CodeGeneratorExtensions;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
@@ -91,7 +90,7 @@ namespace Corvus.Text.Json.CodeGeneration
             if (isObject)
             {
                 generator
-                    .AddObjectBuilders(typeDeclaration, isArray);
+                    .AppendObjectBuilders(typeDeclaration, isArray);
             }
 
             generator
@@ -174,7 +173,7 @@ namespace Corvus.Text.Json.CodeGeneration
 
         }
 
-        private static CodeGenerator AddObjectBuilders(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool isArray)
+        private static CodeGenerator AppendObjectBuilders(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool isAlsoArray)
         {
             if (generator.IsCancellationRequested)
             {
@@ -182,11 +181,11 @@ namespace Corvus.Text.Json.CodeGeneration
             }
 
             return generator
-                .AppendObjectCreateMethods(typeDeclaration)
-                .AppendAddPropertyMethod(typeDeclaration);
+                .AppendObjectCreateMethods(typeDeclaration, isAlsoArray)
+                .AppendAddPropertyMethod(typeDeclaration, isAlsoArray);
         }
 
-        private static CodeGenerator AppendAddPropertyMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        private static CodeGenerator AppendAddPropertyMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool isAlsoArray)
         {
             if (generator.IsCancellationRequested)
             {
@@ -200,7 +199,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 string fqdtn = fallbackType.ReducedType.FullyQualifiedDotnetTypeName();
                 if (seenTypes.Add(fqdtn))
                 {
-                    AppendAddPropertyMethod(generator, typeDeclaration, fqdtn);
+                    AppendAddPropertyMethods(generator, typeDeclaration, fqdtn, isAlsoArray);
                 }
             }
 
@@ -209,7 +208,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 string fqdtn = localFallbackType.ReducedType.FullyQualifiedDotnetTypeName();
                 if (seenTypes.Add(fqdtn))
                 {
-                    AppendAddPropertyMethod(generator, typeDeclaration, fqdtn);
+                    AppendAddPropertyMethods(generator, typeDeclaration, fqdtn, isAlsoArray);
                 }
             }
 
@@ -218,21 +217,47 @@ namespace Corvus.Text.Json.CodeGeneration
                 string fqdtn = localAndAppliedFallbackType.ReducedType.FullyQualifiedDotnetTypeName();
                 if (seenTypes.Add(fqdtn))
                 {
-                    AppendAddPropertyMethod(generator, typeDeclaration, fqdtn);
+                    AppendAddPropertyMethods(generator, typeDeclaration, fqdtn, isAlsoArray);
                 }
             }
 
             return generator;
 
-            static void AppendAddPropertyMethod(CodeGenerator generator, TypeDeclaration typeDeclaration, string propertyTypeName)
+            static void AppendAddPropertyMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string propertyTypeName, bool isAlsoArray)
+            {
+                AppendAddPropertyMethod(generator, typeDeclaration, propertyTypeName, isAlsoArray, "ReadOnlySpan<byte>");
+                AppendAddPropertyMethod(generator, typeDeclaration, propertyTypeName, isAlsoArray, "ReadOnlySpan<char>");
+                AppendAddPropertyMethod(generator, typeDeclaration, propertyTypeName, isAlsoArray, "string");
+            }
+
+            static void AppendAddPropertyMethod(CodeGenerator generator, TypeDeclaration typeDeclaration, string propertyTypeName, bool isAlsoArray, string nameType)
             {
                 generator
                     .AppendSeparatorLine()
-                    .AppendLineIndent("public void AddProperty(");
+                    .AppendLineIndent("/// <summary>")
+                    .AppendLineIndent("/// Add a property to the object.")
+                    .AppendLineIndent("/// </summary>")
+                    .AppendLineIndent("/// <param name=\"propertyName\">The name of the property to add.</param>")
+                    .AppendLineIndent("/// <param name=\"value\">The value of the property to add.</param>")
+                    .AppendLineIndent("public void AddProperty(", nameType, " propertyName, in ", propertyTypeName, ".", generator.SourceClassName(propertyTypeName), " value)")
+                    .AppendLineIndent("{")
+                    .PushIndent();
+
+                if (isAlsoArray)
+                {
+                    generator
+                        .AppendCheckExpectObject(true);
+                }
+
+                generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("value.AddAsProperty(propertyName, ref _builder);")
+                    .PopIndent()
+                    .AppendLineIndent("}");
             }
         }
 
-        private static CodeGenerator AppendObjectCreateMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        private static CodeGenerator AppendObjectCreateMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool isAlsoArray)
         {
             if (generator.IsCancellationRequested)
             {
@@ -258,8 +283,6 @@ namespace Corvus.Text.Json.CodeGeneration
             {
                 return generator;
             }
-
-            bool isAlsoArray = (typeDeclaration.ImpliedCoreTypes() & CoreTypes.Array) != 0;
 
             generator
                 .AppendSeparatorLine()
@@ -527,6 +550,7 @@ namespace Corvus.Text.Json.CodeGeneration
 
                 if (hasTuple)
                 {
+                    // Note that we are already in the allowsNonPrefixItems case here, so we know we have added the _addedPrefixItems field.
                     generator
                         .AppendLineIndent("if (!_addedPrefixItems)")
                         .AppendLineIndent("{")
@@ -752,7 +776,9 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendSourceConstructors(typeDeclaration, builders)
                     .AppendSourceConversionOperators(typeDeclaration, builders)
                     .AppendSourceFactoryMethods(typeDeclaration, builders)
-                    .AppendAddAsProperty(typeDeclaration, builders)
+                    .AppendAddAsProperty(typeDeclaration, builders, "ReadOnlySpan<byte>", "utf8Name", includeEscaping: true)
+                    .AppendAddAsProperty(typeDeclaration, builders, "ReadOnlySpan<char>", "name", includeEscaping: false)
+                    .AppendAddAsProperty(typeDeclaration, builders, "string", "name", includeEscaping: false)
                     .AppendAddAsItem(typeDeclaration, builders)
                 .EndClassStructOrEnumDeclaration();
         }
@@ -1391,11 +1417,11 @@ namespace Corvus.Text.Json.CodeGeneration
                 .EndClassStructOrEnumDeclaration();
         }
 
-        private static CodeGenerator AppendAddAsProperty(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
+        private static CodeGenerator AppendAddAsProperty(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders, string nameType, string nameName, bool includeEscaping)
         {
             generator
-                .ReserveNameIfNotReserved("AddAsProperty")
-                .AppendLineIndent("internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)")
+                .AppendSeparatorLine()
+                .AppendLineIndent("internal void AddAsProperty(", nameType, " ", nameName, ", ref ComplexValueBuilder valueBuilder", includeEscaping ? ", bool escapeName = true, bool nameRequiresUnescaping = false" : "", ")")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("switch(_kind)")
@@ -1403,7 +1429,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     .PushIndent()
                         .AppendLineIndent("case Kind.JsonElement:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _jsonElement", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
 
@@ -1419,7 +1445,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.Null:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddPropertyNull(utf8Name, escapeName, nameRequiresUnescaping);")
+                            .AppendLineIndent("valueBuilder.AddPropertyNull(", nameName, ", _jsonElement", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1432,7 +1458,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.True:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(utf8Name, true, escapeName, nameRequiresUnescaping);")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", true", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1442,7 +1468,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.False:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(utf8Name, false, escapeName, nameRequiresUnescaping);")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", false", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1455,7 +1481,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.RawUtf8StringRequiresUnescaping:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: true);")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _utf8Backing", includeEscaping ? ", escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: true" : "escapeName: true, escapeValue: false, valueRequiresUnescaping: true", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1465,7 +1491,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.RawUtf8StringNotRequiresUnescaping:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false);")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _utf8Backing", includeEscaping ? ", escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false" : "escapeName: true, escapeValue: false, valueRequiresUnescaping: false", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1475,7 +1501,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.Utf8String:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _utf8Backing", includeEscaping ? ", escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false" : "escapeName: true, escapeValue: true, valueRequiresUnescaping: false", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1485,7 +1511,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.Utf16String:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(utf8Name, _utf16Backing, escapeName, nameRequiresUnescaping);")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _utf16Backing", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1498,7 +1524,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.NumericSimpleType:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddPropertyFormattedNumber(utf8Name, _simpleTypeBacking.Span(), escapeName, nameRequiresUnescaping);")
+                            .AppendLineIndent("valueBuilder.AddPropertyFormattedNumber(", nameName, ", _simpleTypeBacking.Span()", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1507,7 +1533,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 {
                     generator.AppendLineIndent("case Kind.FormattedNumber:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddPropertyFormattedNumber(utf8Name, _utf8Backing, escapeName, nameRequiresUnescaping);")
+                            .AppendLineIndent("valueBuilder.AddPropertyFormattedNumber(", nameName, ", _utf8Backing", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1523,7 +1549,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 generator
                     .AppendLineIndent("case Kind.", builderName, ":")
                     .PushIndent()
-                        .AppendLineIndent("valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => ", builderName, ".BuildValue(b, ref o), escapeName, nameRequiresUnescaping);")
+                        .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _objectBuilder!, static (b, ref o) => ", builderName, ".BuildValue(b, ref o)", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                         .AppendLineIndent("break;")
                     .PopIndent();
             }
@@ -1535,7 +1561,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 generator
                     .AppendLineIndent("case Kind.", builderName, ":")
                     .PushIndent()
-                        .AppendLineIndent("valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => ", builderName, ".BuildValue(b, ref o), escapeName, nameRequiresUnescaping);")
+                        .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _arrayBuilder!, static (b, ref o) => ", builderName, ".BuildValue(b, ref o)", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                         .AppendLineIndent("break;")
                     .PopIndent();
             }
