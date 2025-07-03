@@ -540,7 +540,7 @@ public readonly struct Year : IJsonElement<Year>
 
     public static class JsonSchema
     {
-        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Age"u8, buffer, out written);
+        public static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Year"u8, buffer, out written);
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -556,8 +556,6 @@ public readonly struct Year : IJsonElement<Year>
                 JsonTokenType.EndObject or
                 JsonTokenType.EndArray);
 
-            context.PushSchemaLocation(SchemaLocation);
-
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
             /* Number matching
@@ -567,7 +565,6 @@ public readonly struct Year : IJsonElement<Year>
             {
                 if (!context.HasCollector)
                 {
-                    context.PopSchemaLocation();
                     return;
                 }
 
@@ -582,13 +579,10 @@ public readonly struct Year : IJsonElement<Year>
                 {
                     if (!context.HasCollector)
                     {
-                        context.PopSchemaLocation();
                         return;
                     }
                 }
             }
-
-            context.PopSchemaLocation();
         }
 
         internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
@@ -610,13 +604,12 @@ public readonly struct Year : IJsonElement<Year>
                 context.Dispose();
             }
         }
-
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContext(
@@ -625,7 +618,8 @@ public readonly struct Year : IJsonElement<Year>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContextUnescaped(
@@ -633,7 +627,7 @@ public readonly struct Year : IJsonElement<Year>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContextUnescaped(
@@ -642,14 +636,15 @@ public readonly struct Year : IJsonElement<Year>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
-            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? evaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null)
         {
             return
@@ -658,7 +653,8 @@ public readonly struct Year : IJsonElement<Year>
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation,
                     documentEvaluationPath: documentEvaluationPath);
         }
 
@@ -667,7 +663,7 @@ public readonly struct Year : IJsonElement<Year>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             TContext providerContext,
-            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? evaluationPath = null,
             JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
         {
             return
@@ -676,10 +672,10 @@ public readonly struct Year : IJsonElement<Year>
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
-                    schemaEvaluationPath: schemaEvaluationPath,
-                    documentEvaluationPath: documentEvaluationPath,
-                    providerContext: providerContext);
+                    providerContext: providerContext,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: static (_, buffer, out written) => SchemaLocation(buffer, out written),
+                    documentEvaluationPath: documentEvaluationPath);
         }
-
     }
 }

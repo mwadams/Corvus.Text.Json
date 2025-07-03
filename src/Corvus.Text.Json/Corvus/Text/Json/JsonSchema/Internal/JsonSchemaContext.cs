@@ -183,7 +183,7 @@ namespace Corvus.Text.Json.Internal
             IJsonSchemaResultsCollector? resultsCollector = null)
             where T : IJsonDocument
         {
-            int sequenceNumber = resultsCollector?.BeginChildContext() ?? 0;
+            int sequenceNumber = resultsCollector?.BeginChildContext(0) ?? 0;
 
             uint usingFeatures = usingEvaluatedProperties ? (uint)UsingFeatures.EvaluatedProperties : 0;
             usingFeatures |= usingEvaluatedItems ? (uint)UsingFeatures.EvaluatedItems : 0;
@@ -221,50 +221,16 @@ namespace Corvus.Text.Json.Internal
                 resultsCollector);
         }
 
-
-        /// <summary>
-        /// Push a schema location without starting a child context.
-        /// </summary>
-        /// <param name="relativeOrAbsoluteSchemaLocation"></param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void PushSchemaLocation(
-            JsonSchemaPathProvider relativeOrAbsoluteSchemaLocation)
-        {
-            _resultsCollector?.PushSchemaLocation(relativeOrAbsoluteSchemaLocation);
-        }
-
-        /// <summary>
-        /// If you have pushed a schema location without starting a child context,
-        /// this pops the location.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void PopSchemaLocation()
-        {
-            _resultsCollector?.PopSchemaLocation();
-        }
-
-        public readonly JsonSchemaContext PushChildContext(
-            IJsonDocument parentDocument,
-            int parentDocumentIndex,
-            bool useEvaluatedItems,
-            bool useEvaluatedProperties,
-            JsonSchemaPathProvider? schemaEvaluationPath = null,
-            JsonSchemaPathProvider? documentEvaluationPath = null)
-        {
-            int sequenceNumber = _resultsCollector?.BeginChildContext(schemaEvaluationPath, documentEvaluationPath) ?? 0;
-
-            return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
-        }
-
         public readonly JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             bool useEvaluatedItems,
             bool useEvaluatedProperties,
             ReadOnlySpan<byte> escapedPropertyName,
-            JsonSchemaPathProvider? reducedEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
         {
-            int sequenceNumber = _resultsCollector?.BeginChildContext(escapedPropertyName, reducedEvaluationPath) ?? 0;
+            int sequenceNumber = _resultsCollector?.BeginChildContext(_sequenceNumber, escapedPropertyName, evaluationPath, schemaEvaluationPath) ?? 0;
 
             return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }
@@ -275,9 +241,10 @@ namespace Corvus.Text.Json.Internal
             bool useEvaluatedItems,
             bool useEvaluatedProperties,
             ReadOnlySpan<byte> unescapedPropertyName,
-            JsonSchemaPathProvider? reducedEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null)
         {
-            int sequenceNumber = _resultsCollector?.BeginChildContextUnescaped(unescapedPropertyName, reducedEvaluationPath) ?? 0;
+            int sequenceNumber = _resultsCollector?.BeginChildContextUnescaped(_sequenceNumber, unescapedPropertyName, evaluationPath, schemaEvaluationPath) ?? 0;
 
             return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }
@@ -288,10 +255,25 @@ namespace Corvus.Text.Json.Internal
             bool useEvaluatedItems,
             bool useEvaluatedProperties,
             TProviderContext providerContext,
+            JsonSchemaPathProvider<TProviderContext>? evaluationPath = null,
             JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath = null,
             JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath = null)
         {
-            int sequenceNumber = _resultsCollector?.BeginChildContext(providerContext, schemaEvaluationPath, documentEvaluationPath) ?? 0;
+            int sequenceNumber = _resultsCollector?.BeginChildContext(_sequenceNumber, providerContext, evaluationPath, schemaEvaluationPath, documentEvaluationPath) ?? 0;
+
+            return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+        }
+
+        public readonly JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            bool useEvaluatedItems,
+            bool useEvaluatedProperties,
+            JsonSchemaPathProvider? evaluationPath = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? documentEvaluationPath = null)
+        {
+            int sequenceNumber = _resultsCollector?.BeginChildContext(_sequenceNumber, reducedEvaluationPath: evaluationPath, schemaEvaluationPath: schemaEvaluationPath, documentEvaluationPath) ?? 0;
 
             return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
         }

@@ -47,6 +47,8 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                         typeDeclaration.DotnetAccessibility(),
                         typeDeclaration.DotnetTypeName())
                         .PushJsonSchemaClassNameAndScope()
+                        .PushJsonPropertyNamesClassNameAndScope()
+                        .PushJsonPropertyNamesEscapedClassNameAndScope()
                         // Begin the mutable part of the declaration
                         .BeginReadonlyPartialStructDeclaration(
                             GeneratedTypeAccessibility.Public,

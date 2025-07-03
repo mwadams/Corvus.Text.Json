@@ -93,7 +93,7 @@ namespace Corvus.Text.Json
                         instance.ParentDocumentIndex,
                         useEvaluatedItems: false, // We don't use evaluated items
                         useEvaluatedProperties: false,
-                        schemaEvaluationPath: schemaEvaluationPath,
+                        evaluationPath: schemaEvaluationPath,
                         documentEvaluationPath: documentEvaluationPath,
                         providerContext: providerContext);
             }

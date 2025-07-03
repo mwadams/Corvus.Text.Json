@@ -308,7 +308,7 @@ public readonly struct Person : IJsonElement<Person>
         /// Gets the number of properties in the instance.
         /// </summary>
         /// <returns>The number of properties in the instance.</returns>
-        public int GetPropertyCount()
+        public readonly int GetPropertyCount()
         {
             CheckValidInstance();
             return _parent.GetPropertyCount(_idx);
@@ -318,7 +318,7 @@ public readonly struct Person : IJsonElement<Person>
         /// Gets an enumerator for the properties in the object.
         /// </summary>
         /// <returns></returns>
-        public ObjectEnumerator<JsonElement.Mutable> GetObjectEnumerator()
+        public readonly ObjectEnumerator<JsonElement.Mutable> GetObjectEnumerator()
         {
             CheckValidInstance();
             return EnumeratorCreator.CreateObjectEnumerator<JsonElement.Mutable>(_parent, _idx);
@@ -741,7 +741,7 @@ public readonly struct Person : IJsonElement<Person>
 
     public static class JsonSchema
     {
-        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Person"u8, buffer, out written);
+        public static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Person"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider<int> RequiredSchemaEvaluationPath = static (index, buffer, out written) => JsonSchemaEvaluation.SchemaLocationForIndexedKeyword("required"u8, index, buffer, out written);
         private static readonly JsonSchemaMessageProvider<int> RequiredPropertyNamePresent = static (_, buffer, out written) => JsonSchemaEvaluation.RequiredPropertyPresent("name"u8, buffer, out written);
         private static readonly JsonSchemaMessageProvider<int> RequiredPropertyNameNotPresent = static (_, buffer, out written) => JsonSchemaEvaluation.RequiredPropertyNotPresent("name"u8, buffer, out written);
@@ -768,15 +768,12 @@ public readonly struct Person : IJsonElement<Person>
                 JsonTokenType.EndObject or
                 JsonTokenType.EndArray);
 
-            context.PushSchemaLocation(SchemaLocation);
-
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
             if (!JsonSchemaEvaluation.MatchTypeObject(tokenType, "type"u8, ref context))
             {
                 if (!context.HasCollector)
                 {
-                    context.PopSchemaLocation();
                     return;
                 }
 
@@ -803,7 +800,15 @@ public readonly struct Person : IJsonElement<Person>
 
                         if (!context.IsMatch && !context.HasCollector)
                         {
-                            context.PopSchemaLocation();
+                            return;
+                        }
+                    }
+
+                    if (!context.HasLocalOrAppliedEvaluatedProperty(propertyCount))
+                    {
+                        context.EvaluatedKeywordForProperty(false, null, propertyName, "unevaluatedProperties"u8);
+                        if (!context.HasCollector)
+                        {
                             return;
                         }
                     }
@@ -816,7 +821,6 @@ public readonly struct Person : IJsonElement<Person>
                 {
                     // Add a "matched" for each of the individual matched properties
                     context.EvaluatedKeywordPath(true, 0, RequiredPropertyNamePresent, RequiredSchemaEvaluationPath);
-                    context.PopSchemaLocation();
                     return;
                 }
 
@@ -825,7 +829,6 @@ public readonly struct Person : IJsonElement<Person>
                 {
                     // Which we can cut short if we are not doing collections
                     context.EvaluatedBooleanSchema(false);
-                    context.PopSchemaLocation();
                     return;
                 }
                 else
@@ -842,8 +845,6 @@ public readonly struct Person : IJsonElement<Person>
                     }
                 }
             }
-
-            context.PopSchemaLocation();
         }
 
         private static bool TryGetValidator(ReadOnlySpan<byte> span, [NotNullWhen(true)] out JsonSchemaMatcherWithRequiredBitBuffer? validator)
@@ -878,7 +879,7 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocumentIndex,
                     ref context,
                     JsonPropertyNames.Name,
-                    schemaEvaluationPath: NameSchemaEvaluationPath);
+                    evaluationPath: NameSchemaEvaluationPath);
 
             PersonName.JsonSchema.Evaluate(parentDocument, parentDocumentIndex, ref childContext);
             context.CommitChildContext(childContext.IsMatch, ref childContext);
@@ -894,10 +895,9 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocumentIndex,
                     ref context,
                     JsonPropertyNames.Age,
-                    schemaEvaluationPath: AgeSchemaEvaluationPath);
+                    evaluationPath: AgeSchemaEvaluationPath);
 
             Age.JsonSchema.Evaluate(parentDocument, parentDocumentIndex, ref childContext);
-
             context.CommitChildContext(childContext.IsMatch, ref childContext);
         }
 
@@ -909,7 +909,7 @@ public readonly struct Person : IJsonElement<Person>
                     parentDocumentIndex,
                     ref context,
                     JsonPropertyNames.CompetedInYears,
-                    schemaEvaluationPath: CompetedInYearsSchemaEvaluationPath);
+                    evaluationPath: CompetedInYearsSchemaEvaluationPath);
 
             CompetedInYears.JsonSchema.Evaluate(parentDocument, parentDocumentIndex, ref childContext);
 
@@ -922,7 +922,7 @@ public readonly struct Person : IJsonElement<Person>
                 parentDocument,
                 parentIndex,
                 usingEvaluatedItems: false,
-                usingEvaluatedProperties: false,
+                usingEvaluatedProperties: true,
                 resultsCollector: resultsCollector);
 
             try
@@ -941,16 +941,17 @@ public readonly struct Person : IJsonElement<Person>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContext(
                     parentDocument,
                     parentDocumentIndex,
-                    useEvaluatedItems: false, // We don't use evaluated items
-                    useEvaluatedProperties: false,
+                    useEvaluatedItems: false,
+                    useEvaluatedProperties: true, // We use evaluated properties
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContextUnescaped(
@@ -958,32 +959,34 @@ public readonly struct Person : IJsonElement<Person>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContextUnescaped(
                     parentDocument,
                     parentDocumentIndex,
-                    useEvaluatedItems: false, // We don't use evaluated items
-                    useEvaluatedProperties: false,
+                    useEvaluatedItems: false,
+                    useEvaluatedProperties: true, // We use evaluated properties
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
-            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? evaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null)
         {
             return
                 context.PushChildContext(
                     parentDocument,
                     parentDocumentIndex,
-                    useEvaluatedItems: false, // We don't use evaluated items
-                    useEvaluatedProperties: false,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    useEvaluatedItems: false,
+                    useEvaluatedProperties: true, // We use evaluated properties
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation,
                     documentEvaluationPath: documentEvaluationPath);
         }
 
@@ -992,17 +995,18 @@ public readonly struct Person : IJsonElement<Person>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             TContext providerContext,
-            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? evaluationPath = null,
             JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
         {
             return
                 context.PushChildContext(
                     parentDocument,
                     parentDocumentIndex,
-                    useEvaluatedItems: false, // We don't use evaluated items
-                    useEvaluatedProperties: false, // But we do use evaluated properties
+                    useEvaluatedItems: false, 
+                    useEvaluatedProperties: true, // We use evaluated properties
                     providerContext: providerContext,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: static (_, buffer, out written) => SchemaLocation(buffer, out written),
                     documentEvaluationPath: documentEvaluationPath);
         }
     }

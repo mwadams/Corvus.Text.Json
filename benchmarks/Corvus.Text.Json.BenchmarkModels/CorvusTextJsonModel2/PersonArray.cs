@@ -553,7 +553,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
 
     public static class JsonSchema
     {
-        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/PersonArray"u8, buffer, out written);
+        public static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/PersonArray"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider<int> SchemaLocationForUnevaluatedItems = static (_, buffer, out written) => JsonSchemaEvaluation.TryCopyPath("unevaluatedItems/$ref"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider<int> PrefixItemsWithIndex = (index, buffer, out written) => JsonSchemaEvaluation.SchemaLocationForIndexedKeyword("prefixItems"u8, index, buffer, out written);
         /// <summary>
@@ -570,8 +570,6 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                 JsonTokenType.EndObject or
                 JsonTokenType.EndArray);
 
-            context.PushSchemaLocation(SchemaLocation);
-
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
             /* Array matching
@@ -581,7 +579,6 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             {
                 if (!context.HasCollector)
                 {
-                    context.PopSchemaLocation();
                     return;
                 }
 
@@ -605,7 +602,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                                 arrayEnumerator.CurrentIndex,
                                 ref context,
                                 providerContext: length,
-                                schemaEvaluationPath: PrefixItemsWithIndex,
+                                evaluationPath: PrefixItemsWithIndex,
                                 documentEvaluationPath: JsonSchemaEvaluation.ItemIndex);
 
                             PersonArray.PrefixItems0.JsonSchema.Evaluate(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
@@ -614,7 +611,6 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                                 context.CommitChildContext(false, ref childContext);
                                 if (!context.HasCollector)
                                 {
-                                    context.PopSchemaLocation();
                                     return;
                                 }
                             }
@@ -635,7 +631,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                                 arrayEnumerator.CurrentIndex,
                                 ref context,
                                 providerContext: length,
-                                schemaEvaluationPath: SchemaLocationForUnevaluatedItems,
+                                evaluationPath: SchemaLocationForUnevaluatedItems,
                                 documentEvaluationPath: JsonSchemaEvaluation.ItemIndex);
 
                             Person.JsonSchema.Evaluate(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
@@ -645,7 +641,6 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                                 context.CommitChildContext(false, ref childContext);
                                 if (!context.HasCollector)
                                 {
-                                    context.PopSchemaLocation();
                                     return;
                                 }
                             }
@@ -661,8 +656,6 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                     }
                 }
             }
-
-            context.PopSchemaLocation();
         }
 
         internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
@@ -690,7 +683,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContext(
@@ -699,7 +692,8 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                     useEvaluatedItems: true, // We do use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContextUnescaped(
@@ -707,7 +701,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContextUnescaped(
@@ -716,14 +710,15 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                     useEvaluatedItems: true, // We do use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
-            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? evaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null)
         {
             return
@@ -732,7 +727,8 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                     parentDocumentIndex,
                     useEvaluatedItems: true, // We do use evaluated items
                     useEvaluatedProperties: false,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation,
                     documentEvaluationPath: documentEvaluationPath);
         }
 
@@ -741,7 +737,7 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             TContext providerContext,
-            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? evaluationPath = null,
             JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
         {
             return
@@ -751,7 +747,8 @@ public readonly partial struct PersonArray: IJsonElement<PersonArray>
                     useEvaluatedItems: true, // We do use evaluated items
                     useEvaluatedProperties: false,
                     providerContext: providerContext,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: static (_, buffer, out written) => SchemaLocation(buffer, out written),
                     documentEvaluationPath: documentEvaluationPath);
         }
     }

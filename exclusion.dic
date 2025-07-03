@@ -52,3 +52,5 @@ uuid
 Impl
 netstandard
 numerics
+cref
+fqdtn

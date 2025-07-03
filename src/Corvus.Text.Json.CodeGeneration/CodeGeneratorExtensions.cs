@@ -542,6 +542,254 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendLineIndent("}");
         }
 
+        /// <summary>
+        /// Begin a method declaration for an explicit name which will be reserved in the scope.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the method.</param>
+        /// <param name="visibilityAndModifiers">The visibility and modifiers for the method.</param>
+        /// <param name="returnType">The return type of the method.</param>
+        /// <param name="methodName">The method name, which will be reserved in the scope.</param>
+        /// <param name="parameters">The parameter list.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator BeginReservedMethodDeclaration(
+            this CodeGenerator generator,
+            string visibilityAndModifiers,
+            string returnType,
+            string methodName,
+            params MethodParameter[] parameters)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            return generator
+                .AppendSeparatorLine()
+                .AppendIndent(visibilityAndModifiers)
+                .Append(' ')
+                .Append(returnType)
+                .Append(' ')
+                .Append(methodName)
+                .ReserveName(methodName) // Reserve the method name in the parent scope
+                .PushMemberScope(methodName, ScopeType.Method) // Then move to the method scope before appending parameters
+                .AppendParameterList(parameters)
+                .AppendLineIndent("{")
+                .PushIndent();
+        }
+
+        /// <summary>
+        /// Append a parameter list. This will produce the parameters on a single line
+        /// for 0, 1, or 2 parameters, and an indented multi-line list for 3 or more parameters.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the parameter list.</param>
+        /// <param name="parameters">The parameter list.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendParameterList(
+            this CodeGenerator generator,
+            params MethodParameter[] parameters)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            if (parameters.Length < 3)
+            {
+                return AppendParameterListSingleLine(generator, parameters);
+            }
+
+            return AppendParameterListIndent(generator, parameters);
+        }
+
+        /// <summary>
+        /// Append a parameter list on a single line.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the parameter list.</param>
+        /// <param name="parameters">The parameter list.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendParameterListSingleLine(CodeGenerator generator, MethodParameter[] parameters)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            if (parameters.Length == 0)
+            {
+                // If we have no parameters, just emit the brackets.
+                return generator.AppendLine("()");
+            }
+
+            generator.Append("(");
+            bool first = true;
+
+            foreach (MethodParameter parameter in parameters)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    generator.Append(", ");
+                }
+
+                generator.AppendParameter(parameter);
+            }
+
+            return generator
+                .AppendLine(")");
+        }
+
+        /// <summary>
+        /// Append a parameter list on multiple lines, indented.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the parameter list.</param>
+        /// <param name="parameters">The parameter list.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendParameterListIndent(CodeGenerator generator, MethodParameter[] parameters)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            if (parameters.Length == 0)
+            {
+                // If we have no parameters, just emit the brackets.
+                return generator.AppendLine("()");
+            }
+
+            generator.AppendLine("(");
+            generator.PushIndent();
+            bool first = true;
+
+            foreach (MethodParameter parameter in parameters)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    generator.AppendLine(",");
+                }
+
+                generator.AppendParameterIndent(parameter);
+            }
+
+            return generator
+                .PopIndent()
+                .AppendLine(")");
+        }
+
+        /// <summary>
+        /// Append a parameter in a parameter list.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the parameter.</param>
+        /// <param name="parameter">The parameter to append.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendParameterIndent(
+            this CodeGenerator generator,
+            MethodParameter parameter)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            string name = parameter.GetName(generator, isDeclaration: true);
+
+            if (!string.IsNullOrEmpty(parameter.Modifiers))
+            {
+                generator
+                    .AppendIndent(parameter.Modifiers)
+                    .Append(' ')
+                    .Append(parameter.Type);
+            }
+            else
+            {
+                generator
+                    .AppendIndent(parameter.Type);
+            }
+
+            if (parameter.TypeIsNullable)
+            {
+                generator
+                    .Append('?');
+            }
+
+            generator
+                .Append(' ')
+                .Append(name);
+
+            if (!string.IsNullOrEmpty(parameter.DefaultValue))
+            {
+                generator
+                    .Append(" = ")
+                    .Append(parameter.DefaultValue);
+            }
+
+            return generator;
+        }
+
+        /// <summary>
+        /// Append a parameter in a parameter list.
+        /// </summary>
+        /// <param name="generator">The generator to which to append the parameter.</param>
+        /// <param name="parameter">The parameter to append.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendParameter(
+            this CodeGenerator generator,
+            MethodParameter parameter)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            string name = parameter.GetName(generator, isDeclaration: true);
+
+            if (!string.IsNullOrEmpty(parameter.Modifiers))
+            {
+                generator
+                    .Append(parameter.Modifiers)
+                    .Append(' ');
+            }
+
+            generator
+                .Append(parameter.Type);
+
+            if (parameter.TypeIsNullable)
+            {
+                generator
+                    .Append('?');
+            }
+
+            generator
+                .Append(' ')
+                .Append(name);
+
+            if (!string.IsNullOrEmpty(parameter.DefaultValue))
+            {
+                generator
+                    .Append(" = ")
+                    .Append(parameter.DefaultValue);
+            }
+
+            return generator;
+        }
+
         public static CodeGenerator AppendBackingFields(this CodeGenerator generator, bool forMutable = false)
         {
             if (generator.IsCancellationRequested)

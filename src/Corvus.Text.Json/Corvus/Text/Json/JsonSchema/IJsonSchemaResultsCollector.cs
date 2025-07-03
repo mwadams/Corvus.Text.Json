@@ -71,7 +71,9 @@ namespace Corvus.Text.Json
         /// <summary>
         /// Begin a child context.
         /// </summary>
+        /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
         /// <param name="reducedEvaluationPath">The path taken through the schema(s).</param>
+        /// <param name="schemaEvaluationPath">The schema evaluation path.</param>
         /// <param name="documentEvaluationPath">The path in the JSON document instance.</param>
         /// <returns>The sequence number of the child context.</returns>
         /// <remarks>
@@ -83,63 +85,60 @@ namespace Corvus.Text.Json
         /// In DEBUG builds, the sequence number returned by the call to <see cref="BeginChildContext"/> is passed to the commit or pop methods and validated
         /// to ensure that completion operations are carried out in the expected order.
         /// </para>
-        /// <para>
-        /// Note that <paramref name="reducedEvaluationPath"/> is applied to the schemaPath and the evaluation path to take us through
-        /// to the actual schema that will be applied e.g. <c>items/$ref</c> but NOT the path to the schema itself, which will be applied
-        /// when the schema is evaluated, using <see cref="PushSchemaLocation(JsonSchemaPathProvider)"/>.
-        /// </para>
         /// </remarks>
         int BeginChildContext(
+            int parentSequenceNumber,
             JsonSchemaPathProvider? reducedEvaluationPath = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null);
 
         /// <summary>
         /// Begin a child context for a property evaluation.
         /// </summary>
+        /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
         /// <param name="escapedPropertyName">The escaped name of the property for which to begin a child context.</param>
         /// <param name="reducedEvaluationPath">The fully reduced evaluation path for the keyword.</param>
+        /// <param name="schemaEvaluationPath">The schema evaluation path of the target schema.</param>
         /// <returns>The sequence number of the child context.</returns>
         /// <remarks>
         /// <para>
         /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
         /// or abandoned with <see cref="PopChildContext"/>.
         /// </para>
-        /// <para>
-        /// Note that <paramref name="reducedEvaluationPath"/> is applied to the schemaPath and the evaluation path to take us through
-        /// to the actual schema that will be applied e.g. <c>items/$ref</c> but NOT the path to the schema itself, which will be applied
-        /// when the schema is evaluated, using <see cref="PushSchemaLocation(JsonSchemaPathProvider)"/>.
-        /// </para>
         /// </remarks>
         int BeginChildContext(
+            int parentSequenceNumber,
             ReadOnlySpan<byte> escapedPropertyName,
-            JsonSchemaPathProvider? reducedEvaluationPath = null);
+            JsonSchemaPathProvider? reducedEvaluationPath = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null);
 
         /// <summary>
         /// Begin a child context for a property evaluation.
         /// </summary>
+        /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
         /// <param name="unescapedPropertyName">The name of the property for which to begin a child context.</param>
         /// <param name="reducedEvaluationPath">The fully reduced evaluation path for the keyword.</param>
+        /// <param name="schemaEvaluationPath">The schema evaluation path of the target schema.</param>
         /// <returns>The sequence number of the child context.</returns>
         /// <remarks>
         /// <para>
         /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
         /// or abandoned with <see cref="PopChildContext"/>.
         /// </para>
-        /// <para>
-        /// Note that <paramref name="reducedEvaluationPath"/> is applied to the schemaPath and the evaluation path to take us through
-        /// to the actual schema that will be applied e.g. <c>items/$ref</c> but NOT the path to the schema itself, which will be applied
-        /// when the schema is evaluated, using <see cref="PushSchemaLocation(JsonSchemaPathProvider)"/>.
-        /// </para>
         /// </remarks>
         int BeginChildContextUnescaped(
+            int parentSequenceNumber,
             ReadOnlySpan<byte> unescapedPropertyName,
-            JsonSchemaPathProvider? reducedEvaluationPath = null);
+            JsonSchemaPathProvider? reducedEvaluationPath = null,
+            JsonSchemaPathProvider? schemaEvaluationPath = null);
 
         /// <summary>
         /// Begin a child context.
         /// </summary>
+        /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
         /// <param name="providerContext">The context to be passed to the path provider.</param>
         /// <param name="reducedEvaluationPath">The path taken through the schema(s) at which the child context is being evaluated.</param>
+        /// <param name="schemaEvaluationPath">The schema evaluation path.</param>
         /// <param name="documentEvaluationPath">The path in the JSON document instance at which the child context is being evaluated.</param>
         /// <returns>The sequence number of the child context.</returns>
         /// <remarks>
@@ -152,15 +151,12 @@ namespace Corvus.Text.Json
         /// a child context. The sequence number returned by <see cref="BeginChildContext{TProviderContext}"/> and passed in to
         /// <see cref="CommitChildContext"/> or <see cref="PopChildContext(int)"/> is used to enforce this
         /// </para>
-        /// <para>
-        /// Note that <paramref name="reducedEvaluationPath"/> is applied to the schemaPath and the evaluation path to take us through
-        /// to the actual schema that will be applied e.g. <c>items/$ref</c> but NOT the path to the schema itself, which will be applied
-        /// when the schema is evaluated, using <see cref="PushSchemaLocation(JsonSchemaPathProvider)"/>.
-        /// </para>
         /// </remarks>
         int BeginChildContext<TProviderContext>(
+            int parentSequenceNumber,
             TProviderContext providerContext,
             JsonSchemaPathProvider<TProviderContext>? reducedEvaluationPath,
+            JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath,
             JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath);
 
         /// <summary>
@@ -282,25 +278,6 @@ namespace Corvus.Text.Json
         /// for the <c>required</c> keyword, would produce <c>required/0</c> as the <paramref name="encodedKeywordPath"/>).
         /// </remarks>
         void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> encodedKeywordPath);
-
-        /// <summary>
-        /// Pushes the relative or absolute schema location when evaluating a subschema.
-        /// </summary>
-        /// <param name="relativeOrAbsoluteSchemaLocation">The provider for the relative or absolute schema location of the subschema.</param>
-        void PushSchemaLocation(JsonSchemaPathProvider relativeOrAbsoluteSchemaLocation);
-
-
-        /// <summary>
-        /// Pushes the relative or absolute schema location when evaluating a subschema.
-        /// </summary>
-        /// <param name="providerContext">Context to be provided to the provider.</param>
-        /// <param name="relativeOrAbsoluteSchemaLocation">The provider for the relative or absolute schema location of the subschema.</param>
-        void PushSchemaLocation<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> relativeOrAbsoluteSchemaLocationProvider);
-
-        /// <summary>
-        /// Pops the relative or absolute schema location when concluding the evaluation of a subschema.
-        /// </summary>
-        void PopSchemaLocation();
 
         /// <summary>
         /// Indicates that a schema keyword was ignored.

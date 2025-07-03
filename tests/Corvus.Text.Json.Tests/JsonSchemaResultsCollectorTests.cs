@@ -16,37 +16,6 @@ namespace Corvus.Text.Json.Tests
             collector.Dispose();
         }
 
-        [Fact]
-        public void PushAndPopSchemaLocation()
-        {
-            JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
-            IJsonSchemaResultsCollector c = collector;
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Person"u8, buffer, out written));
-            Assert.Equal("#/$defs/Person", collector.SchemaLocation);
-
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            Assert.Equal("#/$defs/Name", collector.SchemaLocation);
-
-            c.PopSchemaLocation();
-            Assert.Equal("#/$defs/Person", collector.SchemaLocation);
-
-            c.PopSchemaLocation();
-            Assert.Equal("", collector.SchemaLocation);
-
-            collector.Dispose();
-        }
-
-        [Fact]
-        public void PushSchemaLocationWithProviderContext()
-        {
-            JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
-            IJsonSchemaResultsCollector c = collector;
-
-            c.PushSchemaLocation(3, static (count, buffer, out written) => { Assert.Equal(3, count); return JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written); });
-            Assert.Equal("#/$defs/Name", collector.SchemaLocation);
-            collector.Dispose();
-        }
-
         private record ExpectedResult(string evaluationLocation, string schemaLocation, string documentLocation, string message, bool isMatch)
         {
             internal void AssertEqual(JsonSchemaResultsCollector.Result result)
@@ -75,15 +44,15 @@ namespace Corvus.Text.Json.Tests
             JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
             IJsonSchemaResultsCollector c = collector;
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
             c.EvaluatedBooleanSchema(true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a first property."u8, buffer, out written));
             c.EvaluatedBooleanSchema(false, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a second property."u8, buffer, out written));
-            int sequenceNumber2 = c.BeginChildContext("nextProperty"u8);
+            int sequenceNumber2 = c.BeginChildContext(sequenceNumber, "nextProperty"u8);
             c.EvaluatedBooleanSchema(true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a third property."u8, buffer, out written));
             c.EvaluatedBooleanSchema(false, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a fourth property."u8, buffer, out written));
             c.CommitChildContext(sequenceNumber2, true, true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Committed the third and fourth properties."u8, buffer, out written));
-            int sequenceNumber3 = c.BeginChildContext("anotherProperty"u8);
+            int sequenceNumber3 = c.BeginChildContext(sequenceNumber, "anotherProperty"u8);
             c.EvaluatedBooleanSchema(true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a fifth property."u8, buffer, out written));
             c.EvaluatedBooleanSchema(false, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a sixth property."u8, buffer, out written));
             c.PopChildContext(sequenceNumber3);
@@ -119,15 +88,15 @@ namespace Corvus.Text.Json.Tests
             JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
             IJsonSchemaResultsCollector c = collector;
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
             c.EvaluatedBooleanSchema(true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a first property."u8, buffer, out written));
             c.EvaluatedBooleanSchema(false, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a second property."u8, buffer, out written));
-            int sequenceNumber2 = c.BeginChildContext("nextProperty"u8);
+            int sequenceNumber2 = c.BeginChildContext(sequenceNumber, "nextProperty"u8);
             c.EvaluatedBooleanSchema(true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a third property."u8, buffer, out written));
             c.EvaluatedBooleanSchema(false, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a fourth property."u8, buffer, out written));
             c.PopChildContext(sequenceNumber2);
-            int sequenceNumber3 = c.BeginChildContext("anotherProperty"u8);
+            int sequenceNumber3 = c.BeginChildContext(sequenceNumber, "anotherProperty"u8);
             c.EvaluatedBooleanSchema(true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a fifth property."u8, buffer, out written));
             c.EvaluatedBooleanSchema(false, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Evaluated a sixth property."u8, buffer, out written));
             c.CommitChildContext(sequenceNumber3, true, true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Committed the fifth and sixth properties."u8, buffer, out written));
@@ -157,19 +126,19 @@ namespace Corvus.Text.Json.Tests
             IJsonSchemaResultsCollector c = collector;
 
             // Using BeginChildContext with reducedEvaluationPath and documentEvaluationPath as null
-            int seq1 = c.BeginChildContext();
+            int seq1 = c.BeginChildContext(0);
             Assert.True(seq1 >= 0);
 
             // Using BeginChildContext with property name (escaped)
-            int seq2 = c.BeginChildContext("propertyName"u8);
+            int seq2 = c.BeginChildContext(0, "propertyName"u8);
             Assert.True(seq2 >= 0);
 
             // Using BeginChildContextUnescaped
-            int seq3 = c.BeginChildContextUnescaped("unescapedName"u8);
+            int seq3 = c.BeginChildContextUnescaped(0, "unescapedName"u8);
             Assert.True(seq3 >= 0);
 
             // Using generic BeginChildContext
-            int seq4 = c.BeginChildContext(42, null, null);
+            int seq4 = c.BeginChildContext(0, 42, null, null, null);
             Assert.True(seq4 >= 0);
 
             // Pop all contexts
@@ -192,6 +161,7 @@ namespace Corvus.Text.Json.Tests
 
             // Non-null reducedEvaluationPath and documentEvaluationPath
             int seq = c.BeginChildContext(
+                0,
                 (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("reduced/path"u8, buffer, out written),
                 (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("doc/path"u8, buffer, out written));
             Assert.True(seq > 0);
@@ -209,6 +179,7 @@ namespace Corvus.Text.Json.Tests
 
             // Non-null reducedEvaluationPath for escaped property
             int seq = c.BeginChildContext(
+                0,
                 "property"u8,
                 (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("reduced/escaped"u8, buffer, out written));
             Assert.True(seq > 0);
@@ -226,6 +197,7 @@ namespace Corvus.Text.Json.Tests
 
             // Non-null reducedEvaluationPath for unescaped property
             int seq = c.BeginChildContextUnescaped(
+                0,
                 "property"u8,
                 (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("reduced/unescaped"u8, buffer, out written));
             Assert.True(seq > 0);
@@ -242,11 +214,25 @@ namespace Corvus.Text.Json.Tests
             IJsonSchemaResultsCollector c = collector;
 
             // Non-null reducedEvaluationPath and documentEvaluationPath for generic overload
+
             int seq = c.BeginChildContext(
+                0,
                 123,
                 static (ctx, buffer, out written) =>
                 {
                     ReadOnlySpan<byte> prefix = "reduced/"u8;
+                    prefix.CopyTo(buffer);
+                    if (!System.Buffers.Text.Utf8Formatter.TryFormat(ctx, buffer.Slice(prefix.Length), out int intWritten))
+                    {
+                        written = 0;
+                        return false;
+                    }
+                    written = prefix.Length + intWritten;
+                    return true;
+                },
+                static (ctx, buffer, out written) =>
+                {
+                    ReadOnlySpan<byte> prefix = "#/$defs/someSchema/"u8;
                     prefix.CopyTo(buffer);
                     if (!System.Buffers.Text.Utf8Formatter.TryFormat(ctx, buffer.Slice(prefix.Length), out int intWritten))
                     {
@@ -281,7 +267,7 @@ namespace Corvus.Text.Json.Tests
             var collector = JsonSchemaResultsCollector.Create(level);
             IJsonSchemaResultsCollector c = collector;
 
-            int seq = c.BeginChildContext();
+            int seq = c.BeginChildContext(0);
             c.CommitChildContext(seq, true, false, 123, (ctx, buffer, out written) =>
             {
                 Assert.Equal(123, ctx);
@@ -300,8 +286,8 @@ namespace Corvus.Text.Json.Tests
             var collector = JsonSchemaResultsCollector.Create(level);
             IJsonSchemaResultsCollector c = collector;
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
 
             // Non-generic
             c.EvaluatedKeyword(true, (buffer, out written) =>
@@ -325,8 +311,8 @@ namespace Corvus.Text.Json.Tests
             var collector = JsonSchemaResultsCollector.Create(level);
             IJsonSchemaResultsCollector c = collector;
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: (b, out w) => JsonSchemaEvaluation.TryCopyPath("#/$defs/schema"u8, b, out w));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
 
             // Non-generic
             c.EvaluatedKeywordForProperty(true, (buffer, out written) =>
@@ -337,7 +323,6 @@ namespace Corvus.Text.Json.Tests
                 JsonSchemaEvaluation.TryCopyMessage("Generic property keyword"u8, buffer, out written), "property"u8, "keyword"u8);
 
             c.CommitChildContext(sequenceNumber, true, true, static (buffer, out written) => JsonSchemaEvaluation.TryCopyMessage("Committed boolean"u8, buffer, out written));
-
             collector.Dispose();
         }
 
@@ -350,8 +335,8 @@ namespace Corvus.Text.Json.Tests
             var collector = JsonSchemaResultsCollector.Create(level);
             IJsonSchemaResultsCollector c = collector;
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
 
             // Non-generic
             c.EvaluatedKeywordPath(true, (buffer, out written) =>
@@ -378,8 +363,8 @@ namespace Corvus.Text.Json.Tests
             var collector = JsonSchemaResultsCollector.Create(level);
             IJsonSchemaResultsCollector c = collector;
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
 
             // Non-generic
             c.IgnoredKeyword((buffer, out written) =>
@@ -403,8 +388,8 @@ namespace Corvus.Text.Json.Tests
             var collector = JsonSchemaResultsCollector.Create(level);
             IJsonSchemaResultsCollector c = collector;
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
 
             c.EvaluatedBooleanSchema(true, 5, (ctx, buffer, out written) =>
                 JsonSchemaEvaluation.TryCopyMessage("Generic boolean"u8, buffer, out written));
@@ -448,8 +433,8 @@ namespace Corvus.Text.Json.Tests
             byte[] largeBuffer = new byte[9000];
             for (int i = 0; i < largeBuffer.Length; ++i) largeBuffer[i] = (byte)('A' + (i % 26));
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
 
             // 1. EvaluatedKeyword with large keyword
             c.EvaluatedKeyword(true, null, largeBuffer.AsSpan());
@@ -495,27 +480,25 @@ namespace Corvus.Text.Json.Tests
 
 
             // 1. BeginChildContext with large path provider
-            Assert.Throws<ArgumentException>(() => c.BeginChildContext(largePathProvider, null));
-            Assert.Throws<ArgumentException>(() => c.BeginChildContext(reducedEvaluationPath: null, documentEvaluationPath: largePathProvider));
-            Assert.Throws<ArgumentException>(() => c.BeginChildContext(largePathProvider, largePathProvider));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContext(0, largePathProvider, null));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContext(0, reducedEvaluationPath: null, documentEvaluationPath: largePathProvider));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContext(0, largePathProvider, largePathProvider));
 
             // 2. BeginChildContext (escaped property) with large path provider
-            Assert.Throws<ArgumentException>(() => c.BeginChildContext("prop"u8, largePathProvider));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContext(0, "prop"u8, largePathProvider));
 
             // 3. BeginChildContextUnescaped with large path provider
-            Assert.Throws<ArgumentException>(() => c.BeginChildContextUnescaped("prop"u8, largePathProvider));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContextUnescaped(0, "prop"u8, largePathProvider));
 
             // 4. BeginChildContext<T> with large path provider
-            Assert.Throws<ArgumentException>(() => c.BeginChildContext(42, (ctx, buffer, out written) => largePathProvider(buffer, out written), null));
-            Assert.Throws<ArgumentException>(() => c.BeginChildContext(42, null, (ctx, buffer, out written) => largePathProvider(buffer, out written)));
-            Assert.Throws<ArgumentException>(() => c.BeginChildContext(42, (ctx, buffer, out written) => largePathProvider(buffer, out written), (ctx, buffer, out written) => largePathProvider(buffer, out written)));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContext(0, 42, (ctx, buffer, out written) => largePathProvider(buffer, out written), null, null));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContext(0, 42, null, (ctx, buffer, out written) => largePathProvider(buffer, out written), null));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContext(0, 42, null, null, (ctx, buffer, out written) => largePathProvider(buffer, out written)));
+            Assert.Throws<ArgumentException>(() => c.BeginChildContext(0, 42, (ctx, buffer, out written) => largePathProvider(buffer, out written), (ctx, buffer, out written) => largePathProvider(buffer, out written), (ctx, buffer, out written) => largePathProvider(buffer, out written)));
 
-            // 5. PushSchemaLocation with large path provider
-            Assert.Throws<ArgumentException>(() => c.PushSchemaLocation(largePathProvider));
-            Assert.Throws<ArgumentException>(() => c.PushSchemaLocation(42, (ctx, buffer, out written) => largePathProvider(buffer, out written)));
 
-            c.PushSchemaLocation(static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
-            int sequenceNumber = c.BeginChildContext("someProperty"u8);
+            int parent = c.BeginChildContext(0, schemaEvaluationPath: static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/Name"u8, buffer, out written));
+            int sequenceNumber = c.BeginChildContext(parent, "someProperty"u8);
 
             // 8. EvaluatedKeywordPath with large path provider
             Assert.Throws<ArgumentException>(() => c.EvaluatedKeywordPath(true, largeMessageProvider, largePathProvider));
@@ -544,6 +527,14 @@ namespace Corvus.Text.Json.Tests
                 written = value.Length;
                 return true;
             };
+            JsonSchemaPathProvider schemaPath1 = (buffer, out written) =>
+            {
+                ReadOnlySpan<byte> value = "schema1"u8;
+                value.CopyTo(buffer);
+                written = value.Length;
+                return true;
+            };
+
             JsonSchemaPathProvider docPath1 = (buffer, out written) =>
             {
                 ReadOnlySpan<byte> value = "doc1"u8;
@@ -560,6 +551,14 @@ namespace Corvus.Text.Json.Tests
                 written = value.Length;
                 return true;
             };
+            JsonSchemaPathProvider schemaPath2 = (buffer, out written) =>
+            {
+                ReadOnlySpan<byte> value = "schema2"u8;
+                value.CopyTo(buffer);
+                written = value.Length;
+                return true;
+            };
+
             JsonSchemaPathProvider docPath2 = (buffer, out written) =>
             {
                 ReadOnlySpan<byte> value = "doc2"u8;
@@ -568,17 +567,47 @@ namespace Corvus.Text.Json.Tests
                 return true;
             };
 
+            // Third path providers
+            JsonSchemaPathProvider evalPath3 = (buffer, out written) =>
+            {
+                ReadOnlySpan<byte> value = "eval3"u8;
+                value.CopyTo(buffer);
+                written = value.Length;
+                return true;
+            };
+            JsonSchemaPathProvider schemaPath3 = (buffer, out written) =>
+            {
+                ReadOnlySpan<byte> value = "schema3"u8;
+                value.CopyTo(buffer);
+                written = value.Length;
+                return true;
+            };
+
+            JsonSchemaPathProvider docPath3 = (buffer, out written) =>
+            {
+                ReadOnlySpan<byte> value = "doc3"u8;
+                value.CopyTo(buffer);
+                written = value.Length;
+                return true;
+            };
+
             // First context
-            c.BeginChildContext(evalPath1, docPath1);
-            Assert.Equal("/eval1", collector.SchemaLocation); // SchemaLocation uses evaluationPath provider
+            int parentSequenceNumber = c.BeginChildContext(0, evalPath1, schemaPath1, docPath1);
+            Assert.Equal("schema1", collector.SchemaLocation); // SchemaLocation uses evaluationPath provider
             Assert.Equal("/doc1", collector.DocumentLocation);
             Assert.Equal("/eval1", collector.EvaluationLocation);
 
             // Second context (should concatenate)
-            c.BeginChildContext(evalPath2, docPath2);
-            Assert.Equal("/eval1/eval2", collector.SchemaLocation);
+            c.BeginChildContext(parentSequenceNumber, evalPath2, schemaPath2, docPath2);
+            Assert.Equal("schema2", collector.SchemaLocation);
             Assert.Equal("/doc1/doc2", collector.DocumentLocation);
             Assert.Equal("/eval1/eval2", collector.EvaluationLocation);
+
+            // Parallel context (should concatenate with parent)
+            c.BeginChildContext(parentSequenceNumber, evalPath3, schemaPath3, docPath3);
+            Assert.Equal("schema3", collector.SchemaLocation);
+            Assert.Equal("/doc1/doc3", collector.DocumentLocation);
+            Assert.Equal("/eval1/eval3", collector.EvaluationLocation);
 
             collector.Dispose();
         }
@@ -594,14 +623,14 @@ namespace Corvus.Text.Json.Tests
             ReadOnlySpan<byte> property2 = "property2"u8;
 
             // Begin with first property
-            c.BeginChildContext(property1);
+            int parentSequenceNumber = c.BeginChildContext(0, property1);
             Assert.Equal("", collector.SchemaLocation);
             Assert.Equal("", collector.EvaluationLocation);
             // DocumentLocation is encoded/escaped, but for ASCII should match
             Assert.Equal("/property1", collector.DocumentLocation);
 
             // Second keyword
-            c.BeginChildContext(property2);
+            c.BeginChildContext(parentSequenceNumber, property2);
             Assert.Equal("", collector.SchemaLocation);
             Assert.Equal("", collector.EvaluationLocation);
             Assert.Equal("/property1/property2", collector.DocumentLocation);
@@ -620,13 +649,13 @@ namespace Corvus.Text.Json.Tests
             ReadOnlySpan<byte> property2 = "property2"u8;
 
             // Begin with first keyword (unescaped)
-            c.BeginChildContextUnescaped(property1);
+            int parentSequenceNumber = c.BeginChildContextUnescaped(0, property1);
             Assert.Equal("", collector.SchemaLocation);
             Assert.Equal("", collector.EvaluationLocation);
             Assert.Equal("/property1", collector.DocumentLocation);
 
             // Second keyword (unescaped)
-            c.BeginChildContextUnescaped(property2);
+            c.BeginChildContextUnescaped(parentSequenceNumber, property2);
             Assert.Equal("", collector.SchemaLocation);
             Assert.Equal("", collector.EvaluationLocation);
             Assert.Equal("/property1/property2", collector.DocumentLocation);
@@ -645,6 +674,19 @@ namespace Corvus.Text.Json.Tests
             {
                 // Write "eval" + ctx as UTF-8
                 ReadOnlySpan<byte> prefix = "eval"u8;
+                prefix.CopyTo(buffer);
+                if (!System.Buffers.Text.Utf8Formatter.TryFormat(ctx, buffer.Slice(prefix.Length), out int intWritten))
+                {
+                    written = 0;
+                    return false;
+                }
+                written = prefix.Length + intWritten;
+                return true;
+            }
+            static bool schemaPath1(int ctx, Span<byte> buffer, out int written)
+            {
+                // Write "eval" + ctx as UTF-8
+                ReadOnlySpan<byte> prefix = "schema"u8;
                 prefix.CopyTo(buffer);
                 if (!System.Buffers.Text.Utf8Formatter.TryFormat(ctx, buffer.Slice(prefix.Length), out int intWritten))
                 {
@@ -680,6 +722,18 @@ namespace Corvus.Text.Json.Tests
                 written = prefix.Length + intWritten;
                 return true;
             }
+            static bool schemaPath2(int ctx, Span<byte> buffer, out int written)
+            {
+                ReadOnlySpan<byte> prefix = "schema"u8;
+                prefix.CopyTo(buffer);
+                if (!System.Buffers.Text.Utf8Formatter.TryFormat(ctx + 1, buffer.Slice(prefix.Length), out int intWritten))
+                {
+                    written = 0;
+                    return false;
+                }
+                written = prefix.Length + intWritten;
+                return true;
+            }
             static bool docPath2(int ctx, Span<byte> buffer, out int written)
             {
                 ReadOnlySpan<byte> prefix = "doc"u8;
@@ -694,14 +748,14 @@ namespace Corvus.Text.Json.Tests
             }
 
             // First context
-            c.BeginChildContext(1, evalPath1, docPath1);
-            Assert.Equal("/eval1", collector.SchemaLocation);
+            int parentSequenceNumber = c.BeginChildContext(0, 1, evalPath1, schemaPath1, docPath1);
+            Assert.Equal("schema1", collector.SchemaLocation);
             Assert.Equal("/doc1", collector.DocumentLocation);
             Assert.Equal("/eval1", collector.EvaluationLocation);
 
             // Second context (should concatenate)
-            c.BeginChildContext(2, evalPath2, docPath2);
-            Assert.Equal("/eval1/eval3", collector.SchemaLocation);
+            c.BeginChildContext(parentSequenceNumber, 2, evalPath2, schemaPath2, docPath2);
+            Assert.Equal("schema3", collector.SchemaLocation);
             Assert.Equal("/doc1/doc3", collector.DocumentLocation);
             Assert.Equal("/eval1/eval3", collector.EvaluationLocation);
 
@@ -717,7 +771,7 @@ namespace Corvus.Text.Json.Tests
             // "hell\u006F" is "hello" in UTF-8
             ReadOnlySpan<byte> escapedProperty = "hell\\u006F"u8;
 
-            c.BeginChildContext(escapedProperty);
+            c.BeginChildContext(0, escapedProperty);
 
             // SchemaLocation and EvaluationLocation should be empty for property context
             Assert.Equal("", collector.SchemaLocation);
@@ -738,7 +792,7 @@ namespace Corvus.Text.Json.Tests
             // The property name contains both '/' and '~'
             ReadOnlySpan<byte> unescapedProperty = "he/l~o"u8;
 
-            c.BeginChildContextUnescaped(unescapedProperty);
+            c.BeginChildContextUnescaped(0, unescapedProperty);
 
             // SchemaLocation and EvaluationLocation should be empty for property context
             Assert.Equal("", collector.SchemaLocation);
@@ -765,7 +819,7 @@ namespace Corvus.Text.Json.Tests
 
             // Verify that the collector works as expected
             IJsonSchemaResultsCollector c2 = collector2;
-            int seq = c2.BeginChildContext();
+            int seq = c2.BeginChildContext(0);
             c2.CommitChildContext(seq, true, true, null);
 
             // Should be able to enumerate results
@@ -795,7 +849,7 @@ namespace Corvus.Text.Json.Tests
             // The collector will call the provider and see the too-large written value
             Assert.Throws<ArgumentException>(() =>
             {
-                int seq = c.BeginChildContext();
+                int seq = c.BeginChildContext(0);
                 c.CommitChildContext(seq, true, false, TooLargeKeywordProvider);
             });
 

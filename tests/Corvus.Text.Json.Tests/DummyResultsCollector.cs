@@ -16,10 +16,10 @@ internal class DummyResultsCollector : IJsonSchemaResultsCollector
         Assert.Equal(0, _schemaLocationCount);
     }
 
-    public int BeginChildContext(JsonSchemaPathProvider reducedEvaluationPath = null, JsonSchemaPathProvider documentEvaluationPath = null) => _childContextCount++;
-    public int BeginChildContext(ReadOnlySpan<byte> propertyName, JsonSchemaPathProvider reducedEvaluationPath = null) => _childContextCount++;
-    public int BeginChildContext<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> reducedEvaluationPath, JsonSchemaPathProvider<TProviderContext> documentEvaluationPath) => _childContextCount++;
-    public int BeginChildContextUnescaped(ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider reducedEvaluationPath = null) => _childContextCount++;
+    public int BeginChildContext(int parentSequenceNumber, JsonSchemaPathProvider reducedEvaluationPath = null, JsonSchemaPathProvider schemaEvaluationPath = null, JsonSchemaPathProvider documentEvaluationPath = null) => _childContextCount++;
+    public int BeginChildContext(int parentSequenceNumber, ReadOnlySpan<byte> propertyName, JsonSchemaPathProvider reducedEvaluationPath = null, JsonSchemaPathProvider? schemaEvaluationPath = null) => _childContextCount++;
+    public int BeginChildContext<TProviderContext>(int parentSequenceNumber, TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> reducedEvaluationPath, JsonSchemaPathProvider<TProviderContext> schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext> documentEvaluationPath) => _childContextCount++;
+    public int BeginChildContextUnescaped(int parentSequenceNumber, ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider reducedEvaluationPath = null, JsonSchemaPathProvider? schemaEvaluationPath = null) => _childContextCount++;
     public void CommitChildContext(int sequenceNumber, bool parentIsMatch, bool childIsMatch, JsonSchemaMessageProvider messageProvider) => _childContextCount--;
     public void CommitChildContext<TProviderContext>(int sequenceNumber, bool parentIsMatch, bool childIsMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider) => _childContextCount--;
     public void Dispose() {}
@@ -34,7 +34,4 @@ internal class DummyResultsCollector : IJsonSchemaResultsCollector
     public void IgnoredKeyword(JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> encodedKeyword) { }
     public void IgnoredKeyword<TProviderContext>(TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> encodedKeyword) { }
     public void PopChildContext(int sequenceNUmber) => _childContextCount--;
-    public void PopSchemaLocation() => _schemaLocationCount--;
-    public void PushSchemaLocation(JsonSchemaPathProvider relativeOrAbsoluteSchemaLocation) => _schemaLocationCount++;
-    public void PushSchemaLocation<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> relativeOrAbsoluteSchemaLocationProvider) => _schemaLocationCount++;
 }

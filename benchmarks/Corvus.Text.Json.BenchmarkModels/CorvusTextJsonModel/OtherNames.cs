@@ -526,7 +526,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             RawUtf8StringNotRequiresUnescaping,
             Utf8String,
             Utf16String,
-            NameComponentArray
+            NameComponentArrayBuilder
         }
 
         private readonly Kind _kind;
@@ -563,7 +563,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
         public Source(NameComponentArray.Builder.Build value)
         {
             NameComponentArrayBuilderInstance = value;
-            _kind = Kind.NameComponentArray;
+            _kind = Kind.NameComponentArrayBuilder;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -605,7 +605,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                 case Kind.Utf16String:
                     valueBuilder.AddProperty(utf8Name, _utf16Backing, escapeName, nameRequiresUnescaping);
                     break;
-                case Kind.NameComponentArray:
+                case Kind.NameComponentArrayBuilder:
                     valueBuilder.AddProperty(utf8Name, NameComponentArrayBuilderInstance!, static (b, ref o) => NameComponentArray.Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
                 default:
@@ -636,7 +636,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                 case Kind.Utf16String:
                     valueBuilder.AddItem(_utf16Backing);
                     break;
-                case Kind.NameComponentArray:
+                case Kind.NameComponentArrayBuilder:
                     valueBuilder.AddItem(NameComponentArrayBuilderInstance!, static (b, ref o) => NameComponentArray.Builder.BuildValue(b, ref o));
                     break;
                 default:
@@ -648,7 +648,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
     public static class JsonSchema
     {
-        private static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/OtherNames"u8, buffer, out written);
+        public static readonly JsonSchemaPathProvider SchemaLocation = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$defs/OtherNames"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider OneOf0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("oneOf/0/$ref"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider OneOf1SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("oneOf/1/$ref"u8, buffer, out written);
 
@@ -665,13 +665,11 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                 JsonTokenType.None or
                 JsonTokenType.EndObject or
                 JsonTokenType.EndArray);
-
-            context.PushSchemaLocation(SchemaLocation);
-
+           
             int oneOfMatchCount = 0;
 
             JsonSchemaContext oneOf0Context =
-                NameComponent.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf0SchemaEvaluationPath);
+                NameComponent.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, evaluationPath: OneOf0SchemaEvaluationPath);
 
             NameComponent.JsonSchema.Evaluate(parentDocument, parentIndex, ref oneOf0Context);
 
@@ -682,7 +680,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             }
 
             JsonSchemaContext oneOf1Context =
-                NameComponentArray.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: OneOf1SchemaEvaluationPath);
+                NameComponentArray.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, evaluationPath: OneOf1SchemaEvaluationPath);
 
             NameComponentArray.JsonSchema.Evaluate(parentDocument, parentIndex, ref oneOf1Context);
 
@@ -707,7 +705,6 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
 
                 if (!context.HasCollector)
                 {
-                    context.PopSchemaLocation();
                     return;
                 }
             }
@@ -718,12 +715,9 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                 context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedNoSchema, "oneOf"u8);
                 if (!context.HasCollector)
                 {
-                    context.PopSchemaLocation();
                     return;
                 }
             }
-
-            context.PopSchemaLocation();
         }
 
         internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
@@ -751,7 +745,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContext(
@@ -760,7 +754,8 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContextUnescaped(
@@ -768,7 +763,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContextUnescaped(
@@ -777,14 +772,15 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
-       internal static JsonSchemaContext PushChildContext(
+        internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
-            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? evaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null)
         {
             return
@@ -793,7 +789,8 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation,
                     documentEvaluationPath: documentEvaluationPath);
         }
 
@@ -802,7 +799,7 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             TContext providerContext,
-            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? evaluationPath = null,
             JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
         {
             return
@@ -812,7 +809,8 @@ public readonly struct OtherNames : IJsonElement<OtherNames>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     providerContext: providerContext,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: static (_, buffer, out written) => SchemaLocation(buffer, out written),
                     documentEvaluationPath: documentEvaluationPath);
         }
     }

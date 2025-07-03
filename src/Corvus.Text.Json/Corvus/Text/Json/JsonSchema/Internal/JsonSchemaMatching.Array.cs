@@ -26,7 +26,7 @@ namespace Corvus.Text.Json.Internal
                 return false;
             }
 
-            written = bytesWritten + 1;
+            written = bytesWritten;
             return true;
         }
 

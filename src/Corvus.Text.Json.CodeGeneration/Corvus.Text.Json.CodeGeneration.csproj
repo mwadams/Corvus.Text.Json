@@ -44,6 +44,7 @@
     <Compile Include="FrameworkType.cs" />
     <Compile Include="GeneratedTypeAccessibility.cs" />
     <Compile Include="INameCollisionResolver.cs" />
+    <Compile Include="MethodParameter.cs" />
     <Compile Include="NameCollisionResolverRegistry.cs" />
     <Compile Include="NameCollisionResolvers\DefaultNameCollisionResolver.cs" />
     <Compile Include="NameHeuristics\BaseSchemaNameHeuristic.cs" />
@@ -78,7 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.3.10" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.3.13" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
   </ItemGroup>
 

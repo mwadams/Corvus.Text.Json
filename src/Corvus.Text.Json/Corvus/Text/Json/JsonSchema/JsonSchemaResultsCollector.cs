@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
@@ -413,6 +414,7 @@ namespace Corvus.Text.Json
             _schemaEvaluationPathStack.Length = 0;
             _resultStack.Length = 0;
             _committedResultStack.Length = 0;
+            _sequenceNumber = 0;
         }
 
         internal void ResetAllStateForCacheReuse()
@@ -427,6 +429,7 @@ namespace Corvus.Text.Json
             _schemaEvaluationPathStack.Length = 0;
             _resultStack.Length = 0;
             _committedResultStack.Length = 0;
+            _sequenceNumber = 0;
         }
 
         internal static JsonSchemaResultsCollector CreateEmptyInstanceForCaching() => new(true, JsonSchemaResultsLevel.Basic, 30);
@@ -644,6 +647,28 @@ namespace Corvus.Text.Json
             _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
         }
 
+        private void AppendParallelEvaluationPath(int sequenceOffset, JsonSchemaPathProvider path)
+        {
+            ValueRange parentRange = _evaluationPathStack[^(sequenceOffset + 1)];
+            if (_currentEvaluationPathRange.End + parentRange.Length + MaxPathSegmentLength > _evaluationPath.Length)
+            {
+                Enlarge(parentRange.Length + MaxPathSegmentLength, ref _evaluationPath, _currentEvaluationPathRange.End);
+            }
+
+            _evaluationPath.AsSpan(parentRange.Start, parentRange.Length).CopyTo(_evaluationPath.AsSpan(_currentEvaluationPathRange.End));
+
+            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.End, _currentEvaluationPathRange.End + parentRange.Length);
+
+            _evaluationPath[_currentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(_evaluationPath.AsSpan(_currentEvaluationPathRange.End + 1), out int written))
+            {
+                ThrowHelper.ThrowArgumentException_DestinationTooShort();
+            }
+
+            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
+        }
+
         private void AppendToEvaluationPath<T>(T context, JsonSchemaPathProvider<T> path)
         {
             if (_currentEvaluationPathRange.End + MaxPathSegmentLength > _evaluationPath.Length)
@@ -660,6 +685,29 @@ namespace Corvus.Text.Json
 
             _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
         }
+
+        private void AppendParallelEvaluationPath<T>(int sequenceOffset, T context, JsonSchemaPathProvider<T> path)
+        {
+            ValueRange parentRange = _evaluationPathStack[^(sequenceOffset + 1)];
+            if (_currentEvaluationPathRange.End + parentRange.Length + MaxPathSegmentLength > _evaluationPath.Length)
+            {
+                Enlarge(parentRange.Length + MaxPathSegmentLength, ref _evaluationPath, _currentEvaluationPathRange.End);
+            }
+
+            _evaluationPath.AsSpan(parentRange.Start, parentRange.Length).CopyTo(_evaluationPath.AsSpan(_currentEvaluationPathRange.End));
+
+            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.End, _currentEvaluationPathRange.End + parentRange.Length);
+
+            _evaluationPath[_currentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(context, _evaluationPath.AsSpan(_currentEvaluationPathRange.End + 1), out int written))
+            {
+                ThrowHelper.ThrowArgumentException_DestinationTooShort();
+            }
+
+            _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
+        }
+
 
         private void AppendToSchemaEvaluationPath(JsonSchemaPathProvider path)
         {
@@ -711,6 +759,27 @@ namespace Corvus.Text.Json
 
             _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
         }
+        private void AppendParallelDocumentEvaluationPath(int sequenceOffset, JsonSchemaPathProvider path)
+        {
+            ValueRange parentRange = _documentEvaluationPathStack[^(sequenceOffset + 1)];
+            if (_currentDocumentEvaluationPathRange.End + parentRange.Length + MaxPathSegmentLength > _documentEvaluationPath.Length)
+            {
+                Enlarge(parentRange.Length + MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
+            }
+
+            _documentEvaluationPath.AsSpan(parentRange.Start, parentRange.Length).CopyTo(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End));
+
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.End, _currentDocumentEvaluationPathRange.End + parentRange.Length);
+
+            _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
+            {
+                ThrowHelper.ThrowArgumentException_DestinationTooShort();
+            }
+
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
+        }
 
         private void AppendToDocumentEvaluationPath<T>(T context, JsonSchemaPathProvider<T> path)
         {
@@ -718,6 +787,28 @@ namespace Corvus.Text.Json
             {
                 Enlarge(MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
             }
+
+            _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!path(context, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
+            {
+                ThrowHelper.ThrowArgumentException_DestinationTooShort();
+            }
+
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
+        }
+
+        private void AppendParallelDocumentEvaluationPath<T>(int sequenceOffset, T context, JsonSchemaPathProvider<T> path)
+        {
+            ValueRange parentRange = _documentEvaluationPathStack[^(sequenceOffset + 1)];
+            if (_currentDocumentEvaluationPathRange.End + parentRange.Length + MaxPathSegmentLength > _documentEvaluationPath.Length)
+            {
+                Enlarge(parentRange.Length + MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
+            }
+
+            _documentEvaluationPath.AsSpan(parentRange.Start, parentRange.Length).CopyTo(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End));
+
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.End, _currentDocumentEvaluationPathRange.End + parentRange.Length);
 
             _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
 
@@ -748,6 +839,28 @@ namespace Corvus.Text.Json
             _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
         }
 
+        private void UnescapeEncodeAndAppendParallelDocumentEvaluationPath(int sequenceOffset, ReadOnlySpan<byte> escapedAndUnencodedPropertyName)
+        {
+            ValueRange parentRange = _documentEvaluationPathStack[^(sequenceOffset + 1)];
+            if (_currentDocumentEvaluationPathRange.End + parentRange.Length + MaxPathSegmentLength > _documentEvaluationPath.Length)
+            {
+                Enlarge(parentRange.Length + MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
+            }
+
+            _documentEvaluationPath.AsSpan(parentRange.Start, parentRange.Length).CopyTo(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End));
+
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.End, _currentDocumentEvaluationPathRange.End + parentRange.Length);
+
+            _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!JsonReaderHelper.TryUnescapeAndEncodePointer(escapedAndUnencodedPropertyName, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
+            {
+                    ThrowHelper.ThrowArgumentException_DestinationTooShort();
+            }
+
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
+        }
+
         private void EncodeAndAppendToDocumentEvaluationPath(ReadOnlySpan<byte> unencodedPropertyName)
         {
             int length = (unencodedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileEncodingPointer);
@@ -762,6 +875,28 @@ namespace Corvus.Text.Json
             if (!JsonReaderHelper.TryEncodePointer(unencodedPropertyName, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
+            }
+
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
+        }
+
+        private void EncodeAndAppendParallelDocumentEvaluationPath(int sequenceOffset, ReadOnlySpan<byte> unencodedPropertyName)
+        {
+            ValueRange parentRange = _documentEvaluationPathStack[^(sequenceOffset + 1)];
+            if (_currentDocumentEvaluationPathRange.End + parentRange.Length + MaxPathSegmentLength > _documentEvaluationPath.Length)
+            {
+                Enlarge(parentRange.Length + MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
+            }
+
+            _documentEvaluationPath.AsSpan(parentRange.Start, parentRange.Length).CopyTo(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End));
+
+            _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.End, _currentDocumentEvaluationPathRange.End + parentRange.Length);
+
+            _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+            if (!JsonReaderHelper.TryEncodePointer(unencodedPropertyName, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
+            {
+                    ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
             _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
@@ -806,24 +941,44 @@ namespace Corvus.Text.Json
         }
 
 
-        int IJsonSchemaResultsCollector.BeginChildContext(JsonSchemaPathProvider? evaluationPath, JsonSchemaPathProvider? documentEvaluationPath)
+        int IJsonSchemaResultsCollector.BeginChildContext(int parentSequenceNumber, JsonSchemaPathProvider? evaluationPath, JsonSchemaPathProvider? schemaEvaluationPath, JsonSchemaPathProvider? documentEvaluationPath)
         {
             IsConsistent(_sequenceNumber);
-
+           
             // Push the paths onto the stack
             _evaluationPathStack.Append(_currentEvaluationPathRange);
             _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
             _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
 
+            int sequenceOffset = _sequenceNumber - parentSequenceNumber;
+
             if (evaluationPath is not null)
             {
-                AppendToSchemaEvaluationPath(evaluationPath);
-                AppendToEvaluationPath(evaluationPath);
+                if (sequenceOffset > 0)
+                {
+                    AppendParallelEvaluationPath(sequenceOffset, evaluationPath);
+                }
+                else
+                {
+                    AppendToEvaluationPath(evaluationPath);
+                }
+            }
+
+            if (schemaEvaluationPath is not null)
+            {
+                SetSchemaEvaluationPath(schemaEvaluationPath);
             }
 
             if (documentEvaluationPath is not null)
             {
-                AppendToDocumentEvaluationPath(documentEvaluationPath);
+                if (sequenceOffset > 0)
+                {
+                    AppendParallelDocumentEvaluationPath(sequenceOffset, documentEvaluationPath);
+                }
+                else
+                {
+                    AppendToDocumentEvaluationPath(documentEvaluationPath);
+                }
             }
 
             // There are no current results for this context (hence our result stack has 0 length)
@@ -835,7 +990,7 @@ namespace Corvus.Text.Json
             return _sequenceNumber;
         }
 
-        int IJsonSchemaResultsCollector.BeginChildContext<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext>? evaluationPath, JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath)
+        int IJsonSchemaResultsCollector.BeginChildContext<TProviderContext>(int parentSequenceNumber, TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext>? evaluationPath, JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath)
         {
             IsConsistent(_sequenceNumber);
 
@@ -844,15 +999,35 @@ namespace Corvus.Text.Json
             _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
             _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
 
+            int sequenceOffset = _sequenceNumber - parentSequenceNumber;
+
             if (evaluationPath is not null)
             {
-                AppendToSchemaEvaluationPath(providerContext, evaluationPath);
-                AppendToEvaluationPath(providerContext, evaluationPath);
+                if (sequenceOffset > 0)
+                {
+                    AppendParallelEvaluationPath(sequenceOffset, providerContext, evaluationPath);
+                }
+                else
+                {
+                    AppendToEvaluationPath(providerContext, evaluationPath);
+                }
+            }
+
+            if (schemaEvaluationPath is not null)
+            {
+                SetSchemaEvaluationPath(providerContext, schemaEvaluationPath);
             }
 
             if (documentEvaluationPath is not null)
             {
-                AppendToDocumentEvaluationPath(providerContext, documentEvaluationPath);
+                if (sequenceOffset > 0)
+                {
+                    AppendParallelDocumentEvaluationPath(sequenceOffset, providerContext, documentEvaluationPath);
+                }
+                else
+                {
+                    AppendToDocumentEvaluationPath(providerContext, documentEvaluationPath);
+                }
             }
 
             // There are no current results for this context (hence our result stack has 0 length)
@@ -864,7 +1039,7 @@ namespace Corvus.Text.Json
             return _sequenceNumber;
         }
 
-        int IJsonSchemaResultsCollector.BeginChildContext(ReadOnlySpan<byte> escapedPropertyName, JsonSchemaPathProvider? evaluationPath)
+        int IJsonSchemaResultsCollector.BeginChildContext(int parentSequenceNumber, ReadOnlySpan<byte> escapedPropertyName, JsonSchemaPathProvider? evaluationPath, JsonSchemaPathProvider? schemaEvaluationPath)
         {
             IsConsistent(_sequenceNumber);
 
@@ -873,13 +1048,33 @@ namespace Corvus.Text.Json
             _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
             _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
 
+            int sequenceOffset = _sequenceNumber - parentSequenceNumber;
+
             if (evaluationPath is not null)
             {
-                AppendToSchemaEvaluationPath(evaluationPath);
-                AppendToEvaluationPath(evaluationPath);
+                if (sequenceOffset > 0)
+                {
+                    AppendParallelEvaluationPath(sequenceOffset, evaluationPath);
+                }
+                else
+                {
+                    AppendToEvaluationPath(evaluationPath);
+                }
             }
 
-            UnescapeEncodeAndAppendToDocumentEvaluationPath(escapedPropertyName);
+            if (schemaEvaluationPath is not null)
+            {
+                SetSchemaEvaluationPath(schemaEvaluationPath);
+            }
+
+            if (sequenceOffset > 0)
+            {
+                UnescapeEncodeAndAppendParallelDocumentEvaluationPath(sequenceOffset, escapedPropertyName);
+            }
+            else
+            {
+                UnescapeEncodeAndAppendToDocumentEvaluationPath(escapedPropertyName);
+            }
 
             // There are no current results for this context (hence our result stack has 0 length)
             // But we also record the committed result stack at this point, in case we wish to pop and unwind it later.
@@ -890,7 +1085,7 @@ namespace Corvus.Text.Json
             return _sequenceNumber;
         }
 
-        int IJsonSchemaResultsCollector.BeginChildContextUnescaped(ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider? evaluationPath)
+        int IJsonSchemaResultsCollector.BeginChildContextUnescaped(int parentSequenceNumber,ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider? evaluationPath, JsonSchemaPathProvider? schemaEvaluationPath)
         {
             IsConsistent(_sequenceNumber);
 
@@ -899,13 +1094,33 @@ namespace Corvus.Text.Json
             _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
             _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
 
+            int sequenceOffset = _sequenceNumber - parentSequenceNumber;
+
             if (evaluationPath is not null)
             {
-                AppendToSchemaEvaluationPath(evaluationPath);
-                AppendToEvaluationPath(evaluationPath);
+                if (sequenceOffset > 0)
+                {
+                    AppendParallelEvaluationPath(sequenceOffset, evaluationPath);
+                }
+                else
+                {
+                    AppendToEvaluationPath(evaluationPath);
+                }
             }
 
-            EncodeAndAppendToDocumentEvaluationPath(unescapedPropertyName);
+            if (schemaEvaluationPath is not null)
+            {
+                SetSchemaEvaluationPath(schemaEvaluationPath);
+            }
+
+            if (sequenceOffset > 0)
+            {
+                EncodeAndAppendParallelDocumentEvaluationPath(sequenceOffset, unescapedPropertyName);
+            }
+            else
+            {
+                EncodeAndAppendToDocumentEvaluationPath(unescapedPropertyName);
+            }
 
             // There are no current results for this context (hence our result stack has 0 length)
             // But we also record the committed result stack at this point, in case we wish to pop and unwind it later.
@@ -1161,50 +1376,35 @@ namespace Corvus.Text.Json
             }
         }
 
-        void IJsonSchemaResultsCollector.PopSchemaLocation()
+        private void SetSchemaEvaluationPath(JsonSchemaPathProvider path)
         {
-            _currentEvaluationPathRange = _evaluationPathStack.Pop();
-            _currentSchemaEvaluationPathRange = _schemaEvaluationPathStack.Pop();
-            _currentDocumentEvaluationPathRange = _documentEvaluationPathStack.Pop();
-        }
-
-        void IJsonSchemaResultsCollector.PushSchemaLocation(JsonSchemaPathProvider relativeOrAbsoluteSchemaLocation)
-        {
-            if (_currentSchemaEvaluationPathRange.End + MaxUriBaseLength > _schemaEvaluationPath.Length)
+            if (_currentSchemaEvaluationPathRange.End + MaxPathSegmentLength > _schemaEvaluationPath.Length)
             {
                 Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _currentSchemaEvaluationPathRange.End);
             }
 
-            if (!relativeOrAbsoluteSchemaLocation(_schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End), out int written))
+            if (!path(_schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _evaluationPathStack.Append(_currentEvaluationPathRange);
-            _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
-            _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
-            _currentSchemaEvaluationPathRange = new(_currentSchemaEvaluationPathRange.End, _currentSchemaEvaluationPathRange.End + written);
+            _currentSchemaEvaluationPathRange = new ValueRange(_currentSchemaEvaluationPathRange.End, _currentSchemaEvaluationPathRange.End + written);
         }
 
-
-        void IJsonSchemaResultsCollector.PushSchemaLocation<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> relativeOrAbsoluteSchemaLocation)
+        private void SetSchemaEvaluationPath<TProviderContext>(TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> path)
         {
-            if (_currentSchemaEvaluationPathRange.End + MaxUriBaseLength > _schemaEvaluationPath.Length)
+            if (_currentSchemaEvaluationPathRange.End + MaxPathSegmentLength > _schemaEvaluationPath.Length)
             {
                 Enlarge(MaxPathSegmentLength, ref _schemaEvaluationPath, _currentSchemaEvaluationPathRange.End);
             }
 
-            if (!relativeOrAbsoluteSchemaLocation(providerContext, _schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End), out int written))
+            if (!path(providerContext, _schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.End), out int written))
             {
                 ThrowHelper.ThrowArgumentException_DestinationTooShort();
             }
 
-            _evaluationPathStack.Append(_currentEvaluationPathRange);
-            _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
-            _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
-            _currentSchemaEvaluationPathRange = new(_currentSchemaEvaluationPathRange.End, _currentSchemaEvaluationPathRange.End + written);
+            _currentSchemaEvaluationPathRange = new ValueRange(_currentSchemaEvaluationPathRange.End, _currentSchemaEvaluationPathRange.End + written);
         }
-
 
         [Conditional("DEBUG")]
         private void IsConsistent(int sequenceNumber)

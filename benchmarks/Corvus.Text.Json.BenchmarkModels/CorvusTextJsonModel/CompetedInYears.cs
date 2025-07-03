@@ -272,7 +272,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             _kind = Kind.ArrayBuilder;
         }
 
-        public Source(ReadOnlySpan<int> value)
+        private Source(ReadOnlySpan<int> value)
         {
             _int32Array = value;
             _kind = Kind.Int32Array;
@@ -629,8 +629,6 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                 JsonTokenType.EndObject or
                 JsonTokenType.EndArray);
 
-            context.PushSchemaLocation(SchemaLocation);
-
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
             /* Array matching
@@ -640,7 +638,6 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             {
                 if (!context.HasCollector)
                 {
-                    context.PopSchemaLocation();
                     return;
                 }
 
@@ -659,22 +656,19 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                         arrayEnumerator.CurrentIndex,
                         ref context,
                         providerContext: length,
-                        schemaEvaluationPath: SchemaLocationForItems,
+                        evaluationPath: SchemaLocationForItems,
                         documentEvaluationPath: JsonSchemaEvaluation.ItemIndex);
 
                     Year.JsonSchema.Evaluate(parentDocument, arrayEnumerator.CurrentIndex, ref childContext);
                     context.CommitChildContext(childContext.IsMatch, ref childContext);
                     if (!childContext.IsMatch && !context.HasCollector)
                     {
-                        context.PopSchemaLocation();
                         return;
                     }
 
                     context.AddLocalEvaluatedItem(length);
                 }
             }
-
-            context.PopSchemaLocation();
         }
 
         internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
@@ -696,12 +690,13 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                 context.Dispose();
             }
         }
+
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContext(
@@ -710,7 +705,8 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContextUnescaped(
@@ -718,7 +714,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             ReadOnlySpan<byte> propertyName,
-            JsonSchemaPathProvider? schemaEvaluationPath = null)
+            JsonSchemaPathProvider? evaluationPath = null)
         {
             return
                 context.PushChildContextUnescaped(
@@ -727,14 +723,15 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     propertyName,
-                    reducedEvaluationPath: schemaEvaluationPath);
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation);
         }
 
         internal static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
-            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? evaluationPath = null,
             JsonSchemaPathProvider? documentEvaluationPath = null)
         {
             return
@@ -743,7 +740,8 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                     parentDocumentIndex,
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocation,
                     documentEvaluationPath: documentEvaluationPath);
         }
 
@@ -752,7 +750,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             int parentDocumentIndex,
             ref JsonSchemaContext context,
             TContext providerContext,
-            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? evaluationPath = null,
             JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
         {
             return
@@ -762,7 +760,8 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
                     useEvaluatedItems: false, // We don't use evaluated items
                     useEvaluatedProperties: false,
                     providerContext: providerContext,
-                    schemaEvaluationPath: schemaEvaluationPath,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: static (_, buffer, out written) => SchemaLocation(buffer, out written),
                     documentEvaluationPath: documentEvaluationPath);
         }
     }
