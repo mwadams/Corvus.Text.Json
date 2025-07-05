@@ -686,7 +686,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             o.EndObject();
         }
 
-        public void Create(in NameComponent.Source firstName, in NameComponent.Source lastName, in OtherNames.Source otherNames)
+        public void Create(in NameComponent.Source firstName, in NameComponent.Source lastName = default, in OtherNames.Source otherNames = default)
         {
             Create(ref _builder, firstName, lastName, otherNames);
         }

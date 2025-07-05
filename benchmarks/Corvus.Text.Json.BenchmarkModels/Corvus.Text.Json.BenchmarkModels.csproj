@@ -19,6 +19,7 @@
   <ItemGroup>
     <Folder Include="CorvusJsonSchemaModel2\" />
     <Folder Include="CorvusJsonSchemaModel\" />
+    <Folder Include="Test\" />
   </ItemGroup>
 
 </Project>

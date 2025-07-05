@@ -4,7 +4,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
@@ -309,7 +308,8 @@ public class CSharpLanguageProvider(CSharpLanguageProvider.Options? options = nu
         CSharpLanguageProvider languageProvider = new(options);
 
         languageProvider.RegisterCodeFileBuilders(
-            CorePartial.Instance
+            CorePartial.Instance,
+            MutableCorePartial.Instance
             ////ArrayPartial.Instance,
             ////ObjectPartial.Instance,
             ////BooleanPartial.Instance,

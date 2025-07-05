@@ -490,6 +490,60 @@ namespace Corvus.Text.Json
                 }
             }
 
+            public void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
+            {
+                AddAsProperty(name.AsSpan(), ref valueBuilder);
+            }
+
+            public void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
+            {
+                switch (_kind)
+                {
+                    case Kind.JsonElement:
+                        valueBuilder.AddProperty(name, _jsonElement);
+                        break;
+                    case Kind.Null:
+                        valueBuilder.AddPropertyNull(name);
+                        break;
+                    case Kind.True:
+                        valueBuilder.AddProperty(name, true);
+                        break;
+                    case Kind.False:
+                        valueBuilder.AddProperty(name, false);
+                        break;
+                    case Kind.NumericSimpleType:
+                        valueBuilder.AddPropertyFormattedNumber(name, _simpleTypeBacking.Span());
+                        break;
+                    case Kind.FormattedNumber:
+                        valueBuilder.AddPropertyFormattedNumber(name, _utf8Backing);
+                        break;
+                    case Kind.StringSimpleType:
+                        valueBuilder.AddProperty(name, _simpleTypeBacking.Span(), escapeValue: true, valueRequiresUnescaping: false);
+                        break;
+                    case Kind.RawUtf8StringRequiresUnescaping:
+                        valueBuilder.AddProperty(name, _utf8Backing, escapeValue: false, valueRequiresUnescaping: true);
+                        break;
+                    case Kind.RawUtf8StringNotRequiresUnescaping:
+                        valueBuilder.AddProperty(name, _utf8Backing, escapeValue: false, valueRequiresUnescaping: false);
+                        break;
+                    case Kind.Utf8String:
+                        valueBuilder.AddProperty(name, _utf8Backing, escapeValue: true, valueRequiresUnescaping: false);
+                        break;
+                    case Kind.Utf16String:
+                        valueBuilder.AddProperty(name, _utf16Backing);
+                        break;
+                    case Kind.JsonArrayBuilderInstance:
+                        valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o));
+                        break;
+                    case Kind.JsonObjectBuilderInstance:
+                        valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o));
+                        break;
+                    default:
+                        Debug.Fail("Unrecognized kind.");
+                        break;
+                }
+            }
+
             public void AddAsItem(ref ComplexValueBuilder valueBuilder)
             {
                 switch (_kind)

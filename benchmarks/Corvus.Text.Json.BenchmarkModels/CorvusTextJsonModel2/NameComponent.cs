@@ -548,6 +548,8 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         {
             switch (_kind)
             {
+                case Kind.Unknown:
+                    break;
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
                     break;
@@ -573,6 +575,8 @@ public readonly struct NameComponent : IJsonElement<NameComponent>
         {
             switch (_kind)
             {
+                case Kind.Unknown:
+                    break;
                 case Kind.JsonElement:
                     valueBuilder.AddItem(_jsonElement);
                     break;

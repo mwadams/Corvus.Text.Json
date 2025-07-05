@@ -41,20 +41,21 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
 
                 string methodName = generator.GetMethodNameInScope("TryGetAs", suffix: t.DotnetTypeName());
+                string typeName = t.FullyQualifiedDotnetTypeName();
                 generator
                     .AppendSeparatorLine()
                     .AppendLineIndent("/// <summary>")
-                    .AppendLineIndent("/// Gets the value as a <see cref=\"", t.FullyQualifiedDotnetTypeName(), "\" />.")
+                    .AppendLineIndent("/// Gets the value as a <see cref=\"", typeName, "\" />.")
                     .AppendLineIndent("/// </summary>")
                     .AppendLineIndent("/// <param name=\"result\">The result of the conversions.</param>")
                     .AppendLineIndent("/// <returns><see langword=\"true\" /> if the conversion was valid.</returns>")
-                    .AppendLineIndent("public bool ", methodName, "(out ", t.FullyQualifiedDotnetTypeName(), " result)")
+                    .AppendLineIndent("public bool ", methodName, "(out ", typeName, " result)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("if (", t.FullyQualifiedDotnetTypeName(), ".", generator.JsonSchemaClassName(), ".Evaluate(_parent, _idx))")
+                        .AppendLineIndent("if (", typeName, ".", generator.JsonSchemaClassName(typeName), ".Evaluate(_parent, _idx))")
                         .AppendLineIndent("{")
                         .PushIndent()
-                            .AppendLineIndent("result = ", t.FullyQualifiedDotnetTypeName(), ".From(this);")
+                            .AppendLineIndent("result = ", typeName, ".From(this);")
                             .AppendLineIndent("return true;")
                         .PopIndent()
                         .AppendLineIndent("}")
@@ -73,11 +74,13 @@ namespace Corvus.Text.Json.CodeGeneration
         /// to the composition types.
         /// </summary>
         /// <param name="generator">The code generator.</param>
-        /// <param name="rootDeclaration">The type declaration which is the basis of the conversions.</param>
+        /// <param name"rootDeclaration">The type declaration which is the basis of the conversions.</param>
+        /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
         /// <returns>A reference to the generator having completed the operation.</returns>
         public static CodeGenerator AppendConversionToCompositionTypes(
         this CodeGenerator generator,
-        TypeDeclaration rootDeclaration)
+        TypeDeclaration rootDeclaration,
+        bool forMutable = false)
         {
             if (generator.IsCancellationRequested)
             {
@@ -97,8 +100,8 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
 
                 (TypeDeclaration subschema, bool allowsImplicitFrom, bool allowsImplicitTo) = typesToProcess.Dequeue();
-                AppendConversions(generator, appliedConversions, rootDeclaration, subschema, allowsImplicitFrom, allowsImplicitTo);
-                AppendCompositionConversions(generator, appliedConversions, typesToProcess, rootDeclaration, subschema, allowsImplicitFrom: allowsImplicitFrom, allowsImplicitTo: allowsImplicitTo);
+                AppendConversions(generator, appliedConversions, rootDeclaration, subschema, allowsImplicitFrom, allowsImplicitTo, forMutable);
+                AppendCompositionConversions(generator, appliedConversions, typesToProcess, rootDeclaration, subschema, allowsImplicitFrom: allowsImplicitFrom, allowsImplicitTo: allowsImplicitTo, forMutable);
             }
 
             return generator;
@@ -110,7 +113,8 @@ namespace Corvus.Text.Json.CodeGeneration
                 TypeDeclaration rootType,
                 TypeDeclaration sourceType,
                 bool allowsImplicitFrom,
-                bool allowsImplicitTo)
+                bool allowsImplicitTo,
+                bool forMutable)
             {
                 if (generator.IsCancellationRequested)
                 {
@@ -119,7 +123,7 @@ namespace Corvus.Text.Json.CodeGeneration
 
                 if (sourceType.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> allOf)
                 {
-                    AppendSubschemaConversions(generator, appliedConversions, typesToProcess, rootType, allOf.SelectMany(k => k.Value).ToList(), isImplicitFrom: false, isImplicitTo: allowsImplicitTo);
+                    AppendSubschemaConversions(generator, appliedConversions, typesToProcess, rootType, allOf.SelectMany(k => k.Value).ToList(), isImplicitFrom: false, isImplicitTo: allowsImplicitTo, forMutable: forMutable);
                 }
 
                 if (sourceType.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> anyOf)
@@ -158,7 +162,8 @@ namespace Corvus.Text.Json.CodeGeneration
                 TypeDeclaration rootDeclaration,
                 IReadOnlyCollection<TypeDeclaration> subschemas,
                 bool isImplicitFrom,
-                bool isImplicitTo)
+                bool isImplicitTo,
+                bool forMutable)
             {
                 foreach (TypeDeclaration candidate in subschemas)
                 {
@@ -168,13 +173,13 @@ namespace Corvus.Text.Json.CodeGeneration
                     }
 
                     TypeDeclaration subschema = candidate.ReducedTypeDeclaration().ReducedType;
-                    if (!AppendConversions(generator, appliedConversions, rootDeclaration, subschema, isImplicitFrom, isImplicitTo))
+                    if (!AppendConversions(generator, appliedConversions, rootDeclaration, subschema, isImplicitFrom, isImplicitTo, forMutable))
                     {
                         continue;
                     }
 
                     // Recurse, which will add more allOfs, and queue up the anyOfs and oneOfs.
-                    AppendCompositionConversions(generator, appliedConversions, typesToProcess, rootDeclaration, subschema, isImplicitFrom, isImplicitTo);
+                    AppendCompositionConversions(generator, appliedConversions, typesToProcess, rootDeclaration, subschema, isImplicitFrom, isImplicitTo, forMutable);
                 }
             }
 
@@ -184,7 +189,8 @@ namespace Corvus.Text.Json.CodeGeneration
                 TypeDeclaration rootDeclaration,
                 TypeDeclaration subschema,
                 bool isImplicitFrom,
-                bool isImplicitTo)
+                bool isImplicitTo,
+                bool forMutable)
             {
                 if (generator.IsCancellationRequested)
                 {
@@ -212,12 +218,12 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("/// Conversion to <see cref=\"", subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName(), "\"/>.")
                     .AppendLineIndent("/// </summary>")
                     .AppendLineIndent("/// <param name=\"value\">The value from which to convert.</param>")
-                    .AppendIndent("public static ", implicitOrExplicitTo, " operator ", subschemaTypeName, "(")
-                    .Append(rootDeclaration.DotnetTypeName())
+                    .AppendIndent("public static ", implicitOrExplicitTo, " operator ", subschemaTypeName, forMutable ? ".Mutable" : "", "(")
+                    .Append(forMutable ? "Mutable" : rootDeclaration.DotnetTypeName())
                     .AppendLine(" value)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("return ", subschemaTypeName, "From(value);")
+                        .AppendLineIndent("return ", subschemaTypeName, forMutable ? ".Mutable" : "",  ".From(value);")
                     .PopIndent()
                     .AppendLineIndent("}");
 
@@ -227,8 +233,9 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("/// Conversion from <see cref=\"", subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName(), "\"/>.")
                     .AppendLineIndent("/// </summary>")
                     .AppendLineIndent("/// <param name=\"value\">The value from which to convert.</param>")
-                    .AppendIndent("public static ", implicitOrExplicitFrom, " operator ", rootDeclaration.DotnetTypeName(), "(")
+                    .AppendIndent("public static ", implicitOrExplicitFrom, " operator ", forMutable ? "Mutable" : rootDeclaration.DotnetTypeName(), "(")
                     .Append(subschema.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName())
+                    .Append(forMutable ? ".Mutable" : "")
                     .AppendLine(" value)")
                     .AppendLineIndent("{")
                     .PushIndent()
@@ -426,8 +433,8 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendIndent(
                             "Matcher<",
                             match.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName(),
-                            includeContext ? ", TIn" : string.Empty,
-                            ", TOut> ",
+                            includeContext ? ", TContext" : string.Empty,
+                            ", TResult> ",
                             parameterNames[i++]);
                 }
 
@@ -437,8 +444,8 @@ namespace Corvus.Text.Json.CodeGeneration
                         "Matcher<",
                         typeDeclaration.FullyQualifiedDotnetTypeName(),
                         forMutable ? ".Mutable" : "",
-                        includeContext ? ", TIn" : string.Empty,
-                        ", TOut> defaultMatch)")
+                        includeContext ? ", TContext" : string.Empty,
+                        ", TResult> defaultMatch)")
                     .PopIndent()
                     .AppendLineIndent("{")
                     .PushIndent();
@@ -457,7 +464,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendLineIndent("if (", matchTypeName, ".", generator.JsonSchemaClassName(), ".Evaluate(_parent, _idx))")
                         .AppendLineIndent("{")
                         .PushIndent()
-                            .AppendLineIndent("return ", parameterNames[i], "(", matchTypeName, ".From(this));")
+                            .AppendLineIndent("return ", parameterNames[i], "(", matchTypeName, ".From(this)", includeContext ? ", context" : string.Empty, ");")
                         .PopIndent()
                         .AppendLineIndent("}");
                     i++;
@@ -493,11 +500,11 @@ namespace Corvus.Text.Json.CodeGeneration
                 if (includeContext)
                 {
                     generator
-                        .AppendLineIndent("/// <typeparam name=\"TIn\">The immutable context to pass in to the match function.</typeparam>");
+                        .AppendLineIndent("/// <typeparam name=\"TContext\">The immutable context to pass in to the match function.</typeparam>");
                 }
 
                 generator
-                    .AppendLineIndent("/// <typeparam name=\"TOut\">The result of calling the match function.</typeparam>");
+                    .AppendLineIndent("/// <typeparam name=\"TResult\">The result of calling the match function.</typeparam>");
 
                 if (includeContext)
                 {
@@ -542,14 +549,14 @@ namespace Corvus.Text.Json.CodeGeneration
                 generator
                     .AppendLineIndent("/// <param name=\"defaultMatch\">Match any other value.</param>")
                     .AppendLineIndent("/// <returns>An instance of the value returned by the match function.</returns>")
-                    .AppendLineIndent("public TOut Match<", includeContext ? "TIn, " : string.Empty, "TOut>(")
+                    .AppendLineIndent("public TResult Match<", includeContext ? "TContext, " : string.Empty, "TResult>(")
                     .PushMemberScope(scopeName, ScopeType.Method)
                     .PushIndent();
 
                 if (includeContext)
                 {
                     generator
-                        .AppendIndent("in TIn context");
+                        .AppendIndent("in TContext context");
                 }
 
                 for (int i = 0; i < count; ++i)
@@ -568,8 +575,8 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendIndent(
                             "Func<",
-                            includeContext ? "TIn, " : string.Empty,
-                            "TOut> ",
+                            includeContext ? "TContext, " : string.Empty,
+                            "TResult> ",
                             parameterNames[i]);
                 }
 
@@ -577,8 +584,8 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLine(",")
                     .AppendLineIndent(
                         "Func<",
-                        includeContext ? "TIn, " : string.Empty,
-                        "TOut> defaultMatch)")
+                        includeContext ? "TContext, " : string.Empty,
+                        "TResult> defaultMatch)")
                     .PopIndent()
                     .AppendLineIndent("{")
                     .PushIndent();
@@ -669,11 +676,11 @@ namespace Corvus.Text.Json.CodeGeneration
                 if (includeContext)
                 {
                     generator
-                        .AppendLineIndent("/// <typeparam name=\"TIn\">The immutable context to pass in to the match function.</typeparam>");
+                        .AppendLineIndent("/// <typeparam name=\"TContext\">The immutable context to pass in to the match function.</typeparam>");
                 }
 
                 generator
-                    .AppendLineIndent("/// <typeparam name=\"TOut\">The result of calling the match function.</typeparam>");
+                    .AppendLineIndent("/// <typeparam name=\"TResult\">The result of calling the match function.</typeparam>");
 
                 if (includeContext)
                 {
@@ -719,14 +726,14 @@ namespace Corvus.Text.Json.CodeGeneration
 
                 generator
                     .AppendLineIndent("/// <returns>An instance of the value returned by the match function.</returns>")
-                    .AppendLineIndent("public TOut Match<", includeContext ? "TIn, " : string.Empty, "TOut>(")
+                    .AppendLineIndent("public TResult Match<", includeContext ? "TContext, " : string.Empty, "TResult>(")
                     .PushMemberScope(scopeName, ScopeType.Method)
                     .PushIndent();
 
                 if (includeContext)
                 {
                     generator
-                        .AppendIndent("in TIn context");
+                        .AppendIndent("in TContext context");
                 }
 
                 if (thenDeclaration is SingleSubschemaKeywordTypeDeclaration thenSubschema2 &&
@@ -742,8 +749,8 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendIndent(
                             "Matcher<",
                             thenSubschema2.ReducedType.FullyQualifiedDotnetTypeName(),
-                            includeContext ? ", TIn" : string.Empty,
-                            ", TOut> ",
+                            includeContext ? ", TContext" : string.Empty,
+                            ", TResult> ",
                             thenMatchParamName2);
                 }
 
@@ -760,8 +767,8 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendIndent(
                             "Matcher<",
                             elseSubschema2.ReducedType.FullyQualifiedDotnetTypeName(),
-                            includeContext ? ", TIn" : string.Empty,
-                            ", TOut> ",
+                            includeContext ? ", TContext" : string.Empty,
+                            ", TResult> ",
                             elseMatchParamName2);
                 }
 
@@ -772,8 +779,8 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendIndent(
                             "Matcher<",
                             typeDeclaration.DotnetTypeName(),
-                            includeContext ? ", TIn" : string.Empty,
-                            ", TOut> defaultMatch");
+                            includeContext ? ", TContext" : string.Empty,
+                            ", TResult> defaultMatch");
                 }
 
                 generator

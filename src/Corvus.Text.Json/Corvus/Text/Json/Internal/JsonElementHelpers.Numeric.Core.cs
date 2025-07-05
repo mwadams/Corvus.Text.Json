@@ -4,7 +4,13 @@
 using System.Buffers.Text;
 using System.Diagnostics;
 
+#if CORVUS_TEXT_JSON_CODEGENERATION
+using Corvus.Text.Json.Internal;
+
+namespace Corvus.Text.Json.CodeGeneration.Internal
+#else
 namespace Corvus.Text.Json.Internal
+#endif
 {
     /// <summary>
     /// Extension methods for <see cref="IJsonElement"/>.

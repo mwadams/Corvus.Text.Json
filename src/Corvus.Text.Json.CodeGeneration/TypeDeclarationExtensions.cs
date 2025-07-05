@@ -256,6 +256,19 @@ public static class TypeDeclarationExtensions
     }
 
     /// <summary>
+    /// Gets a value which determines if this type is the built-in JsonNotAny type
+    /// type.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration to test.</param>
+    /// <returns><see langword="true"/> if the type declaration is the <see cref="WellKnownTypeDeclarations.JsonAny"/> type.</returns>
+    /// <remarks>This uses the <see cref="WellKnownTypeDeclarations.JsonAny"/> schema location IRI to identify the type. Contrast
+    /// with <see cref="IsCorvusJsonExtendedJsonAny"/> which uses the type name to distinguish the type.</remarks>
+    public static bool IsBuiltInJsonNotAnyType(this TypeDeclaration typeDeclaration)
+    {
+        return typeDeclaration.LocatedSchema.Location == WellKnownTypeDeclarations.JsonNotAny.LocatedSchema.Location;
+    }
+
+    /// <summary>
     /// Determines if the given name collides with a property name in the parent.
     /// </summary>
     /// <param name="typeDeclaration">The type declaration to test.</param>
@@ -669,7 +682,7 @@ public static class TypeDeclarationExtensions
 
     public static string GetIMutableJsonElementInterface(this TypeDeclaration typeDeclaration)
     {
-        return $"IMutableJsonElement<{typeDeclaration.DotnetTypeName()}>";
+        return "IMutableJsonElement<Mutable>";
     }
 
     /// <summary>

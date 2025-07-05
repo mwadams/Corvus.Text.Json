@@ -70,6 +70,7 @@
     <Compile Include="JsonElement.MutableWriteTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderDynamicTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderTests.cs" />
+    <Compile Include="JsonSchemaCodeGeneratorTests.cs" />
     <Compile Include="JsonRegexValidatorTests.cs" />
     <Compile Include="JsonSchemaContextTests.cs" />
     <Compile Include="JsonSchemaMatchingNumberTests.cs" />

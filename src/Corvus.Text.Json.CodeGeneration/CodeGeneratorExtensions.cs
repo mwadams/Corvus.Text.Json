@@ -309,7 +309,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 generator
                     .AppendSeparatorLine()
                     .AppendDocumentation(parent)
-                    .BeginReadonlyPartialStructDeclaration(
+                    .BeginPartialStructDeclaration(
                         parent.DotnetAccessibility(),
                         parent.DotnetTypeName());
             }
@@ -434,12 +434,14 @@ namespace Corvus.Text.Json.CodeGeneration
         /// <param name="accessibility">The accessibility for the generated type.</param>
         /// <param name="dotnetTypeName">The .NET type name for the partial struct.</param>
         /// <param name="interfaces">Interfaces to implement.</param>
+        /// <param name="isReadOnly">Indicates whether to emit a readonly struct (defaults to 'true')</param>
         /// <returns>A reference to the generator having completed the operation.</returns>
-        public static CodeGenerator BeginReadonlyPartialStructDeclaration(
+        public static CodeGenerator BeginPartialStructDeclaration(
             this CodeGenerator generator,
             GeneratedTypeAccessibility accessibility,
             string dotnetTypeName,
-            ConditionalCodeSpecification[]? interfaces = null)
+            ConditionalCodeSpecification[]? interfaces = null,
+            bool isReadOnly = true)
         {
             if (generator.IsCancellationRequested)
             {
@@ -455,7 +457,8 @@ namespace Corvus.Text.Json.CodeGeneration
 
             generator.ReserveNameIfNotReserved(dotnetTypeName);
             generator
-                .AppendIndent(accessibilityString, " readonly partial struct ")
+                .AppendIndent(accessibilityString)
+                .Append(isReadOnly ? " readonly partial struct " : " partial struct ")
                 .AppendLine(dotnetTypeName);
 
             if (interfaces is ConditionalCodeSpecification[] conditionalSpecifications)
@@ -522,8 +525,9 @@ namespace Corvus.Text.Json.CodeGeneration
 
             generator.ReserveNameIfNotReserved(dotnetTypeName);
             generator
-                .AppendIndent(isReadOnly ? " readonly" : "")
-                .AppendIndent(accessibilityString, " ref struct ")
+                .AppendIndent(accessibilityString)
+                .Append(isReadOnly ? " readonly" : "")
+                .Append(" ref struct ")
                 .AppendLine(dotnetTypeName);
 
             return generator
@@ -874,12 +878,12 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendSeparatorLine()
                 .AppendLineIndent("/// <summary>")
                 .AppendIndent("/// Initializes a new instance of the ")
-                .AppendTypeAsSeeCref(typeDeclaration.DotnetTypeName())
+                .AppendTypeAsSeeCref(forMutable ? "Mutable" : typeDeclaration.DotnetTypeName())
                 .AppendLine(" struct.")
                 .AppendLineIndent("/// </summary>")
                 .AppendLineIndent("/// <param name=\"value\">The value from which to construct the instance.</param>")
                 .AppendIndent("internal ")
-                .Append(typeDeclaration.DotnetTypeName())
+                .Append(forMutable ? "Mutable" : typeDeclaration.DotnetTypeName())
                 .AppendLine("(IJsonDocument parent, int idx)")
                 .AppendLineIndent("{")
                 .PushIndent();
@@ -1083,10 +1087,10 @@ namespace Corvus.Text.Json.CodeGeneration
                     /// Gets an instance of the JSON value from another element.
                     /// </summary>
                     /// <param name="value">The <see cref="IJsonElement{T}"/> value from which to instantiate the instance.</param>
-                    /// <returns>An instance of this type, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
+                    /// <returns>An instance of this type, initialized from the JSON element.</returns>                
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     """)
-                .AppendIndent("public static ", typeDeclaration.DotnetTypeName(), " From<T>(in T instance)")
+                .AppendLineIndent("public static ", forMutable ? "Mutable" : typeDeclaration.DotnetTypeName(), " From<T>(in T instance)")
                 .PushIndent()
                     .AppendLineIndent(forMutable ? "where T : struct, IMutableJsonElement<T>" : "where T : struct, IJsonElement<T>")
                 .PopIndent()
@@ -1114,16 +1118,19 @@ namespace Corvus.Text.Json.CodeGeneration
 
             generator
                 .ReserveName("CreateInstance")
-                .AppendSeparatorLine();
+                .AppendSeparatorLine()
+                .AppendLine("#if NET");
 
             if (forMutable)
             {
                 return generator
-                    .AppendIndent("public static Mutbable IJsonElement<Mutable>(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);");
+                    .AppendLineIndent("static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);")
+                    .AppendLine("#endif");
             }
 
             return generator
-                .AppendIndent("public static ", typeDeclaration.DotnetTypeName(), " IJsonElement<", typeDeclaration.DotnetTypeName(), ">(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);");
+                .AppendLineIndent("static ", typeDeclaration.DotnetTypeName(), " IJsonElement<", typeDeclaration.DotnetTypeName(), ">.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);")
+                .AppendLine("#endif");
         }
 
         /// <summary>
@@ -1133,7 +1140,7 @@ namespace Corvus.Text.Json.CodeGeneration
         /// <param name="generator">The code generator.</param>
         /// <param name="typeDeclaration">The type declaration to which to convert.</param>
         /// <returns>A reference to the generator having completed the operation.</returns>
-        public static CodeGenerator AppendJsonElementConversionOperator(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        public static CodeGenerator AppendJsonElementConversionOperator(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable = false)
         {
             if (generator.IsCancellationRequested)
             {
@@ -1151,7 +1158,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     """)
-                .AppendIndent("public static implicit operator JsonElement(", typeDeclaration.DotnetTypeName(), " instance)")
+                .AppendLineIndent("public static implicit operator JsonElement(", forMutable ? "Mutable" : typeDeclaration.DotnetTypeName(), " instance)")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("return JsonElement.From(instance);")
@@ -1185,7 +1192,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     /// <returns>A mutable instance.</returns>
                     /// <exception cref="FormatException">Thrown if the instance is not backed by a mutable document.</exception>
                     """)
-                .AppendIndent("public static explicit operator Mutable(", typeDeclaration.DotnetTypeName(), " instance)")
+                .AppendLineIndent("public static explicit operator Mutable(", typeDeclaration.DotnetTypeName(), " instance)")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("if (instance._parent is not IMutableJsonDocument doc)")
@@ -1209,7 +1216,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     """)
-                .AppendIndent("public static implicit operator ", typeDeclaration.DotnetTypeName(), "(Mutable instance)")
+                .AppendLineIndent("public static implicit operator ", typeDeclaration.DotnetTypeName(), "(Mutable instance)")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("return new(instance._parent, instance._idx);")
@@ -1257,9 +1264,9 @@ namespace Corvus.Text.Json.CodeGeneration
                     /// <param name="other">The other item with which to compare.</param>
                     /// <returns><see langword="true"/> if the values were equal.</returns>
                     """)
-                .AppendIndent("public bool Equals<T>(in T other)")
+                .AppendLineIndent("public bool Equals<T>(in T other)")
                 .PushIndent()
-                    .AppendIndent("where T : struct, IJsonElement")
+                    .AppendLineIndent("where T : struct, IJsonElement")
                 .PopIndent()
                 .AppendLineIndent("{")
                 .PushIndent();
@@ -1397,6 +1404,7 @@ namespace Corvus.Text.Json.CodeGeneration
         {
             return generator
                 .ReserveName("DebuggerDisplay")
+                .AppendSeparatorLine()
                 .AppendLineIndent("[DebuggerBrowsable(DebuggerBrowsableState.Never)]")
                 .AppendLineIndent("private string DebuggerDisplay => $\"", typeDeclaration.DotnetTypeName(), forMutable ? ".Mutable" : "",  ": ValueKind = {ValueKind} : \\\"{ToString()}\\\"\";");
         }
@@ -1413,6 +1421,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 .ReserveNameIfNotReserved("ParentDocumentIndex")
                 .ReserveNameIfNotReserved("TokenType")
                 .ReserveNameIfNotReserved("ValueKind")
+                .AppendSeparatorLine()
                 .AppendBlockIndent(
                 """
                 [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1452,8 +1461,15 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendSeparatorLine()
                 .AppendBlockIndent(
                 $$"""
+                /// <summary>
+                /// Creates and initializes a mutable document from a value.
+                /// </summary>
+                /// <param name="workspace">The JSON workspace.</param>
+                /// <param name="value">The value with which to initialize the builder.</param>
+                /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+                /// <returns>An instance of a mutable document initialized with the given value.</returns>
                 public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-                    JsonWorkspace workspace, in Builder.Source value, int initialCapacity = {{initialCapacity}})
+                    JsonWorkspace workspace, in {{generator.SourceClassName()}} value, int initialCapacity = {{initialCapacity}})
                 {
                     // Create the document builder without a MetadataDb
                     JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -1465,6 +1481,11 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
                 """)
                 .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Creates and initializes a mutable document from this instance.")
+                .AppendLineIndent("/// </summary>")
+                .AppendLineIndent("/// <param name=\"workspace\">The JSON workspace.</param>")
+                .AppendLineIndent("/// <returns>An instance of a mutable document initialized with this instance.</returns>")
                 .AppendLineIndent("public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)")
                 .AppendLineIndent("{")
                 .PushIndent()

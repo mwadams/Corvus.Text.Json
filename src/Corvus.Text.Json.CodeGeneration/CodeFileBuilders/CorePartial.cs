@@ -36,6 +36,7 @@ public sealed class CorePartial : ICodeFileBuilder
                     new("global::System.Diagnostics", addExplicitUsings),
                     new("global::System.Diagnostics.CodeAnalysis", addExplicitUsings),
                     "System.Buffers",
+                    "System.Buffers.Text",
                     "System.Runtime.CompilerServices",
                     "Corvus.Text.Json",
                     "Corvus.Text.Json.Internal")
@@ -43,7 +44,7 @@ public sealed class CorePartial : ICodeFileBuilder
                 .BeginTypeDeclarationNesting(typeDeclaration)
                     .AppendDocumentation(typeDeclaration)
                     .AppendDebuggerDisplay()
-                    .BeginReadonlyPartialStructDeclaration(
+                    .BeginPartialStructDeclaration(
                         typeDeclaration.DotnetAccessibility(),
                         typeDeclaration.DotnetTypeName(),
                         interfaces: [
@@ -63,7 +64,7 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendBinaryOperator(typeDeclaration, "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")
                         .AppendBinaryOperator(typeDeclaration, "bool", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
                         .AppendBinaryOperator(typeDeclaration, "JsonElement", "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")
-                        .AppendBinaryOperator(typeDeclaration, "JsonElement", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
+                        .AppendBinaryOperator(typeDeclaration, "JsonElement", "bool", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
                         .AppendJsonElementConversionOperator(typeDeclaration)
                         .AppendFromFactoryMethod(typeDeclaration)
                         .AppendEqualsOverloads(typeDeclaration)

@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
+using Corvus.Text.Json.CodeGeneration.Internal;
 using Corvus.Text.Json.Internal;
 using Microsoft.CodeAnalysis.CSharp;
 

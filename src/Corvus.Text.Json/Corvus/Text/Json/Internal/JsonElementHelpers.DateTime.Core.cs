@@ -2,7 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
+#if CORVUS_TEXT_JSON_CODEGENERATION
+namespace Corvus.Text.Json.CodeGeneration.Internal;
+#else
 namespace Corvus.Text.Json.Internal;
+#endif
 
 public static partial class JsonElementHelpers
 {

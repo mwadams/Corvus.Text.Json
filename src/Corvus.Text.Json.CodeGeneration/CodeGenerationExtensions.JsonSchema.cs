@@ -298,6 +298,18 @@ namespace Corvus.Text.Json.CodeGeneration
         }
 
         /// <summary>
+        /// Gets the JsonSchema class name for a particular type name.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="fullyQualifiedTypeName">The fully qualified type name.</param>
+        /// <returns>The class name.</returns>
+        public static string JsonSchemaClassName(this CodeGenerator generator, string fullyQualifiedTypeName)
+        {
+            return generator.GetTypeNameInScope(JsonSchemaClassNameKey, rootScope: fullyQualifiedTypeName);
+        }
+
+
+        /// <summary>
         /// Gets the Builder class name for a particular type name.
         /// </summary>
         /// <param name="generator">The code generator.</param>
@@ -444,11 +456,16 @@ namespace Corvus.Text.Json.CodeGeneration
                 .ReserveName("EvaluateSchema")
                 .AppendSeparatorLine()
                 .AppendBlockIndent(
-                    """
+                    $$"""
+                    /// <summary>
+                    /// Evaluate this instance against the JSON Schema for this type.
+                    /// </summary>
+                    /// <params name="resultsCollector">The (optional) results collector.</params>
+                    /// <returns><see langword="true" /> if the instance evaluates against the schema.</returns>
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
                     {
-                        return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
+                        return {{generator.JsonSchemaClassName()}}.Evaluate(_parent, _idx, resultsCollector);
                     }
                     """);
         }

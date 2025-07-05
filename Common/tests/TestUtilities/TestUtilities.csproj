@@ -75,6 +75,8 @@
 
   <ItemGroup>
     <!--<Compile Include="System\AdminHelpers.cs" />-->
+    <Compile Include="FakeWebDocumentResolver.cs" />
+    <Compile Include="Metaschema.cs" />
     <Compile Include="System\AssertExtensions.cs" />
     <Compile Include="System\IO\StreamExtensions.cs" />
     <Compile Include="System\IO\PathGenerator.cs" />
@@ -108,6 +110,8 @@
     <Compile Include="RandomTestCollectionOrderer.cs" />
 
     <Compile Include="TestEventListener.cs" />
+
+    <Compile Include="TestJsonSchemaCodeGenerator.cs" />
   </ItemGroup>
 
  
@@ -147,6 +151,16 @@
   </ItemGroup>-->
 
   <ItemGroup>
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.201909" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.4" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.6" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.CorvusVocabulary" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.3.13" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.3.13" />
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25225.104" />
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25225.104" />
     <PackageReference Include="xunit" Version="2.9.3" ExcludeAssets="build" />
@@ -154,6 +168,76 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <PackageReference Include="System.Memory" Version="4.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Corvus.Text.Json.CodeGeneration\Corvus.Text.Json.CodeGeneration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="metaschema\draft2019-09\meta\applicator.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2019-09\meta\content.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2019-09\meta\core.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2019-09\meta\format.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2019-09\meta\hyper-schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2019-09\meta\meta-data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2019-09\meta\validation.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2019-09\schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\applicator.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\content.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\core.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\format-annotation.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\format-assertion.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\hyper-schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\meta-data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\unevaluated.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\meta\validation.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft2020-12\schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft4\schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft6\schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="metaschema\draft7\schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

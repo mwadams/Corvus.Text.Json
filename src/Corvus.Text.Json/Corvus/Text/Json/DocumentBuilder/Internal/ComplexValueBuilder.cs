@@ -194,6 +194,19 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>
+        /// Adds a property with a string value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The property value as a UTF-8 span.</param>
+        public void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool escapeValue, bool valueRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            AddStringValue(JsonTokenType.String, value, escapeValue, valueRequiresUnescaping);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        /// <summary>
         /// Adds a property with a formatted number value to the current object.
         /// </summary>
         /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
@@ -211,9 +224,61 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a formatted number value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="value">The number value as a UTF-8 byte span.</param>
+        public void AddPropertyFormattedNumber(string propertyName, ReadOnlySpan<byte> value)
+        {
+            AddPropertyFormattedNumber(propertyName.AsSpan(), value);
+        }
+
+        /// <summary>
+        /// Adds a property with a formatted number value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-16 span.</param>
+        /// <param name="value">The number value as a UTF-8 byte span.</param>
+        public void AddPropertyFormattedNumber(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
+            _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: value.IndexOfAny((byte)'e', (byte)'E') >= 0);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        /// <summary>
+        /// Adds a property with a raw string value.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="value">The value as a UTF-8 byte span.</param>
         public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
+            AddStringValue(JsonTokenType.String, value, escape: false, ifNotEscapeRequiresUenscaping: valueRequiresUnescaping);
+            _memberCount += 1;
+            _rowCount += 2;
+        }
+
+        /// <summary>
+        /// Adds a property with a raw string value.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="value">The value as a UTF-8 byte span.</param>
+        public void AddPropertyRawString(string propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
+        {
+            AddPropertyRawString(propertyName.AsSpan(), value, valueRequiresUnescaping);
+        }
+
+
+        /// <summary>
+        /// Adds a property with a raw string value.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="value">The value as a UTF-8 byte span.</param>
+        public void AddPropertyRawString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
+        {
+            AddStringValue(JsonTokenType.PropertyName, propertyName);
             AddStringValue(JsonTokenType.String, value, escape: false, ifNotEscapeRequiresUenscaping: valueRequiresUnescaping);
             _memberCount += 1;
             _rowCount += 2;
@@ -842,6 +907,361 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 #endif
+
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<long> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<int> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<short> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<sbyte> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<ulong> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<uint> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<ushort> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<byte> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<decimal> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<double> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<float> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+#if NET
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<Int128> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<UInt128> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(string name, ReadOnlySpan<Half> array)
+        {
+            AddPropertyArrayValue(name.AsSpan(), array);
+        }
+#endif
+
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<long> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<int> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<short> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<sbyte> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<ulong> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<uint> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<ushort> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<byte> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<decimal> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<double> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<float> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+#if NET
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<Int128> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<UInt128> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+
+        [CLSCompliant(false)]
+        public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<Half> array)
+        {
+            int currentMemberCount = _memberCount;
+            int currentRowCount = _rowCount;
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, name);
+            StartArray();
+
+            foreach (var item in array)
+            {
+                AddItem(item);
+            }
+
+            EndArray();
+            _memberCount = currentMemberCount + 1;
+            _rowCount = currentRowCount + _rowCount + 1;
+        }
+#endif
+
 
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<long> array, bool escapeName, bool nameRequiresUnescaping)
         {

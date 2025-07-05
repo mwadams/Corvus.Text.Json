@@ -1,11 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
+using static Corvus.Text.Json.CodeGeneration.CodeGeneratorExtensions;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
@@ -51,9 +53,17 @@ namespace Corvus.Text.Json.CodeGeneration
                 .BeginRefStruct(GeneratedTypeAccessibility.Public, generator.BuilderClassName(), isReadOnly: false)
                     .ReserveName("Build")
                     .ReserveName("_builder")
-                    .AppendLineIndent("public delegate void Build(ref Builder builder);")
+                    .AppendLineIndent("public delegate void Build(ref ", generator.BuilderClassName(), " builder);")
                     .AppendSeparatorLine()
-                    .AppendLineIndent("private ComplexValueBuilder _builder;");
+                    .AppendLineIndent("private ComplexValueBuilder _builder;")
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        $$"""
+                        internal {{generator.BuilderClassName()}}(ComplexValueBuilder builder)
+                        {
+                            _builder = builder;
+                        }
+                        """);
 
             bool isArray = (core & CoreTypes.Array) != 0;
             bool isObject = (core & CoreTypes.Object) != 0;
@@ -194,43 +204,63 @@ namespace Corvus.Text.Json.CodeGeneration
 
             HashSet<string> seenTypes = [];
 
+            bool seenFallback = false;
+
             if (typeDeclaration.FallbackObjectPropertyType() is FallbackObjectPropertyType fallbackType)
             {
-                string fqdtn = fallbackType.ReducedType.FullyQualifiedDotnetTypeName();
-                if (seenTypes.Add(fqdtn))
+                seenFallback = true;
+                if (!fallbackType.ReducedType.IsBuiltInJsonNotAnyType())
                 {
-                    AppendAddPropertyMethods(generator, typeDeclaration, fqdtn, isAlsoArray);
+                    string fqdtn = fallbackType.ReducedType.FullyQualifiedDotnetTypeName();
+                    if (seenTypes.Add(fqdtn))
+                    {
+                        AppendAddPropertyMethods(generator, fqdtn, isAlsoArray);
+                    }
                 }
             }
 
             if (typeDeclaration.LocalEvaluatedPropertyType() is FallbackObjectPropertyType localFallbackType)
             {
-                string fqdtn = localFallbackType.ReducedType.FullyQualifiedDotnetTypeName();
-                if (seenTypes.Add(fqdtn))
+                seenFallback = true;
+
+                if (!localFallbackType.ReducedType.IsBuiltInJsonNotAnyType())
                 {
-                    AppendAddPropertyMethods(generator, typeDeclaration, fqdtn, isAlsoArray);
+                    string fqdtn = localFallbackType.ReducedType.FullyQualifiedDotnetTypeName();
+                    if (seenTypes.Add(fqdtn))
+                    {
+                        AppendAddPropertyMethods(generator, fqdtn, isAlsoArray);
+                    }
                 }
             }
 
             if (typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is FallbackObjectPropertyType localAndAppliedFallbackType)
             {
-                string fqdtn = localAndAppliedFallbackType.ReducedType.FullyQualifiedDotnetTypeName();
-                if (seenTypes.Add(fqdtn))
+                seenFallback = true;
+                if (!localAndAppliedFallbackType.ReducedType.IsBuiltInJsonNotAnyType())
                 {
-                    AppendAddPropertyMethods(generator, typeDeclaration, fqdtn, isAlsoArray);
+                    string fqdtn = localAndAppliedFallbackType.ReducedType.FullyQualifiedDotnetTypeName();
+                    if (seenTypes.Add(fqdtn))
+                    {
+                        AppendAddPropertyMethods(generator, fqdtn, isAlsoArray);
+                    }
                 }
+            }
+
+            if (!seenFallback)
+            {
+                AppendAddPropertyMethods(generator, "JsonElement", isAlsoArray);
             }
 
             return generator;
 
-            static void AppendAddPropertyMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string propertyTypeName, bool isAlsoArray)
+            static void AppendAddPropertyMethods(CodeGenerator generator, string propertyTypeName, bool isAlsoArray)
             {
-                AppendAddPropertyMethod(generator, typeDeclaration, propertyTypeName, isAlsoArray, "ReadOnlySpan<byte>");
-                AppendAddPropertyMethod(generator, typeDeclaration, propertyTypeName, isAlsoArray, "ReadOnlySpan<char>");
-                AppendAddPropertyMethod(generator, typeDeclaration, propertyTypeName, isAlsoArray, "string");
+                AppendAddPropertyMethod(generator, propertyTypeName, isAlsoArray, "ReadOnlySpan<byte>");
+                AppendAddPropertyMethod(generator, propertyTypeName, isAlsoArray, "ReadOnlySpan<char>");
+                AppendAddPropertyMethod(generator, propertyTypeName, isAlsoArray, "string");
             }
 
-            static void AppendAddPropertyMethod(CodeGenerator generator, TypeDeclaration typeDeclaration, string propertyTypeName, bool isAlsoArray, string nameType)
+            static void AppendAddPropertyMethod(CodeGenerator generator, string propertyTypeName, bool isAlsoArray, string nameType)
             {
                 generator
                     .AppendSeparatorLine()
@@ -293,9 +323,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     "internal static",
                     "void",
                     "Create",
-                    staticMethodParameters)
-                .AppendLineIndent("{")
-                .PushIndent();
+                    staticMethodParameters);
 
             if (isAlsoArray)
             {
@@ -321,8 +349,6 @@ namespace Corvus.Text.Json.CodeGeneration
                     "Create",
                     nonStaticMethodParameters
                     )
-                .AppendLineIndent("{")
-                .PushIndent()
                     .AppendCallStaticCreateWithBuilder(nonStaticMethodParameters)
                 .PopIndent()
                 .AppendLineIndent("}");
@@ -346,11 +372,12 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
 
                 generator
-                    .Append(",")
+                    .Append(", ")
                     .Append(parameters[i].GetName(generator));
             }
 
-            return generator;
+            return generator
+                .AppendLine(");");
         }
 
 
@@ -399,13 +426,13 @@ namespace Corvus.Text.Json.CodeGeneration
                 generator
                     .AppendLineIndent(
                         builderName,
-                        ".Add(",
+                        ".AddProperty(",
                         propertyNamesClass,
                         ".",
                         property.DotnetPropertyName(),
                         ", ",
                         property.ReducedPropertyType.FullyQualifiedDotnetTypeName(),
-                        ".ConstInstance.AsAny);");
+                        ".ConstInstance);");
             }
             else
             {
@@ -413,14 +440,14 @@ namespace Corvus.Text.Json.CodeGeneration
 
                 generator
                     .AppendLineIndent(
-                        builderName,
-                        ".Add(",
+                        parameterName,
+                        ".AddAsProperty(",
                         propertyNamesClass,
                         ".",
                         property.DotnetPropertyName(),
-                        ", ",
-                        parameterName,
-                        ".AsAny);");
+                        ", ref ",
+                        builderName,
+                        ", escapeName: false);");
             }
 
             return parameterIndex;
@@ -433,28 +460,23 @@ namespace Corvus.Text.Json.CodeGeneration
                 return parameterIndex;
             }
 
-            string propertyNamesClass = generator.JsonPropertyNamesClassName();
+            string propertyNamesClass = generator.JsonPropertyNamesEscapedClassName();
             string parameterName = parameters[parameterIndex++].GetName(generator);
 
             generator
-                .AppendSeparatorLine()
-                .AppendLineIndent("if (", parameterName, " is not null)")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .AppendLineIndent(
-                        builderName,
-                        ".Add(",
-                        propertyNamesClass,
-                        ".",
-                        property.DotnetPropertyName(),
-                        ", ",
-                        parameterName,
-                        ".Value.AsAny);")
-                .PopIndent()
-                .AppendLineIndent("}");
+                .AppendLineIndent(
+                    parameterName,
+                    ".AddAsProperty(",
+                    propertyNamesClass,
+                    ".",
+                    property.DotnetPropertyName(),
+                    ", ref ",
+                    builderName,
+                    ", escapeName: false);");
 
             return parameterIndex;
         }
+
 
         private static MethodParameter[] BuildMethodParameters(CodeGenerator generator, TypeDeclaration typeDeclaration)
         {
@@ -470,18 +492,23 @@ namespace Corvus.Text.Json.CodeGeneration
                             .Where(p => p.RequiredOrOptional != RequiredOrOptional.Optional &&
                                    p.ReducedPropertyType.SingleConstantValue().ValueKind == JsonValueKind.Undefined)
                             .OrderBy(p => p.JsonPropertyName)
-                            .Select(p => new MethodParameter("in", p.ReducedPropertyType.FullyQualifiedDotnetTypeName(), generator.GetUniqueParameterNameInScope(p.JsonPropertyName, childScope: "Create"))),
+                            .Select(p => new MethodParameter("in", GetSource(generator, p.ReducedPropertyType.FullyQualifiedDotnetTypeName()), generator.GetUniqueParameterNameInScope(p.JsonPropertyName, childScope: "Create"))),
                     .. typeDeclaration.PropertyDeclarations
                             .Where(p => p.RequiredOrOptional == RequiredOrOptional.Optional)
                             .OrderBy(p => p.JsonPropertyName)
                             .Select(p =>
                                 new MethodParameter(
                                     "in",
-                                    p.ReducedPropertyType.FullyQualifiedDotnetTypeName(),
+                                    GetSource(generator, p.ReducedPropertyType.FullyQualifiedDotnetTypeName()),
                                     generator.GetUniqueParameterNameInScope(p.JsonPropertyName, childScope: "Create"),
-                                    typeIsNullable: true,
-                                    defaultValue: "null")),
+                                    typeIsNullable: false,
+                                    defaultValue: "default")),
                 ];
+
+            static string GetSource(CodeGenerator generator, string fqdtn)
+            {
+                return fqdtn + "." + generator.SourceClassName(fqdtn);
+            }
         }
 
         private static PropertyDeclaration[] BuildOrderedProperties(TypeDeclaration typeDeclaration)
@@ -574,8 +601,6 @@ namespace Corvus.Text.Json.CodeGeneration
         {
             if (typeDeclaration.IsFixedSizeNumericArray())
             {
-                Debug.Assert(typeDeclaration.PreferredDotnetNumericTypeName() is not null);
-
                 NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
 
                 if (numericTypeName.IsNetOnly)
@@ -790,6 +815,7 @@ namespace Corvus.Text.Json.CodeGeneration
             if ((core & CoreTypes.String) != 0)
             {
                 generator
+                    .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static ", generator.SourceClassName(), " RawString(ReadOnlySpan<byte> value, bool requiresUnescaping) => new(value, requiresUnescaping);");
             }
@@ -797,6 +823,7 @@ namespace Corvus.Text.Json.CodeGeneration
             if ((core & CoreTypes.Number) != 0)
             {
                 generator
+                    .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static ", generator.SourceClassName(), " FormattedNumber(ReadOnlySpan<byte> value) => new(value, Kind.FormattedNumber);");
             }
@@ -804,6 +831,7 @@ namespace Corvus.Text.Json.CodeGeneration
             if ((core & CoreTypes.Null) != 0)
             {
                 generator
+                    .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static ", generator.SourceClassName(), " Null() => new(Kind.Null);");
             }
@@ -918,7 +946,7 @@ namespace Corvus.Text.Json.CodeGeneration
             if ((core & (CoreTypes.Number | CoreTypes.Integer)) != 0)
             {
                 if (typeDeclaration.Format() is not string format ||
-                    !FormatHandlerRegistry.Instance.StringFormatHandlers.AppendFormatSourceConversionOperators(generator, typeDeclaration, format, seenConversionOperators))
+                    !FormatHandlerRegistry.Instance.NumberFormatHandlers.AppendFormatSourceConversionOperators(generator, typeDeclaration, format, seenConversionOperators))
                 {
                     // There were no format-specific constructors, so we fall back to a default of double for number,
                     // and long for integer.
@@ -1039,7 +1067,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("private Source(ReadOnlySpan<byte> value)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("_utf8String = value;")
+                        .AppendLineIndent("_utf8Backing = value;")
                         .AppendLineIndent("_kind = Kind.Utf8String;")
                     .PopIndent()
                     .AppendLineIndent("}");
@@ -1049,7 +1077,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("private Source(ReadOnlySpan<char> value)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("_utf16String = value;")
+                        .AppendLineIndent("_utf16Backing = value;")
                         .AppendLineIndent("_kind = Kind.Utf16String;")
                     .PopIndent()
                     .AppendLineIndent("}");
@@ -1059,7 +1087,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("private Source(ReadOnlySpan<byte> value, bool requiresUnescaping)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("_utf8String = value;")
+                        .AppendLineIndent("_utf8Backing = value;")
                         .AppendLineIndent("_kind = requiresUnescaping ? Kind.RawUtf8StringRequiresUnescaping : Kind.RawUtf8StringNotRequiresUnescaping;")
                     .PopIndent()
                     .AppendLineIndent("}");
@@ -1078,7 +1106,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("{")
                     .PushIndent()
                         .AppendLineIndent("Debug.Assert(kind is Kind.FormattedNumber);")
-                        .AppendLineIndent("_utf8String = value;")
+                        .AppendLineIndent("_utf8Backing = value;")
                         .AppendLineIndent("_kind = kind;")
                     .PopIndent()
                     .AppendLineIndent("}");
@@ -1129,12 +1157,59 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
             }
 
+            HashSet<string> seenNumericArrayTypes = [];
+
+            generator
+                .AppendNumericArrayConstructors(typeDeclaration, seenNumericArrayTypes);
+
+            // This is the "has builder" case
+            if ((core & (CoreTypes.Array | CoreTypes.Object)) != 0 &&
+                !typeDeclaration.CanReduceToAnyOf() && !typeDeclaration.CanReduceToOneOf())
+            {
+                bool isArray = (core & CoreTypes.Array) != 0;
+                bool isObject = (core & CoreTypes.Object) != 0;
+
+                if (isObject)
+                {
+                    string fqdtn = typeDeclaration.FullyQualifiedDotnetTypeName();
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent(
+                            "public Source(",
+                            fqdtn,
+                            ".",
+                            isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName(),
+                            ".Build value) { _objectBuilder = value; _kind = Kind.",
+                            isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName(),
+                            "; }");
+                }
+
+                if (isArray)
+                {
+                    string fqdtn = typeDeclaration.FullyQualifiedDotnetTypeName();
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent(
+                            "public Source(",
+                            fqdtn,
+                            ".",
+                            isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName(),
+                            ".Build value) { _arrayBuilder = value; _kind = Kind.",
+                            isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName(),
+                            "; }");
+                }
+            }
+
+
             foreach (ComposedBuilder composedBuilder in builders)
             {
                 if (generator.IsCancellationRequested)
                 {
                     return generator;
                 }
+
+                generator
+                    .AppendNumericArrayConstructors(composedBuilder.TypeDeclaration, seenNumericArrayTypes);
 
                 if (composedBuilder.TypeDeclaration.Format() is string format)
                 {
@@ -1160,11 +1235,11 @@ namespace Corvus.Text.Json.CodeGeneration
                             fqdtn,
                             ".",
                             composedBuilder.IsArray ? generator.ObjectBuilderClassName(fqdtn) : generator.BuilderClassName(fqdtn),
-                            ".Build value) => { ",
+                            ".Build value) { _",
                             composedBuilder.ObjectInstanceName,
                             " = value; _kind = Kind.",
                             composedBuilder.ObjectKindName,
-                            "; };");
+                            "; }");
                 }
 
                 if (composedBuilder.ArrayInstanceName is not null && composedBuilder.ArrayKindName is not null)
@@ -1175,12 +1250,13 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendLineIndent(
                             "public Source(",
                             fqdtn,
+                            ".",
                             composedBuilder.IsObject ? generator.ArrayBuilderClassName(fqdtn) : generator.BuilderClassName(fqdtn),
-                            ".Build value) => { ",
+                            ".Build value) { _",
                             composedBuilder.ArrayInstanceName,
                             " = value; _kind = Kind.",
                             composedBuilder.ArrayKindName,
-                            "; };");
+                            "; }");
                 }
             }
 
@@ -1204,10 +1280,10 @@ namespace Corvus.Text.Json.CodeGeneration
             if ((core & CoreTypes.String) != 0)
             {
                 generator
-                .ReserveNameIfNotReserved("_utf8String")
-                .ReserveNameIfNotReserved("_utf16String")
-                    .AppendLineIndent("private readonly Utf8String _utf8String;")
-                    .AppendLineIndent("private readonly Utf16String _utf16String;");
+                .ReserveNameIfNotReserved("_utf8Backing")
+                .ReserveNameIfNotReserved("_utf16Backing")
+                    .AppendLineIndent("private readonly ReadOnlySpan<byte> _utf8Backing;")
+                    .AppendLineIndent("private readonly ReadOnlySpan<char> _utf16Backing;");
                 hasUtf8Backing = true;
             }
 
@@ -1216,8 +1292,8 @@ namespace Corvus.Text.Json.CodeGeneration
                 if (!hasUtf8Backing)
                 {
                     generator
-                        .ReserveNameIfNotReserved("_utf8String")
-                        .AppendLineIndent("private readonly Utf8String _utf8String;");
+                        .ReserveNameIfNotReserved("_utf8Backing")
+                        .AppendLineIndent("private readonly ReadOnlySpan<byte> _utf8Backing;");
                 }
 
                 if (!hasSimpleTypeBacking)
@@ -1318,6 +1394,60 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
             }
         }
+
+        private static CodeGenerator AppendNumericArrayConstructors(this CodeGenerator generator, TypeDeclaration typeDeclaration, HashSet<string> seenArrayValues)
+        {
+            NumericTypeName? arrayType = typeDeclaration.ArrayItemsType()?.ReducedType.PreferredDotnetNumericTypeName();
+
+            if (arrayType is NumericTypeName at)
+            {
+                if (at.IsNetOnly)
+                {
+                    if (seenArrayValues.Add($"[{at.Name}]"))
+                    {
+                        generator
+                            .AppendLine("#if NET")
+                            .AppendLineIndent("private ", generator.SourceClassName(),"(ReadOnlySpan<", at.Name, "> value)")
+                            .AppendLineIndent("{")
+                            .PushIndent()
+                                .AppendLineIndent("_", at.Name, "Array = value;")
+                                .AppendLineIndent("_kind = Kind.", GetNumericArrayKind(generator, at), ";")
+                            .PopIndent()
+                            .AppendLineIndent("}")
+                            .AppendLine("#endif");
+                    }
+                }
+                else
+                {
+                    if (seenArrayValues.Add($"[{at.Name}]"))
+                    {
+                        generator
+                            .AppendLineIndent("private ", generator.SourceClassName(), "(ReadOnlySpan<", at.Name, "> value)")
+                            .AppendLineIndent("{")
+                            .PushIndent()
+                                .AppendLineIndent("_", at.Name, "Array = value;")
+                                .AppendLineIndent("_kind = Kind.", GetNumericArrayKind(generator, at), ";")
+                            .PopIndent()
+                            .AppendLineIndent("}");
+                    }
+                }
+            }
+
+            return generator;
+        }
+
+        private static string GetNumericArrayKind(CodeGenerator generator, NumericTypeName at, bool reserve = false)
+        {
+            Span<char> buffer = stackalloc char[at.Name.Length + 5];
+            at.Name.AsSpan().CopyTo(buffer);
+            int written = Formatting.ToPascalCase(buffer.Slice(0, at.Name.Length));
+            "Array".AsSpan().CopyTo(buffer.Slice(written));
+            return reserve
+                ? generator.GetUniquePropertyNameInScope(buffer.Slice(0, written + 5).ToString())
+                : generator.GetPropertyNameInScope(buffer.Slice(0, written + 5).ToString());
+        }
+
+
         private static void AppendNumericArrayFactoryMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration, HashSet<string> seenArrayValues)
         {
             NumericTypeName? arrayType = typeDeclaration.ArrayItemsType()?.ReducedType.PreferredDotnetNumericTypeName();
@@ -1427,6 +1557,10 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("switch(_kind)")
                     .AppendLineIndent("{")
                     .PushIndent()
+                        .AppendLineIndent("case Kind.Unknown:")
+                        .PushIndent()
+                            .AppendLineIndent("break;")
+                        .PopIndent()
                         .AppendLineIndent("case Kind.JsonElement:")
                         .PushIndent()
                             .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _jsonElement", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
@@ -1481,7 +1615,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.RawUtf8StringRequiresUnescaping:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _utf8Backing", includeEscaping ? ", escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: true" : "escapeName: true, escapeValue: false, valueRequiresUnescaping: true", ");")
+                            .AppendLineIndent("valueBuilder.AddPropertyRawString(", nameName, ", _utf8Backing, ", includeEscaping ? "escapeName, nameRequiresUnescaping, valueRequiresUnescaping: true" : "valueRequiresUnescaping: true", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1491,7 +1625,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.RawUtf8StringNotRequiresUnescaping:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _utf8Backing", includeEscaping ? ", escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false" : "escapeName: true, escapeValue: false, valueRequiresUnescaping: false", ");")
+                            .AppendLineIndent("valueBuilder.AddPropertyRawString(", nameName, ", _utf8Backing, ", includeEscaping ? "escapeName, nameRequiresUnescaping, valueRequiresUnescaping: false" : "valueRequiresUnescaping: false", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1501,7 +1635,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.Utf8String:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _utf8Backing", includeEscaping ? ", escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false" : "escapeName: true, escapeValue: true, valueRequiresUnescaping: false", ");")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _utf8Backing, ", includeEscaping ? "escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false" : "escapeValue: true, valueRequiresUnescaping: false", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1554,6 +1688,8 @@ namespace Corvus.Text.Json.CodeGeneration
                     .PopIndent();
             }
 
+            HashSet<string> numericArrayKinds = [];
+
             if (isArray && !canReduce)
             {
                 string builderName = isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName();
@@ -1564,8 +1700,34 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _arrayBuilder!, static (b, ref o) => ", builderName, ".BuildValue(b, ref o)", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                         .AppendLineIndent("break;")
                     .PopIndent();
-            }
 
+                if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
+                {
+                    NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+                    string numericArrayKindName = GetNumericArrayKind(generator, numericTypeName);
+                    if (numericArrayKinds.Add(numericArrayKindName))
+                    {
+                        if (numericTypeName.IsNetOnly)
+                        {
+                            generator
+                                .AppendLine("#if NET");
+                        }
+
+                        generator
+                            .AppendLineIndent("case Kind.", numericArrayKindName, ":")
+                            .PushIndent()
+                                .AppendLineIndent("valueBuilder.AddPropertyArrayValue(", nameName, ", _", numericTypeName.Name, "Array!", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
+                                .AppendLineIndent("break;")
+                            .PopIndent();
+
+                        if (numericTypeName.IsNetOnly)
+                        {
+                            generator
+                                .AppendLine("#endif");
+                        }
+                    }
+                }
+            }
 
             foreach (ComposedBuilder composedBuilder in builders)
             {
@@ -1581,7 +1743,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         generator
                             .AppendLineIndent("case Kind.", composedBuilder.ObjectKindName, ":")
                             .PushIndent()
-                                .AppendLineIndent("valueBuilder.AddProperty(utf8Name, ", composedBuilder.ObjectInstanceName, "!, static (b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".", composedBuilder.ObjectBuilderName, ".BuildValue(b, ref o), escapeName, nameRequiresUnescaping);")
+                                .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _", composedBuilder.ObjectInstanceName, "!, static (b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".", composedBuilder.ObjectBuilderName, ".BuildValue(b, ref o)", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                                 .AppendLineIndent("break;")
                             .PopIndent();
                     }
@@ -1594,9 +1756,33 @@ namespace Corvus.Text.Json.CodeGeneration
                         generator
                             .AppendLineIndent("case Kind.", composedBuilder.ArrayKindName, ":")
                             .PushIndent()
-                                .AppendLineIndent("valueBuilder.AddProperty(utf8Name, ", composedBuilder.ArrayInstanceName, "!, static (b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".", composedBuilder.ArrayBuilderName, ".BuildValue(b, ref o), escapeName, nameRequiresUnescaping);")
+                                .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _", composedBuilder.ArrayInstanceName, "!, static (b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".", composedBuilder.ArrayBuilderName, ".BuildValue(b, ref o)", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                                 .AppendLineIndent("break;")
                             .PopIndent();
+                    }
+                }
+
+                if (composedBuilder.NumericArrayKindName is not null && composedBuilder.NumericArrayTypeName is not null)
+                {
+                    if (numericArrayKinds.Add(composedBuilder.NumericArrayKindName))
+                    {
+                        bool isNetOnly = composedBuilder.NumericArrayTypeName.Value.IsNetOnly;
+                        if (isNetOnly)
+                        {
+                            generator.AppendLine("#if NET");
+                        }
+
+                        generator
+                            .AppendLineIndent("case Kind.", composedBuilder.NumericArrayKindName, ":")
+                            .PushIndent()
+                                .AppendLineIndent("valueBuilder.AddPropertyArrayValue(", nameName, ", _", composedBuilder.NumericArrayTypeName.Value.Name, "Array!", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
+                                .AppendLineIndent("break;")
+                            .PopIndent();
+
+                        if (isNetOnly)
+                        {
+                            generator.AppendLine("#endif");
+                        }
                     }
                 }
             }
@@ -1606,6 +1792,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         .PushIndent()
                             .AppendLineIndent("Debug.Fail(\"Unexpected Kind\");")
                             .AppendLineIndent("break;")
+                        .PopIndent()
                     .PopIndent()
                     .AppendLineIndent("}")
                 .PopIndent()
@@ -1615,13 +1802,18 @@ namespace Corvus.Text.Json.CodeGeneration
         private static CodeGenerator AppendAddAsItem(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
         {
             generator
-                .ReserveNameIfNotReserved("AddAsAsItem")
-                .AppendLineIndent("internal void AddAsAsItem(ref ComplexValueBuilder valueBuilder)")
+                .ReserveNameIfNotReserved("AddAsItem")
+                .AppendSeparatorLine()
+                .AppendLineIndent("internal void AddAsItem(ref ComplexValueBuilder valueBuilder)")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("switch(_kind)")
                     .AppendLineIndent("{")
                     .PushIndent()
+                        .AppendLineIndent("case Kind.Unknown:")
+                        .PushIndent()
+                            .AppendLineIndent("break;")
+                        .PopIndent()
                         .AppendLineIndent("case Kind.JsonElement:")
                         .PushIndent()
                             .AppendLineIndent("valueBuilder.AddItem(_jsonElement);")
@@ -1748,6 +1940,8 @@ namespace Corvus.Text.Json.CodeGeneration
                     .PopIndent();
             }
 
+            HashSet<string> numericArrayKinds = [];
+
             if (isArray && !canReduce)
             {
                 generator
@@ -1756,8 +1950,35 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendLineIndent("valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => ", "Builder.BuildValue(b, ref o));")
                         .AppendLineIndent("break;")
                     .PopIndent();
-            }
 
+                if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
+                {
+                    NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+                    string numericArrayKindName = GetNumericArrayKind(generator, numericTypeName);
+                    if (numericArrayKinds.Add(numericArrayKindName))
+                    {
+                        if (numericTypeName.IsNetOnly)
+                        {
+                            generator
+                                .AppendLine("#if NET");
+                        }
+
+                        generator
+                            .AppendLineIndent("case Kind.", numericArrayKindName, ":")
+                            .PushIndent()
+                                .AppendLineIndent("valueBuilder.AddItemArrayValue(_", numericTypeName.Name, "Array!);")
+                                .AppendLineIndent("break;")
+                            .PopIndent();
+
+                        if (numericTypeName.IsNetOnly)
+                        {
+                            generator
+                                .AppendLine("#endif");
+                        }
+                    }
+                }
+
+            }
 
             foreach (ComposedBuilder composedBuilder in builders)
             {
@@ -1773,7 +1994,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         generator
                             .AppendLineIndent("case Kind.", composedBuilder.ObjectKindName, ":")
                             .PushIndent()
-                                .AppendLineIndent("valueBuilder.AddItem(", composedBuilder.ObjectInstanceName, "!, static (b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".Builder.BuildValue(b, ref o));")
+                                .AppendLineIndent("valueBuilder.AddItem(_", composedBuilder.ObjectInstanceName, "!, static (b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".Builder.BuildValue(b, ref o));")
                                 .AppendLineIndent("break;")
                             .PopIndent();
                     }
@@ -1786,9 +2007,33 @@ namespace Corvus.Text.Json.CodeGeneration
                         generator
                             .AppendLineIndent("case Kind.", composedBuilder.ArrayKindName, ":")
                             .PushIndent()
-                                .AppendLineIndent("valueBuilder.AddItem(", composedBuilder.ArrayInstanceName, "!, static (b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".Builder.BuildValue(b, ref o));")
+                                .AppendLineIndent("valueBuilder.AddItem(_", composedBuilder.ArrayInstanceName, "!, static (b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".Builder.BuildValue(b, ref o));")
                                 .AppendLineIndent("break;")
                             .PopIndent();
+                    }
+                }
+
+                if (composedBuilder.NumericArrayKindName is not null && composedBuilder.NumericArrayTypeName is not null)
+                {
+                    if (numericArrayKinds.Add(composedBuilder.NumericArrayKindName))
+                    {
+                        bool isNetOnly = composedBuilder.NumericArrayTypeName.Value.IsNetOnly;
+                        if (isNetOnly)
+                        {
+                            generator.AppendLine("#if NET");
+                        }
+
+                        generator
+                            .AppendLineIndent("case Kind.", composedBuilder.NumericArrayKindName, ":")
+                            .PushIndent()
+                                .AppendLineIndent("valueBuilder.AddItemArrayValue(_", composedBuilder.NumericArrayTypeName.Value.Name, "Array!);")
+                                .AppendLineIndent("break;")
+                            .PopIndent();
+
+                        if (isNetOnly)
+                        {
+                            generator.AppendLine("#endif");
+                        }
                     }
                 }
             }
@@ -1798,6 +2043,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         .PushIndent()
                             .AppendLineIndent("Debug.Fail(\"Unexpected Kind\");")
                             .AppendLineIndent("break;")
+                        .PopIndent()
                     .PopIndent()
                     .AppendLineIndent("}")
                 .PopIndent()
@@ -1817,8 +2063,8 @@ namespace Corvus.Text.Json.CodeGeneration
                     .ReserveName("Utf16String")
                     .AppendLineIndent("RawUtf8StringRequiresUnescaping,")
                     .AppendLineIndent("RawUtf8StringNotRequiresUnescaping,")
-                    .AppendLine("Utf8String,")
-                    .AppendLine("Utf16String,");
+                    .AppendLineIndent("Utf8String,")
+                    .AppendLineIndent("Utf16String,");
             }
 
             if ((core & (CoreTypes.Number | CoreTypes.Integer)) != 0)
@@ -1875,13 +2121,21 @@ namespace Corvus.Text.Json.CodeGeneration
                 string? arrayKindName,
                 string? objectKindName,
                 string? arrayInstanceName,
-                string? objectInstanceName)
+                string? objectInstanceName,
+                string? objectBuilderName,
+                string? arrayBuilderName,
+                string? numericArrayKindName,
+                NumericTypeName? numericArrayTypeName)
             {
                 TypeDeclaration = typeDeclaration;
                 ArrayKindName = arrayKindName;
                 ObjectKindName = objectKindName;
                 ArrayInstanceName = arrayInstanceName;
                 ObjectInstanceName = objectInstanceName;
+                ObjectBuilderName = objectBuilderName;
+                ArrayBuilderName = arrayBuilderName;
+                NumericArrayKindName = numericArrayKindName;
+                NumericArrayTypeName = numericArrayTypeName;
             }
 
             public TypeDeclaration TypeDeclaration { get; }
@@ -1892,6 +2146,8 @@ namespace Corvus.Text.Json.CodeGeneration
             public string? ObjectInstanceName { get; }
             public string? ObjectBuilderName { get; }
             public string? ArrayBuilderName { get; }
+            public string? NumericArrayKindName { get; }
+            public NumericTypeName? NumericArrayTypeName { get; }
 
             public bool IsObject => ObjectKindName is not null;
             public bool IsArray => ArrayKindName is not null;
@@ -1899,6 +2155,8 @@ namespace Corvus.Text.Json.CodeGeneration
 
         private static CodeGenerator CollectBuilderSourcesAndAppendKinds(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
         {
+            HashSet<string> numericArrayKinds = [];
+
             foreach (TypeDeclaration t in typeDeclaration.BuilderSources())
             {
                 if (generator.IsCancellationRequested)
@@ -1920,6 +2178,9 @@ namespace Corvus.Text.Json.CodeGeneration
                 string? arrayBuilderName = null;
                 string? objectBuilderName = null;
 
+                string? numericArrayKindName = null;
+                NumericTypeName? numericArrayTypeName = null;
+
                 if (isArray)
                 {
                     arrayKindName = generator.GetUniqueMethodNameInScope(t.DotnetTypeName(), suffix: isObject ? "ArrayBuilder" : "Builder");
@@ -1928,6 +2189,30 @@ namespace Corvus.Text.Json.CodeGeneration
 
                     generator
                         .AppendLineIndent(arrayKindName, ",");
+
+                    if (t.IsNumericArray() && !t.IsTuple())
+                    {
+                        NumericTypeName numericTypeName = t.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+                        numericArrayKindName = GetNumericArrayKind(generator, numericTypeName, reserve: true);
+                        numericArrayTypeName = numericTypeName;
+                        if (numericArrayKinds.Add(numericArrayKindName))
+                        {
+                            if (numericTypeName.IsNetOnly)
+                            {
+                                generator
+                                    .AppendLine("#if NET");
+                            }
+
+                            generator
+                                .AppendLineIndent(numericArrayKindName, ",");
+
+                            if (numericTypeName.IsNetOnly)
+                            {
+                                generator
+                                    .AppendLine("#endif");
+                            }
+                        }
+                    }
                 }
 
                 if (isObject)
@@ -1941,7 +2226,31 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
 
                 // Always add the builder that we have found
-                builders.Add(new(t, arrayKindName, objectKindName, arrayInstanceName, objectInstanceName));
+                builders.Add(new(t, arrayKindName, objectKindName, arrayInstanceName, objectInstanceName, objectBuilderName, arrayBuilderName, numericArrayKindName, numericArrayTypeName));
+            }
+
+            // Now add the numeric array kind for the base type
+            if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
+            {
+                NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+                string numericArrayKindName = GetNumericArrayKind(generator, numericTypeName, reserve: true);
+                if (numericArrayKinds.Add(numericArrayKindName))
+                {
+                    if (numericTypeName.IsNetOnly)
+                    {
+                        generator
+                            .AppendLine("#if NET");
+                    }
+
+                    generator
+                        .AppendLineIndent(numericArrayKindName, ",");
+
+                    if (numericTypeName.IsNetOnly)
+                    {
+                        generator
+                            .AppendLine("#endif");
+                    }
+                }
             }
 
             return generator;
