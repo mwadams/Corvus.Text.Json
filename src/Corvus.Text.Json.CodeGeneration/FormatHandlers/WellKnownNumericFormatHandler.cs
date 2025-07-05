@@ -239,7 +239,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
-                        .AppendLineIndent("private Source(UInt128 value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }")
+                        .AppendLineIndent("private Source(UInt128 value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written)); _kind = Kind.NumericSimpleType; }")
                         .AppendLine("#endif");
                 }
                 return true;
@@ -281,7 +281,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
-                        .AppendLineIndent("private Source(Int128 value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }")
+                        .AppendLineIndent("private Source(Int128 value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written)); _kind = Kind.NumericSimpleType; }")
                         .AppendLine("#endif");
                 }
                 return true;
@@ -291,7 +291,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
-                        .AppendLineIndent("private Source(Half value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }")
+                        .AppendLineIndent("private Source(Half value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written)); _kind = Kind.NumericSimpleType; }")
                         .AppendLine("#endif");
                 }
                 return true;

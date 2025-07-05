@@ -17,6 +17,15 @@ namespace Corvus.Text.Json.Tests
             }}           
             """;
 
+        private const string NumericFormat =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "number",
+                "format": "{0}"
+            }}           
+            """;
+
         [Theory]
         [InlineData("object")]
         [InlineData("array")]
@@ -54,17 +63,39 @@ namespace Corvus.Text.Json.Tests
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"types_{GetNameFor(type)}.json", string.Format(ArrayType, type));
+
+            static string GetNameFor(string type)
+            {
+                StringBuilder s = new(type);
+                s.Replace("\"", "");
+                s.Replace(" ", "");
+                s.Replace(",", "");
+                s.Replace("[", "");
+                s.Replace("]", "");
+                return s.ToString();
+            }
         }
 
-        private static object GetNameFor(string type)
+        [Theory]
+        [InlineData("sbyte")]
+        [InlineData("int16")]
+        [InlineData("int32")]
+        [InlineData("int64")]
+        [InlineData("int128")]
+        [InlineData("byte")]
+        [InlineData("uint16")]
+        [InlineData("uint32")]
+        [InlineData("uint64")]
+        [InlineData("uint128")]
+        [InlineData("decimal")]
+        [InlineData("double")]
+        [InlineData("single")]
+        [InlineData("half")]
+        public static async Task GenerateCode_Emits_NumericFormatTypes(string format)
         {
-            StringBuilder s = new(type);
-            s.Replace("\"", "");
-            s.Replace(" ", "");
-            s.Replace(",", "");
-            s.Replace("[", "");
-            s.Replace("]", "");
-            return s.ToString();
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"numericFormat_{format}.json", string.Format(NumericFormat, format));
         }
+
     }
 }
