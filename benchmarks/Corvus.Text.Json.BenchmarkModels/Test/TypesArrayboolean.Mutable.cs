@@ -23,7 +23,7 @@ namespace Test;
 /// Generated from JSON Schema.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SimpleNull
+public readonly partial struct TypesArrayboolean
 {
     public partial struct Mutable
         : IMutableJsonElement<Mutable>
@@ -119,7 +119,7 @@ public readonly partial struct SimpleNull
         /// <param name="value">The instance of this type.</param>
         /// <returns>A mutable instance.</returns>
         /// <exception cref="FormatException">Thrown if the instance is not backed by a mutable document.</exception>
-        public static explicit operator Mutable(SimpleNull instance)
+        public static explicit operator Mutable(TypesArrayboolean instance)
         {
             if (instance._parent is not IMutableJsonDocument doc)
             {
@@ -136,7 +136,7 @@ public readonly partial struct SimpleNull
         /// <param name="value">The instance of this type.</param>
         /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator SimpleNull(Mutable instance)
+        public static implicit operator TypesArrayboolean(Mutable instance)
         {
             return new(instance._parent, instance._idx);
         }
@@ -157,7 +157,7 @@ public readonly partial struct SimpleNull
         public override bool Equals(object? obj)
         {
             return
-                (obj is IJsonElement value && Equals(new SimpleNull(value.ParentDocument, value.ParentDocumentIndex))) ||
+                (obj is IJsonElement value && Equals(new TypesArrayboolean(value.ParentDocument, value.ParentDocumentIndex))) ||
                 (obj is null && this.IsNull());
         }
 
@@ -233,7 +233,7 @@ public readonly partial struct SimpleNull
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"SimpleNull.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+        private string DebuggerDisplay => $"TypesArrayboolean.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;

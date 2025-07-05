@@ -23,17 +23,17 @@ namespace Test;
 /// Generated from JSON Schema.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SimpleNull
-    : IJsonElement<SimpleNull>
+public readonly partial struct TypesArraynumber
+    : IJsonElement<TypesArraynumber>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SimpleNull"/> struct.
+    /// Initializes a new instance of the <see cref="TypesArraynumber"/> struct.
     /// </summary>
     /// <param name="value">The value from which to construct the instance.</param>
-    internal SimpleNull(IJsonDocument parent, int idx)
+    internal TypesArraynumber(IJsonDocument parent, int idx)
     {
         Debug.Assert(idx >= 0);
         _parent = parent;
@@ -43,7 +43,7 @@ public readonly partial struct SimpleNull
     /// <summary>
     /// Gets the default instance.
     /// </summary>
-    public static SimpleNull DefaultInstance { get; }
+    public static TypesArraynumber DefaultInstance { get; }
 
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
@@ -59,7 +59,7 @@ public readonly partial struct SimpleNull
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in SimpleNull left, in SimpleNull right)
+    public static bool operator ==(in TypesArraynumber left, in TypesArraynumber right)
     {
         return left.Equals(right);
     }
@@ -72,7 +72,7 @@ public readonly partial struct SimpleNull
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in SimpleNull left, in SimpleNull right)
+    public static bool operator !=(in TypesArraynumber left, in TypesArraynumber right)
     {
         return !left.Equals(right);
     }
@@ -85,7 +85,7 @@ public readonly partial struct SimpleNull
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in SimpleNull left, in JsonElement right)
+    public static bool operator ==(in TypesArraynumber left, in JsonElement right)
     {
         return left.Equals(right);
     }
@@ -98,7 +98,7 @@ public readonly partial struct SimpleNull
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in SimpleNull left, in JsonElement right)
+    public static bool operator !=(in TypesArraynumber left, in JsonElement right)
     {
         return !left.Equals(right);
     }
@@ -109,7 +109,7 @@ public readonly partial struct SimpleNull
     /// <param name="value">The instance of this type.</param>
     /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator JsonElement(SimpleNull instance)
+    public static implicit operator JsonElement(TypesArraynumber instance)
     {
         return JsonElement.From(instance);
     }
@@ -120,7 +120,7 @@ public readonly partial struct SimpleNull
     /// <param name="value">The <see cref="IJsonElement{T}"/> value from which to instantiate the instance.</param>
     /// <returns>An instance of this type, initialized from the JSON element.</returns>                
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static SimpleNull From<T>(in T instance)
+    public static TypesArraynumber From<T>(in T instance)
         where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
@@ -130,7 +130,7 @@ public readonly partial struct SimpleNull
     public override bool Equals(object? obj)
     {
         return
-            (obj is IJsonElement value && Equals(new SimpleNull(value.ParentDocument, value.ParentDocumentIndex))) ||
+            (obj is IJsonElement value && Equals(new TypesArraynumber(value.ParentDocument, value.ParentDocumentIndex))) ||
             (obj is null && this.IsNull());
     }
 
@@ -197,11 +197,11 @@ public readonly partial struct SimpleNull
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static SimpleNull IJsonElement<SimpleNull>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static TypesArraynumber IJsonElement<TypesArraynumber>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"SimpleNull: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"TypesArraynumber: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -223,7 +223,7 @@ public readonly partial struct SimpleNull
     /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
     /// <returns>An instance of a mutable document initialized with the given value.</returns>
     public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-        JsonWorkspace workspace, in Source value, int initialCapacity = 1)
+        JsonWorkspace workspace, in Source value, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -241,7 +241,7 @@ public readonly partial struct SimpleNull
     /// <returns>An instance of a mutable document initialized with this instance.</returns>
     public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
-        return workspace.CreateDocumentBuilder<SimpleNull, Mutable>(this);
+        return workspace.CreateDocumentBuilder<TypesArraynumber, Mutable>(this);
     }
 
     public ref struct Source
@@ -250,11 +250,16 @@ public readonly partial struct SimpleNull
         {
             Unknown,
             JsonElement,
-            Null,
+            NumericSimpleType,
+            FormattedNumber,
+            Builder,
         }
 
         private readonly Kind _kind;
         private readonly JsonElement _jsonElement;
+        private readonly ReadOnlySpan<byte> _utf8Backing;
+        private readonly SimpleTypesBacking _simpleTypeBacking;
+        private readonly Builder.Build? _arrayBuilder;
 
         private Source(JsonElement jsonElement)
         {
@@ -262,12 +267,24 @@ public readonly partial struct SimpleNull
             _kind = Kind.JsonElement;
         }
 
-        private Source(Kind kind) { Debug.Assert(kind == Kind.Null); _kind = Kind.Null; }
+        private Source(ReadOnlySpan<byte> value, Kind kind)
+        {
+            Debug.Assert(kind is Kind.FormattedNumber);
+            _utf8Backing = value;
+            _kind = kind;
+        }
 
-        public static implicit operator Source(SimpleNull instance) => new(JsonElement.From(instance));
+        private Source(double value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (isAlsoArray, buffer, out written) => Utf8Formatter.TryFormat(isAlsoArray, buffer, out written)); _kind = Kind.NumericSimpleType; }
+
+        public Source(Test.TypesArraynumber.Builder.Build value) { _arrayBuilder = value; _kind = Kind.Builder; }
+
+        public static implicit operator Source(TypesArraynumber instance) => new(JsonElement.From(instance));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Source Null() => new(Kind.Null);
+        public static implicit operator Source(double value) => new (value);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Source FormattedNumber(ReadOnlySpan<byte> value) => new(value, Kind.FormattedNumber);
 
         internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -278,8 +295,14 @@ public readonly partial struct SimpleNull
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
                     break;
-                case Kind.Null:
-                    valueBuilder.AddPropertyNull(utf8Name, escapeName, nameRequiresUnescaping);
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddPropertyFormattedNumber(utf8Name, _simpleTypeBacking.Span(), escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddPropertyFormattedNumber(utf8Name, _utf8Backing, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -296,8 +319,14 @@ public readonly partial struct SimpleNull
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(name, _jsonElement);
                     break;
-                case Kind.Null:
-                    valueBuilder.AddPropertyNull(name);
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddPropertyFormattedNumber(name, _simpleTypeBacking.Span());
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddPropertyFormattedNumber(name, _utf8Backing);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -314,8 +343,14 @@ public readonly partial struct SimpleNull
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(name, _jsonElement);
                     break;
-                case Kind.Null:
-                    valueBuilder.AddPropertyNull(name);
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddPropertyFormattedNumber(name, _simpleTypeBacking.Span());
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddPropertyFormattedNumber(name, _utf8Backing);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -332,13 +367,49 @@ public readonly partial struct SimpleNull
                 case Kind.JsonElement:
                     valueBuilder.AddItem(_jsonElement);
                     break;
-                case Kind.Null:
-                    valueBuilder.AddItemNull();
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddItem(_simpleTypeBacking.Span());
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddItemFormattedNumber(_utf8Backing);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
             }
+        }
+    }
+
+    public ref struct Builder
+    {
+        public delegate void Build(ref Builder builder);
+
+        private ComplexValueBuilder _builder;
+
+        internal Builder(ComplexValueBuilder builder)
+        {
+            _builder = builder;
+        }
+
+        /// <summary>
+        /// Add an item to the array.
+        /// </summary>
+        public void Add(in Corvus.Text.Json.JsonElement.Source value)
+        {
+            value.AddAsItem(ref _builder);
+        }
+
+        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
+        {
+            o.StartArray();
+
+            Builder ovb = new(o);
+            value(ref ovb);
+            o = ovb._builder;
+            o.EndArray();
         }
     }
 }

@@ -28,11 +28,14 @@ namespace Corvus.Text.Json.CodeGeneration
 
             return generator
                 .AppendSourceRefStruct(typeDeclaration)
-                .AppendBuilderRefStruct(typeDeclaration);
+                .AppendBuilderRefStruct(typeDeclaration, forArray: true)
+                .AppendBuilderRefStruct(typeDeclaration, forArray: false);
         }
 
-        private static CodeGenerator AppendBuilderRefStruct(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        private static CodeGenerator AppendBuilderRefStruct(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forArray)
         {
+            bool forObject = !forArray;
+
             if (generator.IsCancellationRequested)
             {
                 return generator;
@@ -40,64 +43,62 @@ namespace Corvus.Text.Json.CodeGeneration
 
             CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
 
-            if ((core & (CoreTypes.Array | CoreTypes.Object)) == 0 ||
-                typeDeclaration.CanReduceToAnyOf() || typeDeclaration.CanReduceToOneOf())
+            bool isArray = (core & CoreTypes.Array) != 0;
+            bool isObject = (core & CoreTypes.Object) != 0;
+
+            if (forArray && !isArray)
+            {
+                return generator;
+            }
+
+            if (forObject & !isObject)
+            {
+                return generator;
+            }
+
+            if (typeDeclaration.CanReduceToAnyOf() || typeDeclaration.CanReduceToOneOf())
             {
                 // Nothing to do if we are not an array or an object.
                 // Or we are just a reduction to anyOf/oneOf
                 return generator;
             }
 
-            generator
-                .AppendSeparatorLine()
-                .BeginRefStruct(GeneratedTypeAccessibility.Public, generator.BuilderClassName(), isReadOnly: false)
-                    .ReserveName("Build")
-                    .ReserveName("_builder")
-                    .AppendLineIndent("public delegate void Build(ref ", generator.BuilderClassName(), " builder);")
-                    .AppendSeparatorLine()
-                    .AppendLineIndent("private ComplexValueBuilder _builder;")
-                    .AppendSeparatorLine()
-                    .AppendBlockIndent(
-                        $$"""
-                        internal {{generator.BuilderClassName()}}(ComplexValueBuilder builder)
-                        {
-                            _builder = builder;
-                        }
-                        """);
+            string builderClassName;
 
-            bool isArray = (core & CoreTypes.Array) != 0;
-            bool isObject = (core & CoreTypes.Object) != 0;
-
-            if (isArray && isObject)
+            if (forArray)
             {
-                generator
-                    .AppendSeparatorLine()
-                    .ReserveName("_arrayOrObject")
-                    .AppendLineIndent("private ArrayOrObject _arrayOrObject;")
-                    .AppendSeparatorLine()
-                    .AppendLineIndent("public void CreateEmptyArray()")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendCheckExpectArray(isObject)
-                    .PopIndent()
-                    .AppendLineIndent("}")
-                    .AppendSeparatorLine()
-                    .AppendLineIndent("public void CreateEmptyObject()")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendCheckExpectObject(isArray)
-                    .PopIndent()
-                    .AppendLineIndent("}");
+                builderClassName = isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName();
+            }
+            else
+            {
+                builderClassName = isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName();
             }
 
-            if (isArray)
+            generator
+                    .AppendSeparatorLine()
+                    .BeginRefStruct(GeneratedTypeAccessibility.Public, builderClassName, isReadOnly: false)
+                        .ReserveName("Build")
+                        .ReserveName("_builder")
+                        .AppendLineIndent("public delegate void Build(ref ", builderClassName, " builder);")
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("private ComplexValueBuilder _builder;")
+                        .AppendSeparatorLine()
+                        .AppendBlockIndent(
+                            $$"""
+                            internal {{builderClassName}}(ComplexValueBuilder builder)
+                            {
+                                _builder = builder;
+                            }
+                            """);
+
+            if (forArray)
             {
                 generator
                     .AppendArrayBuilders(typeDeclaration, isObject);
 
             }
 
-            if (isObject)
+            if (forObject)
             {
                 generator
                     .AppendObjectBuilders(typeDeclaration, isArray);
@@ -110,23 +111,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendLineIndent("{")
                 .PushIndent();
 
-            if (isArray && isObject)
-            {
-                generator
-                    .AppendLineIndent("if (_arrayOrObject == ArrayOrObject.Array)")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("o.StartArray();")
-                    .PopIndent()
-                    .AppendLineIndent("}")
-                    .AppendLine("else")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("o.StartObject();")
-                    .PopIndent()
-                    .AppendLineIndent("}");
-            }
-            else if (isArray)
+            if (forArray)
             {
                 generator
                     .AppendLineIndent("o.StartArray();");
@@ -140,27 +125,11 @@ namespace Corvus.Text.Json.CodeGeneration
 
             generator
                     .AppendSeparatorLine()
-                    .AppendLineIndent(generator.BuilderClassName(), " ovb = new(o);")
+                    .AppendLineIndent(builderClassName, " ovb = new(o);")
                     .AppendLineIndent("value(ref ovb);")
                     .AppendLineIndent("o = ovb._builder;");
 
-            if (isArray && isObject)
-            {
-                generator
-                    .AppendLineIndent("if (_arrayOrObject == ArrayOrObject.Array)")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("o.EndArray();")
-                    .PopIndent()
-                    .AppendLineIndent("}")
-                    .AppendLine("else")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("o.EndObject();")
-                    .PopIndent()
-                    .AppendLineIndent("}");
-            }
-            else if (isArray)
+            if (forArray)
             {
                 generator
                     .AppendLineIndent("o.EndArray();");
@@ -273,12 +242,6 @@ namespace Corvus.Text.Json.CodeGeneration
                     .AppendLineIndent("{")
                     .PushIndent();
 
-                if (isAlsoArray)
-                {
-                    generator
-                        .AppendCheckExpectObject(true);
-                }
-
                 generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("value.AddAsProperty(propertyName, ref _builder);")
@@ -324,12 +287,6 @@ namespace Corvus.Text.Json.CodeGeneration
                     "void",
                     "Create",
                     staticMethodParameters);
-
-            if (isAlsoArray)
-            {
-                generator
-                    .AppendLineIndent("_arrayOrObject = ArrayOrObject.Object;");
-            }
 
             generator
                     .AppendCreateAddProperties(staticMethodParameters, orderedProperties)
@@ -572,8 +529,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 generator
                     .AppendLineIndent("public void Add(in ", arrayItemsType, ".", generator.SourceClassName(arrayItemsType), " value)")
                     .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendCheckExpectArray(isObject);
+                    .PushIndent();
 
                 if (hasTuple)
                 {
@@ -624,7 +580,6 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendLineIndent("public int CreateTensor(ReadOnlySpan<", numericTypeName.Name, "> tensor)")
                         .AppendLineIndent("{")
                         .PushIndent()
-                            .AppendCheckExpectArray(isObject)
                             .AppendSeparatorLine()
                             .AppendLineIndent("int index = 0;")
                             .AppendLineIndent("if (tensor.Length != ValueBufferSize)")
@@ -662,7 +617,6 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendLineIndent("public int CreateTensor(ReadOnlySpan<", numericTypeName.Name, "> tensor)")
                         .AppendLineIndent("{")
                         .PushIndent()
-                            .AppendCheckExpectArray(isObject)
                             .AppendLineIndent("if (tensor.Length != ValueBufferSize)")
                             .AppendLineIndent("{")
                             .PushIndent()
@@ -685,51 +639,6 @@ namespace Corvus.Text.Json.CodeGeneration
 
             return generator;
         }
-
-        private static CodeGenerator AppendCheckExpectArray(this CodeGenerator generator, bool isObject)
-        {
-            if (isObject)
-            {
-                generator
-                    .AppendLineIndent("if (_arrayOrObject == ArrayOrObject.Object)")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("CodeGenThrowHelper.ThrowInvalidOperationException_ExpectedArrayType();")
-                    .PopIndent()
-                    .AppendLineIndent("}")
-                    .AppendLineIndent("else")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("_arrayOrObject = ArrayOrObject.Array;")
-                    .PopIndent()
-                    .AppendLineIndent("}");
-            }
-
-            return generator;
-        }
-
-        private static CodeGenerator AppendCheckExpectObject(this CodeGenerator generator, bool isObject)
-        {
-            if (isObject)
-            {
-                generator
-                    .AppendLineIndent("if (_arrayOrObject == ArrayOrObject.Array)")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("CodeGenThrowHelper.ThrowInvalidOperationException_ExpectedObjectType();")
-                    .PopIndent()
-                    .AppendLineIndent("}")
-                    .AppendLineIndent("else")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("_arrayOrObject = ArrayOrObject.Object;")
-                    .PopIndent()
-                    .AppendLineIndent("}");
-            }
-
-            return generator;
-        }
-
         private static CodeGenerator AppendCreateTuple(this CodeGenerator generator, TypeDeclaration typeDeclaration, TupleTypeDeclaration tupleType, bool allowsNonPrefixItems)
         {
             generator
@@ -1935,7 +1844,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 generator
                     .AppendLineIndent("case Kind.", isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName(), ":")
                     .PushIndent()
-                        .AppendLineIndent("valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => ", "Builder.BuildValue(b, ref o));")
+                        .AppendLineIndent("valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => ", isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName(), ".BuildValue(b, ref o));")
                         .AppendLineIndent("break;")
                     .PopIndent();
             }
@@ -1947,7 +1856,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 generator
                     .AppendLineIndent("case Kind.", isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName(), ":")
                     .PushIndent()
-                        .AppendLineIndent("valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => ", "Builder.BuildValue(b, ref o));")
+                        .AppendLineIndent("valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => ", isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName(), ".BuildValue(b, ref o));")
                         .AppendLineIndent("break;")
                     .PopIndent();
 

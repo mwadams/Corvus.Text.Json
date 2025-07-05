@@ -23,17 +23,17 @@ namespace Test;
 /// Generated from JSON Schema.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SimpleString
-    : IJsonElement<SimpleString>
+public readonly partial struct TypeString
+    : IJsonElement<TypeString>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SimpleString"/> struct.
+    /// Initializes a new instance of the <see cref="TypeString"/> struct.
     /// </summary>
     /// <param name="value">The value from which to construct the instance.</param>
-    internal SimpleString(IJsonDocument parent, int idx)
+    internal TypeString(IJsonDocument parent, int idx)
     {
         Debug.Assert(idx >= 0);
         _parent = parent;
@@ -43,7 +43,7 @@ public readonly partial struct SimpleString
     /// <summary>
     /// Gets the default instance.
     /// </summary>
-    public static SimpleString DefaultInstance { get; }
+    public static TypeString DefaultInstance { get; }
 
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
@@ -59,7 +59,7 @@ public readonly partial struct SimpleString
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in SimpleString left, in SimpleString right)
+    public static bool operator ==(in TypeString left, in TypeString right)
     {
         return left.Equals(right);
     }
@@ -72,7 +72,7 @@ public readonly partial struct SimpleString
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in SimpleString left, in SimpleString right)
+    public static bool operator !=(in TypeString left, in TypeString right)
     {
         return !left.Equals(right);
     }
@@ -85,7 +85,7 @@ public readonly partial struct SimpleString
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in SimpleString left, in JsonElement right)
+    public static bool operator ==(in TypeString left, in JsonElement right)
     {
         return left.Equals(right);
     }
@@ -98,7 +98,7 @@ public readonly partial struct SimpleString
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in SimpleString left, in JsonElement right)
+    public static bool operator !=(in TypeString left, in JsonElement right)
     {
         return !left.Equals(right);
     }
@@ -109,7 +109,7 @@ public readonly partial struct SimpleString
     /// <param name="value">The instance of this type.</param>
     /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator JsonElement(SimpleString instance)
+    public static implicit operator JsonElement(TypeString instance)
     {
         return JsonElement.From(instance);
     }
@@ -120,7 +120,7 @@ public readonly partial struct SimpleString
     /// <param name="value">The <see cref="IJsonElement{T}"/> value from which to instantiate the instance.</param>
     /// <returns>An instance of this type, initialized from the JSON element.</returns>                
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static SimpleString From<T>(in T instance)
+    public static TypeString From<T>(in T instance)
         where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
@@ -130,7 +130,7 @@ public readonly partial struct SimpleString
     public override bool Equals(object? obj)
     {
         return
-            (obj is IJsonElement value && Equals(new SimpleString(value.ParentDocument, value.ParentDocumentIndex))) ||
+            (obj is IJsonElement value && Equals(new TypeString(value.ParentDocument, value.ParentDocumentIndex))) ||
             (obj is null && this.IsNull());
     }
 
@@ -197,11 +197,11 @@ public readonly partial struct SimpleString
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static SimpleString IJsonElement<SimpleString>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static TypeString IJsonElement<TypeString>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"SimpleString: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"TypeString: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -241,7 +241,7 @@ public readonly partial struct SimpleString
     /// <returns>An instance of a mutable document initialized with this instance.</returns>
     public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
-        return workspace.CreateDocumentBuilder<SimpleString, Mutable>(this);
+        return workspace.CreateDocumentBuilder<TypeString, Mutable>(this);
     }
 
     public ref struct Source
@@ -285,7 +285,7 @@ public readonly partial struct SimpleString
             _kind = requiresUnescaping ? Kind.RawUtf8StringRequiresUnescaping : Kind.RawUtf8StringNotRequiresUnescaping;
         }
 
-        public static implicit operator Source(SimpleString instance) => new(JsonElement.From(instance));
+        public static implicit operator Source(TypeString instance) => new(JsonElement.From(instance));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator Source(ReadOnlySpan<byte> value) => new (value);

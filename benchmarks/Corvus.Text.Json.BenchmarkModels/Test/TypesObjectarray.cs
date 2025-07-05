@@ -23,17 +23,17 @@ namespace Test;
 /// Generated from JSON Schema.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SimpleBoolean
-    : IJsonElement<SimpleBoolean>
+public readonly partial struct TypesObjectarray
+    : IJsonElement<TypesObjectarray>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SimpleBoolean"/> struct.
+    /// Initializes a new instance of the <see cref="TypesObjectarray"/> struct.
     /// </summary>
     /// <param name="value">The value from which to construct the instance.</param>
-    internal SimpleBoolean(IJsonDocument parent, int idx)
+    internal TypesObjectarray(IJsonDocument parent, int idx)
     {
         Debug.Assert(idx >= 0);
         _parent = parent;
@@ -43,7 +43,7 @@ public readonly partial struct SimpleBoolean
     /// <summary>
     /// Gets the default instance.
     /// </summary>
-    public static SimpleBoolean DefaultInstance { get; }
+    public static TypesObjectarray DefaultInstance { get; }
 
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
@@ -59,7 +59,7 @@ public readonly partial struct SimpleBoolean
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in SimpleBoolean left, in SimpleBoolean right)
+    public static bool operator ==(in TypesObjectarray left, in TypesObjectarray right)
     {
         return left.Equals(right);
     }
@@ -72,7 +72,7 @@ public readonly partial struct SimpleBoolean
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in SimpleBoolean left, in SimpleBoolean right)
+    public static bool operator !=(in TypesObjectarray left, in TypesObjectarray right)
     {
         return !left.Equals(right);
     }
@@ -85,7 +85,7 @@ public readonly partial struct SimpleBoolean
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in SimpleBoolean left, in JsonElement right)
+    public static bool operator ==(in TypesObjectarray left, in JsonElement right)
     {
         return left.Equals(right);
     }
@@ -98,7 +98,7 @@ public readonly partial struct SimpleBoolean
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in SimpleBoolean left, in JsonElement right)
+    public static bool operator !=(in TypesObjectarray left, in JsonElement right)
     {
         return !left.Equals(right);
     }
@@ -109,7 +109,7 @@ public readonly partial struct SimpleBoolean
     /// <param name="value">The instance of this type.</param>
     /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator JsonElement(SimpleBoolean instance)
+    public static implicit operator JsonElement(TypesObjectarray instance)
     {
         return JsonElement.From(instance);
     }
@@ -120,7 +120,7 @@ public readonly partial struct SimpleBoolean
     /// <param name="value">The <see cref="IJsonElement{T}"/> value from which to instantiate the instance.</param>
     /// <returns>An instance of this type, initialized from the JSON element.</returns>                
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static SimpleBoolean From<T>(in T instance)
+    public static TypesObjectarray From<T>(in T instance)
         where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
@@ -130,7 +130,7 @@ public readonly partial struct SimpleBoolean
     public override bool Equals(object? obj)
     {
         return
-            (obj is IJsonElement value && Equals(new SimpleBoolean(value.ParentDocument, value.ParentDocumentIndex))) ||
+            (obj is IJsonElement value && Equals(new TypesObjectarray(value.ParentDocument, value.ParentDocumentIndex))) ||
             (obj is null && this.IsNull());
     }
 
@@ -197,11 +197,11 @@ public readonly partial struct SimpleBoolean
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static SimpleBoolean IJsonElement<SimpleBoolean>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static TypesObjectarray IJsonElement<TypesObjectarray>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"SimpleBoolean: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"TypesObjectarray: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -223,7 +223,7 @@ public readonly partial struct SimpleBoolean
     /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
     /// <returns>An instance of a mutable document initialized with the given value.</returns>
     public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-        JsonWorkspace workspace, in Source value, int initialCapacity = 1)
+        JsonWorkspace workspace, in Source value, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -241,7 +241,7 @@ public readonly partial struct SimpleBoolean
     /// <returns>An instance of a mutable document initialized with this instance.</returns>
     public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
-        return workspace.CreateDocumentBuilder<SimpleBoolean, Mutable>(this);
+        return workspace.CreateDocumentBuilder<TypesObjectarray, Mutable>(this);
     }
 
     public ref struct Source
@@ -250,12 +250,14 @@ public readonly partial struct SimpleBoolean
         {
             Unknown,
             JsonElement,
-            True,
-            False,
+            ObjectBuilder,
+            ArrayBuilder,
         }
 
         private readonly Kind _kind;
         private readonly JsonElement _jsonElement;
+        private readonly ObjectBuilder.Build? _objectBuilder;
+        private readonly ArrayBuilder.Build? _arrayBuilder;
 
         private Source(JsonElement jsonElement)
         {
@@ -263,12 +265,11 @@ public readonly partial struct SimpleBoolean
             _kind = Kind.JsonElement;
         }
 
-        private Source(bool value) { _kind = value ? Kind.True : Kind.False; }
+        public Source(Test.TypesObjectarray.ObjectBuilder.Build value) { _objectBuilder = value; _kind = Kind.ObjectBuilder; }
 
-        public static implicit operator Source(SimpleBoolean instance) => new(JsonElement.From(instance));
+        public Source(Test.TypesObjectarray.ArrayBuilder.Build value) { _arrayBuilder = value; _kind = Kind.ArrayBuilder; }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Source(bool value) => new (value);
+        public static implicit operator Source(TypesObjectarray instance) => new(JsonElement.From(instance));
 
         internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -279,11 +280,11 @@ public readonly partial struct SimpleBoolean
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
                     break;
-                case Kind.True:
-                    valueBuilder.AddProperty(utf8Name, true, escapeName, nameRequiresUnescaping);
+                case Kind.ObjectBuilder:
+                    valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
-                case Kind.False:
-                    valueBuilder.AddProperty(utf8Name, false, escapeName, nameRequiresUnescaping);
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -300,11 +301,11 @@ public readonly partial struct SimpleBoolean
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(name, _jsonElement);
                     break;
-                case Kind.True:
-                    valueBuilder.AddProperty(name, true);
+                case Kind.ObjectBuilder:
+                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o));
                     break;
-                case Kind.False:
-                    valueBuilder.AddProperty(name, false);
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o));
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -321,11 +322,11 @@ public readonly partial struct SimpleBoolean
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(name, _jsonElement);
                     break;
-                case Kind.True:
-                    valueBuilder.AddProperty(name, true);
+                case Kind.ObjectBuilder:
+                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o));
                     break;
-                case Kind.False:
-                    valueBuilder.AddProperty(name, false);
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o));
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -342,16 +343,98 @@ public readonly partial struct SimpleBoolean
                 case Kind.JsonElement:
                     valueBuilder.AddItem(_jsonElement);
                     break;
-                case Kind.True:
-                    valueBuilder.AddItem(true);
+                case Kind.ObjectBuilder:
+                    valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o));
                     break;
-                case Kind.False:
-                    valueBuilder.AddItem(false);
+                case Kind.ArrayBuilder:
+                    valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o));
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
             }
+        }
+    }
+
+    public ref struct ArrayBuilder
+    {
+        public delegate void Build(ref ArrayBuilder builder);
+
+        private ComplexValueBuilder _builder;
+
+        internal ArrayBuilder(ComplexValueBuilder builder)
+        {
+            _builder = builder;
+        }
+
+        /// <summary>
+        /// Add an item to the array.
+        /// </summary>
+        public void Add(in Corvus.Text.Json.JsonElement.Source value)
+        {
+            value.AddAsItem(ref _builder);
+        }
+
+        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
+        {
+            o.StartArray();
+
+            ArrayBuilder ovb = new(o);
+            value(ref ovb);
+            o = ovb._builder;
+            o.EndArray();
+        }
+    }
+
+    public ref struct ObjectBuilder
+    {
+        public delegate void Build(ref ObjectBuilder builder);
+
+        private ComplexValueBuilder _builder;
+
+        internal ObjectBuilder(ComplexValueBuilder builder)
+        {
+            _builder = builder;
+        }
+
+        /// <summary>
+        /// Add a property to the object.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to add.</param>
+        /// <param name="value">The value of the property to add.</param>
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in JsonElement.Source value)
+        {
+            value.AddAsProperty(propertyName, ref _builder);
+        }
+
+        /// <summary>
+        /// Add a property to the object.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to add.</param>
+        /// <param name="value">The value of the property to add.</param>
+        public void AddProperty(ReadOnlySpan<char> propertyName, in JsonElement.Source value)
+        {
+            value.AddAsProperty(propertyName, ref _builder);
+        }
+
+        /// <summary>
+        /// Add a property to the object.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to add.</param>
+        /// <param name="value">The value of the property to add.</param>
+        public void AddProperty(string propertyName, in JsonElement.Source value)
+        {
+            value.AddAsProperty(propertyName, ref _builder);
+        }
+
+        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
+        {
+            o.StartObject();
+
+            ObjectBuilder ovb = new(o);
+            value(ref ovb);
+            o = ovb._builder;
+            o.EndObject();
         }
     }
 }

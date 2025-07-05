@@ -24,10 +24,47 @@ namespace Corvus.Text.Json.Tests
         [InlineData("number")]
         [InlineData("boolean")]
         [InlineData("null")]
-        public static async Task GenerateCode_Emits(string type)
+        public static async Task GenerateCode_Emits_SimpleTypes(string type)
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"simple_{type}.json", string.Format(SimpleType, type));
+            await generator.GenerateCode($"type_{type}.json", string.Format(SimpleType, type));
+        }
+
+
+        private const string ArrayType =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": {0}
+            }}           
+            """;
+
+
+        [Theory]
+        [InlineData("[\"object\", \"array\"]")]
+        [InlineData("[\"object\", \"string\"]")]
+        [InlineData("[\"object\", \"number\"]")]
+        [InlineData("[\"object\", \"boolean\"]")]
+        [InlineData("[\"object\", \"null\"]")]
+        [InlineData("[\"array\", \"string\"]")]
+        [InlineData("[\"array\", \"number\"]")]
+        [InlineData("[\"array\", \"boolean\"]")]
+        [InlineData("[\"array\", \"null\"]")]
+        public static async Task GenerateCode_Emits_ArrayTypes(string type)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"types_{GetNameFor(type)}.json", string.Format(ArrayType, type));
+        }
+
+        private static object GetNameFor(string type)
+        {
+            StringBuilder s = new(type);
+            s.Replace("\"", "");
+            s.Replace(" ", "");
+            s.Replace(",", "");
+            s.Replace("[", "");
+            s.Replace("]", "");
+            return s.ToString();
         }
     }
 }
