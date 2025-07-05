@@ -20,20 +20,20 @@ using Corvus.Text.Json.Internal;
 
 namespace Test;
 /// <summary>
-/// JSON Schema for a Person entity coming back from a 3rd party API (e.g. a storage format in a database)
+/// Generated from JSON Schema.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct Person
-    : IJsonElement<Person>
+public readonly partial struct SimpleNull
+    : IJsonElement<SimpleNull>
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Person"/> struct.
+    /// Initializes a new instance of the <see cref="SimpleNull"/> struct.
     /// </summary>
     /// <param name="value">The value from which to construct the instance.</param>
-    internal Person(IJsonDocument parent, int idx)
+    internal SimpleNull(IJsonDocument parent, int idx)
     {
         Debug.Assert(idx >= 0);
         _parent = parent;
@@ -43,7 +43,7 @@ public readonly partial struct Person
     /// <summary>
     /// Gets the default instance.
     /// </summary>
-    public static Person DefaultInstance { get; }
+    public static SimpleNull DefaultInstance { get; }
 
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
@@ -59,7 +59,7 @@ public readonly partial struct Person
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in Person left, in Person right)
+    public static bool operator ==(in SimpleNull left, in SimpleNull right)
     {
         return left.Equals(right);
     }
@@ -72,7 +72,7 @@ public readonly partial struct Person
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in Person left, in Person right)
+    public static bool operator !=(in SimpleNull left, in SimpleNull right)
     {
         return !left.Equals(right);
     }
@@ -85,7 +85,7 @@ public readonly partial struct Person
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in Person left, in JsonElement right)
+    public static bool operator ==(in SimpleNull left, in JsonElement right)
     {
         return left.Equals(right);
     }
@@ -98,7 +98,7 @@ public readonly partial struct Person
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in Person left, in JsonElement right)
+    public static bool operator !=(in SimpleNull left, in JsonElement right)
     {
         return !left.Equals(right);
     }
@@ -109,7 +109,7 @@ public readonly partial struct Person
     /// <param name="value">The instance of this type.</param>
     /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator JsonElement(Person instance)
+    public static implicit operator JsonElement(SimpleNull instance)
     {
         return JsonElement.From(instance);
     }
@@ -120,7 +120,7 @@ public readonly partial struct Person
     /// <param name="value">The <see cref="IJsonElement{T}"/> value from which to instantiate the instance.</param>
     /// <returns>An instance of this type, initialized from the JSON element.</returns>                
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Person From<T>(in T instance)
+    public static SimpleNull From<T>(in T instance)
         where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
@@ -130,7 +130,7 @@ public readonly partial struct Person
     public override bool Equals(object? obj)
     {
         return
-            (obj is IJsonElement value && Equals(new Person(value.ParentDocument, value.ParentDocumentIndex))) ||
+            (obj is IJsonElement value && Equals(new SimpleNull(value.ParentDocument, value.ParentDocumentIndex))) ||
             (obj is null && this.IsNull());
     }
 
@@ -197,11 +197,11 @@ public readonly partial struct Person
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static Person IJsonElement<Person>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static SimpleNull IJsonElement<SimpleNull>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"Person: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"SimpleNull: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -223,7 +223,7 @@ public readonly partial struct Person
     /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
     /// <returns>An instance of a mutable document initialized with the given value.</returns>
     public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-        JsonWorkspace workspace, in Source value, int initialCapacity = 30)
+        JsonWorkspace workspace, in Source value, int initialCapacity = 1)
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
@@ -241,7 +241,7 @@ public readonly partial struct Person
     /// <returns>An instance of a mutable document initialized with this instance.</returns>
     public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
     {
-        return workspace.CreateDocumentBuilder<Person, Mutable>(this);
+        return workspace.CreateDocumentBuilder<SimpleNull, Mutable>(this);
     }
 
     public ref struct Source
@@ -250,12 +250,11 @@ public readonly partial struct Person
         {
             Unknown,
             JsonElement,
-            Builder,
+            Null,
         }
 
         private readonly Kind _kind;
         private readonly JsonElement _jsonElement;
-        private readonly Builder.Build? _objectBuilder;
 
         private Source(JsonElement jsonElement)
         {
@@ -263,9 +262,12 @@ public readonly partial struct Person
             _kind = Kind.JsonElement;
         }
 
-        public Source(Test.Person.Builder.Build value) { _objectBuilder = value; _kind = Kind.Builder; }
+        private Source(Kind kind) { Debug.Assert(kind == Kind.Null); _kind = Kind.Null; }
 
-        public static implicit operator Source(Person instance) => new(JsonElement.From(instance));
+        public static implicit operator Source(SimpleNull instance) => new(JsonElement.From(instance));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Source Null() => new(Kind.Null);
 
         internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -276,8 +278,8 @@ public readonly partial struct Person
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
                     break;
-                case Kind.Builder:
-                    valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                case Kind.Null:
+                    valueBuilder.AddPropertyNull(utf8Name, escapeName, nameRequiresUnescaping);
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -294,8 +296,8 @@ public readonly partial struct Person
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(name, _jsonElement);
                     break;
-                case Kind.Builder:
-                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                case Kind.Null:
+                    valueBuilder.AddPropertyNull(name);
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -312,8 +314,8 @@ public readonly partial struct Person
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(name, _jsonElement);
                     break;
-                case Kind.Builder:
-                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                case Kind.Null:
+                    valueBuilder.AddPropertyNull(name);
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
@@ -330,117 +332,13 @@ public readonly partial struct Person
                 case Kind.JsonElement:
                     valueBuilder.AddItem(_jsonElement);
                     break;
-                case Kind.Builder:
-                    valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                case Kind.Null:
+                    valueBuilder.AddItemNull();
                     break;
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
             }
         }
-    }
-
-    public ref struct Builder
-    {
-        public delegate void Build(ref Builder builder);
-
-        private ComplexValueBuilder _builder;
-
-        internal Builder(ComplexValueBuilder builder)
-        {
-            _builder = builder;
-        }
-
-        /// <summary>
-        /// Creates an instance of a <see cref="Person"/>.
-        /// </summary>
-        internal static void Create(
-            ref ComplexValueBuilder builder,
-            in Test.Person.PersonName.Source name,
-            in Test.Person.AgeInYears.Source age = default,
-            in Test.Person.YearArray.Source competedInYears = default)
-        {
-            name.AddAsProperty(JsonPropertyNamesEscaped.Name, ref builder, escapeName: false);
-            age.AddAsProperty(JsonPropertyNamesEscaped.Age, ref builder, escapeName: false);
-            competedInYears.AddAsProperty(JsonPropertyNamesEscaped.CompetedInYears, ref builder, escapeName: false);
-        }
-
-        /// <summary>
-        /// Creates an instance of a <see cref="Person"/>.
-        /// </summary>
-        public void Create(
-            in Test.Person.PersonName.Source name,
-            in Test.Person.AgeInYears.Source age = default,
-            in Test.Person.YearArray.Source competedInYears = default)
-        {
-            Create(ref _builder, name, age, competedInYears);
-        }
-
-        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
-        {
-            o.StartObject();
-
-            Builder ovb = new(o);
-            value(ref ovb);
-            o = ovb._builder;
-            o.EndObject();
-        }
-    }
-
-    /// <summary>
-    /// Provides UTF8 and string versions of the JSON property names on the object.
-    /// </summary>
-    public static class JsonPropertyNames
-    {
-        /// <summary>
-        /// Gets the JSON property name for <see cref="Age"/>.
-        /// </summary>
-        public const string Age = "age";
-
-        /// <summary>
-        /// Gets the JSON property name for <see cref="CompetedInYears"/>.
-        /// </summary>
-        public const string CompetedInYears = "competedInYears";
-
-        /// <summary>
-        /// Gets the JSON property name for <see cref="Name"/>.
-        /// </summary>
-        public const string Name = "name";
-
-        /// <summary>
-        /// Gets the JSON property name for <see cref="Age"/>.
-        /// </summary>
-        public static ReadOnlySpan<byte> AgeUtf8 => "age"u8;
-
-        /// <summary>
-        /// Gets the JSON property name for <see cref="CompetedInYears"/>.
-        /// </summary>
-        public static ReadOnlySpan<byte> CompetedInYearsUtf8 => "competedInYears"u8;
-
-        /// <summary>
-        /// Gets the JSON property name for <see cref="Name"/>.
-        /// </summary>
-        public static ReadOnlySpan<byte> NameUtf8 => "name"u8;
-    }
-
-    /// <summary>
-    /// Provides encoded UTF8 versions of the JSON property names on the object.
-    /// </summary>
-    private static class JsonPropertyNamesEscaped
-    {
-        /// <summary>
-        /// Gets the encoded JSON property name for <see cref="Age"/>.
-        /// </summary>
-        public static ReadOnlySpan<byte> Age => "age"u8;
-
-        /// <summary>
-        /// Gets the encoded JSON property name for <see cref="CompetedInYears"/>.
-        /// </summary>
-        public static ReadOnlySpan<byte> CompetedInYears => "competedInYears"u8;
-
-        /// <summary>
-        /// Gets the encoded JSON property name for <see cref="Name"/>.
-        /// </summary>
-        public static ReadOnlySpan<byte> Name => "name"u8;
     }
 }

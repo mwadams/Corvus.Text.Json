@@ -1579,7 +1579,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.Null:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddPropertyNull(", nameName, ", _jsonElement", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
+                            .AppendLineIndent("valueBuilder.AddPropertyNull(", nameName, includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
