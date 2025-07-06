@@ -305,7 +305,7 @@ namespace Corvus.Text.Json.CodeGeneration
         /// <returns>The class name.</returns>
         public static string JsonSchemaClassName(this CodeGenerator generator, string fullyQualifiedTypeName)
         {
-            return generator.GetTypeNameInScope(JsonSchemaClassNameKey, rootScope: fullyQualifiedTypeName);
+            return generator.GetTypeNameInScope(JsonSchemaClassBaseName, rootScope: fullyQualifiedTypeName);
         }
 
 

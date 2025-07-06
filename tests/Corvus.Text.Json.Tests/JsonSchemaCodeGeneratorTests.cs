@@ -9,6 +9,83 @@ namespace Corvus.Text.Json.Tests
 {
     public static class JsonSchemaCodeGeneratorTests
     {
+        private const string Person =
+            """
+            {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "title": "JSON Schema for a Person entity coming back from a 3rd party API (e.g. a storage format in a database)",
+                "type": "object",
+            
+                "required": [ "name" ],
+                "properties": {
+                    "name": { "$ref": "#/$defs/PersonName" },
+                    "age": { "$ref": "#/$defs/Age" },
+                    "competedInYears": { "$ref": "#/$defs/CompetedInYears" }
+                },
+                "$defs": {
+                    "PersonArray": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/$defs/Person"
+                        }
+                    },
+                    "HeightRangeDouble": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 3.0
+                    },
+                    "PersonName": {
+                        "type": "object",
+                        "description": "A name of a person.",
+                        "required": [ "firstName" ],
+                        "properties": {
+                            "firstName": {
+                                "$ref": "#/$defs/NameComponent",
+                                "description": "The person's first name."
+                            },
+                            "lastName": {
+                                "$ref": "#/$defs/NameComponent",
+                                "description": "The person's last name."
+                            },
+                            "otherNames": {
+                                "$ref": "#/$defs/OtherNames",
+                                "description": "Other (middle) names for the person"
+                            }
+                        }
+                    },
+                    "OtherNames": {
+                        "oneOf": [
+                            { "$ref": "#/$defs/NameComponent" },
+                            { "$ref": "#/$defs/NameComponentArray" }
+                        ]
+                    },
+                    "NameComponentArray": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/$defs/NameComponent"
+                        }
+                    },
+                    "NameComponent": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                    },
+                    "CompetedInYears": {
+                        "type": "array",
+                        "items": { "$ref": "#/$defs/Year" }
+                    },
+                    "Year": {
+                        "type": "number",
+                        "format": "int32"
+                    },
+                    "Age": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 130
+                    }
+                }
+            }            
+            """;
         private const string SimpleType =
             """
             {{
@@ -35,6 +112,45 @@ namespace Corvus.Text.Json.Tests
             }}           
             """;
 
+        private const string ArrayType =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": {0}
+            }}           
+            """;
+
+
+        private const string ComposedMultiFormatType =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "anyOf": [
+                        {{"type": "{0}", "format": "{1}"}},
+                        {{"type": "{2}", "format": "{3}"}}
+                    ]
+            }}           
+            """;
+
+        private const string ComposedMultiFormatNumericWithAdditionalConstraint =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "anyOf": [
+                        {{"type": "{0}", "format": "{1}"}},
+                        {{"type": "{2}", "format": "{3}"}}
+                    ],
+                "minimum": 30
+            }}           
+            """;
+
+        [Fact]
+        public static async Task GenerateCode_Emits_Person()
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"person.json", Person);
+        }
+
         [Theory]
         [InlineData("object")]
         [InlineData("array")]
@@ -47,16 +163,6 @@ namespace Corvus.Text.Json.Tests
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"type_{type}.json", string.Format(SimpleType, type));
         }
-
-
-        private const string ArrayType =
-            """
-            {{
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "type": {0}
-            }}           
-            """;
-
 
         [Theory]
         [InlineData("[\"object\", \"array\"]")]
@@ -123,6 +229,27 @@ namespace Corvus.Text.Json.Tests
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"stringFormat_{format}.json", string.Format(StringFormat, format));
+        }
+
+        [Theory]
+        [InlineData("string", "date", "string", "date-time")]
+        [InlineData("string", "date", "string", "date")]
+        [InlineData("string", "date", "number", "int32")]
+        [InlineData("string", "uuid", "string", "iri")]
+        [InlineData("number", "int64", "number", "int128")]
+        public static async Task GenerateCode_Emits_ComposedFormatTypes(string type1, string format1, string type2, string format2)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"composedFormat_{type1}_{format1}_{type2}_{format2}.json", string.Format(ComposedMultiFormatType, type1, format1, type2, format2));
+        }
+
+        [Theory]
+        [InlineData("number", "int64", "number", "int128")]
+        [InlineData("number", "int64", "string", "date")]
+        public static async Task GenerateCode_Emits_ComposedMultiFormatNumericWithAdditionalConstraint(string type1, string format1, string type2, string format2)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"composedNumericFormatWithConstraint_{type1}_{format1}_{type2}_{format2}.json", string.Format(ComposedMultiFormatNumericWithAdditionalConstraint, type1, format1, type2, format2));
         }
     }
 }

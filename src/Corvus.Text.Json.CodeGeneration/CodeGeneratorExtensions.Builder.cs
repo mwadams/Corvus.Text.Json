@@ -849,7 +849,10 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
             }
 
-            if ((core & (CoreTypes.Number | CoreTypes.Integer)) != 0)
+            bool canReduce = typeDeclaration.CanReduceToAnyOf() || typeDeclaration.CanReduceToOneOf();
+            bool hasNumericBuilder = builders.Any(b => (b.TypeDeclaration.ImpliedCoreTypesOrAny() & (CoreTypes.Number | CoreTypes.Integer)) != 0);
+
+            if ((core & (CoreTypes.Number | CoreTypes.Integer)) != 0 && !canReduce && !hasNumericBuilder)
             {
                 if (typeDeclaration.Format() is not string format ||
                     !FormatHandlerRegistry.Instance.NumberFormatHandlers.AppendFormatSourceConversionOperators(generator, typeDeclaration, format, seenConversionOperators))
@@ -1068,9 +1071,11 @@ namespace Corvus.Text.Json.CodeGeneration
             generator
                 .AppendNumericArrayConstructors(typeDeclaration, seenNumericArrayTypes);
 
+            bool canReduce = typeDeclaration.CanReduceToAnyOf() || typeDeclaration.CanReduceToOneOf();
+
             // This is the "has builder" case
             if ((core & (CoreTypes.Array | CoreTypes.Object)) != 0 &&
-                !typeDeclaration.CanReduceToAnyOf() && !typeDeclaration.CanReduceToOneOf())
+                !canReduce)
             {
                 bool isArray = (core & CoreTypes.Array) != 0;
                 bool isObject = (core & CoreTypes.Object) != 0;
@@ -1182,6 +1187,7 @@ namespace Corvus.Text.Json.CodeGeneration
 
             bool hasUtf8Backing = false;
             bool hasSimpleTypeBacking = false;
+            bool canReduce = typeDeclaration.CanReduceToAnyOf() || typeDeclaration.CanReduceToOneOf();
 
             if ((core & CoreTypes.String) != 0)
             {
@@ -1218,12 +1224,11 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .ReserveNameIfNotReserved("_simpleTypeBacking")
                         .AppendLineIndent("private readonly SimpleTypesBacking _simpleTypeBacking;");
-                }
+                    hasSimpleTypeBacking = true;                }
             }
 
             bool isObject = (core & CoreTypes.Object) != 0;
             bool isArray = (core & CoreTypes.Array) != 0;
-            bool canReduce = typeDeclaration.CanReduceToAnyOf() || typeDeclaration.CanReduceToOneOf();
             if (isObject && !canReduce)
             {
                 generator
@@ -1735,7 +1740,7 @@ namespace Corvus.Text.Json.CodeGeneration
                     generator
                         .AppendLineIndent("case Kind.StringSimpleType:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _simpleTypeBacking.Span()", includeEscaping ? ", escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false" : "escapeValue: false, valueRequiresUnescaping: false", ");")
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _simpleTypeBacking.Span()", includeEscaping ? ", escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false" : ", escapeValue: false, valueRequiresUnescaping: false", ");")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -2197,6 +2202,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         generator
                             .ReserveName("StringSimpleType")
                            .AppendLineIndent("StringSimpleType,");
+                        hasStringSimpleType = true;
                     }
 
                 }

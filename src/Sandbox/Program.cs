@@ -470,4 +470,13 @@ using JsonDocumentBuilder<Test.Person.Mutable> testPersonDocBuilder = Test.Perso
                     lastName: "Adams"u8,
                     otherNames: "Francis James"u8);
             }),
-            competedInYears: Test.Person.YearArray.Source.FromArray([2012, 2020, 2024]))));
+            competedInYears: Test.Person.CompetedInYears.Source.FromArray([2012, 2020, 2024]))));
+
+Console.WriteLine(testPersonDocBuilder.RootElement);
+
+using JsonDocumentBuilder<Test.ComposedFormatNumberInt64NumberInt128.Mutable> testComposedDocBuilder =
+    Test.ComposedFormatNumberInt64NumberInt128.CreateDocumentBuilder(
+        workspace,
+        128);
+
+Console.WriteLine(testComposedDocBuilder.RootElement);
