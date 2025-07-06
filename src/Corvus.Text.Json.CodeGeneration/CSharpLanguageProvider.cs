@@ -309,7 +309,8 @@ public class CSharpLanguageProvider(CSharpLanguageProvider.Options? options = nu
 
         languageProvider.RegisterCodeFileBuilders(
             CorePartial.Instance,
-            MutableCorePartial.Instance
+            MutableCorePartial.Instance,
+            JsonSchemaPartial.Instance
             ////ArrayPartial.Instance,
             ////ObjectPartial.Instance,
             ////BooleanPartial.Instance,

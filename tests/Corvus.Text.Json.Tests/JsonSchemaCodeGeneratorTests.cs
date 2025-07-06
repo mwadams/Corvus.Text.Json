@@ -26,6 +26,15 @@ namespace Corvus.Text.Json.Tests
             }}           
             """;
 
+        private const string StringFormat =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "string",
+                "format": "{0}"
+            }}           
+            """;
+
         [Theory]
         [InlineData("object")]
         [InlineData("array")]
@@ -97,5 +106,23 @@ namespace Corvus.Text.Json.Tests
             await generator.GenerateCode($"numericFormat_{format}.json", string.Format(NumericFormat, format));
         }
 
+        [Theory]
+        [InlineData("date")]
+        [InlineData("date-time")]
+        [InlineData("time")]
+        [InlineData("duration")]
+        [InlineData("ipv4")]
+        [InlineData("ipv6")]
+        [InlineData("uuid")]
+        [InlineData("uri")]
+        [InlineData("uri-reference")]
+        [InlineData("iri")]
+        [InlineData("iri-reference")]
+        [InlineData("regex")]
+        public static async Task GenerateCode_Emits_StringFormatTypes(string format)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"stringFormat_{format}.json", string.Format(StringFormat, format));
+        }
     }
 }

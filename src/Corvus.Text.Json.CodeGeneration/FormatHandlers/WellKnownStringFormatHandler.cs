@@ -3,10 +3,10 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.Internal;
-using Corvus.Text.Json.Internal;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration;
@@ -34,7 +34,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                        .AppendLineIndent("private Source(LocalDate value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatLocalDate(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                        .AppendLineIndent("private Source(NodaTime.LocalDate value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatLocalDate(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
                 return true;
             case "date-time":
@@ -42,7 +42,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                        .AppendLineIndent("private Source(OffsetDateTime value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetDateTime(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                        .AppendLineIndent("private Source(NodaTime.OffsetDateTime value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetDateTime(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
 
                 if (seenConstructorParameters.Add("DateTimeOffset"))
@@ -57,7 +57,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                       .AppendLineIndent("private Source(OffsetTime value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetTime(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                       .AppendLineIndent("private Source(NodaTime.OffsetTime value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetTime(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
                 return true;
             case "duration":
@@ -65,7 +65,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                        .AppendLineIndent("private Source(Period value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatPeriod(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
+                        .AppendLineIndent("private Source(NodaTime.Period value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatPeriod(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
                 return true;
             case "ipv4":
@@ -117,7 +117,6 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
             default:
                 return false;
         }
-        ;
     }
 
     /// <inheritdoc/>
@@ -131,8 +130,8 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator Source(LocalDate value) => new (value);");
-                }                
+                        .AppendLineIndent("public static implicit operator Source(NodaTime.LocalDate value) => new (value);");
+                }
                 return true;
             case "date-time":
                 if (seenConversionOperators.Add("OffsetDateTime"))
@@ -140,7 +139,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static implicit operator Source(OffsetDateTime value) => new (value);");
+                    .AppendLineIndent("public static implicit operator Source(NodaTime.OffsetDateTime value) => new (value);");
                 }
                 return true;
 
@@ -150,7 +149,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator Source(OffsetTime value) => new (value);");
+                        .AppendLineIndent("public static implicit operator Source(NodaTime.OffsetTime value) => new (value);");
                 }
                 return true;
 
@@ -160,7 +159,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static implicit operator Source(Period value) => new (value);");
+                    .AppendLineIndent("public static implicit operator Source(NodaTime.Period value) => new (value);");
                 }
                 return true;
 
@@ -818,5 +817,52 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
             "corvus-json-content-pre201909" => true,
             _ => false,
         };
+    }
+
+    public bool RequiresSimpleTypesBacking(string format, out bool requiresSimpleType)
+    {
+        switch (format)
+        {
+            case "date":
+                requiresSimpleType = true;
+                return true;
+            case "date-time":
+                requiresSimpleType = true;
+                return true;
+            case "time":
+                requiresSimpleType = true;
+                return true;
+            case "duration":
+                requiresSimpleType = true;
+                return true;
+            case "ipv4":
+                requiresSimpleType = false;
+                return true;
+            case "ipv6":
+                requiresSimpleType = false;
+                return true;
+            case "uuid":
+                requiresSimpleType = true;
+                return true;
+            case "uri":
+                requiresSimpleType = false;
+                return true;
+            case "uri-reference":
+                requiresSimpleType = false;
+                return true;
+            case "iri":
+                requiresSimpleType = false;
+                return true;
+            case "iri-reference":
+                requiresSimpleType = false;
+                return true;
+            case "regex":
+                requiresSimpleType = false;
+                return true;
+            default:
+                requiresSimpleType = false;
+                return false;
+
+        }
     }
 }

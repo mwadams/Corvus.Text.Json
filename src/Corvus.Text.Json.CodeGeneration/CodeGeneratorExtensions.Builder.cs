@@ -1,13 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
-using static Corvus.Text.Json.CodeGeneration.CodeGeneratorExtensions;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
@@ -1193,6 +1190,17 @@ namespace Corvus.Text.Json.CodeGeneration
                 .ReserveNameIfNotReserved("_utf16Backing")
                     .AppendLineIndent("private readonly ReadOnlySpan<byte> _utf8Backing;")
                     .AppendLineIndent("private readonly ReadOnlySpan<char> _utf16Backing;");
+
+                if (typeDeclaration.Format() is string format &&
+                    FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(format, out bool requiresSimpleType) &&
+                    requiresSimpleType)
+                {
+                    generator
+                        .ReserveNameIfNotReserved("_simpleTypeBacking")
+                        .AppendLineIndent("private readonly SimpleTypesBacking _simpleTypeBacking;");
+                    hasSimpleTypeBacking = true;
+                }
+
                 hasUtf8Backing = true;
             }
 
@@ -1270,6 +1278,17 @@ namespace Corvus.Text.Json.CodeGeneration
                         ";")
                        .AppendNumericArrayTypeFields(builder.TypeDeclaration, seenArrayValues);
 
+                }
+
+                if (!hasSimpleTypeBacking &&
+                    builder.StringFormat is string format &&
+                    FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(format, out bool requiresSimpleType) &&
+                    requiresSimpleType)
+                {
+                    generator
+                        .ReserveNameIfNotReserved("_simpleTypeBacking")
+                        .AppendLineIndent("private readonly SimpleTypesBacking _simpleTypeBacking;");
+                    hasSimpleTypeBacking = true;
                 }
             }
 
@@ -1558,6 +1577,19 @@ namespace Corvus.Text.Json.CodeGeneration
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
+
+                if (typeDeclaration.Format() is string format &&
+                    FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(format, out bool requiresSimpleType) &&
+                    requiresSimpleType &&
+                    seenKinds.Add("StringSimpleType"))
+                {
+                    generator
+                        .AppendLineIndent("case Kind.StringSimpleType:")
+                        .PushIndent()
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _simpleTypeBacking.Span()", includeEscaping ? ", escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false" : ", escapeValue: false, valueRequiresUnescaping: false", ");")
+                            .AppendLineIndent("break;")
+                        .PopIndent();
+                }
             }
 
             if ((core & CoreTypes.Number) != 0)
@@ -1694,6 +1726,20 @@ namespace Corvus.Text.Json.CodeGeneration
                         }
                     }
                 }
+
+                if (composedBuilder.StringFormat is string format &&
+                    FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(format, out bool requiresSimpleType) &&
+                    requiresSimpleType &&
+                    seenKinds.Add("StringSimpleType"))
+                {
+                    generator
+                        .AppendLineIndent("case Kind.StringSimpleType:")
+                        .PushIndent()
+                            .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _simpleTypeBacking.Span()", includeEscaping ? ", escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false" : "escapeValue: false, valueRequiresUnescaping: false", ");")
+                            .AppendLineIndent("break;")
+                        .PopIndent();
+                }
+
             }
 
             return generator
@@ -1811,6 +1857,19 @@ namespace Corvus.Text.Json.CodeGeneration
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
+
+                if (typeDeclaration.Format() is string format &&
+                    FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(format, out bool requiresSimpleType) &&
+                    requiresSimpleType &&
+                    seenKinds.Add("StringSimpleType"))
+                {
+                    generator
+                        .AppendLineIndent("case Kind.StringSimpleType:")
+                        .PushIndent()
+                            .AppendLineIndent("valueBuilder.AddItem(_simpleTypeBacking.Span());")
+                            .AppendLineIndent("break;")
+                        .PopIndent();
+                }
             }
 
             if ((core & CoreTypes.Number) != 0)
@@ -1920,6 +1979,19 @@ namespace Corvus.Text.Json.CodeGeneration
                                 .AppendLineIndent("break;")
                             .PopIndent();
                     }
+                }
+
+                if (composedBuilder.StringFormat is string format &&
+                    FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(format, out bool requiresSimpleType) &&
+                    requiresSimpleType &&
+                    seenKinds.Add("StringSimpleType"))
+                {
+                    generator
+                        .AppendLineIndent("case Kind.StringSimpleType:")
+                        .PushIndent()
+                            .AppendLineIndent("valueBuilder.AddItem(_simpleTypeBacking.Span());")
+                            .AppendLineIndent("break;")
+                        .PopIndent();
                 }
 
                 if (composedBuilder.NumericArrayKindName is not null && composedBuilder.NumericArrayTypeName is not null)
@@ -2034,7 +2106,9 @@ namespace Corvus.Text.Json.CodeGeneration
                 string? objectBuilderName,
                 string? arrayBuilderName,
                 string? numericArrayKindName,
-                NumericTypeName? numericArrayTypeName)
+                NumericTypeName? numericArrayTypeName,
+                string? stringFormat,
+                string? numericFormat)
             {
                 TypeDeclaration = typeDeclaration;
                 ArrayKindName = arrayKindName;
@@ -2045,6 +2119,8 @@ namespace Corvus.Text.Json.CodeGeneration
                 ArrayBuilderName = arrayBuilderName;
                 NumericArrayKindName = numericArrayKindName;
                 NumericArrayTypeName = numericArrayTypeName;
+                StringFormat = stringFormat;
+                NumericFormat = numericFormat;
             }
 
             public TypeDeclaration TypeDeclaration { get; }
@@ -2057,6 +2133,8 @@ namespace Corvus.Text.Json.CodeGeneration
             public string? ArrayBuilderName { get; }
             public string? NumericArrayKindName { get; }
             public NumericTypeName? NumericArrayTypeName { get; }
+            public string? StringFormat { get; }
+            public string? NumericFormat { get; }
 
             public bool IsObject => ObjectKindName is not null;
             public bool IsArray => ArrayKindName is not null;
@@ -2065,6 +2143,18 @@ namespace Corvus.Text.Json.CodeGeneration
         private static CodeGenerator CollectBuilderSourcesAndAppendKinds(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
         {
             HashSet<string> numericArrayKinds = [];
+            bool hasStringSimpleType = false;
+
+            if (typeDeclaration.Format() is string format &&
+                FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(format, out bool requiresSimpleType) &&
+                requiresSimpleType)
+            {
+                generator
+                    .ReserveName("StringSimpleType")
+                    .AppendLineIndent("StringSimpleType,");
+                hasStringSimpleType = true;
+            }
+
 
             foreach (TypeDeclaration t in typeDeclaration.BuilderSources())
             {
@@ -2077,6 +2167,8 @@ namespace Corvus.Text.Json.CodeGeneration
 
                 bool isObject = (core & CoreTypes.Object) != 0;
                 bool isArray = (core & CoreTypes.Array) != 0;
+                bool isString = (core & CoreTypes.String) != 0;
+                bool isNumber = (core & CoreTypes.Number) != 0;
 
                 string? arrayKindName = null;
                 string? objectKindName = null;
@@ -2089,6 +2181,30 @@ namespace Corvus.Text.Json.CodeGeneration
 
                 string? numericArrayKindName = null;
                 NumericTypeName? numericArrayTypeName = null;
+
+                string? stringFormat = null;
+                string? numericFormat = null;
+
+
+                if (isString)
+                {
+                    stringFormat = t.Format();
+
+                    if (!hasStringSimpleType && stringFormat is string f &&
+                        FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(f, out bool r) &&
+                        r)
+                    {
+                        generator
+                            .ReserveName("StringSimpleType")
+                           .AppendLineIndent("StringSimpleType,");
+                    }
+
+                }
+
+                if (isNumber)
+                {
+                    numericFormat = t.Format();
+                }
 
                 if (isArray)
                 {
@@ -2135,7 +2251,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 }
 
                 // Always add the builder that we have found
-                builders.Add(new(t, arrayKindName, objectKindName, arrayInstanceName, objectInstanceName, objectBuilderName, arrayBuilderName, numericArrayKindName, numericArrayTypeName));
+                builders.Add(new(t, arrayKindName, objectKindName, arrayInstanceName, objectInstanceName, objectBuilderName, arrayBuilderName, numericArrayKindName, numericArrayTypeName, stringFormat, numericFormat));
             }
 
             // Now add the numeric array kind for the base type

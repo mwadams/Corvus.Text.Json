@@ -93,6 +93,30 @@ namespace Corvus.Text.Json.CodeGeneration
             return false;
         }
 
+
+        /// <summary>
+        /// Get the preferred numeric type for a format.
+        /// </summary>
+        /// <typeparam name="T">The type of the format handler.</typeparam>
+        /// <param name="handlers">The handlers which may determine the preferred numeric type.</param>
+        /// <param name="format">The format for which to determine the preferred numeric type.</param>
+        /// <param name="requiresSimpleType"><see langword="true"/> if the format requires the fixed-size simple types backing.</param>
+        /// <returns><see langword="true"/> if the instance handled this format.</returns>
+        public static bool RequiresSimpleTypesBacking<T>(this IEnumerable<T> handlers, string format, out bool requiresSimpleType)
+            where T : notnull, IStringFormatHandler
+        {
+            foreach (T handler in handlers)
+            {
+                if (handler.RequiresSimpleTypesBacking(format, out requiresSimpleType))
+                {
+                    return true;
+                }
+            }
+
+            requiresSimpleType = false;
+            return false;
+        }
+
         /// <summary>
         /// Get the preferred numeric type for a format.
         /// </summary>

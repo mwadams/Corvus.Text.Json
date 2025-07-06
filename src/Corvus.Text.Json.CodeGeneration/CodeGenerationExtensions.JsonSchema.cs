@@ -469,5 +469,48 @@ namespace Corvus.Text.Json.CodeGeneration
                     }
                     """);
         }
+
+        public static CodeGenerator AppendJsonSchemaEvaluateMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        {
+            return generator
+                .ReserveName("Evaluate")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                    /// <summary>
+                    /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
+                    /// </summary>
+                    /// <param name="parentDocument">The parent document.</param>
+                    /// <param name="parentIndex">The parent index.</param>
+                    /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
+                    internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+                    {
+                        // NOP AS YET
+                    }
+                    """)
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    $$"""
+                    internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+                    {
+                        JsonSchemaContext context = JsonSchemaContext.BeginContext(
+                            parentDocument,
+                            parentIndex,
+                            usingEvaluatedItems: {{(typeDeclaration.ExplicitUnevaluatedItemsType() is not null ? "true" : "false")}},
+                            usingEvaluatedProperties: {{(typeDeclaration.LocalEvaluatedPropertyType() is not null || typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is not null ? "true" : "false")}},
+                            resultsCollector: resultsCollector);
+
+                        try
+                        {
+                            Evaluate(parentDocument, parentIndex, ref context);
+                            return context.IsMatch;
+                        }
+                        finally
+                        {
+                            context.Dispose();
+                        }
+                    }
+                    """);
+        }
     }
 }

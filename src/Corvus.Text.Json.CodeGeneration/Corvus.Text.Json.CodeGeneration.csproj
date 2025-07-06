@@ -22,6 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="CodeFileBuilders\JsonSchemaPartial.cs" />
     <Compile Include="CodeFileBuilders\MutableCorePartial.cs" />
     <Compile Include="CodeFileBuilders\CorePartial.cs" />
     <Compile Include="CodeGenerationExtensions.JsonSchema.cs" />

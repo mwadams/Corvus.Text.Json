@@ -26,4 +26,12 @@ public interface IStringFormatHandler : IFormatHandler
         string formatKeywordProviderExpression,
         string valueIdentifier,
         string validationContextIdentifier);
+
+    /// <summary>
+    /// Indicates whether the string format requires the simple types backing.
+    /// </summary>
+    /// <param name="format">The format to test.</param>
+    /// <param name="requiresSimpleType"><see langword="true"/> if the format requires the fixed-size simple types backing.</param>
+    /// <returns><see langword="true"/> if the instance handled this format.</returns>
+    bool RequiresSimpleTypesBacking(string format, out bool requiresSimpleType);
 }
