@@ -4,6 +4,7 @@
 using Corvus.Text.Json.Internal;
 using System.Diagnostics.CodeAnalysis;
 using NodaTime;
+using System.Numerics;
 
 namespace Corvus.Text.Json.Tests;
 
@@ -57,6 +58,8 @@ internal class DummyDocument : IJsonDocument
     public bool TryGetValue(int index, out double value) { value = default; return false; }
     public bool TryGetValue(int index, out float value) { value = default; return false; }
     public bool TryGetValue(int index, out decimal value) { value = default; return false; }
+    public bool TryGetValue(int index, out BigInteger value) { value = default; return false; }
+    public bool TryGetValue(int index, out BigNumber value) { value = default; return false; }
     public bool TryGetValue(int index, out DateTime value) { value = default; return false; }
     public bool TryGetValue(int index, out DateTimeOffset value) { value = default; return false; }
     public bool TryGetValue(int index, out OffsetDateTime value) { value = default; return false; }

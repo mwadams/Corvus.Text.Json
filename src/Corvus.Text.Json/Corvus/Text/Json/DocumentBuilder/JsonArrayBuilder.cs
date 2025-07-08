@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Numerics;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 
@@ -298,6 +299,24 @@ namespace Corvus.Text.Json
         /// </summary>
         /// <param name="value">The <see cref="decimal"/> value.</param>
         public void Add(decimal value)
+        {
+            _builder.AddItem(value);
+        }
+
+        /// <summary>
+        /// Adds a <see cref="BigInteger"/> value to the array.
+        /// </summary>
+        /// <param name="value">The <see cref="BigInteger"/> value.</param>
+        public void Add(in BigInteger value)
+        {
+            _builder.AddItem(value);
+        }
+
+        /// <summary>
+        /// Adds a <see cref="BigNumber"/> value to the array.
+        /// </summary>
+        /// <param name="value">The <see cref="BigNumber"/> value.</param>
+        public void Add(in BigNumber value)
         {
             _builder.AddItem(value);
         }

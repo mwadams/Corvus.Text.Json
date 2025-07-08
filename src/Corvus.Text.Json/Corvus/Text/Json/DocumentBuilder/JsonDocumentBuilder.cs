@@ -3,9 +3,9 @@
 
 using System.Buffers;
 using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json.Internal;
 using NodaTime;
@@ -672,6 +672,34 @@ namespace Corvus.Text.Json
 
             value = 0;
             return false;
+        }
+
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out BigInteger value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+            return BigInteger.TryParse(segment, out value);
+        }
+
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out BigNumber value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+            return BigNumber.TryParse(segment, out value);
         }
 
 #if NET
@@ -1460,6 +1488,8 @@ namespace Corvus.Text.Json
         int IMutableJsonDocument.StoreValue(float value) => StoreValue(value);
         int IMutableJsonDocument.StoreValue(double value) => StoreValue(value);
         int IMutableJsonDocument.StoreValue(decimal value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(in BigNumber value) => StoreValue(value);
+        int IMutableJsonDocument.StoreValue(in BigInteger value) => StoreValue(value);
 #if NET
         int IMutableJsonDocument.StoreValue(Int128 value) => StoreValue(value);
         int IMutableJsonDocument.StoreValue(UInt128 value) => StoreValue(value);

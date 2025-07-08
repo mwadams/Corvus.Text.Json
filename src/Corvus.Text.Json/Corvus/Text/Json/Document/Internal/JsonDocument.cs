@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
 using NodaTime;
 using System.Collections.Generic;
+using System.Numerics;
+
 
 #if NET
 using System.Globalization;
@@ -848,6 +850,83 @@ namespace Corvus.Text.Json.Internal
             bool success = Utf8Formatter.TryFormat(value, _valueBacking.AsSpan(offset), out length);
             Debug.Assert(success);
             offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(in BigInteger value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length;
+
+            offset += 4;
+
+#if NET
+            if (!value.TryGetMinimumFormatBufferLength(out int enlarge))
+            {
+                ThrowHelper.ThrowOutOfMemoryException((uint)enlarge);
+            }
+
+            Enlarge(enlarge, ref _valueBacking);
+            var formatted = value.TryFormat(_valueBacking.AsSpan(offset), out length);
+            Debug.Assert(formatted);
+#else
+            Enlarge(JsonConstants.InitialFormatBigIntegerLength, ref _valueBacking);
+
+
+            while(!value.TryFormat(_valueBacking.AsSpan(offset), out length))
+            {
+                Enlarge(JsonConstants.InitialFormatBigIntegerLength, ref _valueBacking);
+            }
+#endif
+
+            offset += length;
+
+#if NET
+            BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#else
+            BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
+#endif
+
+            _valueOffset = offset;
+            return result;
+        }
+
+        protected int StoreValue(in BigNumber value)
+        {
+            int offset = _valueOffset;
+            int result = offset;
+            int length;
+
+            offset += 4;
+#if NET
+            if (!value.TryGetMinimumFormatBufferLength(out int enlarge))
+            {
+                ThrowHelper.ThrowOutOfMemoryException((uint)enlarge);
+            }
+
+            Enlarge(enlarge, ref _valueBacking);
+            var formatted = value.TryFormat(_valueBacking.AsSpan(offset), out length);
+            Debug.Assert(formatted);
+#else
+            Enlarge(JsonConstants.InitialFormatBigNumberLength, ref _valueBacking);
+
+
+            while (!value.Normalize().TryFormat(_valueBacking.AsSpan(offset), out length))
+            {
+                Enlarge(JsonConstants.InitialFormatBigIntegerLength, ref _valueBacking);
+            }
+#endif
+            offset += length;
+
 
 #if NET
             BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);

@@ -90,6 +90,8 @@ namespace Corvus.Text.Json
         public const int MaximumFormatDecimalLength = 31; // default (i.e. 'G')
         public const int MaximumFormatGuidLength = 36;    // default (i.e. 'D'), 8 + 4 + 4 + 4 + 12 + 4 for the hyphens (e.g. 094ffa0a-0442-494d-b452-04003fa755cc)
         public const int MaximumFormatInt128Length = 40;
+        public const int InitialFormatBigIntegerLength = 80;
+        public const int InitialFormatBigNumberLength = InitialFormatBigIntegerLength + MaximumFormatUInt32Length;
         public const int MaximumFormatUInt128Length = 39;
         public const int MaximumFormatHalfLength = 20;
         public const int MaximumEscapedGuidLength = MaxExpansionFactorWhileEscaping * MaximumFormatGuidLength;

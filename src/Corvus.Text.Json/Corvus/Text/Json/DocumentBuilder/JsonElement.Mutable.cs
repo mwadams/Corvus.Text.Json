@@ -5,6 +5,7 @@ using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json.Internal;
 using NodaTime;
@@ -199,7 +200,7 @@ namespace Corvus.Text.Json
                 _kind = Kind.StringSimpleType;
             }
 
-            private Source(Corvus.Text.Json.Period value)
+            private Source(Period value)
             {
                 SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatPeriod(v, buffer, out written));
                 _kind = Kind.StringSimpleType;
@@ -312,7 +313,7 @@ namespace Corvus.Text.Json
                 return new(value);
             }
 
-            public static implicit operator Source(Corvus.Text.Json.Period value)
+            public static implicit operator Source(Period value)
             {
                 return new(value);
             }
@@ -1854,6 +1855,112 @@ namespace Corvus.Text.Json
                 return value;
             }
 #endif
+
+            /// <summary>
+            ///   Attempts to represent the current JSON number as a <see cref="BigNumber"/>.
+            /// </summary>
+            /// <param name="value">Receives the value.</param>
+            /// <remarks>
+            ///   This method does not parse the contents of a JSON string value.
+            /// </remarks>
+            /// <returns>
+            ///   <see langword="true"/> if the number can be represented as a <see cref="BigNumber"/>,
+            ///   <see langword="false"/> otherwise.
+            /// </returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="GetRawText"/>
+            public readonly bool TryGetBigNumber(out BigNumber value)
+            {
+                CheckValidInstance();
+
+                return _parent.TryGetValue(_idx, out value);
+            }
+
+
+            /// <summary>
+            ///   Gets the current JSON number as a <see cref="BigNumber"/>.
+            /// </summary>
+            /// <returns>The current JSON number as a <see cref="BigNumber"/>.</returns>
+            /// <remarks>
+            ///   This method does not parse the contents of a JSON string value.
+            /// </remarks>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+            /// </exception>
+            /// <exception cref="FormatException">
+            ///   The value cannot be represented as a <see cref="BigNumber"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="GetRawText"/>
+            public readonly BigNumber GetBigNumber()
+            {
+                if (!TryGetBigNumber(out BigNumber value))
+                {
+                    ThrowHelper.ThrowFormatException();
+                }
+
+                return value;
+            }
+
+            /// <summary>
+            ///   Attempts to represent the current JSON number as a <see cref="BigInteger"/>.
+            /// </summary>
+            /// <param name="value">Receives the value.</param>
+            /// <remarks>
+            ///   This method does not parse the contents of a JSON string value.
+            /// </remarks>
+            /// <returns>
+            ///   <see langword="true"/> if the number can be represented as a <see cref="BigInteger"/>,
+            ///   <see langword="false"/> otherwise.
+            /// </returns>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="GetRawText"/>
+            public readonly bool TryGetBigInteger(out BigInteger value)
+            {
+                CheckValidInstance();
+
+                return _parent.TryGetValue(_idx, out value);
+            }
+
+
+            /// <summary>
+            ///   Gets the current JSON number as a <see cref="BigInteger"/>.
+            /// </summary>
+            /// <returns>The current JSON number as a <see cref="BigInteger"/>.</returns>
+            /// <remarks>
+            ///   This method does not parse the contents of a JSON string value.
+            /// </remarks>
+            /// <exception cref="InvalidOperationException">
+            ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+            /// </exception>
+            /// <exception cref="FormatException">
+            ///   The value cannot be represented as a <see cref="BigInteger"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            ///   The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
+            /// <seealso cref="GetRawText"/>
+            public readonly BigInteger GetBigInteger()
+            {
+                if (!TryGetBigInteger(out BigInteger value))
+                {
+                    ThrowHelper.ThrowFormatException();
+                }
+
+                return value;
+            }
 
             /// <summary>
             ///   Attempts to represent the current JSON string as a <see cref="LocalDate"/>.

@@ -3,9 +3,9 @@
 
 using System.Buffers;
 using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Corvus.Text.Json.Internal;
@@ -665,6 +665,36 @@ namespace Corvus.Text.Json
 
             value = 0;
             return false;
+        }
+
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out BigInteger value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> data = _utf8Json.Span;
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+            return BigInteger.TryParse(segment, out value);
+        }
+
+        /// <inheritdoc />
+        bool IJsonDocument.TryGetValue(int index, out BigNumber value)
+        {
+            CheckNotDisposed();
+
+            DbRow row = _parsedData.Get(index);
+
+            CheckExpectedType(JsonTokenType.Number, row.TokenType);
+
+            ReadOnlySpan<byte> data = _utf8Json.Span;
+            ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+            return BigNumber.TryParse(segment, out value);
         }
 
 #if NET

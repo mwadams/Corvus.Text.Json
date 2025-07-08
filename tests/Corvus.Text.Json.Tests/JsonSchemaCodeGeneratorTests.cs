@@ -86,12 +86,31 @@ namespace Corvus.Text.Json.Tests
                 }
             }            
             """;
+
         private const string SimpleType =
             """
             {{
                 "$schema": "https://json-schema.org/draft/2020-12/schema",
                 "type": "{0}"
             }}           
+            """;
+
+        private const string ArrayTypeWithItemsConstraint =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "array",
+                "{0}": {{ "type": "{1}" }}
+            }}
+            """;
+
+        private const string ArrayTypeWithItemsConstraintAndFormat =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "array",
+                "{0}": {{ "type": "{1}", "format": "{2}" }}
+            }}
             """;
 
         private const string NumericFormat =
@@ -250,6 +269,63 @@ namespace Corvus.Text.Json.Tests
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"composedNumericFormatWithConstraint_{type1}_{format1}_{type2}_{format2}.json", string.Format(ComposedMultiFormatNumericWithAdditionalConstraint, type1, format1, type2, format2));
+        }
+
+        [Theory]
+        [InlineData("items", "number", "int128")]
+        [InlineData("items", "number", "int64")]
+        [InlineData("items", "number", "int32")]
+        [InlineData("items", "number", "int16")]
+        [InlineData("items", "number", "sbyte")]
+        [InlineData("items", "number", "uint128")]
+        [InlineData("items", "number", "uint64")]
+        [InlineData("items", "number", "uint32")]
+        [InlineData("items", "number", "uint16")]
+        [InlineData("items", "number", "byte")]
+        [InlineData("items", "number", "double")]
+        [InlineData("items", "number", "single")]
+        [InlineData("items", "number", "decimal")]
+        [InlineData("items", "string", "date")]
+        [InlineData("items", "string", "date-time")]
+        [InlineData("items", "string", "time")]
+        [InlineData("items", "string", "duration")]
+        [InlineData("items", "string", "ipv4")]
+        [InlineData("items", "string", "ipv6")]
+        [InlineData("items", "string", "uuid")]
+        [InlineData("items", "string", "uri")]
+        [InlineData("items", "string", "uri-reference")]
+        [InlineData("items", "string", "iri")]
+        [InlineData("items", "string", "iri-reference")]
+        [InlineData("items", "string", "regex")]
+        [InlineData("unevaluatedItems", "number", "int128")]
+        [InlineData("unevaluatedItems", "number", "int64")]
+        [InlineData("unevaluatedItems", "number", "int32")]
+        [InlineData("unevaluatedItems", "number", "int16")]
+        [InlineData("unevaluatedItems", "number", "sbyte")]
+        [InlineData("unevaluatedItems", "number", "uint128")]
+        [InlineData("unevaluatedItems", "number", "uint64")]
+        [InlineData("unevaluatedItems", "number", "uint32")]
+        [InlineData("unevaluatedItems", "number", "uint16")]
+        [InlineData("unevaluatedItems", "number", "byte")]
+        [InlineData("unevaluatedItems", "number", "double")]
+        [InlineData("unevaluatedItems", "number", "single")]
+        [InlineData("unevaluatedItems", "number", "decimal")]
+        [InlineData("unevaluatedItems", "string", "date")]
+        [InlineData("unevaluatedItems", "string", "date-time")]
+        [InlineData("unevaluatedItems", "string", "time")]
+        [InlineData("unevaluatedItems", "string", "duration")]
+        [InlineData("unevaluatedItems", "string", "ipv4")]
+        [InlineData("unevaluatedItems", "string", "ipv6")]
+        [InlineData("unevaluatedItems", "string", "uuid")]
+        [InlineData("unevaluatedItems", "string", "uri")]
+        [InlineData("unevaluatedItems", "string", "uri-reference")]
+        [InlineData("unevaluatedItems", "string", "iri")]
+        [InlineData("unevaluatedItems", "string", "iri-reference")]
+        [InlineData("unevaluatedItems", "string", "regex")]
+        public static async Task GenerateCode_Emits_ArrayTypeWithItemsConstraintAndFormat(string keyword, string type, string format)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"arrayTypeWithItemsAndFormat_{keyword}_{type}_{format}.json", string.Format(ArrayTypeWithItemsConstraintAndFormat, keyword, type, format));
         }
     }
 }

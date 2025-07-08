@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using NodaTime;
 
 namespace Corvus.Text.Json.Internal
@@ -235,6 +236,22 @@ namespace Corvus.Text.Json.Internal
         /// <param name="value">The <see cref="decimal"/> value.</param>
         /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
         bool TryGetValue(int index, out decimal value);
+
+        /// <summary>
+        /// Tries to get the value of the element at the specified index as a <see cref="BigInteger"/>.
+        /// </summary>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="value">The <see cref="BigInteger"/> value.</param>
+        /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
+        bool TryGetValue(int index, out BigInteger value);
+
+        /// <summary>
+        /// Tries to get the value of the element at the specified index as a <see cref="BigNumber"/>.
+        /// </summary>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="value">The <see cref="BigNumber"/> value.</param>
+        /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
+        bool TryGetValue(int index, out BigNumber value);
 
         /// <summary>
         /// Tries to get the value of the element at the specified index as a <see cref="DateTime"/>.

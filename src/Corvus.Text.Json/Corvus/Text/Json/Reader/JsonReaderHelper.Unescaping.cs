@@ -458,6 +458,39 @@ namespace Corvus.Text.Json
             }
         }
 
+        internal static bool TryGetTextFromUtf8(ReadOnlySpan<byte> text, Span<char> dest, out int written)
+        {
+            try
+            {
+#if NET
+                written = s_utf8Encoding.GetChars(text, dest);
+                return true;
+#else
+                if (text.IsEmpty)
+                {
+                    written = 0;
+                    return true;
+                }
+
+                unsafe
+                {
+                    fixed (byte* bytePtr = text)
+                    fixed (char* destPtr = dest)
+                    {
+                        written = s_utf8Encoding.GetChars(bytePtr, text.Length, destPtr, dest.Length);
+                        return true;
+                    }
+                }
+#endif
+            }
+            catch (EncoderFallbackException)
+            {
+                written = 0;
+                return false;
+            }
+        }
+
+
         internal static int GetUtf8FromText(ReadOnlySpan<char> text, Span<byte> dest)
         {
             try

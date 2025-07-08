@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using System.Numerics;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 
@@ -304,6 +305,26 @@ namespace Corvus.Text.Json
         }
 
         public void Add(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, in BigInteger value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        public void Add(ReadOnlySpan<byte> propertyName, in BigNumber value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(

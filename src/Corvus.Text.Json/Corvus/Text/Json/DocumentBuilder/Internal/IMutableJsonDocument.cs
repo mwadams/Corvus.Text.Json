@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Numerics;
 using NodaTime;
 
 namespace Corvus.Text.Json.Internal
@@ -227,6 +228,20 @@ namespace Corvus.Text.Json.Internal
         /// <param name="value">The <see cref="decimal"/> value to store.</param>
         /// <returns>The index of the stored value.</returns>
         int StoreValue(decimal value);
+
+        /// <summary>
+        /// Stores a <see cref="BigInteger"/> value in the document.
+        /// </summary>
+        /// <param name="value">The <see cref="BigInteger"/> value to store.</param>
+        /// <returns>The index of the stored value.</returns>
+        int StoreValue(in BigInteger value);
+
+        /// <summary>
+        /// Stores a <see cref="BigNumber"/> value in the document.
+        /// </summary>
+        /// <param name="value">The <see cref="BigNumber"/> value to store.</param>
+        /// <returns>The index of the stored value.</returns>
+        int StoreValue(in BigNumber value);
 
 #if NET
         /// <summary>

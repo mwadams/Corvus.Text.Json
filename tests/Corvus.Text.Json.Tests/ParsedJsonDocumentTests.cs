@@ -10,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Tests;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ using Corvus.Text.Json.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using YamlDotNet.Core.Tokens;
 
 namespace Corvus.Text.Json.Tests
 {
@@ -1495,6 +1497,8 @@ namespace Corvus.Text.Json.Tests
             double expectedDouble = value;
             float expectedFloat = value;
             decimal expectedDecimal = value;
+            BigInteger expectedBigInteger = value;
+            BigNumber expectedBigNumber = new(value, 0);
 
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
@@ -1511,6 +1515,12 @@ namespace Corvus.Text.Json.Tests
                 Assert.True(root.TryGetDecimal(out decimal decimalVal));
                 Assert.Equal(expectedDecimal, decimalVal);
 
+                Assert.True(root.TryGetBigInteger(out BigInteger bigIntegerVal));
+                Assert.Equal(expectedBigInteger, bigIntegerVal);
+
+                Assert.True(root.TryGetBigNumber(out BigNumber bigNumberVal));
+                Assert.Equal(expectedBigNumber, bigNumberVal);
+
                 Assert.True(root.TryGetSByte(out sbyte sbyteVal));
                 Assert.Equal(value, sbyteVal);
 
@@ -1523,9 +1533,12 @@ namespace Corvus.Text.Json.Tests
                 Assert.True(root.TryGetInt64(out long longVal));
                 Assert.Equal(value, longVal);
 
+
                 Assert.Equal(expectedFloat, root.GetSingle());
                 Assert.Equal(expectedDouble, root.GetDouble());
                 Assert.Equal(expectedDecimal, root.GetDecimal());
+                Assert.Equal(expectedBigInteger, root.GetBigInteger());
+                Assert.Equal(expectedBigNumber, root.GetBigNumber());
                 Assert.Equal(value, root.GetInt32());
                 Assert.Equal(value, root.GetInt64());
 
@@ -1596,6 +1609,8 @@ namespace Corvus.Text.Json.Tests
             double expectedDouble = value;
             float expectedFloat = value;
             decimal expectedDecimal = value;
+            BigInteger expectedBigInteger = value;
+            BigNumber expectedBigNumber = new(value, 0);
 
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
@@ -1611,6 +1626,12 @@ namespace Corvus.Text.Json.Tests
 
                 Assert.True(root.TryGetDecimal(out decimal decimalVal));
                 Assert.Equal(expectedDecimal, decimalVal);
+
+                Assert.True(root.TryGetBigInteger(out BigInteger bigIntegerVal));
+                Assert.Equal(expectedBigInteger, bigIntegerVal);
+
+                Assert.True(root.TryGetBigNumber(out BigNumber bigNumberVal));
+                Assert.Equal(expectedBigNumber, bigNumberVal);
 
                 Assert.Equal((value == 0), root.TryGetSByte(out sbyte sbyteVal));
                 Assert.Equal(0, sbyteVal);
@@ -1630,6 +1651,8 @@ namespace Corvus.Text.Json.Tests
                 Assert.Equal(expectedFloat, root.GetSingle());
                 Assert.Equal(expectedDouble, root.GetDouble());
                 Assert.Equal(expectedDecimal, root.GetDecimal());
+                Assert.Equal(expectedBigInteger, root.GetBigInteger());
+                Assert.Equal(expectedBigNumber, root.GetBigNumber());
                 Assert.Equal(value, root.GetInt32());
                 Assert.Equal(value, root.GetInt64());
 
@@ -1694,6 +1717,8 @@ namespace Corvus.Text.Json.Tests
             double expectedDouble = value;
             float expectedFloat = value;
             decimal expectedDecimal = value;
+            BigInteger expectedBigInteger = value;
+            BigNumber expectedBigNumber = new(value, 0);
 
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
@@ -1709,6 +1734,12 @@ namespace Corvus.Text.Json.Tests
 
                 Assert.True(root.TryGetDecimal(out decimal decimalVal));
                 Assert.Equal(expectedDecimal, decimalVal);
+
+                Assert.True(root.TryGetBigInteger(out BigInteger bigIntegerVal));
+                Assert.Equal(expectedBigInteger, bigIntegerVal);
+
+                Assert.True(root.TryGetBigNumber(out BigNumber bigNumberVal));
+                Assert.Equal(expectedBigNumber, bigNumberVal);
 
                 Assert.Equal((value == 0), root.TryGetSByte(out sbyte sbyteVal));
                 Assert.Equal(0, sbyteVal);
@@ -1731,6 +1762,8 @@ namespace Corvus.Text.Json.Tests
                 Assert.Equal(expectedFloat, root.GetSingle());
                 Assert.Equal(expectedDouble, root.GetDouble());
                 Assert.Equal(expectedDecimal, root.GetDecimal());
+                Assert.Equal(expectedBigInteger, root.GetBigInteger());
+                Assert.Equal(expectedBigNumber, root.GetBigNumber());
                 Assert.Equal(value, root.GetInt32());
                 Assert.Equal(value, root.GetInt64());
 
@@ -1789,6 +1822,8 @@ namespace Corvus.Text.Json.Tests
             double expectedDouble = value;
             float expectedFloat = value;
             decimal expectedDecimal = value;
+            BigInteger expectedBigInteger = value;
+            BigNumber expectedBigNumber = new(value, 0);
 
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
@@ -1804,6 +1839,12 @@ namespace Corvus.Text.Json.Tests
 
                 Assert.True(root.TryGetDecimal(out decimal decimalVal));
                 Assert.Equal(expectedDecimal, decimalVal);
+
+                Assert.True(root.TryGetBigInteger(out BigInteger bigIntegerVal));
+                Assert.Equal(expectedBigInteger, bigIntegerVal);
+
+                Assert.True(root.TryGetBigNumber(out BigNumber bigNumberVal));
+                Assert.Equal(expectedBigNumber, bigNumberVal);
 
                 Assert.False(root.TryGetSByte(out sbyte sbyteVal));
                 Assert.Equal(0, sbyteVal);
@@ -1890,6 +1931,8 @@ namespace Corvus.Text.Json.Tests
             double expectedDouble = value;
             float expectedFloat = value;
             decimal expectedDecimal = value;
+            BigInteger expectedBigInteger = value;
+            BigNumber expectedBigNumber = new(value, 0);
 
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
             {
@@ -1905,6 +1948,12 @@ namespace Corvus.Text.Json.Tests
 
                 Assert.True(root.TryGetDecimal(out decimal decimalVal));
                 Assert.Equal(expectedDecimal, decimalVal);
+
+                Assert.True(root.TryGetBigInteger(out BigInteger bigIntegerVal));
+                Assert.Equal(expectedBigInteger, bigIntegerVal);
+
+                Assert.True(root.TryGetBigNumber(out BigNumber bigNumberVal));
+                Assert.Equal(expectedBigNumber, bigNumberVal);
 
                 Assert.False(root.TryGetSByte(out sbyte sbyteVal));
                 Assert.Equal(0, sbyteVal);
@@ -1962,9 +2011,12 @@ namespace Corvus.Text.Json.Tests
             float expectedFloat = ulong.MaxValue;
             double expectedDouble = ulong.MaxValue;
             decimal expectedDecimal = ulong.MaxValue;
+            BigInteger expectedBigInteger = ulong.MaxValue;
+            BigNumber expectedBigNumber = new BigNumber(new BigInteger(ulong.MaxValue) * 10, 0).Normalize();
             expectedDouble *= 10;
             expectedFloat *= 10;
             expectedDecimal *= 10;
+            expectedBigInteger *= 10;
 
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + ulong.MaxValue + "0  ", default))
             {
@@ -1980,6 +2032,12 @@ namespace Corvus.Text.Json.Tests
 
                 Assert.True(root.TryGetDecimal(out decimal decimalVal));
                 Assert.Equal(expectedDecimal, decimalVal);
+
+                Assert.True(root.TryGetBigInteger(out BigInteger bigIntegerVal));
+                Assert.Equal(expectedBigInteger, bigIntegerVal);
+
+                Assert.True(root.TryGetBigNumber(out BigNumber bigNumberVal));
+                Assert.Equal(expectedBigNumber, bigNumberVal);
 
                 Assert.False(root.TryGetSByte(out sbyte sbyteVal));
                 Assert.Equal(0, sbyteVal);
@@ -2008,6 +2066,9 @@ namespace Corvus.Text.Json.Tests
                 Assert.Equal(expectedFloat, root.GetSingle());
                 Assert.Equal(expectedDouble, root.GetDouble());
                 Assert.Equal(expectedDecimal, root.GetDecimal());
+                Assert.Equal(expectedBigInteger, root.GetBigInteger());
+                Assert.Equal(expectedBigNumber, root.GetBigNumber());
+
                 Assert.Throws<FormatException>(() => root.GetInt32());
                 Assert.Throws<FormatException>(() => root.GetUInt32());
                 Assert.Throws<FormatException>(() => root.GetInt64());
@@ -2177,17 +2238,17 @@ namespace Corvus.Text.Json.Tests
         {
             get
             {
-                yield return new object[] { "1e+1", 10.0, 10.0f, 10m };
-                yield return new object[] { "1.1e-0", 1.1, 1.1f, 1.1m };
-                yield return new object[] { "3.14159", 3.14159, 3.14159f, 3.14159m };
-                yield return new object[] { "1e-10", 1e-10, 1e-10f, 1e-10m };
-                yield return new object[] { "1234567.15", 1234567.15, 1234567.13f, 1234567.15m };
+                yield return new object[] { "1e+1", 10.0, 10.0f, 10m, new  BigNumber(1, 1)};
+                yield return new object[] { "1.1e-0", 1.1, 1.1f, 1.1m, new BigNumber(11, -1) };
+                yield return new object[] { "3.14159", 3.14159, 3.14159f, 3.14159m, new BigNumber(314159, -5) };
+                yield return new object[] { "1e-10", 1e-10, 1e-10f, 1e-10m, new BigNumber(1, -10) };
+                yield return new object[] { "1234567.15", 1234567.15, 1234567.13f, 1234567.15m, new BigNumber(123456715, -2) };
             }
         }
 
         [Theory]
         [MemberData(nameof(NonIntegerCases))]
-        public static void ReadNonInteger(string str, double expectedDouble, float expectedFloat, decimal expectedDecimal)
+        public static void ReadNonInteger(string str, double expectedDouble, float expectedFloat, decimal expectedDecimal, BigNumber expectedBigNumber)
         {
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + str + "  "))
             {
@@ -2228,9 +2289,13 @@ namespace Corvus.Text.Json.Tests
                 Assert.False(root.TryGetUInt64(out ulong ulongVal));
                 Assert.Equal(0UL, ulongVal);
 
+                Assert.False(root.TryGetBigInteger(out BigInteger bigIntegerVal));
+                Assert.Equal(0UL, bigIntegerVal);
+
                 Assert.Equal(expectedFloat, root.GetSingle());
                 Assert.Equal(expectedDouble, root.GetDouble());
                 Assert.Equal(expectedDecimal, root.GetDecimal());
+                Assert.Equal(expectedBigNumber, root.GetBigNumber());
                 Assert.Throws<FormatException>(() => root.GetSByte());
                 Assert.Throws<FormatException>(() => root.GetByte());
                 Assert.Throws<FormatException>(() => root.GetInt16());
@@ -2285,6 +2350,14 @@ namespace Corvus.Text.Json.Tests
 
                 Assert.False(root.TryGetDecimal(out decimal decimalVal));
                 Assert.Equal(0m, decimalVal);
+
+                Assert.False(root.TryGetBigInteger(out BigInteger bigIntegerVal));
+                Assert.Equal(0, bigIntegerVal);
+
+                BigNumber expectedBigNumber = new BigNumber(1, 100000002);
+                Assert.True(root.TryGetBigNumber(out BigNumber bigNumberVal));
+                Assert.Equal(expectedBigNumber, bigNumberVal);
+
 
                 Assert.False(root.TryGetSByte(out sbyte sbyteVal));
                 Assert.Equal(0, sbyteVal);
