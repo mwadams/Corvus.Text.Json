@@ -153,6 +153,66 @@ public readonly partial struct TypeObject
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
         }
 
+        /// <summary>
+        /// Gets the value of the property with the given name.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>The value of the property with the given name.</returns>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public JsonElement.Mutable this[ReadOnlySpan<byte> propertyName]
+        {
+            get
+            {
+                CheckValidInstance();
+                if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement.Mutable value))
+                {
+                    return default;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of the property with the given name.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>The value of the property with the given name.</returns>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public JsonElement.Mutable this[ReadOnlySpan<char> propertyName]
+        {
+            get
+            {
+                CheckValidInstance();
+                if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement.Mutable value))
+                {
+                    return default;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of the property with the given name.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>The value of the property with the given name.</returns>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public JsonElement.Mutable this[string propertyName]
+        {
+            get
+            {
+                CheckValidInstance();
+                if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement.Mutable value))
+                {
+                    return default;
+                }
+
+                return value;
+            }
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

@@ -107,5 +107,110 @@ namespace Corvus.Text.Json.CodeGeneration
 
             return generator;
         }
+
+        /// <summary>
+        /// Append GetArrayLength() method.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration for which to emit the indexers.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendGetArrayLength(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Array) == 0)
+            {
+                return generator;
+            }
+
+            return generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Gets the array length.")
+                .AppendLineIndent("/// </summary>")
+                .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">The value is not an array.</exception>")
+                .AppendLineIndent("public int GetArrayLength()")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("CheckValidInstance();")
+                    .AppendLineIndent("return _parent.GetArrayLength(_idx);")
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
+
+        /// <summary>
+        /// Append array indexer properties.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration for which to emit the indexers.</param>
+        /// <param name="forMutable">Whether to emit the indexers for the mutable element.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendArrayIndexerProperties(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable = false)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Array) == 0)
+            {
+                return generator;
+            }
+
+            string fqdtn;
+
+            if (typeDeclaration.ArrayItemsType() is ArrayItemsTypeDeclaration itemsType)
+            {
+                if (itemsType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+                {
+                    return generator;
+                }
+
+                fqdtn = itemsType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
+            else if (typeDeclaration.ExplicitUnevaluatedItemsType() is ArrayItemsTypeDeclaration unevaluatedItemsType)
+            {
+                if (unevaluatedItemsType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+                {
+                    return generator;
+                }
+
+                fqdtn = unevaluatedItemsType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
+            else
+            {
+                fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+            }
+
+            generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                    """
+                    /// <summary>
+                    /// Gets the item at the given index.
+                    /// </summary>
+                    /// <param name="index">The index at which to retrieve the item.</param>
+                    /// <returns>The item at the given index.</returns>
+                    /// <exception cref="IndexOutOfRangeException">The index was outside the bounds of the array.</exception>
+                    /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+                    """)
+                    .AppendLineIndent("public ", fqdtn, forMutable ? ".Mutable" : "", " this[int index]")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("get")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("CheckValidInstance();")
+                            .AppendLineIndent("return _parent.GetArrayIndexElement<", fqdtn, forMutable ? ".Mutable" : "", ">(_idx, index);")
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+            return generator;
+        }
     }
 }

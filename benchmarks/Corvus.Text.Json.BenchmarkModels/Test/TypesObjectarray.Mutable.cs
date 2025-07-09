@@ -153,6 +153,102 @@ public readonly partial struct TypesObjectarray
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
         }
 
+        /// <summary>
+        /// Gets the item at the given index.
+        /// </summary>
+        /// <param name="index">The index at which to retrieve the item.</param>
+        /// <returns>The item at the given index.</returns>
+        /// <exception cref="IndexOutOfRangeException">The index was outside the bounds of the array.</exception>
+        /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+        public JsonElement.Mutable this[int index]
+        {
+            get
+            {
+                CheckValidInstance();
+                return _parent.GetArrayIndexElement<JsonElement.Mutable>(_idx, index);
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of the property with the given name.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>The value of the property with the given name.</returns>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public JsonElement.Mutable this[ReadOnlySpan<byte> propertyName]
+        {
+            get
+            {
+                CheckValidInstance();
+                if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement.Mutable value))
+                {
+                    return default;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of the property with the given name.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>The value of the property with the given name.</returns>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public JsonElement.Mutable this[ReadOnlySpan<char> propertyName]
+        {
+            get
+            {
+                CheckValidInstance();
+                if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement.Mutable value))
+                {
+                    return default;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of the property with the given name.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>The value of the property with the given name.</returns>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public JsonElement.Mutable this[string propertyName]
+        {
+            get
+            {
+                CheckValidInstance();
+                if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement.Mutable value))
+                {
+                    return default;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the array length.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+        public int GetArrayLength()
+        {
+            CheckValidInstance();
+            return _parent.GetArrayLength(_idx);
+        }
+
+        /// <summary>
+        /// Gets the number of properties in the object.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public int GetPropertyCount()
+        {
+            CheckValidInstance();
+            return _parent.GetPropertyCount(_idx);
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

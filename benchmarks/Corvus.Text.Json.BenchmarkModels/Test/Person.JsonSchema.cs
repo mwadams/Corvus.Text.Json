@@ -45,7 +45,7 @@ public readonly partial struct Person
                 parentDocument,
                 parentIndex,
                 usingEvaluatedItems: false,
-                usingEvaluatedProperties: false,
+                usingEvaluatedProperties: true,
                 resultsCollector: resultsCollector);
 
             try

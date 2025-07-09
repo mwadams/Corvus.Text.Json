@@ -22,6 +22,7 @@ namespace Corvus.Text.Json.Tests
                     "age": { "$ref": "#/$defs/Age" },
                     "competedInYears": { "$ref": "#/$defs/CompetedInYears" }
                 },
+                "unevaluatedProperties": false,
                 "$defs": {
                     "PersonArray": {
                         "type": "array",

@@ -481,7 +481,6 @@ using JsonDocumentBuilder<Test.ComposedFormatNumberInt64NumberInt128.Mutable> te
 
 Console.WriteLine(testComposedDocBuilder.RootElement);
 
-
 using JsonDocumentBuilder<Test.MultiDimensionFixedSizeNumericArrayInt32.Mutable> testMultiDimensionalArray =
     Test.MultiDimensionFixedSizeNumericArrayInt32.CreateDocumentBuilder(
         workspace,
@@ -491,4 +490,6 @@ using JsonDocumentBuilder<Test.MultiDimensionFixedSizeNumericArrayInt32.Mutable>
         }));
 
 Console.WriteLine(testMultiDimensionalArray.RootElement);
+
+Console.WriteLine(testMultiDimensionalArray.RootElement[1][3]);
 

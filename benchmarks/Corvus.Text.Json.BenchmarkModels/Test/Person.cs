@@ -376,36 +376,6 @@ public readonly partial struct Person
             Create(ref _builder, name, age, competedInYears);
         }
 
-        /// <summary>
-        /// Add a property to the object.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to add.</param>
-        /// <param name="value">The value of the property to add.</param>
-        public void AddProperty(ReadOnlySpan<byte> propertyName, in JsonElement.Source value)
-        {
-            value.AddAsProperty(propertyName, ref _builder);
-        }
-
-        /// <summary>
-        /// Add a property to the object.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to add.</param>
-        /// <param name="value">The value of the property to add.</param>
-        public void AddProperty(ReadOnlySpan<char> propertyName, in JsonElement.Source value)
-        {
-            value.AddAsProperty(propertyName, ref _builder);
-        }
-
-        /// <summary>
-        /// Add a property to the object.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to add.</param>
-        /// <param name="value">The value of the property to add.</param>
-        public void AddProperty(string propertyName, in JsonElement.Source value)
-        {
-            value.AddAsProperty(propertyName, ref _builder);
-        }
-
         internal static void BuildValue(Build value, ref ComplexValueBuilder o)
         {
             o.StartObject();

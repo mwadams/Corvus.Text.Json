@@ -65,6 +65,42 @@ public readonly partial struct FixedSizeNumericArrayByte
     /// </remarks>
     public static int ValueBufferSize => 10;
 
+    /// <summary>
+    /// Gets the item at the given index.
+    /// </summary>
+    /// <param name="index">The index at which to retrieve the item.</param>
+    /// <returns>The item at the given index.</returns>
+    /// <exception cref="IndexOutOfRangeException">The index was outside the bounds of the array.</exception>
+    /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+    public Test.FixedSizeNumericArrayByte.ItemsEntity this[int index]
+    {
+        get
+        {
+            CheckValidInstance();
+            return _parent.GetArrayIndexElement<Test.FixedSizeNumericArrayByte.ItemsEntity>(_idx, index);
+        }
+    }
+
+    /// <summary>
+    /// Gets the array length.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+    public int GetArrayLength()
+    {
+        CheckValidInstance();
+        return _parent.GetArrayLength(_idx);
+    }
+
+    /// <summary>
+    /// Gets the number of properties in the object.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public int GetPropertyCount()
+    {
+        CheckValidInstance();
+        return _parent.GetPropertyCount(_idx);
+    }
+
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 
