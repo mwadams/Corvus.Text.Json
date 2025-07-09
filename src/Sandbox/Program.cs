@@ -480,3 +480,16 @@ using JsonDocumentBuilder<Test.ComposedFormatNumberInt64NumberInt128.Mutable> te
         128);
 
 Console.WriteLine(testComposedDocBuilder.RootElement);
+
+
+using JsonDocumentBuilder<Test.MultiDimensionFixedSizeNumericArrayInt32.Mutable> testMultiDimensionalArray =
+    Test.MultiDimensionFixedSizeNumericArrayInt32.CreateDocumentBuilder(
+        workspace,
+        new((ref b) =>
+        {
+            b.CreateTensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        }));
+
+Console.WriteLine(testMultiDimensionalArray.RootElement);
+
+testMultiDimensionalArray.RootElement[0][4];

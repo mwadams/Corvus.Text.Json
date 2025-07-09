@@ -159,11 +159,11 @@ namespace Corvus.Text.Json.Tests
                         "type": "number",
                         "format": "{0}"           
                     }},
-                    "minItems": 20,
-                    "maxItems": 20
+                    "minItems": 5,
+                    "maxItems": 5
                 }},
-                "minItems": 10,
-                "maxItems": 10
+                "minItems": 2,
+                "maxItems": 2
             }}           
             """;
         private const string StringFormat =
