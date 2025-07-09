@@ -492,4 +492,3 @@ using JsonDocumentBuilder<Test.MultiDimensionFixedSizeNumericArrayInt32.Mutable>
 
 Console.WriteLine(testMultiDimensionalArray.RootElement);
 
-testMultiDimensionalArray.RootElement[0][4];

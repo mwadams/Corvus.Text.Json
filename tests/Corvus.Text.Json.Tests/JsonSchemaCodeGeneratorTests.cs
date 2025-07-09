@@ -207,6 +207,70 @@ namespace Corvus.Text.Json.Tests
             }}           
             """;
 
+        private const string SimpleObjectWithProperties =
+            """
+            {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "otherName": {
+                        "type": "number"
+                    }
+                }
+            }
+            """;
+
+        private const string ComposedObjectWithProperties =
+            """
+            {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            }
+                        }           
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "otherName": {
+                                "type": "number"
+                            }
+                        }           
+                    }         
+                ]
+            }
+            """;
+
+        private const string ComposedObjectWithRequiredProperties =
+            """
+            {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "allOf": [
+                    {
+                        "required": ["name"]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "otherName": {
+                                "type": "number"
+                            }
+                        }           
+                    }         
+                ]
+            }
+            """;
+
         [Fact]
         public static async Task GenerateCode_Emits_Person()
         {
@@ -376,6 +440,29 @@ namespace Corvus.Text.Json.Tests
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"composedNumericFormatWithConstraint_{type1}_{format1}_{type2}_{format2}.json", string.Format(ComposedMultiFormatNumericWithAdditionalConstraint, type1, format1, type2, format2));
+        }
+
+
+        [Fact]
+        public static async Task GenerateCode_Emits_SimpleObjectWithProperties()
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"simpleObjectWithProperties.json", SimpleObjectWithProperties);
+        }
+
+
+        [Fact]
+        public static async Task GenerateCode_Emits_ComposedObjectWithProperties()
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"composedObjectWithProperties.json", ComposedObjectWithProperties);
+        }
+
+        [Fact]
+        public static async Task GenerateCode_Emits_ComposedObjectWithRequiredProperties()
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"composedObjectWithRequiredProperties.json", ComposedObjectWithRequiredProperties);
         }
 
         [Theory]
