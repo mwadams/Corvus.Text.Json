@@ -344,7 +344,7 @@ public readonly partial struct TypeArray
     {
         public delegate void Build(ref Builder builder);
 
-        private ComplexValueBuilder _builder;
+        internal ComplexValueBuilder _builder;
 
         internal Builder(ComplexValueBuilder builder)
         {

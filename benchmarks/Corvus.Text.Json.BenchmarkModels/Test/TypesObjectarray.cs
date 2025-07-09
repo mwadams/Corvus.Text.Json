@@ -360,7 +360,7 @@ public readonly partial struct TypesObjectarray
     {
         public delegate void Build(ref ArrayBuilder builder);
 
-        private ComplexValueBuilder _builder;
+        internal ComplexValueBuilder _builder;
 
         internal ArrayBuilder(ComplexValueBuilder builder)
         {
@@ -390,7 +390,7 @@ public readonly partial struct TypesObjectarray
     {
         public delegate void Build(ref ObjectBuilder builder);
 
-        private ComplexValueBuilder _builder;
+        internal ComplexValueBuilder _builder;
 
         internal ObjectBuilder(ComplexValueBuilder builder)
         {

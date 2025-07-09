@@ -362,7 +362,7 @@ public readonly partial struct TypesObjectnull
     {
         public delegate void Build(ref Builder builder);
 
-        private ComplexValueBuilder _builder;
+        internal ComplexValueBuilder _builder;
 
         internal Builder(ComplexValueBuilder builder)
         {

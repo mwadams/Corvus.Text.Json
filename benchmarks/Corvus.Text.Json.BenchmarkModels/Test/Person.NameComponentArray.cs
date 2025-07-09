@@ -51,6 +51,11 @@ public readonly partial struct Person
         /// </summary>
         public static NameComponentArray DefaultInstance { get; }
 
+        /// <summary>
+        /// Gets the rank of the array.
+        /// </summary>
+        public static int Rank => 1;
+
         /// <inheritdoc/>
         public JsonValueKind ValueKind => TokenType.ToValueKind();
 
@@ -350,7 +355,7 @@ public readonly partial struct Person
         {
             public delegate void Build(ref Builder builder);
 
-            private ComplexValueBuilder _builder;
+            internal ComplexValueBuilder _builder;
 
             internal Builder(ComplexValueBuilder builder)
             {

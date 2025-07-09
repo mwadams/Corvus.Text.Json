@@ -375,7 +375,7 @@ public readonly partial struct TypesObjectboolean
     {
         public delegate void Build(ref Builder builder);
 
-        private ComplexValueBuilder _builder;
+        internal ComplexValueBuilder _builder;
 
         internal Builder(ComplexValueBuilder builder)
         {
