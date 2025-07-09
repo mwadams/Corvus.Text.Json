@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace Corvus.Text.Json.Internal
 {
@@ -15,9 +16,10 @@ namespace Corvus.Text.Json.Internal
         // If the exception source is this value, the serializer will re-throw as JsonException.
         public const string ExceptionSourceValueToRethrowAsJsonException = "Corvus.Text.Json.Rethrowable";
 
-        private static ArgumentOutOfRangeException GetArgumentOutOfRangeException(string parameterName, string message)
+
+        public static void ThrowArgumentException_ArrayBufferLength(string paramName, int expectedLength)
         {
-            return new ArgumentOutOfRangeException(parameterName, message);
+            throw new ArgumentException(SR.Format(SR.IncorrectArrayBufferLength, expectedLength), paramName);
         }
 
         [DoesNotReturn]

@@ -67,17 +67,6 @@ namespace Corvus.Text.Json
             _isImmutable = true;
         }
 
-#if DEBUG
-        public void EnumerateRows()
-        {
-            List<DbRow> results = [];
-            for (int i = 0; i < _parsedData.Length; i += DbRow.Size)
-            {
-                results.Add(_parsedData.Get(i));
-            }
-        }
-#endif
-
         /// <inheritdoc />
         public void Dispose()
         {

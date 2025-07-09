@@ -221,7 +221,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseOffsetDateTime(ReadOnlySpan<byte> text, out OffsetDateTime value)
     {
-        if (text.Length < JsonConstants.MinimumDateTimeParseLength)
+        if (text.Length < JsonConstants.MinimumDateTimeOffsetParseLength)
         {
             value = default;
             return false;
@@ -247,7 +247,16 @@ public static partial class JsonElementHelpers
             return false;
         }
 
-        value = CreateOffsetDateTimeCore(year, month, day, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetSeconds);
+        try
+        {
+            value = CreateOffsetDateTimeCore(year, month, day, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetSeconds);
+        }
+        catch(OverflowException)
+        {
+            // We cannot prevent NodaTime from throwing an OverflowException.
+            value = default;
+            return false;
+        }
 
         return true;
     }

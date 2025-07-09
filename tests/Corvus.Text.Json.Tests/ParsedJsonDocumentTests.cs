@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using Corvus.Text.Json.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NodaTime;
+using NodaTime.Text;
 using Xunit;
 using YamlDotNet.Core.Tokens;
 
@@ -1591,6 +1593,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.TryGetBytesFromBase64(out byte[] bytes));
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
                 Assert.Throws<InvalidOperationException>(() => root.GetPropertyCount());
@@ -1699,6 +1705,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.TryGetBytesFromBase64(out byte[] bytes));
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
                 Assert.Throws<InvalidOperationException>(() => root.GetPropertyCount());
@@ -1802,6 +1812,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.TryGetBytesFromBase64(out byte[] bytes));
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
                 Assert.Throws<InvalidOperationException>(() => root.GetPropertyCount());
@@ -1914,6 +1928,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetBytesFromBase64());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
                 Assert.Throws<InvalidOperationException>(() => root.GetPropertyCount());
@@ -1996,6 +2014,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetBytesFromBase64());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
                 Assert.Throws<InvalidOperationException>(() => root.GetPropertyCount());
@@ -2082,6 +2104,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetBytesFromBase64());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
                 Assert.Throws<InvalidOperationException>(() => root.GetPropertyCount());
@@ -2103,7 +2129,6 @@ namespace Corvus.Text.Json.Tests
 
                 DateTime expectedDateTime = DateTime.Parse(expectedString);
                 DateTimeOffset expectedDateTimeOffset = DateTimeOffset.Parse(expectedString);
-
                 Assert.Equal(JsonValueKind.String, root.ValueKind);
 
                 Assert.True(root.TryGetDateTime(out DateTime DateTimeVal));
@@ -2143,7 +2168,7 @@ namespace Corvus.Text.Json.Tests
 
                 DateTime expectedDateTime = DateTime.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
                 DateTimeOffset expectedDateTimeOffset = DateTimeOffset.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-
+                OffsetDateTime expectedOffsetDateTime = OffsetDateTimePattern.ExtendedIso.Parse(expectedString).GetValueOrThrow();
                 Assert.Equal(JsonValueKind.String, root.ValueKind);
 
                 Assert.True(root.TryGetDateTime(out DateTime DateTimeVal));
@@ -2171,11 +2196,15 @@ namespace Corvus.Text.Json.Tests
 
                 Assert.False(root.TryGetDateTime(out DateTime DateTimeVal));
                 Assert.Equal(default, DateTimeVal);
+
                 Assert.False(root.TryGetDateTimeOffset(out DateTimeOffset DateTimeOffsetVal));
                 Assert.Equal(default, DateTimeOffsetVal);
+                Assert.False(root.TryGetOffsetDateTime(out OffsetDateTime OffsetDateTimeVal));
+                Assert.Equal(default, OffsetDateTimeVal);
 
                 Assert.Throws<FormatException>(() => root.GetDateTime());
                 Assert.Throws<FormatException>(() => root.GetDateTimeOffset());
+                Assert.Throws<FormatException>(() => root.GetOffsetDateTime());
             }
         }
 
@@ -2238,7 +2267,7 @@ namespace Corvus.Text.Json.Tests
         {
             get
             {
-                yield return new object[] { "1e+1", 10.0, 10.0f, 10m, new  BigNumber(1, 1)};
+                yield return new object[] { "1e+1", 10.0, 10.0f, 10m, new BigNumber(1, 1) };
                 yield return new object[] { "1.1e-0", 1.1, 1.1f, 1.1m, new BigNumber(11, -1) };
                 yield return new object[] { "3.14159", 3.14159, 3.14159f, 3.14159m, new BigNumber(314159, -5) };
                 yield return new object[] { "1e-10", 1e-10, 1e-10f, 1e-10m, new BigNumber(1, -10) };
@@ -2313,6 +2342,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetBytesFromBase64());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
                 Assert.Throws<InvalidOperationException>(() => root.GetPropertyCount());
@@ -2412,6 +2445,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetBytesFromBase64());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
                 Assert.Throws<InvalidOperationException>(() => root.GetPropertyCount());
@@ -2478,6 +2515,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.TryGetBytesFromBase64(out byte[] _));
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+                Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.EnumerateObject());
                 Assert.Throws<InvalidOperationException>(() => root.GetBoolean());
@@ -2585,6 +2626,10 @@ namespace Corvus.Text.Json.Tests
             Assert.Throws<InvalidOperationException>(() => root.TryGetBytesFromBase64(out byte[] _));
             Assert.Throws<InvalidOperationException>(() => root.GetDateTime());
             Assert.Throws<InvalidOperationException>(() => root.GetDateTimeOffset());
+            Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
+            Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
+            Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+            Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
             Assert.Throws<InvalidOperationException>(() => root.GetGuid());
             Assert.Throws<InvalidOperationException>(() => root.GetBoolean());
             Assert.Throws<InvalidOperationException>(() => root.GetRawText());
@@ -2833,6 +2878,10 @@ namespace Corvus.Text.Json.Tests
                 Assert.False(root.GetProperty("DateTimeProperty").TryGetDateTimeOffset(out DateTimeOffset datetimeOffsetValue));
                 Assert.Equal(default, datetimeOffsetValue);
                 Assert.Throws<FormatException>(() => root.GetProperty("DateTimeProperty").GetDateTimeOffset());
+
+                Assert.False(root.GetProperty("DateTimeProperty").TryGetOffsetDateTime(out OffsetDateTime offsetDatetimeValue));
+                Assert.Equal(default, offsetDatetimeValue);
+                Assert.Throws<FormatException>(() => root.GetProperty("DateTimeProperty").GetOffsetDateTime());
             }
         }
 

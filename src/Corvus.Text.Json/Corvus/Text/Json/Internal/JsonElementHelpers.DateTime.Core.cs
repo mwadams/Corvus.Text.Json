@@ -107,8 +107,8 @@ public static partial class JsonElementHelpers
 
         offsetSeconds = (offsetHours * 3600) + (offsetMinutes * 60);
 
-        // You can't have an offset more than +/- 18 hours
-        if (offsetSeconds > 64800)
+        // You can't have an offset more than +/- 14 hours
+        if (offsetSeconds > 50400)
         {
             offsetSeconds = 0;
             return false;
@@ -124,7 +124,8 @@ public static partial class JsonElementHelpers
 
     public static bool ParseTimeCore(ReadOnlySpan<byte> text, out int hours, out int minutes, out int seconds, out int milliseconds, out int microseconds, out int nanoseconds)
     {
-        if (text[2] != ':' ||
+        if (text.Length > 18 ||
+            text[2] != ':' ||
             text[5] != ':' ||
             IsNotNumeric(text[0]) ||
             IsNotNumeric(text[1]) ||

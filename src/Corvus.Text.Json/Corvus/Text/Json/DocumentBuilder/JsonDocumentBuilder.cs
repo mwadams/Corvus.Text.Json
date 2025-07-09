@@ -25,18 +25,6 @@ namespace Corvus.Text.Json
             _workspace = workspace;
         }
 
-#if DEBUG
-        public void EnumerateRows()
-        {
-            List<DbRow> results = [];
-            for (int i = 0; i < _parsedData.Length; i += DbRow.Size)
-            {
-                results.Add(_parsedData.Get(i));
-            }
-        }
-#endif
-
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IJsonDocument.IsDisposable => true;
 

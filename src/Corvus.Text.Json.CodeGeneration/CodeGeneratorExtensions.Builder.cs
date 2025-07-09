@@ -78,7 +78,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         .ReserveName("_builder")
                         .AppendLineIndent("public delegate void Build(ref ", builderClassName, " builder);")
                         .AppendSeparatorLine()
-                        .AppendLineIndent("private ComplexValueBuilder _builder;")
+                        .AppendLineIndent("internal ComplexValueBuilder _builder;")
                         .AppendSeparatorLine()
                         .AppendBlockIndent(
                             $$"""
@@ -564,8 +564,11 @@ namespace Corvus.Text.Json.CodeGeneration
 
                 if (typeDeclaration.ArrayRank() > 1)
                 {
-                    string arrayItemsTypeName = typeDeclaration.ArrayItemsType()!.ReducedType.FullyQualifiedDotnetTypeName() ?? throw new InvalidOperationException("Expected an array items type name.");
+                    TypeDeclaration arrayItemsType = typeDeclaration.ArrayItemsType()!.ReducedType;
+                    bool isAlsoObject = (arrayItemsType.ImpliedCoreTypesOrAny() & CoreTypes.Object) != 0;
 
+                    string arrayItemsTypeName = arrayItemsType.FullyQualifiedDotnetTypeName() ?? throw new InvalidOperationException("Expected an array items type name.");
+                    string builderClassName = isAlsoObject ? generator.ArrayBuilderClassName(arrayItemsTypeName) : generator.BuilderClassName(arrayItemsTypeName);
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("/// <summary>")
@@ -573,7 +576,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendLineIndent("/// </summary>")
                         .AppendLineIndent("/// <param name=\"tensor\">The data from which to create the tensor.</param>")
                         .AppendLineIndent("/// <returns>The number of items consumed.</returns>")
-                        .AppendLineIndent("/// <exception cref=\"ArgumentException\">The tensor did not contain the correct number of values for the arrays rank and dimension.</exception>")
+                        .AppendLineIndent("/// <exception cref=\"ArgumentException\">The tensor did not contain the correct number of values for the array rank and dimension.</exception>")
                         .AppendLineIndent("public int CreateTensor(ReadOnlySpan<", numericTypeName.Name, "> tensor)")
                         .AppendLineIndent("{")
                         .PushIndent()
@@ -590,7 +593,7 @@ namespace Corvus.Text.Json.CodeGeneration
                             .AppendLineIndent("{")
                             .PushIndent()
                                 .AppendLineIndent("_builder.StartArray();")
-                                .AppendLineIndent(arrayItemsTypeName, ".", generator.BuilderClassName(arrayItemsTypeName), " inner = new(_builder);")
+                                .AppendLineIndent(arrayItemsTypeName, ".", builderClassName, " inner = new(_builder);")
                                 .AppendLineIndent("index += inner.CreateTensor(tensor.Slice(index, ", arrayItemsTypeName, ".ValueBufferSize));")
                                 .AppendLineIndent("_builder = inner._builder;")
                                 .AppendLineIndent("_builder.EndArray();")
@@ -610,7 +613,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         .AppendLineIndent("/// </summary>")
                         .AppendLineIndent("/// <param name=\"tensor\">The data from which to create the tensor.</param>")
                         .AppendLineIndent("/// <returns>The number of items consumed.</returns>")
-                        .AppendLineIndent("/// <exception cref=\"ArgumentException\">The tensor did not contain the correct number of values for the arrays rank and dimension.</exception>")
+                        .AppendLineIndent("/// <exception cref=\"ArgumentException\">The tensor did not contain the correct number of values for the array rank and dimension.</exception>")
                         .AppendLineIndent("public int CreateTensor(ReadOnlySpan<", numericTypeName.Name, "> tensor)")
                         .AppendLineIndent("{")
                         .PushIndent()
@@ -1438,6 +1441,7 @@ namespace Corvus.Text.Json.CodeGeneration
                                 .AppendSeparatorLine()
                             .AppendLineIndent("return new(value);")
                             .PopIndent()
+                            .AppendLineIndent("}")
                             .AppendLine("#endif");
                     }
                 }
@@ -1460,7 +1464,8 @@ namespace Corvus.Text.Json.CodeGeneration
                                 .AppendLineIndent("}")
                                 .AppendSeparatorLine()
                             .AppendLineIndent("return new(value);")
-                            .PopIndent();
+                            .PopIndent()
+                            .AppendLineIndent("}");
                     }
                 }
             }

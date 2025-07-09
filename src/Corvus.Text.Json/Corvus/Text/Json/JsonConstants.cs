@@ -108,6 +108,7 @@ namespace Corvus.Text.Json
         public const int MaximumDateTimeOffsetParseLength = (MaximumFormatDateTimeOffsetLength +
             (DateTimeParseNumFractionDigits - DateTimeNumFractionDigits)); // Like StandardFormat 'O' for DateTimeOffset, but allowing 9 additional (up to 16) fraction digits.
         public const int MinimumDateTimeParseLength = 10; // YYYY-MM-DD
+        public const int MinimumDateTimeOffsetParseLength = 19; // YYYY-MM-DDTHH:MM:SS
         public const int MinimumDateParseLength = 10; // YYYY-MM-DD
         public const int MinimumTimeParseLength = 8; // HH:MM:SS
         public const int MaximumEscapedDateTimeOffsetParseLength = MaxExpansionFactorWhileEscaping * MaximumDateTimeOffsetParseLength;

@@ -202,7 +202,8 @@ namespace Corvus.Text.Json.Tests
             yield return new object[] { "\"1997-07-16T19:60:30.4555555+10:00\"" };
             yield return new object[] { "\"1997-07-16T19:20:60.4555555+10:00\"" };
             yield return new object[] { "\"1997-07-16T19:20:30.4555555+10:60\"" };
-            yield return new object[] { "\"0000-07-16T19:20:30.4555555+10:00\"" };
+            // This *is* a valid value for ISO-compliant date time offsets.
+            ////yield return new object[] { "\"0000-07-16T19:20:30.4555555+10:00\"" };
             yield return new object[] { "\"2019-02-29T19:20:30.4555555+10:00\"" };
             yield return new object[] { "\"9999-12-31T23:59:59.9999999-01:00\"" }; // This date spills over to year 10_000.
 

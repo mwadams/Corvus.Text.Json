@@ -122,6 +122,50 @@ namespace Corvus.Text.Json.Tests
             }}           
             """;
 
+        private const string NumericArrayFormat =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "array",
+                "items": {{
+                    "type": "number",
+                    "format": "{0}"           
+                }}
+            }}           
+            """;
+
+        private const string FixedSizeNumericArrayFormat =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "array",
+                "items": {{
+                    "type": "number",
+                    "format": "{0}"           
+                }},
+                "minItems": 10,
+                "maxItems": 10
+            }}           
+            """;
+
+        private const string MultiDimensionFixedSizeNumericArrayFormat =
+            """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "array",
+                "items": {{
+                    "type": "array",
+                    "items": {{
+                        "type": "number",
+                        "format": "{0}"           
+                    }},
+                    "minItems": 20,
+                    "maxItems": 20
+                }},
+                "minItems": 10,
+                "maxItems": 10
+            }}           
+            """;
         private const string StringFormat =
             """
             {{
@@ -229,6 +273,69 @@ namespace Corvus.Text.Json.Tests
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"numericFormat_{format}.json", string.Format(NumericFormat, format));
+        }
+
+        [Theory]
+        [InlineData("sbyte")]
+        [InlineData("int16")]
+        [InlineData("int32")]
+        [InlineData("int64")]
+        [InlineData("int128")]
+        [InlineData("byte")]
+        [InlineData("uint16")]
+        [InlineData("uint32")]
+        [InlineData("uint64")]
+        [InlineData("uint128")]
+        [InlineData("decimal")]
+        [InlineData("double")]
+        [InlineData("single")]
+        [InlineData("half")]
+        public static async Task GenerateCode_Emits_NumericArrayTypes(string format)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"numericArray_{format}.json", string.Format(NumericArrayFormat, format));
+        }
+
+        [Theory]
+        [InlineData("sbyte")]
+        [InlineData("int16")]
+        [InlineData("int32")]
+        [InlineData("int64")]
+        [InlineData("int128")]
+        [InlineData("byte")]
+        [InlineData("uint16")]
+        [InlineData("uint32")]
+        [InlineData("uint64")]
+        [InlineData("uint128")]
+        [InlineData("decimal")]
+        [InlineData("double")]
+        [InlineData("single")]
+        [InlineData("half")]
+        public static async Task GenerateCode_Emits_FixedSizeNumericArrayTypes(string format)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"fixedSizeNumericArray_{format}.json", string.Format(FixedSizeNumericArrayFormat, format));
+        }
+
+        [Theory]
+        [InlineData("sbyte")]
+        [InlineData("int16")]
+        [InlineData("int32")]
+        [InlineData("int64")]
+        [InlineData("int128")]
+        [InlineData("byte")]
+        [InlineData("uint16")]
+        [InlineData("uint32")]
+        [InlineData("uint64")]
+        [InlineData("uint128")]
+        [InlineData("decimal")]
+        [InlineData("double")]
+        [InlineData("single")]
+        [InlineData("half")]
+        public static async Task GenerateCode_Emits_MultiDimensionFixedSizeNumericArrayTypes(string format)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"multiDimensionFixedSizeNumericArray_{format}.json", string.Format(MultiDimensionFixedSizeNumericArrayFormat, format));
         }
 
         [Theory]
