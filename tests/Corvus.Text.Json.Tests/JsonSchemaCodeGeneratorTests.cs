@@ -249,6 +249,19 @@ namespace Corvus.Text.Json.Tests
             }
             """;
 
+        private const string ComposedArrayMultiItemType =
+            """
+            {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "oneOf": [
+                    { "items": {"type": "number" } },
+                    { "items": {"type": "string" } }          
+                ],
+                "minItems": 10,
+                "maxItems": 10
+            }
+            """;
+
         private const string ComposedObjectWithRequiredProperties =
             """
             {
@@ -464,6 +477,13 @@ namespace Corvus.Text.Json.Tests
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"composedObjectWithRequiredProperties.json", ComposedObjectWithRequiredProperties);
+        }
+
+        [Fact]
+        public static async Task GenerateCode_Emits_ComposedArrayMultiItemType()
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"composedArrayMultiItemType.json", ComposedArrayMultiItemType);
         }
 
         [Theory]

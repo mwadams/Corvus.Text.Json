@@ -243,7 +243,7 @@ namespace Corvus.Text.Json.CodeGeneration
                 return generator;
             }
 
-            if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Array) == 0)
+            if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Object) == 0)
             {
                 return generator;
             }

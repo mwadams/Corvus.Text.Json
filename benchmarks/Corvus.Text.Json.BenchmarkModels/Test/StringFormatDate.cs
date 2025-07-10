@@ -215,46 +215,17 @@ public readonly partial struct StringFormatDate
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
 
-    /// <summary>
-    /// Creates and initializes a mutable document from a value.
-    /// </summary>
-    /// <param name="workspace">The JSON workspace.</param>
-    /// <param name="value">The value with which to initialize the builder.</param>
-    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
-    /// <returns>An instance of a mutable document initialized with the given value.</returns>
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-        JsonWorkspace workspace, in Source value, int initialCapacity = 1)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        value.AddAsItem(ref cvb);
-        Debug.Assert(cvb.MemberCount == 1);
-        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
-    /// <summary>
-    /// Creates and initializes a mutable document from this instance.
-    /// </summary>
-    /// <param name="workspace">The JSON workspace.</param>
-    /// <returns>An instance of a mutable document initialized with this instance.</returns>
-    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
-    {
-        return workspace.CreateDocumentBuilder<StringFormatDate, Mutable>(this);
-    }
-
     public ref struct Source
     {
         private enum Kind
         {
             Unknown,
             JsonElement,
+            StringSimpleType,
             RawUtf8StringRequiresUnescaping,
             RawUtf8StringNotRequiresUnescaping,
             Utf8String,
             Utf16String,
-            StringSimpleType,
         }
 
         private readonly Kind _kind;
@@ -425,5 +396,34 @@ public readonly partial struct StringFormatDate
                     break;
             }
         }
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from a value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="value">The value with which to initialize the builder.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given value.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+        JsonWorkspace workspace, in Source value, int initialCapacity = 1)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        value.AddAsItem(ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from this instance.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <returns>An instance of a mutable document initialized with this instance.</returns>
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocumentBuilder<StringFormatDate, Mutable>(this);
     }
 }

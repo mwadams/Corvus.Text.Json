@@ -219,6 +219,16 @@ public readonly partial struct ComposedObjectWithRequiredProperties
                 }
             }
 
+            /// <summary>
+            /// Gets the number of properties in the object.
+            /// </summary>
+            /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+            public int GetPropertyCount()
+            {
+                CheckValidInstance();
+                return _parent.GetPropertyCount(_idx);
+            }
+
             /// <inheritdoc/>
             public override bool Equals(object? obj)
             {

@@ -77,16 +77,6 @@ public readonly partial struct Person
             return _parent.GetArrayLength(_idx);
         }
 
-        /// <summary>
-        /// Gets the number of properties in the object.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
-        public int GetPropertyCount()
-        {
-            CheckValidInstance();
-            return _parent.GetPropertyCount(_idx);
-        }
-
         /// <inheritdoc/>
         public JsonValueKind ValueKind => TokenType.ToValueKind();
 
@@ -294,35 +284,6 @@ public readonly partial struct Person
         JsonValueKind IJsonElement.ValueKind => ValueKind;
 
         /// <summary>
-        /// Creates and initializes a mutable document from a value.
-        /// </summary>
-        /// <param name="workspace">The JSON workspace.</param>
-        /// <param name="value">The value with which to initialize the builder.</param>
-        /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
-        /// <returns>An instance of a mutable document initialized with the given value.</returns>
-        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-            JsonWorkspace workspace, in Source value, int initialCapacity = 30)
-        {
-            // Create the document builder without a MetadataDb
-            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-            value.AddAsItem(ref cvb);
-            Debug.Assert(cvb.MemberCount == 1);
-            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-            return documentBuilder;
-        }
-
-        /// <summary>
-        /// Creates and initializes a mutable document from this instance.
-        /// </summary>
-        /// <param name="workspace">The JSON workspace.</param>
-        /// <returns>An instance of a mutable document initialized with this instance.</returns>
-        public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
-        {
-            return workspace.CreateDocumentBuilder<OtherNames, Mutable>(this);
-        }
-
-        /// <summary>
         /// Gets the value as a <see cref="Test.Person.NameComponent" />.
         /// </summary>
         /// <param name="result">The result of the conversions.</param>
@@ -417,11 +378,11 @@ public readonly partial struct Person
             {
                 Unknown,
                 JsonElement,
+                NameComponentArrayBuilder,
                 RawUtf8StringRequiresUnescaping,
                 RawUtf8StringNotRequiresUnescaping,
                 Utf8String,
                 Utf16String,
-                NameComponentArrayBuilder,
             }
 
             private readonly Kind _kind;
@@ -472,9 +433,6 @@ public readonly partial struct Person
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(Test.Person.NameComponentArray instance) => new(JsonElement.From(instance));
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static implicit operator Source(Test.Person.NameComponentArray.Builder.Build value) => new(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping) => new(value, requiresUnescaping);
@@ -598,6 +556,55 @@ public readonly partial struct Person
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates and initializes a mutable document from a value.
+        /// </summary>
+        /// <param name="workspace">The JSON workspace.</param>
+        /// <param name="value">The value with which to initialize the builder.</param>
+        /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+        /// <returns>An instance of a mutable document initialized with the given value.</returns>
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+            JsonWorkspace workspace, in Source value, int initialCapacity = 30)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+            value.AddAsItem(ref cvb);
+            Debug.Assert(cvb.MemberCount == 1);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        /// <summary>
+        /// Creates and initializes a mutable document from a value.
+        /// </summary>
+        /// <param name="workspace">The JSON workspace.</param>
+        /// <param name="value">The value with which to initialize the builder.</param>
+        /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+        /// <returns>An instance of a mutable document initialized with the given value.</returns>
+        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+            JsonWorkspace workspace, in Test.Person.NameComponentArray.Builder.Build value, int initialCapacity = 30)
+        {
+            // Create the document builder without a MetadataDb
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+            var source = new Test.Person.NameComponentArray.Source(value);
+            source.AddAsItem(ref cvb);
+            Debug.Assert(cvb.MemberCount == 1);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        /// <summary>
+        /// Creates and initializes a mutable document from this instance.
+        /// </summary>
+        /// <param name="workspace">The JSON workspace.</param>
+        /// <returns>An instance of a mutable document initialized with this instance.</returns>
+        public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+        {
+            return workspace.CreateDocumentBuilder<OtherNames, Mutable>(this);
         }
     }
 }

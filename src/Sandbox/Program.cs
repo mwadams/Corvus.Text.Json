@@ -461,16 +461,16 @@ static void EvaluateAndWriteResults(Person person, JsonSchemaResultsLevel level)
 
 using JsonDocumentBuilder<Test.Person.Mutable> testPersonDocBuilder = Test.Person.CreateDocumentBuilder(
         workspace,
-        new(static (ref b) => b.Create(
+        static (ref b) => b.Create(
             age: 51,
-            name: new((ref personName) =>
+            name: new(static (ref personName) =>
             {
                 personName.Create(
                     firstName: "Michael"u8,
                     lastName: "Adams"u8,
                     otherNames: "Francis James"u8);
             }),
-            competedInYears: Test.Person.CompetedInYears.Source.FromArray([2012, 2020, 2024]))));
+            competedInYears: Test.Person.CompetedInYears.Source.FromArray([2012, 2020, 2024])));
 
 Console.WriteLine(testPersonDocBuilder.RootElement);
 
@@ -484,12 +484,19 @@ Console.WriteLine(testComposedDocBuilder.RootElement);
 using JsonDocumentBuilder<Test.MultiDimensionFixedSizeNumericArrayInt32.Mutable> testMultiDimensionalArray =
     Test.MultiDimensionFixedSizeNumericArrayInt32.CreateDocumentBuilder(
         workspace,
-        new((ref b) =>
+        static (ref b) =>
         {
             b.CreateTensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-        }));
+        });
 
 Console.WriteLine(testMultiDimensionalArray.RootElement);
 
 Console.WriteLine(testMultiDimensionalArray.RootElement[1][3]);
 
+using JsonDocumentBuilder<Test.ComposedArrayMultiItemType.Mutable> testComposedArrayMultiItemType =
+    Test.ComposedArrayMultiItemType.CreateDocumentBuilder(
+        workspace,
+        static (ref b) =>
+        {
+            b.Add("hello");
+        });

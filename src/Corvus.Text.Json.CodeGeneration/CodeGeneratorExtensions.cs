@@ -1439,62 +1439,6 @@ namespace Corvus.Text.Json.CodeGeneration
         }
 
         /// <summary>
-        /// Appends methods to create <c>JsonDocumentBuilder&lt;Mutable&gt;</c> instances for the specified type declaration.
-        /// </summary>
-        /// <param name="generator">The code generator to which to append the methods.</param>
-        /// <param name="typeDeclaration">The type declaration for which to emit the document builder creation methods.</param>
-        /// <returns>A reference to the generator having completed the operation.</returns>
-        public static CodeGenerator AppendCommonCreateDocumentBuilders(this CodeGenerator generator, TypeDeclaration typeDeclaration)
-        {
-            // We only expect 1 row for a simple type.
-            int initialCapacity = 1;
-
-            if ((typeDeclaration.ImpliedCoreTypes() & (CoreTypes.Object | CoreTypes.Array)) != 0)
-            {
-                // But we allow a default initial capacity of 30 for objects or arrays
-                initialCapacity = 30;
-
-            }
-
-            return generator
-                .ReserveNameIfNotReserved("CreateDocumentBuilder")
-                .AppendSeparatorLine()
-                .AppendBlockIndent(
-                $$"""
-                /// <summary>
-                /// Creates and initializes a mutable document from a value.
-                /// </summary>
-                /// <param name="workspace">The JSON workspace.</param>
-                /// <param name="value">The value with which to initialize the builder.</param>
-                /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
-                /// <returns>An instance of a mutable document initialized with the given value.</returns>
-                public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-                    JsonWorkspace workspace, in {{generator.SourceClassName()}} value, int initialCapacity = {{initialCapacity}})
-                {
-                    // Create the document builder without a MetadataDb
-                    JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-                    ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-                    value.AddAsItem(ref cvb);
-                    Debug.Assert(cvb.MemberCount == 1);
-                    ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-                    return documentBuilder;
-                }
-                """)
-                .AppendSeparatorLine()
-                .AppendLineIndent("/// <summary>")
-                .AppendLineIndent("/// Creates and initializes a mutable document from this instance.")
-                .AppendLineIndent("/// </summary>")
-                .AppendLineIndent("/// <param name=\"workspace\">The JSON workspace.</param>")
-                .AppendLineIndent("/// <returns>An instance of a mutable document initialized with this instance.</returns>")
-                .AppendLineIndent("public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .AppendLineIndent("return workspace.CreateDocumentBuilder<", typeDeclaration.DotnetTypeName(), ", Mutable>(this);")
-                .PopIndent()
-                .AppendLineIndent("}");
-        }
-
-        /// <summary>
         /// Append an ordinal name for a number.
         /// </summary>
         /// <param name="generator">The code generator.</param>
