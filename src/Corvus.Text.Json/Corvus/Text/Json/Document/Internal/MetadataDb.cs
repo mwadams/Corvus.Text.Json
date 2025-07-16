@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -555,6 +556,34 @@ namespace Corvus.Text.Json.Internal
 
             int value = current | unchecked((int)0x80000000);
             MemoryMarshal.Write(dataPos, ref value);
+        }
+
+        /// <summary>
+        /// Removes rows from the database, copying up the remaining rows to fill the gap.
+        /// </summary>
+        /// <param name="startIndex">The start index at which to remove rows.</param>
+        /// <param name="length">The number of rows to remove.</param>
+        /// <remarks>
+        /// Note that this does *not* modify any data in complex objects as a result
+        /// of the row removal. It is intended
+        /// for use during complex object build.
+        /// </remarks>
+        internal void RemoveRows(int startIndex, int length)
+        {
+            AssertValidIndex(startIndex);
+            Debug.Assert(length > 0, "length must be greater than 0");
+
+            int lengthToRemove = (length * DbRow.Size);
+            Debug.Assert(startIndex + lengthToRemove <= Length, $"Length {lengthToRemove} is out of bounds of the array.");
+            int sourceIndex = startIndex + lengthToRemove;
+            if (lengthToRemove > 0)
+            {
+                // We are removing rows, so we need to copy the data up
+                // to fill the gap.
+                Buffer.BlockCopy(_data, sourceIndex, _data, startIndex, Length - sourceIndex);
+            }
+
+            Length -= lengthToRemove;
         }
 
         internal int FindIndexOfFirstUnsetSizeOrLength(JsonTokenType lookupType)

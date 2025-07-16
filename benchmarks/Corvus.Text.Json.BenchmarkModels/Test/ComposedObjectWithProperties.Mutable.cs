@@ -259,6 +259,16 @@ public readonly partial struct ComposedObjectWithProperties
             return _parent.GetPropertyCount(_idx);
         }
 
+        /// <summary>
+        /// Enumerates the object.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public ObjectEnumerator<JsonElement.Mutable> EnumerateObject()
+        {
+            CheckValidInstance();
+            return EnumeratorCreator.CreateObjectEnumerator<JsonElement.Mutable>(_parent, _idx);
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
@@ -276,6 +286,42 @@ public readonly partial struct ComposedObjectWithProperties
             where T : struct, IJsonElement
         {
             return JsonElementHelpers.DeepEquals(this, other);
+        }
+
+        /// <summary>
+        /// Apply a composed value.
+        /// </summary>
+        /// <remarks>
+        /// This will add or update any property values provided by the <paramref name="value"/>.
+        /// </remarks>
+        public void Apply(in Test.ComposedObjectWithProperties.AllOf0Entity value)
+        {
+            CheckValidInstance();
+
+            foreach (var property in value.EnumerateObject())
+            {
+                JsonElementHelpers.SetPropertyUnsafe(this, property);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        /// Apply a composed value.
+        /// </summary>
+        /// <remarks>
+        /// This will add or update any property values provided by the <paramref name="value"/>.
+        /// </remarks>
+        public void Apply(in Test.ComposedObjectWithProperties.AllOf1Entity value)
+        {
+            CheckValidInstance();
+
+            foreach (var property in value.EnumerateObject())
+            {
+                JsonElementHelpers.SetPropertyUnsafe(this, property);
+            }
+
+            _documentVersion = _parent.Version;
         }
 
         /// <inheritdoc/>

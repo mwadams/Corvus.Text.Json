@@ -314,6 +314,13 @@ namespace Corvus.Text.Json
             throw GetInvalidOperationException(tokenType);
         }
 
+
+        [DoesNotReturn]
+        public static void ThrowInvalidOperationException_ExpectedObject(JsonTokenType tokenType)
+        {
+            throw GetInvalidOperationException(tokenType);
+        }
+
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedComment(JsonTokenType tokenType)
         {

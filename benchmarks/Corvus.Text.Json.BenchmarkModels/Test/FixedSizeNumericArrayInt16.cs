@@ -91,6 +91,16 @@ public readonly partial struct FixedSizeNumericArrayInt16
         return _parent.GetArrayLength(_idx);
     }
 
+    /// <summary>
+    /// Enumerates the array.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+    public ArrayEnumerator<Test.FixedSizeNumericArrayInt16.ItemsEntity> EnumerateArray()
+    {
+        CheckValidInstance();
+        return EnumeratorCreator.CreateArrayEnumerator<Test.FixedSizeNumericArrayInt16.ItemsEntity>(_parent, _idx);
+    }
+
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 

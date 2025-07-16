@@ -74,7 +74,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
         return _parent.GetArrayLength(_idx);
     }
 
-    public ArrayEnumerator<Year> GetArrayEnumerator()
+    public ArrayEnumerator<Year> EnumerateArray()
     {
         CheckValidInstance();
         return EnumeratorCreator.CreateArrayEnumerator<Year>(_parent, _idx);
@@ -405,7 +405,7 @@ public readonly struct CompetedInYears : IJsonElement<CompetedInYears>
             return _parent.GetArrayLength(_idx);
         }
 
-        public ArrayEnumerator<Year.Mutable> GetArrayEnumerator()
+        public ArrayEnumerator<Year.Mutable> EnumerateArray()
         {
             CheckValidInstance();
             return EnumeratorCreator.CreateArrayEnumerator<Year.Mutable>(_parent, _idx);

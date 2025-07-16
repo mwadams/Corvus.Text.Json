@@ -284,9 +284,15 @@ namespace Corvus.Text.Json
             return GetRawSimpleValueUnsafe(index, includeQuotes);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes)
         {
-            DbRow row = _parsedData.Get(index);
+            return GetRawSimpleValueUnsafe(ref _parsedData, index, includeQuotes);
+        }
+
+        protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index, bool includeQuotes)
+        {
+            DbRow row = parsedData.Get(index);
 
             Debug.Assert(row.IsSimpleValue);
 
@@ -1191,7 +1197,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -1209,7 +1215,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -1226,7 +1232,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -1247,7 +1253,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -1265,7 +1271,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -1282,7 +1288,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -1450,6 +1456,12 @@ namespace Corvus.Text.Json
             }
         }
 
+
+        bool IMutableJsonDocument.TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, out int valueIndex)
+        {
+            CheckNotDisposed();
+            return TryGetNamedPropertyValueIndexUnsafe(ref parsedData, startIndex, endIndex, propertyName, out valueIndex);
+        }
 
         int IMutableJsonDocument.StoreBooleanValue(bool value) => StoreBooleanValue(value);
         int IMutableJsonDocument.StoreNullValue() => StoreNullValue();

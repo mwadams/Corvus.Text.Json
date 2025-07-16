@@ -179,6 +179,16 @@ public readonly partial struct ArrayTypeWithItemsAndFormatItemsNumberDecimal
             return _parent.GetArrayLength(_idx);
         }
 
+        /// <summary>
+        /// Enumerates the array.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+        public ArrayEnumerator<Test.ArrayTypeWithItemsAndFormatItemsNumberDecimal.ItemsEntity.Mutable> EnumerateArray()
+        {
+            CheckValidInstance();
+            return EnumeratorCreator.CreateArrayEnumerator<Test.ArrayTypeWithItemsAndFormatItemsNumberDecimal.ItemsEntity.Mutable>(_parent, _idx);
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

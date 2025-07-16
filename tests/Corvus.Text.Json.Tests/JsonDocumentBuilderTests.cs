@@ -23,7 +23,7 @@ namespace Corvus.Text.Json.Tests
 {
     public static class JsonDocumentBuilderTests
     {
-        private static readonly byte[] Utf8Bom = { 0xEF, 0xBB, 0xBF };
+        private static readonly byte[] Utf8Bom = [0xEF, 0xBB, 0xBF];
 
         private static readonly Dictionary<TestCaseType, string> s_expectedConcat =
             new Dictionary<TestCaseType, string>();
@@ -34,17 +34,17 @@ namespace Corvus.Text.Json.Tests
         public static IEnumerable<object[]> BadBOMCases { get; } =
             new object[][]
             {
-                new object[] { "\u00EF" },
-                new object[] { "\u00EF1" },
-                new object[] { "\u00EF\u00BB" },
-                new object[] { "\u00EF\u00BB1" },
-                new object[] { "\u00EF\u00BB\u00BE" },
-                new object[] { "\u00EF\u00BB\u00BE1" },
-                new object[] { "\u00EF\u00BB\u00FB" },
-                new object[] { "\u00EF\u00BB\u00FB1" },
+                ["\u00EF"],
+                ["\u00EF1"],
+                ["\u00EF\u00BB"],
+                ["\u00EF\u00BB1"],
+                ["\u00EF\u00BB\u00BE"],
+                ["\u00EF\u00BB\u00BE1"],
+                ["\u00EF\u00BB\u00FB"],
+                ["\u00EF\u00BB\u00FB1"],
 
                 // Legal BOM, but no payload.
-                new object[] { "\u00EF\u00BB\u00BF" },
+                ["\u00EF\u00BB\u00BF"],
             };
 
         public static IEnumerable<object[]> ReducedTestCases { get; } =
@@ -229,7 +229,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ParseJson_SeekableStream_Small()
         {
-            byte[] data = { (byte)'1', (byte)'1' };
+            byte[] data = [(byte)'1', (byte)'1'];
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(new MemoryStream(data)))
@@ -244,7 +244,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ParseJson_UnseekableStream_Small()
         {
-            byte[] data = { (byte)'1', (byte)'1' };
+            byte[] data = [(byte)'1', (byte)'1'];
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc =
@@ -260,7 +260,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static async Task ParseJson_SeekableStream_Small_Async()
         {
-            byte[] data = { (byte)'1', (byte)'1' };
+            byte[] data = [(byte)'1', (byte)'1'];
 
             using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
             using (ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(new MemoryStream(data)))
@@ -275,7 +275,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static async Task ParseJson_UnseekableStream_Small_Async()
         {
-            byte[] data = { (byte)'1', (byte)'1' };
+            byte[] data = [(byte)'1', (byte)'1'];
 
             using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
             using (ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(
@@ -341,7 +341,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ParseJson_Stream_ClearRentedBuffer_WhenThrow_CodeCoverage()
         {
-            using (Stream stream = new ThrowOnReadStream(new byte[] { 1 }))
+            using (Stream stream = new ThrowOnReadStream([1]))
             {
                 Assert.Throws<EndOfStreamException>(() => ParsedJsonDocument<JsonElement>.Parse(stream));
             }
@@ -350,7 +350,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static async Task ParseJson_Stream_Async_ClearRentedBuffer_WhenThrow_CodeCoverage()
         {
-            using (Stream stream = new ThrowOnReadStream(new byte[] { 1 }))
+            using (Stream stream = new ThrowOnReadStream([1]))
             {
                 await Assert.ThrowsAsync<EndOfStreamException>(async () => await ParsedJsonDocument<JsonElement>.ParseAsync(stream));
             }
@@ -359,7 +359,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void ParseJson_Stream_ThrowsOn_ArrayPoolRent_CodeCoverage()
         {
-            using (Stream stream = new ThrowOnCanSeekStream(new byte[] { 1 }))
+            using (Stream stream = new ThrowOnCanSeekStream([1]))
             {
                 Assert.Throws<InsufficientMemoryException>(() => ParsedJsonDocument<JsonElement>.Parse(stream));
             }
@@ -368,7 +368,7 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static async Task ParseJson_Stream_Async_ThrowsOn_ArrayPoolRent_CodeCoverage()
         {
-            using (Stream stream = new ThrowOnCanSeekStream(new byte[] { 1 }))
+            using (Stream stream = new ThrowOnCanSeekStream([1]))
             {
                 await Assert.ThrowsAsync<InsufficientMemoryException>(async () => await ParsedJsonDocument<JsonElement>.ParseAsync(stream));
             }
@@ -1938,7 +1938,7 @@ namespace Corvus.Text.Json.Tests
         {
             // The Arabic ligature Lam-Alef (U+FEFB) (which happens to, as a standalone, mean "no" in English)
             // is UTF-8 EF BB BB.  So let's leave out a BB and put it in quotes.
-            byte[] badUtf8 = new byte[] { 0x22, 0xEF, 0xBB, 0x22 };
+            byte[] badUtf8 = [0x22, 0xEF, 0xBB, 0x22];
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(badUtf8))
             using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace))
@@ -2858,69 +2858,6 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-        // TODO: WE WANT AN EQUIVALENT OF THIS WHEN WE ADD THE "BUILD FROM SCRATCH" TESTS
-        ////[Fact]
-        ////public static void EnsureResizeSucceeds()
-        ////{
-        ////    // This test increases coverage, so it's based on a lot of implementation detail,
-        ////    // to ensure that the otherwise untested blocks produce the right functional behavior.
-        ////    //
-        ////    // The initial database size is just over the number of bytes of UTF-8 data in the payload,
-        ////    // capped at 2^20 (unless the payload exceeds 2^22).
-        ////    //
-        ////    // Regrowth happens if the rented array (which may be bigger than we asked for) is not sufficient,
-        ////    // meaning tokens (on average) occur more often than every 12 bytes.
-        ////    //
-        ////    // The array pool (for bytes) returns power-of-two sizes.
-        ////    //
-        ////    // Conclusion: A resize will happen if a payload of 1MB+epsilon has tokens more often than every 12 bytes.
-        ////    //
-        ////    // Integer numbers as strings, padded to 4 with no whitespace in series in an array: 7x + 1.
-        ////    //  That would take 149797 integers.
-        ////    //
-        ////    // Padded to 5 (8x + 1) => 131072 integers.
-        ////    // Padded to 6 (9x + 1) => 116509 integers.
-        ////    //
-        ////    // At pad-to-6 tokens occur every 9 bytes, and we can represent values without repeat.
-
-        ////    const int NumberOfNumbers = (1024 * 1024 / 9) + 1;
-        ////    const int NumberOfBytes = 9 * NumberOfNumbers + 1;
-
-        ////    byte[] utf8Json = new byte[NumberOfBytes];
-        ////    utf8Json.AsSpan().Fill((byte)'"');
-        ////    utf8Json[0] = (byte)'[';
-
-        ////    Span<byte> valuesSpan = utf8Json.AsSpan(1);
-        ////    StandardFormat format = StandardFormat.Parse("D6");
-
-        ////    for (int i = 0; i < NumberOfNumbers; i++)
-        ////    {
-        ////        // Just inside the quote
-        ////        Span<byte> curDest = valuesSpan.Slice(9 * i + 1);
-
-        ////        if (!Utf8Formatter.TryFormat(i, curDest, out int bytesWritten, format) || bytesWritten != 6)
-        ////        {
-        ////            throw new InvalidOperationException("" + i);
-        ////        }
-
-        ////        curDest[7] = (byte)',';
-        ////    }
-
-        ////    // Replace last comma with ]
-        ////    utf8Json[NumberOfBytes - 1] = (byte)']';
-
-        ////    using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(utf8Json))
-        ////    {
-        ////        JsonElement.Mutable root = builderDoc.RootElement;
-        ////        int count = root.GetArrayLength();
-
-        ////        for (int i = 0; i < count; i++)
-        ////        {
-        ////            Assert.Equal(i, int.Parse(root[i].GetString()));
-        ////        }
-        ////    }
-        ////}
-
         [Fact]
         public static void ValueEquals_Null_TrueForNullFalseForEmpty()
         {
@@ -3123,17 +3060,17 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
-                var outputSbyte = new sbyte[length];
-                var outputByte = new byte[length];
-                var outputInt16 = new short[length];
-                var outputUInt16 = new ushort[length];
-                var outputInt32 = new int[length];
-                var outputUInt32 = new uint[length];
-                var outputInt64 = new long[length];
-                var outputUInt64 = new ulong[length];
-                var outputDouble = new double[length];
-                var outputSingle = new float[length];
-                var outputDecimal = new decimal[length];
+                sbyte[] outputSbyte = new sbyte[length];
+                byte[] outputByte = new byte[length];
+                short[] outputInt16 = new short[length];
+                ushort[] outputUInt16 = new ushort[length];
+                int[] outputInt32 = new int[length];
+                uint[] outputUInt32 = new uint[length];
+                long[] outputInt64 = new long[length];
+                ulong[] outputUInt64 = new ulong[length];
+                double[] outputDouble = new double[length];
+                float[] outputSingle = new float[length];
+                decimal[] outputDecimal = new decimal[length];
 #if NET
                 var outputInt128 = new Int128[length];
                 var outputUInt128 = new UInt128[length];
@@ -3212,17 +3149,17 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
-                var outputSbyte = new sbyte[length];
-                var outputByte = new byte[length];
-                var outputInt16 = new short[length];
-                var outputUInt16 = new ushort[length];
-                var outputInt32 = new int[length];
-                var outputUInt32 = new uint[length];
-                var outputInt64 = new long[length];
-                var outputUInt64 = new ulong[length];
-                var outputDouble = new double[length];
-                var outputSingle = new float[length];
-                var outputDecimal = new decimal[length];
+                sbyte[] outputSbyte = new sbyte[length];
+                byte[] outputByte = new byte[length];
+                short[] outputInt16 = new short[length];
+                ushort[] outputUInt16 = new ushort[length];
+                int[] outputInt32 = new int[length];
+                uint[] outputUInt32 = new uint[length];
+                long[] outputInt64 = new long[length];
+                ulong[] outputUInt64 = new ulong[length];
+                double[] outputDouble = new double[length];
+                float[] outputSingle = new float[length];
+                decimal[] outputDecimal = new decimal[length];
 #if NET
                 var outputInt128 = new Int128[length];
                 var outputUInt128 = new UInt128[length];
@@ -3304,17 +3241,17 @@ namespace Corvus.Text.Json.Tests
                 IJsonElement root = doc.RootElement;
                 int written;
 
-                var outputSbyte = new sbyte[length];
-                var outputByte = new byte[length];
-                var outputInt16 = new short[length];
-                var outputUInt16 = new ushort[length];
-                var outputInt32 = new int[length];
-                var outputUInt32 = new uint[length];
-                var outputInt64 = new long[length];
-                var outputUInt64 = new ulong[length];
-                var outputDouble = new double[length];
-                var outputSingle = new float[length];
-                var outputDecimal = new decimal[length];
+                sbyte[] outputSbyte = new sbyte[length];
+                byte[] outputByte = new byte[length];
+                short[] outputInt16 = new short[length];
+                ushort[] outputUInt16 = new ushort[length];
+                int[] outputInt32 = new int[length];
+                uint[] outputUInt32 = new uint[length];
+                long[] outputInt64 = new long[length];
+                ulong[] outputUInt64 = new ulong[length];
+                double[] outputDouble = new double[length];
+                float[] outputSingle = new float[length];
+                decimal[] outputDecimal = new decimal[length];
 #if NET
                 var outputInt128 = new Int128[length];
                 var outputUInt128 = new UInt128[length];
@@ -3377,17 +3314,17 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5,6],[7,8,9]]"))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
-                var outputSbyte = new sbyte[length];
-                var outputByte = new byte[length];
-                var outputInt16 = new short[length];
-                var outputUInt16 = new ushort[length];
-                var outputInt32 = new int[length];
-                var outputUInt32 = new uint[length];
-                var outputInt64 = new long[length];
-                var outputUInt64 = new ulong[length];
-                var outputDouble = new double[length];
-                var outputSingle = new float[length];
-                var outputDecimal = new decimal[length];
+                sbyte[] outputSbyte = new sbyte[length];
+                byte[] outputByte = new byte[length];
+                short[] outputInt16 = new short[length];
+                ushort[] outputUInt16 = new ushort[length];
+                int[] outputInt32 = new int[length];
+                uint[] outputUInt32 = new uint[length];
+                long[] outputInt64 = new long[length];
+                ulong[] outputUInt64 = new ulong[length];
+                double[] outputDouble = new double[length];
+                float[] outputSingle = new float[length];
+                decimal[] outputDecimal = new decimal[length];
 #if NET
                 var outputInt128 = new Int128[length];
                 var outputUInt128 = new UInt128[length];
@@ -3466,17 +3403,17 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
-                var outputSbyte = new sbyte[length];
-                var outputByte = new byte[length];
-                var outputInt16 = new short[length];
-                var outputUInt16 = new ushort[length];
-                var outputInt32 = new int[length];
-                var outputUInt32 = new uint[length];
-                var outputInt64 = new long[length];
-                var outputUInt64 = new ulong[length];
-                var outputDouble = new double[length];
-                var outputSingle = new float[length];
-                var outputDecimal = new decimal[length];
+                sbyte[] outputSbyte = new sbyte[length];
+                byte[] outputByte = new byte[length];
+                short[] outputInt16 = new short[length];
+                ushort[] outputUInt16 = new ushort[length];
+                int[] outputInt32 = new int[length];
+                uint[] outputUInt32 = new uint[length];
+                long[] outputInt64 = new long[length];
+                ulong[] outputUInt64 = new ulong[length];
+                double[] outputDouble = new double[length];
+                float[] outputSingle = new float[length];
+                decimal[] outputDecimal = new decimal[length];
 #if NET
                 var outputInt128 = new Int128[length];
                 var outputUInt128 = new UInt128[length];
@@ -3558,17 +3495,17 @@ namespace Corvus.Text.Json.Tests
                 IJsonElement root = doc.RootElement;
                 int written;
 
-                var outputSbyte = new sbyte[length];
-                var outputByte = new byte[length];
-                var outputInt16 = new short[length];
-                var outputUInt16 = new ushort[length];
-                var outputInt32 = new int[length];
-                var outputUInt32 = new uint[length];
-                var outputInt64 = new long[length];
-                var outputUInt64 = new ulong[length];
-                var outputDouble = new double[length];
-                var outputSingle = new float[length];
-                var outputDecimal = new decimal[length];
+                sbyte[] outputSbyte = new sbyte[length];
+                byte[] outputByte = new byte[length];
+                short[] outputInt16 = new short[length];
+                ushort[] outputUInt16 = new ushort[length];
+                int[] outputInt32 = new int[length];
+                uint[] outputUInt32 = new uint[length];
+                long[] outputInt64 = new long[length];
+                ulong[] outputUInt64 = new ulong[length];
+                double[] outputDouble = new double[length];
+                float[] outputSingle = new float[length];
+                decimal[] outputDecimal = new decimal[length];
 #if NET
                 var outputInt128 = new Int128[length];
                 var outputUInt128 = new UInt128[length];
@@ -3645,17 +3582,17 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,\"stringValue\"],[6,7,8]]"))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
             {
-                var outputSbyte = new sbyte[length];
-                var outputByte = new byte[length];
-                var outputInt16 = new short[length];
-                var outputUInt16 = new ushort[length];
-                var outputInt32 = new int[length];
-                var outputUInt32 = new uint[length];
-                var outputInt64 = new long[length];
-                var outputUInt64 = new ulong[length];
-                var outputDouble = new double[length];
-                var outputSingle = new float[length];
-                var outputDecimal = new decimal[length];
+                sbyte[] outputSbyte = new sbyte[length];
+                byte[] outputByte = new byte[length];
+                short[] outputInt16 = new short[length];
+                ushort[] outputUInt16 = new ushort[length];
+                int[] outputInt32 = new int[length];
+                uint[] outputUInt32 = new uint[length];
+                long[] outputInt64 = new long[length];
+                ulong[] outputUInt64 = new ulong[length];
+                double[] outputDouble = new double[length];
+                float[] outputSingle = new float[length];
+                decimal[] outputDecimal = new decimal[length];
 #if NET
                 var outputInt128 = new Int128[length];
                 var outputUInt128 = new UInt128[length];
@@ -3852,7 +3789,7 @@ namespace Corvus.Text.Json.Tests
             Assert.False(mutableBuilder.IsImmutable);
             mutableBuilder.Freeze();
             Assert.True(mutableBuilder.IsImmutable);
-            using var copyOfFrozen = mutableBuilder.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> copyOfFrozen = mutableBuilder.RootElement.CreateDocumentBuilder(workspace);
             Assert.False(copyOfFrozen.IsImmutable);
         }
 
@@ -3877,8 +3814,8 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act
             root.SetItem(0, 123);
@@ -3894,8 +3831,8 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act
             root.SetItem(1, 99);
@@ -3913,8 +3850,8 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[10,20]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act
             root.SetItem(2, 30);
@@ -3932,8 +3869,8 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act & Assert
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 100));
@@ -3945,8 +3882,8 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act & Assert
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(4, 100));
@@ -3959,8 +3896,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[false]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, true);
             Assert.True(root[0].GetBoolean());
@@ -3977,8 +3914,8 @@ namespace Corvus.Text.Json.Tests
             var guid2 = Guid.NewGuid();
             using var doc = ParsedJsonDocument<JsonElement>.Parse($"[\"{guid1}\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, guid2);
             Assert.Equal(guid2, root[0].GetGuid());
@@ -3993,8 +3930,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, (byte)42);
             Assert.Equal(42, root[0].GetByte());
@@ -4008,8 +3945,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, long.MaxValue);
             Assert.Equal(long.MaxValue, root[0].GetInt64());
@@ -4023,8 +3960,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, (short)-12345);
             Assert.Equal(-12345, root[0].GetInt16());
@@ -4038,8 +3975,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, 3.14f);
             Assert.Equal(3.14f, root[0].GetSingle());
@@ -4053,8 +3990,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, 2.718281828);
             Assert.Equal(2.718281828, root[0].GetDouble());
@@ -4068,13 +4005,13 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Use a JsonElement.Mutable as the value
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
-            var value = builderDoc2.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable value = builderDoc2.RootElement;
 
             root.SetItem<JsonElement.Mutable>(0, value);
             Assert.Equal(42, root[0].GetInt32());
@@ -4085,8 +4022,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Simple ASCII
             root.SetItem(0, "hello"u8);
@@ -4101,7 +4038,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal("foo\"bar", root[2].GetString());
 
             // Non-ASCII UTF-8 string: "héllo" (e with acute accent)
-            ReadOnlySpan<byte> nonAsciiUtf8 = new byte[] { (byte)'h', 0xC3, 0xA9, (byte)'l', (byte)'l', (byte)'o' };
+            ReadOnlySpan<byte> nonAsciiUtf8 = [(byte)'h', 0xC3, 0xA9, (byte)'l', (byte)'l', (byte)'o'];
             root.SetItem(3, nonAsciiUtf8);
             Assert.Equal("héllo", root[3].GetString());
 
@@ -4116,8 +4053,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Simple ASCII
             root.SetItem(0, "hello");
@@ -4147,8 +4084,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItemNull(0);
             Assert.Equal(JsonValueKind.Null, root[0].ValueKind);
@@ -4162,8 +4099,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, (sbyte)-8);
             Assert.Equal(-8, root[0].GetSByte());
@@ -4177,8 +4114,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, (ushort)65535);
             Assert.Equal(65535, root[0].GetUInt16());
@@ -4192,8 +4129,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, 4294967295u);
             Assert.Equal(4294967295u, root[0].GetUInt32());
@@ -4207,8 +4144,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, 18446744073709551615ul);
             Assert.Equal(18446744073709551615ul, root[0].GetUInt64());
@@ -4222,8 +4159,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, -123456);
             Assert.Equal(-123456, root[0].GetInt32());
@@ -4237,8 +4174,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, 123.456m);
             Assert.Equal(123.456m, root[0].GetDecimal());
@@ -4253,8 +4190,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
             Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
@@ -4271,8 +4208,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
             UInt128 smallValue = 42;
@@ -4289,8 +4226,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.5]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Half value1 = (Half)3.25;
             Half value2 = (Half)(-2.5);
@@ -4308,8 +4245,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2020-01-01T00:00:00Z\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             var dt1 = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
             var dt2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -4326,8 +4263,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2020-01-01T00:00:00Z\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             var dto1 = new DateTimeOffset(2024, 5, 30, 12, 34, 56, TimeSpan.Zero);
             var dto2 = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.FromHours(2));
@@ -4344,8 +4281,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[true]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, false));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, true));
@@ -4356,8 +4293,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"00000000-0000-0000-0000-000000000000\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
             var guid = Guid.NewGuid();
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, guid));
@@ -4369,8 +4306,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (byte)1));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, (byte)2));
@@ -4381,8 +4318,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (sbyte)1));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, (sbyte)2));
@@ -4393,8 +4330,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (short)1));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, (short)2));
@@ -4405,8 +4342,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, (ushort)1));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, (ushort)2));
@@ -4417,8 +4354,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2));
@@ -4429,8 +4366,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1u));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2u));
@@ -4441,8 +4378,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1L));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2L));
@@ -4453,8 +4390,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1UL));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2UL));
@@ -4465,8 +4402,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0f));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2.0f));
@@ -4477,8 +4414,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2.0));
@@ -4489,8 +4426,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, 1.0m));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, 2.0m));
@@ -4501,8 +4438,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, "test"u8));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, "test"u8));
@@ -4513,12 +4450,12 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
-            var value = builderDoc2.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable value = builderDoc2.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(-1, value));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(2, value));
@@ -4529,8 +4466,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItemNull(-1));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItemNull(2));
@@ -4542,8 +4479,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Int128 value = Int128.One;
 
@@ -4556,8 +4493,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             UInt128 value = UInt128.One;
 
@@ -4570,8 +4507,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1.0]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Half value = (Half)1.0;
 
@@ -4585,8 +4522,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Existing UTF-8 property name tests
             root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
@@ -4613,8 +4550,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement.GetProperty("a");
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             // Existing UTF-8 property name tests
             root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
@@ -4639,8 +4576,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Existing UTF-8 property name test
             root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
@@ -4669,8 +4606,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": {\"c\": true}}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement.GetProperty("a");
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             // Existing UTF-8 property name test
             root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
@@ -4700,8 +4637,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
             root.SetProperty("a"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
@@ -4730,8 +4667,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement.GetProperty("a");
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             // ASCII property name
             root.SetProperty("b"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
@@ -4760,8 +4697,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": true}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
             root.SetProperty("a"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
@@ -4782,8 +4719,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"b\": {\"c\": true}}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement.GetProperty("a");
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             // ASCII property name
             root.SetProperty("b"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
@@ -4807,8 +4744,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
             root.SetProperty("a"u8, true);
@@ -4830,8 +4767,8 @@ namespace Corvus.Text.Json.Tests
             var guid2 = Guid.NewGuid();
             using var doc = ParsedJsonDocument<JsonElement>.Parse($"{{\"a\":\"{guid1}\"}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
             root.SetProperty("a"u8, guid2);
@@ -4855,8 +4792,8 @@ namespace Corvus.Text.Json.Tests
             var dt2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, dt1);
             Assert.Equal(dt1, root.GetProperty("a").GetDateTime());
@@ -4875,8 +4812,8 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
             Assert.Equal(dto1, root.GetProperty("a").GetDateTimeOffset());
@@ -4895,8 +4832,8 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new OffsetDateTime(new LocalDateTime(2025, 1, 1, 0, 0, 0), Offset.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
             Assert.Equal(dto1, root.GetProperty("a").GetOffsetDateTime());
@@ -4915,8 +4852,8 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new OffsetDate(new LocalDate(2025, 1, 1), Offset.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
             Assert.Equal(dto1, root.GetProperty("a").GetOffsetDate());
@@ -4935,8 +4872,8 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new LocalDate(2025, 1, 1);
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
             Assert.Equal(dto1, root.GetProperty("a").GetLocalDate());
@@ -4955,8 +4892,8 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new OffsetTime(new LocalTime(0, 0, 0), Offset.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
             Assert.Equal(dto1, root.GetProperty("a").GetOffsetTime());
@@ -4971,12 +4908,12 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public static void SetProperty_Period_Works()
         {
-            var dto1 = new Period(1, 2, 3, 4, 5, 6, 7, 8 ,9, 1).Normalize();
-            var dto2 = Period.Zero;
+            Period dto1 = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 1).Normalize();
+            Period dto2 = Period.Zero;
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"P1W\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
             Assert.Equal(dto1, root.GetProperty("a").GetPeriod());
@@ -4993,8 +4930,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, (byte)42);
             Assert.Equal(42, root.GetProperty("a").GetByte());
@@ -5011,8 +4948,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, (sbyte)-8);
             Assert.Equal(-8, root.GetProperty("a").GetSByte());
@@ -5029,8 +4966,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, (short)-12345);
             Assert.Equal(-12345, root.GetProperty("a").GetInt16());
@@ -5047,8 +4984,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, (ushort)65535);
             Assert.Equal(65535, root.GetProperty("a").GetUInt16());
@@ -5065,8 +5002,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, -123456);
             Assert.Equal(-123456, root.GetProperty("a").GetInt32());
@@ -5083,8 +5020,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 4294967295u);
             Assert.Equal(4294967295u, root.GetProperty("a").GetUInt32());
@@ -5101,8 +5038,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, long.MaxValue);
             Assert.Equal(long.MaxValue, root.GetProperty("a").GetInt64());
@@ -5119,8 +5056,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 18446744073709551615ul);
             Assert.Equal(18446744073709551615ul, root.GetProperty("a").GetUInt64());
@@ -5137,8 +5074,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 3.14f);
             Assert.Equal(3.14f, root.GetProperty("a").GetSingle());
@@ -5155,8 +5092,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 2.718281828);
             Assert.Equal(2.718281828, root.GetProperty("a").GetDouble());
@@ -5173,8 +5110,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a"u8, 123.456m);
             Assert.Equal(123.456m, root.GetProperty("a").GetDecimal());
@@ -5192,8 +5129,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
             Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
@@ -5213,8 +5150,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
             UInt128 smallValue = 42;
@@ -5234,8 +5171,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Half value1 = (Half)3.25;
             Half value2 = (Half)(-2.5);
@@ -5256,8 +5193,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":false}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", true);
             Assert.True(root.GetProperty("a").GetBoolean());
@@ -5276,8 +5213,8 @@ namespace Corvus.Text.Json.Tests
             var guid2 = Guid.NewGuid();
             using var doc = ParsedJsonDocument<JsonElement>.Parse($"{{\"a\":\"{guid1}\"}}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", guid2);
             Assert.Equal(guid2, root.GetProperty("a").GetGuid());
@@ -5296,8 +5233,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", (byte)42);
             Assert.Equal(42, root.GetProperty("a").GetByte());
@@ -5314,8 +5251,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", (sbyte)-8);
             Assert.Equal(-8, root.GetProperty("a").GetSByte());
@@ -5332,8 +5269,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", (short)-12345);
             Assert.Equal(-12345, root.GetProperty("a").GetInt16());
@@ -5350,8 +5287,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", (ushort)65535);
             Assert.Equal(65535, root.GetProperty("a").GetUInt16());
@@ -5368,8 +5305,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", -123456);
             Assert.Equal(-123456, root.GetProperty("a").GetInt32());
@@ -5386,8 +5323,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", 4294967295u);
             Assert.Equal(4294967295u, root.GetProperty("a").GetUInt32());
@@ -5404,8 +5341,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", long.MaxValue);
             Assert.Equal(long.MaxValue, root.GetProperty("a").GetInt64());
@@ -5422,8 +5359,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", 18446744073709551615ul);
             Assert.Equal(18446744073709551615ul, root.GetProperty("a").GetUInt64());
@@ -5440,8 +5377,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", 3.14f);
             Assert.Equal(3.14f, root.GetProperty("a").GetSingle());
@@ -5458,8 +5395,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", 2.718281828);
             Assert.Equal(2.718281828, root.GetProperty("a").GetDouble());
@@ -5476,8 +5413,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", 123.456m);
             Assert.Equal(123.456m, root.GetProperty("a").GetDecimal());
@@ -5495,8 +5432,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
             Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
@@ -5516,8 +5453,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
             UInt128 smallValue = 42;
@@ -5537,8 +5474,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1.5}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Half value1 = (Half)3.25;
             Half value2 = (Half)(-2.5);
@@ -5561,8 +5498,8 @@ namespace Corvus.Text.Json.Tests
             var dt2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", dt1);
             Assert.Equal(dt1, root.GetProperty("a").GetDateTime());
@@ -5578,8 +5515,8 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("a", dto1);
             Assert.Equal(dto1, root.GetProperty("a").GetDateTimeOffset());
@@ -5593,8 +5530,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
             root.SetProperty("a"u8, "hello"u8);
@@ -5615,12 +5552,12 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("123");
-            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
-            var value = builderDoc2.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable value = builderDoc2.RootElement;
 
             // ASCII property name
             root.SetProperty("a"u8, value);
@@ -5640,8 +5577,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
             root.SetProperty("a", "hello");
@@ -5661,8 +5598,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
             root.SetPropertyNull("a");
@@ -5683,8 +5620,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"a\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
             root.SetProperty("a", doc.RootElement);
@@ -5704,8 +5641,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":false,\"foo\\\"bar\":true}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Non-ASCII property name
             root.SetProperty("héllo"u8, true);
@@ -5721,8 +5658,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Non-ASCII property name
             root.SetProperty("héllo"u8, 42);
@@ -5738,8 +5675,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":\"a\",\"foo\\\"bar\":\"b\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Non-ASCII property name
             root.SetProperty("héllo"u8, "world"u8);
@@ -5755,12 +5692,12 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("123");
-            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
-            var value = builderDoc2.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable value = builderDoc2.RootElement;
 
             // Non-ASCII property name
             root.SetProperty<JsonElement.Mutable>("héllo"u8, value);
@@ -5776,8 +5713,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, long.MaxValue);
             Assert.Equal(long.MaxValue, root.GetProperty("héllo").GetInt64());
@@ -5791,8 +5728,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, ulong.MaxValue);
             Assert.Equal(ulong.MaxValue, root.GetProperty("héllo").GetUInt64());
@@ -5806,8 +5743,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, 3.14f);
             Assert.Equal(3.14f, root.GetProperty("héllo").GetSingle());
@@ -5821,8 +5758,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, 2.718281828);
             Assert.Equal(2.718281828, root.GetProperty("héllo").GetDouble());
@@ -5836,8 +5773,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, 123.456m);
             Assert.Equal(123.456m, root.GetProperty("héllo").GetDecimal());
@@ -5851,8 +5788,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetPropertyNull("héllo"u8);
             Assert.Null(root.GetProperty("héllo").GetString());
@@ -5867,8 +5804,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
             Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
@@ -5885,8 +5822,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
             UInt128 smallValue = 42;
@@ -5903,8 +5840,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1.1,\"foo\\\"bar\":2.2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             Half value1 = (Half)3.25;
             Half value2 = (Half)(-2.5);
@@ -5922,8 +5859,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, (byte)123);
             Assert.Equal((byte)123, root.GetProperty("héllo").GetByte());
@@ -5937,8 +5874,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, (sbyte)-42);
             Assert.Equal((sbyte)-42, root.GetProperty("héllo").GetSByte());
@@ -5952,8 +5889,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, (short)-12345);
             Assert.Equal((short)-12345, root.GetProperty("héllo").GetInt16());
@@ -5967,8 +5904,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, (ushort)65535);
             Assert.Equal((ushort)65535, root.GetProperty("héllo").GetUInt16());
@@ -5982,8 +5919,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":1,\"foo\\\"bar\":2}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetProperty("héllo"u8, 4294967295u);
             Assert.Equal(4294967295u, root.GetProperty("héllo").GetUInt32());
@@ -5999,8 +5936,8 @@ namespace Corvus.Text.Json.Tests
             var guid2 = Guid.NewGuid();
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":\"00000000-0000-0000-0000-000000000000\",\"foo\\\"bar\":\"00000000-0000-0000-0000-000000000000\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Non-ASCII property name
             root.SetProperty("héllo"u8, guid1);
@@ -6018,8 +5955,8 @@ namespace Corvus.Text.Json.Tests
             var dt2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":\"2020-01-01T00:00:00Z\",\"foo\\\"bar\":\"2020-01-01T00:00:00Z\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Non-ASCII property name
             root.SetProperty("héllo"u8, dt1);
@@ -6037,8 +5974,8 @@ namespace Corvus.Text.Json.Tests
             var dto2 = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.FromHours(2));
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"héllo\":\"2020-01-01T00:00:00Z\",\"foo\\\"bar\":\"2020-01-01T00:00:00+02:00\"}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             // Non-ASCII property name
             root.SetProperty("héllo"u8, dto1);
@@ -6057,6 +5994,31 @@ namespace Corvus.Text.Json.Tests
             var guid = Guid.NewGuid();
             var dt = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
             var dto = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            var odt = new OffsetDateTime(new LocalDateTime(2025, 1, 1, 0, 0, 0), Offset.Zero);
+            var od = new OffsetDate(new LocalDate(2025, 1, 1), Offset.Zero);
+            var ot = new OffsetTime(new LocalTime(14, 0, 3), Offset.Zero);
+            var ld = new LocalDate(2025, 1, 1);
+            Period period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
+
+            // Test data for various numeric types
+            byte[] byteArray = [1, 2, 3];
+            short[] shortArray = [-1, 0, 1];
+            int[] intArray = [-100, 0, 100];
+            long[] longArray = [-1000L, 0L, 1000L];
+            sbyte[] sbyteArray = [-5, 0, 5];
+            ushort[] ushortArray = [10, 20, 30];
+            uint[] uintArray = [100, 200, 300];
+            ulong[] ulongArray = [1000, 2000, 3000];
+            float[] floatArray = [1.1f, 2.2f, 3.3f];
+            double[] doubleArray = [1.11, 2.22, 3.33];
+            decimal[] decimalArray = [1.111m, 2.222m, 3.333m];
+
+#if NET
+            Int128[] int128Array = [(Int128)1, (Int128)2, (Int128)3];
+            UInt128[] uint128Array = [(UInt128)4, (UInt128)5, (UInt128)6];
+            Half[] halfArray = [(Half)1.5, (Half)2.5, (Half)3.5];
+#endif
+
 
             using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
@@ -6096,6 +6058,12 @@ namespace Corvus.Text.Json.Tests
                     arrayBuilder.Add(dt);
                     arrayBuilder.Add(dto);
 
+                    arrayBuilder.Add(odt);
+                    arrayBuilder.Add(od);
+                    arrayBuilder.Add(ot);
+                    arrayBuilder.Add(ld);
+                    arrayBuilder.Add(period);
+
                     // Add nested array
                     arrayBuilder.Add((ref JsonArrayBuilder ab) =>
                     {
@@ -6109,10 +6077,30 @@ namespace Corvus.Text.Json.Tests
                         ob.Add("foo"u8, "bar"u8);
                     });
 
+                    // Add arrays using AddArrayValue(ReadOnlySpan<byte>, ...)
+                    arrayBuilder.AddArrayValue(byteArray);
+                    arrayBuilder.AddArrayValue(shortArray);
+                    arrayBuilder.AddArrayValue(intArray);
+                    arrayBuilder.AddArrayValue(longArray);
+                    arrayBuilder.AddArrayValue(sbyteArray);
+                    arrayBuilder.AddArrayValue(ushortArray);
+                    arrayBuilder.AddArrayValue(uintArray);
+                    arrayBuilder.AddArrayValue(ulongArray);
+                    arrayBuilder.AddArrayValue(floatArray);
+                    arrayBuilder.AddArrayValue(doubleArray);
+                    arrayBuilder.AddArrayValue(decimalArray);
+
+#if NET
+                    arrayBuilder.AddArrayValue(int128Array);
+                    arrayBuilder.AddArrayValue(uint128Array);
+                    arrayBuilder.AddArrayValue(halfArray);
+#endif
+
+
                     arrayBuilder.Add(parsedDoc.RootElement);
                 }));
 
-            var root = doc.RootElement;
+            JsonElement.Mutable root = doc.RootElement;
 
             // Now verify the array contents
             int i = 0;
@@ -6145,21 +6133,294 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(dt, root[i++].GetDateTime());
             Assert.Equal(dto, root[i++].GetDateTimeOffset());
 
+            Assert.Equal(odt, root[i++].GetOffsetDateTime());
+            Assert.Equal(od, root[i++].GetOffsetDate());
+            Assert.Equal(ot, root[i++].GetOffsetTime());
+            Assert.Equal(ld, root[i++].GetLocalDate());
+            Assert.Equal(period, root[i++].GetPeriod());
+
+
             // Nested array
-            var nestedArray = root[i++];
+            JsonElement.Mutable nestedArray = root[i++];
             Assert.Equal(2, nestedArray.GetArrayLength());
             Assert.Equal(1, nestedArray[0].GetInt32());
             Assert.Equal(2, nestedArray[1].GetInt32());
 
             // Nested object
-            var nestedObject = root[i++];
+            JsonElement.Mutable nestedObject = root[i++];
             Assert.Equal(JsonValueKind.Object, nestedObject.ValueKind);
             Assert.Equal("bar", nestedObject.GetProperty("foo").GetString());
 
-            var element = root[i++];
+            JsonElement.Mutable byteArrayElem = root[i++];
+            Assert.Equal(3, byteArrayElem.GetArrayLength());
+            Assert.Equal(1, byteArrayElem[0].GetByte());
+            Assert.Equal(2, byteArrayElem[1].GetByte());
+            Assert.Equal(3, byteArrayElem[2].GetByte());
+
+            JsonElement.Mutable shortArrayElem = root[i++];
+            Assert.Equal(3, shortArrayElem.GetArrayLength());
+            Assert.Equal(-1, shortArrayElem[0].GetInt16());
+            Assert.Equal(0, shortArrayElem[1].GetInt16());
+            Assert.Equal(1, shortArrayElem[2].GetInt16());
+
+            JsonElement.Mutable intArrayElem = root[i++];
+            Assert.Equal(3, intArrayElem.GetArrayLength());
+            Assert.Equal(-100, intArrayElem[0].GetInt32());
+            Assert.Equal(0, intArrayElem[1].GetInt32());
+            Assert.Equal(100, intArrayElem[2].GetInt32());
+
+            JsonElement.Mutable longArrayElem = root[i++];
+            Assert.Equal(3, longArrayElem.GetArrayLength());
+            Assert.Equal(-1000L, longArrayElem[0].GetInt64());
+            Assert.Equal(0L, longArrayElem[1].GetInt64());
+            Assert.Equal(1000L, longArrayElem[2].GetInt64());
+
+            JsonElement.Mutable sbyteArrayElem = root[i++];
+            Assert.Equal(3, sbyteArrayElem.GetArrayLength());
+            Assert.Equal(-5, sbyteArrayElem[0].GetSByte());
+            Assert.Equal(0, sbyteArrayElem[1].GetSByte());
+            Assert.Equal(5, sbyteArrayElem[2].GetSByte());
+
+            JsonElement.Mutable ushortArrayElem = root[i++];
+            Assert.Equal(3, ushortArrayElem.GetArrayLength());
+            Assert.Equal((ushort)10, ushortArrayElem[0].GetUInt16());
+            Assert.Equal((ushort)20, ushortArrayElem[1].GetUInt16());
+            Assert.Equal((ushort)30, ushortArrayElem[2].GetUInt16());
+
+            JsonElement.Mutable uintArrayElem = root[i++];
+            Assert.Equal(3, uintArrayElem.GetArrayLength());
+            Assert.Equal(100U, uintArrayElem[0].GetUInt32());
+            Assert.Equal(200U, uintArrayElem[1].GetUInt32());
+            Assert.Equal(300U, uintArrayElem[2].GetUInt32());
+
+            JsonElement.Mutable ulongArrayElem = root[i++];
+            Assert.Equal(3, ulongArrayElem.GetArrayLength());
+            Assert.Equal(1000UL, ulongArrayElem[0].GetUInt64());
+            Assert.Equal(2000UL, ulongArrayElem[1].GetUInt64());
+            Assert.Equal(3000UL, ulongArrayElem[2].GetUInt64());
+
+            JsonElement.Mutable floatArrayElem = root[i++];
+            Assert.Equal(3, floatArrayElem.GetArrayLength());
+            Assert.Equal(1.1f, floatArrayElem[0].GetSingle());
+            Assert.Equal(2.2f, floatArrayElem[1].GetSingle());
+            Assert.Equal(3.3f, floatArrayElem[2].GetSingle());
+
+            JsonElement.Mutable doubleArrayElem = root[i++];
+            Assert.Equal(3, doubleArrayElem.GetArrayLength());
+            Assert.Equal(1.11, doubleArrayElem[0].GetDouble());
+            Assert.Equal(2.22, doubleArrayElem[1].GetDouble());
+            Assert.Equal(3.33, doubleArrayElem[2].GetDouble());
+
+            JsonElement.Mutable decimalArrayElem = root[i++];
+            Assert.Equal(3, decimalArrayElem.GetArrayLength());
+            Assert.Equal(1.111m, decimalArrayElem[0].GetDecimal());
+            Assert.Equal(2.222m, decimalArrayElem[1].GetDecimal());
+            Assert.Equal(3.333m, decimalArrayElem[2].GetDecimal());
+
+#if NET
+            JsonElement.Mutable int128ArrayElem = root[i++];
+            Assert.Equal(3, int128ArrayElem.GetArrayLength());
+            Assert.Equal((Int128)1, int128ArrayElem[0].GetInt128());
+            Assert.Equal((Int128)2, int128ArrayElem[1].GetInt128());
+            Assert.Equal((Int128)3, int128ArrayElem[2].GetInt128());
+
+            JsonElement.Mutable uint128ArrayElem = root[i++];
+            Assert.Equal(3, uint128ArrayElem.GetArrayLength());
+            Assert.Equal((UInt128)4, uint128ArrayElem[0].GetUInt128());
+            Assert.Equal((UInt128)5, uint128ArrayElem[1].GetUInt128());
+            Assert.Equal((UInt128)6, uint128ArrayElem[2].GetUInt128());
+
+            JsonElement.Mutable halfArrayElem = root[i++];
+            Assert.Equal(3, halfArrayElem.GetArrayLength());
+            Assert.Equal((Half)1.5, halfArrayElem[0].GetHalf());
+            Assert.Equal((Half)2.5, halfArrayElem[1].GetHalf());
+            Assert.Equal((Half)3.5, halfArrayElem[2].GetHalf());
+#endif
+
+
+            JsonElement.Mutable element = root[i++];
             Assert.Equal(3, element.GetProperty("foo").GetInt32());
 
         }
+
+        [Fact]
+        public static void CreateObject_RemoveProperty_NestedObject()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+            workspace,
+            new((ref objBuilder) =>
+            {
+                // Add some properties
+                objBuilder.Add("name"u8, "John Doe"u8);
+                objBuilder.Add("age"u8, 30);
+                objBuilder.Add("isActive"u8, true);
+                objBuilder.Add("nested1", (ref objBuilder) =>
+                {
+                    objBuilder.Add("name"u8, "Nested Sally"u8);
+                    objBuilder.Add("age"u8, 49);
+                });
+                objBuilder.Add("nested2", (ref objBuilder) =>
+                {
+                    objBuilder.Add("name"u8, "Nested Derek"u8);
+                    objBuilder.Add("age"u8, 49);
+                    objBuilder.Add("isActive"u8, false);
+                    objBuilder.RemoveProperty("age"u8);
+                });
+                objBuilder.RemoveProperty("nested1"u8);
+                objBuilder.Add("nested1"u8, 12.6);
+                objBuilder.Add("score"u8, 10.3m);
+            }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("John Doe", root.GetProperty("name").GetString());
+            Assert.Equal(10.3m, root.GetProperty("score").GetDecimal());
+            Assert.True(root.TryGetProperty("age", out _));
+            Assert.True(root.GetProperty("isActive").GetBoolean());
+            Assert.Equal(12.6, root.GetProperty("nested1").GetDouble());
+            Assert.Equal(6, root.GetPropertyCount());
+            Assert.Equal("{\"name\":\"John Doe\",\"age\":30,\"isActive\":true,\"nested2\":{\"name\":\"Nested Derek\",\"isActive\":false},\"nested1\":12.6,\"score\":10.3}", root.ToString());
+        }
+
+        [Fact]
+        public static void CreateObject_RemoveProperty_NestedArray()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+            workspace,
+            new((ref objBuilder) =>
+            {
+                // Add some properties
+                objBuilder.Add("name"u8, "John Doe"u8);
+                objBuilder.Add("age"u8, 30);
+                objBuilder.Add("isActive"u8, true);
+                objBuilder.Add("nested1", (ref arrayBuilder) =>
+                {
+                    arrayBuilder.Add("Nested Sally"u8);
+                    arrayBuilder.Add(49);
+                });
+                objBuilder.Add("nested2", (ref arrayBuilder) =>
+                {
+                    arrayBuilder.Add("Nested Derek"u8);
+                    arrayBuilder.Add(49);
+                    arrayBuilder.Add(false);
+                });
+                objBuilder.RemoveProperty("nested1"u8);
+                objBuilder.Add("nested1"u8, 12.6);
+                objBuilder.Add("score"u8, 10.3m);
+            }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("John Doe", root.GetProperty("name").GetString());
+            Assert.Equal(10.3m, root.GetProperty("score").GetDecimal());
+            Assert.Equal(30, root.GetProperty("age").GetInt32());
+            Assert.True(root.GetProperty("isActive").GetBoolean());
+            Assert.Equal(12.6, root.GetProperty("nested1").GetDouble());
+            Assert.Equal(6, root.GetPropertyCount());
+            Assert.Equal("{\"name\":\"John Doe\",\"age\":30,\"isActive\":true,\"nested2\":[\"Nested Derek\",49,false],\"nested1\":12.6,\"score\":10.3}", root.ToString());
+        }
+
+        [Fact]
+        public static void CreateObject_RemoveProperty_Escaped()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+            workspace,
+            new((ref JsonObjectBuilder objBuilder) =>
+            {
+                // Add some properties
+                objBuilder.Add("name"u8, "John Doe"u8);
+                objBuilder.Add("a\\\"ge"u8, 30, escapeName: false, nameRequiresUnescaping: true);
+                objBuilder.Add("isActive"u8, true);
+                objBuilder.RemoveProperty("a\\\"ge"u8, escapeName: false, nameRequiresUnescaping: true);
+                objBuilder.Add("score"u8, 10.3m);
+            }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("John Doe", root.GetProperty("name").GetString());
+            Assert.Equal(10.3m, root.GetProperty("score").GetDecimal());
+            Assert.False(root.TryGetProperty("a\"ge", out _));
+            Assert.True(root.GetProperty("isActive").GetBoolean());
+            Assert.Equal(3, root.GetPropertyCount());
+            Assert.Equal("{\"name\":\"John Doe\",\"isActive\":true,\"score\":10.3}", root.ToString());
+        }
+
+
+        [Fact]
+        public static void CreateObject_RemoveProperty()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+            workspace,
+            new((ref JsonObjectBuilder objBuilder) =>
+            {
+                // Add some properties
+                objBuilder.Add("name"u8, "John Doe"u8);
+                objBuilder.Add("age"u8, 30);
+                objBuilder.Add("isActive"u8, true);
+                objBuilder.RemoveProperty("age"u8);
+                objBuilder.Add("score"u8, 10.3m);
+            }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("John Doe", root.GetProperty("name").GetString());
+            Assert.Equal(10.3m, root.GetProperty("score").GetDecimal());
+            Assert.False(root.TryGetProperty("age", out _));
+            Assert.True(root.GetProperty("isActive").GetBoolean());
+            Assert.Equal(3, root.GetPropertyCount());
+            Assert.Equal("{\"name\":\"John Doe\",\"isActive\":true,\"score\":10.3}", root.ToString());
+        }
+
+        [Fact]
+        public static void CreateObject_RemoveProperty_SpanOfChar()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+            workspace,
+            new((ref JsonObjectBuilder objBuilder) =>
+            {
+                // Add some properties
+                objBuilder.Add("name"u8, "John Doe"u8);
+                objBuilder.Add("age"u8, 30);
+                objBuilder.Add("isActive"u8, true);
+                objBuilder.RemoveProperty("age".AsSpan());
+                objBuilder.Add("score"u8, 10.3m);
+            }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("John Doe", root.GetProperty("name").GetString());
+            Assert.Equal(10.3m, root.GetProperty("score").GetDecimal());
+            Assert.False(root.TryGetProperty("age", out _));
+            Assert.True(root.GetProperty("isActive").GetBoolean());
+            Assert.Equal(3, root.GetPropertyCount());
+            Assert.Equal("{\"name\":\"John Doe\",\"isActive\":true,\"score\":10.3}", root.ToString());
+        }
+
+        [Fact]
+        public static void CreateObject_RemoveProperty_String()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+            workspace,
+            new((ref JsonObjectBuilder objBuilder) =>
+            {
+                // Add some properties
+                objBuilder.Add("name"u8, "John Doe"u8);
+                objBuilder.Add("age"u8, 30);
+                objBuilder.Add("isActive"u8, true);
+                objBuilder.RemoveProperty("age");
+                objBuilder.Add("score"u8, 10.3m);
+            }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("John Doe", root.GetProperty("name").GetString());
+            Assert.Equal(10.3m, root.GetProperty("score").GetDecimal());
+            Assert.False(root.TryGetProperty("age", out _));
+            Assert.True(root.GetProperty("isActive").GetBoolean());
+            Assert.Equal(3, root.GetPropertyCount());
+            Assert.Equal("{\"name\":\"John Doe\",\"isActive\":true,\"score\":10.3}", root.ToString());
+        }
+
         [Fact]
         public static void CreateObject_AllTypes()
         {
@@ -6168,6 +6429,30 @@ namespace Corvus.Text.Json.Tests
             var guid = Guid.NewGuid();
             var dt = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
             var dto = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            var odt = new OffsetDateTime(new LocalDateTime(2025, 1, 1, 0, 0, 0), Offset.Zero);
+            var od = new OffsetDate(new LocalDate(2025, 1, 1), Offset.Zero);
+            var ot = new OffsetTime(new LocalTime(14, 0, 3), Offset.Zero);
+            var ld = new LocalDate(2025, 1, 1);
+            Period period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
+
+            // Test data for various numeric types
+            byte[] byteArray = [1, 2, 3];
+            short[] shortArray = [-1, 0, 1];
+            int[] intArray = [-100, 0, 100];
+            long[] longArray = [-1000L, 0L, 1000L];
+            sbyte[] sbyteArray = [-5, 0, 5];
+            ushort[] ushortArray = [10, 20, 30];
+            uint[] uintArray = [100, 200, 300];
+            ulong[] ulongArray = [1000, 2000, 3000];
+            float[] floatArray = [1.1f, 2.2f, 3.3f];
+            double[] doubleArray = [1.11, 2.22, 3.33];
+            decimal[] decimalArray = [1.111m, 2.222m, 3.333m];
+
+#if NET
+            Int128[] int128Array = [(Int128)1, (Int128)2, (Int128)3];
+            UInt128[] uint128Array = [(UInt128)4, (UInt128)5, (UInt128)6];
+            Half[] halfArray = [(Half)1.5, (Half)2.5, (Half)3.5];
+#endif
 
             using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
@@ -6212,6 +6497,12 @@ namespace Corvus.Text.Json.Tests
                     objBuilder.Add("datetime"u8, dt);
                     objBuilder.Add("datetimeoffset"u8, dto);
 
+                    objBuilder.Add("offsetdatetime"u8, odt);
+                    objBuilder.Add("offsetdate"u8, od);
+                    objBuilder.Add("offsettime"u8, ot);
+                    objBuilder.Add("localdate"u8, ld);
+                    objBuilder.Add("period"u8, period);
+
                     // Add nested array
                     objBuilder.Add("array"u8, (ref JsonArrayBuilder ab) =>
                     {
@@ -6224,9 +6515,28 @@ namespace Corvus.Text.Json.Tests
                     {
                         ob.Add("foo"u8, "bar"u8);
                     });
+
+                    // Add arrays using AddArrayValue(ReadOnlySpan<byte>, ...)
+                    objBuilder.AddArrayValue("byteArray"u8, byteArray);
+                    objBuilder.AddArrayValue("shortArray"u8, shortArray);
+                    objBuilder.AddArrayValue("intArray"u8, intArray);
+                    objBuilder.AddArrayValue("longArray"u8, longArray);
+                    objBuilder.AddArrayValue("sbyteArray"u8, sbyteArray);
+                    objBuilder.AddArrayValue("ushortArray"u8, ushortArray);
+                    objBuilder.AddArrayValue("uintArray"u8, uintArray);
+                    objBuilder.AddArrayValue("ulongArray"u8, ulongArray);
+                    objBuilder.AddArrayValue("floatArray"u8, floatArray);
+                    objBuilder.AddArrayValue("doubleArray"u8, doubleArray);
+                    objBuilder.AddArrayValue("decimalArray"u8, decimalArray);
+
+#if NET
+                    objBuilder.AddArrayValue("int128Array"u8, int128Array);
+                    objBuilder.AddArrayValue("uint128Array"u8, uint128Array);
+                    objBuilder.AddArrayValue("halfArray"u8, halfArray);
+#endif
                 }));
 
-            var root = doc.RootElement;
+            JsonElement.Mutable root = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Object, root.ValueKind);
 
@@ -6265,19 +6575,371 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(dt, root.GetProperty("datetime").GetDateTime());
             Assert.Equal(dto, root.GetProperty("datetimeoffset").GetDateTimeOffset());
 
-            var elementValue = root.GetProperty("elementValue");
+            Assert.Equal(odt, root.GetProperty("offsetdatetime").GetOffsetDateTime());
+            Assert.Equal(od, root.GetProperty("offsetdate").GetOffsetDate());
+            Assert.Equal(ot, root.GetProperty("offsettime").GetOffsetTime());
+            Assert.Equal(ld, root.GetProperty("localdate").GetLocalDate());
+            Assert.Equal(period, root.GetProperty("period").GetPeriod());
+
+            JsonElement.Mutable elementValue = root.GetProperty("elementValue");
             Assert.Equal(3, elementValue.GetProperty("foo").GetInt32());
 
             // Nested array
-            var nestedArray = root.GetProperty("array");
+            JsonElement.Mutable nestedArray = root.GetProperty("array");
             Assert.Equal(2, nestedArray.GetArrayLength());
             Assert.Equal(1, nestedArray[0].GetInt32());
             Assert.Equal(2, nestedArray[1].GetInt32());
 
             // Nested object
-            var nestedObject = root.GetProperty("object");
+            JsonElement.Mutable nestedObject = root.GetProperty("object");
             Assert.Equal(JsonValueKind.Object, nestedObject.ValueKind);
             Assert.Equal("bar", nestedObject.GetProperty("foo").GetString());
+
+            JsonElement.Mutable byteArrayElem = root.GetProperty("byteArray");
+            Assert.Equal(3, byteArrayElem.GetArrayLength());
+            Assert.Equal(1, byteArrayElem[0].GetByte());
+            Assert.Equal(2, byteArrayElem[1].GetByte());
+            Assert.Equal(3, byteArrayElem[2].GetByte());
+
+            JsonElement.Mutable shortArrayElem = root.GetProperty("shortArray");
+            Assert.Equal(3, shortArrayElem.GetArrayLength());
+            Assert.Equal(-1, shortArrayElem[0].GetInt16());
+            Assert.Equal(0, shortArrayElem[1].GetInt16());
+            Assert.Equal(1, shortArrayElem[2].GetInt16());
+
+            JsonElement.Mutable intArrayElem = root.GetProperty("intArray");
+            Assert.Equal(3, intArrayElem.GetArrayLength());
+            Assert.Equal(-100, intArrayElem[0].GetInt32());
+            Assert.Equal(0, intArrayElem[1].GetInt32());
+            Assert.Equal(100, intArrayElem[2].GetInt32());
+
+            JsonElement.Mutable longArrayElem = root.GetProperty("longArray");
+            Assert.Equal(3, longArrayElem.GetArrayLength());
+            Assert.Equal(-1000L, longArrayElem[0].GetInt64());
+            Assert.Equal(0L, longArrayElem[1].GetInt64());
+            Assert.Equal(1000L, longArrayElem[2].GetInt64());
+
+            JsonElement.Mutable sbyteArrayElem = root.GetProperty("sbyteArray");
+            Assert.Equal(3, sbyteArrayElem.GetArrayLength());
+            Assert.Equal(-5, sbyteArrayElem[0].GetSByte());
+            Assert.Equal(0, sbyteArrayElem[1].GetSByte());
+            Assert.Equal(5, sbyteArrayElem[2].GetSByte());
+
+            JsonElement.Mutable ushortArrayElem = root.GetProperty("ushortArray");
+            Assert.Equal(3, ushortArrayElem.GetArrayLength());
+            Assert.Equal((ushort)10, ushortArrayElem[0].GetUInt16());
+            Assert.Equal((ushort)20, ushortArrayElem[1].GetUInt16());
+            Assert.Equal((ushort)30, ushortArrayElem[2].GetUInt16());
+
+            JsonElement.Mutable uintArrayElem = root.GetProperty("uintArray");
+            Assert.Equal(3, uintArrayElem.GetArrayLength());
+            Assert.Equal(100U, uintArrayElem[0].GetUInt32());
+            Assert.Equal(200U, uintArrayElem[1].GetUInt32());
+            Assert.Equal(300U, uintArrayElem[2].GetUInt32());
+
+            JsonElement.Mutable ulongArrayElem = root.GetProperty("ulongArray");
+            Assert.Equal(3, ulongArrayElem.GetArrayLength());
+            Assert.Equal(1000UL, ulongArrayElem[0].GetUInt64());
+            Assert.Equal(2000UL, ulongArrayElem[1].GetUInt64());
+            Assert.Equal(3000UL, ulongArrayElem[2].GetUInt64());
+
+            JsonElement.Mutable floatArrayElem = root.GetProperty("floatArray");
+            Assert.Equal(3, floatArrayElem.GetArrayLength());
+            Assert.Equal(1.1f, floatArrayElem[0].GetSingle());
+            Assert.Equal(2.2f, floatArrayElem[1].GetSingle());
+            Assert.Equal(3.3f, floatArrayElem[2].GetSingle());
+
+            JsonElement.Mutable doubleArrayElem = root.GetProperty("doubleArray");
+            Assert.Equal(3, doubleArrayElem.GetArrayLength());
+            Assert.Equal(1.11, doubleArrayElem[0].GetDouble());
+            Assert.Equal(2.22, doubleArrayElem[1].GetDouble());
+            Assert.Equal(3.33, doubleArrayElem[2].GetDouble());
+
+            JsonElement.Mutable decimalArrayElem = root.GetProperty("decimalArray");
+            Assert.Equal(3, decimalArrayElem.GetArrayLength());
+            Assert.Equal(1.111m, decimalArrayElem[0].GetDecimal());
+            Assert.Equal(2.222m, decimalArrayElem[1].GetDecimal());
+            Assert.Equal(3.333m, decimalArrayElem[2].GetDecimal());
+
+#if NET
+            JsonElement.Mutable int128ArrayElem = root.GetProperty("int128Array");
+            Assert.Equal(3, int128ArrayElem.GetArrayLength());
+            Assert.Equal((Int128)1, int128ArrayElem[0].GetInt128());
+            Assert.Equal((Int128)2, int128ArrayElem[1].GetInt128());
+            Assert.Equal((Int128)3, int128ArrayElem[2].GetInt128());
+
+            JsonElement.Mutable uint128ArrayElem = root.GetProperty("uint128Array");
+            Assert.Equal(3, uint128ArrayElem.GetArrayLength());
+            Assert.Equal((UInt128)4, uint128ArrayElem[0].GetUInt128());
+            Assert.Equal((UInt128)5, uint128ArrayElem[1].GetUInt128());
+            Assert.Equal((UInt128)6, uint128ArrayElem[2].GetUInt128());
+
+            JsonElement.Mutable halfArrayElem = root.GetProperty("halfArray");
+            Assert.Equal(3, halfArrayElem.GetArrayLength());
+            Assert.Equal((Half)1.5, halfArrayElem[0].GetHalf());
+            Assert.Equal((Half)2.5, halfArrayElem[1].GetHalf());
+            Assert.Equal((Half)3.5, halfArrayElem[2].GetHalf());
+#endif
+        }
+
+        [Fact]
+        public static void CreateObject_AllTypes_String()
+        {
+            using var workspace = JsonWorkspace.Create();
+
+            var guid = Guid.NewGuid();
+            var dt = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
+            var dto = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            var odt = new OffsetDateTime(new LocalDateTime(2025, 1, 1, 0, 0, 0), Offset.Zero);
+            var od = new OffsetDate(new LocalDate(2025, 1, 1), Offset.Zero);
+            var ot = new OffsetTime(new LocalTime(14, 0, 3), Offset.Zero);
+            var ld = new LocalDate(2025, 1, 1);
+            Period period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
+
+            // Test data for various numeric types
+            byte[] byteArray = [1, 2, 3];
+            short[] shortArray = [-1, 0, 1];
+            int[] intArray = [-100, 0, 100];
+            long[] longArray = [-1000L, 0L, 1000L];
+            sbyte[] sbyteArray = [-5, 0, 5];
+            ushort[] ushortArray = [10, 20, 30];
+            uint[] uintArray = [100, 200, 300];
+            ulong[] ulongArray = [1000, 2000, 3000];
+            float[] floatArray = [1.1f, 2.2f, 3.3f];
+            double[] doubleArray = [1.11, 2.22, 3.33];
+            decimal[] decimalArray = [1.111m, 2.222m, 3.333m];
+
+#if NET
+            Int128[] int128Array = [(Int128)1, (Int128)2, (Int128)3];
+            UInt128[] uint128Array = [(UInt128)4, (UInt128)5, (UInt128)6];
+            Half[] halfArray = [(Half)1.5, (Half)2.5, (Half)3.5];
+#endif
+
+            using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
+
+            // Build an object using every method on JsonObjectBuilder
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    // Add primitive types
+                    objBuilder.Add("boolTrue", true);
+                    objBuilder.Add("boolFalse", false);
+                    objBuilder.Add("byte", (byte)42);
+                    objBuilder.Add("sbyte", (sbyte)-8);
+                    objBuilder.Add("short", (short)-12345);
+                    objBuilder.Add("ushort", (ushort)65535);
+                    objBuilder.Add("int", -123456);
+                    objBuilder.Add("uint", 654321u);
+                    objBuilder.Add("long", long.MaxValue);
+                    objBuilder.Add("ulong", ulong.MaxValue);
+                    objBuilder.Add("float", 3.14f);
+                    objBuilder.Add("double", -2.71d);
+                    objBuilder.Add("decimal1", 123.456m);
+                    objBuilder.Add("decimal2", -789.01m);
+                    objBuilder.Add("bigInteger1", new BigInteger(123456));
+                    objBuilder.Add("bigInteger2", new BigInteger(-78901));
+                    objBuilder.Add("bigNumber1", new BigNumber(123456, -2));
+                    objBuilder.Add("bigNumber2", new BigNumber(-78901, 20));
+                    objBuilder.Add("string1", "hello"u8, escapeValue: true, valueRequiresUnescaping: false);
+                    objBuilder.Add("string2", "there".AsSpan());
+                    objBuilder.AddNull("nullValue");
+                    objBuilder.Add("elementValue", parsedDoc.RootElement);
+
+#if NET
+                    objBuilder.Add("int128", Int128.Parse("170141183460469231731687303715884105727"));
+                    objBuilder.Add("uint128", UInt128.Parse("340282366920938463463374607431768211455"));
+                    objBuilder.Add("half", (Half)1.5);
+#endif
+
+                    // Add Guid, DateTime, DateTimeOffset
+                    objBuilder.Add("guid", guid);
+                    objBuilder.Add("datetime", dt);
+                    objBuilder.Add("datetimeoffset", dto);
+
+                    objBuilder.Add("offsetdatetime"u8, odt);
+                    objBuilder.Add("offsetdate"u8, od);
+                    objBuilder.Add("offsettime"u8, ot);
+                    objBuilder.Add("localdate"u8, ld);
+                    objBuilder.Add("period"u8, period);
+
+                    // Add nested array
+                    objBuilder.Add("array", (ref JsonArrayBuilder ab) =>
+                    {
+                        ab.Add(1);
+                        ab.Add(2);
+                    });
+
+                    // Add nested object
+                    objBuilder.Add("object", (ref JsonObjectBuilder ob) =>
+                    {
+                        ob.Add("foo"u8, "bar"u8);
+                    });
+
+                    // Add arrays using AddArrayValue(ReadOnlySpan<byte>, ...)
+                    objBuilder.AddArrayValue("byteArray", byteArray);
+                    objBuilder.AddArrayValue("shortArray", shortArray);
+                    objBuilder.AddArrayValue("intArray", intArray);
+                    objBuilder.AddArrayValue("longArray", longArray);
+                    objBuilder.AddArrayValue("sbyteArray", sbyteArray);
+                    objBuilder.AddArrayValue("ushortArray", ushortArray);
+                    objBuilder.AddArrayValue("uintArray", uintArray);
+                    objBuilder.AddArrayValue("ulongArray", ulongArray);
+                    objBuilder.AddArrayValue("floatArray", floatArray);
+                    objBuilder.AddArrayValue("doubleArray", doubleArray);
+                    objBuilder.AddArrayValue("decimalArray", decimalArray);
+
+#if NET
+                    objBuilder.AddArrayValue("int128Array", int128Array);
+                    objBuilder.AddArrayValue("uint128Array", uint128Array);
+                    objBuilder.AddArrayValue("halfArray", halfArray);
+#endif
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Object, root.ValueKind);
+
+            Assert.True(root.GetProperty("boolTrue").GetBoolean());
+            Assert.False(root.GetProperty("boolFalse").GetBoolean());
+            Assert.Equal((byte)42, root.GetProperty("byte").GetByte());
+            Assert.Equal((sbyte)-8, root.GetProperty("sbyte").GetSByte());
+            Assert.Equal((short)-12345, root.GetProperty("short").GetInt16());
+            Assert.Equal((ushort)65535, root.GetProperty("ushort").GetUInt16());
+            Assert.Equal(-123456, root.GetProperty("int").GetInt32());
+            Assert.Equal(654321u, root.GetProperty("uint").GetUInt32());
+            Assert.Equal(long.MaxValue, root.GetProperty("long").GetInt64());
+            Assert.Equal(ulong.MaxValue, root.GetProperty("ulong").GetUInt64());
+            Assert.Equal(3.14f, root.GetProperty("float").GetSingle());
+            Assert.Equal(-2.71d, root.GetProperty("double").GetDouble());
+            Assert.Equal(123.456m, root.GetProperty("decimal1").GetDecimal());
+            Assert.Equal(-789.01m, root.GetProperty("decimal2").GetDecimal());
+            Assert.Equal(123456, root.GetProperty("bigInteger1").GetBigInteger());
+            Assert.Equal(-78901, root.GetProperty("bigInteger2").GetBigInteger());
+            Assert.Equal(new(123456, -2), root.GetProperty("bigNumber1").GetBigNumber());
+            Assert.Equal(new(-78901, 20), root.GetProperty("bigNumber2").GetBigNumber());
+            Assert.Equal(123.456m, root.GetProperty("decimal1").GetDecimal());
+            Assert.Equal(-789.01m, root.GetProperty("decimal2").GetDecimal());
+            Assert.Equal("hello", root.GetProperty("string1").GetString());
+            Assert.Equal("there", root.GetProperty("string2").GetString());
+            Assert.Equal(JsonValueKind.Null, root.GetProperty("nullValue").ValueKind);
+
+#if NET
+            Assert.Equal(Int128.Parse("170141183460469231731687303715884105727"), root.GetProperty("int128").GetInt128());
+            Assert.Equal(UInt128.Parse("340282366920938463463374607431768211455"), root.GetProperty("uint128").GetUInt128());
+            Assert.Equal((Half)1.5, root.GetProperty("half").GetHalf());
+#endif
+
+            Assert.Equal(guid, root.GetProperty("guid").GetGuid());
+            Assert.Equal(dt, root.GetProperty("datetime").GetDateTime());
+            Assert.Equal(dto, root.GetProperty("datetimeoffset").GetDateTimeOffset());
+
+            Assert.Equal(odt, root.GetProperty("offsetdatetime").GetOffsetDateTime());
+            Assert.Equal(od, root.GetProperty("offsetdate").GetOffsetDate());
+            Assert.Equal(ot, root.GetProperty("offsettime").GetOffsetTime());
+            Assert.Equal(ld, root.GetProperty("localdate").GetLocalDate());
+            Assert.Equal(period, root.GetProperty("period").GetPeriod());
+
+
+            JsonElement.Mutable elementValue = root.GetProperty("elementValue");
+            Assert.Equal(3, elementValue.GetProperty("foo").GetInt32());
+
+            // Nested array
+            JsonElement.Mutable nestedArray = root.GetProperty("array");
+            Assert.Equal(2, nestedArray.GetArrayLength());
+            Assert.Equal(1, nestedArray[0].GetInt32());
+            Assert.Equal(2, nestedArray[1].GetInt32());
+
+            // Nested object
+            JsonElement.Mutable nestedObject = root.GetProperty("object");
+            Assert.Equal(JsonValueKind.Object, nestedObject.ValueKind);
+            Assert.Equal("bar", nestedObject.GetProperty("foo").GetString());
+
+            JsonElement.Mutable byteArrayElem = root.GetProperty("byteArray");
+            Assert.Equal(3, byteArrayElem.GetArrayLength());
+            Assert.Equal(1, byteArrayElem[0].GetByte());
+            Assert.Equal(2, byteArrayElem[1].GetByte());
+            Assert.Equal(3, byteArrayElem[2].GetByte());
+
+            JsonElement.Mutable shortArrayElem = root.GetProperty("shortArray");
+            Assert.Equal(3, shortArrayElem.GetArrayLength());
+            Assert.Equal(-1, shortArrayElem[0].GetInt16());
+            Assert.Equal(0, shortArrayElem[1].GetInt16());
+            Assert.Equal(1, shortArrayElem[2].GetInt16());
+
+            JsonElement.Mutable intArrayElem = root.GetProperty("intArray");
+            Assert.Equal(3, intArrayElem.GetArrayLength());
+            Assert.Equal(-100, intArrayElem[0].GetInt32());
+            Assert.Equal(0, intArrayElem[1].GetInt32());
+            Assert.Equal(100, intArrayElem[2].GetInt32());
+
+            JsonElement.Mutable longArrayElem = root.GetProperty("longArray");
+            Assert.Equal(3, longArrayElem.GetArrayLength());
+            Assert.Equal(-1000L, longArrayElem[0].GetInt64());
+            Assert.Equal(0L, longArrayElem[1].GetInt64());
+            Assert.Equal(1000L, longArrayElem[2].GetInt64());
+
+            JsonElement.Mutable sbyteArrayElem = root.GetProperty("sbyteArray");
+            Assert.Equal(3, sbyteArrayElem.GetArrayLength());
+            Assert.Equal(-5, sbyteArrayElem[0].GetSByte());
+            Assert.Equal(0, sbyteArrayElem[1].GetSByte());
+            Assert.Equal(5, sbyteArrayElem[2].GetSByte());
+
+            JsonElement.Mutable ushortArrayElem = root.GetProperty("ushortArray");
+            Assert.Equal(3, ushortArrayElem.GetArrayLength());
+            Assert.Equal((ushort)10, ushortArrayElem[0].GetUInt16());
+            Assert.Equal((ushort)20, ushortArrayElem[1].GetUInt16());
+            Assert.Equal((ushort)30, ushortArrayElem[2].GetUInt16());
+
+            JsonElement.Mutable uintArrayElem = root.GetProperty("uintArray");
+            Assert.Equal(3, uintArrayElem.GetArrayLength());
+            Assert.Equal(100U, uintArrayElem[0].GetUInt32());
+            Assert.Equal(200U, uintArrayElem[1].GetUInt32());
+            Assert.Equal(300U, uintArrayElem[2].GetUInt32());
+
+            JsonElement.Mutable ulongArrayElem = root.GetProperty("ulongArray");
+            Assert.Equal(3, ulongArrayElem.GetArrayLength());
+            Assert.Equal(1000UL, ulongArrayElem[0].GetUInt64());
+            Assert.Equal(2000UL, ulongArrayElem[1].GetUInt64());
+            Assert.Equal(3000UL, ulongArrayElem[2].GetUInt64());
+
+            JsonElement.Mutable floatArrayElem = root.GetProperty("floatArray");
+            Assert.Equal(3, floatArrayElem.GetArrayLength());
+            Assert.Equal(1.1f, floatArrayElem[0].GetSingle());
+            Assert.Equal(2.2f, floatArrayElem[1].GetSingle());
+            Assert.Equal(3.3f, floatArrayElem[2].GetSingle());
+
+            JsonElement.Mutable doubleArrayElem = root.GetProperty("doubleArray");
+            Assert.Equal(3, doubleArrayElem.GetArrayLength());
+            Assert.Equal(1.11, doubleArrayElem[0].GetDouble());
+            Assert.Equal(2.22, doubleArrayElem[1].GetDouble());
+            Assert.Equal(3.33, doubleArrayElem[2].GetDouble());
+
+            JsonElement.Mutable decimalArrayElem = root.GetProperty("decimalArray");
+            Assert.Equal(3, decimalArrayElem.GetArrayLength());
+            Assert.Equal(1.111m, decimalArrayElem[0].GetDecimal());
+            Assert.Equal(2.222m, decimalArrayElem[1].GetDecimal());
+            Assert.Equal(3.333m, decimalArrayElem[2].GetDecimal());
+
+#if NET
+            JsonElement.Mutable int128ArrayElem = root.GetProperty("int128Array");
+            Assert.Equal(3, int128ArrayElem.GetArrayLength());
+            Assert.Equal((Int128)1, int128ArrayElem[0].GetInt128());
+            Assert.Equal((Int128)2, int128ArrayElem[1].GetInt128());
+            Assert.Equal((Int128)3, int128ArrayElem[2].GetInt128());
+
+            JsonElement.Mutable uint128ArrayElem = root.GetProperty("uint128Array");
+            Assert.Equal(3, uint128ArrayElem.GetArrayLength());
+            Assert.Equal((UInt128)4, uint128ArrayElem[0].GetUInt128());
+            Assert.Equal((UInt128)5, uint128ArrayElem[1].GetUInt128());
+            Assert.Equal((UInt128)6, uint128ArrayElem[2].GetUInt128());
+
+            JsonElement.Mutable halfArrayElem = root.GetProperty("halfArray");
+            Assert.Equal(3, halfArrayElem.GetArrayLength());
+            Assert.Equal((Half)1.5, halfArrayElem[0].GetHalf());
+            Assert.Equal((Half)2.5, halfArrayElem[1].GetHalf());
+            Assert.Equal((Half)3.5, halfArrayElem[2].GetHalf());
+#endif
         }
 
 
@@ -6286,8 +6948,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[false]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[0].ToString());
@@ -6301,8 +6963,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":[true]}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement.GetProperty("a");
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[0].ToString());
@@ -6316,8 +6978,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[{\"a\":\"b\"}]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[0].ToString());
@@ -6331,8 +6993,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":[{\"b\": \"c\"}]}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement.GetProperty("a");
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[0].ToString());
@@ -6346,8 +7008,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[false]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
@@ -6360,8 +7022,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":[true]}");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement.GetProperty("a");
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
@@ -6374,8 +7036,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[{\"a\": \"b\"}]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
@@ -6388,8 +7050,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\": [{\"b\": \"c\"}] }");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement.GetProperty("a");
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
@@ -6402,8 +7064,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2020-01-01T00:00:00Z\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             var odt1 = new OffsetDateTime(new LocalDateTime(2024, 5, 30, 12, 34, 56), Offset.Zero);
             var odt2 = new OffsetDateTime(new LocalDateTime(2025, 1, 1, 0, 0, 0), Offset.FromHours(2));
@@ -6420,8 +7082,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2020-01-01Z\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             var od1 = new OffsetDate(new LocalDate(2024, 5, 30), Offset.Zero);
             var od2 = new OffsetDate(new LocalDate(2025, 1, 1), Offset.FromHours(2));
@@ -6438,8 +7100,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"00:00:00Z\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             var ot1 = new OffsetTime(new LocalTime(12, 34, 56), Offset.Zero);
             var ot2 = new OffsetTime(new LocalTime(0, 0, 0), Offset.FromHours(2));
@@ -6456,8 +7118,8 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"2024-05-30\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
             var ld1 = new LocalDate(2024, 5, 30);
             var ld2 = new LocalDate(2025, 1, 1);
@@ -6474,11 +7136,11 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"P1W\"]");
             using var workspace = JsonWorkspace.Create();
-            using var builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
-            var root = builderDoc.RootElement;
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
 
-            var p1 = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 1).Normalize();
-            var p2 = Period.Zero;
+            Period p1 = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 1).Normalize();
+            Period p2 = Period.Zero;
 
             root.SetItem(0, p1);
             Assert.Equal(p1, root[0].GetPeriod());

@@ -76,6 +76,16 @@ public readonly partial struct ArrayTypeWithItemsAndFormatItemsNumberUint16
         return _parent.GetArrayLength(_idx);
     }
 
+    /// <summary>
+    /// Enumerates the array.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+    public ArrayEnumerator<Test.ArrayTypeWithItemsAndFormatItemsNumberUint16.ItemsEntity> EnumerateArray()
+    {
+        CheckValidInstance();
+        return EnumeratorCreator.CreateArrayEnumerator<Test.ArrayTypeWithItemsAndFormatItemsNumberUint16.ItemsEntity>(_parent, _idx);
+    }
+
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 

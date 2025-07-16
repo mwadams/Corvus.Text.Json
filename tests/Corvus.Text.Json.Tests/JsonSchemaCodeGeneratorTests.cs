@@ -249,6 +249,49 @@ namespace Corvus.Text.Json.Tests
             }
             """;
 
+        private const string ComplexComposedObjectWithProperties =
+            """
+            {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "eitherOr": {
+                                "type": "boolean"
+                            }
+                        }           
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "wholeNumber": {
+                                "type": "integer"
+                            }
+                        }           
+                    }         
+                            ],
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            }
+                        }           
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "otherName": {
+                                "type": "number"
+                            }
+                        }           
+                    }         
+                ]
+            }
+            """;
+
         private const string ComposedArrayMultiItemType =
             """
             {
@@ -484,6 +527,13 @@ namespace Corvus.Text.Json.Tests
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"composedArrayMultiItemType.json", ComposedArrayMultiItemType);
+        }
+
+        [Fact]
+        public static async Task GenerateCode_Emits_ComplexComposedObjectWithProperties()
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"complexComposedObjectWithProperties.json", ComplexComposedObjectWithProperties);
         }
 
         [Theory]

@@ -141,6 +141,26 @@ public readonly partial struct TypesObjectarray
         return _parent.GetPropertyCount(_idx);
     }
 
+    /// <summary>
+    /// Enumerates the array.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+    public ArrayEnumerator<JsonElement> EnumerateArray()
+    {
+        CheckValidInstance();
+        return EnumeratorCreator.CreateArrayEnumerator<JsonElement>(_parent, _idx);
+    }
+
+    /// <summary>
+    /// Enumerates the object.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public ObjectEnumerator<JsonElement> EnumerateObject()
+    {
+        CheckValidInstance();
+        return EnumeratorCreator.CreateObjectEnumerator<JsonElement>(_parent, _idx);
+    }
+
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 

@@ -246,9 +246,15 @@ namespace Corvus.Text.Json
             return GetRawSimpleValueUnsafe(index, includeQuotes);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes)
         {
-            DbRow row = _parsedData.Get(index);
+            return GetRawSimpleValueUnsafe(ref _parsedData, index, includeQuotes);
+        }
+
+        protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index, bool includeQuotes)
+        {
+            DbRow row = parsedData.Get(index);
             Debug.Assert(row.IsSimpleValue);
 
             if (includeQuotes && row.TokenType == JsonTokenType.String)

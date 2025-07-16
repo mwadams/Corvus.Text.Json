@@ -185,6 +185,16 @@ public readonly partial struct Person
                 return _parent.GetArrayLength(_idx);
             }
 
+            /// <summary>
+            /// Enumerates the array.
+            /// </summary>
+            /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+            public ArrayEnumerator<Test.Person.Year.Mutable> EnumerateArray()
+            {
+                CheckValidInstance();
+                return EnumeratorCreator.CreateArrayEnumerator<Test.Person.Year.Mutable>(_parent, _idx);
+            }
+
             /// <inheritdoc/>
             public override bool Equals(object? obj)
             {

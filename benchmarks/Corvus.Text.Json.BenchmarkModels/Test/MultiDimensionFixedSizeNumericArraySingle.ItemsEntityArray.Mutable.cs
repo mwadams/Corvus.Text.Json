@@ -185,6 +185,16 @@ public readonly partial struct MultiDimensionFixedSizeNumericArraySingle
                 return _parent.GetArrayLength(_idx);
             }
 
+            /// <summary>
+            /// Enumerates the array.
+            /// </summary>
+            /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+            public ArrayEnumerator<Test.MultiDimensionFixedSizeNumericArraySingle.ItemsEntityArray.ItemsEntity.Mutable> EnumerateArray()
+            {
+                CheckValidInstance();
+                return EnumeratorCreator.CreateArrayEnumerator<Test.MultiDimensionFixedSizeNumericArraySingle.ItemsEntityArray.ItemsEntity.Mutable>(_parent, _idx);
+            }
+
             /// <inheritdoc/>
             public override bool Equals(object? obj)
             {

@@ -179,6 +179,16 @@ public readonly partial struct FixedSizeNumericArrayInt32
             return _parent.GetArrayLength(_idx);
         }
 
+        /// <summary>
+        /// Enumerates the array.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+        public ArrayEnumerator<Test.FixedSizeNumericArrayInt32.ItemsEntity.Mutable> EnumerateArray()
+        {
+            CheckValidInstance();
+            return EnumeratorCreator.CreateArrayEnumerator<Test.FixedSizeNumericArrayInt32.ItemsEntity.Mutable>(_parent, _idx);
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

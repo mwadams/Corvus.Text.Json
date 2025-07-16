@@ -84,6 +84,8 @@ namespace Corvus.Text.Json.Internal
 
         protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes);
 
+        protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index, bool includeQuotes);
+
         protected static void CheckExpectedType(JsonTokenType expected, JsonTokenType actual)
         {
             if (expected != actual)
@@ -1246,7 +1248,7 @@ namespace Corvus.Text.Json.Internal
             return _valueBacking.AsMemory(start, (int)length);
         }
 
-        protected bool TryGetNamedPropertyValueUnsafe(int index, ReadOnlySpan<char> propertyName, out int valueIndex)
+        protected bool TryGetNamedPropertyValueIndexUnsafe(int index, ReadOnlySpan<char> propertyName, out int valueIndex)
         {
             DbRow row = _parsedData.Get(index);
 
@@ -1274,7 +1276,7 @@ namespace Corvus.Text.Json.Internal
                 int len = JsonReaderHelper.GetUtf8FromText(propertyName, utf8Name);
                 utf8Name = utf8Name.Slice(0, len);
 
-                return TryGetNamedPropertyValueUnsafe(
+                return TryGetNamedPropertyValueIndexUnsafe(
                     index,
                     utf8Name,
                     out valueIndex);
@@ -1288,7 +1290,7 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
-        protected bool TryGetNamedPropertyValueUnsafe(
+        protected bool TryGetNamedPropertyValueIndexUnsafe(
             int startIndex,
             ReadOnlySpan<byte> propertyName,
             out int valueIndex)
@@ -1307,21 +1309,31 @@ namespace Corvus.Text.Json.Internal
             int endIndex = startIndex + GetDbSizeUnsafe(startIndex, false);// checked(row.NumberOfRows * DbRow.Size + startIndex);
 
             DbRow endObjectRow = _parsedData.Get(endIndex);
-            int propertyMapIndex = endObjectRow.SizeOrLengthOrPropertyMapIndex;
 
             if (endObjectRow.HasPropertyMap)
             {
                 return TryGetNamedPropertyValueFromPropertyMap(endObjectRow.SizeOrLengthOrPropertyMapIndex, propertyName, out valueIndex);
             }
 
+            return TryGetNamedPropertyValueIndexUnsafe(ref _parsedData, startIndex, endIndex, propertyName, out valueIndex);
+        }
+
+        /// <summary>
+        /// Gets the named property value from a specific <see cref="MetadataDb"/>.
+        /// </summary>
+        /// <param name="parsedData">The parsed data. This is used in place of the document's own MetadataDb.</param>
+        /// <param name="startIndex">The index of the first property name.</param>
+        /// <param name="endIndex">The index of the last property value.</param>
+        /// <param name="propertyName">The unescaped property name to look up.</param>
+        /// <param name="valueIndex">The index of the value corresponding to the given property name.</param>
+        /// <returns><see langword="true"/> if the property with the given name is found.</returns>
+        protected bool TryGetNamedPropertyValueIndexUnsafe(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, out int valueIndex)
+        {
             Span<byte> utf8UnescapedStack = stackalloc byte[JsonConstants.StackallocByteThreshold];
-
-            // Move to the row before the EndObject
             int index = endIndex - DbRow.Size;
-
             while (index > startIndex)
             {
-                row = _parsedData.Get(index);
+                DbRow row = parsedData.Get(index);
                 Debug.Assert(row.TokenType != JsonTokenType.PropertyName);
 
                 // Move before the value
@@ -1335,11 +1347,11 @@ namespace Corvus.Text.Json.Internal
                     index -= DbRow.Size * (row.NumberOfRows + 1);
                 }
 
-                row = _parsedData.Get(index);
+                row = parsedData.Get(index);
 
                 Debug.Assert(row.TokenType == JsonTokenType.PropertyName);
 
-                ReadOnlySpan<byte> currentPropertyName = GetRawSimpleValueUnsafe(index, false).Span;
+                ReadOnlySpan<byte> currentPropertyName = GetRawSimpleValueUnsafe(ref parsedData, index, false).Span;
 
                 if (row.HasComplexChildren)
                 {
@@ -1400,7 +1412,6 @@ namespace Corvus.Text.Json.Internal
             valueIndex = -1;
             return false;
         }
-
 
         protected void DisposeCore()
         {

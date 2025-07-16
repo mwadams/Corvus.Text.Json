@@ -65,6 +65,8 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendObjectIndexerProperties(typeDeclaration)
                         .AppendGetArrayLength(typeDeclaration)
                         .AppendGetPropertyCount(typeDeclaration)
+                        .AppendEnumerateArray(typeDeclaration)
+                        .AppendEnumerateObject(typeDeclaration)
                         .AppendValueKindProperty()
                         .AppendTokenTypeProperty()
                         .AppendConversionToCompositionTypes(typeDeclaration)

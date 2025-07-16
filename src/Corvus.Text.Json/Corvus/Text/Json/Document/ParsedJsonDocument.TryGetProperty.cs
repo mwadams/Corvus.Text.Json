@@ -12,7 +12,7 @@ namespace Corvus.Text.Json
         {
             CheckNotDisposed();
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -31,7 +31,7 @@ namespace Corvus.Text.Json
             CheckNotDisposed();
 
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -50,7 +50,7 @@ namespace Corvus.Text.Json
             CheckNotDisposed();
 
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))
@@ -73,7 +73,7 @@ namespace Corvus.Text.Json
             CheckNotDisposed();
 
 
-            if (TryGetNamedPropertyValueUnsafe(
+            if (TryGetNamedPropertyValueIndexUnsafe(
                 index,
                 propertyName,
                 out int valueIndex))

@@ -223,6 +223,16 @@ public readonly partial struct TypesObjectnull
             return _parent.GetPropertyCount(_idx);
         }
 
+        /// <summary>
+        /// Enumerates the object.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+        public ObjectEnumerator<JsonElement.Mutable> EnumerateObject()
+        {
+            CheckValidInstance();
+            return EnumeratorCreator.CreateObjectEnumerator<JsonElement.Mutable>(_parent, _idx);
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

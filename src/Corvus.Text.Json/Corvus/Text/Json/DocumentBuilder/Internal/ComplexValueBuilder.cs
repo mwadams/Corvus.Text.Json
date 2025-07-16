@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Buffers;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -106,6 +107,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, context, createComplexValue, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a complex value to the current object using a builder delegate, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="createComplexValue">A delegate that builds the property value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, ValueBuilderAction createComplexValue, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -118,6 +126,15 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with a complex value to the current object using a builder delegate and context, with control over escaping.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context object.</typeparam>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="context">The context object to pass to the delegate.</param>
+        /// <param name="createComplexValue">A delegate that builds the property value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, TContext context, ValueBuilderAction<TContext> createComplexValue, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -130,6 +147,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with a complex value to the current object using a builder delegate.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="createComplexValue">A delegate that builds the property value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, ValueBuilderAction createComplexValue)
         {
             int currentMemberCount = _memberCount;
@@ -142,6 +164,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with a complex value to the current object using a builder delegate and context.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context object.</typeparam>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="context">The context object to pass to the delegate.</param>
+        /// <param name="createComplexValue">A delegate that builds the property value.</param>
         public void AddProperty<TContext>(ReadOnlySpan<char> propertyName, TContext context, ValueBuilderAction<TContext> createComplexValue)
         {
             int currentMemberCount = _memberCount;
@@ -165,6 +194,15 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, utf8String, escapeName: true, escapeValue: true, false, false);
         }
 
+        /// <summary>
+        /// Adds a property with a string value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="utf8String">The property value as a UTF-8 byte span.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="escapeValue">Whether to escape the property value.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        /// <param name="valueRequiresUnescaping">Whether the property value requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName, bool escapeValue, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -173,6 +211,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a string value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The property value as a character span.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<char> value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -195,10 +240,12 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>
-        /// Adds a property with a string value to the current object.
+        /// Adds a property with a string value to the current object, with control over escaping the value.
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
-        /// <param name="value">The property value as a UTF-8 span.</param>
+        /// <param name="value">The property value as a UTF-8 byte span.</param>
+        /// <param name="escapeValue">Whether to escape the property value.</param>
+        /// <param name="valueRequiresUnescaping">Whether the property value requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool escapeValue, bool valueRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -217,6 +264,11 @@ namespace Corvus.Text.Json.Internal
             AddPropertyFormattedNumber(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a formatted number value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The number value as a UTF-8 byte span.</param>
         public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -249,10 +301,13 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>
-        /// Adds a property with a raw string value.
+        /// Adds a property with a raw string value to the current object, with control over escaping and unescaping.
         /// </summary>
-        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
         /// <param name="value">The value as a UTF-8 byte span.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        /// <param name="valueRequiresUnescaping">Whether the value requires unescaping.</param>
         public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -1041,7 +1096,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (long item in array)
             {
                 AddItem(item);
             }
@@ -1060,7 +1115,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (int item in array)
             {
                 AddItem(item);
             }
@@ -1079,7 +1134,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (short item in array)
             {
                 AddItem(item);
             }
@@ -1099,7 +1154,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (sbyte item in array)
             {
                 AddItem(item);
             }
@@ -1119,7 +1174,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (ulong item in array)
             {
                 AddItem(item);
             }
@@ -1139,7 +1194,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (uint item in array)
             {
                 AddItem(item);
             }
@@ -1159,7 +1214,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (ushort item in array)
             {
                 AddItem(item);
             }
@@ -1178,7 +1233,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (byte item in array)
             {
                 AddItem(item);
             }
@@ -1197,7 +1252,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (decimal item in array)
             {
                 AddItem(item);
             }
@@ -1216,7 +1271,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (double item in array)
             {
                 AddItem(item);
             }
@@ -1235,7 +1290,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, name);
             StartArray();
 
-            foreach (var item in array)
+            foreach (float item in array)
             {
                 AddItem(item);
             }
@@ -1317,7 +1372,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (long item in array)
             {
                 AddItem(item);
             }
@@ -1336,7 +1391,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (int item in array)
             {
                 AddItem(item);
             }
@@ -1355,7 +1410,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (short item in array)
             {
                 AddItem(item);
             }
@@ -1375,7 +1430,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (sbyte item in array)
             {
                 AddItem(item);
             }
@@ -1395,7 +1450,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (ulong item in array)
             {
                 AddItem(item);
             }
@@ -1415,7 +1470,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (uint item in array)
             {
                 AddItem(item);
             }
@@ -1435,7 +1490,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (ushort item in array)
             {
                 AddItem(item);
             }
@@ -1454,7 +1509,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (byte item in array)
             {
                 AddItem(item);
             }
@@ -1473,7 +1528,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (decimal item in array)
             {
                 AddItem(item);
             }
@@ -1492,7 +1547,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (double item in array)
             {
                 AddItem(item);
             }
@@ -1511,7 +1566,7 @@ namespace Corvus.Text.Json.Internal
             AddStringValue(JsonTokenType.PropertyName, utf8Name, escapeName, nameRequiresUnescaping);
             StartArray();
 
-            foreach (var item in array)
+            foreach (float item in array)
             {
                 AddItem(item);
             }
@@ -1877,7 +1932,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (long item in array)
             {
                 AddItem(item);
             }
@@ -1897,7 +1952,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (int item in array)
             {
                 AddItem(item);
             }
@@ -1917,7 +1972,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (short item in array)
             {
                 AddItem(item);
             }
@@ -1938,7 +1993,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (sbyte item in array)
             {
                 AddItem(item);
             }
@@ -1959,7 +2014,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (ulong item in array)
             {
                 AddItem(item);
             }
@@ -1980,7 +2035,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (uint item in array)
             {
                 AddItem(item);
             }
@@ -2001,7 +2056,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (ushort item in array)
             {
                 AddItem(item);
             }
@@ -2021,7 +2076,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (byte item in array)
             {
                 AddItem(item);
             }
@@ -2041,7 +2096,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (decimal item in array)
             {
                 AddItem(item);
             }
@@ -2061,7 +2116,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (double item in array)
             {
                 AddItem(item);
             }
@@ -2081,7 +2136,7 @@ namespace Corvus.Text.Json.Internal
 
             StartArray();
 
-            foreach (var item in array)
+            foreach (float item in array)
             {
                 AddItem(item);
             }
@@ -2192,6 +2247,170 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>
+        /// Removes a property from the current object.
+        /// </summary>
+        /// <param name="utf8Name">The name of the property as a string.</param>
+        public void RemoveProperty(string name)
+        {
+            RemoveProperty(name.AsSpan());
+        }
+
+        /// <summary>
+        /// Apply an object instance value to the document.
+        /// </summary>
+        /// <typeparam name="T">The type of the <paramref name="value"/>.</typeparam>
+        /// <param name="value">The value to apply.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the <paramref name="value"/> is not a JSON object.</exception>"
+        /// <remarks>
+        /// The value must be a JSON object. Its properties will be set on the current document,
+        /// replacing any existing values if present.
+        /// </remarks>
+        [CLSCompliant(false)]
+        public void Apply<T>(in T value)
+            where T : struct, IJsonElement<T>
+        {
+            if (value.TokenType != JsonTokenType.StartObject)
+            {
+                ThrowHelper.ThrowInvalidOperationException_ExpectedObject(value.TokenType);
+            }
+
+            TryApply(value);
+        }
+
+        /// <summary>
+        /// Tries to apply an object instance value to the document.
+        /// </summary>
+        /// <typeparam name="T">The type of the <paramref name="value"/>.</typeparam>
+        /// <param name="value">The value to apply.</param>
+        /// <returns><see langword="true"/> if the value was applied.</returns>
+        /// <remarks>
+        /// <para>
+        /// If the value is a JSON object, its properties (if any) will be set on the current document,
+        /// replacing any existing values if present, and the method returns <see langword="true"/>.
+        /// </para>
+        /// <para>
+        /// Otherwise, no changes are made, and the method returns <see langword="false"/>.
+        /// </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public bool TryApply<T>(in T value)
+            where T : struct, IJsonElement<T>
+        {
+            if (value.TokenType != JsonTokenType.StartObject)
+            {
+                return false;
+            }
+
+            ObjectEnumerator<JsonElement> enumerator = EnumeratorCreator.CreateObjectEnumerator<JsonElement>(value.ParentDocument, value.ParentDocumentIndex);
+            while (enumerator.MoveNext())
+            {                
+                // TODO: there is an opportunity here to see if the value's property count * parsedData property count > 10
+                // and build a stack-based lookup like the PropertyMap to do these removals. It will be faster to do 1 pass of that
+                // build and then constant time lookups for properties.
+                // This would also require overloads of the remove property call chain that could take a ref to a stack-based property
+                // map.
+                JsonProperty <JsonElement> current = enumerator.Current;
+                RemoveProperty(current.RawNameSpan, escapeName: false, nameRequiresUnescaping: current.NameIsEscaped);
+                AddProperty(current.RawNameSpan, current.Value, escapeName: false, nameRequiresUnescaping: current.NameIsEscaped);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Removes a property from the current object.
+        /// </summary>
+        /// <param name="utf8Name">The UTF-16 name of the property.</param>
+        public void RemoveProperty(scoped ReadOnlySpan<char> name)
+        {
+            // 1. Transcode the name to a UTF-8 byte span
+            // 2. Return the result of RemoveProperty with the UTF-8 byte span, with escapeName set to true, and nameRequiresUnescaping false
+            int length = Encoding.UTF8.GetMaxByteCount(name.Length);
+            byte[]? buffer = null;
+            Span<byte> utf8Name = length < JsonConstants.StackallocByteThreshold
+                ? stackalloc byte[length]
+                : (buffer = ArrayPool<byte>.Shared.Rent(length));
+            int written = JsonReaderHelper.TranscodeHelper(name, utf8Name);
+            try
+            {
+                RemoveProperty(utf8Name.Slice(0, written), true, false);
+            }
+            finally
+            {
+                if (buffer is byte[] b)
+                {
+                    utf8Name.Slice(0, written).Clear();
+                    ArrayPool<byte>.Shared.Return(b);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes a property from the current object.
+        /// </summary>
+        /// <param name="utf8Name">The UTF-8 name of the property.</param>
+        /// <param name="escapeName">Indicates whether the name requires escaping.</param>
+        /// <param name="nameRequiresUnescaping">If the name does not require escaping, indicates whether the name requires unescaping.</param>
+        public void RemoveProperty(scoped ReadOnlySpan<byte> utf8Name, bool escapeName, bool nameRequiresUnescaping)
+        {
+            // This holds true even for a partially complete property
+            int startIndex = Length - ((_rowCount - 1) * DbRow.Size);
+            if (startIndex < 0)
+            {
+                return;
+            }
+
+            // There can be no "end object" at the end of this entity because it has not
+            // yet been written;
+            // However, this is supposed to point at the end object. We will point
+            // one off the end of the current metadata DB, which will serve the purpose.
+            int endIndex = Length;
+            int valueIndex;
+            if (!escapeName && nameRequiresUnescaping)
+            {
+                byte[]? buffer = null;
+                Span<byte> unescapedSpan = utf8Name.Length < JsonConstants.StackallocByteThreshold
+                    ? stackalloc byte[utf8Name.Length]
+                    : (buffer = ArrayPool<byte>.Shared.Rent(utf8Name.Length));
+                bool result = JsonReaderHelper.TryUnescape(utf8Name, unescapedSpan, out int written);
+                try
+                {
+                    Debug.Assert(result);
+
+                    if (!_parentDocument.TryGetNamedPropertyValueIndex(ref _parsedData, startIndex, endIndex, unescapedSpan.Slice(0, written), out valueIndex))
+                    {
+                        return;
+                    }
+                }
+                finally
+                {
+                    if (buffer is byte[] b)
+                    {
+                        // This might contain sensitive data
+                        unescapedSpan.Slice(0, written).Clear();
+                        ArrayPool<byte>.Shared.Return(b);
+                    }
+                }
+            }
+            else if (!_parentDocument.TryGetNamedPropertyValueIndex(ref _parsedData, startIndex, endIndex, utf8Name, out valueIndex))
+            {
+                return;
+            }
+
+            // We have found the item, so we need to slice out the property name and value
+            DbRow valueRow = _parsedData.Get(valueIndex);
+
+            int rowCountToRemove = valueRow.IsSimpleValue ? 2 : valueRow.NumberOfRows + 2;
+
+            // Directly remove the given range of rows, copying up additional rows
+            _parsedData.RemoveRows(valueIndex - DbRow.Size, rowCountToRemove);
+
+            // Then update our local member count and row count.
+            _memberCount -= 1;
+            _rowCount -= rowCountToRemove;
+        }
+
+        /// <summary>
         /// Ends the current JSON array, finalizing its structure in the builder.
         /// </summary>
         public void EndArray()
@@ -2258,44 +2477,6 @@ namespace Corvus.Text.Json.Internal
         {
             targetData.ReplaceRowsInComplexObject(_parentDocument, complexObjectStartIndex, startIndex, endIndex, memberCountToReplace, _rowCount, _memberCount);
             _parsedData.Overwrite(ref targetData, startIndex);
-        }
-
-        /// <summary>
-        /// Add a property name to the current object.
-        /// </summary>
-        /// <param name="stringValue"></param>
-        /// <param name="escape">Indicates whether to escape the property name.</param>
-        /// <param name="ifNotEscapeRequiresUenscaping">Indicates whether the property name needs unescaping if it is not to be escaped.</param>
-        /// <returns>The handle for the property.</returns>
-        public PropertyHandle StartProperty(ReadOnlySpan<byte> stringValue, bool escape, bool ifNotEscapeRequiresUenscaping)
-        {
-            var result = new PropertyHandle(_memberCount, _rowCount);
-            _memberCount = 0;
-            _rowCount = 0;
-            AddStringValue(JsonTokenType.PropertyName, stringValue, escape, ifNotEscapeRequiresUenscaping);
-            return result;
-        }
-
-        /// <summary>
-        /// Ends the property with the given property handle.
-        /// </summary>
-        /// <param name="handle">The handle of the property to end.</param>
-        public void EndProperty(in PropertyHandle handle)
-        {
-            _memberCount = handle.MemberCount + 1;
-            _rowCount = handle.RowCount + _rowCount + 1;
-        }
-
-        public readonly struct PropertyHandle
-        {
-            internal int MemberCount { get; }
-            internal int RowCount { get; }
-
-            internal PropertyHandle(int memberCount, int rowCount)
-            {
-                MemberCount = memberCount;
-                RowCount = rowCount;
-            }
         }
 
         private void AddStringValue(JsonTokenType tokenType, ReadOnlySpan<byte> stringValue, bool escape, bool ifNotEscapeRequiresUenscaping)

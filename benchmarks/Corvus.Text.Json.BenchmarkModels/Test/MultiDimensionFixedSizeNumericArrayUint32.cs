@@ -91,6 +91,16 @@ public readonly partial struct MultiDimensionFixedSizeNumericArrayUint32
         return _parent.GetArrayLength(_idx);
     }
 
+    /// <summary>
+    /// Enumerates the array.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+    public ArrayEnumerator<Test.MultiDimensionFixedSizeNumericArrayUint32.ItemsEntityArray> EnumerateArray()
+    {
+        CheckValidInstance();
+        return EnumeratorCreator.CreateArrayEnumerator<Test.MultiDimensionFixedSizeNumericArrayUint32.ItemsEntityArray>(_parent, _idx);
+    }
+
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 

@@ -90,6 +90,12 @@ namespace Corvus.Text.Json
             {
                 if (_length > 0)
                 {
+                    // Dispose the documents
+                    foreach (IJsonDocument document in _documents.AsSpan(0, _length))
+                    {
+                        document.Dispose();
+                    }
+
                     ArrayPool<IJsonDocument>.Shared.Return(_documents);
                     _documentIndices.Clear();
                     _length = -1;
@@ -176,6 +182,11 @@ namespace Corvus.Text.Json
         {
             if (_length >= 0)
             {
+                foreach (IJsonDocument document in _documents.AsSpan(0, _length))
+                {
+                    document.Dispose();
+                }
+
                 Array.Clear(_documents, 0, _length);
                 _length = -1;
                 _documentIndices.Clear();

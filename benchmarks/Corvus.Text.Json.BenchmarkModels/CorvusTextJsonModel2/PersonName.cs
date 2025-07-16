@@ -40,7 +40,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
     /// Gets an enumerator for the properties in the object.
     /// </summary>
     /// <returns></returns>
-    public ObjectEnumerator<JsonElement> GetObjectEnumerator()
+    public ObjectEnumerator<JsonElement> EnumerateObject()
     {
         CheckValidInstance();
         return EnumeratorCreator.CreateObjectEnumerator<JsonElement>(_parent, _idx);

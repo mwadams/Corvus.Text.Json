@@ -76,6 +76,16 @@ public readonly partial struct ArrayTypeWithItemsAndFormatUnevaluatedItemsString
         return _parent.GetArrayLength(_idx);
     }
 
+    /// <summary>
+    /// Enumerates the array.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+    public ArrayEnumerator<Test.ArrayTypeWithItemsAndFormatUnevaluatedItemsStringDate.UnevaluatedItemsEntity> EnumerateArray()
+    {
+        CheckValidInstance();
+        return EnumeratorCreator.CreateArrayEnumerator<Test.ArrayTypeWithItemsAndFormatUnevaluatedItemsStringDate.UnevaluatedItemsEntity>(_parent, _idx);
+    }
+
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 

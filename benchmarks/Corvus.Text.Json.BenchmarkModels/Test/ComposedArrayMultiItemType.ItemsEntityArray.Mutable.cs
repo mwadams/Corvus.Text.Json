@@ -185,6 +185,16 @@ public readonly partial struct ComposedArrayMultiItemType
                 return _parent.GetArrayLength(_idx);
             }
 
+            /// <summary>
+            /// Enumerates the array.
+            /// </summary>
+            /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+            public ArrayEnumerator<Test.ComposedArrayMultiItemType.ItemsEntityArray.ItemsEntity.Mutable> EnumerateArray()
+            {
+                CheckValidInstance();
+                return EnumeratorCreator.CreateArrayEnumerator<Test.ComposedArrayMultiItemType.ItemsEntityArray.ItemsEntity.Mutable>(_parent, _idx);
+            }
+
             /// <inheritdoc/>
             public override bool Equals(object? obj)
             {

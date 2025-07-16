@@ -26,6 +26,17 @@ namespace Corvus.Text.Json.Internal
         new JsonElement.Mutable GetArrayIndexElement(int currentIndex, int arrayIndex);
 
         /// <summary>
+        /// Gets the named property value from a specific <see cref="MetadataDb"/>.
+        /// </summary>
+        /// <param name="parsedData">The parsed data. This is used in place of the document's own MetadataDb.</param>
+        /// <param name="startIndex">The index of the first property name.</param>
+        /// <param name="endIndex">The index of the last property value.</param>
+        /// <param name="propertyName">The unescaped property name to look up.</param>
+        /// <param name="valueIndex">The index of the value corresponding to the given property name.</param>
+        /// <returns><see langword="true"/> if the property with the given name is found.</returns>
+        bool TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, out int valueIndex);
+
+        /// <summary>
         /// Tries to get the value of a named property as a mutable JSON element.
         /// </summary>
         /// <param name="index">The index of the element.</param>

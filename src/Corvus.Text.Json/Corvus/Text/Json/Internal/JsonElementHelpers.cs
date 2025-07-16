@@ -23,6 +23,40 @@ namespace Corvus.Text.Json.Internal
     /// </summary>
     public static partial class JsonElementHelpers
     {
+        /// <summary>
+        /// Sets a property value on a target element.
+        /// </summary>
+        /// <typeparam name="TTarget">The type of the target element.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="targetElement">The target element instance.</param>
+        /// <param name="property">The property to set.</param>
+        [CLSCompliant(false)]
+        public static void SetPropertyUnsafe<TTarget, TValue>(TTarget targetElement, JsonProperty<TValue> property)
+            where TTarget : struct, IMutableJsonElement<TTarget>
+            where TValue : struct, IJsonElement<TValue>
+        {
+            using var name = property.NameSpan;
+            IMutableJsonDocument targetParentDocument = (IMutableJsonDocument)targetElement.ParentDocument;
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(targetParentDocument, 30);
+            if (targetElement.ParentDocument.TryGetNamedPropertyValue(targetElement.ParentDocumentIndex, name.Span, out TValue value))
+            {
+                // We are going to replace just the value
+                cvb.AddItem(property.Value);
+                targetParentDocument.OverwriteAndDispose(
+                    targetElement.ParentDocumentIndex,
+                    value.ParentDocumentIndex,
+                    value.ParentDocumentIndex + value.ParentDocument.GetDbSize(value.ParentDocumentIndex, true),
+                    1,
+                    ref cvb);
+            }
+            else
+            {
+                cvb.AddProperty(name.Span, property.Value, escapeName: true, nameRequiresUnescaping: false);
+                int endIndex = targetElement.ParentDocumentIndex + targetParentDocument.GetDbSize(targetElement.ParentDocumentIndex, false);
+                targetParentDocument.InsertAndDispose(targetElement.ParentDocumentIndex, endIndex, ref cvb);
+            }
+        }
+
         public static JsonValueKind ToValueKind(this JsonTokenType tokenType)
         {
             switch (tokenType)

@@ -141,6 +141,71 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendLineIndent("}");
         }
 
+
+        /// <summary>
+        /// Append EnumerateArray() method.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration for which to emit the indexers.</param>
+        /// <param name="forMutable">Indicates that the method is for a mutable instance.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
+        public static CodeGenerator AppendEnumerateArray(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable = false)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Array) == 0)
+            {
+                return generator;
+            }
+
+            string fqdtn;
+
+            if (typeDeclaration.ArrayItemsType() is ArrayItemsTypeDeclaration itemsType)
+            {
+                if (itemsType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+                {
+                    return generator;
+                }
+
+                fqdtn = itemsType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
+            else if (typeDeclaration.ExplicitUnevaluatedItemsType() is ArrayItemsTypeDeclaration unevaluatedItemsType)
+            {
+                if (unevaluatedItemsType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+                {
+                    return generator;
+                }
+
+                fqdtn = unevaluatedItemsType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
+            else
+            {
+                fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+            }
+
+            if (forMutable)
+            {
+                fqdtn = fqdtn + ".Mutable";
+            }
+
+            return generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Enumerates the array.")
+                .AppendLineIndent("/// </summary>")
+                .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">The value is not an array.</exception>")
+                .AppendLineIndent("public ArrayEnumerator<", fqdtn, "> EnumerateArray()" )
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("CheckValidInstance();")
+                    .AppendLineIndent("return EnumeratorCreator.CreateArrayEnumerator<", fqdtn, ">(_parent, _idx);")
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
+
         /// <summary>
         /// Append array indexer properties.
         /// </summary>

@@ -175,7 +175,7 @@
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25225.104" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.15.0-preview-25225-102" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Text.Json" Version="10.0.0-preview.3.25171.5" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0-preview.5.25277.114" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
       <PrivateAssets>all</PrivateAssets>
@@ -184,9 +184,9 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Collections.Immutable" Version="10.0.0-preview.3.25171.5" />
-    <PackageReference Include="System.IO.Pipelines" Version="10.0.0-preview.4.25258.110" />
-    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.0-preview.3.25171.5" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="System.IO.Pipelines" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.0-preview.5.25277.114" />
     <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
@@ -213,7 +213,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="3.12.0-beta1.25218.8">
+    <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="5.0.0-1.25277.114">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

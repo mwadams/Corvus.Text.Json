@@ -13,6 +13,6 @@ namespace Corvus.Text.Json.Internal
     [CLSCompliant(false)]
     public interface IMutableJsonElement<T> : IJsonElement<T>
         where T : struct, IJsonElement<T>
-    {
+    {        
     }
 }

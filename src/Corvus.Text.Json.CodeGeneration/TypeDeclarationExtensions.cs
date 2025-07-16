@@ -295,29 +295,23 @@ public static class TypeDeclarationExtensions
     }
 
     /// <summary>
-    /// Gets the type names from which the Builder.Source can be created for the the type declaration.
+    /// Gets the types for oneOf/anyOf composition sources that can be created for the the type declaration.
     /// </summary>
     /// <param name="typeDeclaration">The type declaration.</param>
     /// <returns>The array of types from which this can be converted.</returns>
-    public static TypeDeclaration[] BuilderSources(this TypeDeclaration typeDeclaration)
+    public static TypeDeclaration[] CompositionSources(this TypeDeclaration typeDeclaration)
     {
         if (!typeDeclaration.TryGetMetadata(BuilderSourcesKey, out TypeDeclaration[]? sources))
         {
-            sources = GetBuilderSources(typeDeclaration);
+            sources = GetCompositionSources(typeDeclaration);
             typeDeclaration.SetMetadata(BuilderSourcesKey, sources);
         }
 
         return sources ?? [];
 
-        static TypeDeclaration[] GetBuilderSources(TypeDeclaration rootDeclaration)
+        static TypeDeclaration[] GetCompositionSources(TypeDeclaration rootDeclaration)
         {
             HashSet<TypeDeclaration> sources = [];
-
-            ////// Short circuit if cannot reduce to AnyOf or OneOf
-            ////if(!rootDeclaration.CanReduceToAnyOf() && !rootDeclaration.CanReduceToOneOf())
-            ////{
-            ////    return [];
-            ////}
 
             Queue<TypeDeclaration> typesToProcess = [];
 
@@ -760,7 +754,7 @@ public static class TypeDeclarationExtensions
         TypeDeclaration rootType,
         TypeDeclaration sourceType)
     {
-        if (/*sourceType.CanReduceToAnyOf() && */sourceType.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> anyOf)
+        if (sourceType.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> anyOf)
         {
             // Defer any of until all the AllOf have been processed so we prefer an implicit to the allOf types
             foreach (TypeDeclaration subschema in anyOf.SelectMany(k => k.Value))
@@ -769,7 +763,7 @@ public static class TypeDeclarationExtensions
             }
         }
 
-        if (/*sourceType.CanReduceToOneOf() && */sourceType.OneOfCompositionTypes() is IReadOnlyDictionary<IOneOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> oneOf)
+        if (sourceType.OneOfCompositionTypes() is IReadOnlyDictionary<IOneOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> oneOf)
         {
             // Defer any of until all the AllOf have been processed so we prefer an implicit to the allOf types
             foreach (TypeDeclaration subschema in oneOf.SelectMany(k => k.Value))

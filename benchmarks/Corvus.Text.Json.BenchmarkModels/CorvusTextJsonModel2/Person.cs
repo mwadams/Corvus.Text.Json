@@ -40,7 +40,7 @@ public readonly struct Person : IJsonElement<Person>
     /// Gets an enumerator for the properties in the object.
     /// </summary>
     /// <returns></returns>
-    public ObjectEnumerator<JsonElement> GetObjectEnumerator()
+    public ObjectEnumerator<JsonElement> EnumerateObject()
     {
         CheckValidInstance();
         return EnumeratorCreator.CreateObjectEnumerator<JsonElement>(_parent, _idx);
@@ -318,7 +318,7 @@ public readonly struct Person : IJsonElement<Person>
         /// Gets an enumerator for the properties in the object.
         /// </summary>
         /// <returns></returns>
-        public readonly ObjectEnumerator<JsonElement.Mutable> GetObjectEnumerator()
+        public readonly ObjectEnumerator<JsonElement.Mutable> EnumerateObject()
         {
             CheckValidInstance();
             return EnumeratorCreator.CreateObjectEnumerator<JsonElement.Mutable>(_parent, _idx);
