@@ -429,7 +429,20 @@ public readonly partial struct MultiDimensionFixedSizeNumericArrayUint128
         /// <param name="tensor">The data from which to create the tensor.</param>
         /// <returns>The number of items consumed.</returns>
         /// <exception cref="ArgumentException">The tensor did not contain the correct number of values for the array rank and dimension.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int CreateTensor(ReadOnlySpan<UInt128> tensor)
+        {
+                return CreateTensor(tensor, false);
+        }
+
+        /// <summary>
+        /// Creates a tensor from the given numeric span.
+        /// </summary>
+        /// <param name="tensor">The data from which to create the tensor.</param>
+        /// <param name="createArray">Determines whether to create the wrapping array around the items.</param>
+        /// <returns>The number of items consumed.</returns>
+        /// <exception cref="ArgumentException">The tensor did not contain the correct number of values for the array rank and dimension.</exception>
+        internal int CreateTensor(ReadOnlySpan<UInt128> tensor, bool createArray)
         {
             int index = 0;
             if (tensor.Length != ValueBufferSize)
@@ -437,11 +450,26 @@ public readonly partial struct MultiDimensionFixedSizeNumericArrayUint128
                 CodeGenThrowHelper.ThrowArgumentException_ArrayBufferLength(nameof(tensor), ValueBufferSize);
             }
 
+            if (createArray)
+            {
+                _builder.StartArray();
+            }
+
             while (index < tensor.Length)
             {
+                ComplexValueBuilder.ComplexValueHandle handle = default;
+
+                handle = _builder.StartItem();
                 Test.MultiDimensionFixedSizeNumericArrayUint128.ItemsEntityArray.Builder inner = new(_builder);
-                index += inner.CreateTensor(tensor.Slice(index, Test.MultiDimensionFixedSizeNumericArrayUint128.ItemsEntityArray.ValueBufferSize));
+                index += inner.CreateTensor(tensor.Slice(index, Test.MultiDimensionFixedSizeNumericArrayUint128.ItemsEntityArray.ValueBufferSize), createArray: true);
                 _builder = inner._builder;
+
+                _builder.EndItem(handle);
+            }
+
+            if (createArray)
+            {
+                _builder.EndArray();
             }
 
             return ValueBufferSize;

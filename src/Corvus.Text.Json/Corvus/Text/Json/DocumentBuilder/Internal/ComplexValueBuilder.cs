@@ -2466,6 +2466,69 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>
+        /// Add a property name to the current object.
+        /// </summary>
+        /// <param name="stringValue"></param>
+        /// <param name="escape">Indicates whether to escape the property name.</param>
+        /// <param name="ifNotEscapeRequiresUenscaping">Indicates whether the property name needs unescaping if it is not to be escaped.</param>
+        /// <returns>The handle for the property.</returns>
+        public ComplexValueHandle StartProperty(ReadOnlySpan<byte> stringValue, bool escape, bool ifNotEscapeRequiresUenscaping)
+        {
+            var result = new ComplexValueHandle(_memberCount, _rowCount);
+            _memberCount = 0;
+            _rowCount = 0;
+            AddStringValue(JsonTokenType.PropertyName, stringValue, escape, ifNotEscapeRequiresUenscaping);
+            return result;
+        }
+
+        /// <summary>
+        /// Ends the property with the given property handle.
+        /// </summary>
+        /// <param name="handle">The handle of the property to end.</param>
+        public void EndProperty(in ComplexValueHandle handle)
+        {
+            _memberCount = handle.MemberCount + 1;
+            _rowCount = handle.RowCount + _rowCount + 1;
+        }
+
+        /// <summary>
+        /// Start an array item.
+        /// </summary>
+        /// <param name="stringValue"></param>
+        /// <param name="escape">Indicates whether to escape the property name.</param>
+        /// <param name="ifNotEscapeRequiresUenscaping">Indicates whether the property name needs unescaping if it is not to be escaped.</param>
+        /// <returns>The handle for the property.</returns>
+        public ComplexValueHandle StartItem()
+        {
+            var result = new ComplexValueHandle(_memberCount, _rowCount);
+            _memberCount = 0;
+            _rowCount = 0;
+            return result;
+        }
+
+        /// <summary>
+        /// Ends the given array item.
+        /// </summary>
+        /// <param name="handle">The handle of the item to end.</param>
+        public void EndItem(in ComplexValueHandle handle)
+        {
+            _memberCount = handle.MemberCount + 1;
+            _rowCount += handle.RowCount;
+        }
+
+        public readonly struct ComplexValueHandle
+        {
+            internal int MemberCount { get; }
+            internal int RowCount { get; }
+
+            internal ComplexValueHandle(int memberCount, int rowCount)
+            {
+                MemberCount = memberCount;
+                RowCount = rowCount;
+            }
+        }
+
+        /// <summary>
         /// Overwrites a range of data in the specified <see cref="MetadataDb"/> with the built data and disposes this builder.
         /// </summary>
         /// <param name="complexObjectStartIndex">The start index of the complex object in the target database.</param>

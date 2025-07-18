@@ -167,6 +167,31 @@ namespace Corvus.Text.Json.Tests
                 "maxItems": 2
             }}           
             """;
+
+        private const string MultiDimensionHigherRankFixedSizeNumericArrayFormat =
+    """
+            {{
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "array",
+                "items": {{
+                    "type": "array",
+                    "items": {{
+                        "type": "array",
+                        "items": {{
+                            "type": "number",
+                            "format": "{0}"           
+                        }},
+                        "minItems": 5,
+                        "maxItems": 5
+                    }},
+                    "minItems": 2,
+                    "maxItems": 2
+                }},
+                "minItems": 3,
+                "maxItems": 3           
+            }}           
+            """;
+
         private const string StringFormat =
             """
             {{
@@ -457,6 +482,27 @@ namespace Corvus.Text.Json.Tests
         {
             TestJsonSchemaCodeGenerator generator = new("./someFakePath");
             await generator.GenerateCode($"multiDimensionFixedSizeNumericArray_{format}.json", string.Format(MultiDimensionFixedSizeNumericArrayFormat, format));
+        }
+
+        [Theory]
+        [InlineData("sbyte")]
+        [InlineData("int16")]
+        [InlineData("int32")]
+        [InlineData("int64")]
+        [InlineData("int128")]
+        [InlineData("byte")]
+        [InlineData("uint16")]
+        [InlineData("uint32")]
+        [InlineData("uint64")]
+        [InlineData("uint128")]
+        [InlineData("decimal")]
+        [InlineData("double")]
+        [InlineData("single")]
+        [InlineData("half")]
+        public static async Task GenerateCode_Emits_MultiDimensionHigherRankFixedSizeNumericArrayTypes(string format)
+        {
+            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
+            await generator.GenerateCode($"multiDimensionHigherRankFixedSizeNumericArray_{format}.json", string.Format(MultiDimensionHigherRankFixedSizeNumericArrayFormat, format));
         }
 
         [Theory]

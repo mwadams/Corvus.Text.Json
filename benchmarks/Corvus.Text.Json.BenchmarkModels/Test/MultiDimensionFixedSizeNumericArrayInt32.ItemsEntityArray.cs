@@ -413,21 +413,44 @@ public readonly partial struct MultiDimensionFixedSizeNumericArrayInt32
             {
                 _builder = builder;
             }
-
             /// <summary>
             /// Creates a tensor from the given numeric span.
             /// </summary>
             /// <param name="tensor">The data from which to create the tensor.</param>
             /// <returns>The number of items consumed.</returns>
             /// <exception cref="ArgumentException">The tensor did not contain the correct number of values for the array rank and dimension.</exception>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public int CreateTensor(ReadOnlySpan<int> tensor)
+            {
+                    return CreateTensor(tensor, false);
+            }
+
+            /// <summary>
+            /// Creates a tensor from the given numeric span.
+            /// </summary>
+            /// <param name="tensor">The data from which to create the tensor.</param>
+            /// <param name="createArray">Determines whether to create the wrapping array around the items.</param>
+            /// <returns>The number of items consumed.</returns>
+            /// <exception cref="ArgumentException">The tensor did not contain the correct number of values for the array rank and dimension.</exception>
+            internal int CreateTensor(ReadOnlySpan<int> tensor, bool createArray)
             {
                 if (tensor.Length != ValueBufferSize)
                 {
                     CodeGenThrowHelper.ThrowArgumentException_ArrayBufferLength(nameof(tensor), ValueBufferSize);
                 }
 
-                _builder.AddItemArrayValue(tensor);
+                if (createArray)
+                {
+                    _builder.AddItemArrayValue(tensor);
+                }
+                else
+                {
+                    foreach (int item in tensor)
+                    {
+                        _builder.AddItem(item);
+                    }
+                }
+
                 return ValueBufferSize;
             }
 
