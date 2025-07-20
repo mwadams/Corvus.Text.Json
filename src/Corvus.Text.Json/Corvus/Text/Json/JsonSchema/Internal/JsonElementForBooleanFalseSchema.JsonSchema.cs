@@ -12,6 +12,11 @@ namespace Corvus.Text.Json
     /// </summary>
     public readonly partial struct JsonElementForBooleanFalseSchema
     {
+        /// <summary>
+        /// Evaluates this element against the boolean false schema.
+        /// </summary>
+        /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
+        /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
         {
@@ -23,6 +28,12 @@ namespace Corvus.Text.Json
         /// </summary>
         public static class JsonSchema
         {
+            /// <summary>
+            /// Evaluates the boolean false schema against the JSON element at the specified index.
+            /// </summary>
+            /// <param name="parentDocument">The parent document containing the JSON element.</param>
+            /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
+            /// <param name="context">The schema evaluation context.</param>
             internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
             {
                 // You're not allowed to ask about non-value-like entities
@@ -35,6 +46,13 @@ namespace Corvus.Text.Json
                 context.EvaluatedBooleanSchema(false);
             }
 
+            /// <summary>
+            /// Evaluates the boolean false schema against the JSON element at the specified index.
+            /// </summary>
+            /// <param name="parentDocument">The parent document containing the JSON element.</param>
+            /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
+            /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
+            /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
             internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
             {
                 return false;

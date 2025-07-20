@@ -9,8 +9,17 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
+    /// <summary>
+    /// Code generator extensions for object-related functionality.
+    /// </summary>
     internal static partial class CodeGeneratorExtensions
     {
+        /// <summary>
+        /// Appends methods to apply object composition types.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration for which to apply composition types.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
         public static CodeGenerator AppendApplyObjectCompositionTypes(this CodeGenerator generator, TypeDeclaration typeDeclaration)
         {
             HashSet<TypeDeclaration> seenTypes = [];
@@ -173,6 +182,12 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendLineIndent("}");
         }
 
+        /// <summary>
+        /// Appends a JsonPropertyNames nested class containing property name constants.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration for which to emit the property names class.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
         public static CodeGenerator AppendJsonPropertyNames(this CodeGenerator generator, TypeDeclaration typeDeclaration)
         {
             if (generator.IsCancellationRequested)
@@ -249,6 +264,12 @@ namespace Corvus.Text.Json.CodeGeneration
                 .EndClassStructOrEnumDeclaration();
         }
 
+        /// <summary>
+        /// Appends a JsonPropertyNamesEscaped nested class containing escaped property name constants.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="typeDeclaration">The type declaration for which to emit the escaped property names class.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
         public static CodeGenerator AppendJsonPropertyNamesEscaped(this CodeGenerator generator, TypeDeclaration typeDeclaration)
         {
             if (generator.IsCancellationRequested)

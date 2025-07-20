@@ -96,6 +96,12 @@ namespace Corvus.Text.Json
         ValueStack<ValueRangeWithCommitIndexAndSequenceNumber> _resultStack;
         ValueStack<ValueRange> _committedResultStack;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonSchemaResultsCollector"/> class.
+        /// </summary>
+        /// <param name="rented">A value indicating whether this instance is rented from a pool.</param>
+        /// <param name="level">The level of detail to collect in the results.</param>
+        /// <param name="estimatedCapacity">An estimate of the number of results that will be collected.</param>
         internal JsonSchemaResultsCollector(bool rented, JsonSchemaResultsLevel level, int estimatedCapacity = 30)
         {
             if (estimatedCapacity <= 0)
@@ -304,11 +310,18 @@ namespace Corvus.Text.Json
             return new(this);
         }
 
+        /// <summary>
+        /// Gets the total number of committed results in this collector.
+        /// </summary>
+        /// <returns>The number of committed results.</returns>
         public int GetResultCount()
         {
             return _committedResultStack.Length;
         }
 
+        /// <summary>
+        /// Releases all resources used by this results collector and returns it to the pool if it is rented.
+        /// </summary>
         public void Dispose()
         {
             if (_isDisposed)

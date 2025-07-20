@@ -5,11 +5,27 @@ using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides utilities for parsing and validating IP addresses.
+    /// </summary>
     internal static class IPAddressParser
     {
+        /// <summary>
+        /// The maximum length of an IPv4 address string representation.
+        /// </summary>
         internal const int MaxIPv4StringLength = 15; // 4 numbers separated by 3 periods, with up to 3 digits per number
+
+        /// <summary>
+        /// The maximum length of an IPv6 address string representation.
+        /// </summary>
         internal const int MaxIPv6StringLength = 65;
 
+        /// <summary>
+        /// Determines whether the specified span represents a valid IPv6 address.
+        /// </summary>
+        /// <param name="ipSpan">The span containing the IPv6 address bytes to validate.</param>
+        /// <param name="disallowScope">If true, scope identifiers are not allowed in the IPv6 address.</param>
+        /// <returns>true if the span represents a valid IPv6 address; otherwise, false.</returns>
         public static unsafe bool IsValidIPV6(ReadOnlySpan<byte> ipSpan, bool disallowScope = true)
         {
             fixed (byte* ipStringPtr = &MemoryMarshal.GetReference(ipSpan))
@@ -23,6 +39,12 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified span represents a valid IPv4 address.
+        /// </summary>
+        /// <param name="ipSpan">The span containing the IPv4 address bytes to validate.</param>
+        /// <param name="requireCanonical">If true, requires the IPv4 address to be in canonical form.</param>
+        /// <returns>true if the span represents a valid IPv4 address; otherwise, false.</returns>
         public static unsafe bool IsValidIPV4(ReadOnlySpan<byte> ipSpan, bool requireCanonical = true)
         {
             fixed (byte* ipStringPtr = &MemoryMarshal.GetReference(ipSpan))

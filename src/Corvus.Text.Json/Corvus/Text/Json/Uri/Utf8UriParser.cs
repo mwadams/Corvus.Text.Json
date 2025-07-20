@@ -3,8 +3,14 @@
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides URI parsing functionality for UTF-8 URI strings.
+    /// </summary>
     internal partial class Utf8UriParser
     {
+        /// <summary>
+        /// Gets the scheme name for this parser.
+        /// </summary>
         internal string SchemeName
         {
             get
@@ -12,6 +18,10 @@ namespace Corvus.Text.Json.Internal
                 return _scheme;
             }
         }
+        
+        /// <summary>
+        /// Gets the default port for this parser's scheme.
+        /// </summary>
         internal int DefaultPort
         {
             get

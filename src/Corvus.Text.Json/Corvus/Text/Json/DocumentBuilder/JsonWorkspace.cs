@@ -54,6 +54,12 @@ namespace Corvus.Text.Json
             return new(false, initialDocumentCapacity, options);
         }
 
+        /// <summary>
+        /// Rents a UTF-8 JSON writer and associated buffer writer from the pool.
+        /// </summary>
+        /// <param name="defaultBufferSize">The default buffer size to use for the buffer writer.</param>
+        /// <param name="bufferWriter">When this method returns, contains the rented buffer writer.</param>
+        /// <returns>A rented UTF-8 JSON writer configured with the workspace options.</returns>
         public Utf8JsonWriter RentWriterAndBuffer(int defaultBufferSize, out IByteBufferWriter bufferWriter)
         {
             Utf8JsonWriter result = Utf8JsonWriterCache.RentWriterAndBuffer(Options, defaultBufferSize, out PooledByteBufferWriter writer);
@@ -61,17 +67,31 @@ namespace Corvus.Text.Json
             return result;
         }
 
+        /// <summary>
+        /// Rents a UTF-8 JSON writer from the pool that writes to the specified buffer writer.
+        /// </summary>
+        /// <param name="bufferWriter">The buffer writer to write JSON data to.</param>
+        /// <returns>A rented UTF-8 JSON writer configured with the workspace options.</returns>
         public Utf8JsonWriter RentWriter(IBufferWriter<byte> bufferWriter)
         {
             return Utf8JsonWriterCache.RentWriter(Options, bufferWriter);
         }
 
 #pragma warning disable CA1822 // Mark members as static
+        /// <summary>
+        /// Returns a rented UTF-8 JSON writer and buffer writer to the pool.
+        /// </summary>
+        /// <param name="writer">The writer to return to the pool.</param>
+        /// <param name="bufferWriter">The buffer writer to return to the pool.</param>
         public void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)
         {
             Utf8JsonWriterCache.ReturnWriterAndBuffer(writer, bufferWriter);
         }
 
+        /// <summary>
+        /// Returns a rented UTF-8 JSON writer to the pool.
+        /// </summary>
+        /// <param name="writer">The writer to return to the pool.</param>
         public void ReturnWriter(Utf8JsonWriter writer)
         {
             Utf8JsonWriterCache.ReturnWriter(writer);
@@ -80,6 +100,7 @@ namespace Corvus.Text.Json
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
+        /// <inheritdoc />
         public void Dispose()
         {
             if (_rented)
@@ -105,6 +126,13 @@ namespace Corvus.Text.Json
 
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
 
+        /// <summary>
+        /// Creates a document builder for building mutable JSON documents from an existing element.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the source JSON element.</typeparam>
+        /// <typeparam name="TMutableElement">The type of the mutable JSON element to build.</typeparam>
+        /// <param name="sourceElement">The source element to build from.</param>
+        /// <returns>A document builder for the mutable element type.</returns>
         [CLSCompliant(false)]
         public JsonDocumentBuilder<TMutableElement> CreateDocumentBuilder<TElement, TMutableElement>(TElement sourceElement)
             where TElement : struct, IJsonElement<TElement>
@@ -116,6 +144,13 @@ namespace Corvus.Text.Json
             return result;
         }
 
+        /// <summary>
+        /// Creates a document builder for building mutable JSON documents.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the mutable JSON element to build.</typeparam>
+        /// <param name="initialCapacity">The initial capacity for the document builder.</param>
+        /// <param name="initialValueBufferSize">The initial size of the value buffer.</param>
+        /// <returns>A document builder for the specified element type.</returns>
         [CLSCompliant(false)]
         public JsonDocumentBuilder<TElement> CreateDocumentBuilder<TElement>(int initialCapacity = 30, int initialValueBufferSize = 8192)
             where TElement : struct, IMutableJsonElement<TElement>
@@ -126,6 +161,12 @@ namespace Corvus.Text.Json
             return result;
         }
 
+        /// <summary>
+        /// Gets the document at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the document to retrieve.</param>
+        /// <returns>The document at the specified index.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the index is out of range.</exception>
         internal IJsonDocument GetDocument(int index)
         {
             if (index < 0 || index >= _length)
@@ -136,6 +177,11 @@ namespace Corvus.Text.Json
             return _documents[index];
         }
 
+        /// <summary>
+        /// Gets the index of the specified document in the workspace.
+        /// </summary>
+        /// <param name="document">The document to find the index for.</param>
+        /// <returns>The index of the document in the workspace.</returns>
         internal int GetDocumentIndex(IJsonDocument document)
         {
             if (_documentIndices.TryGetValue(document, out int index))
@@ -158,6 +204,11 @@ namespace Corvus.Text.Json
             return result;
         }
 
+        /// <summary>
+        /// Resets the workspace with new capacity and options.
+        /// </summary>
+        /// <param name="initialDocumentCapacity">The initial document capacity for the workspace.</param>
+        /// <param name="options">The JSON writer options to use.</param>
         internal void Reset(int initialDocumentCapacity, JsonWriterOptions? options)
         {
             Options = options ?? s_internalWriterOptions;
@@ -178,6 +229,9 @@ namespace Corvus.Text.Json
             _length = 0;
         }
 
+        /// <summary>
+        /// Resets all state for cache reuse, disposing any documents and clearing collections.
+        /// </summary>
         internal void ResetAllStateForCacheReuse()
         {
             if (_length >= 0)
@@ -196,6 +250,10 @@ namespace Corvus.Text.Json
             ThrowHelper.ThrowObjectDisposedException_JsonWorkspace();
         }
 
+        /// <summary>
+        /// Creates an empty instance for caching purposes.
+        /// </summary>
+        /// <returns>An empty workspace instance suitable for caching.</returns>
         internal static JsonWorkspace CreateEmptyInstanceForCaching() => new(true);
     }
 }

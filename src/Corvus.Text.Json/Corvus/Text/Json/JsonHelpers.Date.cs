@@ -26,12 +26,22 @@ namespace Corvus.Text.Json
             public byte OffsetToken;
         }
 
+        /// <summary>
+        /// Determines whether the specified length is valid for DateTime offset parsing.
+        /// </summary>
+        /// <param name="length">The length to check.</param>
+        /// <returns><c>true</c> if the length is within the valid range for DateTime offset parsing; otherwise, <c>false</c>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidDateTimeOffsetParseLength(int length)
         {
             return IsInRangeInclusive(length, JsonConstants.MinimumDateTimeParseLength, JsonConstants.MaximumEscapedDateTimeOffsetParseLength);
         }
 
+        /// <summary>
+        /// Determines whether the specified length is valid for unescaped DateTime offset parsing.
+        /// </summary>
+        /// <param name="length">The length to check.</param>
+        /// <returns><c>true</c> if the length is within the valid range for unescaped DateTime offset parsing; otherwise, <c>false</c>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidUnescapedDateTimeOffsetParseLength(int length)
         {
@@ -96,6 +106,12 @@ namespace Corvus.Text.Json
         }
 
 #if NET
+        /// <summary>
+        /// Parse the given UTF-8 <paramref name="source"/> as extended ISO 8601 date format.
+        /// </summary>
+        /// <param name="source">UTF-8 source to parse.</param>
+        /// <param name="value">The parsed <see cref="DateOnly"/> if successful.</param>
+        /// <returns><c>true</c> if successfully parsed; otherwise, <c>false</c>.</returns>
         public static bool TryParseAsIso(ReadOnlySpan<byte> source, out DateOnly value)
         {
             if (TryParseDateTimeOffset(source, out DateTimeParseData parseData) &&

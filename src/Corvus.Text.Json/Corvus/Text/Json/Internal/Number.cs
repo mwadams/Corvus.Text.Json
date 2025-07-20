@@ -7,8 +7,16 @@ using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides utility methods for writing numeric digits to byte buffers.
+    /// </summary>
     internal static class Number
     {
+        /// <summary>
+        /// Writes a two-digit value (00-99) to the specified buffer location.
+        /// </summary>
+        /// <param name="value">The value to write (must be between 0 and 99).</param>
+        /// <param name="ptr">The pointer to the buffer location where the digits will be written.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static unsafe void WriteTwoDigits(uint value, byte* ptr)
         {
@@ -51,6 +59,12 @@ namespace Corvus.Text.Json.Internal
                 (uint)sizeof(byte) * 2);
         }
 
+        /// <summary>
+        /// Writes a sequence of digits representing the specified value to the buffer at the specified location.
+        /// </summary>
+        /// <param name="value">The value to write as digits.</param>
+        /// <param name="ptr">The pointer to the buffer location where the digits will be written.</param>
+        /// <param name="count">The number of digits to write.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static unsafe void WriteDigits(uint value, byte* ptr, int count)
         {

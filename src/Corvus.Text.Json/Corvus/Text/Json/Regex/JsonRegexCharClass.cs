@@ -7,6 +7,9 @@ using System.Globalization;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides utilities for working with character classes in JSON regular expressions.
+    /// </summary>
     internal static class JsonRegexCharClass
     {
         private const string InternalRegexIgnoreCase = "__InternalRegexIgnoreCase__";
@@ -222,6 +225,11 @@ namespace Corvus.Text.Json.Internal
                 +"\u3041\u3097\u3099\u30A0\u30A1\u30FB\u30FC\u3100\u3105\u312D\u3131\u318F\u3190\u31B8\u31F0\u321D\u3220\u3244\u3251\u327C\u327F\u32CC\u32D0\u32FF\u3300\u3377\u337B\u33DE\u33E0\u33FF\u3400\u4DB6\u4E00\u9FA6\uA000\uA48D\uA490\uA4C7\uAC00\uD7A4\uF900\uFA2E\uFA30\uFA6B\uFB00\uFB07\uFB13\uFB18\uFB1D\uFB37\uFB38\uFB3D\uFB3E\uFB3F\uFB40\uFB42\uFB43\uFB45\uFB46\uFBB2\uFBD3\uFD3E\uFD50\uFD90\uFD92\uFDC8\uFDF0\uFDFD\uFE00\uFE10\uFE20\uFE24\uFE62\uFE63\uFE64\uFE67\uFE69\uFE6A\uFE70\uFE75\uFE76\uFEFD\uFF04\uFF05\uFF0B\uFF0C\uFF10\uFF1A\uFF1C\uFF1F\uFF21\uFF3B\uFF3E\uFF3F\uFF40\uFF5B\uFF5C\uFF5D\uFF5E\uFF5F\uFF66\uFFBF\uFFC2\uFFC8\uFFCA\uFFD0\uFFD2\uFFD8\uFFDA\uFFDD\uFFE0\uFFE7\uFFE8\uFFEF\uFFFC\uFFFE"],
         ];
 
+        /// <summary>
+        /// Validates whether the specified category name is a valid Unicode category or defined property.
+        /// </summary>
+        /// <param name="categoryName">The category name to validate.</param>
+        /// <returns><see langword="true"/> if the category name is valid; otherwise, <see langword="false"/>.</returns>
         public static bool ValidateCategoryName(ReadOnlySpan<char> categoryName)
         {
             if (!HasKey(s_definedCategories, categoryName) ||
@@ -233,6 +241,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates whether the specified property name exists in the property table.
+        /// </summary>
+        /// <param name="capname">The property name to validate.</param>
+        /// <returns><see langword="true"/> if the property exists; otherwise, <see langword="false"/>.</returns>
         private static bool ValidateRangesFromProperty(ReadOnlySpan<char> capname)
         {
             int min = 0;
@@ -262,6 +275,12 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Determines whether the specified dictionary contains a key that matches the given category name.
+        /// </summary>
+        /// <param name="s_definedCategories">The dictionary of defined categories to search.</param>
+        /// <param name="categoryName">The category name to search for.</param>
+        /// <returns><see langword="true"/> if a matching key is found; otherwise, <see langword="false"/>.</returns>
         private static bool HasKey(Dictionary<string, string> s_definedCategories, ReadOnlySpan<char> categoryName)
         {
             foreach (string key in s_definedCategories.Keys)
@@ -276,6 +295,8 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>Determines whether a character is considered a word character for the purposes of testing a word character boundary.</summary>
+        /// <param name="ch">The character to test.</param>
+        /// <returns><see langword="true"/> if the character is a word character; otherwise, <see langword="false"/>.</returns>
         public static bool IsBoundaryWordChar(char ch)
         {
             // According to UTS#18 Unicode Regular Expressions (http://www.unicode.org/reports/tr18/)
@@ -296,6 +317,8 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>Gets whether the specified span participates in case conversion.</summary>
+        /// <param name="s">The span of characters to check for case conversion participation.</param>
+        /// <returns><see langword="true"/> if any character in the span participates in case conversion; otherwise, <see langword="false"/>.</returns>
         /// <remarks>The span participates in case conversion if any of its characters do.</remarks>
         public static bool ParticipatesInCaseConversion(ReadOnlySpan<char> s)
         {
@@ -311,6 +334,8 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>Gets whether the specified character participates in case conversion.</summary>
+        /// <param name="comparison">The character code to check for case conversion participation.</param>
+        /// <returns><see langword="true"/> if the character participates in case conversion; otherwise, <see langword="false"/>.</returns>
         /// <remarks>
         /// This method is used to perform operations as if they were case-sensitive even if they're
         /// specified as being case-insensitive.  Such a reduction can be applied when the only character

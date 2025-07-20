@@ -16,30 +16,54 @@ namespace Corvus.Text.Json.Internal
         // If the exception source is this value, the serializer will re-throw as JsonException.
         public const string ExceptionSourceValueToRethrowAsJsonException = "Corvus.Text.Json.Rethrowable";
 
-
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when an array buffer has an incorrect length.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <param name="expectedLength">The expected length of the array buffer.</param>
+        /// <exception cref="ArgumentException">Always thrown.</exception>
         public static void ThrowArgumentException_ArrayBufferLength(string paramName, int expectedLength)
         {
             throw new ArgumentException(SR.Format(SR.IncorrectArrayBufferLength, expectedLength), paramName);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when an array index is negative.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_ArrayIndexNegative(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, SR.ArrayIndexNegative);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when a value must be non-negative.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_NeedNonNegNum(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, SR.ArgumentOutOfRange_Generic_MustBeNonNegative);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when offset and length parameters are invalid.
+        /// </summary>
+        /// <exception cref="ArgumentException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentException_InvalidOffLen()
         {
             throw new ArgumentException(SR.Argument_InvalidOffLen);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when an array is too small.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <exception cref="ArgumentException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentException_ArrayTooSmall(string paramName)
         {
@@ -51,24 +75,42 @@ namespace Corvus.Text.Json.Internal
             return new ArgumentException(message);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> with the specified message.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <exception cref="ArgumentException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentException(string message)
         {
             throw GetArgumentException(message);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when the destination buffer is too short.
+        /// </summary>
+        /// <exception cref="ArgumentException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentException_DestinationTooShort()
         {
             throw GetArgumentException(SR.DestinationTooShort);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> with the specified message.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException(string message)
         {
             throw GetInvalidOperationException(message);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a prefix tuple must be created first.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst()
         {
@@ -80,28 +122,53 @@ namespace Corvus.Text.Json.Internal
             return new InvalidOperationException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };
         }
 
+        /// <summary>
+        /// Creates an <see cref="InvalidOperationException"/> when an array was expected but a different token type was encountered.
+        /// </summary>
+        /// <param name="tokenType">The actual token type that was encountered.</param>
+        /// <returns>An exception indicating that an array was expected.</returns>
         public static InvalidOperationException GetInvalidOperationException_ExpectedArray(JsonTokenType tokenType)
         {
             return GetInvalidOperationException("array", tokenType);
         }
 
+        /// <summary>
+        /// Creates an <see cref="InvalidOperationException"/> when an object was expected but a different token type was encountered.
+        /// </summary>
+        /// <param name="tokenType">The actual token type that was encountered.</param>
+        /// <returns>An exception indicating that an object was expected.</returns>
         public static InvalidOperationException GetInvalidOperationException_ExpectedObject(JsonTokenType tokenType)
         {
             return GetInvalidOperationException("object", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a number was expected but a different token type was encountered.
+        /// </summary>
+        /// <param name="tokenType">The actual token type that was encountered.</param>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedNumber(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException("number", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a boolean was expected but a different token type was encountered.
+        /// </summary>
+        /// <param name="tokenType">The actual token type that was encountered.</param>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedBoolean(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException("boolean", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a string was expected but a different token type was encountered.
+        /// </summary>
+        /// <param name="tokenType">The actual token type that was encountered.</param>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)
         {
@@ -118,6 +185,12 @@ namespace Corvus.Text.Json.Internal
             return GetInvalidOperationException(SR.Format(SR.InvalidComparison, tokenType));
         }
 
+        /// <summary>
+        /// Throws an exception when a JSON element has an unexpected type.
+        /// </summary>
+        /// <param name="expectedType">The expected JSON token type.</param>
+        /// <param name="actualType">The actual JSON token type.</param>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         internal static void ThrowJsonElementWrongTypeException(
             JsonTokenType expectedType,
@@ -126,6 +199,12 @@ namespace Corvus.Text.Json.Internal
             throw GetJsonElementWrongTypeException(expectedType.ToValueKind(), actualType.ToValueKind());
         }
 
+        /// <summary>
+        /// Creates an exception when a JSON element has an unexpected value kind.
+        /// </summary>
+        /// <param name="expectedType">The expected JSON value kind.</param>
+        /// <param name="actualType">The actual JSON value kind.</param>
+        /// <returns>An exception indicating the type mismatch.</returns>
         internal static InvalidOperationException GetJsonElementWrongTypeException(
             JsonValueKind expectedType,
             JsonValueKind actualType)
@@ -136,6 +215,11 @@ namespace Corvus.Text.Json.Internal
 
         private static bool IsPrintable(byte value) => value >= 0x20 && value < 0x7F;
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when invalid UTF-8 bytes are encountered.
+        /// </summary>
+        /// <param name="value">The invalid UTF-8 byte sequence.</param>
+        /// <exception cref="ArgumentException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentException_InvalidUTF8(ReadOnlySpan<byte> value)
         {
@@ -164,29 +248,53 @@ namespace Corvus.Text.Json.Internal
             throw new ArgumentException(SR.Format(SR.CannotEncodeInvalidUTF8, builder));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when an invalid UTF-16 character is encountered.
+        /// </summary>
+        /// <param name="charAsInt">The invalid character represented as an integer.</param>
+        /// <exception cref="ArgumentException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentException_InvalidUTF16(int charAsInt)
         {
             throw new ArgumentException(SR.Format(SR.CannotEncodeInvalidUTF16, $"0x{charAsInt:X2}"));
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when an invalid UTF-16 character is encountered during reading.
+        /// </summary>
+        /// <param name="charAsInt">The invalid character represented as an integer.</param>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ReadInvalidUTF16(int charAsInt)
         {
             throw GetInvalidOperationException(SR.Format(SR.CannotReadInvalidUTF16, $"0x{charAsInt:X2}"));
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when an incomplete UTF-16 sequence is encountered during reading.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ReadIncompleteUTF16()
         {
             throw GetInvalidOperationException(SR.CannotReadIncompleteUTF16);
         }
 
+        /// <summary>
+        /// Creates an <see cref="ArgumentException"/> for invalid UTF-16 encoding during reading operations.
+        /// </summary>
+        /// <param name="innerException">The inner encoder fallback exception that caused this error.</param>
+        /// <returns>An argument exception with the inner exception details.</returns>
         public static ArgumentException GetArgumentException_ReadInvalidUTF16(EncoderFallbackException innerException)
         {
             return new ArgumentException(SR.CannotTranscodeInvalidUtf16, innerException);
         }
 
+        /// <summary>
+        /// Throws an <see cref="OutOfMemoryException"/> when buffer capacity exceeds maximum allowed size.
+        /// </summary>
+        /// <param name="capacity">The requested capacity that exceeded the maximum.</param>
+        /// <exception cref="OutOfMemoryException">Always thrown.</exception>
         [CLSCompliant(false)]
         [DoesNotReturn]
         public static void ThrowOutOfMemoryException(uint capacity)
@@ -194,12 +302,21 @@ namespace Corvus.Text.Json.Internal
             throw new OutOfMemoryException(SR.Format(SR.BufferMaximumSizeExceeded, capacity));
         }
 
+        /// <summary>
+        /// Throws a generic <see cref="FormatException"/> for format-related errors.
+        /// </summary>
+        /// <exception cref="FormatException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowFormatException()
         {
             throw new FormatException { Source = ExceptionSourceValueToRethrowAsJsonException };
         }
 
+        /// <summary>
+        /// Throws a <see cref="FormatException"/> for numeric type formatting errors.
+        /// </summary>
+        /// <param name="numericType">The numeric type that failed to format.</param>
+        /// <exception cref="FormatException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowFormatException(CodeGenNumericType numericType)
         {
@@ -257,6 +374,11 @@ namespace Corvus.Text.Json.Internal
             throw new FormatException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };
         }
 
+        /// <summary>
+        /// Throws a <see cref="FormatException"/> for data type formatting errors.
+        /// </summary>
+        /// <param name="dataType">The data type that failed to format.</param>
+        /// <exception cref="FormatException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowFormatException(CodeGenDataType dataType)
         {
@@ -285,6 +407,11 @@ namespace Corvus.Text.Json.Internal
             throw new FormatException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a character was expected but a different token type was encountered.
+        /// </summary>
+        /// <param name="tokenType">The actual token type that was encountered.</param>
+        /// <exception cref="InvalidOperationException">Always thrown.</exception>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedChar(JsonTokenType tokenType)
         {

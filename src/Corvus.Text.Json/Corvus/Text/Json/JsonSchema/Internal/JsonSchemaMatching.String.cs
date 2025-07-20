@@ -13,6 +13,9 @@ namespace Corvus.Text.Json.Internal
     /// </summary>
     public static partial class JsonSchemaEvaluation
     {
+        /// <summary>
+        /// A message provider for ignored non-string type validation.
+        /// </summary>
         public static readonly JsonSchemaMessageProvider IgnoredNotTypeString = static (buffer, out written) => IgnoredNotType("string"u8, buffer, out written);
 
         private static readonly JsonSchemaMessageProvider ExpectedTypeString = static (buffer, out written) => ExpectedType("string"u8, buffer, out written);
@@ -37,6 +40,13 @@ namespace Corvus.Text.Json.Internal
         private static readonly JsonSchemaMessageProvider ExpectedRelativeJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRelativeJsonPointer.AsSpan(), buffer, out written);
         private static readonly JsonSchemaMessageProvider ExpectedRegex = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRegex.AsSpan(), buffer, out written);
 
+        /// <summary>
+        /// Matches a JSON token type against the string type constraint.
+        /// </summary>
+        /// <param name="tokenType">The JSON token type to validate.</param>
+        /// <param name="typeKeyword">The type keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the token type matches the string type constraint; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchTypeString(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
         {
@@ -54,6 +64,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value conforms to the ISO 8601 date format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid ISO 8601 date; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchDate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -67,6 +84,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value conforms to the ISO 8601 offset date-time format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid ISO 8601 offset date-time; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchDateTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -81,6 +105,13 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Validates that a string value conforms to the ISO 8601 offset time format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid ISO 8601 offset time; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -94,6 +125,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value conforms to the ISO 8601 duration format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid ISO 8601 duration; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchDuration(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -107,10 +145,20 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Gets the allowed characters for the local part of an email address.
+        /// </summary>
         private static ReadOnlySpan<byte> AllowedLocalCharacters => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~"u8;
 
 
 
+        /// <summary>
+        /// Validates that a string value is a valid email address format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid email address; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchEmail(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -125,6 +173,11 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Validates that a string value is a valid email address format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid email address; otherwise, <see langword="false"/>.</returns>
         internal static bool MatchEmail(ReadOnlySpan<byte> value)
         {
             if (value.Length > 320 || value.Length < 3)
@@ -291,6 +344,13 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Validates that a string value is a valid internationalized domain name (IDN) email address format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid IDN email address; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchIdnEmail(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -304,6 +364,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid internationalized domain name (IDN) email address format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid IDN email address; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIdnEmail(ReadOnlySpan<byte> value)
         {
@@ -334,6 +399,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid internationalized domain name (IDN) hostname format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid IDN hostname; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchIdnHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -347,6 +419,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid internationalized domain name (IDN) hostname format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid IDN hostname; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIdnHostname(ReadOnlySpan<byte> value)
         {
@@ -367,6 +444,13 @@ namespace Corvus.Text.Json.Internal
             return MatchDecodedHostname(segment);
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid hostname format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid hostname; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -380,6 +464,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid hostname format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid hostname; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchHostname(ReadOnlySpan<byte> value)
         {
@@ -465,6 +554,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a decoded UTF-8 hostname value conforms to the hostname format requirements.
+        /// </summary>
+        /// <param name="value">The decoded UTF-8 hostname value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid decoded hostname; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchDecodedHostname(ReadOnlySpan<byte> value)
         {
@@ -676,6 +770,13 @@ namespace Corvus.Text.Json.Internal
         private static bool IsExtendedArabicIndicDigit(int value) => (value >= 0x06F0 && value <= 0x06F9);
         private static bool IsVirama(int value) => ViramaTable.IndexOf(value) >= 0;
 
+        /// <summary>
+        /// Validates that a string value is a valid IPv4 address format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid IPv4 address; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchIPV4(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -689,6 +790,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid IPv4 address format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid IPv4 address; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIPV4(ReadOnlySpan<byte> value)
         {
@@ -700,6 +806,13 @@ namespace Corvus.Text.Json.Internal
             return IPAddressParser.IsValidIPV4(value);
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid IPv6 address format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid IPv6 address; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchIPV6(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -713,6 +826,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid IPv6 address format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid IPv6 address; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIPV6(ReadOnlySpan<byte> value)
         {
@@ -725,6 +843,13 @@ namespace Corvus.Text.Json.Internal
             return IPAddressParser.IsValidIPV6(value);
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid UUID format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid UUID; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchUuid(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -738,12 +863,24 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid UUID format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid UUID; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchUuid(ReadOnlySpan<byte> value)
         {
             return Utf8Parser.TryParse(value, out Guid _, out _);
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid URI format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid URI; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchUri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -757,6 +894,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid URI format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid URI; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchUri(ReadOnlySpan<byte> value)
         {
@@ -784,6 +926,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid IRI; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchIri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -797,6 +946,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid IRI; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIri(ReadOnlySpan<byte> value)
         {
@@ -824,6 +978,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid URI reference format (absolute or relative URI).
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid URI reference; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchUriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -837,6 +998,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid URI reference format (absolute or relative URI).
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid URI reference; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchUriReference(ReadOnlySpan<byte> value)
         {
@@ -849,6 +1015,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) reference format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid IRI reference; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchIriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -862,6 +1035,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) reference format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid IRI reference; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchIriReference(ReadOnlySpan<byte> value)
         {
@@ -873,6 +1051,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid URI template format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid URI template; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchUriTemplate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -886,6 +1071,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid URI template format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid URI template; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchUriTemplate(ReadOnlySpan<byte> value)
         {
@@ -897,6 +1087,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid JSON Pointer format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid JSON Pointer; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -910,6 +1107,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid JSON Pointer format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid JSON Pointer; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchJsonPointer(ReadOnlySpan<byte> value)
         {
@@ -921,6 +1123,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid relative JSON Pointer format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid relative JSON Pointer; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -934,6 +1143,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid relative JSON Pointer format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid relative JSON Pointer; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value)
         {
@@ -945,6 +1159,13 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid ECMAScript regular expression format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The JSON schema validation context.</param>
+        /// <returns><see langword="true"/> if the value is a valid regex; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchRegex(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -958,6 +1179,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates that a string value is a valid ECMAScript regular expression format.
+        /// </summary>
+        /// <param name="value">The UTF-8 encoded string value to validate.</param>
+        /// <returns><see langword="true"/> if the value is a valid regex; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool MatchRegex(ReadOnlySpan<byte> value)
         {

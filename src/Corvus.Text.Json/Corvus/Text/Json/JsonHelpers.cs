@@ -9,6 +9,9 @@ using System.Text.RegularExpressions;
 
 namespace Corvus.Text.Json
 {
+    /// <summary>
+    /// Provides helper methods for JSON processing operations.
+    /// </summary>
     internal static partial class JsonHelpers
     {
         /// <summary>
@@ -45,7 +48,7 @@ namespace Corvus.Text.Json
         /// Calls Encoding.UTF8.GetString that supports netstandard.
         /// </summary>
         /// <param name="bytes">The utf8 bytes to convert.</param>
-        /// <returns></returns>
+        /// <returns>A string representation of the UTF-8 encoded bytes.</returns>
         public static string Utf8GetString(ReadOnlySpan<byte> bytes)
         {
 #if NET
@@ -66,6 +69,11 @@ namespace Corvus.Text.Json
 #endif
         }
 
+        /// <summary>
+        /// Determines whether the specified double-precision floating-point number is finite (not infinite or NaN).
+        /// </summary>
+        /// <param name="value">A double-precision floating-point number.</param>
+        /// <returns><c>true</c> if <paramref name="value"/> is finite; otherwise, <c>false</c>.</returns>
         public static bool IsFinite(double value)
         {
 #if NET
@@ -75,6 +83,11 @@ namespace Corvus.Text.Json
 #endif
         }
 
+        /// <summary>
+        /// Determines whether the specified single-precision floating-point number is finite (not infinite or NaN).
+        /// </summary>
+        /// <param name="value">A single-precision floating-point number.</param>
+        /// <returns><c>true</c> if <paramref name="value"/> is finite; otherwise, <c>false</c>.</returns>
         public static bool IsFinite(float value)
         {
 #if NET
@@ -84,6 +97,11 @@ namespace Corvus.Text.Json
 #endif
         }
 
+        /// <summary>
+        /// Validates that the specified length does not exceed the maximum array length for 32-bit integers.
+        /// </summary>
+        /// <param name="length">The length to validate.</param>
+        /// <exception cref="OutOfMemoryException">Thrown when <paramref name="length"/> exceeds the maximum allowed array length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ValidateInt32MaxArrayLength(uint length)
         {
@@ -94,6 +112,11 @@ namespace Corvus.Text.Json
         }
 
 #if !NET8_0_OR_GREATER
+        /// <summary>
+        /// Determines whether all bits in the <see cref="BitArray"/> are set to <c>true</c>.
+        /// </summary>
+        /// <param name="bitArray">The <see cref="BitArray"/> to check.</param>
+        /// <returns><c>true</c> if all bits are set; otherwise, <c>false</c>.</returns>
         public static bool HasAllSet(this BitArray bitArray)
         {
             for (int i = 0; i < bitArray.Count; i++)

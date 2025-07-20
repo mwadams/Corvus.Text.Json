@@ -3,11 +3,24 @@
 
 namespace Corvus.Text.Json.Internal
 {
-    // Used to control whether absolute or relative URIs are used
+    /// <summary>
+    /// Defines the kind of URI, controlling whether absolute or relative URIs are used.
+    /// </summary>
     public enum Utf8UriKind
     {
+        /// <summary>
+        /// The kind of URI is indeterminate. The URI can be either relative or absolute.
+        /// </summary>
         RelativeOrAbsolute = 0,
+
+        /// <summary>
+        /// The URI is an absolute URI.
+        /// </summary>
         Absolute = 1,
+
+        /// <summary>
+        /// The URI is a relative URI.
+        /// </summary>
         Relative = 2
     }
 }

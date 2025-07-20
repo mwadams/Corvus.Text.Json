@@ -13,6 +13,12 @@ namespace Corvus.Text.Json.Internal
         [ThreadStatic]
         private static ThreadLocalState? t_threadLocalState;
 
+        /// <summary>
+        /// Rents a workspace from the thread-local cache or creates a new one.
+        /// </summary>
+        /// <param name="initialDocumentCapacity">The initial document capacity for the workspace.</param>
+        /// <param name="options">The JSON writer options to use.</param>
+        /// <returns>A workspace instance from the cache or a new instance.</returns>
         public static JsonWorkspace RentWorkspace(int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
         {
             ThreadLocalState state = t_threadLocalState ??= new();
@@ -33,6 +39,10 @@ namespace Corvus.Text.Json.Internal
             return workspace;
         }
 
+        /// <summary>
+        /// Returns a workspace to the thread-local cache for reuse.
+        /// </summary>
+        /// <param name="workspace">The workspace to return to the cache.</param>
         public static void ReturnWorkspace(JsonWorkspace workspace)
         {
             Debug.Assert(t_threadLocalState != null);

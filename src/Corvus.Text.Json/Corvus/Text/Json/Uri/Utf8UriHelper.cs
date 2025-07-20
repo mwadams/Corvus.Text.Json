@@ -6,24 +6,49 @@ using System.Diagnostics;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides helper methods for UTF-8 URI processing.
+    /// </summary>
     internal static class Utf8UriHelper
     {
 #if NET
-        // true for all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~'
+        /// <summary>
+        /// SearchValues for all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~'.
+        /// </summary>
         public static readonly SearchValues<char> Unreserved =
             SearchValues.Create("-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~");
+            
+        /// <summary>
+        /// SearchValues for all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~' (byte version).
+        /// </summary>
         public static readonly SearchValues<byte> UnreservedBytes =
             SearchValues.Create("-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"u8);
 #else
-        // true for all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~'
+        /// <summary>
+        /// Span of all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~'.
+        /// </summary>
         public static ReadOnlySpan<char> Unreserved => "-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
+        
+        /// <summary>
+        /// Span of all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~' (byte version).
+        /// </summary>
         public static ReadOnlySpan<byte> UnreservedBytes => "-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"u8;
 #endif
+        /// <summary>
+        /// Determines whether the specified byte represents a linear white space character.
+        /// </summary>
+        /// <param name="b">The byte to check.</param>
+        /// <returns><see langword="true"/> if the byte is a linear white space character; otherwise, <see langword="false"/>.</returns>
         internal static bool IsLWS(byte b)
         {
             return (b <= (byte)' ') && (b == (byte)' ' || b == (byte)'\n' || b == (byte)'\r' || b == (byte)'\t');
         }
 
+        /// <summary>
+        /// Converts an ASCII scheme byte span to a lowercase invariant string.
+        /// </summary>
+        /// <param name="asciiSpan">The ASCII span to convert.</param>
+        /// <returns>A lowercase invariant string representation of the scheme.</returns>
         internal static string AsciiSchemeToLowerInvariantString(ReadOnlySpan<byte> asciiSpan)
         {
             Debug.Assert(asciiSpan.Length < Utf8Uri.c_MaxUriSchemeName);

@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 namespace Corvus.Text.Json.Internal
 {
     /// <summary>
-    /// Extension methods for <see cref="IJsonElement"/>.
+    /// Helper methods for creating and converting JSON element instances using dynamic method generation.
     /// </summary>
     public static partial class JsonElementHelpers
     {
@@ -18,6 +18,14 @@ namespace Corvus.Text.Json.Internal
 
         private static readonly ConcurrentDictionary<Type, object> Creators = [];
 
+        /// <summary>
+        /// Creates an instance of the specified JSON element type using dynamic method generation.
+        /// </summary>
+        /// <typeparam name="T">The type of JSON element to create, which must implement <see cref="IJsonElement{T}"/>.</typeparam>
+        /// <param name="parentDocument">The parent JSON document that contains the element.</param>
+        /// <param name="parentDocumentIndex">The index of the element within the parent document.</param>
+        /// <returns>A new instance of the specified JSON element type.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the type does not have a constructor with the required signature.</exception>
         [CLSCompliant(false)]
         public static T CreateInstance<T>(IJsonDocument parentDocument, int parentDocumentIndex)
             where T : struct, IJsonElement<T>

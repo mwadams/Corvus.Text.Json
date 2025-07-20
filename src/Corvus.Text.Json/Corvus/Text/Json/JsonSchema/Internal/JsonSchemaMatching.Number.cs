@@ -169,6 +169,13 @@ namespace Corvus.Text.Json.Internal
         private static ReadOnlySpan<byte> MaximumDecimalFractional => ""u8;
         private const int MaximumDecimalExponent = 0;
 
+        /// <summary>
+        /// Matches a JSON token type against the "number" type constraint.
+        /// </summary>
+        /// <param name="tokenType">The JSON token type to validate.</param>
+        /// <param name="typeKeyword">The type keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the token type is a number; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchTypeNumber(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
         {
@@ -185,6 +192,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the Int128 type constraint, validating it as a 128-bit signed integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Int128; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -226,6 +243,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the UInt128 type constraint, validating it as a 128-bit unsigned integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid UInt128; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchUInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -268,6 +295,16 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Matches a JSON number against the Int64 type constraint, validating it as a 64-bit signed integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Int64; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -309,6 +346,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the UInt64 type constraint, validating it as a 64-bit unsigned integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid UInt64; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchUInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -351,6 +398,16 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Matches a JSON number against the Int32 type constraint, validating it as a 32-bit signed integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Int32; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -392,6 +449,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the UInt32 type constraint, validating it as a 32-bit unsigned integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid UInt32; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchUInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -433,6 +500,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the Int16 type constraint, validating it as a 16-bit signed integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Int16; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -474,6 +551,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the UInt16 type constraint, validating it as a 16-bit unsigned integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid UInt16; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchUInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -515,6 +602,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the SByte type constraint, validating it as an 8-bit signed integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid SByte; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchSByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -556,6 +653,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the Byte type constraint, validating it as an 8-bit unsigned integer.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Byte; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -597,6 +704,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the Double type constraint, validating it as a double-precision floating-point number.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Double; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchDouble(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -632,6 +749,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the Single type constraint, validating it as a single-precision floating-point number.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Single; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchSingle(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -667,6 +794,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the Half type constraint, validating it as a half-precision floating-point number.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Half; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchHalf(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {
@@ -702,6 +839,16 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Matches a JSON number against the Decimal type constraint, validating it as a decimal floating-point number.
+        /// </summary>
+        /// <param name="isNegative">Indicates whether the number is negative.</param>
+        /// <param name="integral">The integral part of the number.</param>
+        /// <param name="fractional">The fractional part of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
+        /// <param name="keyword">The keyword being evaluated.</param>
+        /// <param name="context">The schema validation context.</param>
+        /// <returns><see langword="true"/> if the number is a valid Decimal; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool MatchDecimal(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
         {

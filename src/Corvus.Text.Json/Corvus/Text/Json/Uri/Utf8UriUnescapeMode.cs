@@ -3,6 +3,9 @@
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Specifies the URI unescaping mode options.
+    /// </summary>
     [Flags]
     internal enum Utf8UriUnescapeMode
     {

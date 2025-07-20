@@ -8,6 +8,9 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
+    /// <summary>
+    /// Code generator extensions for XML documentation generation.
+    /// </summary>
     internal static partial class CodeGeneratorExtensions
     {
         /// <summary>

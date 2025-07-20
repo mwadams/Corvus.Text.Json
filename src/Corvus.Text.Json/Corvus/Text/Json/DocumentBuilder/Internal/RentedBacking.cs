@@ -17,14 +17,26 @@ namespace Corvus.Text.Json.Internal
         : IDisposable
 #endif
     {
+        /// <summary>
+        /// Delegate for writing a value to a byte buffer.
+        /// </summary>
+        /// <typeparam name="T">The type of value to write.</typeparam>
+        /// <param name="value">The value to write.</param>
+        /// <param name="buffer">The buffer to write to.</param>
+        /// <param name="written">The number of bytes written.</param>
         public delegate void Writer<T>(T value, Span<byte> buffer, out int written);
 
         private byte[] _buffer;
         private int _length;
 
         /// <summary>
-        /// Initializes an instance of the rented backing.
+        /// Initializes the rented backing with a value using the provided writer delegate.
         /// </summary>
+        /// <typeparam name="T">The type of value to initialize with.</typeparam>
+        /// <param name="backing">The backing to initialize.</param>
+        /// <param name="minimumLength">The minimum length to rent from the array pool.</param>
+        /// <param name="value">The value to write.</param>
+        /// <param name="writer">The writer delegate to use for serialization.</param>
         public static void Initialize<T>(ref RentedBacking backing, int minimumLength, in T value, Writer<T> writer)
         {
             backing._buffer = ArrayPool<byte>.Shared.Rent(minimumLength);

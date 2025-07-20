@@ -20,30 +20,70 @@ using System.Threading;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Base class for JSON document implementations providing common functionality
+    /// for parsing and accessing JSON data.
+    /// </summary>
     public abstract partial class JsonDocument
     {
+        /// <summary>
+        /// Mask used for extracting hash values from stored metadata.
+        /// </summary>
         [CLSCompliant(false)]
         protected const ulong HashMask = 0xFFUL << 56;
+        /// <summary>
+        /// Length in bytes of hash values stored in metadata.
+        /// </summary>
         protected const int HashLength = 8;
 
+        /// <summary>
+        /// Backing array for the property map data.
+        /// </summary>
         [CLSCompliant(false)]
         protected byte[]? _propertyMapBacking;
+        /// <summary>
+        /// Backing array for the hash buckets used in property lookups.
+        /// </summary>
         [CLSCompliant(false)]
         protected int[]? _bucketsBacking;
+        /// <summary>
+        /// Backing array for the hash table entries used in property lookups.
+        /// </summary>
         [CLSCompliant(false)]
         protected byte[]? _entriesBacking;
+        /// <summary>
+        /// Backing array for storing dynamic values created during document manipulation.
+        /// </summary>
         [CLSCompliant(false)]
         protected byte[]? _valueBacking;
+        /// <summary>
+        /// Current offset into the property map backing array.
+        /// </summary>
         [CLSCompliant(false)]
         protected int _propertyMapOffset;
+        /// <summary>
+        /// Current offset into the buckets backing array.
+        /// </summary>
         [CLSCompliant(false)]
         protected int _bucketOffset;
+        /// <summary>
+        /// Current offset into the entries backing array.
+        /// </summary>
         [CLSCompliant(false)]
         protected int _entryOffset;
+        /// <summary>
+        /// Current offset into the value backing array.
+        /// </summary>
         [CLSCompliant(false)]
         protected int _valueOffset;
+        /// <summary>
+        /// The metadata database containing all parsed JSON structure information.
+        /// </summary>
         [CLSCompliant(false)]
         protected MetadataDb _parsedData;
+        /// <summary>
+        /// Indicates whether this document instance is immutable and cannot be modified.
+        /// </summary>
         [CLSCompliant(false)]
         protected bool _isImmutable;
 
@@ -57,7 +97,7 @@ namespace Corvus.Text.Json.Internal
         /// </summary>
         public bool IsImmutable
         {
-            get => _isImmutable;           
+            get => _isImmutable;
         }
 
         /// <summary>
@@ -82,10 +122,29 @@ namespace Corvus.Text.Json.Internal
             _isImmutable = true;
         }
 
+        /// <summary>
+        /// Gets the raw simple value as a memory span for the specified index.
+        /// </summary>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="includeQuotes">Whether to include quotes in the result.</param>
+        /// <returns>The raw value as a memory span.</returns>
         protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes);
 
+        /// <summary>
+        /// Gets the raw simple value as a memory span for the specified index using external metadata.
+        /// </summary>
+        /// <param name="parsedData">The parsed data metadata database.</param>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="includeQuotes">Whether to include quotes in the result.</param>
+        /// <returns>The raw value as a memory span.</returns>
         protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index, bool includeQuotes);
 
+        /// <summary>
+        /// Checks that the actual token type matches the expected token type, throwing an exception if not.
+        /// </summary>
+        /// <param name="expected">The expected token type.</param>
+        /// <param name="actual">The actual token type.</param>
+        /// <exception cref="JsonException">Thrown when the types don't match.</exception>
         protected static void CheckExpectedType(JsonTokenType expected, JsonTokenType actual)
         {
             if (expected != actual)
@@ -94,6 +153,12 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Gets the database size for the specified index, optionally including the end element.
+        /// </summary>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="includeEndElement">Whether to include the end element in the size calculation.</param>
+        /// <returns>The database size in bytes.</returns>
         protected virtual int GetDbSizeUnsafe(int index, bool includeEndElement)
         {
             DbRow row = _parsedData.Get(index);
@@ -111,8 +176,15 @@ namespace Corvus.Text.Json.Internal
             }
 
             return endIndex;
-        }        
+        }
 
+        /// <summary>
+        /// Compares the text at the specified index with the provided character span for equality.
+        /// </summary>
+        /// <param name="index">The index of the element to compare.</param>
+        /// <param name="otherText">The text to compare against.</param>
+        /// <param name="isPropertyName">Whether the element is a property name.</param>
+        /// <returns><see langword="true"/> if the texts are equal; otherwise, <see langword="false"/>.</returns>
         protected bool TextEqualsUnsafe(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
         {
             byte[]? otherUtf8TextArray = null;
@@ -144,6 +216,14 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Compares the text at the specified index with the provided UTF-8 byte span for equality.
+        /// </summary>
+        /// <param name="index">The index of the element to compare.</param>
+        /// <param name="otherUtf8Text">The UTF-8 encoded text to compare against.</param>
+        /// <param name="isPropertyName">Whether the element is a property name.</param>
+        /// <param name="shouldUnescape">Whether to unescape the text during comparison.</param>
+        /// <returns><see langword="true"/> if the texts are equal; otherwise, <see langword="false"/>.</returns>
         protected bool TextEqualsUnsafe(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
         {
             int matchIndex = isPropertyName ? index - DbRow.Size : index;
@@ -182,6 +262,13 @@ namespace Corvus.Text.Json.Internal
             return segment.SequenceEqual(otherUtf8Text);
         }
 
+        /// <summary>
+        /// Gets the index of the element at the specified array index within an array element.
+        /// </summary>
+        /// <param name="currentIndex">The index of the array element.</param>
+        /// <param name="arrayIndex">The index within the array to find.</param>
+        /// <returns>The index of the element at the specified array position.</returns>
+        /// <exception cref="IndexOutOfRangeException">Thrown when the array index is out of range.</exception>
         protected int GetArrayIndexElementUnsafe(int currentIndex, int arrayIndex)
         {
             DbRow row = _parsedData.Get(currentIndex);
@@ -228,6 +315,12 @@ namespace Corvus.Text.Json.Internal
             throw new IndexOutOfRangeException();
         }
 
+        /// <summary>
+        /// Determines whether the value at the specified index is escaped and requires unescaping.
+        /// </summary>
+        /// <param name="index">The index of the element to check.</param>
+        /// <param name="isPropertyName">Whether the element is a property name.</param>
+        /// <returns><see langword="true"/> if the value is escaped; otherwise, <see langword="false"/>.</returns>
         protected bool ValueIsEscapedUnsafe(int index, bool isPropertyName)
         {
             int matchIndex = isPropertyName ? index - DbRow.Size : index;
@@ -237,6 +330,11 @@ namespace Corvus.Text.Json.Internal
             return row.HasComplexChildren;
         }
 
+        /// <summary>
+        /// Enlarges a byte array to accommodate the specified minimum size, using array pool rental.
+        /// </summary>
+        /// <param name="v">The minimum size required.</param>
+        /// <param name="byteArray">The byte array to enlarge (passed by reference).</param>
         protected static void Enlarge(int v, [NotNull] ref byte[]? byteArray)
         {
             if (byteArray is null)
@@ -279,6 +377,11 @@ namespace Corvus.Text.Json.Internal
             ArrayPool<byte>.Shared.Return(toReturn);
         }
 
+        /// <summary>
+        /// Enlarges an integer array to accommodate the specified minimum size, using array pool rental.
+        /// </summary>
+        /// <param name="v">The minimum size required.</param>
+        /// <param name="intArray">The integer array to enlarge (passed by reference).</param>
         protected void Enlarge(int v, ref int[] intArray)
         {
             int[] toReturn = intArray;
@@ -310,6 +413,11 @@ namespace Corvus.Text.Json.Internal
             ArrayPool<int>.Shared.Return(toReturn);
         }
 
+        /// <summary>
+        /// Stores a boolean value in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The boolean value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreBooleanValue(bool value)
         {
             ref int valueIndex = ref _falseIndex;
@@ -343,6 +451,10 @@ namespace Corvus.Text.Json.Internal
             return valueIndex;
         }
 
+        /// <summary>
+        /// Stores a null value in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <returns>The offset of the stored null value in the value buffer.</returns>
         protected int StoreNullValue()
         {
             if (_nullIndex >= 0)
@@ -368,6 +480,11 @@ namespace Corvus.Text.Json.Internal
             return _nullIndex;
         }
 
+        /// <summary>
+        /// Stores a GUID value as a quoted string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The GUID value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(Guid value)
         {
             int offset = _valueOffset;
@@ -398,6 +515,11 @@ namespace Corvus.Text.Json.Internal
 
         }
 
+        /// <summary>
+        /// Stores a DateTime value as a quoted ISO 8601 string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The DateTime value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in DateTime value)
         {
             int offset = _valueOffset;
@@ -427,6 +549,11 @@ namespace Corvus.Text.Json.Internal
 
         }
 
+        /// <summary>
+        /// Stores a DateTimeOffset value as a quoted ISO 8601 string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The DateTimeOffset value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in DateTimeOffset value)
         {
             int offset = _valueOffset;
@@ -456,6 +583,11 @@ namespace Corvus.Text.Json.Internal
 
         }
 
+        /// <summary>
+        /// Stores an OffsetDateTime value as a quoted ISO 8601 string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The OffsetDateTime value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in OffsetDateTime value)
         {
             int offset = _valueOffset;
@@ -486,6 +618,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores an OffsetDate value as a quoted ISO 8601 date string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The OffsetDate value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in OffsetDate value)
         {
             int offset = _valueOffset;
@@ -516,6 +653,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores an OffsetTime value as a quoted ISO 8601 time string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The OffsetTime value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in OffsetTime value)
         {
             int offset = _valueOffset;
@@ -546,6 +688,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a LocalDate value as a quoted ISO 8601 date string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The LocalDate value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in LocalDate value)
         {
             int offset = _valueOffset;
@@ -576,6 +723,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a Period value as a quoted string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The Period value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in Period value)
         {
             int offset = _valueOffset;
@@ -606,6 +758,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a signed byte value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The signed byte value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         [CLSCompliant(false)]
         protected int StoreValue(sbyte value)
         {
@@ -630,6 +787,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a byte value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The byte value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(byte value)
         {
             int offset = _valueOffset;
@@ -653,6 +815,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores an integer value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The integer value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(int value)
         {
             int offset = _valueOffset;
@@ -676,6 +843,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores an unsigned integer value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The unsigned integer value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         [CLSCompliant(false)]
         protected int StoreValue(uint value)
         {
@@ -700,6 +872,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a long integer value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The long value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(long value)
         {
             int offset = _valueOffset;
@@ -723,6 +900,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores an unsigned long integer value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The unsigned long value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         [CLSCompliant(false)]
         protected int StoreValue(ulong value)
         {
@@ -747,6 +929,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a short integer value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The short value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(short value)
         {
             int offset = _valueOffset;
@@ -770,6 +957,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores an unsigned short integer value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The unsigned short value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         [CLSCompliant(false)]
         protected int StoreValue(ushort value)
         {
@@ -794,6 +986,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a single precision float value as a quoted string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The float value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(float value)
         {
             int offset = _valueOffset;
@@ -817,6 +1014,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a double value as a quoted string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The double value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(double value)
         {
             int offset = _valueOffset;
@@ -840,6 +1042,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a decimal value as a quoted string in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The decimal value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(decimal value)
         {
             int offset = _valueOffset;
@@ -863,6 +1070,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a BigInteger value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The BigInteger value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in BigInteger value)
         {
             int offset = _valueOffset;
@@ -902,6 +1114,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a BigNumber value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The BigNumber value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(in BigNumber value)
         {
             int offset = _valueOffset;
@@ -941,6 +1158,11 @@ namespace Corvus.Text.Json.Internal
         }
 
 #if NET
+        /// <summary>
+        /// Stores a 128-bit signed integer value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The Int128 value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(Int128 value)
         {
             int offset = _valueOffset;
@@ -960,6 +1182,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a 128-bit unsigned integer value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The UInt128 value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         [CLSCompliant(false)]
         protected int StoreValue(UInt128 value)
         {
@@ -980,6 +1207,11 @@ namespace Corvus.Text.Json.Internal
             return result;
         }
 
+        /// <summary>
+        /// Stores a half-precision floating point value as a number in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="value">The Half value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreValue(Half value)
         {
             int offset = _valueOffset;
@@ -1000,6 +1232,12 @@ namespace Corvus.Text.Json.Internal
         }
 #endif
 
+        /// <summary>
+        /// Unescapes an escaped string value and stores the unescaped result in the dynamic value buffer.
+        /// </summary>
+        /// <param name="escapedPropertyName">The escaped string to unescape and store.</param>
+        /// <param name="dynamicValueOffset">The offset of the stored unescaped value in the value buffer.</param>
+        /// <returns>A span containing the unescaped string data.</returns>
         protected ReadOnlySpan<byte> UnescapeAndStoreUnescapedStringValue(ReadOnlySpan<byte> escapedPropertyName, out int dynamicValueOffset)
         {
             int index = escapedPropertyName.IndexOf(JsonConstants.BackSlash);
@@ -1035,6 +1273,13 @@ namespace Corvus.Text.Json.Internal
             return _valueBacking.AsSpan(valueOffset, length);
         }
 
+        /// <summary>
+        /// Escapes and stores a UTF-8 string value in the dynamic value buffer, returning its offset and whether escaping was required.
+        /// </summary>
+        /// <param name="utf8Value">The UTF-8 string value to escape and store.</param>
+        /// <param name="requiredEscaping">Indicates whether the string required escaping.</param>
+        /// <param name="encoder">The optional JavaScript encoder to use for escaping.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> utf8Value, out bool requiredEscaping, JavaScriptEncoder? encoder)
         {
             int offset = _valueOffset;
@@ -1090,6 +1335,13 @@ namespace Corvus.Text.Json.Internal
             return offset;
         }
 
+        /// <summary>
+        /// Escapes and stores a character string value in the dynamic value buffer, returning its offset and whether escaping was required.
+        /// </summary>
+        /// <param name="value">The character string value to escape and store.</param>
+        /// <param name="requiredEscaping">Indicates whether the string required escaping.</param>
+        /// <param name="encoder">The optional JavaScript encoder to use for escaping.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, out bool requiredEscaping, JavaScriptEncoder? encoder)
         {
             int offset = _valueOffset;
@@ -1151,6 +1403,11 @@ namespace Corvus.Text.Json.Internal
             return offset;
         }
 
+        /// <summary>
+        /// Stores a raw escaped string value in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="escapedString">The already-escaped string to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreRawStringValue(ReadOnlySpan<byte> escapedString)
         {
             int offset = _valueOffset;
@@ -1182,6 +1439,11 @@ namespace Corvus.Text.Json.Internal
             return offset;
         }
 
+        /// <summary>
+        /// Stores a raw unescaped number value in the dynamic value buffer and returns its offset.
+        /// </summary>
+        /// <param name="unescapedNumberValue">The unescaped number value to store.</param>
+        /// <returns>The offset of the stored value in the value buffer.</returns>
         protected int StoreRawNumberValue(ReadOnlySpan<byte> unescapedNumberValue)
         {
             JsonWriterHelper.ValidateNumber(unescapedNumberValue);
@@ -1211,6 +1473,11 @@ namespace Corvus.Text.Json.Internal
             return offset;
         }
 
+        /// <summary>
+        /// Reads an unescaped UTF-8 string from the dynamic value buffer at the specified offset.
+        /// </summary>
+        /// <param name="offset">The offset in the value buffer where the string is stored.</param>
+        /// <returns>A memory span containing the unescaped UTF-8 string data.</returns>
         protected ReadOnlyMemory<byte> ReadDynamicUnescapedUtf8String(int offset)
         {
             // The first 4 bytes are the type and length
@@ -1223,6 +1490,12 @@ namespace Corvus.Text.Json.Internal
             return _valueBacking.AsMemory(offset + 4, (int)length);
         }
 
+        /// <summary>
+        /// Reads a simple dynamic value (string, number, boolean, or null) from the dynamic value buffer at the specified offset.
+        /// </summary>
+        /// <param name="offset">The offset in the value buffer where the value is stored.</param>
+        /// <param name="includeQuotes">Whether to include quotes in the result for string values.</param>
+        /// <returns>A memory span containing the dynamic value data.</returns>
         protected ReadOnlyMemory<byte> ReadRawSimpleDynamicValue(int offset, bool includeQuotes)
         {
             // The first 4 bytes are the type and length
@@ -1248,6 +1521,13 @@ namespace Corvus.Text.Json.Internal
             return _valueBacking.AsMemory(start, (int)length);
         }
 
+        /// <summary>
+        /// Attempts to get the index of a named property value within a JSON object using a character span property name.
+        /// </summary>
+        /// <param name="index">The index of the JSON object.</param>
+        /// <param name="propertyName">The name of the property to find.</param>
+        /// <param name="valueIndex">The index of the property value if found.</param>
+        /// <returns><see langword="true"/> if the property is found; otherwise, <see langword="false"/>.</returns>
         protected bool TryGetNamedPropertyValueIndexUnsafe(int index, ReadOnlySpan<char> propertyName, out int valueIndex)
         {
             DbRow row = _parsedData.Get(index);
@@ -1290,6 +1570,13 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Attempts to get the index of a named property value within a JSON object using a UTF-8 byte span property name.
+        /// </summary>
+        /// <param name="startIndex">The starting index of the JSON object.</param>
+        /// <param name="propertyName">The UTF-8 encoded name of the property to find.</param>
+        /// <param name="valueIndex">The index of the property value if found.</param>
+        /// <returns><see langword="true"/> if the property is found; otherwise, <see langword="false"/>.</returns>
         protected bool TryGetNamedPropertyValueIndexUnsafe(
             int startIndex,
             ReadOnlySpan<byte> propertyName,
@@ -1413,6 +1700,9 @@ namespace Corvus.Text.Json.Internal
             return false;
         }
 
+        /// <summary>
+        /// Disposes of the core resources used by the JSON document, including returning rented arrays to their pools.
+        /// </summary>
         protected void DisposeCore()
         {
             _parsedData.Dispose();
@@ -1460,6 +1750,11 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Gets the hash code for the JSON element at the specified index using an unsafe method that doesn't validate input.
+        /// </summary>
+        /// <param name="index">The index of the element to get the hash code for.</param>
+        /// <returns>The hash code of the element.</returns>
         protected int GetHashCodeUnsafe(int index)
         {
             return _parsedData.GetJsonTokenType(index) switch

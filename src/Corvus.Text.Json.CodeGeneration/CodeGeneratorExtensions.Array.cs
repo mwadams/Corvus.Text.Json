@@ -5,6 +5,9 @@ using Corvus.Json.CodeGeneration;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
+    /// <summary>
+    /// Code generator extensions for array-related functionality.
+    /// </summary>
     internal static partial class CodeGeneratorExtensions
     {
         /// <summary>

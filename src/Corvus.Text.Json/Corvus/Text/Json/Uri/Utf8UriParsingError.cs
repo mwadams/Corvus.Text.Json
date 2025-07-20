@@ -3,6 +3,9 @@
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Defines the types of errors that can occur during UTF-8 URI parsing.
+    /// </summary>
     internal enum Utf8UriParsingError
     {
         // looks good

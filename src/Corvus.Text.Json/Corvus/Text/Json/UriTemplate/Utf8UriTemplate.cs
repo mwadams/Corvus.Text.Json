@@ -3,8 +3,16 @@
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides validation functionality for URI Templates as defined in RFC 6570.
+    /// </summary>
     internal static class Utf8UriTemplate
     {
+        /// <summary>
+        /// Validates whether the specified byte span represents a valid URI template.
+        /// </summary>
+        /// <param name="uriTemplate">The URI template to validate.</param>
+        /// <returns><see langword="true"/> if the URI template is valid; otherwise, <see langword="false"/>.</returns>
         public static bool Validate(ReadOnlySpan<byte> uriTemplate)
         {
             int start = 0;
@@ -34,7 +42,7 @@ namespace Corvus.Text.Json.Internal
                 {
                     return true; // No opening brace found, so that's that.
                 }
-               
+
                 start++; // Move past the '{' character
 
                 if (start >= templateLength)
@@ -60,6 +68,18 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates a variable specification within a URI template.
+        /// </summary>
+        /// <param name="span">The byte span containing the variable specification to validate.</param>
+        /// <returns><see langword="true"/> if the variable specification is valid; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>
+        /// Validates variable specifications according to RFC 6570, including:
+        /// - Optional operators (+, #, ., /, ;, ?, &, =, ,, !, @, |)
+        /// - Variable names with optional dot-separated segments
+        /// - Modifiers (: for prefix, * for explode)
+        /// - Multiple variables separated by commas
+        /// </remarks>
         private static bool ValidateVariableSpecification(ReadOnlySpan<byte> span)
         {
             int i = 0;

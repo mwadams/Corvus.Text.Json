@@ -10,6 +10,9 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
+    /// <summary>
+    /// Code generator extensions for operator overloading functionality.
+    /// </summary>
     internal static partial class CodeGeneratorExtensions
     {
         /// <summary>

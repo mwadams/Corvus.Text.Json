@@ -13,10 +13,26 @@ namespace Corvus.Text.Json.Internal
 #endif
 {
     /// <summary>
-    /// Extension methods for <see cref="IJsonElement"/>.
+    /// Core helper methods for parsing and processing JSON numeric values into their component parts.
     /// </summary>
     public static partial class JsonElementHelpers
     {
+        /// <summary>
+        /// Parses a JSON number into its component parts using normal-form decimal representation.
+        /// </summary>
+        /// <param name="span">The UTF-8 encoded span containing the JSON number to parse.</param>
+        /// <param name="isNegative">When this method returns, indicates whether the number is negative.</param>
+        /// <param name="integral">When this method returns, contains the integral part of the number without leading zeros.</param>
+        /// <param name="fractional">When this method returns, contains the fractional part of the number without trailing zeros.</param>
+        /// <param name="exponent">When this method returns, contains the exponent value for scientific notation.</param>
+        /// <remarks>
+        /// The returned components use a normal-form decimal representation:
+        /// Number := sign * &lt;integral + fractional&gt; * 10^exponent
+        /// where integral and fractional are sequences of digits whose concatenation
+        /// represents the significand of the number without leading or trailing zeros.
+        /// Two such normal-form numbers are treated as equal if and only if they have
+        /// equal signs, significands, and exponents.
+        /// </remarks>
         public static void ParseNumber(
            ReadOnlySpan<byte> span,
            out bool isNegative,

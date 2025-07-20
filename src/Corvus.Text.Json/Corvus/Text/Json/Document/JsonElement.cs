@@ -71,16 +71,33 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Compares two JsonElement values for equality.
+        /// </summary>
+        /// <param name="left">The first JsonElement to compare.</param>
+        /// <param name="right">The second JsonElement to compare.</param>
+        /// <returns><see langword="true"/> if the JsonElement values are equal; otherwise, <see langword="false"/>.</returns>
         public static bool operator ==(JsonElement left, JsonElement right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>
+        /// Compares two JsonElement values for inequality.
+        /// </summary>
+        /// <param name="left">The first JsonElement to compare.</param>
+        /// <param name="right">The second JsonElement to compare.</param>
+        /// <returns><see langword="true"/> if the JsonElement values are not equal; otherwise, <see langword="false"/>.</returns>
         public static bool operator !=(JsonElement left, JsonElement right)
         {
             return !left.Equals(right);
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current JsonElement.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current JsonElement.</param>
+        /// <returns><see langword="true"/> if the specified object is equal to the current JsonElement; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object? obj)
         {
@@ -88,6 +105,12 @@ namespace Corvus.Text.Json
                 || (obj is null && this.IsNull());
         }
 
+        /// <summary>
+        /// Determines whether the current JsonElement is equal to another JsonElement-like value through deep comparison.
+        /// </summary>
+        /// <typeparam name="T">The type of the other JSON element that implements IJsonElement.</typeparam>
+        /// <param name="other">The JSON element to compare with this JsonElement.</param>
+        /// <returns><see langword="true"/> if the current JsonElement is equal to the other parameter; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals<T>(T other)
@@ -96,6 +119,11 @@ namespace Corvus.Text.Json
             return JsonElementHelpers.DeepEquals(this, other);
         }
 
+        /// <summary>
+        /// Creates a mutable document builder from this JsonElement using the specified workspace.
+        /// </summary>
+        /// <param name="workspace">The JsonWorkspace to use for creating the document builder.</param>
+        /// <returns>A JsonDocumentBuilder configured for mutable operations on this JsonElement.</returns>
         [CLSCompliant(false)]
         public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
         {

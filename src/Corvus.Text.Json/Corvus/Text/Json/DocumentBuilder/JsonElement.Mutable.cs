@@ -14,6 +14,13 @@ namespace Corvus.Text.Json
 {
     public readonly partial struct JsonElement
     {
+        /// <summary>
+        /// Represents a source for creating mutable JSON elements from various value types.
+        /// </summary>
+        /// <remarks>
+        /// This ref struct provides implicit conversions from various types to create JSON element sources,
+        /// enabling flexible construction of mutable JSON documents.
+        /// </remarks>
         public readonly ref struct Source
         {
             private enum Kind
@@ -43,14 +50,6 @@ namespace Corvus.Text.Json
             private readonly SimpleTypesBacking _simpleTypeBacking;
             private readonly ReadOnlySpan<byte> _utf8Backing;
             private readonly ReadOnlySpan<char> _utf16Backing;
-
-            // Add additional backing fields for composed object/array builders
-            // We have two here for object builder and array builder
-            // Because we could be either
-
-            // NEXT TIME: build a JsonArrayBuilder<T> and a JsonObjectBuilder<T> where we have distinct
-            // value types
-
             private readonly JsonArrayBuilder.Build? _arrayBuilder;
             private readonly JsonObjectBuilder.Build? _objectBuilder;
 
@@ -159,7 +158,7 @@ namespace Corvus.Text.Json
             }
 
             private Source(DateTimeOffset value)
-            {                
+            {
                 //                                                                We inject the actual formatting code from the formatter infrastructure
                 //                                                                                                                     |
                 //                                                                                              /---------------------------------------------\
@@ -238,23 +237,31 @@ namespace Corvus.Text.Json
             }
 #endif
 
-            // If the core types offer Array, we provide this constructor
-            // (It will be a JsonArrayBuilder<T> if the array has a strong single type)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Source"/> struct from a JSON array builder.
+            /// </summary>
+            /// <param name="value">The array builder delegate to use as the source.</param>
             public Source(JsonArrayBuilder.Build value)
             {
                 _arrayBuilder = value;
                 _kind = Kind.JsonArrayBuilderInstance;
             }
 
-            // If the core types offer Object, we provide this constructor
-            // (It will be a JsonObjectBuilder<T> if the object has a strong single property type i.e. it is a map of string to SomeType)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Source"/> struct from a JSON object builder.
+            /// </summary>
+            /// <param name="value">The object builder delegate to use as the source.</param>
             public Source(JsonObjectBuilder.Build value)
             {
                 _objectBuilder = value;
                 _kind = Kind.JsonObjectBuilderInstance;
             }
 
-            // One conversion for each IJsonElement type
+            /// <summary>
+            /// Implicitly converts a <see cref="JsonElement"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The JSON element to convert.</param>
+            /// <returns>A source representing the JSON element.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(in JsonElement value)
             {
@@ -263,72 +270,136 @@ namespace Corvus.Text.Json
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a UTF-8 byte span to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The UTF-8 byte span to convert.</param>
+            /// <returns>A source representing the UTF-8 string.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(ReadOnlySpan<byte> value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a UTF-16 character span to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The UTF-16 character span to convert.</param>
+            /// <returns>A source representing the UTF-16 string.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(ReadOnlySpan<char> value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a string to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The string to convert.</param>
+            /// <returns>A source representing the string.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(string value)
             {
                 return new(value.AsSpan());
             }
 
+            /// <summary>
+            /// Implicitly converts a <see cref="DateTimeOffset"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The DateTimeOffset value to convert.</param>
+            /// <returns>A source representing the DateTimeOffset value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(DateTimeOffset value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a <see cref="DateTime"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The DateTime value to convert.</param>
+            /// <returns>A source representing the DateTime value.</returns>
             public static implicit operator Source(DateTime value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts an <see cref="OffsetDateTime"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The OffsetDateTime value to convert.</param>
+            /// <returns>A source representing the OffsetDateTime value.</returns>
             public static implicit operator Source(OffsetDateTime value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts an <see cref="OffsetDate"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The OffsetDate value to convert.</param>
+            /// <returns>A source representing the OffsetDate value.</returns>
             public static implicit operator Source(OffsetDate value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts an <see cref="OffsetTime"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The OffsetTime value to convert.</param>
+            /// <returns>A source representing the OffsetTime value.</returns>
             public static implicit operator Source(OffsetTime value)
             {
                 return new(value);
             }
 
 
+            /// <summary>
+            /// Implicitly converts a <see cref="LocalDate"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The LocalDate value to convert.</param>
+            /// <returns>A source representing the LocalDate value.</returns>
             public static implicit operator Source(LocalDate value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a <see cref="Period"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The Period value to convert.</param>
+            /// <returns>A source representing the Period value.</returns>
             public static implicit operator Source(Period value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a <see cref="Guid"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The Guid value to convert.</param>
+            /// <returns>A source representing the Guid value.</returns>
             public static implicit operator Source(Guid value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a <see cref="Uri"/> to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The Uri value to convert.</param>
+            /// <returns>A source representing the Uri value.</returns>
             public static implicit operator Source(Uri value)
             {
                 return new(value);
             }
 
             // If the CoreTypes offer nullable, we add this method
+            /// <summary>
+            /// Creates a <see cref="Source"/> representing a null value.
+            /// </summary>
+            /// <returns>A source representing a null JSON value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Source Null()
             {
@@ -336,6 +407,12 @@ namespace Corvus.Text.Json
             }
 
             // If the CoreTypes offer string, we add this method
+            /// <summary>
+            /// Creates a <see cref="Source"/> from a raw UTF-8 string.
+            /// </summary>
+            /// <param name="value">The raw UTF-8 string bytes.</param>
+            /// <param name="requiresUnescaping">Whether the string requires unescaping.</param>
+            /// <returns>A source representing the raw UTF-8 string.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
             {
@@ -343,36 +420,67 @@ namespace Corvus.Text.Json
             }
 
             // If the CoreTypes offer number, we add this method
+            /// <summary>
+            /// Creates a <see cref="Source"/> from a formatted number value.
+            /// </summary>
+            /// <param name="value">The raw UTF-8 bytes representing the formatted number.</param>
+            /// <returns>A source representing the formatted number.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Source FormattedNumber(ReadOnlySpan<byte> value)
             {
                 return new(value, Kind.FormattedNumber);
             }
 
+            /// <summary>
+            /// Implicitly converts a boolean value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The boolean value to convert.</param>
+            /// <returns>A source representing the boolean value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(bool value)
             {
                 return new(value ? Kind.True : Kind.False);
             }
 
+            /// <summary>
+            /// Implicitly converts a long value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The long value to convert.</param>
+            /// <returns>A source representing the long value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(long value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts an integer value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The integer value to convert.</param>
+            /// <returns>A source representing the integer value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(int value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a short value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The short value to convert.</param>
+            /// <returns>A source representing the short value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(short value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a signed byte value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The signed byte value to convert.</param>
+            /// <returns>A source representing the signed byte value.</returns>
+            /// <remarks>This method is not CLS compliant.</remarks>
             [CLSCompliant(false)]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(sbyte value)
@@ -380,6 +488,12 @@ namespace Corvus.Text.Json
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts an unsigned long value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The unsigned long value to convert.</param>
+            /// <returns>A source representing the unsigned long value.</returns>
+            /// <remarks>This method is not CLS compliant.</remarks>
             [CLSCompliant(false)]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(ulong value)
@@ -387,6 +501,12 @@ namespace Corvus.Text.Json
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts an unsigned integer value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The unsigned integer value to convert.</param>
+            /// <returns>A source representing the unsigned integer value.</returns>
+            /// <remarks>This method is not CLS compliant.</remarks>
             [CLSCompliant(false)]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(uint value)
@@ -394,6 +514,12 @@ namespace Corvus.Text.Json
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts an unsigned short value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The unsigned short value to convert.</param>
+            /// <returns>A source representing the unsigned short value.</returns>
+            /// <remarks>This method is not CLS compliant.</remarks>
             [CLSCompliant(false)]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(ushort value)
@@ -401,24 +527,44 @@ namespace Corvus.Text.Json
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a byte value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The byte value to convert.</param>
+            /// <returns>A source representing the byte value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(byte value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a decimal value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The decimal value to convert.</param>
+            /// <returns>A source representing the decimal value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(decimal value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a double value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The double value to convert.</param>
+            /// <returns>A source representing the double value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(double value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a float value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The float value to convert.</param>
+            /// <returns>A source representing the float value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator Source(float value)
             {
@@ -426,22 +572,45 @@ namespace Corvus.Text.Json
             }
 
 #if NET
+            /// <summary>
+            /// Implicitly converts an Int128 value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The Int128 value to convert.</param>
+            /// <returns>A source representing the Int128 value.</returns>
             public static implicit operator Source(Int128 value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a UInt128 value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The UInt128 value to convert.</param>
+            /// <returns>A source representing the UInt128 value.</returns>
+            /// <remarks>This method is not CLS compliant.</remarks>
             [CLSCompliant(false)]
             public static implicit operator Source(UInt128 value)
             {
                 return new(value);
             }
 
+            /// <summary>
+            /// Implicitly converts a Half value to a <see cref="Source"/>.
+            /// </summary>
+            /// <param name="value">The Half value to convert.</param>
+            /// <returns>A source representing the Half value.</returns>
             public static implicit operator Source(Half value)
             {
                 return new(value);
             }
 #endif
+            /// <summary>
+            /// Adds this source as a property to a complex value builder.
+            /// </summary>
+            /// <param name="utf8Name">The UTF-8 encoded property name.</param>
+            /// <param name="valueBuilder">The complex value builder to add the property to.</param>
+            /// <param name="escapeName">Whether to escape the property name.</param>
+            /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
             public void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
             {
                 switch (_kind)
@@ -491,11 +660,21 @@ namespace Corvus.Text.Json
                 }
             }
 
+            /// <summary>
+            /// Adds this source as a property to a complex value builder.
+            /// </summary>
+            /// <param name="name">The property name.</param>
+            /// <param name="valueBuilder">The complex value builder to add the property to.</param>
             public void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
             {
                 AddAsProperty(name.AsSpan(), ref valueBuilder);
             }
 
+            /// <summary>
+            /// Adds this source as a property to a complex value builder.
+            /// </summary>
+            /// <param name="name">The property name as a character span.</param>
+            /// <param name="valueBuilder">The complex value builder to add the property to.</param>
             public void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
             {
                 switch (_kind)
@@ -545,6 +724,10 @@ namespace Corvus.Text.Json
                 }
             }
 
+            /// <summary>
+            /// Adds this source as an item to a complex value builder.
+            /// </summary>
+            /// <param name="valueBuilder">The complex value builder to add the item to.</param>
             public void AddAsItem(ref ComplexValueBuilder valueBuilder)
             {
                 switch (_kind)
@@ -595,6 +778,14 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Creates a JSON document builder from a source value.
+        /// </summary>
+        /// <param name="workspace">The JSON workspace to use for the document builder.</param>
+        /// <param name="source">The source value to build the document from.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
+        /// <returns>A JSON document builder containing the source value.</returns>
+        /// <remarks>This method is not CLS compliant.</remarks>
         [CLSCompliant(false)]
         public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int estimatedMemberCount = 30)
         {
@@ -670,11 +861,24 @@ namespace Corvus.Text.Json
                 }
             }
 
+            /// <summary>
+            /// Implicitly converts a <see cref="Mutable"/> to a <see cref="JsonElement"/>.
+            /// </summary>
+            /// <param name="value">The mutable JSON element to convert.</param>
+            /// <returns>A <see cref="JsonElement"/> representing the same JSON value.</returns>
             public static implicit operator JsonElement(Mutable value)
             {
                 return new(value._parent, value._idx);
             }
 
+            /// <summary>
+            /// Explicitly converts a <see cref="JsonElement"/> to a <see cref="Mutable"/>.
+            /// </summary>
+            /// <param name="value">The JSON element to convert.</param>
+            /// <returns>A <see cref="Mutable"/> representing the same JSON value.</returns>
+            /// <exception cref="FormatException">
+            /// The JSON element is not from a mutable JSON document.
+            /// </exception>
             public static explicit operator Mutable(JsonElement value)
             {
                 if (value._parent is not IMutableJsonDocument)
@@ -687,26 +891,55 @@ namespace Corvus.Text.Json
                 return new(value._parent, value._idx);
             }
 
+            /// <summary>
+            /// Determines whether two <see cref="Mutable"/> instances are equal.
+            /// </summary>
+            /// <param name="left">The first mutable JSON element to compare.</param>
+            /// <param name="right">The second mutable JSON element to compare.</param>
+            /// <returns>True if the instances are equal; otherwise, false.</returns>
             public static bool operator ==(Mutable left, Mutable right)
             {
                 return left.Equals(right);
             }
 
+            /// <summary>
+            /// Determines whether two <see cref="Mutable"/> instances are not equal.
+            /// </summary>
+            /// <param name="left">The first mutable JSON element to compare.</param>
+            /// <param name="right">The second mutable JSON element to compare.</param>
+            /// <returns>True if the instances are not equal; otherwise, false.</returns>
             public static bool operator !=(Mutable left, Mutable right)
             {
                 return !left.Equals(right);
             }
 
+            /// <summary>
+            /// Determines whether a <see cref="Mutable"/> and a <see cref="JsonElement"/> are equal.
+            /// </summary>
+            /// <param name="left">The mutable JSON element to compare.</param>
+            /// <param name="right">The JSON element to compare.</param>
+            /// <returns>True if the instances are equal; otherwise, false.</returns>
             public static bool operator ==(Mutable left, JsonElement right)
             {
                 return left.Equals(right);
             }
 
+            /// <summary>
+            /// Determines whether a <see cref="Mutable"/> and a <see cref="JsonElement"/> are not equal.
+            /// </summary>
+            /// <param name="left">The mutable JSON element to compare.</param>
+            /// <param name="right">The JSON element to compare.</param>
+            /// <returns>True if the instances are not equal; otherwise, false.</returns>
             public static bool operator !=(Mutable left, JsonElement right)
             {
                 return !left.Equals(right);
             }
 
+            /// <summary>
+            /// Determines whether this JSON element is equal to the specified object.
+            /// </summary>
+            /// <param name="obj">The object to compare with this JSON element.</param>
+            /// <returns>True if the object is equal to this JSON element; otherwise, false.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override readonly bool Equals(object? obj)
             {
@@ -714,6 +947,13 @@ namespace Corvus.Text.Json
                     || (obj is null && this.IsNull());
             }
 
+            /// <summary>
+            /// Determines whether this JSON element is equal to another JSON element of type T.
+            /// </summary>
+            /// <typeparam name="T">The type of JSON element to compare with.</typeparam>
+            /// <param name="other">The JSON element to compare with this instance.</param>
+            /// <returns>True if the JSON elements are equal; otherwise, false.</returns>
+            /// <remarks>This method is not CLS compliant.</remarks>
             [CLSCompliant(false)]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly bool Equals<T>(T other)
@@ -722,22 +962,30 @@ namespace Corvus.Text.Json
                 return JsonElementHelpers.DeepEquals(this, other);
             }
 
+            /// <summary>
+            /// Creates a JSON document builder from this mutable JSON element.
+            /// </summary>
+            /// <param name="workspace">The JSON workspace to use for the document builder.</param>
+            /// <returns>A JSON document builder containing this mutable JSON element.</returns>
+            /// <remarks>This method is not CLS compliant.</remarks>
             [CLSCompliant(false)]
             public readonly JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
             {
                 return workspace.CreateDocumentBuilder<Mutable, Mutable>(this);
             }
 
+            /// <summary>
+            /// Creates a mutable JSON element from another mutable JSON element instance.
+            /// </summary>
+            /// <typeparam name="T">The type of the source mutable JSON element.</typeparam>
+            /// <param name="instance">The source mutable JSON element instance.</param>
+            /// <returns>A new mutable JSON element representing the same JSON value.</returns>
+            /// <remarks>This method is not CLS compliant.</remarks>
             [CLSCompliant(false)]
             public static Mutable From<T>(in T instance)
                 where T : struct, IMutableJsonElement<T>
             {
                 return new(instance.ParentDocument, instance.ParentDocumentIndex);
-            }
-
-            internal static bool IsValid(IJsonDocument parentDocument, int parentIndex)
-            {
-                return IsValid(parentDocument, parentIndex);
             }
 
             /// <summary>
@@ -1053,6 +1301,16 @@ namespace Corvus.Text.Json
                 return _parent.GetString(_idx, JsonTokenType.String);
             }
 
+            /// <summary>
+            /// Gets the value of the element as an unescaped UTF-8 JSON string.
+            /// </summary>
+            /// <returns>The value of the element as an unescaped UTF-8 JSON string.</returns>
+            /// <exception cref="InvalidOperationException">
+            /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+            /// </exception>
+            /// <exception cref="ObjectDisposedException">
+            /// The parent <see cref="JsonDocument"/> has been disposed.
+            /// </exception>
             public readonly UnescapedUtf8JsonString GetUtf8String()
             {
                 CheckValidInstance();
@@ -4656,6 +4914,11 @@ namespace Corvus.Text.Json
             static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
+            /// <summary>
+            /// Evaluates the schema against this JSON element.
+            /// </summary>
+            /// <param name="resultsCollector">The optional results collector for schema validation.</param>
+            /// <returns>True if the schema evaluation passes; otherwise, false.</returns>
             public readonly bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null) => JsonSchema.Evaluate(_parent, _idx, resultsCollector);
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]

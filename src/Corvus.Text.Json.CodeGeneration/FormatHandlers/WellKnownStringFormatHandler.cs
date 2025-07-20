@@ -119,7 +119,14 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
         }
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Appends format-specific source conversion operators to the generator.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the conversion operators.</param>
+    /// <param name="typeDeclaration">The type declaration for which to append conversion operators.</param>
+    /// <param name="format">The format for which to append conversion operators.</param>
+    /// <param name="seenConversionOperators">The set of conversion operators that have already been generated.</param>
+    /// <returns><see langword="true"/> if the instance handled this format.</returns>
     public bool AppendFormatSourceConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
     {
         switch (format)
@@ -819,6 +826,12 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
         };
     }
 
+    /// <summary>
+    /// Determines whether the specified format requires simple types backing.
+    /// </summary>
+    /// <param name="format">The format to check.</param>
+    /// <param name="requiresSimpleType">When this method returns, contains <see langword="true"/> if the format requires simple types backing; otherwise, <see langword="false"/>.</param>
+    /// <returns><see langword="true"/> if this handler supports the specified format; otherwise, <see langword="false"/>.</returns>
     public bool RequiresSimpleTypesBacking(string format, out bool requiresSimpleType)
     {
         switch (format)

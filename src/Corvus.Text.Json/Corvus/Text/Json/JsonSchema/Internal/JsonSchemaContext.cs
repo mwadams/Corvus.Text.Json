@@ -166,15 +166,15 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>
-        /// Begin a context
+        /// Begins a new JSON schema evaluation context for the specified document.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parentDocument"></param>
-        /// <param name="parentDocumentIndex"></param>
-        /// <param name="usingEvaluatedItems"></param>
-        /// <param name="usingEvaluatedProperties"></param>
-        /// <param name="resultsCollector"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the JSON document.</typeparam>
+        /// <param name="parentDocument">The parent JSON document to evaluate.</param>
+        /// <param name="parentDocumentIndex">The index within the parent document.</param>
+        /// <param name="usingEvaluatedItems">A value indicating whether to track evaluated items.</param>
+        /// <param name="usingEvaluatedProperties">A value indicating whether to track evaluated properties.</param>
+        /// <param name="resultsCollector">An optional results collector for gathering evaluation results.</param>
+        /// <returns>A new <see cref="JsonSchemaContext"/> for the evaluation.</returns>
         public static JsonSchemaContext BeginContext<T>(
             T parentDocument,
             int parentDocumentIndex,
@@ -316,6 +316,10 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Records the evaluation of a boolean schema.
+        /// </summary>
+        /// <param name="isMatch">A value indicating whether the boolean schema matched.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EvaluatedBooleanSchema(bool isMatch)
         {
@@ -326,6 +330,12 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Records the evaluation of a schema keyword.
+        /// </summary>
+        /// <param name="isMatch">A value indicating whether the keyword evaluation matched.</param>
+        /// <param name="messageProvider">An optional message provider for generating evaluation messages.</param>
+        /// <param name="unescapedKeyword">The unescaped keyword that was evaluated.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EvaluatedKeyword(
             bool isMatch,
@@ -339,6 +349,14 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Records the evaluation of a schema keyword with a provider context.
+        /// </summary>
+        /// <typeparam name="TProviderContext">The type of the provider context.</typeparam>
+        /// <param name="isMatch">A value indicating whether the keyword evaluation matched.</param>
+        /// <param name="providerContext">The provider context for the evaluation.</param>
+        /// <param name="messageProvider">An optional message provider for generating evaluation messages.</param>
+        /// <param name="unescapedKeyword">The unescaped keyword that was evaluated.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EvaluatedKeyword<TProviderContext>(
             bool isMatch,
@@ -353,6 +371,13 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Records the evaluation of a schema keyword for a specific property.
+        /// </summary>
+        /// <param name="isMatch">A value indicating whether the keyword evaluation matched.</param>
+        /// <param name="messageProvider">An optional message provider for generating evaluation messages.</param>
+        /// <param name="propertyName">The name of the property being evaluated.</param>
+        /// <param name="unescapedKeyword">The unescaped keyword that was evaluated.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EvaluatedKeywordForProperty(
             bool isMatch,
@@ -367,6 +392,15 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Records the evaluation of a schema keyword for a specific property with a provider context.
+        /// </summary>
+        /// <typeparam name="TProviderContext">The type of the provider context.</typeparam>
+        /// <param name="isMatch">A value indicating whether the keyword evaluation matched.</param>
+        /// <param name="providerContext">The provider context for the evaluation.</param>
+        /// <param name="messageProvider">An optional message provider for generating evaluation messages.</param>
+        /// <param name="propertyName">The name of the property being evaluated.</param>
+        /// <param name="unescapedKeyword">The unescaped keyword that was evaluated.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EvaluatedKeywordForProperty<TProviderContext>(
             bool isMatch,
@@ -383,6 +417,12 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Records the evaluation of a schema keyword using a path-based approach.
+        /// </summary>
+        /// <param name="isMatch">A value indicating whether the keyword evaluation matched.</param>
+        /// <param name="messageProvider">The message provider for generating evaluation messages.</param>
+        /// <param name="keywordPath">The path provider for the keyword being evaluated.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EvaluatedKeywordPath(
             bool isMatch,
@@ -396,6 +436,14 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Records the evaluation of a schema keyword using a path-based approach with a provider context.
+        /// </summary>
+        /// <typeparam name="TProviderContext">The type of the provider context.</typeparam>
+        /// <param name="isMatch">A value indicating whether the keyword evaluation matched.</param>
+        /// <param name="providerContext">The provider context for the evaluation.</param>
+        /// <param name="messageProvider">The message provider for generating evaluation messages.</param>
+        /// <param name="keywordPath">The path provider for the keyword being evaluated.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EvaluatedKeywordPath<TProviderContext>(
             bool isMatch,
@@ -410,6 +458,11 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Records that a keyword was ignored during schema evaluation.
+        /// </summary>
+        /// <param name="messageProvider">An optional message provider for generating evaluation messages.</param>
+        /// <param name="encodedKeyword">The encoded keyword that was ignored.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void IgnoredKeyword(
             JsonSchemaMessageProvider? messageProvider,
@@ -418,6 +471,13 @@ namespace Corvus.Text.Json.Internal
             _resultsCollector?.IgnoredKeyword(messageProvider, encodedKeyword);
         }
 
+        /// <summary>
+        /// Records that a keyword was ignored during schema evaluation with a provider context.
+        /// </summary>
+        /// <typeparam name="TProviderContext">The type of the provider context.</typeparam>
+        /// <param name="providerContext">The provider context for the evaluation.</param>
+        /// <param name="messageProvider">An optional message provider for generating evaluation messages.</param>
+        /// <param name="unescapedKeyword">The unescaped keyword that was ignored.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void IgnoredKeyword<TProviderContext>(
             TProviderContext providerContext,
@@ -437,6 +497,11 @@ namespace Corvus.Text.Json.Internal
             _rentedBuffer = childContext._rentedBuffer;
         }
 
+        /// <summary>
+        /// Determines whether a specific item at the given index has been locally evaluated.
+        /// </summary>
+        /// <param name="index">The index of the item to check.</param>
+        /// <returns><see langword="true"/> if the item at the specified index has been locally evaluated; otherwise, <see langword="false"/>.</returns>
         public bool HasLocalEvaluatedItem(int index)
         {
             if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0)
@@ -452,6 +517,11 @@ namespace Corvus.Text.Json.Internal
             return false;
         }
 
+        /// <summary>
+        /// Determines whether a specific property at the given index has been locally evaluated.
+        /// </summary>
+        /// <param name="index">The index of the property to check.</param>
+        /// <returns><see langword="true"/> if the property at the specified index has been locally evaluated; otherwise, <see langword="false"/>.</returns>
         public bool HasLocalEvaluatedProperty(int index)
         {
             if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0)
@@ -467,6 +537,11 @@ namespace Corvus.Text.Json.Internal
             return false;
         }
 
+        /// <summary>
+        /// Determines whether a specific item at the given index has been either locally or applied evaluated.
+        /// </summary>
+        /// <param name="index">The index of the item to check.</param>
+        /// <returns><see langword="true"/> if the item at the specified index has been locally or applied evaluated; otherwise, <see langword="false"/>.</returns>
         public bool HasLocalOrAppliedEvaluatedItem(int index)
         {
             if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0)
@@ -482,6 +557,11 @@ namespace Corvus.Text.Json.Internal
             return false;
         }
 
+        /// <summary>
+        /// Determines whether a specific property at the given index has been either locally or applied evaluated.
+        /// </summary>
+        /// <param name="index">The index of the property to check.</param>
+        /// <returns><see langword="true"/> if the property at the specified index has been locally or applied evaluated; otherwise, <see langword="false"/>.</returns>
         public bool HasLocalOrAppliedEvaluatedProperty(int index)
         {
             if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0)
@@ -559,6 +639,10 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Adds an item at the specified index to the local evaluated items collection.
+        /// </summary>
+        /// <param name="index">The index of the item to mark as locally evaluated.</param>
         public void AddLocalEvaluatedItem(int index)
         {
             if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedItems) != 0)
@@ -572,6 +656,10 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Adds a property at the specified index to the local evaluated properties collection.
+        /// </summary>
+        /// <param name="index">The index of the property to mark as locally evaluated.</param>
         public void AddLocalEvaluatedProperty(int index)
         {
             if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0)
@@ -696,6 +784,9 @@ namespace Corvus.Text.Json.Internal
         }
 
 #if NET
+        /// <summary>
+        /// Represents an inline array buffer for storing evaluated index information.
+        /// </summary>
         [InlineArray(BufferSize)]
         public struct EvaluatedIndexBuffer
         {

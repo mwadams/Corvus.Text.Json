@@ -246,12 +246,25 @@ namespace Corvus.Text.Json
             return GetRawSimpleValueUnsafe(index, includeQuotes);
         }
 
+        /// <summary>
+        /// Gets the raw simple value from the document without bounds checking.
+        /// </summary>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="includeQuotes">Whether to include quotes for string values.</param>
+        /// <returns>The raw value as a read-only memory of bytes.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes)
         {
             return GetRawSimpleValueUnsafe(ref _parsedData, index, includeQuotes);
         }
 
+        /// <summary>
+        /// Gets the raw simple value from the specified metadata database without bounds checking.
+        /// </summary>
+        /// <param name="parsedData">The metadata database to read from.</param>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="includeQuotes">Whether to include quotes for string values.</param>
+        /// <returns>The raw value as a read-only memory of bytes.</returns>
         protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index, bool includeQuotes)
         {
             DbRow row = parsedData.Get(index);
@@ -985,6 +998,17 @@ namespace Corvus.Text.Json
             return JsonReaderHelper.TranscodeHelper(_utf8Json.Slice(start, end - start).Span);
         }
 
+        /// <summary>
+        /// Creates a new parsed JSON document from UTF-8 JSON data without renting memory from pools.
+        /// </summary>
+        /// <param name="utf8Json">The UTF-8 JSON data to parse.</param>
+        /// <param name="options">Optional reader options for parsing.</param>
+        /// <returns>A new parsed JSON document instance.</returns>
+        /// <remarks>
+        /// This method creates a non-disposable document instance that does not use pooled memory,
+        /// making it suitable for scenarios where the document needs to be retained long-term
+        /// without memory pool pressure.
+        /// </remarks>
         internal static ParsedJsonDocument<T> ParseUnrented(ReadOnlyMemory<byte> utf8Json, JsonReaderOptions? options = null)
         {
             MetadataDb db = MetadataDb.CreateRented(utf8Json.Length, convertToAlloc: true);
@@ -1003,6 +1027,15 @@ namespace Corvus.Text.Json
             return new ParsedJsonDocument<T>(utf8Json, db, isDisposable: false);
         }
 
+        /// <summary>
+        /// Creates a deep clone of the element at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the element to clone.</param>
+        /// <returns>A new element that is a deep copy of the original.</returns>
+        /// <remarks>
+        /// The cloned element creates its own document instance with a copy of the relevant
+        /// metadata and JSON data, making it independent of the original document.
+        /// </remarks>
         private T CloneElement(int index)
         {
             CheckNotDisposed();
@@ -1147,6 +1180,18 @@ namespace Corvus.Text.Json
             writer.WritePropertyName(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
         }
 
+        /// <summary>
+        /// Parses UTF-8 JSON data into a metadata database representation.
+        /// </summary>
+        /// <param name="utf8JsonSpan">The UTF-8 JSON data to parse.</param>
+        /// <param name="readerOptions">Options for the JSON reader.</param>
+        /// <param name="database">The metadata database to populate with parsing results.</param>
+        /// <param name="stack">The stack for tracking nested JSON structures during parsing.</param>
+        /// <remarks>
+        /// This method performs the core JSON parsing logic, building up a metadata database
+        /// that represents the structure of the JSON document. It tracks arrays, objects,
+        /// and their nesting levels to create an efficient representation for element access.
+        /// </remarks>
         internal static void Parse(
             ReadOnlySpan<byte> utf8JsonSpan,
             JsonReaderOptions readerOptions,

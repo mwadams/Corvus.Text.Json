@@ -9,7 +9,10 @@ using System.Text.Unicode;
 
 namespace Corvus.Text.Json.Internal
 {
-    // This does the a similar job to MatchIdnHostname but it doesn't punycode decode and validate the resulting address.
+    /// <summary>
+    /// Provides helper methods for validating UTF-8 domain names.
+    /// This does a similar job to MatchIdnHostname but it doesn't punycode decode and validate the resulting address.
+    /// </summary>
     internal class Utf8UriDomainNameHelper
     {
 #if NET
@@ -38,6 +41,14 @@ namespace Corvus.Text.Json.Internal
             "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008A\u008B\u008C\u008D\u008E\u008F" +
             "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009A\u009B\u009C\u009D\u009E\u009F";
 #endif
+        /// <summary>
+        /// Determines whether the specified hostname is valid.
+        /// </summary>
+        /// <param name="hostname">The hostname to validate.</param>
+        /// <param name="iri">A value indicating whether IRI parsing is enabled.</param>
+        /// <param name="notImplicitFile">A value indicating whether this is not an implicit file URI.</param>
+        /// <param name="length">When this method returns, contains the length of the valid hostname portion.</param>
+        /// <returns><see langword="true"/> if the hostname is valid; otherwise, <see langword="false"/>.</returns>
         public static bool IsValid(ReadOnlySpan<byte> hostname, bool iri, bool notImplicitFile, out int length)
         {
             int invalidCharOrDelimiterIndex = iri
@@ -133,7 +144,7 @@ namespace Corvus.Text.Json.Internal
         {
             for(int i = 0; i < hostname.Length;)
             {
-                Rune.DecodeFromUtf8(hostname.Slice(i), out Rune result, out int bytesConsumed);                
+                Rune.DecodeFromUtf8(hostname.Slice(i), out Rune result, out int bytesConsumed);
                 if (s_iriInvalidChars.Contains((char)result.Value))
                 {
                     return i; // Return the start index of the invalid character
@@ -150,7 +161,7 @@ namespace Corvus.Text.Json.Internal
         {
             for(int i = 0; i < hostname.Length;)
             {
-                Rune.DecodeFromUtf8(hostname.Slice(i), out Rune result, out int bytesConsumed);                
+                Rune.DecodeFromUtf8(hostname.Slice(i), out Rune result, out int bytesConsumed);
                 if (s_iriInvalidChars.IndexOf((char)result.Value) >= 0)
                 {
                     return i; // Return the start index of the invalid character

@@ -8,7 +8,7 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json
 {
     public readonly partial struct JsonElementForBooleanFalseSchema
-    {    
+    {
         /// <summary>
         ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
         /// </summary>
@@ -20,6 +20,11 @@ namespace Corvus.Text.Json
             private readonly ulong _documentVersion;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Mutable"/> struct.
+            /// </summary>
+            /// <param name="parent">The parent JSON document.</param>
+            /// <param name="idx">The index within the parent document.</param>
             internal Mutable(IJsonDocument parent, int idx)
             {
                 // parent is usually not null, but the Current property
@@ -73,11 +78,22 @@ namespace Corvus.Text.Json
                 }
             }
 
+            /// <summary>
+            /// Implicitly converts a <see cref="Mutable"/> to a <see cref="JsonElementForBooleanFalseSchema"/>.
+            /// </summary>
+            /// <param name="value">The mutable value to convert.</param>
+            /// <returns>A <see cref="JsonElementForBooleanFalseSchema"/> representing the same JSON element.</returns>
             public static implicit operator JsonElementForBooleanFalseSchema(Mutable value)
             {
                 return new(value._parent, value._idx);
             }
 
+            /// <summary>
+            /// Explicitly converts a <see cref="JsonElementForBooleanFalseSchema"/> to a <see cref="Mutable"/>.
+            /// </summary>
+            /// <param name="value">The value to convert.</param>
+            /// <returns>A <see cref="Mutable"/> representing the same JSON element.</returns>
+            /// <exception cref="FormatException">The parent document is not a mutable document.</exception>
             public static explicit operator Mutable(JsonElementForBooleanFalseSchema value)
             {
                 if (value._parent is not IMutableJsonDocument)
@@ -89,26 +105,56 @@ namespace Corvus.Text.Json
 
                 return new(value._parent, value._idx);
             }
+
+            /// <summary>
+            /// Determines whether two <see cref="Mutable"/> values are equal.
+            /// </summary>
+            /// <param name="left">The first value to compare.</param>
+            /// <param name="right">The second value to compare.</param>
+            /// <returns><see langword="true"/> if the values are equal; otherwise, <see langword="false"/>.</returns>
             public static bool operator ==(Mutable left, Mutable right)
             {
                 return left.Equals(right);
             }
 
+            /// <summary>
+            /// Determines whether two <see cref="Mutable"/> values are not equal.
+            /// </summary>
+            /// <param name="left">The first value to compare.</param>
+            /// <param name="right">The second value to compare.</param>
+            /// <returns><see langword="true"/> if the values are not equal; otherwise, <see langword="false"/>.</returns>
             public static bool operator !=(Mutable left, Mutable right)
             {
                 return !left.Equals(right);
             }
 
+            /// <summary>
+            /// Determines whether a <see cref="Mutable"/> and a <see cref="JsonElement"/> are equal.
+            /// </summary>
+            /// <param name="left">The mutable value to compare.</param>
+            /// <param name="right">The JSON element to compare.</param>
+            /// <returns><see langword="true"/> if the values are equal; otherwise, <see langword="false"/>.</returns>
             public static bool operator ==(Mutable left, JsonElement right)
             {
                 return left.Equals(right);
             }
 
+            /// <summary>
+            /// Determines whether a <see cref="Mutable"/> and a <see cref="JsonElement"/> are not equal.
+            /// </summary>
+            /// <param name="left">The mutable value to compare.</param>
+            /// <param name="right">The JSON element to compare.</param>
+            /// <returns><see langword="true"/> if the values are not equal; otherwise, <see langword="false"/>.</returns>
             public static bool operator !=(Mutable left, JsonElement right)
             {
                 return !left.Equals(right);
             }
 
+            /// <summary>
+            /// Determines whether the specified object is equal to the current mutable JSON element.
+            /// </summary>
+            /// <param name="obj">The object to compare with the current element.</param>
+            /// <returns><see langword="true"/> if the specified object is equal to the current element; otherwise, <see langword="false"/>.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool Equals(object? obj)
             {
@@ -116,6 +162,12 @@ namespace Corvus.Text.Json
                     || (obj is null && this.IsNull());
             }
 
+            /// <summary>
+            /// Determines whether this mutable JSON element is equal to another JSON element using deep comparison.
+            /// </summary>
+            /// <typeparam name="T">The type of the JSON element to compare with.</typeparam>
+            /// <param name="other">The JSON element to compare with this element.</param>
+            /// <returns><see langword="true"/> if the elements are deeply equal; otherwise, <see langword="false"/>.</returns>
             [CLSCompliant(false)]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly bool Equals<T>(T other)
@@ -124,12 +176,23 @@ namespace Corvus.Text.Json
                 return JsonElementHelpers.DeepEquals(this, other);
             }
 
+            /// <summary>
+            /// Creates a document builder for this mutable JSON element.
+            /// </summary>
+            /// <param name="workspace">The JSON workspace to use for creating the document builder.</param>
+            /// <returns>A document builder that can be used to create a new JSON document based on this element.</returns>
             [CLSCompliant(false)]
             public readonly JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
             {
                 return workspace.CreateDocumentBuilder<Mutable, Mutable>(this);
             }
 
+            /// <summary>
+            /// Creates a new <see cref="Mutable"/> instance from another mutable JSON element.
+            /// </summary>
+            /// <typeparam name="T">The type of the source mutable JSON element.</typeparam>
+            /// <param name="instance">The source mutable JSON element to create from.</param>
+            /// <returns>A new <see cref="Mutable"/> instance representing the same JSON element.</returns>
             [CLSCompliant(false)]
             public static Mutable From<T>(in T instance)
                 where T : struct, IMutableJsonElement<T>
@@ -137,6 +200,12 @@ namespace Corvus.Text.Json
                 return new(instance.ParentDocument, instance.ParentDocumentIndex);
             }
 
+            /// <summary>
+            /// Determines if the JSON element at the specified index in the parent document is valid.
+            /// </summary>
+            /// <param name="parentDocument">The parent document containing the JSON element.</param>
+            /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
+            /// <returns><see langword="true"/> if the element at the specified index is valid; otherwise, <see langword="false"/>.</returns>
             internal static bool IsValid(IJsonDocument parentDocument, int parentIndex)
             {
                 return IsValid(parentDocument, parentIndex);
@@ -254,6 +323,11 @@ namespace Corvus.Text.Json
             static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new Mutable(parentDocument, parentDocumentIndex);
 #endif
 
+            /// <summary>
+            /// Evaluates this mutable element against the boolean false schema.
+            /// </summary>
+            /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
+            /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
             public readonly bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null) => JsonSchema.Evaluate(_parent, _idx, resultsCollector);
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -48,7 +48,7 @@ namespace Corvus.Text.Json.CodeGeneration
         /// <returns><see langword="true"/> if the instance handled this format.</returns>
         public static bool AppendFormatSourceConstructors<T>(this IEnumerable<T> handlers, CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConstructorParameters)
             where T : notnull, IFormatHandler
-        {            
+        {
             foreach (T handler in handlers)
             {
                 if (generator.IsCancellationRequested)

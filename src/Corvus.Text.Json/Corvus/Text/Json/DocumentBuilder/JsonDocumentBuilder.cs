@@ -12,6 +12,10 @@ using NodaTime;
 
 namespace Corvus.Text.Json
 {
+    /// <summary>
+    /// A mutable JSON document builder that provides functionality to construct and modify JSON documents.
+    /// </summary>
+    /// <typeparam name="T">The type of mutable JSON element this builder works with.</typeparam>
     [CLSCompliant(false)]
     public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonDocument
         where T : struct, IMutableJsonElement<T>
@@ -37,6 +41,11 @@ namespace Corvus.Text.Json
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         JsonWorkspace IMutableJsonDocument.Workspace => _workspace;
 
+        /// <summary>
+        /// Gets the root element of the JSON document.
+        /// </summary>
+        /// <value>The mutable root element of the document.</value>
+        /// <exception cref="ObjectDisposedException">Thrown when the document has been disposed.</exception>
         public T RootElement
         {
             get
@@ -94,6 +103,7 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             if (_parentWorkspaceIndex == -1)
@@ -189,6 +199,12 @@ namespace Corvus.Text.Json
             return GetDbSizeUnsafe(index, includeEndElement);
         }
 
+        /// <summary>
+        /// Gets the database size for an element without bounds checking.
+        /// </summary>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="includeEndElement">Whether to include the end element in the size calculation.</param>
+        /// <returns>The database size of the element.</returns>
         protected override int GetDbSizeUnsafe(int index, bool includeEndElement)
         {
             DbRow row = _parsedData.Get(index);
@@ -284,12 +300,25 @@ namespace Corvus.Text.Json
             return GetRawSimpleValueUnsafe(index, includeQuotes);
         }
 
+        /// <summary>
+        /// Gets the raw simple value from the document without bounds checking.
+        /// </summary>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="includeQuotes">Whether to include quotes for string values.</param>
+        /// <returns>The raw value as a read-only memory of bytes.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes)
         {
             return GetRawSimpleValueUnsafe(ref _parsedData, index, includeQuotes);
         }
 
+        /// <summary>
+        /// Gets the raw simple value from the specified metadata database without bounds checking.
+        /// </summary>
+        /// <param name="parsedData">The metadata database to read from.</param>
+        /// <param name="index">The index of the element.</param>
+        /// <param name="includeQuotes">Whether to include quotes for string values.</param>
+        /// <returns>The raw value as a read-only memory of bytes.</returns>
         protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index, bool includeQuotes)
         {
             DbRow row = parsedData.Get(index);

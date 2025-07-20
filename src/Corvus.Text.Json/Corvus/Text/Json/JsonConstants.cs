@@ -3,29 +3,75 @@
 
 namespace Corvus.Text.Json
 {
+    /// <summary>
+    /// Provides constants for common JSON characters and tokens represented as bytes.
+    /// </summary>
     internal static partial class JsonConstants
     {
+        /// <summary>The opening brace character '{'.</summary>
         public const byte OpenBrace = (byte)'{';
+
+        /// <summary>The closing brace character '}'.</summary>
         public const byte CloseBrace = (byte)'}';
+
+        /// <summary>The opening bracket character '['.</summary>
         public const byte OpenBracket = (byte)'[';
+
+        /// <summary>The closing bracket character ']'.</summary>
         public const byte CloseBracket = (byte)']';
+
+        /// <summary>The space character ' '.</summary>
         public const byte Space = (byte)' ';
+
+        /// <summary>The carriage return character '\r'.</summary>
         public const byte CarriageReturn = (byte)'\r';
+
+        /// <summary>The line feed character '\n'.</summary>
         public const byte LineFeed = (byte)'\n';
+
+        /// <summary>The tab character '\t'.</summary>
         public const byte Tab = (byte)'\t';
+
+        /// <summary>The list separator character ','.</summary>
         public const byte ListSeparator = (byte)',';
+
+        /// <summary>The key-value separator character ':'.</summary>
         public const byte KeyValueSeparator = (byte)':';
+
+        /// <summary>The quote character '"'.</summary>
         public const byte Quote = (byte)'"';
+
+        /// <summary>The backslash character '\'.</summary>
         public const byte BackSlash = (byte)'\\';
+
+        /// <summary>The forward slash character '/'.</summary>
         public const byte Slash = (byte)'/';
+
+        /// <summary>The backspace character '\b'.</summary>
         public const byte BackSpace = (byte)'\b';
+
+        /// <summary>The form feed character '\f'.</summary>
         public const byte FormFeed = (byte)'\f';
+
+        /// <summary>The asterisk character '*'.</summary>
         public const byte Asterisk = (byte)'*';
+
+        /// <summary>The colon character ':'.</summary>
         public const byte Colon = (byte)':';
+
+        /// <summary>The period character '.'.</summary>
         public const byte Period = (byte)'.';
+
+        /// <summary>The plus character '+'.</summary>
         public const byte Plus = (byte)'+';
+
+        /// <summary>The hyphen character '-'.</summary>
         public const byte Hyphen = (byte)'-';
+
+        /// <summary>The UTC offset token 'Z'.</summary>
         public const byte UtcOffsetToken = (byte)'Z';
+
+        /// <summary>The time prefix 'T'.</summary>
         public const byte TimePrefix = (byte)'T';
 
         public const string NewLineLineFeed = "\n";

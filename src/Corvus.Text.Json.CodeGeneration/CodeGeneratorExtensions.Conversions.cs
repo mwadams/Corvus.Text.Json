@@ -9,6 +9,9 @@ using Corvus.Json.CodeGeneration;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
+    /// <summary>
+    /// Code generator extensions for type conversion functionality.
+    /// </summary>
     internal static partial class CodeGeneratorExtensions
     {
         /// <summary>

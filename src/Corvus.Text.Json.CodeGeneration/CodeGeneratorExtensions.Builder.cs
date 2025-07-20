@@ -10,10 +10,13 @@ using static Corvus.Text.Json.CodeGeneration.CodeGeneratorExtensions;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
+    /// <summary>
+    /// Code generator extensions for builder pattern functionality.
+    /// </summary>
     internal static partial class CodeGeneratorExtensions
     {
         /// <summary>
-        /// Appends the builder 
+        /// Appends the builder pattern methods for the specified type declaration.
         /// </summary>
         /// <param name="generator">The generator to which to append the separator line.</param>
         /// <param name="typeDeclaration">The type declaration for which the builder is to be appended.</param>

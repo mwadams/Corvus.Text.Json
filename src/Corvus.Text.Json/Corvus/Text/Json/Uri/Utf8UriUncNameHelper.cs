@@ -5,8 +5,14 @@ using System.Buffers;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides helper methods for validating UNC (Universal Naming Convention) names.
+    /// </summary>
     internal static class Utf8UriUncNameHelper
     {
+        /// <summary>
+        /// The maximum length for an internet name.
+        /// </summary>
         public const int MaximumInternetNameLength = 256;
 
         //
@@ -31,6 +37,16 @@ namespace Corvus.Text.Json.Internal
         //
         // Assumption is the caller will check on the resulting name length
         // Remarks:  MUST NOT be used unless all input indexes are verified and trusted.
+        
+        /// <summary>
+        /// Determines whether the specified UNC name is valid.
+        /// </summary>
+        /// <param name="name">Pointer to the name to validate.</param>
+        /// <param name="start">The start index of the name.</param>
+        /// <param name="returnedEnd">A reference to the end index; updated with the actual end of the valid name.</param>
+        /// <param name="notImplicitFile">A value indicating whether this is not an implicit file URI.</param>
+        /// <returns><see langword="true"/> if the UNC name is valid; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>MUST NOT be used unless all input indexes are verified and trusted.</remarks>
         public static unsafe bool IsValid(byte* name, int start, ref int returnedEnd, bool notImplicitFile)
         {
             int end = returnedEnd;

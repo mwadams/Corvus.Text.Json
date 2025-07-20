@@ -13,6 +13,12 @@ namespace Corvus.Text.Json.Internal
         [ThreadStatic]
         private static ThreadLocalState? s_threadLocalState;
 
+        /// <summary>
+        /// Rents a JsonSchemaResultsCollector from the thread-local cache or creates a new one.
+        /// </summary>
+        /// <param name="level">The verbosity level for results collection.</param>
+        /// <param name="initialCapacity">The initial capacity estimate for the collector.</param>
+        /// <returns>A JsonSchemaResultsCollector instance ready for use.</returns>
         public static JsonSchemaResultsCollector RentResultsCollector(JsonSchemaResultsLevel level = JsonSchemaResultsLevel.Basic, int initialCapacity = 30)
         {
             ThreadLocalState state = s_threadLocalState ??= new();
@@ -33,6 +39,10 @@ namespace Corvus.Text.Json.Internal
             return collector;
         }
 
+        /// <summary>
+        /// Returns a JsonSchemaResultsCollector to the thread-local cache for reuse.
+        /// </summary>
+        /// <param name="collector">The collector to return to the cache.</param>
         public static void ReturnResultsCollector(JsonSchemaResultsCollector collector)
         {
             Debug.Assert(s_threadLocalState != null);
@@ -49,6 +59,9 @@ namespace Corvus.Text.Json.Internal
             public readonly JsonSchemaResultsCollector Collector;
             public int RentedCollectors;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ThreadLocalState"/> class.
+            /// </summary>
             public ThreadLocalState()
             {
                 Collector = JsonSchemaResultsCollector.CreateEmptyInstanceForCaching();

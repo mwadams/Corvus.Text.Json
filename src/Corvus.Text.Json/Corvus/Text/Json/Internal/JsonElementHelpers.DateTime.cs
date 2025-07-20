@@ -11,6 +11,9 @@ using NodaTime.Calendars;
 
 namespace Corvus.Text.Json.Internal;
 
+/// <summary>
+/// Helper methods for JSON element date and time operations.
+/// </summary>
 public static partial class JsonElementHelpers
 {
     /// <summary>
@@ -78,6 +81,12 @@ public static partial class JsonElementHelpers
         return TryFormat(value, output, out bytesWritten);
     }
 
+    /// <summary>
+    /// Parse a period from a UTF-8 encoded string for the <c>duration</c> format.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded string to parse.</param>
+    /// <returns>The resulting period.</returns>
+    /// <exception cref="FormatException">Thrown when the text cannot be parsed as a valid period.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Period ParsePeriod(ReadOnlySpan<byte> text)
     {
@@ -100,6 +109,12 @@ public static partial class JsonElementHelpers
         return Period.TryParse(text,out value);
     }
 
+    /// <summary>
+    /// Parse a local date from a UTF-8 encoded string for the <c>date</c> format.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded string to parse.</param>
+    /// <returns>The resulting local date.</returns>
+    /// <exception cref="FormatException">Thrown when the text cannot be parsed as a valid date.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static LocalDate ParseLocalDate(ReadOnlySpan<byte> text)
     {
@@ -109,7 +124,8 @@ public static partial class JsonElementHelpers
         }
 
         return value;
-    }       
+    }
+
     /// <summary>
     /// Parse a date from a string for the <c>date</c> format.
     /// </summary>
@@ -135,6 +151,12 @@ public static partial class JsonElementHelpers
         return true;
     }
 
+    /// <summary>
+    /// Parse an offset time from a UTF-8 encoded string for the <c>time</c> format.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded string to parse.</param>
+    /// <returns>The resulting offset time.</returns>
+    /// <exception cref="FormatException">Thrown when the text cannot be parsed as a valid time.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static OffsetTime ParseOffsetTime(ReadOnlySpan<byte> text)
     {
@@ -172,6 +194,17 @@ public static partial class JsonElementHelpers
         return true;
     }
 
+    /// <summary>
+    /// Creates an offset time from its individual components including nanosecond precision.
+    /// </summary>
+    /// <param name="hours">The hours component (0-23).</param>
+    /// <param name="minutes">The minutes component (0-59).</param>
+    /// <param name="seconds">The seconds component (0-59).</param>
+    /// <param name="milliseconds">The milliseconds component (0-999).</param>
+    /// <param name="microseconds">The microseconds component (0-999).</param>
+    /// <param name="nanoseconds">The nanoseconds component (0-999).</param>
+    /// <param name="offsetSeconds">The offset from UTC in seconds.</param>
+    /// <returns>The constructed offset time.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static OffsetTime CreateOffsetTimeCore(int hours, int minutes, int seconds, int milliseconds, int microseconds, int nanoseconds, int offsetSeconds)
     {
@@ -189,6 +222,15 @@ public static partial class JsonElementHelpers
         return value;
     }
 
+    /// <summary>
+    /// Creates an offset time from its individual components with millisecond precision.
+    /// </summary>
+    /// <param name="hours">The hours component (0-23).</param>
+    /// <param name="minutes">The minutes component (0-59).</param>
+    /// <param name="seconds">The seconds component (0-59).</param>
+    /// <param name="milliseconds">The milliseconds component (0-999).</param>
+    /// <param name="offsetSeconds">The offset from UTC in seconds.</param>
+    /// <returns>The constructed offset time.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static OffsetTime CreateOffsetTimeCore(int hours, int minutes, int seconds, int milliseconds, int offsetSeconds)
     {
@@ -201,6 +243,12 @@ public static partial class JsonElementHelpers
         return value;
     }
 
+    /// <summary>
+    /// Parse an offset date time from a UTF-8 encoded string for the <c>date-time</c> format.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded string to parse.</param>
+    /// <returns>The resulting offset date time.</returns>
+    /// <exception cref="FormatException">Thrown when the text cannot be parsed as a valid date time.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static OffsetDateTime ParseOffsetDateTime(ReadOnlySpan<byte> text)
     {
@@ -261,6 +309,20 @@ public static partial class JsonElementHelpers
         return true;
     }
 
+    /// <summary>
+    /// Creates an offset date time from its individual components including nanosecond precision.
+    /// </summary>
+    /// <param name="year">The year component.</param>
+    /// <param name="month">The month component (1-12).</param>
+    /// <param name="day">The day component (1-31).</param>
+    /// <param name="hours">The hours component (0-23).</param>
+    /// <param name="minutes">The minutes component (0-59).</param>
+    /// <param name="seconds">The seconds component (0-59).</param>
+    /// <param name="milliseconds">The milliseconds component (0-999).</param>
+    /// <param name="microseconds">The microseconds component (0-999).</param>
+    /// <param name="nanoseconds">The nanoseconds component (0-999).</param>
+    /// <param name="offsetSeconds">The offset from UTC in seconds.</param>
+    /// <returns>The constructed offset date time.</returns>
     public static OffsetDateTime CreateOffsetDateTimeCore(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds, int microseconds, int nanoseconds, int offsetSeconds)
     {
         OffsetDateTime value = new OffsetDateTime(
@@ -274,6 +336,18 @@ public static partial class JsonElementHelpers
         return value;
     }
 
+    /// <summary>
+    /// Creates an offset date time from its individual components with millisecond precision.
+    /// </summary>
+    /// <param name="year">The year component.</param>
+    /// <param name="month">The month component (1-12).</param>
+    /// <param name="day">The day component (1-31).</param>
+    /// <param name="hours">The hours component (0-23).</param>
+    /// <param name="minutes">The minutes component (0-59).</param>
+    /// <param name="seconds">The seconds component (0-59).</param>
+    /// <param name="milliseconds">The milliseconds component (0-999).</param>
+    /// <param name="offsetSeconds">The offset from UTC in seconds.</param>
+    /// <returns>The constructed offset date time.</returns>
     public static OffsetDateTime CreateOffsetDateTimeCore(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds, int offsetSeconds)
     {
         OffsetDateTime value = new OffsetDateTime(
@@ -283,6 +357,12 @@ public static partial class JsonElementHelpers
         return value;
     }
 
+    /// <summary>
+    /// Parse an offset date from a UTF-8 encoded string for the <c>date</c> format.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded string to parse.</param>
+    /// <returns>The resulting offset date.</returns>
+    /// <exception cref="FormatException">Thrown when the text cannot be parsed as a valid date.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static OffsetDate ParseOffsetDate(ReadOnlySpan<byte> text)
     {

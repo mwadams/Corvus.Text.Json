@@ -3,7 +3,9 @@
 
 namespace Corvus.Text.Json
 {
-    // This enum specifies the Uri syntax flags that is understood by builtin Uri parser.
+    /// <summary>
+    /// Specifies the URI syntax flags that are understood by the built-in URI parser.
+    /// </summary>
     [Flags]
     internal enum Utf8UriSyntaxFlags
     {

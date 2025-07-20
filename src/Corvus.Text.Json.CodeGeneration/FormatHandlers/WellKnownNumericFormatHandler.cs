@@ -449,6 +449,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
         };
     }
 
+    /// <inheritdoc/>
     public bool TryGetNumericTypeName(string format, [NotNullWhen(true)] out string? typeName, out bool isNetOnly, out string? netStandardFallback)
     {
         switch (format)
@@ -532,6 +533,14 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
         ;
     }
 
+    /// <summary>
+    /// Appends format-specific source conversion operators to the generator.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the conversion operators.</param>
+    /// <param name="typeDeclaration">The type declaration for which to append conversion operators.</param>
+    /// <param name="format">The format for which to append conversion operators.</param>
+    /// <param name="seenConversionOperators">The set of conversion operators that have already been generated.</param>
+    /// <returns><see langword="true"/> if the instance handled this format.</returns>
     public bool AppendFormatSourceConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
     {
         switch (format)

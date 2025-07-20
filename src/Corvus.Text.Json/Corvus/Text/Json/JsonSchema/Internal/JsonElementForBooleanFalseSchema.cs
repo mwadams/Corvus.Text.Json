@@ -16,6 +16,11 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     private readonly IJsonDocument _parent;
     private readonly int _idx;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JsonElementForBooleanFalseSchema"/> struct.
+    /// </summary>
+    /// <param name="parent">The parent JSON document.</param>
+    /// <param name="idx">The index within the parent document.</param>
     internal JsonElementForBooleanFalseSchema(IJsonDocument parent, int idx)
     {
         // parent is usually not null, but the Current property
@@ -44,6 +49,12 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
         }
     }
 
+    /// <summary>
+    /// Implicitly converts a <see cref="JsonElementForBooleanFalseSchema"/> to an <see cref="int"/>.
+    /// </summary>
+    /// <param name="age">The JSON element to convert.</param>
+    /// <returns>The integer value of the JSON element.</returns>
+    /// <exception cref="FormatException">The JSON element cannot be converted to an integer.</exception>
     public static implicit operator int(JsonElementForBooleanFalseSchema age)
     {
         age.CheckValidInstance();
@@ -56,26 +67,55 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
         return result;
     }
 
+    /// <summary>
+    /// Determines whether two <see cref="JsonElementForBooleanFalseSchema"/> instances are equal.
+    /// </summary>
+    /// <param name="left">The first instance to compare.</param>
+    /// <param name="right">The second instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(JsonElementForBooleanFalseSchema left, JsonElementForBooleanFalseSchema right)
     {
         return left.Equals(right);
     }
 
+    /// <summary>
+    /// Determines whether two <see cref="JsonElementForBooleanFalseSchema"/> instances are not equal.
+    /// </summary>
+    /// <param name="left">The first instance to compare.</param>
+    /// <param name="right">The second instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are not equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(JsonElementForBooleanFalseSchema left, JsonElementForBooleanFalseSchema right)
     {
         return !left.Equals(right);
     }
 
+    /// <summary>
+    /// Determines whether a <see cref="JsonElementForBooleanFalseSchema"/> and a <see cref="JsonElement"/> are equal.
+    /// </summary>
+    /// <param name="left">The <see cref="JsonElementForBooleanFalseSchema"/> instance to compare.</param>
+    /// <param name="right">The <see cref="JsonElement"/> instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(JsonElementForBooleanFalseSchema left, JsonElement right)
     {
         return left.Equals(right);
     }
 
+    /// <summary>
+    /// Determines whether a <see cref="JsonElementForBooleanFalseSchema"/> and a <see cref="JsonElement"/> are not equal.
+    /// </summary>
+    /// <param name="left">The <see cref="JsonElementForBooleanFalseSchema"/> instance to compare.</param>
+    /// <param name="right">The <see cref="JsonElement"/> instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are not equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(JsonElementForBooleanFalseSchema left, JsonElement right)
     {
         return !left.Equals(right);
     }
 
+    /// <summary>
+    /// Determines whether the specified object is equal to the current instance.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current instance.</param>
+    /// <returns><see langword="true"/> if the specified object is equal to the current instance; otherwise, <see langword="false"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
     {
@@ -83,6 +123,12 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
             || (obj is null && this.IsNull());
     }
 
+    /// <summary>
+    /// Determines whether the specified JSON element is equal to the current instance.
+    /// </summary>
+    /// <typeparam name="T">The type of the JSON element to compare.</typeparam>
+    /// <param name="other">The JSON element to compare with the current instance.</param>
+    /// <returns><see langword="true"/> if the specified JSON element is equal to the current instance; otherwise, <see langword="false"/>.</returns>
     [CLSCompliant(false)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals<T>(T other)
@@ -91,6 +137,12 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
         return JsonElementHelpers.DeepEquals(this, other);
     }
 
+    /// <summary>
+    /// Creates a new <see cref="JsonElementForBooleanFalseSchema"/> from the specified JSON element instance.
+    /// </summary>
+    /// <typeparam name="T">The type of the JSON element.</typeparam>
+    /// <param name="instance">The JSON element instance to create from.</param>
+    /// <returns>A new <see cref="JsonElementForBooleanFalseSchema"/> instance.</returns>
     [CLSCompliant(false)]
     public static JsonElementForBooleanFalseSchema From<T>(in T instance)
         where T : struct, IJsonElement<T>
@@ -98,6 +150,13 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
     }
 
+    /// <summary>
+    /// Creates a JSON document containing the specified integer value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace to use for document creation.</param>
+    /// <param name="year">The integer value to include in the document.</param>
+    /// <param name="initialCapacity">The initial capacity for the document builder.</param>
+    /// <returns>A JSON document builder containing the specified value.</returns>
     [CLSCompliant(false)]
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity = 30)
     {
@@ -110,6 +169,11 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
         return documentBuilder;
     }
 
+    /// <summary>
+    /// Creates a JSON document from the current instance.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace to use for document creation.</param>
+    /// <returns>A JSON document builder containing the current instance.</returns>
     [CLSCompliant(false)]
     public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
     {
@@ -180,7 +244,10 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
         return _parent.ToString(_idx);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the hash code for the current instance.
+    /// </summary>
+    /// <returns>A hash code for the current instance.</returns>
     public override int GetHashCode()
     {
         if (_parent is null)

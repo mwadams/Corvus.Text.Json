@@ -6,8 +6,19 @@ using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides helper methods for validating and parsing IPv6 addresses.
+    /// </summary>
     internal static partial class IPv6AddressHelper
     {
+        /// <summary>
+        /// Determines whether a name is a valid IPv6 address enclosed in brackets.
+        /// </summary>
+        /// <param name="name">Pointer to the string containing possible IPv6 address.</param>
+        /// <param name="start">Starting index to check from.</param>
+        /// <param name="end">Ending index to check to.</param>
+        /// <param name="disallowScope">Whether to disallow scope identifiers.</param>
+        /// <returns><see langword="true"/> if the name contains a valid IPv6 address; otherwise, <see langword="false"/>.</returns>
         internal static unsafe bool IsValid(byte* name, int start, int end, bool disallowScope)
         {
             if (name[start] != '[')
@@ -23,38 +34,26 @@ namespace Corvus.Text.Json.Internal
 
             return IsValidStrict(name, start, end + start + 1, disallowScope);
         }
-        //
-        // IsValidStrict
-        //
-        //  Determine whether a name is a valid IPv6 address. Rules are:
-        //
-        //   *  8 groups of 16-bit hex numbers, separated by ':'
-        //   *  a *single* run of zeros can be compressed using the symbol '::'
-        //   *  an optional string of a ScopeID delimited by '%'
-        //   *  the last 32 bits in an address can be represented as an IPv4 address
-        //
-        //  Difference between IsValid() and IsValidStrict() is that IsValid() expects part of the string to
-        //  be ipv6 address where as IsValidStrict() expects strict ipv6 address.
-        //
-        // Inputs:
-        //  <argument>  name
-        //      IPv6 address in string format
-        //
-        // Outputs:
-        //  Nothing
-        //
-        // Assumes:
-        //  the correct name is terminated by  ']' character
-        //
-        // Returns:
-        //  true if <name> is IPv6  address, else false
-        //
-        // Throws:
-        //  Nothing
-        //
 
-            //  Remarks: MUST NOT be used unless all input indexes are verified and trusted.
-            //           start must be next to '[' position, or error is reported
+        /// <summary>
+        /// Determines whether a name is a valid IPv6 address with strict validation rules.
+        /// </summary>
+        /// <param name="name">Pointer to the IPv6 address in string format.</param>
+        /// <param name="start">Starting index (must be next to '[' position).</param>
+        /// <param name="end">Ending index (the correct name is terminated by ']' character).</param>
+        /// <param name="disallowScope">Whether to disallow scope identifiers.</param>
+        /// <returns><see langword="true"/> if the name is a valid IPv6 address; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>
+        /// MUST NOT be used unless all input indexes are verified and trusted.
+        /// Start must be next to '[' position, or error is reported.
+        /// Rules:
+        /// - 8 groups of 16-bit hex numbers, separated by ':'
+        /// - a single run of zeros can be compressed using the symbol '::'
+        /// - an optional string of a ScopeID delimited by '%'
+        /// - the last 32 bits in an address can be represented as an IPv4 address
+        /// Difference between IsValid() and IsValidStrict() is that IsValid() expects part of the string to
+        /// be ipv6 address where as IsValidStrict() expects strict ipv6 address.
+        /// </remarks>
         internal static unsafe bool IsValidStrict(byte* name, int start, int end, bool disallowScope)
         {
             // Number of components in this IPv6 address
@@ -244,6 +243,11 @@ namespace Corvus.Text.Json.Internal
                 !needsClosingBracket;
         }
 
+        /// <summary>
+        /// Determines whether the specified character is an ASCII digit (0-9).
+        /// </summary>
+        /// <param name="v">The character to check.</param>
+        /// <returns><see langword="true"/> if the character is an ASCII digit; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsAsciiDigit(char v)
         {

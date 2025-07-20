@@ -12,6 +12,11 @@ namespace Corvus.Text.Json
     /// </summary>
     public readonly struct BigNumber : IEquatable<BigNumber>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BigNumber"/> struct.
+        /// </summary>
+        /// <param name="significand">The significand of the number.</param>
+        /// <param name="exponent">The exponent of the number.</param>
         public BigNumber(BigInteger significand, int exponent)
         {
             Significand = significand;
@@ -92,6 +97,12 @@ namespace Corvus.Text.Json
         }
 #endif
 
+        /// <summary>
+        /// Attempts to format the value of the current instance into the provided span of characters.
+        /// </summary>
+        /// <param name="destination">The span in which to write this instance's value formatted as a span of characters.</param>
+        /// <param name="charsWritten">When this method returns, contains the number of characters that were written in <paramref name="destination"/>.</param>
+        /// <returns><c>true</c> if the formatting was successful; otherwise, <c>false</c>.</returns>
         public bool TryFormat(Span<char> destination, out int charsWritten)
         {
             if (!Significand.TryFormat(destination, out int valueBytesWritten))
@@ -119,7 +130,7 @@ namespace Corvus.Text.Json
                     return false;
                 }
 
-                
+
                 result += exponentBytesWritten;
 #else
                 int exp = Exponent;
@@ -170,7 +181,12 @@ namespace Corvus.Text.Json
             return true;
         }
 
-
+        /// <summary>
+        /// Attempts to format the value of the current instance into the provided span of bytes.
+        /// </summary>
+        /// <param name="destination">The span in which to write this instance's value formatted as a span of bytes.</param>
+        /// <param name="charsWritten">When this method returns, contains the number of bytes that were written in <paramref name="destination"/>.</param>
+        /// <returns><c>true</c> if the formatting was successful; otherwise, <c>false</c>.</returns>
         public bool TryFormat(Span<byte> destination, out int charsWritten)
         {
             if (!Significand.TryFormat(destination, out int valueBytesWritten))
@@ -335,12 +351,19 @@ namespace Corvus.Text.Json
         public override string ToString() => $"{Significand}{(Exponent != 0 ? "E" : "")}{(Exponent != 0 ? Exponent : "")}";
 
         /// <summary>
-        /// Equality operator.
+        /// Determines whether two <see cref="BigNumber"/> instances are equal.
         /// </summary>
-        /// <param name="left">The lhs</param>
-        /// <param name="right"></param>
-        /// <returns></returns>
+        /// <param name="left">The first <see cref="BigNumber"/> to compare.</param>
+        /// <param name="right">The second <see cref="BigNumber"/> to compare.</param>
+        /// <returns><c>true</c> if the two instances are equal; otherwise, <c>false</c>.</returns>
         public static bool operator ==(BigNumber left, BigNumber right) => left.Equals(right);
+
+        /// <summary>
+        /// Determines whether two <see cref="BigNumber"/> instances are not equal.
+        /// </summary>
+        /// <param name="left">The first <see cref="BigNumber"/> to compare.</param>
+        /// <param name="right">The second <see cref="BigNumber"/> to compare.</param>
+        /// <returns><c>true</c> if the two instances are not equal; otherwise, <c>false</c>.</returns>
         public static bool operator !=(BigNumber left, BigNumber right) => !(left == right);
     }
 }

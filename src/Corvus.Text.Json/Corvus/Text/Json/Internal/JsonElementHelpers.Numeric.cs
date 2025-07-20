@@ -19,7 +19,7 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json.Internal
 {
     /// <summary>
-    /// Extension methods for <see cref="IJsonElement"/>.
+    /// Helper methods for JSON numeric operations including equality comparisons, divisibility checks, and arithmetic operations.
     /// </summary>
     public static partial class JsonElementHelpers
     {
@@ -54,6 +54,9 @@ namespace Corvus.Text.Json.Internal
         /// <summary>
         /// Compares two valid UTF-8 encoded JSON numbers for decimal equality.
         /// </summary>
+        /// <param name="left">The UTF-8 encoded bytes representing the left JSON number.</param>
+        /// <param name="right">The UTF-8 encoded bytes representing the right JSON number.</param>
+        /// <returns><see langword="true"/> if the two JSON numbers are equal; otherwise, <see langword="false"/>.</returns>
         public static bool AreEqualJsonNumbers(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right)
         {
             Debug.Assert(left.Length > 0 && right.Length > 0);
@@ -76,6 +79,15 @@ namespace Corvus.Text.Json.Internal
         /// <summary>
         /// Compares two valid normalized JSON numbers for decimal equality.
         /// </summary>
+        /// <param name="leftIsNegative">Indicates whether the left number is negative.</param>
+        /// <param name="leftIntegral">The integral part of the left number without leading zeros.</param>
+        /// <param name="leftFractional">The fractional part of the left number without trailing zeros.</param>
+        /// <param name="leftExponent">The exponent of the left number.</param>
+        /// <param name="rightIsNegative">Indicates whether the right number is negative.</param>
+        /// <param name="rightIntegral">The integral part of the right number without leading zeros.</param>
+        /// <param name="rightFractional">The fractional part of the right number without trailing zeros.</param>
+        /// <param name="rightExponent">The exponent of the right number.</param>
+        /// <returns><see langword="true"/> if the two normalized JSON numbers are equal; otherwise, <see langword="false"/>.</returns>
         public static bool AreEqualNormalizedJsonNumbers(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent)
         {
             Debug.Assert(leftIntegral.Length == 0 || leftIntegral[0] != (byte)'0');
@@ -164,6 +176,7 @@ namespace Corvus.Text.Json.Internal
         /// <param name="leftIntegral">When concatenated with <paramref name="leftFractional"/> produces the significand of the LHS number without leading or trailing zeros.</param>
         /// <param name="leftFractional">When concatenated with <paramref name="leftIntegral"/> produces the significand of the LHS number without leading or trailing zeros.</param>
         /// <param name="leftExponent">The LHS exponent.</param>
+        /// <param name="rightIsNegative">True if the RHS is negative.</param>
         /// <param name="rightIntegral">When concatenated with <paramref name="rightFractional"/> produces the significand of the RHS number without leading or trailing zeros.</param>
         /// <param name="rightFractional">When concatenated with <paramref name="rightIntegral"/> produces the significand of the RHS number without leading or trailing zeros.</param>
         /// <param name="rightExponent">The RHS exponent.</param>
@@ -324,7 +337,7 @@ namespace Corvus.Text.Json.Internal
         /// <param name="integral">When concatenated with <paramref name="fractional"/> produces the significand of the number without leading or trailing zeros.</param>
         /// <param name="fractional">When concatenated with <paramref name="integral"/> produces the significand of the number without leading or trailing zeros.</param>
         /// <param name="exponent">The exponent of the number.</param>
-        /// <param name="divisor">The significand of the divisor represented as a <see cref="UInt64"/>.</param>
+        /// <param name="divisor">The significand of the divisor represented as a <see cref="System.Numerics.BigInteger"/>.</param>
         /// <param name="divisorExponent">The exponent of the divisor. This will be non-zero if the divisor had a fractional component.</param>
         /// <returns>True if the normalized JSON number is a multiple of the divisor (i.e. <c>n mod D == 0</c>).</returns>
         /// <remarks>We do not need to pass the sign of the JSON number as it is irrelevant to the calculation.</remarks>
@@ -521,10 +534,10 @@ namespace Corvus.Text.Json.Internal
         private static bool GeneralPurposeIsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int maxSignificandIndex, ulong divisor)
         {
             // Step 5.
-            // for each index i, from 0 to the length of the significand, accumulate the remainder using the mod of the divisor 
+            // for each index i, from 0 to the length of the significand, accumulate the remainder using the mod of the divisor
             // i.e. remainder = (remainder * 10 + digitValue) % divisor;
             // Use the GetDigitAtPosition() method to get the digit value using the integral and fractional parts, and the net exponent.
-            // Return remainder == 0.        
+            // Return remainder == 0.
             // By using a ulong for the divisor, we support ~19 digits of precision in the divisor
 
             ulong remainder = 0;
@@ -561,10 +574,10 @@ namespace Corvus.Text.Json.Internal
         private static bool GeneralPurposeIsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int maxSignificandIndex, System.Numerics.BigInteger divisor)
         {
             // Step 5.
-            // for each index i, from 0 to the length of the significand, accumulate the remainder using the mod of the divisor 
+            // for each index i, from 0 to the length of the significand, accumulate the remainder using the mod of the divisor
             // i.e. remainder = (remainder * 10 + digitValue) % divisor;
             // Use the GetDigitAtPosition() method to get the digit value using the integral and fractional parts, and the net exponent.
-            // Return remainder == 0.        
+            // Return remainder == 0.
             // By using a ulong for the divisor, we support ~19 digits of precision in the divisor
 
             System.Numerics.BigInteger remainder = 0;

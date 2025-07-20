@@ -20,9 +20,21 @@ namespace Corvus.Text.Json
         ReadOnlyMemory<byte> _utf8Bytes;
         byte[]? _extraRentedArrayPoolBytes;
 
+        /// <summary>
+        /// Gets the UTF-8 bytes as a read-only memory.
+        /// </summary>
         public readonly ReadOnlyMemory<byte> Memory => _utf8Bytes;
+
+        /// <summary>
+        /// Gets the UTF-8 bytes as a read-only span.
+        /// </summary>
         public readonly ReadOnlySpan<byte> Span => _utf8Bytes.Span;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnescapedUtf8JsonString"/> struct.
+        /// </summary>
+        /// <param name="utf8Bytes">The UTF-8 bytes representing the JSON string.</param>
+        /// <param name="extraRentedArrayPoolBytes">Optional rented array pool bytes.</param>
         public UnescapedUtf8JsonString(ReadOnlyMemory<byte> utf8Bytes, byte[]? extraRentedArrayPoolBytes = null)
         {
             _utf8Bytes = utf8Bytes;
@@ -40,6 +52,9 @@ namespace Corvus.Text.Json
             return _utf8Bytes;
         }
 
+        /// <summary>
+        /// Disposes the unescaped UTF-8 JSON string, returning any rented array pool bytes.
+        /// </summary>
         public void Dispose()
         {
             if (_extraRentedArrayPoolBytes != null)

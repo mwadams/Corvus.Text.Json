@@ -12,6 +12,14 @@ namespace Corvus.Text.Json.Internal
     /// </summary>
     public static partial class JsonSchemaEvaluation
     {
+        /// <summary>
+        /// Creates a schema location for an indexed keyword by appending the index to the base location.
+        /// </summary>
+        /// <param name="keywordSchemaLocation">The base schema location for the keyword.</param>
+        /// <param name="index">The index to append to the location.</param>
+        /// <param name="buffer">The buffer to write the resulting location to.</param>
+        /// <param name="written">The number of bytes written to the buffer.</param>
+        /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
         public static bool SchemaLocationForIndexedKeyword(ReadOnlySpan<byte> keywordSchemaLocation, int index, Span<byte> buffer, out int written)
         {
             if (buffer.Length < keywordSchemaLocation.Length)
@@ -44,6 +52,13 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Tries to copy a message to the specified buffer.
+        /// </summary>
+        /// <param name="readOnlySpan">The message to copy.</param>
+        /// <param name="buffer">The buffer to copy the message to.</param>
+        /// <param name="written">The number of bytes written to the buffer.</param>
+        /// <returns><see langword="true"/> if the copy succeeded; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryCopyMessage(ReadOnlySpan<byte> readOnlySpan, Span<byte> buffer, out int written)
         {

@@ -5,8 +5,14 @@ using System.Diagnostics;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides helper methods for validating and parsing IPv4 addresses.
+    /// </summary>
     internal static partial class IPv4AddressHelper
     {
+        /// <summary>
+        /// Represents an invalid IPv4 address parsing result.
+        /// </summary>
         internal const long Invalid = -1;
         private const long MaxIPv4Value = uint.MaxValue; // the native parser cannot handle MaxIPv4Value, only MaxIPv4Value - 1
 
@@ -16,48 +22,22 @@ namespace Corvus.Text.Json.Internal
 
         private const int NumberOfLabels = 4;
 
-        //
-        // IsValid
-        //
-        //  Performs IsValid on a substring. Updates the index to where we
-        //  believe the IPv4 address ends
-        //
-        // Inputs:
-        //  <argument>  name
-        //      string containing possible IPv4 address
-        //
-        //  <argument>  start
-        //      offset in <name> to start checking for IPv4 address
-        //
-        //  <argument>  end
-        //      offset in <name> of the last character we can touch in the check
-        //
-        // Outputs:
-        //  <argument>  end
-        //      index of last character in <name> we checked
-        //
-        //  <argument>  allowIPv6
-        //      enables parsing IPv4 addresses embedded in IPv6 address literals
-        //
-        //  <argument>  notImplicitFile
-        //      do not consider this URI holding an implicit filename
-        //
-        //  <argument>  unknownScheme
-        //      the check is made on an unknown scheme (suppress IPv4 canonicalization)
-        //
-        // Assumes:
-        // The address string is terminated by either
-        // end of the string, characters ':' '/' '\' '?'
-        //
-        //
-        // Returns:
-        //  bool
-        //
-        // Throws:
-        //  Nothing
-        //
-
-        //Remark: MUST NOT be used unless all input indexes are verified and trusted.
+        /// <summary>
+        /// Performs validation on a substring to determine if it contains a valid IPv4 address.
+        /// Updates the end index to where the IPv4 address ends.
+        /// </summary>
+        /// <param name="name">Pointer to the string containing possible IPv4 address.</param>
+        /// <param name="start">Offset to start checking for IPv4 address.</param>
+        /// <param name="end">On input, index of the last character to check; on output, updated to the last character checked.</param>
+        /// <param name="allowIPv6">Enables parsing IPv4 addresses embedded in IPv6 address literals.</param>
+        /// <param name="notImplicitFile">Do not consider this URI holding an implicit filename.</param>
+        /// <param name="unknownScheme">The check is made on an unknown scheme (suppress IPv4 canonicalization).</param>
+        /// <returns><see langword="true"/> if the substring contains a valid IPv4 address; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>
+        /// MUST NOT be used unless all input indexes are verified and trusted.
+        /// The address string is terminated by either end of the string, characters ':' '/' '\' '?'
+        /// IPv6 can only have canonical IPv4 embedded. Unknown schemes will not attempt parsing of non-canonical IPv4 addresses.
+        /// </remarks>
         internal static unsafe bool IsValid(byte* name, int start, ref int end, bool allowIPv6, bool notImplicitFile, bool unknownScheme)
         {
             // IPv6 can only have canonical IPv4 embedded. Unknown schemes will not attempt parsing of non-canonical IPv4 addresses.
@@ -71,19 +51,26 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
-        //
-        // IsValidCanonical
-        //
-        //  Checks if the substring is a valid canonical IPv4 address or an IPv4 address embedded in an IPv6 literal
-        //  This is an attempt to parse ABNF productions from RFC3986, Section 3.2.2:
-        //     IP-literal = "[" ( IPv6address / IPvFuture  ) "]"
-        //     IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
-        //     dec-octet   = DIGIT                 ; 0-9
-        //                 / %x31-39 DIGIT         ; 10-99
-        //                 / "1" 2DIGIT            ; 100-199
-        //                 / "2" %x30-34 DIGIT     ; 200-249
-        //                 / "25" %x30-35          ; 250-255
-        //
+        /// <summary>
+        /// Checks if the substring is a valid canonical IPv4 address or an IPv4 address embedded in an IPv6 literal.
+        /// This method validates against RFC3986 ABNF productions from Section 3.2.2.
+        /// </summary>
+        /// <param name="name">Pointer to the string containing possible IPv4 address.</param>
+        /// <param name="start">Offset to start checking for IPv4 address.</param>
+        /// <param name="end">On input, index of the last character to check; on output, updated to the last character checked.</param>
+        /// <param name="allowIPv6">Enables parsing IPv4 addresses embedded in IPv6 address literals.</param>
+        /// <param name="notImplicitFile">Do not consider this URI holding an implicit filename.</param>
+        /// <returns><see langword="true"/> if the substring contains a valid canonical IPv4 address; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>
+        /// Parses ABNF productions from RFC3986, Section 3.2.2:
+        /// IP-literal = "[" ( IPv6address / IPvFuture  ) "]"
+        /// IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
+        /// dec-octet   = DIGIT                 ; 0-9
+        ///             / %x31-39 DIGIT         ; 10-99
+        ///             / "1" 2DIGIT            ; 100-199
+        ///             / "2" %x30-34 DIGIT     ; 200-249
+        ///             / "25" %x30-35          ; 250-255
+        /// </remarks>
         internal static unsafe bool IsValidCanonical(byte* name, int start, ref int end, bool allowIPv6, bool notImplicitFile)
         {
             int dots = 0;
@@ -163,10 +150,19 @@ namespace Corvus.Text.Json.Internal
             return res;
         }
 
-        // Parse any canonical or noncanonical IPv4 formats and return a long between 0 and MaxIPv4Value.
-        // Return Invalid (-1) for failures.
-        // If the address has less than three dots, and we allow non-canoncial form, then only the rightmost section is assumed to contain the combined value for
-        // the missing sections: 0xFF00FFFF == 0xFF.0x00.0xFF.0xFF == 0xFF.0xFFFF
+        /// <summary>
+        /// Parse any canonical or non-canonical IPv4 formats and return a numeric value between 0 and MaxIPv4Value.
+        /// </summary>
+        /// <param name="name">Pointer to the string containing possible IPv4 address.</param>
+        /// <param name="start">Offset to start parsing from.</param>
+        /// <param name="end">On input, index of the last character to check; on output, updated to the last character parsed.</param>
+        /// <param name="notImplicitFile">Do not consider this URI holding an implicit filename.</param>
+        /// <param name="requireCanonical">Whether to require canonical format.</param>
+        /// <returns>A long value between 0 and MaxIPv4Value, or <see cref="Invalid"/> (-1) for failures.</returns>
+        /// <remarks>
+        /// If the address has less than three dots, and we allow non-canonical form, then only the rightmost section
+        /// is assumed to contain the combined value for the missing sections: 0xFF00FFFF == 0xFF.0x00.0xFF.0xFF == 0xFF.0xFFFF
+        /// </remarks>
         internal static unsafe long ParseNonCanonical(byte* name, int start, ref int end, bool notImplicitFile, bool requireCanonical)
         {
             int numberBase = IPv4AddressHelper.Decimal;

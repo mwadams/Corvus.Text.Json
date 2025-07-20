@@ -10,16 +10,27 @@ namespace Corvus.Text.Json.Internal
     /// <summary>Builds a tree of RegexNodes from a regular expression.</summary>
     internal ref struct JsonRegexValidator
     {
-        // A 12 byte buffer is used to store the node details.
+        /// <summary>
+        /// A 12 byte buffer is used to store the node details.
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         private readonly struct NodeDbRow
-        {            
+        {
             private readonly int _parentIdx;
             private readonly int _childCount;
             private readonly int _nodeKind;
 
+            /// <summary>
+            /// The size of this structure in bytes.
+            /// </summary>
             internal const int Size = 12;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="NodeDbRow"/> struct.
+            /// </summary>
+            /// <param name="parentIdx">The parent node index.</param>
+            /// <param name="nodeKind">The kind of node.</param>
+            /// <param name="childCount">The number of child nodes.</param>
             public NodeDbRow(int parentIdx, JsonRegexNodeKind nodeKind, int childCount)
             {
                 _parentIdx = parentIdx;
@@ -27,15 +38,30 @@ namespace Corvus.Text.Json.Internal
                 _nodeKind = (int)nodeKind;
             }
 
+            /// <summary>
+            /// Gets the kind of this node.
+            /// </summary>
             public readonly JsonRegexNodeKind NodeKind => (JsonRegexNodeKind)_nodeKind;
 
+            /// <summary>
+            /// Gets the parent node, or <see cref="JsonRegexNode.Null"/> if this is the root.
+            /// </summary>
             public JsonRegexNode Parent => _parentIdx < 0 ? JsonRegexNode.Null : new(_parentIdx);
 
+            /// <summary>
+            /// Gets the number of child nodes.
+            /// </summary>
             public int ChildCount => _childCount;
 
+            /// <summary>
+            /// Gets the index of the parent node.
+            /// </summary>
             public int ParentIndex => _parentIdx;
         }
 
+        /// <summary>
+        /// Represents a capture name to capture number mapping.
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         private readonly struct CapNameToCapNumberRow
         {
@@ -43,12 +69,32 @@ namespace Corvus.Text.Json.Internal
             private readonly int _endOffset;
             private readonly int _capNum;
 
+            /// <summary>
+            /// The size of this structure in bytes.
+            /// </summary>
             internal const int Size = 12;
 
+            /// <summary>
+            /// Gets the start offset of the capture name.
+            /// </summary>
             public int Start => _startOffset;
+
+            /// <summary>
+            /// Gets the end offset of the capture name.
+            /// </summary>
             public int End => _endOffset;
+
+            /// <summary>
+            /// Gets the capture number.
+            /// </summary>
             public int CapNum => _capNum;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CapNameToCapNumberRow"/> struct.
+            /// </summary>
+            /// <param name="startOffset">The start offset of the capture name.</param>
+            /// <param name="endOffset">The end offset of the capture name.</param>
+            /// <param name="capNum">The capture number.</param>
             public CapNameToCapNumberRow(int startOffset, int endOffset, int capNum)
             {
                 _startOffset = startOffset;
@@ -57,17 +103,35 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Represents a capture number to position mapping.
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         private readonly struct CapToPos
         {
             private readonly int _capNum;
             private readonly int _pos;
 
+            /// <summary>
+            /// The size of this structure in bytes.
+            /// </summary>
             internal const int Size = 8;
 
+            /// <summary>
+            /// Gets the capture number.
+            /// </summary>
             public int CapNum => _capNum;
+
+            /// <summary>
+            /// Gets the position.
+            /// </summary>
             public int Pos => _pos;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CapToPos"/> struct.
+            /// </summary>
+            /// <param name="capNum">The capture number.</param>
+            /// <param name="pos">The position.</param>
             public CapToPos(int capNum, int pos)
             {
                 _capNum = capNum;
@@ -137,6 +201,12 @@ namespace Corvus.Text.Json.Internal
             _ignoreNextParen = false;
         }
 
+        /// <summary>
+        /// Validates a regular expression pattern with the specified options.
+        /// </summary>
+        /// <param name="pattern">The regular expression pattern to validate.</param>
+        /// <param name="options">The options to use during validation.</param>
+        /// <returns><see langword="true"/> if the pattern is valid; otherwise, <see langword="false"/>.</returns>
         public static bool Validate (ReadOnlySpan<char> pattern, JsonRegexOptions options)
         {
             using var validator = new JsonRegexValidator(
@@ -168,6 +238,9 @@ namespace Corvus.Text.Json.Internal
             _stack = JsonRegexNode.Null;
         }
 
+        /// <summary>
+        /// Disposes the resources held by this validator.
+        /// </summary>
         public void Dispose()
         {
             _optionsStack.Dispose();
@@ -1963,6 +2036,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Sets the parent node for a child node.
+        /// </summary>
+        /// <param name="child">The index of the child node.</param>
+        /// <param name="parent">The index of the parent node.</param>
         internal void SetParent(int child, int parent)
         {
             Debug.Assert(child >= 0 && child < _nodeDb.Length, "Index out of bounds for node database.");
@@ -1976,12 +2054,22 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Gets the parent node for the specified node index.
+        /// </summary>
+        /// <param name="idx">The index of the node.</param>
+        /// <returns>The parent node.</returns>
         internal readonly JsonRegexNode GetParent(int idx)
         {
             Debug.Assert(idx >= 0 && idx < _nodeDb.Length, "Index out of bounds for node database.");
             return _nodeDb[idx].Parent;
         }
 
+        /// <summary>
+        /// Gets the node kind for the specified node index.
+        /// </summary>
+        /// <param name="idx">The index of the node.</param>
+        /// <returns>The node kind, or <see cref="JsonRegexNodeKind.Unknown"/> if the index is invalid.</returns>
         internal readonly JsonRegexNodeKind GetNodeKind(int idx)
         {
             if (idx < 0)
@@ -1993,6 +2081,11 @@ namespace Corvus.Text.Json.Internal
             return _nodeDb[idx].NodeKind;
         }
 
+        /// <summary>
+        /// Sets the node kind for the specified node index.
+        /// </summary>
+        /// <param name="idx">The index of the node.</param>
+        /// <param name="kind">The new node kind.</param>
         internal void SetKind(int idx, JsonRegexNodeKind kind)
         {
             Debug.Assert(idx >= 0 && idx < _nodeDb.Length, "Index out of bounds for node database.");
@@ -2001,12 +2094,22 @@ namespace Corvus.Text.Json.Internal
         }
 
 
+        /// <summary>
+        /// Gets the number of child nodes for the specified node index.
+        /// </summary>
+        /// <param name="idx">The index of the node.</param>
+        /// <returns>The number of child nodes.</returns>
         internal readonly int GetChildCount(int idx)
         {
             Debug.Assert(idx >= 0 && idx < _nodeDb.Length, "Index out of bounds for node database.");
             return _nodeDb[idx].ChildCount;
         }
 
+        /// <summary>
+        /// Creates a new node with the specified kind.
+        /// </summary>
+        /// <param name="nodeKind">The kind of node to create.</param>
+        /// <returns>A new regex node.</returns>
         internal JsonRegexNode CreateNode(JsonRegexNodeKind nodeKind)
         {
             NodeDbRow row = new(-1, nodeKind, 0);

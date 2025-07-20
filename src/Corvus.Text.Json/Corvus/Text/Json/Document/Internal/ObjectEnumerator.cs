@@ -17,6 +17,11 @@ namespace Corvus.Text.Json.Internal
         private int _curIdx;
         private readonly int _endIdxOrVersion;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectEnumerator"/> struct.
+        /// </summary>
+        /// <param name="targetDocument">The target document containing the object to enumerate.</param>
+        /// <param name="initialIndex">The initial index of the object in the document.</param>
         public ObjectEnumerator(IJsonDocument targetDocument, int initialIndex)
         {
             _targetDocument = targetDocument;
@@ -26,7 +31,9 @@ namespace Corvus.Text.Json.Internal
             _endIdxOrVersion = _initialIndex + _targetDocument.GetDbSize(_initialIndex, includeEndElement: false);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the current index in the document.
+        /// </summary>
         public int CurrentIndex
         {
             get
@@ -35,19 +42,29 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Releases resources used by the enumerator.
+        /// </summary>
         public void Dispose()
         {
             _curIdx = _endIdxOrVersion;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets the enumerator to its initial position, which is before the first element.
+        /// </summary>
         public void Reset()
         {
             _curIdx = -1;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Advances the enumerator to the next element of the collection.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if the enumerator was successfully advanced to the next element;
+        /// <see langword="false"/> if the enumerator has passed the end of the collection.
+        /// </returns>
         public bool MoveNext()
         {
             if (_curIdx >= _endIdxOrVersion)

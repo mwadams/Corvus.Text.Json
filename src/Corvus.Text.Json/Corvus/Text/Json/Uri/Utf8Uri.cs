@@ -9,13 +9,34 @@ using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides utilities for parsing and validating UTF-8 URI strings.
+    /// </summary>
     internal static class Utf8Uri
     {
+        /// <summary>
+        /// The maximum size for a URI buffer.
+        /// </summary>
         internal const int c_MaxUriBufferSize = 0xFFF0;
+
+        /// <summary>
+        /// The maximum length for a URI scheme name.
+        /// </summary>
         internal const int c_MaxUriSchemeName = 1024;
+
+        /// <summary>
+        /// An invalid Unicode character used as a dummy character parameter.
+        /// </summary>
         internal const char c_DummyChar = (char)0xFFFF;     //An Invalid Unicode character used as a dummy char passed into the parameter
+
+        /// <summary>
+        /// End-of-line character.
+        /// </summary>
         internal const byte c_EOL = 0x00;
 
+        /// <summary>
+        /// Flags used during URI parsing and validation.
+        /// </summary>
         [Flags]
         internal enum Flags : ulong
         {
@@ -111,6 +132,17 @@ namespace Corvus.Text.Json.Internal
             FoundNonAscii = 0x8
         }
 
+        /// <summary>
+        /// Parses URI information from the specified UTF-8 URI string.
+        /// </summary>
+        /// <param name="uriString">The UTF-8 URI string to parse.</param>
+        /// <param name="uriKind">The kind of URI to parse.</param>
+        /// <param name="requireAbsolute">A value indicating whether to require an absolute URI.</param>
+        /// <param name="allowIri">A value indicating whether to allow IRI parsing.</param>
+        /// <param name="allowUNCPath">A value indicating whether to allow UNC path parsing.</param>
+        /// <param name="uriInfo">When this method returns, contains the parsed URI offset information.</param>
+        /// <param name="resultFlags">When this method returns, contains the parsing result flags.</param>
+        /// <returns><see langword="true"/> if the URI was parsed successfully; otherwise, <see langword="false"/>.</returns>
         internal static bool ParseUriInfo(ReadOnlySpan<byte> uriString, Utf8UriKind uriKind, bool requireAbsolute, bool allowIri, bool allowUNCPath, out Utf8UriOffset uriInfo, out Flags resultFlags)
         {
             Utf8UriParser? syntax = null;
@@ -132,7 +164,6 @@ namespace Corvus.Text.Json.Internal
                 {
                     resultFlags = flags | Flags.UserEscaped;
                     return GetUriInfoForRelativeReference(uriString, allowIri, out uriInfo);
-                    
                 }
 
                 uriInfo = default;
@@ -161,6 +192,15 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates the specified UTF-8 URI string.
+        /// </summary>
+        /// <param name="uriString">The UTF-8 URI string to validate.</param>
+        /// <param name="uriKind">The kind of URI to validate.</param>
+        /// <param name="requireAbsolute">A value indicating whether to require an absolute URI.</param>
+        /// <param name="allowIri">A value indicating whether to allow IRI validation.</param>
+        /// <param name="allowUNCPath">A value indicating whether to allow UNC path validation.</param>
+        /// <returns><see langword="true"/> if the URI is valid; otherwise, <see langword="false"/>.</returns>
         internal static bool Validate(ReadOnlySpan<byte> uriString, Utf8UriKind uriKind, bool requireAbsolute, bool allowIri, bool allowUNCPath)
         {
             Utf8UriParser? syntax = null;
@@ -402,7 +442,7 @@ namespace Corvus.Text.Json.Internal
                     else if (uriKind == Utf8UriKind.Relative && InFact(flags, Flags.DosPath))
                     {
                         syntax = null!; //make it be relative Uri
-                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri                        
+                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
                         uriInfo = info;
                         return requireAbsolute ? false : true;
                         // Otherwise an absolute file Uri wins when it's of the form "c:\something"
@@ -499,7 +539,7 @@ namespace Corvus.Text.Json.Internal
                     ))
                     {
                         syntax = null!; //make it be relative Uri
-                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri                        
+                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
                         return requireAbsolute ? false : true;
                         // Otherwise an absolute file Uri wins when it's of the form "\\something"
                     }
@@ -510,7 +550,7 @@ namespace Corvus.Text.Json.Internal
                     else if (uriKind == Utf8UriKind.Relative && InFact(flags, Flags.DosPath))
                     {
                         syntax = null!; //make it be relative Uri
-                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri                        
+                        flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
                         return requireAbsolute ? false : true;
                         // Otherwise an absolute file Uri wins when it's of the form "c:\something"
                     }
@@ -2255,6 +2295,5 @@ namespace Corvus.Text.Json.Internal
             return true;
 #endif
         }
-
     }
 }

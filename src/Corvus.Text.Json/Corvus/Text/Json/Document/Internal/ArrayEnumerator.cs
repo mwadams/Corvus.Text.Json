@@ -17,6 +17,11 @@ namespace Corvus.Text.Json.Internal
         private int _curIdx;
         private readonly int _endIdxOrVersion;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ArrayEnumerator"/> struct.
+        /// </summary>
+        /// <param name="targetDocument">The document containing the array to enumerate.</param>
+        /// <param name="initialIndex">The initial index of the array element in the document.</param>
         public ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)
         {
             _targetDocument = targetDocument;

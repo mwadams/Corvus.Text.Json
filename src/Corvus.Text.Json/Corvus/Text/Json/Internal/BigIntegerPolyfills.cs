@@ -13,6 +13,13 @@ namespace Corvus.Text.Json.Internal
     public static class BigIntegerPolyfills
     {
 #if !NET
+        /// <summary>
+        /// Tries to format the value of the current <see cref="BigInteger"/> instance into the provided span of characters.
+        /// </summary>
+        /// <param name="value">The value to format.</param>
+        /// <param name="destination">The span in which to write the formatted value.</param>
+        /// <param name="charsWritten">When this method returns, contains the number of characters that were written to the destination.</param>
+        /// <returns><see langword="true"/> if the operation was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryFormat(this in BigInteger value, Span<char> destination, out int charsWritten)
         {
             // Fast path for zero and one to avoid
@@ -70,6 +77,13 @@ namespace Corvus.Text.Json.Internal
         }
 #endif
 
+        /// <summary>
+        /// Tries to format the value of the current <see cref="BigInteger"/> instance into the provided span of bytes.
+        /// </summary>
+        /// <param name="value">The value to format.</param>
+        /// <param name="destination">The span in which to write the formatted value as UTF-8.</param>
+        /// <param name="bytesWritten">When this method returns, contains the number of bytes that were written to the destination.</param>
+        /// <returns><see langword="true"/> if the operation was successful; otherwise, <see langword="false"/>.</returns>
         public static bool TryFormat(this in BigInteger value, Span<byte> destination, out int bytesWritten)
         {
             char[]? charBuffer = null;
@@ -103,8 +117,15 @@ namespace Corvus.Text.Json.Internal
 
         extension(BigInteger i)
         {
+
+            /// <summary>
+            /// Tries to parse a span of UTF-8 characters into a <see cref="BigInteger"/> value.
+            /// 1</summary>
+            /// <param name="segment">The span of UTF-8 bytes to parse.</param>
+            /// <param name="value">When this method returns, contains the <see cref="BigInteger"/> value equivalent to the bytes contained in <paramref name="segment"/>, if the conversion succeeded, or zero if the conversion failed.</param>
+            /// <returns><see langword="true"/> if the parse operation was successful; otherwise, <see langword="false"/>.</returns>
             public static bool TryParse(ReadOnlySpan<byte> segment, out BigInteger value)
-            {
+        {
 #if NET
             char[]? rentedChars = null;
             int desiredLength =  Encoding.UTF8.GetMaxCharCount(segment.Length);
@@ -138,6 +159,12 @@ namespace Corvus.Text.Json.Internal
             }
 
 #if !NET
+            /// <summary>
+            /// Tries to parse a span of characters into a <see cref="BigInteger"/> value.
+            /// </summary>
+            /// <param name="segment">The span of characters to parse.</param>
+            /// <param name="value">When this method returns, contains the <see cref="BigInteger"/> value equivalent to the characters contained in <paramref name="segment"/>, if the conversion succeeded, or zero if the conversion failed.</param>
+            /// <returns><see langword="true"/> if the parse operation was successful; otherwise, <see langword="false"/>.</returns>
             public static bool TryParse(ReadOnlySpan<char> segment, out BigInteger value)
             {
                 // Sadly, we have to allocate a string here, as BigInteger does not support parsing

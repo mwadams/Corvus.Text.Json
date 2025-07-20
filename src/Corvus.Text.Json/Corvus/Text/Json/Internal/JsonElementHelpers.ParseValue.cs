@@ -6,6 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Helper methods for parsing JSON values from readers.
+    /// </summary>
     public static partial class JsonElementHelpers
     {
         /// <summary>
@@ -99,6 +102,6 @@ namespace Corvus.Text.Json.Internal
             bool ret = ParsedJsonDocument<T>.TryParseValue(ref reader, out ParsedJsonDocument<T>? document, shouldThrow: false, useArrayPools: false);
             element = document?.RootElement;
             return ret;
-        }       
+        }
     }
 }

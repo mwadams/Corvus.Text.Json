@@ -10,6 +10,12 @@ namespace Corvus.Text.Json
 {
     internal static partial class JsonHelpers
     {
+        /// <summary>
+        /// Gets the escaped property name section for the specified UTF-8 value.
+        /// </summary>
+        /// <param name="utf8Value">The UTF-8 value to escape.</param>
+        /// <param name="encoder">The JavaScript encoder to use for escaping.</param>
+        /// <returns>A byte array containing the escaped property name section.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte[] GetEscapedPropertyNameSection(ReadOnlySpan<byte> utf8Value, JavaScriptEncoder? encoder)
         {
@@ -25,6 +31,13 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Escapes the specified UTF-8 value using the provided encoder.
+        /// </summary>
+        /// <param name="utf8Value">The UTF-8 value to escape.</param>
+        /// <param name="firstEscapeIndexVal">The index of the first character that needs escaping.</param>
+        /// <param name="encoder">The JavaScript encoder to use for escaping.</param>
+        /// <returns>A byte array containing the escaped value.</returns>
         public static byte[] EscapeValue(
             ReadOnlySpan<byte> utf8Value,
             int firstEscapeIndexVal,

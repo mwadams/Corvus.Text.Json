@@ -16,9 +16,8 @@ namespace Corvus.Text.Json.Compatibility
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationResult"/> struct.
         /// </summary>
-        /// <param name="valid">A value indicating whether this is a valid result.</param>
-        /// <param name="messageRange">The error message.</param>
-        /// <param name="location">The location of the result.</param>
+        /// <param name="collector">The results collector containing the validation data.</param>
+        /// <param name="resultIndex">The index of the result within the collector.</param>
         internal ValidationResult(JsonSchemaResultsCollector collector, int resultIndex)
         {
             Debug.Assert(resultIndex >= 0);
@@ -27,6 +26,9 @@ namespace Corvus.Text.Json.Compatibility
             _resultIndex = resultIndex;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the validation result is valid.
+        /// </summary>
         public bool Valid
         {
             get
@@ -36,6 +38,9 @@ namespace Corvus.Text.Json.Compatibility
             }
         }
 
+        /// <summary>
+        /// Gets the location information for this validation result.
+        /// </summary>
         public LocationTuple Location
         {
             get
@@ -45,6 +50,9 @@ namespace Corvus.Text.Json.Compatibility
             }
         }
 
+        /// <summary>
+        /// Gets the validation message for this result, if any.
+        /// </summary>
         public string? Message
         {
             get
@@ -63,6 +71,12 @@ namespace Corvus.Text.Json.Compatibility
             private readonly ReadOnlySpan<byte> _schemaLocation;
             private readonly ReadOnlySpan<byte> _documentLocation;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="LocationTuple"/> struct.
+            /// </summary>
+            /// <param name="validationLocation">The validation location.</param>
+            /// <param name="schemaLocation">The schema location.</param>
+            /// <param name="documentLocation">The document location.</param>
             internal LocationTuple(ReadOnlySpan<byte> validationLocation, ReadOnlySpan<byte> schemaLocation, ReadOnlySpan<byte> documentLocation)
             {
                 _validationLocation = validationLocation;
@@ -70,8 +84,19 @@ namespace Corvus.Text.Json.Compatibility
                 _documentLocation = documentLocation;
             }
 
+            /// <summary>
+            /// Gets the validation location as a JSON reference.
+            /// </summary>
             public JsonReference ValidationLocation => JsonReference.Create(_validationLocation);
+
+            /// <summary>
+            /// Gets the schema location as a JSON reference.
+            /// </summary>
             public JsonReference SchemaLocation => JsonReference.Create(_schemaLocation);
+
+            /// <summary>
+            /// Gets the document location as a JSON reference.
+            /// </summary>
             public JsonReference DocumentLocation => JsonReference.Create(_documentLocation);
         }
     }

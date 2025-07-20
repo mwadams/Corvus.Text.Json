@@ -8,6 +8,9 @@ using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Represents a database row containing metadata about a JSON token including its type, location, and structural information.
+    /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [StructLayout(LayoutKind.Sequential)]
     internal readonly struct DbRow
@@ -15,6 +18,9 @@ namespace Corvus.Text.Json.Internal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => $"DbRow: TokenType = {TokenType}, {(FromExternalDocument && (TokenType is not JsonTokenType.EndObject or JsonTokenType.EndArray) ? $"WorkspaceDocumentId: {NumberOfRows}" : $"NumberOfRows: {NumberOfRows}")}";
 
+        /// <summary>
+        /// The size in bytes of a DbRow structure.
+        /// </summary>
         internal const int Size = 12;
 
         // Sign bit indicates whether this is from an external document.
@@ -48,22 +54,35 @@ namespace Corvus.Text.Json.Internal
         internal int RawSizeOrLength => _sizeLengthOrPropertyMapIndexUnion;
 
         /// <summary>
-        /// String/PropertyName: Unescaping is required.
-        /// Array: At least one element is an object/array.
-        /// Otherwise; false
+        /// Gets a value indicating whether this token has complex children (requires unescaping for strings, or contains objects/arrays for arrays).
         /// </summary>
         internal bool HasComplexChildren => _sizeLengthOrPropertyMapIndexUnion < 0;
 
+        /// <summary>
+        /// Gets a value indicating whether this row represents data from an external document.
+        /// </summary>
         internal bool FromExternalDocument => (unchecked(_locationAndFromExternalDocumentUnion) & 0x8000_0000U) != 0;
 
+        /// <summary>
+        /// Gets the number of rows that the current JSON element occupies within the database.
+        /// </summary>
         internal int NumberOfRows =>
             (int)(_numberOfRowsExternalDocumentIndexAndTypeUnion & 0x0FFFFFFFU); // Number of rows that the current JSON element occupies within the database
 
+        /// <summary>
+        /// Gets the workspace document ID when this simple value is from an external document.
+        /// </summary>
         internal int WorkspaceDocumentId =>
             (int)(_numberOfRowsExternalDocumentIndexAndTypeUnion & 0x0FFFFFFFU); // The workspace document ID, if this simple value is from an external document.
 
+        /// <summary>
+        /// Gets the JSON token type for this row.
+        /// </summary>
         internal JsonTokenType TokenType => (JsonTokenType)(_numberOfRowsExternalDocumentIndexAndTypeUnion >> 28);
 
+        /// <summary>
+        /// Constant representing an unknown size value.
+        /// </summary>
         internal const int UnknownSize = -1;
 
         /// <summary>

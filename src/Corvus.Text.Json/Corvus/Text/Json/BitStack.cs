@@ -6,6 +6,13 @@ using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json
 {
+    /// <summary>
+    /// Represents a stack of boolean values implemented using bit manipulation for efficient memory usage.
+    /// </summary>
+    /// <remarks>
+    /// This structure is optimized to avoid allocation for depths up to 64 levels by using a ulong as storage.
+    /// For deeper nesting, it falls back to using an array.
+    /// </remarks>
     internal struct BitStack
     {
         // We are using a ulong to represent our nested state, so we can only

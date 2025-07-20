@@ -9,6 +9,9 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration
 {
+    /// <summary>
+    /// Code generator extensions providing general code generation utilities.
+    /// </summary>
     internal static partial class CodeGeneratorExtensions
     {
         /// <summary>
@@ -840,6 +843,12 @@ namespace Corvus.Text.Json.CodeGeneration
             return generator;
         }
 
+        /// <summary>
+        /// Appends the backing fields for the JSON element.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="forMutable">Whether to emit the fields for a mutable element.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
         public static CodeGenerator AppendBackingFields(this CodeGenerator generator, bool forMutable = false)
         {
             if (generator.IsCancellationRequested)
@@ -1026,6 +1035,12 @@ namespace Corvus.Text.Json.CodeGeneration
                 .AppendLineIndent("private JsonTokenType TokenType => _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;");
         }
 
+        /// <summary>
+        /// Appends a method to check if the instance is valid.
+        /// </summary>
+        /// <param name="generator">The code generator.</param>
+        /// <param name="forMutable">Whether to emit the check for a mutable element.</param>
+        /// <returns>A reference to the generator having completed the operation.</returns>
         public static CodeGenerator AppendCheckValidInstance(this CodeGenerator generator, bool forMutable = false)
         {
             generator

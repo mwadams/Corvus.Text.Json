@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 namespace Corvus.Text.Json.Internal
 {
     /// <summary>
-    /// Extension methods for <see cref="IJsonElement"/>.
+    /// Helper methods for performing deep equality comparisons between JSON elements and their descendant values.
     /// </summary>
     public static partial class JsonElementHelpers
     {
@@ -17,7 +17,7 @@ namespace Corvus.Text.Json.Internal
         /// Compares the values of two <see cref="IJsonElement"/> values for equality, including the values of all descendant elements.
         /// </summary>
         /// <typeparam name="TLeft">The type of the first <see cref="IJsonElement"/>.</typeparam>
-        /// <typeparam name="TLeft">The type of the first <see cref="IJsonElement"/>.</typeparam>
+        /// <typeparam name="TRight">The type of the second <see cref="IJsonElement"/>.</typeparam>
         /// <param name="element1">The first <see cref="IJsonElement"/> to compare.</param>
         /// <param name="element2">The second <see cref="IJsonElement"/> to compare.</param>
         /// <returns><see langword="true"/> if the two values are equal; otherwise, <see langword="false"/>.</returns>
@@ -60,6 +60,16 @@ namespace Corvus.Text.Json.Internal
 
         }
 
+        /// <summary>
+        /// Compares the values of two JSON elements for equality based on their value kinds and document information.
+        /// </summary>
+        /// <param name="element1Kind">The value kind of the first JSON element.</param>
+        /// <param name="element2Kind">The value kind of the second JSON element.</param>
+        /// <param name="element1ParentDocument">The parent document containing the first JSON element.</param>
+        /// <param name="element2ParentDocument">The parent document containing the second JSON element.</param>
+        /// <param name="element1ParentDocumentIndex">The index of the first JSON element within its parent document.</param>
+        /// <param name="element2ParentDocumentIndex">The index of the second JSON element within its parent document.</param>
+        /// <returns><see langword="true"/> if the two JSON elements are equal; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool DeepEquals(
             JsonValueKind element1Kind,

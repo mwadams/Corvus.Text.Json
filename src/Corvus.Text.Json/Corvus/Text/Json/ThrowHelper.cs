@@ -9,35 +9,62 @@ using static Corvus.Text.Json.Utf8JsonWriter;
 
 namespace Corvus.Text.Json
 {
+    /// <summary>
+    /// Provides helper methods for throwing exceptions in a consistent manner.
+    /// </summary>
     internal static partial class ThrowHelper
     {
-        // If the exception source is this value, the serializer will re-throw as JsonException.
+        /// <summary>
+        /// Exception source value that indicates the serializer should re-throw the exception as a JsonException.
+        /// </summary>
         public const string ExceptionSourceValueToRethrowAsJsonException = "Corvus.Text.Json.Rethrowable";
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> for an invalid new line character.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_NewLine(string parameterName)
         {
             throw GetArgumentOutOfRangeException(parameterName, SR.InvalidNewLine);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> for an invalid indent character.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_IndentCharacter(string parameterName)
         {
             throw GetArgumentOutOfRangeException(parameterName, SR.InvalidIndentCharacter);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> for an invalid indent size.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter that caused the exception.</param>
+        /// <param name="minimumSize">The minimum allowed size.</param>
+        /// <param name="maximumSize">The maximum allowed size.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_IndentSize(string parameterName, int minimumSize, int maximumSize)
         {
             throw GetArgumentOutOfRangeException(parameterName, SR.Format(SR.InvalidIndentSize, minimumSize, maximumSize));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when max depth must be positive.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_MaxDepthMustBePositive(string parameterName)
         {
             throw GetArgumentOutOfRangeException(parameterName, SR.MaxDepthMustBePositive);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when a JSON number exponent is too large.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_JsonNumberExponentTooLarge(string parameterName)
         {
@@ -49,42 +76,69 @@ namespace Corvus.Text.Json
             return new ArgumentOutOfRangeException(parameterName, message);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when a comment enum value is out of range.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_CommentEnumMustBeInRange(string parameterName)
         {
             throw GetArgumentOutOfRangeException(parameterName, SR.CommentHandlingMustBeValid);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when an array index is negative.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_ArrayIndexNegative(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, SR.ArrayIndexNegative);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when a JSON converter factory type is not supported.
+        /// </summary>
+        /// <param name="typeToConvert">The type that is not supported.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_JsonConverterFactory_TypeNotSupported(Type typeToConvert)
         {
             throw new ArgumentOutOfRangeException(nameof(typeToConvert), SR.Format(SR.SerializerConverterFactoryInvalidArgument, typeToConvert.FullName));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when a value must be non-negative.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_NeedNonNegNum(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, SR.ArgumentOutOfRange_Generic_MustBeNonNegative);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when an index must be less than or equal to the collection size.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeException_IndexMustBeLessOrEqual(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, SR.ArgumentOutOfRange_IndexMustBeLessOrEqual);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> for invalid offset and length parameters.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowArgumentException_InvalidOffLen()
         {
             throw new ArgumentException(SR.Argument_InvalidOffLen);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when an array is too small.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentException_ArrayTooSmall(string paramName)
         {
@@ -96,53 +150,88 @@ namespace Corvus.Text.Json
             return new ArgumentException(message);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> with the specified message.
+        /// </summary>
+        /// <param name="message">The error message to include in the exception.</param>
         [DoesNotReturn]
         public static void ThrowArgumentException(string message)
         {
             throw GetArgumentException(message);
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> for when flush must be called first.
+        /// </summary>
+        /// <param name="_buffered">The number of buffered bytes.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
         public static InvalidOperationException GetInvalidOperationException_CallFlushFirst(int _buffered)
         {
             return GetInvalidOperationException(SR.Format(SR.CallFlushToAvoidDataLoss, _buffered));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when the destination span is too short.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowArgumentException_DestinationTooShort()
         {
             throw GetArgumentException(SR.DestinationTooShort);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when a property name is too large.
+        /// </summary>
+        /// <param name="tokenLength">The length of the token that is too large.</param>
         [DoesNotReturn]
         public static void ThrowArgumentException_PropertyNameTooLarge(int tokenLength)
         {
             throw GetArgumentException(SR.Format(SR.PropertyNameTooLarge, tokenLength));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when a value is too large.
+        /// </summary>
+        /// <param name="tokenLength">The length of the token that is too large.</param>
         [DoesNotReturn]
         public static void ThrowArgumentException_ValueTooLarge(long tokenLength)
         {
             throw GetArgumentException(SR.Format(SR.ValueTooLarge, tokenLength));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when a value type is not supported.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowArgumentException_ValueNotSupported()
         {
             throw GetArgumentException(SR.SpecialNumberValuesNotSupported);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a larger span is needed.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_NeedLargerSpan()
         {
             throw GetInvalidOperationException(SR.FailedToGetLargerSpan);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when a property name is too large.
+        /// </summary>
+        /// <param name="length">The length of the property name that is too large.</param>
         [DoesNotReturn]
         public static void ThrowPropertyNameTooLargeArgumentException(int length)
         {
             throw GetArgumentException(SR.Format(SR.PropertyNameTooLarge, length));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> for property name or value that is too large.
+        /// </summary>
+        /// <param name="propertyName">The property name span.</param>
+        /// <param name="value">The value span.</param>
         [DoesNotReturn]
         public static void ThrowArgumentException(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
         {
@@ -157,6 +246,11 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> for property name or value that is too large.
+        /// </summary>
+        /// <param name="propertyName">The property name span (UTF-8 bytes).</param>
+        /// <param name="value">The value span (UTF-16 characters).</param>
         [DoesNotReturn]
         public static void ThrowArgumentException(ReadOnlySpan<byte> propertyName, ReadOnlySpan<char> value)
         {
@@ -171,6 +265,11 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> for property name or value that is too large.
+        /// </summary>
+        /// <param name="propertyName">The property name span (UTF-16 characters).</param>
+        /// <param name="value">The value span (UTF-8 bytes).</param>
         [DoesNotReturn]
         public static void ThrowArgumentException(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
         {
@@ -185,6 +284,11 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> for property name or value that is too large.
+        /// </summary>
+        /// <param name="propertyName">The property name span (UTF-16 characters).</param>
+        /// <param name="value">The value span (UTF-16 characters).</param>
         [DoesNotReturn]
         public static void ThrowArgumentException(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
         {
@@ -199,6 +303,12 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> or <see cref="ArgumentException"/> based on property name length or depth.
+        /// </summary>
+        /// <param name="propertyName">The property name span.</param>
+        /// <param name="currentDepth">The current depth.</param>
+        /// <param name="maxDepth">The maximum allowed depth.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationOrArgumentException(ReadOnlySpan<byte> propertyName, int currentDepth, int maxDepth)
         {
@@ -215,12 +325,20 @@ namespace Corvus.Text.Json
         }
 
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when encoders are incompatible.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_IncompatibleEncoders()
         {
             throw GetInvalidOperationException(SR.IncompatibleEncoders);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when the depth is too large.
+        /// </summary>
+        /// <param name="currentDepth">The current depth.</param>
+        /// <param name="maxDepth">The maximum allowed depth.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException(int currentDepth, int maxDepth)
         {
@@ -229,6 +347,10 @@ namespace Corvus.Text.Json
             ThrowInvalidOperationException(SR.Format(SR.DepthTooLarge, currentDepth, maxDepth));
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> with the specified message.
+        /// </summary>
+        /// <param name="message">The error message to include in the exception.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException(string message)
         {
@@ -240,6 +362,10 @@ namespace Corvus.Text.Json
             return new InvalidOperationException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when depth is not zero or JSON is empty.
+        /// </summary>
+        /// <param name="currentDepth">The current depth.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_DepthNonZeroOrEmptyJson(int currentDepth)
         {
@@ -259,6 +385,12 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> or <see cref="ArgumentException"/> based on property name length or depth.
+        /// </summary>
+        /// <param name="propertyName">The property name span (UTF-16 characters).</param>
+        /// <param name="currentDepth">The current depth.</param>
+        /// <param name="maxDepth">The maximum allowed depth.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationOrArgumentException(ReadOnlySpan<char> propertyName, int currentDepth, int maxDepth)
         {
@@ -274,40 +406,70 @@ namespace Corvus.Text.Json
             }
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> when an array token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
         public static InvalidOperationException GetInvalidOperationException_ExpectedArray(JsonTokenType tokenType)
         {
             return GetInvalidOperationException("array", tokenType);
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> when an object token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
         public static InvalidOperationException GetInvalidOperationException_ExpectedObject(JsonTokenType tokenType)
         {
             return GetInvalidOperationException("object", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a number token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedNumber(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException("number", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a boolean token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedBoolean(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException("boolean", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a string token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException("string", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a property name token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedPropertyName(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException("propertyName", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when string comparison is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedStringComparison(JsonTokenType tokenType)
         {
@@ -315,24 +477,40 @@ namespace Corvus.Text.Json
         }
 
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when an object token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedObject(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException(tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a comment token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedComment(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException("comment", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when skipping is not allowed on partial data.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_CannotSkipOnPartial()
         {
             throw GetInvalidOperationException(SR.CannotSkip);
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when different encodings cannot be mixed.
+        /// </summary>
+        /// <param name="previousEncoding">The previous encoding type.</param>
+        /// <param name="currentEncoding">The current encoding type.</param>
         [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException_CannotMixEncodings(EnclosingContainerType previousEncoding, EnclosingContainerType currentEncoding)
@@ -363,6 +541,11 @@ namespace Corvus.Text.Json
             return GetInvalidOperationException(SR.Format(SR.InvalidComparison, tokenType));
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> for incorrect <see cref="JsonElement"/> type access.
+        /// </summary>
+        /// <param name="expectedType">The expected JSON token type.</param>
+        /// <param name="actualType">The actual JSON token type.</param>
         [DoesNotReturn]
         internal static void ThrowJsonElementWrongTypeException(
             JsonTokenType expectedType,
@@ -371,6 +554,12 @@ namespace Corvus.Text.Json
             throw GetJsonElementWrongTypeException(expectedType.ToValueKind(), actualType.ToValueKind());
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> for incorrect <see cref="JsonElement"/> type access.
+        /// </summary>
+        /// <param name="expectedType">The expected JSON value kind.</param>
+        /// <param name="actualType">The actual JSON value kind.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
         internal static InvalidOperationException GetJsonElementWrongTypeException(
             JsonValueKind expectedType,
             JsonValueKind actualType)
@@ -379,6 +568,12 @@ namespace Corvus.Text.Json
                 SR.Format(SR.JsonElementHasWrongType, expectedType, actualType));
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> for incorrect <see cref="JsonElement"/> type access.
+        /// </summary>
+        /// <param name="expectedTypeName">The expected type name.</param>
+        /// <param name="actualType">The actual JSON value kind.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
         internal static InvalidOperationException GetJsonElementWrongTypeException(
             string expectedTypeName,
             JsonValueKind actualType)
@@ -387,12 +582,27 @@ namespace Corvus.Text.Json
                 SR.Format(SR.JsonElementHasWrongType, expectedTypeName, actualType));
         }
 
+        /// <summary>
+        /// Throws a <see cref="JsonReaderException"/> with information from the JSON reader.
+        /// </summary>
+        /// <param name="json">The JSON reader reference.</param>
+        /// <param name="resource">The exception resource type.</param>
+        /// <param name="nextByte">The next byte that caused the exception.</param>
+        /// <param name="bytes">Additional bytes for context.</param>
         [DoesNotReturn]
         public static void ThrowJsonReaderException(ref Utf8JsonReader json, ExceptionResource resource, byte nextByte = default, ReadOnlySpan<byte> bytes = default)
         {
             throw GetJsonReaderException(ref json, resource, nextByte, bytes);
         }
 
+        /// <summary>
+        /// Gets a <see cref="JsonException"/> with information from the JSON reader.
+        /// </summary>
+        /// <param name="json">The JSON reader reference.</param>
+        /// <param name="resource">The exception resource type.</param>
+        /// <param name="nextByte">The next byte that caused the exception.</param>
+        /// <param name="bytes">Additional bytes for context.</param>
+        /// <returns>A <see cref="JsonException"/> with the appropriate message and position information.</returns>
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static JsonException GetJsonReaderException(ref Utf8JsonReader json, ExceptionResource resource, byte nextByte, ReadOnlySpan<byte> bytes)
         {
@@ -407,6 +617,11 @@ namespace Corvus.Text.Json
 
         private static bool IsPrintable(byte value) => value >= 0x20 && value < 0x7F;
 
+        /// <summary>
+        /// Gets a printable string representation of a byte value.
+        /// </summary>
+        /// <param name="value">The byte value to convert.</param>
+        /// <returns>A character representation if printable, otherwise a hexadecimal representation.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static string GetPrintableString(byte value)
         {
@@ -535,18 +750,33 @@ namespace Corvus.Text.Json
             return message;
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> based on the exception resource and current state.
+        /// </summary>
+        /// <param name="resource">The exception resource type.</param>
+        /// <param name="currentDepth">The current depth.</param>
+        /// <param name="maxDepth">The maximum allowed depth.</param>
+        /// <param name="token">The token that caused the exception.</param>
+        /// <param name="tokenType">The token type.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException(ExceptionResource resource, int currentDepth, int maxDepth, byte token, JsonTokenType tokenType)
         {
             throw GetInvalidOperationException(resource, currentDepth, maxDepth, token, tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when a comment value is invalid.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowArgumentException_InvalidCommentValue()
         {
             throw new ArgumentException(SR.CannotWriteCommentWithEmbeddedDelimiter);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when invalid UTF-8 bytes are encountered.
+        /// </summary>
+        /// <param name="value">The invalid UTF-8 byte sequence.</param>
         [DoesNotReturn]
         public static void ThrowArgumentException_InvalidUTF8(ReadOnlySpan<byte> value)
         {
@@ -575,39 +805,71 @@ namespace Corvus.Text.Json
             throw new ArgumentException(SR.Format(SR.CannotEncodeInvalidUTF8, builder));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when an invalid UTF-16 character is encountered.
+        /// </summary>
+        /// <param name="charAsInt">The invalid character as an integer.</param>
         [DoesNotReturn]
         public static void ThrowArgumentException_InvalidUTF16(int charAsInt)
         {
             throw new ArgumentException(SR.Format(SR.CannotEncodeInvalidUTF16, $"0x{charAsInt:X2}"));
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when invalid UTF-16 characters are read.
+        /// </summary>
+        /// <param name="charAsInt">The invalid character as an integer.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ReadInvalidUTF16(int charAsInt)
         {
             throw GetInvalidOperationException(SR.Format(SR.CannotReadInvalidUTF16, $"0x{charAsInt:X2}"));
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when incomplete UTF-16 characters are read.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ReadIncompleteUTF16()
         {
             throw GetInvalidOperationException(SR.CannotReadIncompleteUTF16);
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> for invalid UTF-8 reading operations.
+        /// </summary>
+        /// <param name="innerException">The optional inner exception.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
         public static InvalidOperationException GetInvalidOperationException_ReadInvalidUTF8(DecoderFallbackException? innerException = null)
         {
             return GetInvalidOperationException(SR.CannotTranscodeInvalidUtf8, innerException);
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> for invalid UTF-16 reading operations.
+        /// </summary>
+        /// <param name="innerException">The optional inner exception.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
         public static InvalidOperationException GetInvalidOperationException_ReadInvalidUTF16(DecoderFallbackException? innerException = null)
         {
             return GetInvalidOperationException(SR.CannotTranscodeInvalidUtf16, innerException);
         }
 
+        /// <summary>
+        /// Gets an <see cref="ArgumentException"/> for invalid UTF-16 reading operations.
+        /// </summary>
+        /// <param name="innerException">The inner exception.</param>
+        /// <returns>An <see cref="ArgumentException"/> with the appropriate message.</returns>
         public static ArgumentException GetArgumentException_ReadInvalidUTF16(EncoderFallbackException innerException)
         {
             return new ArgumentException(SR.CannotTranscodeInvalidUtf16, innerException);
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> with a message and optional inner exception.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="innerException">The optional inner exception.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate source.</returns>
         public static InvalidOperationException GetInvalidOperationException(string message, Exception? innerException)
         {
             InvalidOperationException ex = new InvalidOperationException(message, innerException);
@@ -615,6 +877,15 @@ namespace Corvus.Text.Json
             return ex;
         }
 
+        /// <summary>
+        /// Gets an <see cref="InvalidOperationException"/> based on the exception resource and current state.
+        /// </summary>
+        /// <param name="resource">The exception resource type.</param>
+        /// <param name="currentDepth">The current depth.</param>
+        /// <param name="maxDepth">The maximum allowed depth.</param>
+        /// <param name="token">The token that caused the exception.</param>
+        /// <param name="tokenType">The token type.</param>
+        /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static InvalidOperationException GetInvalidOperationException(ExceptionResource resource, int currentDepth, int maxDepth, byte token, JsonTokenType tokenType)
         {
@@ -624,6 +895,10 @@ namespace Corvus.Text.Json
             return ex;
         }
 
+        /// <summary>
+        /// Throws an <see cref="OutOfMemoryException"/> when buffer capacity is exceeded.
+        /// </summary>
+        /// <param name="capacity">The capacity that was exceeded.</param>
         [DoesNotReturn]
         public static void ThrowOutOfMemoryException(uint capacity)
         {
@@ -674,12 +949,19 @@ namespace Corvus.Text.Json
             return message;
         }
 
+        /// <summary>
+        /// Throws a <see cref="FormatException"/> without a specific message.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowFormatException()
         {
             throw new FormatException { Source = ExceptionSourceValueToRethrowAsJsonException };
         }
 
+        /// <summary>
+        /// Throws a <see cref="FormatException"/> for a specific numeric type.
+        /// </summary>
+        /// <param name="numericType">The numeric type that caused the format exception.</param>
         public static void ThrowFormatException(NumericType numericType)
         {
             string message = "";
@@ -736,6 +1018,10 @@ namespace Corvus.Text.Json
             throw new FormatException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };
         }
 
+        /// <summary>
+        /// Throws a <see cref="FormatException"/> for a specific data type.
+        /// </summary>
+        /// <param name="dataType">The data type that caused the format exception.</param>
         [DoesNotReturn]
         public static void ThrowFormatException(DataType dataType)
         {
@@ -769,30 +1055,46 @@ namespace Corvus.Text.Json
             throw new FormatException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };
         }
 
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/> when a char token type is expected.
+        /// </summary>
+        /// <param name="tokenType">The actual token type encountered.</param>
         [DoesNotReturn]
         public static void ThrowInvalidOperationException_ExpectedChar(JsonTokenType tokenType)
         {
             throw GetInvalidOperationException("char", tokenType);
         }
 
+        /// <summary>
+        /// Throws an <see cref="ObjectDisposedException"/> for a disposed <see cref="Utf8JsonWriter"/>.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowObjectDisposedException_Utf8JsonWriter()
         {
             throw new ObjectDisposedException(nameof(Utf8JsonWriter));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ObjectDisposedException"/> for a disposed <see cref="JsonDocument"/>.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowObjectDisposedException_JsonDocument()
         {
             throw new ObjectDisposedException(nameof(JsonDocument));
         }
 
+        /// <summary>
+        /// Throws an <see cref="ObjectDisposedException"/> for a disposed <see cref="JsonWorkspace"/>.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowObjectDisposedException_JsonWorkspace()
         {
             throw new ObjectDisposedException(nameof(JsonWorkspace));
         }
 
+        /// <summary>
+        /// Throws an <see cref="InsufficientExecutionStackException"/> when deep equality checking causes stack overflow.
+        /// </summary>
         [DoesNotReturn]
         public static void ThrowInsufficientExecutionStackException_JsonElementDeepEqualsInsufficientExecutionStack()
         {
@@ -800,6 +1102,9 @@ namespace Corvus.Text.Json
         }
     }
 
+    /// <summary>
+    /// Defines the types of exception resources used for generating error messages.
+    /// </summary>
     internal enum ExceptionResource
     {
         ArrayDepthTooLarge,
@@ -846,6 +1151,9 @@ namespace Corvus.Text.Json
         CannotWriteWithinString,
     }
 
+    /// <summary>
+    /// Defines the numeric types that can cause format exceptions.
+    /// </summary>
     internal enum NumericType
     {
         Byte,
@@ -864,6 +1172,9 @@ namespace Corvus.Text.Json
         Decimal
     }
 
+    /// <summary>
+    /// Defines the data types that can cause format exceptions.
+    /// </summary>
     internal enum DataType
     {
         Boolean,

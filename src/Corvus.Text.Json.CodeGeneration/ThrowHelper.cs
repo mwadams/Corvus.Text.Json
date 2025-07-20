@@ -3,8 +3,15 @@
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides helper methods for throwing exceptions in a consistent manner for code generation scenarios.
+    /// </summary>
     internal static class ThrowHelper
     {
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when a JSON number exponent is too large.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
         public static void ThrowArgumentOutOfRangeException_JsonNumberExponentTooLarge(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, "The JSON number exponent was too large.");

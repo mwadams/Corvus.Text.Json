@@ -102,6 +102,11 @@ namespace Corvus.Text.Json.Internal
     //   * 4 bits JsonTokenType
     //   * 28 bits for the number of rows until the next value (never 0) if this is a local value,
     //     or the index of the workspace document in the workspace for this row if this is an external value.
+
+    /// <summary>
+    /// Database storing metadata for parsed JSON document structure, including token information
+    /// and structural relationships between JSON elements.
+    /// </summary>
     public struct MetadataDb : IDisposable
     {
         private const int SizeOrLengthOffset = 4;
@@ -134,14 +139,30 @@ namespace Corvus.Text.Json.Internal
             Length = completeDb.Length;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the metadata database has been initialized with data.
+        /// </summary>
         // If the instance is "default", _data can be null
         internal bool IsInitialized => _data is not null;
 
+        /// <summary>
+        /// Creates a metadata database using rented array pool memory with the specified data and length.
+        /// </summary>
+        /// <param name="data">The rented byte array to use as backing storage.</param>
+        /// <param name="length">The initial length of data in the array.</param>
+        /// <param name="convertToAlloc">Whether to convert to allocated memory when complete.</param>
+        /// <returns>A new MetadataDb instance using the provided rented memory.</returns>
         internal static MetadataDb CreateRented(byte[] data, int length, bool convertToAlloc)
         {
             return new MetadataDb(data, isLocked: false, convertToAlloc, length);
         }
 
+        /// <summary>
+        /// Creates a metadata database using rented array pool memory with an estimated initial size.
+        /// </summary>
+        /// <param name="payloadLength">The length of the JSON payload to estimate buffer size.</param>
+        /// <param name="convertToAlloc">Whether to convert to allocated memory when complete.</param>
+        /// <returns>A new MetadataDb instance using rented memory.</returns>
         internal static MetadataDb CreateRented(int payloadLength, bool convertToAlloc)
         {
             int initialSize = CalculateInitialSize(payloadLength);
@@ -174,6 +195,12 @@ namespace Corvus.Text.Json.Internal
             return initialSize;
         }
 
+        /// <summary>
+        /// Creates a metadata database with a fixed-size allocated array.
+        /// </summary>
+        /// <param name="payloadLength">The length of the JSON payload to size the buffer.</param>
+        /// <param name="convertToAlloc">Whether to convert to allocated memory when complete.</param>
+        /// <returns>A new MetadataDb instance with locked allocated memory.</returns>
         internal static MetadataDb CreateLocked(int payloadLength, bool convertToAlloc = false)
         {
             // Add one row worth of data since we need at least one row for a primitive type.
@@ -183,6 +210,9 @@ namespace Corvus.Text.Json.Internal
             return new MetadataDb(data, isLocked: true, convertToAlloc: convertToAlloc);
         }
 
+        /// <summary>
+        /// Releases resources used by the metadata database, returning rented arrays to the pool.
+        /// </summary>
         public void Dispose()
         {
             byte[]? data = Interlocked.Exchange(ref _data, null!);
@@ -201,9 +231,11 @@ namespace Corvus.Text.Json.Internal
         }
 
         /// <summary>
-        /// If using array pools, trim excess if necessary.
-        /// If not using array pools, release the temporary array pool and alloc.
+        /// Completes allocations by either converting rented memory to allocated memory or trimming excess capacity.
         /// </summary>
+        /// <remarks>
+        /// If using array pools, trims excess if necessary. If not using array pools, releases the temporary array pool and allocates.
+        /// </remarks>
         internal void CompleteAllocations()
         {
             if (!_isLocked)
@@ -248,6 +280,12 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Appends a new token entry to the metadata database.
+        /// </summary>
+        /// <param name="tokenType">The JSON token type.</param>
+        /// <param name="startLocation">The start location of the token in the source.</param>
+        /// <param name="length">The length of the token, or -1 for containers.</param>
         internal void Append(JsonTokenType tokenType, int startLocation, int length)
         {
             // StartArray or StartObject should have length -1, otherwise the length should not be -1.
@@ -265,6 +303,12 @@ namespace Corvus.Text.Json.Internal
             Length += DbRow.Size;
         }
 
+        /// <summary>
+        /// Appends a dynamic simple value (string, number, boolean, null) to the metadata database.
+        /// </summary>
+        /// <param name="tokenType">The JSON token type (must be PropertyName or higher).</param>
+        /// <param name="location">The location of the token in the source.</param>
+        /// <param name="requiresUnescapingOrHasExponent">Whether the value requires unescaping or has an exponent.</param>
         internal void AppendDynamicSimpleValue(JsonTokenType tokenType, int location, bool requiresUnescapingOrHasExponent)
         {
             Debug.Assert(tokenType >= JsonTokenType.PropertyName);
@@ -279,6 +323,16 @@ namespace Corvus.Text.Json.Internal
             Length += DbRow.Size;
         }
 
+        /// <summary>
+        /// Replaces a range of rows in a complex object with new rows, updating parent object counts.
+        /// </summary>
+        /// <param name="parentDocument">The parent mutable JSON document.</param>
+        /// <param name="complexObjectStartIndex">The start index of the complex object containing the rows.</param>
+        /// <param name="startIndex">The start index of the range to replace.</param>
+        /// <param name="endIndex">The end index of the range to replace.</param>
+        /// <param name="memberCountToReplace">The number of members being replaced.</param>
+        /// <param name="rowCountToInsert">The number of rows to insert.</param>
+        /// <param name="memberCountToInsert">The number of members to insert.</param>
         internal void ReplaceRowsInComplexObject(IMutableJsonDocument parentDocument, int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, int rowCountToInsert, int memberCountToInsert)
         {
             // First, we need to figure out how many rows we are replacing.
@@ -288,16 +342,63 @@ namespace Corvus.Text.Json.Internal
             InsertOrRemoveRowsInComplexObject(parentDocument, complexObjectStartIndex, startIndex, endIndex, rowCountToAddOrRemove, memberCountToAddOrRemove);
         }
 
+        /// <summary>
+        /// Inserts new rows in a complex object, updating parent object counts.
+        /// </summary>
+        /// <param name="parentDocument">The parent mutable JSON document.</param>
+        /// <param name="complexObjectStartIndex">The start index of the complex object containing the insertion point.</param>
+        /// <param name="startIndex">The index where rows should be inserted.</param>
+        /// <param name="rowCountToInsert">The number of rows to insert.</param>
+        /// <param name="memberCountToInsert">The number of members to insert.</param>
         internal void InsertRowsInComplexObject(IMutableJsonDocument parentDocument, int complexObjectStartIndex, int startIndex, int rowCountToInsert, int memberCountToInsert)
         {
             InsertOrRemoveRowsInComplexObject(parentDocument, complexObjectStartIndex, startIndex, startIndex, rowCountToInsert, memberCountToInsert);
         }
 
-        // This makes a space available to insert the given number of rows into the DB at the given index.
-        // It fixes up the next/previous rows in containing complex objects and leaves them available
-        // to be set.
-        // The startIndex is the start of the range where we are inserting or removing
-        // endIndex is the same as startIndex if we are inserting, or the end of the range that we are removing, if removing
+        /// <summary>
+        /// Inserts or removes rows in a complex object, updating all parent container counts and managing memory allocation.
+        /// </summary>
+        /// <param name="parentDocument">The parent mutable JSON document.</param>
+        /// <param name="complexObjectStartIndex">The start index of the complex object containing the modification point.</param>
+        /// <param name="startIndex">The start index of the range where rows are being inserted or removed.</param>
+        /// <param name="endIndex">The end index of the range. Equal to startIndex for insertions, or the end of the removal range for deletions.</param>
+        /// <param name="rowCountToInsert">The number of rows to insert (positive) or remove (negative).</param>
+        /// <param name="memberCountToInsert">The number of members to insert (positive) or remove (negative).</param>
+        /// <remarks>
+        /// This method performs a complex operation to maintain the structural integrity of the JSON metadata database
+        /// when rows are inserted or removed from within nested containers. The process involves several key steps:
+        ///
+        /// 1. **Parent Container Traversal**: Starting from the immediate parent container, traverses backwards through
+        ///    all containing objects and arrays to update their metadata. This ensures that parent containers maintain
+        ///    accurate counts of their contents.
+        ///
+        /// 2. **Count Updates**: For each containing structure encountered:
+        ///    - **StartObject**: Updates both row count and member count, then resets member count to 0 for outer containers
+        ///    - **StartArray**: Updates row count and member count, with special handling for complex children detection
+        ///    - **EndObject/EndArray**: Uses the end token to find the corresponding start token and continues traversal
+        ///    - **Other tokens**: Simply moves to the previous row without modification
+        ///
+        /// 3. **Memory Management**: Handles dynamic resizing of the backing array:
+        ///    - For insertions requiring more space: Rents a larger array from the pool, copies data with gaps, returns old array
+        ///    - For in-place operations: Uses efficient block copy operations to shift existing data
+        ///    - For removals: Compacts data by copying remaining elements over the removed section
+        ///
+        /// 4. **Data Integrity**: Maintains critical invariants:
+        ///    - Row counts in containers accurately reflect the number of child elements
+        ///    - Member counts distinguish between the logical item count and the actual row count
+        ///    - Complex children flags are properly set when arrays contain non-simple values
+        ///    - External document references are reset to local references when modified
+        ///
+        /// 5. **Performance Optimizations**:
+        ///    - Updates counts before memory operations to avoid cache invalidation during traversal
+        ///    - Uses block copy operations for efficient memory management
+        ///    - Leverages array pooling to minimize garbage collection pressure
+        ///    - Processes containers in reverse order to maintain data consistency during updates
+        ///
+        /// The method is designed to handle both simple insertions/deletions and complex scenarios involving
+        /// nested containers, ensuring that the metadata database remains consistent and all parent containers
+        /// maintain accurate structural information.
+        /// </remarks>
         private void InsertOrRemoveRowsInComplexObject(IMutableJsonDocument parentDocument, int complexObjectStartIndex, int startIndex, int endIndex, int rowCountToInsert, int memberCountToInsert)
         {
             AssertValidIndex(startIndex);
@@ -462,6 +563,13 @@ namespace Corvus.Text.Json.Internal
             MemoryMarshal.Write(startSizeOrLengthUnion, ref currentLength);
         }
 
+        /// <summary>
+        /// Appends an external token entry to the metadata database for tokens from external documents.
+        /// </summary>
+        /// <param name="tokenType">The JSON token type.</param>
+        /// <param name="externalIndex">The index in the external document.</param>
+        /// <param name="sizeOrLength">The size or length of the token.</param>
+        /// <param name="workspaceDocumentIndexOrNumberOfRows">The workspace document index or number of rows.</param>
         internal void AppendExternal(JsonTokenType tokenType, int externalIndex, int sizeOrLength, int workspaceDocumentIndexOrNumberOfRows)
         {
             if (Length >= _data.Length - DbRow.Size)
@@ -474,6 +582,9 @@ namespace Corvus.Text.Json.Internal
             Length += DbRow.Size;
         }
 
+        /// <summary>
+        /// Enlarges the internal data array by doubling its capacity when more space is needed.
+        /// </summary>
         private void Enlarge()
         {
             Debug.Assert(!_isLocked, "Appending to a locked database");
@@ -515,6 +626,11 @@ namespace Corvus.Text.Json.Internal
             Debug.Assert(index % DbRow.Size == 0, $"startIndex {index} is not at a record start position");
         }
 
+        /// <summary>
+        /// Sets the length value for the database row at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the database row.</param>
+        /// <param name="length">The length value to set.</param>
         internal void SetLength(int index, int length)
         {
             AssertValidIndex(index);
@@ -523,6 +639,11 @@ namespace Corvus.Text.Json.Internal
             MemoryMarshal.Write(destination, ref length);
         }
 
+        /// <summary>
+        /// Sets the number of rows value for the database row at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the database row.</param>
+        /// <param name="numberOfRows">The number of rows value to set (must be between 1 and 0x0FFFFFFF).</param>
         internal void SetNumberOfRows(int index, int numberOfRows)
         {
             AssertValidIndex(index);
@@ -536,6 +657,11 @@ namespace Corvus.Text.Json.Internal
             MemoryMarshal.Write(dataPos, ref value);
         }
 
+        /// <summary>
+        /// Sets the property map index for the database row at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the database row.</param>
+        /// <param name="propertyMapIndex">The property map index to set.</param>
         internal void SetPropertyMapIndex(int index, int propertyMapIndex)
         {
             this.AssertValidIndex(index);
@@ -546,6 +672,10 @@ namespace Corvus.Text.Json.Internal
             MemoryMarshal.Write(destination, ref pmi);
         }
 
+        /// <summary>
+        /// Sets the HasComplexChildren flag for the database row at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the database row.</param>
         internal void SetHasComplexChildren(int index)
         {
             AssertValidIndex(index);
@@ -586,12 +716,22 @@ namespace Corvus.Text.Json.Internal
             Length -= lengthToRemove;
         }
 
+        /// <summary>
+        /// Finds the index of the first unset size or length entry for the specified token type.
+        /// </summary>
+        /// <param name="lookupType">The token type to search for (must be StartObject or StartArray).</param>
+        /// <returns>The index of the first unset entry, or -1 if not found.</returns>
         internal int FindIndexOfFirstUnsetSizeOrLength(JsonTokenType lookupType)
         {
             Debug.Assert(lookupType == JsonTokenType.StartObject || lookupType == JsonTokenType.StartArray);
             return FindOpenElement(lookupType);
         }
 
+        /// <summary>
+        /// Finds an open element of the specified token type by searching backwards through the database.
+        /// </summary>
+        /// <param name="lookupType">The token type to search for.</param>
+        /// <returns>The index of the open element, or -1 if not found.</returns>
         internal int FindOpenElement(JsonTokenType lookupType)
         {
             Span<byte> data = _data.AsSpan(0, Length);
@@ -611,12 +751,22 @@ namespace Corvus.Text.Json.Internal
             return -1;
         }
 
+        /// <summary>
+        /// Gets the database row at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the database row to retrieve.</param>
+        /// <returns>The DbRow at the specified index.</returns>
         internal DbRow Get(int index)
         {
             AssertValidIndex(index);
             return MemoryMarshal.Read<DbRow>(_data.AsSpan(index));
         }
 
+        /// <summary>
+        /// Gets the JSON token type for the database row at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the database row.</param>
+        /// <returns>The JsonTokenType for the row at the specified index.</returns>
         internal JsonTokenType GetJsonTokenType(int index)
         {
             AssertValidIndex(index);
@@ -625,6 +775,11 @@ namespace Corvus.Text.Json.Internal
             return (JsonTokenType)(union >> 28);
         }
 
+        /// <summary>
+        /// Gets the start index of a container (object or array) given its end index.
+        /// </summary>
+        /// <param name="endIndex">The index of the EndObject or EndArray token.</param>
+        /// <returns>The index of the corresponding StartObject or StartArray token.</returns>
         internal int GetStartIndex(int endIndex)
         {
             Debug.Assert(GetJsonTokenType(endIndex) is JsonTokenType.EndObject or JsonTokenType.EndArray);
@@ -633,6 +788,12 @@ namespace Corvus.Text.Json.Internal
             return endIndex - ((int)(union & 0x0FFFFFFFU) * DbRow.Size);
         }
 
+        /// <summary>
+        /// Creates a copy of a segment of the metadata database from startIndex to endIndex.
+        /// </summary>
+        /// <param name="startIndex">The starting index of the segment to copy.</param>
+        /// <param name="endIndex">The ending index of the segment to copy.</param>
+        /// <returns>A new MetadataDb containing the copied segment with adjusted location offsets.</returns>
         internal MetadataDb CopySegment(int startIndex, int endIndex)
         {
             Debug.Assert(
@@ -689,6 +850,11 @@ namespace Corvus.Text.Json.Internal
             return new MetadataDb(newDatabase);
         }
 
+        /// <summary>
+        /// Takes ownership of the internal rented backing array, clearing the current instance.
+        /// </summary>
+        /// <param name="rentedBacking">Returns the rented backing array that was taken ownership of.</param>
+        /// <returns>The length of data in the returned backing array.</returns>
         internal int TakeOwnership(out byte[] rentedBacking)
         {
             byte[]? data = Interlocked.Exchange(ref _data, null!);
@@ -699,6 +865,11 @@ namespace Corvus.Text.Json.Internal
             return length;
         }
 
+        /// <summary>
+        /// Overwrites data in the destination metadata database starting at the specified target index.
+        /// </summary>
+        /// <param name="destination">The destination metadata database to write to.</param>
+        /// <param name="targetIndex">The index in the destination where writing should begin.</param>
         internal void Overwrite(ref MetadataDb destination, int targetIndex)
         {
             Debug.Assert(Length <= destination.Length - targetIndex);

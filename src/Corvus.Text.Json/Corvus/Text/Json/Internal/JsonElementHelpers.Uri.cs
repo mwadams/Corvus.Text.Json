@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Helper methods for JSON element URI operations.
+    /// </summary>
     public static partial class JsonElementHelpers
     {
         /// <summary>

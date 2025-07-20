@@ -8,8 +8,19 @@ namespace Corvus.Text.Json.CodeGeneration.Internal;
 namespace Corvus.Text.Json.Internal;
 #endif
 
+/// <summary>
+/// Core helper methods for parsing date and time components from ISO 8601 formatted strings.
+/// </summary>
 public static partial class JsonElementHelpers
 {
+    /// <summary>
+    /// Parses a date string in ISO 8601 format (YYYY-MM-DD) and extracts the year, month, and day components.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded text containing the date string to parse.</param>
+    /// <param name="year">When this method returns, contains the year component of the date.</param>
+    /// <param name="month">When this method returns, contains the month component of the date (1-12).</param>
+    /// <param name="day">When this method returns, contains the day component of the date (1-31).</param>
+    /// <returns><see langword="true"/> if the date was successfully parsed; otherwise, <see langword="false"/>.</returns>
     public static bool ParseDateCore(ReadOnlySpan<byte> text, out int year, out int month, out int day)
     {
         if (text[4] != '-' ||
@@ -35,6 +46,18 @@ public static partial class JsonElementHelpers
         return true;
     }
 
+    /// <summary>
+    /// Parses a time string with optional offset in ISO 8601 format and extracts the time and offset components.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded text containing the time string to parse.</param>
+    /// <param name="hours">When this method returns, contains the hours component of the time (0-23).</param>
+    /// <param name="minutes">When this method returns, contains the minutes component of the time (0-59).</param>
+    /// <param name="seconds">When this method returns, contains the seconds component of the time (0-59).</param>
+    /// <param name="milliseconds">When this method returns, contains the milliseconds component of the time (0-999).</param>
+    /// <param name="microseconds">When this method returns, contains the microseconds component of the time (0-999).</param>
+    /// <param name="nanoseconds">When this method returns, contains the nanoseconds component of the time (0-999).</param>
+    /// <param name="offsetSeconds">When this method returns, contains the timezone offset in seconds from UTC.</param>
+    /// <returns><see langword="true"/> if the time was successfully parsed; otherwise, <see langword="false"/>.</returns>
     public static bool ParseOffsetTimeCore(ReadOnlySpan<byte> text, out int hours, out int minutes, out int seconds, out int milliseconds, out int microseconds, out int nanoseconds, out int offsetSeconds)
     {
         // We can start searching from 8 after the beginning as we know it won't come in
@@ -76,6 +99,12 @@ public static partial class JsonElementHelpers
         return true;
     }
 
+    /// <summary>
+    /// Parses a timezone offset string in ISO 8601 format (±HH:MM or Z) and extracts the offset in seconds.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded text containing the offset string to parse.</param>
+    /// <param name="offsetSeconds">When this method returns, contains the timezone offset in seconds from UTC.</param>
+    /// <returns><see langword="true"/> if the offset was successfully parsed; otherwise, <see langword="false"/>.</returns>
     public static bool ParseOffsetCore(ReadOnlySpan<byte> text, out int offsetSeconds)
     {
         if (text[0] == 'Z' || text[0] == 'z')
@@ -122,6 +151,17 @@ public static partial class JsonElementHelpers
         return true;
     }
 
+    /// <summary>
+    /// Parses a time string in ISO 8601 format (HH:MM:SS[.nnnnnnnnn]) and extracts the time components.
+    /// </summary>
+    /// <param name="text">The UTF-8 encoded text containing the time string to parse.</param>
+    /// <param name="hours">When this method returns, contains the hours component of the time (0-23).</param>
+    /// <param name="minutes">When this method returns, contains the minutes component of the time (0-59).</param>
+    /// <param name="seconds">When this method returns, contains the seconds component of the time (0-59).</param>
+    /// <param name="milliseconds">When this method returns, contains the milliseconds component of the time (0-999).</param>
+    /// <param name="microseconds">When this method returns, contains the microseconds component of the time (0-999).</param>
+    /// <param name="nanoseconds">When this method returns, contains the nanoseconds component of the time (0-999).</param>
+    /// <returns><see langword="true"/> if the time was successfully parsed; otherwise, <see langword="false"/>.</returns>
     public static bool ParseTimeCore(ReadOnlySpan<byte> text, out int hours, out int minutes, out int seconds, out int milliseconds, out int microseconds, out int nanoseconds)
     {
         if (text.Length > 18 ||

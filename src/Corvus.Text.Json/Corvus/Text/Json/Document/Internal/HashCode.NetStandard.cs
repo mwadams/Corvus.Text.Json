@@ -6,10 +6,18 @@ using System.Runtime.InteropServices;
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides polyfill methods for string hash code operations and hash code utilities.
+    /// </summary>
     internal static class StringHashCodePolyfills
     {
         extension(String)
         {
+            /// <summary>
+            /// Computes the hash code for the specified character span.
+            /// </summary>
+            /// <param name="value">The character span to compute the hash code for.</param>
+            /// <returns>The computed hash code.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static int GetHashCode(ReadOnlySpan<char> value)
             {
@@ -20,6 +28,11 @@ namespace Corvus.Text.Json.Internal
             }
         }
 
+        /// <summary>
+        /// Adds bytes to the hash code calculation from the specified byte span.
+        /// </summary>
+        /// <param name="hashCode">The hash code instance to add bytes to.</param>
+        /// <param name="value">The byte span to add to the hash code.</param>
         public static void AddBytes(this HashCode hashCode, ReadOnlySpan<byte> value)
         {
             // Add them in blocks of ulongs

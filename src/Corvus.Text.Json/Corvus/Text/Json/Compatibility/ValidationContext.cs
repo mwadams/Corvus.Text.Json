@@ -21,11 +21,20 @@ namespace Corvus.Text.Json.Compatibility
         /// </summary>
         public static readonly ValidationContext InvalidContext = new(false);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationContext"/> struct.
+        /// </summary>
+        /// <param name="isValid">A value indicating whether the context is valid.</param>
         internal ValidationContext(bool isValid)
         {
             IsValid = isValid;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationContext"/> struct.
+        /// </summary>
+        /// <param name="isMatch">A value indicating whether the validation was a match.</param>
+        /// <param name="collector">The results collector containing validation data.</param>
         // This is the constructor for when the results collection has not changed
         internal ValidationContext(bool isMatch, JsonSchemaResultsCollector collector)
         {
@@ -34,6 +43,9 @@ namespace Corvus.Text.Json.Compatibility
             Collector = collector;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this context represents a valid result.
+        /// </summary>
         public bool IsValid { get; }
 
         /// <summary>
@@ -41,6 +53,9 @@ namespace Corvus.Text.Json.Compatibility
         /// </summary>
         public IReadOnlyList<ValidationResult> Results => BuildResults(Collector);
 
+        /// <summary>
+        /// Gets the internal results collector.
+        /// </summary>
         internal JsonSchemaResultsCollector? Collector { get; }
 
         private static ReadOnlyCollection<ValidationResult> BuildResults(JsonSchemaResultsCollector? collector)

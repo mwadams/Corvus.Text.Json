@@ -3,8 +3,16 @@
 
 namespace Corvus.Text.Json.Internal
 {
+    /// <summary>
+    /// Provides methods for validating JSON Pointer strings.
+    /// </summary>
     internal static class Utf8JsonPointer
     {
+        /// <summary>
+        /// Validates whether the specified byte span represents a valid JSON Pointer.
+        /// </summary>
+        /// <param name="span">The byte span to validate.</param>
+        /// <returns><see langword="true"/> if the span is a valid JSON Pointer; otherwise, <see langword="false"/>.</returns>
         public static bool Validate(ReadOnlySpan<byte> span)
         {
             int i = 0;
@@ -79,6 +87,11 @@ namespace Corvus.Text.Json.Internal
             return true;
         }
 
+        /// <summary>
+        /// Validates whether the specified byte span represents a valid relative JSON Pointer.
+        /// </summary>
+        /// <param name="span">The byte span to validate.</param>
+        /// <returns><see langword="true"/> if the span is a valid relative JSON Pointer; otherwise, <see langword="false"/>.</returns>
         public static bool ValidateRelative(ReadOnlySpan<byte> span)
         {
             int i = 0;

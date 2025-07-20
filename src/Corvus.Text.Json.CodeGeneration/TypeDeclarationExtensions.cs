@@ -12,7 +12,7 @@ using Corvus.Json.CodeGeneration.Keywords;
 namespace Corvus.Text.Json.CodeGeneration;
 
 /// <summary>
-/// Represents a numeric type name with fallback for .NET Standard.   
+/// Represents a numeric type name with fallback for .NET Standard.
 /// </summary>
 public readonly struct NumericTypeName
 {
@@ -360,7 +360,7 @@ public static class TypeDeclarationExtensions
             }
 
             if ((typeDeclaration.ImpliedCoreTypesOrAny() & (CoreTypes.Number | CoreTypes.Integer)) != 0)
-            {                
+            {
                 string? candidateFormat = typeDeclaration.Format();
 
                 if (candidateFormat is string format &&
