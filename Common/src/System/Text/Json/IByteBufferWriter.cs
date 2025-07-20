@@ -3,16 +3,15 @@
 
 using System.Buffers;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json;
+
+public interface IByteBufferWriter : IBufferWriter<byte>, IDisposable
 {
-    public interface IByteBufferWriter : IBufferWriter<byte>, IDisposable
-    {
-        ReadOnlySpan<byte> WrittenSpan { get; }
+    ReadOnlySpan<byte> WrittenSpan { get; }
 
-        ReadOnlyMemory<byte> WrittenMemory { get; }
+    ReadOnlyMemory<byte> WrittenMemory { get; }
 
-        int Capacity { get; }
+    int Capacity { get; }
 
-        void ClearAndReturnBuffers();
-    }
+    void ClearAndReturnBuffers();
 }

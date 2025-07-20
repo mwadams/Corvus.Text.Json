@@ -1,6 +1,5 @@
-﻿// <copyright file="BenchmarkEqualsInOrderProperties.cs" company="Endjin Limited">
-// Copyright (c) Endjin Limited. All rights reserved.
-// </copyright>
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
 using BenchmarkDotNet.Attributes;
 using Corvus.Text.Json;
@@ -151,7 +150,7 @@ public class BenchmarkEqualsInOrderProperties
         this.documentB2?.Dispose();
     }
 
-    [Benchmark(Baseline=true)]
+    [Benchmark(Baseline = true)]
     public bool JsonElementDeepEquals()
     {
         return System.Text.Json.JsonElement.DeepEquals(this.documentA1!.RootElement, this.documentA2!.RootElement);

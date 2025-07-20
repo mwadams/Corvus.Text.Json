@@ -4,94 +4,93 @@
 using System.Buffers;
 using System.Diagnostics;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json;
+
+/// <summary>
+/// Defines a thread-local cache for JsonSerializer to store reusable Utf8JsonWriter/IBufferWriter instances.
+/// </summary>
+internal static class Utf8JsonWriterCache
 {
-    /// <summary>
-    /// Defines a thread-local cache for JsonSerializer to store reusable Utf8JsonWriter/IBufferWriter instances.
-    /// </summary>
-    internal static class Utf8JsonWriterCache
+    [ThreadStatic]
+    private static ThreadLocalState? t_threadLocalState;
+
+    public static Utf8JsonWriter RentWriterAndBuffer(JsonWriterOptions options, int defaultBufferSize, out PooledByteBufferWriter bufferWriter)
     {
-        [ThreadStatic]
-        private static ThreadLocalState? t_threadLocalState;
+        ThreadLocalState state = t_threadLocalState ??= new();
+        Utf8JsonWriter writer;
 
-        public static Utf8JsonWriter RentWriterAndBuffer(JsonWriterOptions options, int defaultBufferSize, out PooledByteBufferWriter bufferWriter)
+        if (state.RentedWriters++ == 0)
         {
-            ThreadLocalState state = t_threadLocalState ??= new();
-            Utf8JsonWriter writer;
+            // First JsonSerializer call in the stack -- initialize & return the cached instances.
+            bufferWriter = state.BufferWriter;
+            writer = state.Writer;
 
-            if (state.RentedWriters++ == 0)
-            {
-                // First JsonSerializer call in the stack -- initialize & return the cached instances.
-                bufferWriter = state.BufferWriter;
-                writer = state.Writer;
-
-                bufferWriter.InitializeEmptyInstance(defaultBufferSize);
-                writer.Reset(bufferWriter, options);
-            }
-            else
-            {
-                // We're in a recursive JsonSerializer call -- return fresh instances.
-                bufferWriter = new PooledByteBufferWriter(defaultBufferSize);
-                writer = new Utf8JsonWriter(bufferWriter, options);
-            }
-
-            return writer;
+            bufferWriter.InitializeEmptyInstance(defaultBufferSize);
+            writer.Reset(bufferWriter, options);
+        }
+        else
+        {
+            // We're in a recursive JsonSerializer call -- return fresh instances.
+            bufferWriter = new PooledByteBufferWriter(defaultBufferSize);
+            writer = new Utf8JsonWriter(bufferWriter, options);
         }
 
-        public static Utf8JsonWriter RentWriter(JsonWriterOptions options, IBufferWriter<byte> bufferWriter)
+        return writer;
+    }
+
+    public static Utf8JsonWriter RentWriter(JsonWriterOptions options, IBufferWriter<byte> bufferWriter)
+    {
+        ThreadLocalState state = t_threadLocalState ??= new();
+        Utf8JsonWriter writer;
+
+        if (state.RentedWriters++ == 0)
         {
-            ThreadLocalState state = t_threadLocalState ??= new();
-            Utf8JsonWriter writer;
-
-            if (state.RentedWriters++ == 0)
-            {
-                // First call in the stack -- initialize & return the cached instance.
-                writer = state.Writer;
-                writer.Reset(bufferWriter, options);
-            }
-            else
-            {
-                // We're in a recursive call -- return a fresh instance.
-                writer = new Utf8JsonWriter(bufferWriter, options);
-            }
-
-            return writer;
+            // First call in the stack -- initialize & return the cached instance.
+            writer = state.Writer;
+            writer.Reset(bufferWriter, options);
+        }
+        else
+        {
+            // We're in a recursive call -- return a fresh instance.
+            writer = new Utf8JsonWriter(bufferWriter, options);
         }
 
-        public static void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)
+        return writer;
+    }
+
+    public static void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)
+    {
+        Debug.Assert(t_threadLocalState != null);
+        ThreadLocalState state = t_threadLocalState;
+
+        writer.ResetAllStateForCacheReuse();
+        bufferWriter.ClearAndReturnBuffers();
+
+        int rentedWriters = --state.RentedWriters;
+        Debug.Assert((rentedWriters == 0) == (ReferenceEquals(state.BufferWriter, bufferWriter) && ReferenceEquals(state.Writer, writer)));
+    }
+
+    public static void ReturnWriter(Utf8JsonWriter writer)
+    {
+        Debug.Assert(t_threadLocalState != null);
+        ThreadLocalState state = t_threadLocalState;
+
+        writer.ResetAllStateForCacheReuse();
+
+        int rentedWriters = --state.RentedWriters;
+        Debug.Assert((rentedWriters == 0) == ReferenceEquals(state.Writer, writer));
+    }
+
+    private sealed class ThreadLocalState
+    {
+        public readonly PooledByteBufferWriter BufferWriter;
+        public readonly Utf8JsonWriter Writer;
+        public int RentedWriters;
+
+        public ThreadLocalState()
         {
-            Debug.Assert(t_threadLocalState != null);
-            ThreadLocalState state = t_threadLocalState;
-
-            writer.ResetAllStateForCacheReuse();
-            bufferWriter.ClearAndReturnBuffers();
-
-            int rentedWriters = --state.RentedWriters;
-            Debug.Assert((rentedWriters == 0) == (ReferenceEquals(state.BufferWriter, bufferWriter) && ReferenceEquals(state.Writer, writer)));
-        }
-
-        public static void ReturnWriter(Utf8JsonWriter writer)
-        {
-            Debug.Assert(t_threadLocalState != null);
-            ThreadLocalState state = t_threadLocalState;
-
-            writer.ResetAllStateForCacheReuse();
-
-            int rentedWriters = --state.RentedWriters;
-            Debug.Assert((rentedWriters == 0) == ReferenceEquals(state.Writer, writer));
-        }
-
-        private sealed class ThreadLocalState
-        {
-            public readonly PooledByteBufferWriter BufferWriter;
-            public readonly Utf8JsonWriter Writer;
-            public int RentedWriters;
-
-            public ThreadLocalState()
-            {
-                BufferWriter = PooledByteBufferWriter.CreateEmptyInstanceForCaching();
-                Writer = Utf8JsonWriter.CreateEmptyInstanceForCaching();
-            }
+            BufferWriter = PooledByteBufferWriter.CreateEmptyInstanceForCaching();
+            Writer = Utf8JsonWriter.CreateEmptyInstanceForCaching();
         }
     }
 }

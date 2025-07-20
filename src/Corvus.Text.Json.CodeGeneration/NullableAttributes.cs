@@ -1,12 +1,5 @@
-﻿// <copyright file="NullableAttributes.cs" company="Endjin Limited">
-// Copyright (c) Endjin Limited. All rights reserved.
-// </copyright>
-// <license>
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-// https://github.com/dotnet/runtime/blob/527f9ae88a0ee216b44d556f9bdc84037fe0ebda/src/libraries/System.Private.CoreLib/src/System/Diagnostics/CodeAnalysis/NullableAttributes.cs
-// </license>
 
 #pragma warning disable
 

@@ -1,9 +1,7 @@
-﻿// <copyright file="StandardDateFormat.cs" company="Endjin Limited">
-// Copyright (c) Endjin Limited. All rights reserved.
-// </copyright>
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers.Text;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NodaTime;
@@ -106,7 +104,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParsePeriod(ReadOnlySpan<byte> text, out Period value)
     {
-        return Period.TryParse(text,out value);
+        return Period.TryParse(text, out value);
     }
 
     /// <summary>
@@ -299,7 +297,7 @@ public static partial class JsonElementHelpers
         {
             value = CreateOffsetDateTimeCore(year, month, day, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetSeconds);
         }
-        catch(OverflowException)
+        catch (OverflowException)
         {
             // We cannot prevent NodaTime from throwing an OverflowException.
             value = default;
@@ -389,7 +387,7 @@ public static partial class JsonElementHelpers
             return false;
         }
 
-        if (!ParseDateCore(text, out int year, out int month, out int day)|| !GregorianYearMonthDayCalculator.TryValidateGregorianYearMonthDay(year, month, day))
+        if (!ParseDateCore(text, out int year, out int month, out int day) || !GregorianYearMonthDayCalculator.TryValidateGregorianYearMonthDay(year, month, day))
         {
             value = default;
             return false;

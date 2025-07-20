@@ -1,35 +1,34 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace Corvus.Text.Json.Internal
+namespace Corvus.Text.Json.Internal;
+
+/// <summary>
+/// Provides URI parsing functionality for UTF-8 URI strings.
+/// </summary>
+internal partial class Utf8UriParser
 {
     /// <summary>
-    /// Provides URI parsing functionality for UTF-8 URI strings.
+    /// Gets the scheme name for this parser.
     /// </summary>
-    internal partial class Utf8UriParser
+    internal string SchemeName
     {
-        /// <summary>
-        /// Gets the scheme name for this parser.
-        /// </summary>
-        internal string SchemeName
+        get
         {
-            get
-            {
-                return _scheme;
-            }
+            return _scheme;
         }
-        
-        /// <summary>
-        /// Gets the default port for this parser's scheme.
-        /// </summary>
-        internal int DefaultPort
-        {
-            get
-            {
-                return _port;
-            }
-        }
-
-        private const Utf8UriSyntaxFlags SchemeOnlyFlags = Utf8UriSyntaxFlags.MayHavePath;
     }
+
+    /// <summary>
+    /// Gets the default port for this parser's scheme.
+    /// </summary>
+    internal int DefaultPort
+    {
+        get
+        {
+            return _port;
+        }
+    }
+
+    private const Utf8UriSyntaxFlags SchemeOnlyFlags = Utf8UriSyntaxFlags.MayHavePath;
 }

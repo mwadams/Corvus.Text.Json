@@ -3,18 +3,17 @@
 
 using System.Runtime.CompilerServices;
 
-namespace System.Collections.Generic
+namespace System.Collections.Generic;
+
+/// <summary>
+/// These public methods are required by RegexWriter.
+/// </summary>
+internal ref partial struct ValueListBuilder<T>
 {
-    /// <summary>
-    /// These public methods are required by RegexWriter.
-    /// </summary>
-    internal ref partial struct ValueListBuilder<T>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Pop()
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Pop()
-        {
-            _pos--;
-            return _span[_pos];
-        }
+        _pos--;
+        return _span[_pos];
     }
 }

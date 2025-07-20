@@ -3,91 +3,90 @@
 
 using Corvus.Text.Json.Internal;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json;
+
+public sealed partial class ParsedJsonDocument<T>
 {
-    public sealed partial class ParsedJsonDocument<T>
+    /// <inheritdoc />
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value)
     {
-        /// <inheritdoc />
-        bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value)
+        CheckNotDisposed();
+
+        if (TryGetNamedPropertyValueIndexUnsafe(
+            index,
+            propertyName,
+            out int valueIndex))
         {
-            CheckNotDisposed();
-
-            if (TryGetNamedPropertyValueIndexUnsafe(
-                index,
-                propertyName,
-                out int valueIndex))
-            {
-                value = new JsonElement(this, valueIndex);
-                return true;
-            }
-
-            value = default;
-            return false;
+            value = new JsonElement(this, valueIndex);
+            return true;
         }
 
-        /// <inheritdoc />
-        bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value)
+        value = default;
+        return false;
+    }
+
+    /// <inheritdoc />
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value)
+    {
+        CheckNotDisposed();
+
+
+        if (TryGetNamedPropertyValueIndexUnsafe(
+            index,
+            propertyName,
+            out int valueIndex))
         {
-            CheckNotDisposed();
-
-
-            if (TryGetNamedPropertyValueIndexUnsafe(
-                index,
-                propertyName,
-                out int valueIndex))
-            {
-                value = new JsonElement(this, valueIndex);
-                return true;
-            }
-
-            value = default;
-            return false;
+            value = new JsonElement(this, valueIndex);
+            return true;
         }
 
-        /// <inheritdoc />
-        bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
+        value = default;
+        return false;
+    }
+
+    /// <inheritdoc />
+    bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
+    {
+        CheckNotDisposed();
+
+
+        if (TryGetNamedPropertyValueIndexUnsafe(
+            index,
+            propertyName,
+            out int valueIndex))
         {
-            CheckNotDisposed();
-
-
-            if (TryGetNamedPropertyValueIndexUnsafe(
-                index,
-                propertyName,
-                out int valueIndex))
-            {
 #if NET
-                value = TElement.CreateInstance(this, valueIndex);
+            value = TElement.CreateInstance(this, valueIndex);
 #else
-                value = JsonElementHelpers.CreateInstance<TElement>(this, valueIndex);
+            value = JsonElementHelpers.CreateInstance<TElement>(this, valueIndex);
 #endif
-                return true;
-            }
-
-            value = default;
-            return false;
+            return true;
         }
 
-        /// <inheritdoc />
-        bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value)
+        value = default;
+        return false;
+    }
+
+    /// <inheritdoc />
+    bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value)
+    {
+        CheckNotDisposed();
+
+
+        if (TryGetNamedPropertyValueIndexUnsafe(
+            index,
+            propertyName,
+            out int valueIndex))
         {
-            CheckNotDisposed();
-
-
-            if (TryGetNamedPropertyValueIndexUnsafe(
-                index,
-                propertyName,
-                out int valueIndex))
-            {
 #if NET
-                value = TElement.CreateInstance(this, valueIndex);
+            value = TElement.CreateInstance(this, valueIndex);
 #else
-                value = JsonElementHelpers.CreateInstance<TElement>(this, valueIndex);
+            value = JsonElementHelpers.CreateInstance<TElement>(this, valueIndex);
 #endif
-                return true;
-            }
-
-            value = default;
-            return false;
+            return true;
         }
+
+        value = default;
+        return false;
     }
 }

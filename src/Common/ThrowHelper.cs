@@ -3,14 +3,13 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json;
+
+internal static partial class ThrowHelper
 {
-    internal static partial class ThrowHelper
+    [DoesNotReturn]
+    public static void ThrowArgumentNullException(string parameterName)
     {
-        [DoesNotReturn]
-        public static void ThrowArgumentNullException(string parameterName)
-        {
-            throw new ArgumentNullException(parameterName);
-        }
+        throw new ArgumentNullException(parameterName);
     }
 }

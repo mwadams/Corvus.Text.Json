@@ -1,6 +1,5 @@
-﻿// <copyright file="BenchmarkEqualsInOrderProperties.cs" company="Endjin Limited">
-// Copyright (c) Endjin Limited. All rights reserved.
-// </copyright>
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
 using BenchmarkDotNet.Attributes;
 using Corvus.Json;
@@ -38,7 +37,7 @@ public class BenchmarkUnevaluatedProperties
         this.documentB1?.Dispose();
     }
 
-    [Benchmark(Baseline=true)]
+    [Benchmark(Baseline = true)]
     public bool ValidateCorvusJsonSchema()
     {
         return Benchmark.CorvusJsonSchema2.Person.FromJson(documentA1!.RootElement).IsValid();

@@ -3,21 +3,20 @@
 
 using System.Runtime.CompilerServices;
 
-namespace System.Collections.Generic
-{
-    internal partial struct ValueStack<T>
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Pop()
-        {
-            _pos--;
-            return Span[_pos];
-        }
+namespace System.Collections.Generic;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Peek()
-        {
-            return Span[_pos - 1];
-        }
+internal partial struct ValueStack<T>
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Pop()
+    {
+        _pos--;
+        return Span[_pos];
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Peek()
+    {
+        return Span[_pos - 1];
     }
 }

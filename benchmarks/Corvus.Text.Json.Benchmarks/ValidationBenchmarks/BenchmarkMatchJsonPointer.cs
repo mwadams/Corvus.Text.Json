@@ -1,6 +1,5 @@
-﻿// <copyright file="BenchmarkEqualsInOrderProperties.cs" company="Endjin Limited">
-// Copyright (c) Endjin Limited. All rights reserved.
-// </copyright>
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
 using BenchmarkDotNet.Attributes;
 using Corvus.Json;
@@ -50,7 +49,7 @@ public class BenchmarkMatchJsonPointer
         JsonSchemaContext context = JsonSchemaContext.BeginContext(_ctjJsonPointer!, 0, false, false);
 
         try
-        {            
+        {
             return JsonSchemaEvaluation.MatchJsonPointer("/foo/-/bar/~1~0.1~0~1~1"u8, "dummy"u8, ref context);
         }
         finally

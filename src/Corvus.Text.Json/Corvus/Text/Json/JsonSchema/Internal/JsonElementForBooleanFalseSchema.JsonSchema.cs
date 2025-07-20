@@ -5,116 +5,115 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json.Internal;
 
-namespace Corvus.Text.Json
+namespace Corvus.Text.Json;
+
+/// <summary>
+///   Represents a specific JSON value within a <see cref="JsonDocument"/>.
+/// </summary>
+public readonly partial struct JsonElementForBooleanFalseSchema
 {
     /// <summary>
-    ///   Represents a specific JSON value within a <see cref="JsonDocument"/>.
+    /// Evaluates this element against the boolean false schema.
     /// </summary>
-    public readonly partial struct JsonElementForBooleanFalseSchema
+    /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
+    /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
+    {
+        return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
+    }
+
+    /// <summary>
+    /// JSON Schema support for the <see cref="JsonElement"/>
+    /// </summary>
+    public static class JsonSchema
     {
         /// <summary>
-        /// Evaluates this element against the boolean false schema.
+        /// Evaluates the boolean false schema against the JSON element at the specified index.
         /// </summary>
-        /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
-        /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
+        /// <param name="parentDocument">The parent document containing the JSON element.</param>
+        /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
+        /// <param name="context">The schema evaluation context.</param>
+        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
         {
-            return JsonSchema.Evaluate(_parent, _idx, resultsCollector);
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            context.EvaluatedBooleanSchema(false);
         }
 
         /// <summary>
-        /// JSON Schema support for the <see cref="JsonElement"/>
+        /// Evaluates the boolean false schema against the JSON element at the specified index.
         /// </summary>
-        public static class JsonSchema
+        /// <param name="parentDocument">The parent document containing the JSON element.</param>
+        /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
+        /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
+        /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
+        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
         {
-            /// <summary>
-            /// Evaluates the boolean false schema against the JSON element at the specified index.
-            /// </summary>
-            /// <param name="parentDocument">The parent document containing the JSON element.</param>
-            /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
-            /// <param name="context">The schema evaluation context.</param>
-            internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
-            {
-                // You're not allowed to ask about non-value-like entities
-                Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
-                    JsonTokenType.None or
-                    JsonTokenType.EndObject or
-                    JsonTokenType.EndArray or
-                    JsonTokenType.PropertyName);
+            return false;
+        }
 
-                context.EvaluatedBooleanSchema(false);
-            }
+        /// <summary>
+        /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation.
+        /// </summary>
+        /// <typeparam name="T">The type of the instance to which to apply the child context.</typeparam>
+        /// <param name="instance">The instance to which to apply the child context.</param>
+        /// <param name="context">The current evaluation context.</param>
+        /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
+        /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
+        /// <returns>The child context.</returns>
+        [CLSCompliant(false)]
+        public static JsonSchemaContext PushChildContext<T>(
+            in T instance,
+            ref JsonSchemaContext context,
+            JsonSchemaPathProvider? schemaEvaluationPath = null,
+            JsonSchemaPathProvider? documentEvaluationPath = null)
+            where T : struct, IJsonElement<T>
+        {
+            return
+                context.PushChildContext(
+                    instance.ParentDocument,
+                    instance.ParentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    schemaEvaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath);
+        }
 
-            /// <summary>
-            /// Evaluates the boolean false schema against the JSON element at the specified index.
-            /// </summary>
-            /// <param name="parentDocument">The parent document containing the JSON element.</param>
-            /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
-            /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
-            /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
-            internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
-            {
-                return false;
-            }
-
-            /// <summary>
-            /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation.
-            /// </summary>
-            /// <typeparam name="T">The type of the instance to which to apply the child context.</typeparam>
-            /// <param name="instance">The instance to which to apply the child context.</param>
-            /// <param name="context">The current evaluation context.</param>
-            /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
-            /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
-            /// <returns>The child context.</returns>
-            [CLSCompliant(false)]
-            public static JsonSchemaContext PushChildContext<T>(
-                in T instance,
-                ref JsonSchemaContext context,
-                JsonSchemaPathProvider? schemaEvaluationPath = null,
-                JsonSchemaPathProvider? documentEvaluationPath = null)
-                where T : struct, IJsonElement<T>
-            {
-                return
-                    context.PushChildContext(
-                        instance.ParentDocument,
-                        instance.ParentDocumentIndex,
-                        useEvaluatedItems: false, // We don't use evaluated items
-                        useEvaluatedProperties: false,
-                        schemaEvaluationPath: schemaEvaluationPath,
-                        documentEvaluationPath: documentEvaluationPath);
-            }
-
-            /// <summary>
-            /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation.
-            /// </summary>
-            /// <typeparam name="T">The type of the instance to which to apply the child context.</typeparam>
-            /// <typeparam name="TContext">The type of the context to be passed to the path providers.</typeparam>
-            /// <param name="instance">The instance to which to apply the child context.</param>
-            /// <param name="providerContext">The context to be passed to the path providers.</param>
-            /// <param name="context">The current evaluation context.</param>
-            /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
-            /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
-            /// <returns>The child context.</returns>
-            [CLSCompliant(false)]
-            public static JsonSchemaContext PushChildContext<T, TContext>(
-                in T instance,
-                ref JsonSchemaContext context,
-                TContext providerContext,
-                JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
-                JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
-                where T : struct, IJsonElement<T>
-            {
-                return
-                    context.PushChildContext(
-                        instance.ParentDocument,
-                        instance.ParentDocumentIndex,
-                        useEvaluatedItems: false, // We don't use evaluated items
-                        useEvaluatedProperties: false,
-                        evaluationPath: schemaEvaluationPath,
-                        documentEvaluationPath: documentEvaluationPath,
-                        providerContext: providerContext);
-            }
+        /// <summary>
+        /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation.
+        /// </summary>
+        /// <typeparam name="T">The type of the instance to which to apply the child context.</typeparam>
+        /// <typeparam name="TContext">The type of the context to be passed to the path providers.</typeparam>
+        /// <param name="instance">The instance to which to apply the child context.</param>
+        /// <param name="providerContext">The context to be passed to the path providers.</param>
+        /// <param name="context">The current evaluation context.</param>
+        /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
+        /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
+        /// <returns>The child context.</returns>
+        [CLSCompliant(false)]
+        public static JsonSchemaContext PushChildContext<T, TContext>(
+            in T instance,
+            ref JsonSchemaContext context,
+            TContext providerContext,
+            JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
+            JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
+            where T : struct, IJsonElement<T>
+        {
+            return
+                context.PushChildContext(
+                    instance.ParentDocument,
+                    instance.ParentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    evaluationPath: schemaEvaluationPath,
+                    documentEvaluationPath: documentEvaluationPath,
+                    providerContext: providerContext);
         }
     }
 }

@@ -1,37 +1,35 @@
-﻿// <copyright file="DynamicValueType.cs" company="Endjin Limited">
-// Copyright (c) Endjin Limited. All rights reserved.
-// </copyright>
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
-namespace Corvus.Text.Json.Internal
+namespace Corvus.Text.Json.Internal;
+
+/// <summary>
+/// Represents the type of a dynamic JSON value.
+/// </summary>
+internal enum DynamicValueType : uint
 {
     /// <summary>
-    /// Represents the type of a dynamic JSON value.
+    /// An unescaped UTF-8 string value.
     /// </summary>
-    internal enum DynamicValueType : uint
-    {
-        /// <summary>
-        /// An unescaped UTF-8 string value.
-        /// </summary>
-        UnescapedUtf8String,
+    UnescapedUtf8String,
 
-        /// <summary>
-        /// A quoted UTF-8 string value.
-        /// </summary>
-        QuotedUtf8String,
+    /// <summary>
+    /// A quoted UTF-8 string value.
+    /// </summary>
+    QuotedUtf8String,
 
-        /// <summary>
-        /// A numeric value.
-        /// </summary>
-        Number,
+    /// <summary>
+    /// A numeric value.
+    /// </summary>
+    Number,
 
-        /// <summary>
-        /// A boolean value.
-        /// </summary>
-        Boolean,
+    /// <summary>
+    /// A boolean value.
+    /// </summary>
+    Boolean,
 
-        /// <summary>
-        /// A null value.
-        /// </summary>
-        Null
-    }
+    /// <summary>
+    /// A null value.
+    /// </summary>
+    Null
 }

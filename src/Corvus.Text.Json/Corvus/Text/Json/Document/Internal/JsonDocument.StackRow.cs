@@ -4,46 +4,45 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Corvus.Text.Json.Internal
+namespace Corvus.Text.Json.Internal;
+
+public abstract partial class JsonDocument
 {
-    public abstract partial class JsonDocument
+    // SizeOrLength - offset - 0 - size - 4
+    // NumberOfRows - offset - 4 - size - 4
+    /// <summary>
+    /// Represents a row in the stack containing size/length and row count information for JSON parsing.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal readonly struct StackRow
     {
-        // SizeOrLength - offset - 0 - size - 4
-        // NumberOfRows - offset - 4 - size - 4
         /// <summary>
-        /// Represents a row in the stack containing size/length and row count information for JSON parsing.
+        /// The size in bytes of a StackRow structure.
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct StackRow
+        internal const int Size = 8;
+
+        /// <summary>
+        /// The size or length value for this stack row.
+        /// </summary>
+        internal readonly int SizeOrLength;
+
+        /// <summary>
+        /// The number of rows for this stack row.
+        /// </summary>
+        internal readonly int NumberOfRows;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StackRow"/> struct.
+        /// </summary>
+        /// <param name="sizeOrLength">The size or length value (must be >= 0).</param>
+        /// <param name="numberOfRows">The number of rows (must be >= -1).</param>
+        internal StackRow(int sizeOrLength = 0, int numberOfRows = -1)
         {
-            /// <summary>
-            /// The size in bytes of a StackRow structure.
-            /// </summary>
-            internal const int Size = 8;
+            Debug.Assert(sizeOrLength >= 0);
+            Debug.Assert(numberOfRows >= -1);
 
-            /// <summary>
-            /// The size or length value for this stack row.
-            /// </summary>
-            internal readonly int SizeOrLength;
-
-            /// <summary>
-            /// The number of rows for this stack row.
-            /// </summary>
-            internal readonly int NumberOfRows;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="StackRow"/> struct.
-            /// </summary>
-            /// <param name="sizeOrLength">The size or length value (must be >= 0).</param>
-            /// <param name="numberOfRows">The number of rows (must be >= -1).</param>
-            internal StackRow(int sizeOrLength = 0, int numberOfRows = -1)
-            {
-                Debug.Assert(sizeOrLength >= 0);
-                Debug.Assert(numberOfRows >= -1);
-
-                SizeOrLength = sizeOrLength;
-                NumberOfRows = numberOfRows;
-            }
+            SizeOrLength = sizeOrLength;
+            NumberOfRows = numberOfRows;
         }
     }
 }

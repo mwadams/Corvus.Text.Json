@@ -1,6 +1,5 @@
-﻿// <copyright file="BenchmarkEqualsInOrderProperties.cs" company="Endjin Limited">
-// Copyright (c) Endjin Limited. All rights reserved.
-// </copyright>
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
 using BenchmarkDotNet.Attributes;
 using Corvus.Json;
@@ -15,7 +14,7 @@ namespace ValidationBenchmarks;
 [MemoryDiagnoser]
 public class BenchmarkMatchRegex
 {
-    
+
     private System.Text.Json.JsonDocument? _cjsRegex;
     private JsonRegex _cjsRegexElement;
     private ParsedJsonDocument<JsonElement>? _ctjRegex;

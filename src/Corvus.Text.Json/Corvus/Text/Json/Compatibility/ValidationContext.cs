@@ -4,89 +4,88 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Corvus.Text.Json.Compatibility
+namespace Corvus.Text.Json.Compatibility;
+
+/// <summary>
+/// Represents the context for a JSON schema validation operation, including validity and results.
+/// </summary>
+public readonly struct ValidationContext
 {
     /// <summary>
-    /// Represents the context for a JSON schema validation operation, including validity and results.
+    /// Gets a valid context.
     /// </summary>
-    public readonly struct ValidationContext
+    public static readonly ValidationContext ValidContext = new(true);
+
+    /// <summary>
+    /// Gets an invalid context.
+    /// </summary>
+    public static readonly ValidationContext InvalidContext = new(false);
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ValidationContext"/> struct.
+    /// </summary>
+    /// <param name="isValid">A value indicating whether the context is valid.</param>
+    internal ValidationContext(bool isValid)
     {
-        /// <summary>
-        /// Gets a valid context.
-        /// </summary>
-        public static readonly ValidationContext ValidContext = new(true);
+        IsValid = isValid;
+    }
 
-        /// <summary>
-        /// Gets an invalid context.
-        /// </summary>
-        public static readonly ValidationContext InvalidContext = new(false);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ValidationContext"/> struct.
+    /// </summary>
+    /// <param name="isMatch">A value indicating whether the validation was a match.</param>
+    /// <param name="collector">The results collector containing validation data.</param>
+    // This is the constructor for when the results collection has not changed
+    internal ValidationContext(bool isMatch, JsonSchemaResultsCollector collector)
+    {
+        // Capture it at the moment we were given the collector
+        IsValid = isMatch;
+        Collector = collector;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationContext"/> struct.
-        /// </summary>
-        /// <param name="isValid">A value indicating whether the context is valid.</param>
-        internal ValidationContext(bool isValid)
+    /// <summary>
+    /// Gets a value indicating whether this context represents a valid result.
+    /// </summary>
+    public bool IsValid { get; }
+
+    /// <summary>
+    /// Gets the validation results.
+    /// </summary>
+    public IReadOnlyList<ValidationResult> Results => BuildResults(Collector);
+
+    /// <summary>
+    /// Gets the internal results collector.
+    /// </summary>
+    internal JsonSchemaResultsCollector? Collector { get; }
+
+    private static ReadOnlyCollection<ValidationResult> BuildResults(JsonSchemaResultsCollector? collector)
+    {
+        if (collector is null)
         {
-            IsValid = isValid;
+            return new ReadOnlyCollection<ValidationResult>(Array.Empty<ValidationResult>());
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationContext"/> struct.
-        /// </summary>
-        /// <param name="isMatch">A value indicating whether the validation was a match.</param>
-        /// <param name="collector">The results collector containing validation data.</param>
-        // This is the constructor for when the results collection has not changed
-        internal ValidationContext(bool isMatch, JsonSchemaResultsCollector collector)
+        var result = new List<ValidationResult>();
+        int index = 0;
+        JsonSchemaResultsCollector.ResultsEnumerator enumerator = collector.EnumerateResults();
+        while (enumerator.MoveNext())
         {
-            // Capture it at the moment we were given the collector
-            IsValid = isMatch;
-            Collector = collector;
+            result.Add(new ValidationResult(collector, index));
+            index++;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this context represents a valid result.
-        /// </summary>
-        public bool IsValid { get; }
+        return new ReadOnlyCollection<ValidationResult>(result);
+    }
 
-        /// <summary>
-        /// Gets the validation results.
-        /// </summary>
-        public IReadOnlyList<ValidationResult> Results => BuildResults(Collector);
-
-        /// <summary>
-        /// Gets the internal results collector.
-        /// </summary>
-        internal JsonSchemaResultsCollector? Collector { get; }
-
-        private static ReadOnlyCollection<ValidationResult> BuildResults(JsonSchemaResultsCollector? collector)
+    internal static JsonSchemaResultsLevel MapLevel(ValidationLevel level)
+    {
+        return level switch
         {
-            if (collector is null)
-            {
-                return new ReadOnlyCollection<ValidationResult>(Array.Empty<ValidationResult>());
-            }
-
-            var result = new List<ValidationResult>();
-            int index = 0;
-            JsonSchemaResultsCollector.ResultsEnumerator enumerator = collector.EnumerateResults();
-            while (enumerator.MoveNext())
-            {
-                result.Add(new ValidationResult(collector, index));
-                index++;
-            }
-
-            return new ReadOnlyCollection<ValidationResult>(result);
-        }
-
-        internal static JsonSchemaResultsLevel MapLevel(ValidationLevel level)
-        {
-            return level switch
-            {
-                // Do not allow Flag
-                ValidationLevel.Basic => JsonSchemaResultsLevel.Basic,
-                ValidationLevel.Detailed => JsonSchemaResultsLevel.Detailed,
-                ValidationLevel.Verbose => JsonSchemaResultsLevel.Verbose,
-                _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
-            };
-        }
+            // Do not allow Flag
+            ValidationLevel.Basic => JsonSchemaResultsLevel.Basic,
+            ValidationLevel.Detailed => JsonSchemaResultsLevel.Detailed,
+            ValidationLevel.Verbose => JsonSchemaResultsLevel.Verbose,
+            _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
+        };
     }
 }

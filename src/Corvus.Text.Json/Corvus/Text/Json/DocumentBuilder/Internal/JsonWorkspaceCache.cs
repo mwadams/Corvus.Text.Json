@@ -3,66 +3,65 @@
 
 using System.Diagnostics;
 
-namespace Corvus.Text.Json.Internal
+namespace Corvus.Text.Json.Internal;
+
+/// <summary>
+/// Defines a thread-local cache for us to store reusable JsonWorkspace instances.
+/// </summary>
+internal static class JsonWorkspaceCache
 {
+    [ThreadStatic]
+    private static ThreadLocalState? t_threadLocalState;
+
     /// <summary>
-    /// Defines a thread-local cache for us to store reusable JsonWorkspace instances.
+    /// Rents a workspace from the thread-local cache or creates a new one.
     /// </summary>
-    internal static class JsonWorkspaceCache
+    /// <param name="initialDocumentCapacity">The initial document capacity for the workspace.</param>
+    /// <param name="options">The JSON writer options to use.</param>
+    /// <returns>A workspace instance from the cache or a new instance.</returns>
+    public static JsonWorkspace RentWorkspace(int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
     {
-        [ThreadStatic]
-        private static ThreadLocalState? t_threadLocalState;
+        ThreadLocalState state = t_threadLocalState ??= new();
+        JsonWorkspace workspace;
 
-        /// <summary>
-        /// Rents a workspace from the thread-local cache or creates a new one.
-        /// </summary>
-        /// <param name="initialDocumentCapacity">The initial document capacity for the workspace.</param>
-        /// <param name="options">The JSON writer options to use.</param>
-        /// <returns>A workspace instance from the cache or a new instance.</returns>
-        public static JsonWorkspace RentWorkspace(int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
+        if (state.RentedWorkspaces++ == 0)
         {
-            ThreadLocalState state = t_threadLocalState ??= new();
-            JsonWorkspace workspace;
-
-            if (state.RentedWorkspaces++ == 0)
-            {
-                // First call in the stack -- initialize & return the cached instance.
-                workspace = state.Workspace;
-                workspace.Reset(initialDocumentCapacity, options);
-            }
-            else
-            {
-                // We've created a second workspace, so we're going to create another instance.
-                workspace = new JsonWorkspace(true, initialDocumentCapacity, options);
-            }
-
-            return workspace;
+            // First call in the stack -- initialize & return the cached instance.
+            workspace = state.Workspace;
+            workspace.Reset(initialDocumentCapacity, options);
+        }
+        else
+        {
+            // We've created a second workspace, so we're going to create another instance.
+            workspace = new JsonWorkspace(true, initialDocumentCapacity, options);
         }
 
-        /// <summary>
-        /// Returns a workspace to the thread-local cache for reuse.
-        /// </summary>
-        /// <param name="workspace">The workspace to return to the cache.</param>
-        public static void ReturnWorkspace(JsonWorkspace workspace)
+        return workspace;
+    }
+
+    /// <summary>
+    /// Returns a workspace to the thread-local cache for reuse.
+    /// </summary>
+    /// <param name="workspace">The workspace to return to the cache.</param>
+    public static void ReturnWorkspace(JsonWorkspace workspace)
+    {
+        Debug.Assert(t_threadLocalState != null);
+        ThreadLocalState state = t_threadLocalState;
+
+        workspace.ResetAllStateForCacheReuse();
+
+        int rentedWorkspaces = --state.RentedWorkspaces;
+        Debug.Assert((rentedWorkspaces == 0) == ReferenceEquals(state.Workspace, workspace));
+    }
+
+    private sealed class ThreadLocalState
+    {
+        public readonly JsonWorkspace Workspace;
+        public int RentedWorkspaces;
+
+        public ThreadLocalState()
         {
-            Debug.Assert(t_threadLocalState != null);
-            ThreadLocalState state = t_threadLocalState;
-
-            workspace.ResetAllStateForCacheReuse();
-
-            int rentedWorkspaces = --state.RentedWorkspaces;
-            Debug.Assert((rentedWorkspaces == 0) == ReferenceEquals(state.Workspace, workspace));
-        }
-
-        private sealed class ThreadLocalState
-        {
-            public readonly JsonWorkspace Workspace;
-            public int RentedWorkspaces;
-
-            public ThreadLocalState()
-            {
-                Workspace = JsonWorkspace.CreateEmptyInstanceForCaching();
-            }
+            Workspace = JsonWorkspace.CreateEmptyInstanceForCaching();
         }
     }
 }
