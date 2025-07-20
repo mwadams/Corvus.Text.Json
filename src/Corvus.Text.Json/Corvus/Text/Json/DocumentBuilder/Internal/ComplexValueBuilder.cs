@@ -350,6 +350,12 @@ namespace Corvus.Text.Json.Internal
             AddPropertyNull(propertyName, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a null value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -358,6 +364,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a null value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
         public void AddPropertyNull(ReadOnlySpan<char> propertyName)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -377,6 +387,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a boolean value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The boolean value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -385,6 +402,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a boolean value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The boolean value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, bool value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -393,6 +415,12 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a JSON element value to the current object.
+        /// </summary>
+        /// <typeparam name="T">The type of the JSON element value.</typeparam>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The JSON element value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void AddProperty<T>(ReadOnlySpan<byte> propertyName, in T value)
@@ -401,6 +429,14 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a JSON element value to the current object, with control over escaping.
+        /// </summary>
+        /// <typeparam name="T">The type of the JSON element value.</typeparam>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The JSON element value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName, bool nameRequiresUnescaping)
             where T : struct, IJsonElement<T>
@@ -412,6 +448,12 @@ namespace Corvus.Text.Json.Internal
             _rowCount += (Length - currentLength) / DbRow.Size;
         }
 
+        /// <summary>
+        /// Adds a property with a JSON element value to the current object.
+        /// </summary>
+        /// <typeparam name="T">The type of the JSON element value.</typeparam>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The JSON element value.</param>
         [CLSCompliant(false)]
         public void AddProperty<T>(ReadOnlySpan<char> propertyName, T value)
             where T : struct, IJsonElement<T>
@@ -434,6 +476,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="Guid"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="Guid"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -442,6 +491,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="Guid"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="Guid"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, Guid value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -461,6 +515,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="DateTime"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="DateTime"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in DateTime value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -469,6 +530,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="DateTime"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="DateTime"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in DateTime value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -488,6 +554,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="DateTimeOffset"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="DateTimeOffset"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in DateTimeOffset value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -496,6 +569,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="DateTimeOffset"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="DateTimeOffset"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in DateTimeOffset value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -515,6 +593,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.OffsetDateTime"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="NodaTime.OffsetDateTime"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetDateTime value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -523,6 +608,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.OffsetDateTime"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="NodaTime.OffsetDateTime"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetDateTime value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -542,6 +632,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.OffsetTime"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="NodaTime.OffsetTime"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetTime value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -550,6 +647,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.OffsetTime"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="NodaTime.OffsetTime"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetTime value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -569,6 +671,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.OffsetDate"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="NodaTime.OffsetDate"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetDate value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -577,6 +686,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.OffsetDate"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="NodaTime.OffsetDate"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetDate value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -596,6 +710,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.LocalDate"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="NodaTime.LocalDate"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in LocalDate value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -604,6 +725,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.LocalDate"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="NodaTime.LocalDate"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in LocalDate value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -623,6 +749,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.Period"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="NodaTime.Period"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in Period value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -631,6 +764,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="NodaTime.Period"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="NodaTime.Period"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in Period value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -639,6 +777,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="sbyte"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="sbyte"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value)
@@ -646,6 +789,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="sbyte"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="sbyte"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -655,6 +805,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="sbyte"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="sbyte"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, sbyte value)
         {
@@ -664,12 +819,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="byte"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="byte"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, byte value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="byte"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="byte"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, byte value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -678,6 +845,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="byte"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="byte"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, byte value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -686,12 +858,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="int"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="int"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, int value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="int"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="int"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, int value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -700,6 +884,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="int"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="int"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, int value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -708,6 +897,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="uint"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="uint"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, uint value)
@@ -715,6 +909,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="uint"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="uint"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, uint value, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -724,6 +925,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="uint"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="uint"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, uint value)
         {
@@ -733,12 +939,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="long"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="long"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, long value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="long"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="long"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, long value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -747,6 +965,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="long"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="long"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, long value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -755,6 +978,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ulong"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="ulong"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value)
@@ -762,6 +990,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ulong"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="ulong"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -771,6 +1006,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ulong"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="ulong"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, ulong value)
         {
@@ -780,12 +1020,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="short"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="short"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, short value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="short"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="short"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, short value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -794,6 +1046,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="short"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="short"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, short value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -802,6 +1059,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ushort"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="ushort"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value)
@@ -809,6 +1071,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ushort"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="ushort"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -818,6 +1087,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ushort"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="ushort"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, ushort value)
         {
@@ -827,12 +1101,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="float"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="float"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, float value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="float"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="float"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, float value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -841,6 +1127,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="float"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="float"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, float value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -849,12 +1140,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="double"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="double"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, double value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="double"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="double"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, double value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -863,6 +1166,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="double"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="double"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, double value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -871,12 +1179,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="decimal"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="decimal"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="decimal"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="decimal"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -885,6 +1205,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="decimal"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="decimal"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, decimal value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -893,12 +1218,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="BigInteger"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="BigInteger"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, in BigInteger value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="BigInteger"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="BigInteger"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in BigInteger value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -907,6 +1244,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="BigInteger"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="BigInteger"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in BigInteger value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -915,12 +1257,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="BigNumber"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="BigNumber"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, in BigNumber value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="BigNumber"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="BigNumber"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, in BigNumber value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -929,6 +1283,16 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="BigNumber"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="BigNumber"/> value.</param>
+        /// <summary>
+        /// Adds a property with a <see cref="BigNumber"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="BigNumber"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, in BigNumber value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -938,12 +1302,24 @@ namespace Corvus.Text.Json.Internal
         }
 
 #if NET
+        /// <summary>
+        /// Adds a property with an <see cref="Int128"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="Int128"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="Int128"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="Int128"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -952,6 +1328,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="Int128"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="Int128"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, Int128 value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -960,6 +1341,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="UInt128"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="UInt128"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value)
@@ -967,6 +1353,13 @@ namespace Corvus.Text.Json.Internal
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="UInt128"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="UInt128"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -976,6 +1369,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="UInt128"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="UInt128"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, UInt128 value)
         {
@@ -985,12 +1383,24 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="Half"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="Half"/> value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, Half value)
         {
             AddProperty(propertyName, value, true, false);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="Half"/> value to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="Half"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddProperty(ReadOnlySpan<byte> propertyName, Half value, bool escapeName, bool nameRequiresUnescaping)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -999,6 +1409,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 2;
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="Half"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="Half"/> value.</param>
         public void AddProperty(ReadOnlySpan<char> propertyName, Half value)
         {
             AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -1008,78 +1423,148 @@ namespace Corvus.Text.Json.Internal
         }
 #endif
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="long"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="long"/> values.</param>
         public void AddPropertyArrayValue(string name, ReadOnlySpan<long> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="int"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="int"/> values.</param>
         public void AddPropertyArrayValue(string name, ReadOnlySpan<int> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="short"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="short"/> values.</param>
         public void AddPropertyArrayValue(string name, ReadOnlySpan<short> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="sbyte"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="sbyte"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(string name, ReadOnlySpan<sbyte> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="ulong"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="ulong"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(string name, ReadOnlySpan<ulong> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="uint"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="uint"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(string name, ReadOnlySpan<uint> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="ushort"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="ushort"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(string name, ReadOnlySpan<ushort> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="byte"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="byte"/> values.</param>
         public void AddPropertyArrayValue(string name, ReadOnlySpan<byte> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="decimal"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="decimal"/> values.</param>
         public void AddPropertyArrayValue(string name, ReadOnlySpan<decimal> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="double"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="double"/> values.</param>
         public void AddPropertyArrayValue(string name, ReadOnlySpan<double> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="float"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="float"/> values.</param>
         public void AddPropertyArrayValue(string name, ReadOnlySpan<float> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
 #if NET
+        /// <summary>
+        /// Adds a property with an array of <see cref="Int128"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="Int128"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(string name, ReadOnlySpan<Int128> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="UInt128"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="UInt128"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(string name, ReadOnlySpan<UInt128> array)
         {
             AddPropertyArrayValue(name.AsSpan(), array);
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="Half"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="array">The array of <see cref="Half"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(string name, ReadOnlySpan<Half> array)
         {
@@ -1087,6 +1572,11 @@ namespace Corvus.Text.Json.Internal
         }
 #endif
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="long"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="long"/> values.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<long> array)
         {
             int currentMemberCount = _memberCount;
@@ -1106,6 +1596,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="int"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="int"/> values.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<int> array)
         {
             int currentMemberCount = _memberCount;
@@ -1125,6 +1620,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="short"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="short"/> values.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<short> array)
         {
             int currentMemberCount = _memberCount;
@@ -1144,6 +1644,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="sbyte"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="sbyte"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<sbyte> array)
         {
@@ -1164,6 +1669,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="ulong"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="ulong"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<ulong> array)
         {
@@ -1184,6 +1694,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="uint"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="uint"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<uint> array)
         {
@@ -1204,6 +1719,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="ushort"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="ushort"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<ushort> array)
         {
@@ -1224,6 +1744,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="byte"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="byte"/> values.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<byte> array)
         {
             int currentMemberCount = _memberCount;
@@ -1243,6 +1768,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="decimal"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="decimal"/> values.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<decimal> array)
         {
             int currentMemberCount = _memberCount;
@@ -1262,6 +1792,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="double"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="double"/> values.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<double> array)
         {
             int currentMemberCount = _memberCount;
@@ -1281,6 +1816,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="float"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="float"/> values.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<float> array)
         {
             int currentMemberCount = _memberCount;
@@ -1301,6 +1841,11 @@ namespace Corvus.Text.Json.Internal
         }
 
 #if NET
+        /// <summary>
+        /// Adds a property with an array of <see cref="Int128"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="Int128"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<Int128> array)
         {
@@ -1321,6 +1866,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="UInt128"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="UInt128"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<UInt128> array)
         {
@@ -1341,6 +1891,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="Half"/> values to the current object.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="Half"/> values.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<Half> array)
         {
@@ -1362,7 +1917,13 @@ namespace Corvus.Text.Json.Internal
         }
 #endif
 
-
+        /// <summary>
+        /// Adds a property with an array of <see cref="long"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="long"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<long> array, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -1382,6 +1943,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="int"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="int"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<int> array, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -1401,6 +1969,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="short"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="short"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<short> array, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -1420,6 +1995,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="sbyte"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="sbyte"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<sbyte> array, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -1440,6 +2022,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="ulong"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="ulong"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<ulong> array, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -1460,6 +2049,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="uint"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="uint"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<uint> array, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -1480,6 +2076,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="ushort"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="ushort"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<ushort> array, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -1500,6 +2103,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="byte"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="byte"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<byte> array, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -1519,6 +2129,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="decimal"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="decimal"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<decimal> array, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -1538,6 +2155,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="double"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="double"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<double> array, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -1557,6 +2181,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="float"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="float"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<float> array, bool escapeName, bool nameRequiresUnescaping)
         {
             int currentMemberCount = _memberCount;
@@ -1577,6 +2208,13 @@ namespace Corvus.Text.Json.Internal
         }
 
 #if NET
+        /// <summary>
+        /// Adds a property with an array of <see cref="Int128"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="Int128"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<Int128> array, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -1597,6 +2235,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="UInt128"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="UInt128"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<UInt128> array, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -1617,6 +2262,13 @@ namespace Corvus.Text.Json.Internal
             _rowCount = currentRowCount + _rowCount + 1;
         }
 
+        /// <summary>
+        /// Adds a property with an array of <see cref="Half"/> values to the current object, with control over escaping.
+        /// </summary>
+        /// <param name="utf8Name">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="Half"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<Half> array, bool escapeName, bool nameRequiresUnescaping)
         {
@@ -1658,6 +2310,12 @@ namespace Corvus.Text.Json.Internal
             AddItem(value.AsSpan());
         }
 
+        /// <summary>
+        /// Adds an item to the current array as a UTF-8 string with control over escaping.
+        /// </summary>
+        /// <param name="utf8String">The item value as a UTF-8 byte span.</param>
+        /// <param name="escapeValue">Whether to escape the value.</param>
+        /// <param name="requiresUnescaping">Whether the value requires unescaping.</param>
         public void AddItem(ReadOnlySpan<byte> utf8String, bool escapeValue, bool requiresUnescaping)
         {
             AddStringValue(JsonTokenType.String, utf8String, escapeValue, requiresUnescaping);
@@ -1676,6 +2334,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount += 1;
         }
 
+        /// <summary>
+        /// Adds an item to the current array as a raw string.
+        /// </summary>
+        /// <param name="value">The item value as a UTF-8 byte span.</param>
+        /// <param name="requiresUnescaping">Whether the value requires unescaping.</param>
         public void AddItemRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
         {
             AddStringValue(JsonTokenType.String, value, false, requiresUnescaping);
@@ -1683,6 +2346,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds an item to the current array using a value builder action.
+        /// </summary>
+        /// <param name="createValue">The action to create the item value.</param>
         public void AddItem(ValueBuilderAction createValue)
         {
             int currentMemberCount = _memberCount;
@@ -1694,6 +2361,12 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an item to the current array using a value builder action with context.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context.</typeparam>
+        /// <param name="context">The context to pass to the create value action.</param>
+        /// <param name="createValue">The action to create the item value.</param>
         public void AddItem<TContext>(TContext context, ValueBuilderAction<TContext> createValue)
         {
             int currentMemberCount = _memberCount;
@@ -1737,6 +2410,11 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a JSON element item to the current array.
+        /// </summary>
+        /// <typeparam name="T">The type of the JSON element.</typeparam>
+        /// <param name="value">The JSON element value.</param>
         [CLSCompliant(false)]
         public void AddItem<T>(in T value)
             where T : struct, IJsonElement<T>
@@ -1747,6 +2425,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += (Length - currentLength) / DbRow.Size;
         }
 
+        /// <summary>
+        /// Adds a <see cref="Guid"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="Guid"/> value.</param>
         public void AddItem(Guid value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1754,6 +2436,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="DateTime"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="DateTime"/> value.</param>
         public void AddItem(in DateTime value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1761,6 +2447,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="DateTimeOffset"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="DateTimeOffset"/> value.</param>
         public void AddItem(in DateTimeOffset value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1768,6 +2458,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds an <see cref="OffsetDateTime"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="OffsetDateTime"/> value.</param>
         public void AddItem(in OffsetDateTime value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1775,6 +2469,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds an <see cref="OffsetDate"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="OffsetDate"/> value.</param>
         public void AddItem(in OffsetDate value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1782,6 +2480,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds an <see cref="OffsetTime"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="OffsetTime"/> value.</param>
         public void AddItem(in OffsetTime value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1789,6 +2491,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="LocalDate"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="LocalDate"/> value.</param>
         public void AddItem(in LocalDate value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1796,6 +2502,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="Period"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="Period"/> value.</param>
         public void AddItem(in Period value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1803,6 +2513,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds an <see cref="sbyte"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="sbyte"/> value.</param>
         [CLSCompliant(false)]
         public void AddItem(sbyte value)
         {
@@ -1811,6 +2525,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="byte"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="byte"/> value.</param>
         public void AddItem(byte value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1818,6 +2536,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds an <see cref="int"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="int"/> value.</param>
         public void AddItem(int value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1825,6 +2547,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="uint"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="uint"/> value.</param>
         [CLSCompliant(false)]
         public void AddItem(uint value)
         {
@@ -1833,6 +2559,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="long"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="long"/> value.</param>
         public void AddItem(long value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1840,6 +2570,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="ulong"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="ulong"/> value.</param>
         [CLSCompliant(false)]
         public void AddItem(ulong value)
         {
@@ -1848,6 +2582,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="short"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="short"/> value.</param>
         public void AddItem(short value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1855,6 +2593,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="ushort"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="ushort"/> value.</param>
         [CLSCompliant(false)]
         public void AddItem(ushort value)
         {
@@ -1863,6 +2605,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="float"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="float"/> value.</param>
         public void AddItem(float value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1870,6 +2616,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="double"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="double"/> value.</param>
         public void AddItem(double value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1877,6 +2627,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="decimal"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="decimal"/> value.</param>
         public void AddItem(decimal value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1884,6 +2638,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="BigNumber"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="BigNumber"/> value.</param>
         public void AddItem(in BigNumber value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1891,6 +2649,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="BigInteger"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="BigInteger"/> value.</param>
         public void AddItem(in BigInteger value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1900,6 +2662,10 @@ namespace Corvus.Text.Json.Internal
 
 
 #if NET
+        /// <summary>
+        /// Adds an <see cref="Int128"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="Int128"/> value.</param>
         public void AddItem(Int128 value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1907,6 +2673,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="UInt128"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="UInt128"/> value.</param>
         [CLSCompliant(false)]
         public void AddItem(UInt128 value)
         {
@@ -1915,6 +2685,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount++;
         }
 
+        /// <summary>
+        /// Adds a <see cref="Half"/> item to the current array.
+        /// </summary>
+        /// <param name="value">The <see cref="Half"/> value.</param>
         public void AddItem(Half value)
         {
             _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
@@ -1923,6 +2697,10 @@ namespace Corvus.Text.Json.Internal
         }
 #endif
 
+        /// <summary>
+        /// Adds an array of <see cref="long"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="long"/> values.</param>
         public void AddItemArrayValue(ReadOnlySpan<long> array)
         {
             int currentMemberCount = _memberCount;
@@ -1943,6 +2721,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="int"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="int"/> values.</param>
         public void AddItemArrayValue(ReadOnlySpan<int> array)
         {
             int currentMemberCount = _memberCount;
@@ -1963,6 +2745,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="short"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="short"/> values.</param>
         public void AddItemArrayValue(ReadOnlySpan<short> array)
         {
             int currentMemberCount = _memberCount;
@@ -1983,6 +2769,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="sbyte"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="sbyte"/> values.</param>
         [CLSCompliant(false)]
         public void AddItemArrayValue(ReadOnlySpan<sbyte> array)
         {
@@ -2004,6 +2794,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="ulong"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="ulong"/> values.</param>
         [CLSCompliant(false)]
         public void AddItemArrayValue(ReadOnlySpan<ulong> array)
         {
@@ -2025,6 +2819,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="uint"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="uint"/> values.</param>
         [CLSCompliant(false)]
         public void AddItemArrayValue(ReadOnlySpan<uint> array)
         {
@@ -2046,6 +2844,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="ushort"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="ushort"/> values.</param>
         [CLSCompliant(false)]
         public void AddItemArrayValue(ReadOnlySpan<ushort> array)
         {
@@ -2067,6 +2869,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="byte"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="byte"/> values.</param>
         public void AddItemArrayValue(ReadOnlySpan<byte> array)
         {
             int currentMemberCount = _memberCount;
@@ -2087,6 +2893,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="decimal"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="decimal"/> values.</param>
         public void AddItemArrayValue(ReadOnlySpan<decimal> array)
         {
             int currentMemberCount = _memberCount;
@@ -2107,6 +2917,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="double"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="double"/> values.</param>
         public void AddItemArrayValue(ReadOnlySpan<double> array)
         {
             int currentMemberCount = _memberCount;
@@ -2127,6 +2941,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="float"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="float"/> values.</param>
         public void AddItemArrayValue(ReadOnlySpan<float> array)
         {
             int currentMemberCount = _memberCount;
@@ -2148,6 +2966,10 @@ namespace Corvus.Text.Json.Internal
         }
 
 #if NET
+        /// <summary>
+        /// Adds an array of <see cref="Int128"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="Int128"/> values.</param>
         [CLSCompliant(false)]
         public void AddItemArrayValue(ReadOnlySpan<Int128> array)
         {
@@ -2169,6 +2991,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="UInt128"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="UInt128"/> values.</param>
         [CLSCompliant(false)]
         public void AddItemArrayValue(ReadOnlySpan<UInt128> array)
         {
@@ -2190,6 +3016,10 @@ namespace Corvus.Text.Json.Internal
             _rowCount += currentRowCount;
         }
 
+        /// <summary>
+        /// Adds an array of <see cref="Half"/> values as an item to the current array.
+        /// </summary>
+        /// <param name="array">The array of <see cref="Half"/> values.</param>
         [CLSCompliant(false)]
         public void AddItemArrayValue(ReadOnlySpan<Half> array)
         {
@@ -2303,7 +3133,7 @@ namespace Corvus.Text.Json.Internal
 
             ObjectEnumerator<JsonElement> enumerator = EnumeratorCreator.CreateObjectEnumerator<JsonElement>(value.ParentDocument, value.ParentDocumentIndex);
             while (enumerator.MoveNext())
-            {                
+            {
                 // TODO: there is an opportunity here to see if the value's property count * parsedData property count > 10
                 // and build a stack-based lookup like the PropertyMap to do these removals. It will be faster to do 1 pass of that
                 // build and then constant time lookups for properties.
@@ -2320,7 +3150,7 @@ namespace Corvus.Text.Json.Internal
         /// <summary>
         /// Removes a property from the current object.
         /// </summary>
-        /// <param name="utf8Name">The UTF-16 name of the property.</param>
+        /// <param name="name">The name of the property as a character span.</param>
         public void RemoveProperty(scoped ReadOnlySpan<char> name)
         {
             // 1. Transcode the name to a UTF-8 byte span
@@ -2494,9 +3324,6 @@ namespace Corvus.Text.Json.Internal
         /// <summary>
         /// Start an array item.
         /// </summary>
-        /// <param name="stringValue"></param>
-        /// <param name="escape">Indicates whether to escape the property name.</param>
-        /// <param name="ifNotEscapeRequiresUenscaping">Indicates whether the property name needs unescaping if it is not to be escaped.</param>
         /// <returns>The handle for the property.</returns>
         public ComplexValueHandle StartItem()
         {
@@ -2516,11 +3343,26 @@ namespace Corvus.Text.Json.Internal
             _rowCount += handle.RowCount;
         }
 
+        /// <summary>
+        /// Represents a handle that tracks the state of a complex value (property or array item) during construction.
+        /// </summary>
         public readonly struct ComplexValueHandle
         {
+            /// <summary>
+            /// Gets the number of members that were present when this handle was created.
+            /// </summary>
             internal int MemberCount { get; }
+
+            /// <summary>
+            /// Gets the number of rows that were present when this handle was created.
+            /// </summary>
             internal int RowCount { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ComplexValueHandle"/> struct.
+            /// </summary>
+            /// <param name="memberCount">The current member count.</param>
+            /// <param name="rowCount">The current row count.</param>
             internal ComplexValueHandle(int memberCount, int rowCount)
             {
                 MemberCount = memberCount;
