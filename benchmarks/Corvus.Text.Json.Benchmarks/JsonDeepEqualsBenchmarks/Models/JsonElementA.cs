@@ -1302,6 +1302,7 @@ namespace Corvus.Text.Json
         }
 
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
+
         public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null) => true;
 
 #if NET

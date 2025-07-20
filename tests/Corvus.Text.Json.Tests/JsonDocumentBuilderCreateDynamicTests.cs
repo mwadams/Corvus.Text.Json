@@ -3,18 +3,18 @@
 
 using System.Buffers;
 using System.Collections;
-using System.Globalization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using Xunit;
 using System.IO.Tests;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using Corvus.Text.Json.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace Corvus.Text.Json.Tests
 {
@@ -169,7 +169,6 @@ namespace Corvus.Text.Json.Tests
                 }
                 sb.Append((string)token["greeting"]);
                 sb.Append((string)token["favoriteFruit"]);
-
             }
             return sb.ToString();
         }
@@ -470,6 +469,7 @@ namespace Corvus.Text.Json.Tests
                         expectedFunc = token => ReadJson400KB(token);
                         actualFunc = element => ReadJson400KB(element);
                         break;
+
                     case TestCaseType.HelloWorld:
                         expectedFunc = token => ReadHelloWorld(token);
                         actualFunc = element => ReadHelloWorld(element);
@@ -3629,7 +3629,6 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-
         [Fact]
         public static void SetItem_OnEmptyArray_AddsItem()
         {
@@ -3976,6 +3975,7 @@ namespace Corvus.Text.Json.Tests
         }
 
 #if NET
+
         [Fact]
         public static void SetItem_Int128_Works()
         {
@@ -4029,6 +4029,7 @@ namespace Corvus.Text.Json.Tests
             root.SetItem(1, value2);
             Assert.Equal(value2, root[1].GetHalf());
         }
+
 #endif
 
         [Fact]
@@ -4229,6 +4230,7 @@ namespace Corvus.Text.Json.Tests
         }
 
 #if NET
+
         [Fact]
         public static void SetItem_Int128_Throws_WhenIndexOutOfBounds()
         {
@@ -4270,6 +4272,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, value));
         }
+
 #endif
 
         private static void BuildSegmentedReader(
@@ -4300,7 +4303,6 @@ namespace Corvus.Text.Json.Tests
                     isFinalBlock,
                     state);
             }
-
         }
 
         private static string GetExpectedConcat(TestCaseType testCaseType, string jsonString)
@@ -4442,6 +4444,7 @@ namespace Corvus.Text.Json.Tests
                         escapeName: false,
                         nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
+
                     case JsonValueKind.Array:
                         builder.Add(propertyName, (ref arrayBuilder) =>
                         {
@@ -4453,21 +4456,27 @@ namespace Corvus.Text.Json.Tests
                         escapeName: false,
                         nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
+
                     case JsonValueKind.String:
                         builder.AddRawString(propertyName, propertyValue.ValueSpan, propertyValue.ValueIsEscaped, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
+
                     case JsonValueKind.Number:
                         builder.AddFormattedNumber(propertyName, propertyValue.ValueSpan, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
+
                     case JsonValueKind.True:
                         builder.Add(propertyName, true, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
+
                     case JsonValueKind.False:
                         builder.Add(propertyName, false, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
+
                     case JsonValueKind.Null:
                         builder.AddNull(propertyName, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
+
                     default:
                         throw new NotSupportedException("Unsupported JSON value kind: " + propertyValue.ValueKind);
                 }
@@ -4486,6 +4495,7 @@ namespace Corvus.Text.Json.Tests
                             }
                         });
                         break;
+
                     case JsonValueKind.Array:
                         builder.Add((ref arrayBuilder) =>
                         {
@@ -4495,21 +4505,27 @@ namespace Corvus.Text.Json.Tests
                             }
                         });
                         break;
+
                     case JsonValueKind.String:
                         builder.AddRawString(value.ValueSpan, value.ValueIsEscaped);
                         break;
+
                     case JsonValueKind.Number:
                         builder.AddFormattedNumber(value.ValueSpan);
                         break;
+
                     case JsonValueKind.True:
                         builder.Add(true);
                         break;
+
                     case JsonValueKind.False:
                         builder.Add(false);
                         break;
+
                     case JsonValueKind.Null:
                         builder.AddNull();
                         break;
+
                     default:
                         throw new NotSupportedException("Unsupported JSON value kind: " + value.ValueKind);
                 }

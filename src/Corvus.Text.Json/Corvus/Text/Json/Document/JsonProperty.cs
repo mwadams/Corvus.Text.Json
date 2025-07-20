@@ -15,11 +15,6 @@ namespace Corvus.Text.Json;
 public readonly struct JsonProperty<TValue>
     where TValue : struct, IJsonElement<TValue>
 {
-    /// <summary>
-    ///   The value of this property.
-    /// </summary>
-    public TValue Value { get; }
-
     internal JsonProperty(TValue value)
     {
         Value = value;
@@ -36,7 +31,6 @@ public readonly struct JsonProperty<TValue>
         {
             Value.CheckValidInstance();
             return Value.ParentDocument.GetNameOfPropertyValue(Value.ParentDocumentIndex);
-
         }
     }
 
@@ -55,6 +49,26 @@ public readonly struct JsonProperty<TValue>
             return Value.ParentDocument.GetUtf8JsonString(Value.ParentDocumentIndex - DbRow.Size, JsonTokenType.PropertyName);
         }
     }
+
+    /// <summary>
+    ///   The value of this property.
+    /// </summary>
+    public TValue Value { get; }
+
+    internal bool NameIsEscaped => Value.ParentDocument.ValueIsEscaped(Value.ParentDocumentIndex, isPropertyName: true);
+
+    internal ReadOnlySpan<byte> RawNameSpan
+    {
+        get
+        {
+            Value.CheckValidInstance();
+            return Value.ParentDocument.GetPropertyNameRaw(Value.ParentDocumentIndex);
+        }
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+            => Value.ValueKind == JsonValueKind.Undefined ? "<Undefined>" : $"\"{ToString()}\"";
 
     /// <summary>
     ///   Compares <paramref name="text" /> to the name of this property.
@@ -118,15 +132,23 @@ public readonly struct JsonProperty<TValue>
         return Value.ParentDocument.TextEquals(Value.ParentDocumentIndex, text, isPropertyName: true);
     }
 
-    internal bool NameIsEscaped => Value.ParentDocument.ValueIsEscaped(Value.ParentDocumentIndex, isPropertyName: true);
-
-    internal ReadOnlySpan<byte> RawNameSpan
+    /// <summary>
+    ///   Provides a <see cref="string"/> representation of the property for
+    ///   debugging purposes.
+    /// </summary>
+    /// <returns>
+    ///   A string containing the un-interpreted value of the property, beginning
+    ///   at the declaring open-quote and ending at the last character that is part of
+    ///   the value.
+    /// </returns>
+    public override string ToString()
     {
-        get
+        if (Value.ParentDocument is null)
         {
-            Value.CheckValidInstance();
-            return Value.ParentDocument.GetPropertyNameRaw(Value.ParentDocumentIndex);
+            return string.Empty;
         }
+
+        return Value.ParentDocument.GetPropertyRawValueAsString(Value.ParentDocumentIndex);
     }
 
     /// <summary>
@@ -154,27 +176,4 @@ public readonly struct JsonProperty<TValue>
         Value.ParentDocument.WritePropertyName(Value.ParentDocumentIndex, writer);
         Value.ParentDocument.WriteElementTo(Value.ParentDocumentIndex, writer);
     }
-
-    /// <summary>
-    ///   Provides a <see cref="string"/> representation of the property for
-    ///   debugging purposes.
-    /// </summary>
-    /// <returns>
-    ///   A string containing the un-interpreted value of the property, beginning
-    ///   at the declaring open-quote and ending at the last character that is part of
-    ///   the value.
-    /// </returns>
-    public override string ToString()
-    {
-        if (Value.ParentDocument is null)
-        {
-            return string.Empty;
-        }
-
-        return Value.ParentDocument.GetPropertyRawValueAsString(Value.ParentDocumentIndex);
-    }
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-        => Value.ValueKind == JsonValueKind.Undefined ? "<Undefined>" : $"\"{ToString()}\"";
 }

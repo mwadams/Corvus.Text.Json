@@ -12,6 +12,7 @@ namespace Corvus.Text.Json.Internal;
 internal static class Utf8UriHelper
 {
 #if NET
+
     /// <summary>
     /// SearchValues for all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~'.
     /// </summary>
@@ -23,17 +24,19 @@ internal static class Utf8UriHelper
     /// </summary>
     public static readonly SearchValues<byte> UnreservedBytes =
         SearchValues.Create("-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"u8);
+
 #else
     /// <summary>
     /// Span of all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~'.
     /// </summary>
     public static ReadOnlySpan<char> Unreserved => "-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
-    
+
     /// <summary>
     /// Span of all ASCII letters and digits, as well as the RFC3986 unreserved marks '-', '_', '.', and '~' (byte version).
     /// </summary>
     public static ReadOnlySpan<byte> UnreservedBytes => "-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"u8;
 #endif
+
     /// <summary>
     /// Determines whether the specified byte represents a linear white space character.
     /// </summary>
@@ -79,5 +82,4 @@ internal static class Utf8UriHelper
 
         return (char)((a << 4) | b);
     }
-
 }

@@ -72,7 +72,6 @@ namespace Corvus.Text.Json
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
         }
 
-
         /// <summary>
         ///   Get the number of values contained within the current array value.
         /// </summary>
@@ -1267,7 +1266,6 @@ namespace Corvus.Text.Json
             return _parent.ToString(_idx);
         }
 
-
         /// <summary>
         ///   Get a JsonElementB which can be safely stored beyond the lifetime of the
         ///   original <see cref="JsonDocument"/>.
@@ -1308,6 +1306,7 @@ namespace Corvus.Text.Json
 #if NET
         public static JsonElementB CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElementB(parentDocument, parentDocumentIndex);
 #endif
+
         public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null) => true;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

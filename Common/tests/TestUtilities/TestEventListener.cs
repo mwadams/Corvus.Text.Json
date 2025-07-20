@@ -113,21 +113,21 @@ public sealed class TestEventListener : EventListener
         StringBuilder sb = new StringBuilder();
 
 #if NET || NETSTANDARD2_1_OR_GREATER
-            sb.Append($"{eventData.TimeStamp:HH:mm:ss.fffffff}");
-            if (_enableActivityId)
+        sb.Append($"{eventData.TimeStamp:HH:mm:ss.fffffff}");
+        if (_enableActivityId)
+        {
+            if (eventData.ActivityId != Guid.Empty)
             {
-                if (eventData.ActivityId != Guid.Empty)
-                {
-                    string activityId = ActivityHelpers.ActivityPathString(eventData.ActivityId);
-                    sb.Append($" {activityId} {new string('-', activityId.Length / 2 - 1 )} ");
-                }
-                else
-                {
-                    sb.Append(" /  ");
-                }
+                string activityId = ActivityHelpers.ActivityPathString(eventData.ActivityId);
+                sb.Append($" {activityId} {new string('-', activityId.Length / 2 - 1)} ");
             }
+            else
+            {
+                sb.Append(" /  ");
+            }
+        }
 #endif
-            sb.Append($"[{eventData.EventName}] ");
+        sb.Append($"[{eventData.EventName}] ");
 
         for (int i = 0; i < eventData.Payload?.Count; i++)
         {

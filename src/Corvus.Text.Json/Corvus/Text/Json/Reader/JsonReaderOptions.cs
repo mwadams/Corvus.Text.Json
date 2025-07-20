@@ -12,8 +12,26 @@ public struct JsonReaderOptions
 {
     internal const int DefaultMaxDepth = 64;
 
-    private int _maxDepth;
     private JsonCommentHandling _commentHandling;
+    private int _maxDepth;
+
+    /// <summary>
+    /// Defines whether the <see cref="Utf8JsonReader"/> should tolerate
+    /// zero or more top-level JSON values that are whitespace separated.
+    /// </summary>
+    /// <remarks>
+    /// By default, it's set to false, and <exception cref="JsonException"/> is thrown if trailing content is encountered after the first top-level JSON value.
+    /// </remarks>
+    public bool AllowMultipleValues { get; set; }
+
+    /// <summary>
+    /// Defines whether an extra comma at the end of a list of JSON values in an object or array
+    /// is allowed (and ignored) within the JSON payload being read.
+    /// </summary>
+    /// <remarks>
+    /// By default, it's set to false, and <exception cref="JsonException"/> is thrown if a trailing comma is encountered.
+    /// </remarks>
+    public bool AllowTrailingCommas { get; set; }
 
     /// <summary>
     /// Defines how the <see cref="Utf8JsonReader"/> should handle comments when reading through the JSON.
@@ -61,22 +79,4 @@ public struct JsonReaderOptions
             _maxDepth = value;
         }
     }
-
-    /// <summary>
-    /// Defines whether an extra comma at the end of a list of JSON values in an object or array
-    /// is allowed (and ignored) within the JSON payload being read.
-    /// </summary>
-    /// <remarks>
-    /// By default, it's set to false, and <exception cref="JsonException"/> is thrown if a trailing comma is encountered.
-    /// </remarks>
-    public bool AllowTrailingCommas { get; set; }
-
-    /// <summary>
-    /// Defines whether the <see cref="Utf8JsonReader"/> should tolerate
-    /// zero or more top-level JSON values that are whitespace separated.
-    /// </summary>
-    /// <remarks>
-    /// By default, it's set to false, and <exception cref="JsonException"/> is thrown if trailing content is encountered after the first top-level JSON value.
-    /// </remarks>
-    public bool AllowMultipleValues { get; set; }
 }

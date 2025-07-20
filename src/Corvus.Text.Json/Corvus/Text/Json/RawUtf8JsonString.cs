@@ -17,8 +17,8 @@ public ref struct RawUtf8JsonString
     : IDisposable
 #endif
 {
-    ReadOnlyMemory<byte> _utf8Bytes;
-    byte[]? _extraRentedArrayPoolBytes;
+    private ReadOnlyMemory<byte> _utf8Bytes;
+    private byte[]? _extraRentedArrayPoolBytes;
 
     /// <summary>
     /// Gets the underlying UTF-8 bytes as a <see cref="ReadOnlyMemory{T}"/>.

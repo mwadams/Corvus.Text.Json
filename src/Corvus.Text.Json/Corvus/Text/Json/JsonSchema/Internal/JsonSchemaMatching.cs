@@ -51,7 +51,6 @@ public static partial class JsonSchemaEvaluation
         return true;
     }
 
-
     /// <summary>
     /// Tries to copy a message to the specified buffer.
     /// </summary>
@@ -96,28 +95,6 @@ public static partial class JsonSchemaEvaluation
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IgnoredNotType(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
-    {
-        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_IgnoredNotType.AsSpan(), buffer, out written))
-        {
-            return false;
-        }
-
-        return AppendSingleQuotedValue(typeName, buffer, ref written);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool ExpectedType(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
-    {
-        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedType.AsSpan(), buffer, out written))
-        {
-            return false;
-        }
-
-        return AppendSingleQuotedValue(typeName, buffer, ref written);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool AppendSingleQuotedValue(ReadOnlySpan<byte> value, Span<byte> buffer, ref int written)
     {
         if (buffer.Length < written + value.Length + 4)
@@ -132,5 +109,27 @@ public static partial class JsonSchemaEvaluation
         written += value.Length;
         buffer[written++] = (byte)'\'';
         return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedType(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedType.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IgnoredNotType(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_IgnoredNotType.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(typeName, buffer, ref written);
     }
 }

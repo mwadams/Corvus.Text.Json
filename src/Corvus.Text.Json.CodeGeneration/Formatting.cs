@@ -319,7 +319,7 @@ public static class Formatting
         throw new InvalidOperationException(
             $"""
             A class name or other identifier can be no longer than 512 characters (CS0645).
-                    
+
             Consider setting a specific named type on the Options for the schema at {typeDeclaration.LocatedSchema.Location}.
             """);
     }

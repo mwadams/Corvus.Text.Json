@@ -12,14 +12,10 @@ namespace Corvus.Text.Json.Internal;
 /// </summary>
 internal static class JsonRegexCharClass
 {
-    private const string InternalRegexIgnoreCase = "__InternalRegexIgnoreCase__";
+    // UnicodeCategory is zero based, so we add one to each value and subtract it off later
+    private const int DefinedCategoriesCapacity = 38;
 
-    /// <summary>16 bytes, representing the chars 0 through 127, with a 1 for a bit where that char is a word char.</summary>
-    private static ReadOnlySpan<byte> WordCharAsciiLookup =>
-    [
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x03,
-        0xFE, 0xFF, 0xFF, 0x87, 0xFE, 0xFF, 0xFF, 0x07
-    ];
+    private const string InternalRegexIgnoreCase = "__InternalRegexIgnoreCase__";
 
     /// <summary>Mask of Unicode categories that combine to form [\\w]</summary>
     private const int WordCategoriesMask =
@@ -32,8 +28,6 @@ internal static class JsonRegexCharClass
         1 << (int)UnicodeCategory.DecimalDigitNumber |
         1 << (int)UnicodeCategory.ConnectorPunctuation;
 
-    // UnicodeCategory is zero based, so we add one to each value and subtract it off later
-    private const int DefinedCategoriesCapacity = 38;
     private static readonly Dictionary<string, string> s_definedCategories = new Dictionary<string, string>(DefinedCategoriesCapacity)
     {
         // Others
@@ -92,13 +86,6 @@ internal static class JsonRegexCharClass
         { "Z", "\u0000\u000D\u000E\u000C\u0000" },
     };
 
-    /*
-*   The property table contains all the block definitions defined in the
-*   XML schema spec (http://www.w3.org/TR/2001/PR-xmlschema-2-20010316/#charcter-classes), Unicode 4.0 spec (www.unicode.org),
-*   and Perl 5.6 (see Programming Perl, 3rd edition page 167).   Three blocks defined by Perl (and here) may
-*   not be in the Unicode: IsHighPrivateUseSurrogates, IsHighSurrogates, and IsLowSurrogates.
-*
-**/
     // Has to be sorted by the first column
     private static readonly string[][] s_propTable =
     [
@@ -225,74 +212,20 @@ internal static class JsonRegexCharClass
             +"\u3041\u3097\u3099\u30A0\u30A1\u30FB\u30FC\u3100\u3105\u312D\u3131\u318F\u3190\u31B8\u31F0\u321D\u3220\u3244\u3251\u327C\u327F\u32CC\u32D0\u32FF\u3300\u3377\u337B\u33DE\u33E0\u33FF\u3400\u4DB6\u4E00\u9FA6\uA000\uA48D\uA490\uA4C7\uAC00\uD7A4\uF900\uFA2E\uFA30\uFA6B\uFB00\uFB07\uFB13\uFB18\uFB1D\uFB37\uFB38\uFB3D\uFB3E\uFB3F\uFB40\uFB42\uFB43\uFB45\uFB46\uFBB2\uFBD3\uFD3E\uFD50\uFD90\uFD92\uFDC8\uFDF0\uFDFD\uFE00\uFE10\uFE20\uFE24\uFE62\uFE63\uFE64\uFE67\uFE69\uFE6A\uFE70\uFE75\uFE76\uFEFD\uFF04\uFF05\uFF0B\uFF0C\uFF10\uFF1A\uFF1C\uFF1F\uFF21\uFF3B\uFF3E\uFF3F\uFF40\uFF5B\uFF5C\uFF5D\uFF5E\uFF5F\uFF66\uFFBF\uFFC2\uFFC8\uFFCA\uFFD0\uFFD2\uFFD8\uFFDA\uFFDD\uFFE0\uFFE7\uFFE8\uFFEF\uFFFC\uFFFE"],
     ];
 
-    /// <summary>
-    /// Validates whether the specified category name is a valid Unicode category or defined property.
-    /// </summary>
-    /// <param name="categoryName">The category name to validate.</param>
-    /// <returns><see langword="true"/> if the category name is valid; otherwise, <see langword="false"/>.</returns>
-    public static bool ValidateCategoryName(ReadOnlySpan<char> categoryName)
-    {
-        if (!HasKey(s_definedCategories, categoryName) ||
-            categoryName.SequenceEqual(InternalRegexIgnoreCase))
-        {
-            return ValidateRangesFromProperty(categoryName);
-        }
+    /// <summary>16 bytes, representing the chars 0 through 127, with a 1 for a bit where that char is a word char.</summary>
+    private static ReadOnlySpan<byte> WordCharAsciiLookup =>
+    [
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x03,
+        0xFE, 0xFF, 0xFF, 0x87, 0xFE, 0xFF, 0xFF, 0x07
+    ];
 
-        return true;
-    }
-
-    /// <summary>
-    /// Validates whether the specified property name exists in the property table.
-    /// </summary>
-    /// <param name="capname">The property name to validate.</param>
-    /// <returns><see langword="true"/> if the property exists; otherwise, <see langword="false"/>.</returns>
-    private static bool ValidateRangesFromProperty(ReadOnlySpan<char> capname)
-    {
-        int min = 0;
-        int max = s_propTable.Length;
-        while (min != max)
-        {
-            int mid = (min + max) / 2;
-
-            int res = capname.CompareTo(s_propTable[mid][0], StringComparison.Ordinal);
-            if (res < 0)
-            {
-                max = mid;
-            }
-            else if (res > 0)
-            {
-                min = mid + 1;
-            }
-            else
-            {
-                string set = s_propTable[mid][1];
-                Debug.Assert(!string.IsNullOrEmpty(set), "Found a null/empty element in RegexCharClass prop table");
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /// <summary>
-    /// Determines whether the specified dictionary contains a key that matches the given category name.
-    /// </summary>
-    /// <param name="s_definedCategories">The dictionary of defined categories to search.</param>
-    /// <param name="categoryName">The category name to search for.</param>
-    /// <returns><see langword="true"/> if a matching key is found; otherwise, <see langword="false"/>.</returns>
-    private static bool HasKey(Dictionary<string, string> s_definedCategories, ReadOnlySpan<char> categoryName)
-    {
-        foreach (string key in s_definedCategories.Keys)
-        {
-            if (categoryName.SequenceEqual(key.AsSpan()))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    /*
+*   The property table contains all the block definitions defined in the
+*   XML schema spec (http://www.w3.org/TR/2001/PR-xmlschema-2-20010316/#charcter-classes), Unicode 4.0 spec (www.unicode.org),
+*   and Perl 5.6 (see Programming Perl, 3rd edition page 167).   Three blocks defined by Perl (and here) may
+*   not be in the Unicode: IsHighPrivateUseSurrogates, IsHighSurrogates, and IsLowSurrogates.
+*
+**/
 
     /// <summary>Determines whether a character is considered a word character for the purposes of testing a word character boundary.</summary>
     /// <param name="ch">The character to test.</param>
@@ -366,5 +299,73 @@ internal static class JsonRegexCharClass
             _ => true,// We don't know (without testing the character against every other
                       // character), so assume it does.
         };
+    }
+
+    /// <summary>
+    /// Validates whether the specified category name is a valid Unicode category or defined property.
+    /// </summary>
+    /// <param name="categoryName">The category name to validate.</param>
+    /// <returns><see langword="true"/> if the category name is valid; otherwise, <see langword="false"/>.</returns>
+    public static bool ValidateCategoryName(ReadOnlySpan<char> categoryName)
+    {
+        if (!HasKey(s_definedCategories, categoryName) ||
+            categoryName.SequenceEqual(InternalRegexIgnoreCase))
+        {
+            return ValidateRangesFromProperty(categoryName);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Determines whether the specified dictionary contains a key that matches the given category name.
+    /// </summary>
+    /// <param name="s_definedCategories">The dictionary of defined categories to search.</param>
+    /// <param name="categoryName">The category name to search for.</param>
+    /// <returns><see langword="true"/> if a matching key is found; otherwise, <see langword="false"/>.</returns>
+    private static bool HasKey(Dictionary<string, string> s_definedCategories, ReadOnlySpan<char> categoryName)
+    {
+        foreach (string key in s_definedCategories.Keys)
+        {
+            if (categoryName.SequenceEqual(key.AsSpan()))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Validates whether the specified property name exists in the property table.
+    /// </summary>
+    /// <param name="capname">The property name to validate.</param>
+    /// <returns><see langword="true"/> if the property exists; otherwise, <see langword="false"/>.</returns>
+    private static bool ValidateRangesFromProperty(ReadOnlySpan<char> capname)
+    {
+        int min = 0;
+        int max = s_propTable.Length;
+        while (min != max)
+        {
+            int mid = (min + max) / 2;
+
+            int res = capname.CompareTo(s_propTable[mid][0], StringComparison.Ordinal);
+            if (res < 0)
+            {
+                max = mid;
+            }
+            else if (res > 0)
+            {
+                min = mid + 1;
+            }
+            else
+            {
+                string set = s_propTable[mid][1];
+                Debug.Assert(!string.IsNullOrEmpty(set), "Found a null/empty element in RegexCharClass prop table");
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -30,29 +30,6 @@ public static class PropertyDeclarationExtensions
         return name ?? throw new InvalidOperationException("Null names are not permitted.");
     }
 
-    private static bool HasMatchingProperty(PropertyDeclaration property, ReadOnlySpan<char> buffer, [NotNullWhen(true)] out string? match)
-    {
-        foreach (PropertyDeclaration sibling in property.Owner.PropertyDeclarations)
-        {
-            if (property == sibling)
-            {
-                continue;
-            }
-
-            if (sibling.TryGetMetadata(nameof(DotnetPropertyName), out string? siblingName))
-            {
-                if (siblingName is string sn && sn.AsSpan().Equals(buffer, StringComparison.Ordinal))
-                {
-                    match = siblingName;
-                    return true;
-                }
-            }
-        }
-
-        match = null;
-        return false;
-    }
-
     private static string BuildDotnetPropertyName(PropertyDeclaration that)
     {
         string? name;
@@ -84,6 +61,29 @@ public static class PropertyDeclarationExtensions
 
         that.SetMetadata(nameof(DotnetPropertyName), name);
         return name;
+    }
+
+    private static bool HasMatchingProperty(PropertyDeclaration property, ReadOnlySpan<char> buffer, [NotNullWhen(true)] out string? match)
+    {
+        foreach (PropertyDeclaration sibling in property.Owner.PropertyDeclarations)
+        {
+            if (property == sibling)
+            {
+                continue;
+            }
+
+            if (sibling.TryGetMetadata(nameof(DotnetPropertyName), out string? siblingName))
+            {
+                if (siblingName is string sn && sn.AsSpan().Equals(buffer, StringComparison.Ordinal))
+                {
+                    match = siblingName;
+                    return true;
+                }
+            }
+        }
+
+        match = null;
+        return false;
     }
 
     private static bool OwnerHasMatchingChild(IReadOnlyCollection<TypeDeclaration> typeDeclarations, ReadOnlySpan<char> writtenBuffer)

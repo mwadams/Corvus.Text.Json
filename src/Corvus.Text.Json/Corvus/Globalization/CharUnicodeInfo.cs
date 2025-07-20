@@ -15,11 +15,11 @@ namespace Corvus.Globalization;
 /// </summary>
 public static partial class CharUnicodeInfo
 {
-    internal const char HIGH_SURROGATE_START = '\ud800';
     internal const char HIGH_SURROGATE_END = '\udbff';
-    internal const char LOW_SURROGATE_START = '\udc00';
-    internal const char LOW_SURROGATE_END = '\udfff';
     internal const int HIGH_SURROGATE_RANGE = 0x3FF;
+    internal const char HIGH_SURROGATE_START = '\ud800';
+    internal const char LOW_SURROGATE_END = '\udfff';
+    internal const char LOW_SURROGATE_START = '\udc00';
 
     // The starting codepoint for Unicode plane 1.  Plane 1 contains 0x010000 ~ 0x01ffff.
     internal const int UNICODE_PLANE01_START = 0x10000;
@@ -31,6 +31,7 @@ public static partial class CharUnicodeInfo
      * is encoded in DerivedBidiClass.txt. We map "L" to "strong left-to-right"; and we map "R" and "AL"
      * to "strong right-to-left". All other (non-strong) code points are "other" for our purposes.
      */
+
     internal static StrongBidiCategory GetBidiCategory(ReadOnlySpan<char> s, int index)
     {
         if ((uint)index >= (uint)s.Length)
@@ -39,6 +40,25 @@ public static partial class CharUnicodeInfo
         }
 
         return GetBidiCategoryNoBoundsChecks((uint)GetCodePointFromString(s, index));
+    }
+
+    internal static StrongBidiCategory GetBidiCategory(ReadOnlySpan<byte> s, int index, out int consumed)
+    {
+        if ((uint)index >= (uint)s.Length)
+        {
+            ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
+        }
+
+        return GetBidiCategoryNoBoundsChecks((uint)GetCodePointFromString(s, index, out consumed));
+    }
+
+    [Conditional("DEBUG")]
+    private static void AssertIsValidCodePoint(uint codePoint)
+    {
+        if (codePoint > 0x10FFFFU)
+        {
+            Debug.Fail($"The value {FormattableString.Invariant($"U+{codePoint:X4}")} is not a valid Unicode code point.");
+        }
     }
 
     private static StrongBidiCategory GetBidiCategoryNoBoundsChecks(uint codePoint)
@@ -53,19 +73,47 @@ public static partial class CharUnicodeInfo
         return bidiCategory;
     }
 
-    internal static StrongBidiCategory GetBidiCategory(ReadOnlySpan<byte> s, int index, out int consumed)
-    {
-        if ((uint)index >= (uint)s.Length)
-        {
-            ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
-        }
-
-        return GetBidiCategoryNoBoundsChecks((uint)GetCodePointFromString(s, index, out consumed));
-    }
-
     /////*
     //// * HELPER AND TABLE LOOKUP ROUTINES
     //// */
+
+    /// <summary>
+    /// Retrieves the offset into the "CategoryCasing" arrays where this code point's
+    /// information is stored. Used for getting the Unicode category, bidi information,
+    /// and whitespace information.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static nuint GetCategoryCasingTableOffsetNoBoundsChecks(uint codePoint)
+    {
+        AssertIsValidCodePoint(codePoint);
+
+        // The code below is written with the assumption that the backing store is 11:5:4.
+        AssertCategoryCasingTableLevels(11, 5, 4);
+
+        // Get the level index item from the high 11 bits of the code point.
+
+        uint index = Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel1Index), codePoint >> 9);
+
+        // Get the level 2 WORD offset from the next 5 bits of the code point.
+        // This provides the base offset of the level 3 table.
+        // Note that & has lower precedence than +, so remember the parens.
+
+        ref byte level2Ref = ref Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel2Index), (index << 6) + ((codePoint >> 3) & 0b_0011_1110));
+
+        if (BitConverter.IsLittleEndian)
+        {
+            index = Unsafe.ReadUnaligned<ushort>(ref level2Ref);
+        }
+        else
+        {
+            index = BinaryPrimitives.ReverseEndianness(Unsafe.ReadUnaligned<ushort>(ref level2Ref));
+        }
+
+        // Get the result from the low 4 bits of the code point.
+        // This is the offset into the values table where the data is stored.
+
+        return Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel3Index), (index << 4) + (codePoint & 0x0F));
+    }
 
     /// <summary>
     /// Returns the code point pointed to by index, decoding any surrogate sequence if possible.
@@ -131,52 +179,5 @@ public static partial class CharUnicodeInfo
         }
 
         return codePoint;
-    }
-
-    /// <summary>
-    /// Retrieves the offset into the "CategoryCasing" arrays where this code point's
-    /// information is stored. Used for getting the Unicode category, bidi information,
-    /// and whitespace information.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static nuint GetCategoryCasingTableOffsetNoBoundsChecks(uint codePoint)
-    {
-        AssertIsValidCodePoint(codePoint);
-
-        // The code below is written with the assumption that the backing store is 11:5:4.
-        AssertCategoryCasingTableLevels(11, 5, 4);
-
-        // Get the level index item from the high 11 bits of the code point.
-
-        uint index = Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel1Index), codePoint >> 9);
-
-        // Get the level 2 WORD offset from the next 5 bits of the code point.
-        // This provides the base offset of the level 3 table.
-        // Note that & has lower precedence than +, so remember the parens.
-
-        ref byte level2Ref = ref Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel2Index), (index << 6) + ((codePoint >> 3) & 0b_0011_1110));
-
-        if (BitConverter.IsLittleEndian)
-        {
-            index = Unsafe.ReadUnaligned<ushort>(ref level2Ref);
-        }
-        else
-        {
-            index = BinaryPrimitives.ReverseEndianness(Unsafe.ReadUnaligned<ushort>(ref level2Ref));
-        }
-
-        // Get the result from the low 4 bits of the code point.
-        // This is the offset into the values table where the data is stored.
-
-        return Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel3Index), (index << 4) + (codePoint & 0x0F));
-    }
-
-    [Conditional("DEBUG")]
-    private static void AssertIsValidCodePoint(uint codePoint)
-    {
-        if (codePoint > 0x10FFFFU)
-        {
-            Debug.Fail($"The value {FormattableString.Invariant($"U+{codePoint:X4}")} is not a valid Unicode code point.");
-        }
     }
 }

@@ -23,6 +23,313 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
     public uint Priority => 100_000;
 
     /// <inheritdoc/>
+    public bool AppendFormatAssertion(CodeGenerator generator, string format, string formatKeywordProviderExpression, string valueIdentifier, string validationContextIdentifier)
+    {
+        switch (format)
+        {
+            case "date":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchDate(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "date-time":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchDateTime(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "time":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchTime(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "duration":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchDuration(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "email":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchEmail(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "idn-email":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIdnEmail(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "hostname":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchHostname(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "idn-hostname":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIdnHostname(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "ipv4":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIPV4(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "ipv6":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIPV6(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "uuid":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchUuid(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "uri":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchUri(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "uri-template":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchUriTemplate(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "uri-reference":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchUriReference(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "iri":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIri(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "iri-reference":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchIriReference(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "json-pointer":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchJsonPointer(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "relative-json-pointer":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchRelativeJsonPointer(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "regex":
+                generator.AppendIndent(
+                   "JsonSchemaMatching.MatchRegex(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
+
+            case "corvus-base64-content":
+                // TODO
+                return false;
+
+            case "corvus-base64-content-pre201909":
+                // TODO
+                return false;
+
+            case "corvus-base64-string":
+                // TODO
+                return false;
+
+            case "corvus-base64-string-pre201909":
+                // TODO
+                return false;
+
+            case "corvus-json-content":
+                // TODO
+                return false;
+
+            case "corvus-json-content-pre201909":
+                // TODO
+                return false;
+
+            default:
+                return false;
+        }
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatConstant(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string format, string staticFieldName, JsonElement constantValue)
+    {
+        if (constantValue.ValueKind != JsonValueKind.String)
+        {
+            return false;
+        }
+
+        return format switch
+        {
+            "date" => AppendDate(generator, keyword, staticFieldName, constantValue),
+            "date-time" => AppendDateTime(generator, keyword, staticFieldName, constantValue),
+            "time" => AppendTime(generator, keyword, staticFieldName, constantValue),
+            "duration" => AppendDuration(generator, keyword, staticFieldName, constantValue),
+            "ipv4" => AppendIpV4(generator, keyword, staticFieldName, constantValue),
+            "ipv6" => AppendIpV6(generator, keyword, staticFieldName, constantValue),
+            "uuid" => AppendUuid(generator, keyword, staticFieldName, constantValue),
+            "uri" => AppendUri(generator, keyword, staticFieldName, constantValue),
+            "uri-reference" => AppendUriReference(generator, keyword, staticFieldName, constantValue),
+            "iri" => AppendIri(generator, keyword, staticFieldName, constantValue),
+            "iri-reference" => AppendIriReference(generator, keyword, staticFieldName, constantValue),
+            //// "regex" => We don't support regex here; there is a custom regex support with IValidationRegexProviderKeyword,
+            _ => false,
+        };
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    {
+        return format switch
+        {
+            ////"date" => generator.AppendDateFormatConversionOperators(typeDeclaration),
+            ////"date-time" => generator.AppendDateTimeFormatConversionOperators(typeDeclaration),
+            ////"time" => generator.AppendTimeFormatConversionOperators(typeDeclaration),
+            ////"duration" => generator.AppendDurationFormatConversionOperators(typeDeclaration),
+            ////"ipv4" => generator.AppendIpV4FormatConversionOperators(typeDeclaration),
+            ////"ipv6" => generator.AppendIpV6FormatConversionOperators(typeDeclaration),
+            ////"uuid" => generator.AppendUuidFormatConversionOperators(typeDeclaration),
+            ////"uri" => generator.AppendUriFormatConversionOperators(typeDeclaration),
+            ////"uri-reference" => generator.AppendUriReferenceFormatConversionOperators(typeDeclaration),
+            ////"iri" => generator.AppendIriFormatConversionOperators(typeDeclaration),
+            ////"iri-reference" => generator.AppendIriReferenceFormatConversionOperators(typeDeclaration),
+            ////"regex" => generator.AppendRegexFormatConversionOperators(typeDeclaration),
+            _ => false,
+        };
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatEqualsTBody(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    {
+        return format switch
+        {
+            ////"date" => generator.AppendDateFormatEqualsTBody(typeDeclaration),
+            ////"date-time" => generator.AppendDateTimeFormatEqualsTBody(typeDeclaration),
+            ////"time" => generator.AppendTimeFormatEqualsTBody(typeDeclaration),
+            ////"duration" => generator.AppendDurationFormatEqualsTBody(typeDeclaration),
+            ////"uuid" => generator.AppendUuidFormatEqualsTBody(typeDeclaration),
+            ////"corvus-json-content" => generator.AppendJsonContentFormatEqualsTBody(typeDeclaration),
+            ////"corvus-json-content-pre201909" => generator.AppendJsonContentFormatEqualsTBody(typeDeclaration),
+            _ => false,
+        };
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatPrivateMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    {
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatPrivateStaticMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    {
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatPublicMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    {
+        return format switch
+        {
+            ////"date" => generator.AppendDateFormatPublicMethods(typeDeclaration),
+            ////"date-time" => generator.AppendDateTimeFormatPublicMethods(typeDeclaration),
+            ////"time" => generator.AppendTimeFormatPublicMethods(typeDeclaration),
+            ////"duration" => generator.AppendDurationFormatPublicMethods(typeDeclaration),
+            ////"ipv4" => generator.AppendIpV4FormatPublicMethods(typeDeclaration),
+            ////"ipv6" => generator.AppendIpV6FormatPublicMethods(typeDeclaration),
+            ////"uuid" => generator.AppendUuidFormatPublicMethods(typeDeclaration),
+            ////"uri" => generator.AppendUriFormatPublicMethods(typeDeclaration),
+            ////"uri-reference" => generator.AppendUriReferenceFormatPublicMethods(typeDeclaration),
+            ////"iri" => generator.AppendIriFormatPublicMethods(typeDeclaration),
+            ////"iri-reference" => generator.AppendIriReferenceFormatPublicMethods(typeDeclaration),
+            ////"uri-template" => generator.AppendUriTemplateFormatPublicMethods(typeDeclaration),
+            ////"regex" => generator.AppendRegexFormatPublicMethods(typeDeclaration),
+            ////"corvus-base64-string" => generator.AppendBase64StringFormatPublicMethods(typeDeclaration),
+            ////"corvus-base64-string-pre201909" => generator.AppendBase64StringFormatPublicMethods(typeDeclaration),
+            ////"corvus-json-content" => generator.AppendJsonContentFormatPublicMethods(typeDeclaration),
+            ////"corvus-json-content-pre201909" => generator.AppendJsonContentFormatPublicMethods(typeDeclaration),
+            ////"corvus-base64-content" => generator.AppendBase64ContentFormatPublicMethods(typeDeclaration),
+            ////"corvus-base64-content-pre201909" => generator.AppendBase64ContentFormatPublicMethods(typeDeclaration),
+            _ => false,
+        };
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatPublicProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    {
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatPublicStaticMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    {
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public bool AppendFormatPublicStaticProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
+    {
+        return false;
+    }
+
+    /// <inheritdoc/>
     public bool AppendFormatSourceConstructors(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConstructorParameters)
     {
         switch (format)
@@ -35,6 +342,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("private Source(NodaTime.LocalDate value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatLocalDate(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
                 return true;
+
             case "date-time":
                 if (seenConstructorParameters.Add("OffsetDateTime"))
                 {
@@ -50,6 +358,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendLineIndent("private Source(DateTimeOffset value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
                 return true;
+
             case "time":
                 if (seenConstructorParameters.Add("OffsetTime"))
                 {
@@ -58,6 +367,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                        .AppendLineIndent("private Source(NodaTime.OffsetTime value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetTime(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
                 return true;
+
             case "duration":
                 if (seenConstructorParameters.Add("Period"))
                 {
@@ -66,10 +376,13 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("private Source(NodaTime.Period value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatPeriod(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
                 return true;
+
             case "ipv4":
                 return true;
+
             case "ipv6":
                 return true;
+
             case "uuid":
                 if (seenConstructorParameters.Add("Guid"))
                 {
@@ -78,6 +391,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                        .AppendLineIndent("private Source(Guid value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
                 return true;
+
             case "uri":
                 if (seenConstructorParameters.Add("Uri"))
                 {
@@ -86,6 +400,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                        .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
                 }
                 return true;
+
             case "uri-reference":
                 if (seenConstructorParameters.Add("Uri"))
                 {
@@ -94,6 +409,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                        .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
                 }
                 return true;
+
             case "iri":
                 if (seenConstructorParameters.Add("Uri"))
                 {
@@ -102,6 +418,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                        .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
                 }
                 return true;
+
             case "iri-reference":
                 if (seenConstructorParameters.Add("Uri"))
                 {
@@ -110,8 +427,10 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                        .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
                 }
                 return true;
+
             case "regex":
                 return true;
+
             default:
                 return false;
         }
@@ -138,6 +457,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("public static implicit operator Source(NodaTime.LocalDate value) => new (value);");
                 }
                 return true;
+
             case "date-time":
                 if (seenConversionOperators.Add("OffsetDateTime"))
                 {
@@ -233,262 +553,6 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
     }
 
     /// <inheritdoc/>
-    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return format switch
-        {
-            ////"date" => generator.AppendDateFormatConversionOperators(typeDeclaration),
-            ////"date-time" => generator.AppendDateTimeFormatConversionOperators(typeDeclaration),
-            ////"time" => generator.AppendTimeFormatConversionOperators(typeDeclaration),
-            ////"duration" => generator.AppendDurationFormatConversionOperators(typeDeclaration),
-            ////"ipv4" => generator.AppendIpV4FormatConversionOperators(typeDeclaration),
-            ////"ipv6" => generator.AppendIpV6FormatConversionOperators(typeDeclaration),
-            ////"uuid" => generator.AppendUuidFormatConversionOperators(typeDeclaration),
-            ////"uri" => generator.AppendUriFormatConversionOperators(typeDeclaration),
-            ////"uri-reference" => generator.AppendUriReferenceFormatConversionOperators(typeDeclaration),
-            ////"iri" => generator.AppendIriFormatConversionOperators(typeDeclaration),
-            ////"iri-reference" => generator.AppendIriReferenceFormatConversionOperators(typeDeclaration),
-            ////"regex" => generator.AppendRegexFormatConversionOperators(typeDeclaration),
-            _ => false,
-        };
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatEqualsTBody(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return format switch
-        {
-            ////"date" => generator.AppendDateFormatEqualsTBody(typeDeclaration),
-            ////"date-time" => generator.AppendDateTimeFormatEqualsTBody(typeDeclaration),
-            ////"time" => generator.AppendTimeFormatEqualsTBody(typeDeclaration),
-            ////"duration" => generator.AppendDurationFormatEqualsTBody(typeDeclaration),
-            ////"uuid" => generator.AppendUuidFormatEqualsTBody(typeDeclaration),
-            ////"corvus-json-content" => generator.AppendJsonContentFormatEqualsTBody(typeDeclaration),
-            ////"corvus-json-content-pre201909" => generator.AppendJsonContentFormatEqualsTBody(typeDeclaration),
-            _ => false,
-        };
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicStaticMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return format switch
-        {
-            ////"date" => generator.AppendDateFormatPublicMethods(typeDeclaration),
-            ////"date-time" => generator.AppendDateTimeFormatPublicMethods(typeDeclaration),
-            ////"time" => generator.AppendTimeFormatPublicMethods(typeDeclaration),
-            ////"duration" => generator.AppendDurationFormatPublicMethods(typeDeclaration),
-            ////"ipv4" => generator.AppendIpV4FormatPublicMethods(typeDeclaration),
-            ////"ipv6" => generator.AppendIpV6FormatPublicMethods(typeDeclaration),
-            ////"uuid" => generator.AppendUuidFormatPublicMethods(typeDeclaration),
-            ////"uri" => generator.AppendUriFormatPublicMethods(typeDeclaration),
-            ////"uri-reference" => generator.AppendUriReferenceFormatPublicMethods(typeDeclaration),
-            ////"iri" => generator.AppendIriFormatPublicMethods(typeDeclaration),
-            ////"iri-reference" => generator.AppendIriReferenceFormatPublicMethods(typeDeclaration),
-            ////"uri-template" => generator.AppendUriTemplateFormatPublicMethods(typeDeclaration),
-            ////"regex" => generator.AppendRegexFormatPublicMethods(typeDeclaration),
-            ////"corvus-base64-string" => generator.AppendBase64StringFormatPublicMethods(typeDeclaration),
-            ////"corvus-base64-string-pre201909" => generator.AppendBase64StringFormatPublicMethods(typeDeclaration),
-            ////"corvus-json-content" => generator.AppendJsonContentFormatPublicMethods(typeDeclaration),
-            ////"corvus-json-content-pre201909" => generator.AppendJsonContentFormatPublicMethods(typeDeclaration),
-            ////"corvus-base64-content" => generator.AppendBase64ContentFormatPublicMethods(typeDeclaration),
-            ////"corvus-base64-content-pre201909" => generator.AppendBase64ContentFormatPublicMethods(typeDeclaration),
-            _ => false,
-        };
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPrivateStaticMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPrivateMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicStaticProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatAssertion(CodeGenerator generator, string format, string formatKeywordProviderExpression, string valueIdentifier, string validationContextIdentifier)
-    {
-        switch (format)
-        {
-            case "date":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchDate(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "date-time":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchDateTime(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "time":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchTime(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "duration":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchDuration(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "email":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchEmail(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "idn-email":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIdnEmail(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "hostname":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchHostname(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "idn-hostname":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIdnHostname(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "ipv4":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIPV4(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "ipv6":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIPV6(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "uuid":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchUuid(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "uri":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchUri(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "uri-template":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchUriTemplate(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "uri-reference":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchUriReference(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "iri":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIri(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "iri-reference":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIriReference(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "json-pointer":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchJsonPointer(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "relative-json-pointer":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchRelativeJsonPointer(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "regex":
-                generator.AppendIndent(
-                   "JsonSchemaMatching.MatchRegex(",
-                   valueIdentifier, ", ",
-                   formatKeywordProviderExpression, ", ",
-                   "ref ", validationContextIdentifier, ")");
-                return true;
-            case "corvus-base64-content":
-                // TODO
-                return false;
-            case "corvus-base64-content-pre201909":
-                // TODO
-                return false;
-            case "corvus-base64-string":
-                // TODO
-                return false;
-            case "corvus-base64-string-pre201909":
-                // TODO
-                return false;
-            case "corvus-json-content":
-                // TODO
-                return false;
-            case "corvus-json-content-pre201909":
-                // TODO
-                return false;
-            default:
-                return false;
-        }
-    }
-
-    /// <inheritdoc/>
     public JsonValueKind? GetExpectedValueKind(string format)
     {
         if (HandlesFormat(format))
@@ -499,171 +563,79 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
         return null;
     }
 
-    /// <inheritdoc/>
-    public bool AppendFormatConstant(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string format, string staticFieldName, JsonElement constantValue)
+    /// <summary>
+    /// Determines whether the specified format requires simple types backing.
+    /// </summary>
+    /// <param name="format">The format to check.</param>
+    /// <param name="requiresSimpleType">When this method returns, contains <see langword="true"/> if the format requires simple types backing; otherwise, <see langword="false"/>.</param>
+    /// <returns><see langword="true"/> if this handler supports the specified format; otherwise, <see langword="false"/>.</returns>
+    public bool RequiresSimpleTypesBacking(string format, out bool requiresSimpleType)
     {
-        if (constantValue.ValueKind != JsonValueKind.String)
+        switch (format)
         {
-            return false;
+            case "date":
+                requiresSimpleType = true;
+                return true;
+
+            case "date-time":
+                requiresSimpleType = true;
+                return true;
+
+            case "time":
+                requiresSimpleType = true;
+                return true;
+
+            case "duration":
+                requiresSimpleType = true;
+                return true;
+
+            case "ipv4":
+                requiresSimpleType = false;
+                return true;
+
+            case "ipv6":
+                requiresSimpleType = false;
+                return true;
+
+            case "uuid":
+                requiresSimpleType = true;
+                return true;
+
+            case "uri":
+                requiresSimpleType = false;
+                return true;
+
+            case "uri-reference":
+                requiresSimpleType = false;
+                return true;
+
+            case "iri":
+                requiresSimpleType = false;
+                return true;
+
+            case "iri-reference":
+                requiresSimpleType = false;
+                return true;
+
+            case "regex":
+                requiresSimpleType = false;
+                return true;
+
+            default:
+                requiresSimpleType = false;
+                return false;
         }
-
-        return format switch
-        {
-            "date" => AppendDate(generator, keyword, staticFieldName, constantValue),
-            "date-time" => AppendDateTime(generator, keyword, staticFieldName, constantValue),
-            "time" => AppendTime(generator, keyword, staticFieldName, constantValue),
-            "duration" => AppendDuration(generator, keyword, staticFieldName, constantValue),
-            "ipv4" => AppendIpV4(generator, keyword, staticFieldName, constantValue),
-            "ipv6" => AppendIpV6(generator, keyword, staticFieldName, constantValue),
-            "uuid" => AppendUuid(generator, keyword, staticFieldName, constantValue),
-            "uri" => AppendUri(generator, keyword, staticFieldName, constantValue),
-            "uri-reference" => AppendUriReference(generator, keyword, staticFieldName, constantValue),
-            "iri" => AppendIri(generator, keyword, staticFieldName, constantValue),
-            "iri-reference" => AppendIriReference(generator, keyword, staticFieldName, constantValue),
-            //// "regex" => We don't support regex here; there is a custom regex support with IValidationRegexProviderKeyword,
-            _ => false,
-        };
     }
 
-    private static bool AppendIriReference(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    private static bool AppendDate(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
     {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Uri ",
-                staticFieldName,
-                " = new Uri(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ", UriKind.RelativeOrAbsolute).GetUri();");
+        ReadOnlySpan<byte> utf8Bytes = Encoding.UTF8.GetBytes(constantValue.GetString()!).AsSpan();
 
-        return true;
-    }
-
-    private static bool AppendIri(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Uri ",
-                staticFieldName,
-                " = new Uri(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ", UriKind.RelativeOrAbsolute).GetUri();");
-
-        return true;
-    }
-
-    private static bool AppendUriReference(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Uri ",
-                staticFieldName,
-                " = new Uri(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ", UriKind.RelativeOrAbsolute).GetUri();");
-
-        return true;
-    }
-
-    private static bool AppendUri(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Uri ",
-                staticFieldName,
-                " = new Uri(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ", UriKind.RelativeOrAbsolute).GetUri();");
-
-        return true;
-    }
-
-    private static bool AppendUuid(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Guid ",
-                staticFieldName,
-                " = new Guid(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ");");
-
-        return true;
-    }
-
-    private static bool AppendIpV6(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly System.Net.IPAddress ",
-                staticFieldName,
-                " = IPAddress.TryParse(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ");");
-
-        return true;
-    }
-
-    private static bool AppendIpV4(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-            "public static readonly System.Net.IPAddress ",
-            staticFieldName,
-            " = IPAddress.TryParse(",
-            SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-            ");");
-
-        return true;
-    }
-
-    private static bool AppendDuration(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Period ",
-                staticFieldName,
-                " = Period.Parse(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ");");
-
-        return true;
-    }
-
-    private static bool AppendTime(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        if (!JsonElementHelpers.ParseOffsetTimeCore(
-            Encoding.UTF8.GetBytes(constantValue.GetString()!).AsSpan(),
-            out int hours,
-            out int minutes,
-            out int seconds,
-            out int milliseconds,
-            out int microseconds,
-            out int nanoseconds,
-            out int offSetSeconds))
+        if (!JsonElementHelpers.ParseDateCore(
+            utf8Bytes,
+            out int year,
+            out int month,
+            out int day))
         {
             return false;
         }
@@ -672,27 +644,15 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
             .AppendLineIndent("/// </summary>")
-            .AppendIndent(
-                "public static readonly NodaTime.OffsetTime ",
+            .AppendLineIndent(
+                "public static readonly NodaTime.LocalDate ",
                 staticFieldName,
-                " = JsonElementHelpers.CreateOffsetTimeCore(",
-                hours.ToString(),
+                " = new(",
+                year.ToString(),
                 ", ",
-                minutes.ToString(),
+                month.ToString(),
                 ", ",
-                seconds.ToString(),
-                ", ",
-                milliseconds.ToString(),
-                ", ");
-
-        if (microseconds != 0 || nanoseconds != 0)
-        {
-            generator
-                .AppendIndent(microseconds.ToString(), ", ", nanoseconds.ToString(), ", ");
-        }
-
-        generator.AppendLineIndent(
-                offSetSeconds.ToString(),
+                day.ToString(),
                 ");");
 
         return true;
@@ -760,15 +720,97 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
         return true;
     }
 
-    private static bool AppendDate(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    private static bool AppendDuration(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
     {
-        ReadOnlySpan<byte> utf8Bytes = Encoding.UTF8.GetBytes(constantValue.GetString()!).AsSpan();
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent(
+                "public static readonly Period ",
+                staticFieldName,
+                " = Period.Parse(",
+                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
+                ");");
 
-        if (!JsonElementHelpers.ParseDateCore(
-            utf8Bytes,
-            out int year,
-            out int month,
-            out int day))
+        return true;
+    }
+
+    private static bool AppendIpV4(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    {
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent(
+            "public static readonly System.Net.IPAddress ",
+            staticFieldName,
+            " = IPAddress.TryParse(",
+            SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
+            ");");
+
+        return true;
+    }
+
+    private static bool AppendIpV6(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    {
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent(
+                "public static readonly System.Net.IPAddress ",
+                staticFieldName,
+                " = IPAddress.TryParse(",
+                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
+                ");");
+
+        return true;
+    }
+
+    private static bool AppendIri(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    {
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent(
+                "public static readonly Uri ",
+                staticFieldName,
+                " = new Uri(",
+                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
+                ", UriKind.RelativeOrAbsolute).GetUri();");
+
+        return true;
+    }
+
+    private static bool AppendIriReference(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    {
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent(
+                "public static readonly Uri ",
+                staticFieldName,
+                " = new Uri(",
+                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
+                ", UriKind.RelativeOrAbsolute).GetUri();");
+
+        return true;
+    }
+
+    private static bool AppendTime(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    {
+        if (!JsonElementHelpers.ParseOffsetTimeCore(
+            Encoding.UTF8.GetBytes(constantValue.GetString()!).AsSpan(),
+            out int hours,
+            out int minutes,
+            out int seconds,
+            out int milliseconds,
+            out int microseconds,
+            out int nanoseconds,
+            out int offSetSeconds))
         {
             return false;
         }
@@ -777,15 +819,75 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
             .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly NodaTime.LocalDate ",
+            .AppendIndent(
+                "public static readonly NodaTime.OffsetTime ",
                 staticFieldName,
-                " = new(",
-                year.ToString(),
+                " = JsonElementHelpers.CreateOffsetTimeCore(",
+                hours.ToString(),
                 ", ",
-                month.ToString(),
+                minutes.ToString(),
                 ", ",
-                day.ToString(),
+                seconds.ToString(),
+                ", ",
+                milliseconds.ToString(),
+                ", ");
+
+        if (microseconds != 0 || nanoseconds != 0)
+        {
+            generator
+                .AppendIndent(microseconds.ToString(), ", ", nanoseconds.ToString(), ", ");
+        }
+
+        generator.AppendLineIndent(
+                offSetSeconds.ToString(),
+                ");");
+
+        return true;
+    }
+
+    private static bool AppendUri(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    {
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent(
+                "public static readonly Uri ",
+                staticFieldName,
+                " = new Uri(",
+                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
+                ", UriKind.RelativeOrAbsolute).GetUri();");
+
+        return true;
+    }
+
+    private static bool AppendUriReference(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    {
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent(
+                "public static readonly Uri ",
+                staticFieldName,
+                " = new Uri(",
+                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
+                ", UriKind.RelativeOrAbsolute).GetUri();");
+
+        return true;
+    }
+
+    private static bool AppendUuid(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
+    {
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent(
+                "public static readonly Guid ",
+                staticFieldName,
+                " = new Guid(",
+                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
                 ");");
 
         return true;
@@ -822,58 +924,5 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
             "corvus-json-content-pre201909" => true,
             _ => false,
         };
-    }
-
-    /// <summary>
-    /// Determines whether the specified format requires simple types backing.
-    /// </summary>
-    /// <param name="format">The format to check.</param>
-    /// <param name="requiresSimpleType">When this method returns, contains <see langword="true"/> if the format requires simple types backing; otherwise, <see langword="false"/>.</param>
-    /// <returns><see langword="true"/> if this handler supports the specified format; otherwise, <see langword="false"/>.</returns>
-    public bool RequiresSimpleTypesBacking(string format, out bool requiresSimpleType)
-    {
-        switch (format)
-        {
-            case "date":
-                requiresSimpleType = true;
-                return true;
-            case "date-time":
-                requiresSimpleType = true;
-                return true;
-            case "time":
-                requiresSimpleType = true;
-                return true;
-            case "duration":
-                requiresSimpleType = true;
-                return true;
-            case "ipv4":
-                requiresSimpleType = false;
-                return true;
-            case "ipv6":
-                requiresSimpleType = false;
-                return true;
-            case "uuid":
-                requiresSimpleType = true;
-                return true;
-            case "uri":
-                requiresSimpleType = false;
-                return true;
-            case "uri-reference":
-                requiresSimpleType = false;
-                return true;
-            case "iri":
-                requiresSimpleType = false;
-                return true;
-            case "iri-reference":
-                requiresSimpleType = false;
-                return true;
-            case "regex":
-                requiresSimpleType = false;
-                return true;
-            default:
-                requiresSimpleType = false;
-                return false;
-
-        }
     }
 }

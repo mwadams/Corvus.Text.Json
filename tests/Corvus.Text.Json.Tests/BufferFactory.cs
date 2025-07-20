@@ -8,6 +8,21 @@ namespace Corvus.Text.Json.Tests
 {
     internal static class BufferFactory
     {
+        public static ReadOnlySequence<byte> Create(params byte[][] buffers)
+        {
+            if (buffers.Length == 1)
+                return new ReadOnlySequence<byte>(buffers[0]);
+            var list = new List<Memory<byte>>();
+            foreach (byte[] buffer in buffers)
+                list.Add(buffer);
+            return Create(list.ToArray());
+        }
+
+        public static ReadOnlySequence<byte> Create(IEnumerable<Memory<byte>> buffers)
+        {
+            return ReadOnlyBufferSegment.Create(buffers);
+        }
+
         private class ReadOnlyBufferSegment : ReadOnlySequenceSegment<byte>
         {
             public static ReadOnlySequence<byte> Create(IEnumerable<Memory<byte>> buffers)
@@ -41,21 +56,6 @@ namespace Corvus.Text.Json.Tests
 
                 return new ReadOnlySequence<byte>(first, 0, segment, segment.Memory.Length);
             }
-        }
-
-        public static ReadOnlySequence<byte> Create(params byte[][] buffers)
-        {
-            if (buffers.Length == 1)
-                return new ReadOnlySequence<byte>(buffers[0]);
-            var list = new List<Memory<byte>>();
-            foreach (byte[] buffer in buffers)
-                list.Add(buffer);
-            return Create(list.ToArray());
-        }
-
-        public static ReadOnlySequence<byte> Create(IEnumerable<Memory<byte>> buffers)
-        {
-            return ReadOnlyBufferSegment.Create(buffers);
         }
     }
 }

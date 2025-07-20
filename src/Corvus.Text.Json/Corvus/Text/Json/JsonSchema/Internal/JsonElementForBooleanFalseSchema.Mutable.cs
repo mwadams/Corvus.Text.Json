@@ -20,6 +20,7 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         private readonly ulong _documentVersion;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Mutable"/> struct.
         /// </summary>
@@ -36,6 +37,7 @@ public readonly partial struct JsonElementForBooleanFalseSchema
             _idx = idx;
             _documentVersion = _parent?.Version ?? 0;
         }
+
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -211,7 +213,6 @@ public readonly partial struct JsonElementForBooleanFalseSchema
             return IsValid(parentDocument, parentIndex);
         }
 
-
         /// <summary>
         ///   Write the element into the provided writer as a JSON value.
         /// </summary>
@@ -320,7 +321,9 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
+
         static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new Mutable(parentDocument, parentDocumentIndex);
+
 #endif
 
         /// <summary>

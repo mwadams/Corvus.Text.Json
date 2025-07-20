@@ -1,7 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Collections;
@@ -20,7 +19,6 @@ using Newtonsoft.Json.Linq;
 using NodaTime;
 using NodaTime.Text;
 using Xunit;
-using YamlDotNet.Core.Tokens;
 
 namespace Corvus.Text.Json.Tests
 {
@@ -175,7 +173,6 @@ namespace Corvus.Text.Json.Tests
                 }
                 sb.Append((string)token["greeting"]);
                 sb.Append((string)token["favoriteFruit"]);
-
             }
             return sb.ToString();
         }
@@ -308,7 +305,6 @@ namespace Corvus.Text.Json.Tests
                 null,
                 bytes => ParsedJsonDocument<JsonElement>.ParseAsync(new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, bytes)));
         }
-
 
         [Fact]
         public static void ParseJson_SeekableStream_Small()
@@ -547,6 +543,7 @@ namespace Corvus.Text.Json.Tests
                         expectedFunc = token => ReadJson400KB(token);
                         actualFunc = element => ReadJson400KB(element);
                         break;
+
                     case TestCaseType.HelloWorld:
                         expectedFunc = token => ReadHelloWorld(token);
                         actualFunc = element => ReadHelloWorld(element);
@@ -1327,7 +1324,6 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-
         [Fact]
         public static void OperatorNotEquals_NotEquals()
         {
@@ -1421,7 +1417,6 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => person.ValueEquals(Encoding.UTF8.GetBytes(ThrowsAnyway)));
             }
         }
-
 
         [Fact]
         public static void ParseBoolean()
@@ -1534,7 +1529,6 @@ namespace Corvus.Text.Json.Tests
 
                 Assert.True(root.TryGetInt64(out long longVal));
                 Assert.Equal(value, longVal);
-
 
                 Assert.Equal(expectedFloat, root.GetSingle());
                 Assert.Equal(expectedDouble, root.GetDouble());
@@ -2390,7 +2384,6 @@ namespace Corvus.Text.Json.Tests
                 BigNumber expectedBigNumber = new BigNumber(1, 100000002);
                 Assert.True(root.TryGetBigNumber(out BigNumber bigNumberVal));
                 Assert.Equal(expectedBigNumber, bigNumberVal);
-
 
                 Assert.False(root.TryGetSByte(out sbyte sbyteVal));
                 Assert.Equal(0, sbyteVal);
@@ -3821,9 +3814,11 @@ namespace Corvus.Text.Json.Tests
                         tokenType,
                         segmentCount);
                     break;
+
                 case ParseReaderScenario.StartAtNestedValue:
                     ParseReaderAtNestedValue(valueJson, tokenType, segmentCount);
                     break;
+
                 case ParseReaderScenario.StartAtPropertyName:
                     ParseReaderAtPropertyName(valueJson, tokenType, segmentCount);
                     break;
@@ -3914,10 +3909,12 @@ namespace Corvus.Text.Json.Tests
                     Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
                     Assert.InRange(reader.BytesConsumed, currentPosition + 1, long.MaxValue);
                     break;
+
                 case JsonTokenType.StartObject:
                     Assert.Equal(JsonTokenType.EndObject, reader.TokenType);
                     Assert.InRange(reader.BytesConsumed, currentPosition + 1, long.MaxValue);
                     break;
+
                 default:
                     Assert.Equal(tokenType, reader.TokenType);
                     Assert.Equal(currentPosition, reader.BytesConsumed);
@@ -3982,9 +3979,11 @@ namespace Corvus.Text.Json.Tests
                 case JsonTokenType.StartArray:
                     Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
                     break;
+
                 case JsonTokenType.StartObject:
                     Assert.Equal(JsonTokenType.EndObject, reader.TokenType);
                     break;
+
                 default:
                     Assert.Equal(tokenType, reader.TokenType);
                     break;
@@ -4020,9 +4019,11 @@ namespace Corvus.Text.Json.Tests
                 case JsonTokenType.EndObject:
                     jsonString = "[ { } ]";
                     break;
+
                 case JsonTokenType.EndArray:
                     jsonString = "[ [ ] ]";
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(tokenType));
             }
@@ -4236,7 +4237,6 @@ namespace Corvus.Text.Json.Tests
 
             Assert.False(reader.Read());
         }
-
 
         [Fact]
         public static void ParseValue_AllowMultipleValues_TrailingContent()
@@ -5154,7 +5154,6 @@ namespace Corvus.Text.Json.Tests
                     isFinalBlock,
                     state);
             }
-
         }
 
         private static string GetExpectedConcat(TestCaseType testCaseType, string jsonString)
@@ -5232,6 +5231,7 @@ namespace Corvus.Text.Json.Tests
             Assert.NotNull(jsonDocument);
             Assert.Equal(JsonValueKind.Null, jsonDocument.RootElement.ValueKind);
         }
+
         [Fact]
         public static void CopySingleDimensionalArray_OutputTooShort()
         {

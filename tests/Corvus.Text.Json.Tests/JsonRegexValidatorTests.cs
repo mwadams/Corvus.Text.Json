@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Text.RegularExpressions;
 using Corvus.Text.Json.Internal;
 using Xunit;
 
@@ -714,7 +713,6 @@ namespace Corvus.Text.Json.Tests
         // Avoid OutOfMemoryException
         [InlineData("a{2147483647}", JsonRegexOptions.None, true)]
         [InlineData("a{2147483647,}", JsonRegexOptions.None, true)]
-
         [InlineData(@"(?(?N))", JsonRegexOptions.None, false)]
         [InlineData(@"(?(?i))", JsonRegexOptions.None, false)]
         [InlineData(@"(?(?I))", JsonRegexOptions.None, false)]
@@ -937,7 +935,6 @@ namespace Corvus.Text.Json.Tests
         [InlineData(@"\uD87E\uDC94(?Pabc", JsonRegexOptions.None, false)]
         [InlineData(@"\uD87E\uDC94aaa(?Pabc", JsonRegexOptions.None, false)]
         [InlineData(@"\uD87E\uDC94\uD87E\uDC94\uD87E\uDC94(?Pabc", JsonRegexOptions.None, false)]
-        // End of Nim parser tests ==============
 #endif
         public void Validate_Validates(string pattern, JsonRegexOptions options, bool expected)
         {

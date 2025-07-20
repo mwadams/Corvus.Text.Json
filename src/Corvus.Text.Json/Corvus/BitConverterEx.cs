@@ -13,6 +13,42 @@ namespace Corvus;
 public static class BitConverterEx
 {
     /// <summary>
+    /// Returns the specified 64-bit unsigned integer value as an array of bytes.
+    /// </summary>
+    /// <param name="value">The 64-bit unsigned integer to convert.</param>
+    /// <returns>An array of bytes with length 8 representing the value.</returns>
+    public static byte[] GetBytes(ulong value)
+    {
+        byte[] bytes = new byte[sizeof(ulong)];
+        Unsafe.As<byte, ulong>(ref bytes[0]) = value;
+        return bytes;
+    }
+
+    /// <summary>
+    /// Returns the specified single-precision floating point value as an array of bytes.
+    /// </summary>
+    /// <param name="value">The single-precision floating point value to convert.</param>
+    /// <returns>An array of bytes with length 4 representing the value.</returns>
+    public static byte[] GetBytes(float value)
+    {
+        byte[] bytes = new byte[sizeof(float)];
+        Unsafe.As<byte, float>(ref bytes[0]) = value;
+        return bytes;
+    }
+
+    /// <summary>
+    /// Returns the specified double-precision floating point value as an array of bytes.
+    /// </summary>
+    /// <param name="value">The double-precision floating point value to convert.</param>
+    /// <returns>An array of bytes with length 8 representing the value.</returns>
+    public static byte[] GetBytes(double value)
+    {
+        byte[] bytes = new byte[sizeof(double)];
+        Unsafe.As<byte, double>(ref bytes[0]) = value;
+        return bytes;
+    }
+
+    /// <summary>
     /// Converts a <see cref="bool"/> value into a span of bytes.
     /// </summary>
     /// <param name="destination">The span to receive the bytes representing the converted Boolean.</param>
@@ -132,18 +168,6 @@ public static class BitConverterEx
     }
 
     /// <summary>
-    /// Returns the specified 64-bit unsigned integer value as an array of bytes.
-    /// </summary>
-    /// <param name="value">The 64-bit unsigned integer to convert.</param>
-    /// <returns>An array of bytes with length 8 representing the value.</returns>
-    public static byte[] GetBytes(ulong value)
-    {
-        byte[] bytes = new byte[sizeof(ulong)];
-        Unsafe.As<byte, ulong>(ref bytes[0]) = value;
-        return bytes;
-    }
-
-    /// <summary>
     /// Converts a 64-bit unsigned integer (<see cref="ulong"/>) into a span of bytes.
     /// </summary>
     /// <param name="destination">The span to receive the bytes representing the converted value.</param>
@@ -161,18 +185,6 @@ public static class BitConverterEx
     }
 
     /// <summary>
-    /// Returns the specified single-precision floating point value as an array of bytes.
-    /// </summary>
-    /// <param name="value">The single-precision floating point value to convert.</param>
-    /// <returns>An array of bytes with length 4 representing the value.</returns>
-    public static byte[] GetBytes(float value)
-    {
-        byte[] bytes = new byte[sizeof(float)];
-        Unsafe.As<byte, float>(ref bytes[0]) = value;
-        return bytes;
-    }
-
-    /// <summary>
     /// Converts a single-precision floating-point value (<see cref="float"/>) into a span of bytes.
     /// </summary>
     /// <param name="destination">The span to receive the bytes representing the converted value.</param>
@@ -187,18 +199,6 @@ public static class BitConverterEx
 
         Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(destination), value);
         return true;
-    }
-
-    /// <summary>
-    /// Returns the specified double-precision floating point value as an array of bytes.
-    /// </summary>
-    /// <param name="value">The double-precision floating point value to convert.</param>
-    /// <returns>An array of bytes with length 8 representing the value.</returns>
-    public static byte[] GetBytes(double value)
-    {
-        byte[] bytes = new byte[sizeof(double)];
-        Unsafe.As<byte, double>(ref bytes[0]) = value;
-        return bytes;
     }
 
     /// <summary>

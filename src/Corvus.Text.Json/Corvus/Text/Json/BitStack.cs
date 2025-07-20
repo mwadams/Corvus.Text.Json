@@ -21,9 +21,6 @@ internal struct BitStack
 
     private const int DefaultInitialArraySize = 2;
 
-    // The backing array for the stack used when the depth exceeds AllocationFreeMaxDepth.
-    private int[]? _array;
-
     // This ulong container represents a tiny stack to track the state during nested transitions.
     // The first bit represents the state of the current depth (1 == object, 0 == array).
     // Each subsequent bit is the parent / containing type (object or array). Since this
@@ -32,12 +29,66 @@ internal struct BitStack
     // depths up to 64 (which is the default max depth).
     private ulong _allocationFreeContainer;
 
+    // The backing array for the stack used when the depth exceeds AllocationFreeMaxDepth.
+    private int[]? _array;
+
     private int _currentDepth;
 
     /// <summary>
     /// Gets the number of elements in the stack.
     /// </summary>
     public readonly int CurrentDepth => _currentDepth;
+
+    /// <summary>
+    /// Peeks at the bit at the top of the stack.
+    /// </summary>
+    /// <returns>The bit at the top of the stack.</returns>
+    public readonly bool Peek()
+        // If the stack is small enough, we can use the allocation-free container, otherwise check the allocated array.
+        => _currentDepth <= AllocationFreeMaxDepth ? (_allocationFreeContainer & 1) != 0 : PeekInArray();
+
+    /// <summary>
+    /// Pops the bit at the top of the stack and returns its value.
+    /// </summary>
+    /// <returns>The bit that was popped.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Pop()
+    {
+        _currentDepth--;
+        bool inObject;
+        if (_currentDepth < AllocationFreeMaxDepth)
+        {
+            _allocationFreeContainer >>= 1;
+            inObject = (_allocationFreeContainer & 1) != 0;
+        }
+        else if (_currentDepth == AllocationFreeMaxDepth)
+        {
+            inObject = (_allocationFreeContainer & 1) != 0;
+        }
+        else
+        {
+            // Decrementing depth above effectively pops the last element in the array-backed case.
+            inObject = PeekInArray();
+        }
+        return inObject;
+    }
+
+    /// <summary>
+    /// Pushes <see langword="false"/> onto the stack.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void PushFalse()
+    {
+        if (_currentDepth < AllocationFreeMaxDepth)
+        {
+            _allocationFreeContainer <<= 1;
+        }
+        else
+        {
+            PushToArray(false);
+        }
+        _currentDepth++;
+    }
 
     /// <summary>
     /// Pushes <see langword="true"/> onto the stack.
@@ -57,20 +108,61 @@ internal struct BitStack
     }
 
     /// <summary>
-    /// Pushes <see langword="false"/> onto the stack.
+    /// Optimization to push <see langword="false"/> as the first bit when the stack is empty.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void PushFalse()
+    public void ResetFirstBit()
     {
-        if (_currentDepth < AllocationFreeMaxDepth)
-        {
-            _allocationFreeContainer <<= 1;
-        }
-        else
-        {
-            PushToArray(false);
-        }
+        Debug.Assert(_currentDepth == 0, "Only call ResetFirstBit when depth is 0");
         _currentDepth++;
+        _allocationFreeContainer = 0;
+    }
+
+    /// <summary>
+    /// Optimization to push <see langword="true"/> as the first bit when the stack is empty.
+    /// </summary>
+    public void SetFirstBit()
+    {
+        Debug.Assert(_currentDepth == 0, "Only call SetFirstBit when depth is 0");
+        _currentDepth++;
+        _allocationFreeContainer = 1;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int Div32Rem(int number, out int remainder)
+    {
+        uint quotient = (uint)number / 32;
+        remainder = number & (32 - 1);   // equivalent to number % 32, since 32 is a power of 2
+        return (int)quotient;
+    }
+
+    private void DoubleArray(int minSize)
+    {
+        Debug.Assert(_array != null);
+        Debug.Assert(_array.Length < int.MaxValue / 2, $"Array too large - arrayLength: {_array.Length}");
+        Debug.Assert(minSize >= 0 && minSize >= _array.Length);
+
+        int nextDouble = Math.Max(minSize + 1, _array.Length * 2);
+        Debug.Assert(nextDouble > minSize);
+
+        Array.Resize(ref _array, nextDouble);
+    }
+
+    /// <summary>
+    /// If the stack has a backing array allocated, this method will find the topmost bit in the array and return its value.
+    /// This should only be called if the depth is greater than AllocationFreeMaxDepth and an array has been allocated.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private readonly bool PeekInArray()
+    {
+        int index = _currentDepth - AllocationFreeMaxDepth - 1;
+        Debug.Assert(_array != null);
+        Debug.Assert(index >= 0, $"Get - Negative - index: {index}, arrayLength: {_array.Length}");
+
+        int elementIndex = Div32Rem(index, out int extraBits);
+
+        Debug.Assert(elementIndex < _array.Length, $"Get - index: {index}, elementIndex: {elementIndex}, arrayLength: {_array.Length}, extraBits: {extraBits}");
+
+        return (_array[elementIndex] & (1 << extraBits)) != 0;
     }
 
     /// <summary>
@@ -112,97 +204,5 @@ internal struct BitStack
             newValue &= ~(1 << extraBits);
         }
         _array[elementIndex] = newValue;
-    }
-
-    /// <summary>
-    /// Pops the bit at the top of the stack and returns its value.
-    /// </summary>
-    /// <returns>The bit that was popped.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool Pop()
-    {
-        _currentDepth--;
-        bool inObject;
-        if (_currentDepth < AllocationFreeMaxDepth)
-        {
-            _allocationFreeContainer >>= 1;
-            inObject = (_allocationFreeContainer & 1) != 0;
-        }
-        else if (_currentDepth == AllocationFreeMaxDepth)
-        {
-            inObject = (_allocationFreeContainer & 1) != 0;
-        }
-        else
-        {
-            // Decrementing depth above effectively pops the last element in the array-backed case.
-            inObject = PeekInArray();
-        }
-        return inObject;
-    }
-
-    /// <summary>
-    /// If the stack has a backing array allocated, this method will find the topmost bit in the array and return its value.
-    /// This should only be called if the depth is greater than AllocationFreeMaxDepth and an array has been allocated.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private readonly bool PeekInArray()
-    {
-        int index = _currentDepth - AllocationFreeMaxDepth - 1;
-        Debug.Assert(_array != null);
-        Debug.Assert(index >= 0, $"Get - Negative - index: {index}, arrayLength: {_array.Length}");
-
-        int elementIndex = Div32Rem(index, out int extraBits);
-
-        Debug.Assert(elementIndex < _array.Length, $"Get - index: {index}, elementIndex: {elementIndex}, arrayLength: {_array.Length}, extraBits: {extraBits}");
-
-        return (_array[elementIndex] & (1 << extraBits)) != 0;
-    }
-
-    /// <summary>
-    /// Peeks at the bit at the top of the stack.
-    /// </summary>
-    /// <returns>The bit at the top of the stack.</returns>
-    public readonly bool Peek()
-        // If the stack is small enough, we can use the allocation-free container, otherwise check the allocated array.
-        => _currentDepth <= AllocationFreeMaxDepth ? (_allocationFreeContainer & 1) != 0 : PeekInArray();
-
-    private void DoubleArray(int minSize)
-    {
-        Debug.Assert(_array != null);
-        Debug.Assert(_array.Length < int.MaxValue / 2, $"Array too large - arrayLength: {_array.Length}");
-        Debug.Assert(minSize >= 0 && minSize >= _array.Length);
-
-        int nextDouble = Math.Max(minSize + 1, _array.Length * 2);
-        Debug.Assert(nextDouble > minSize);
-
-        Array.Resize(ref _array, nextDouble);
-    }
-
-    /// <summary>
-    /// Optimization to push <see langword="true"/> as the first bit when the stack is empty.
-    /// </summary>
-    public void SetFirstBit()
-    {
-        Debug.Assert(_currentDepth == 0, "Only call SetFirstBit when depth is 0");
-        _currentDepth++;
-        _allocationFreeContainer = 1;
-    }
-
-    /// <summary>
-    /// Optimization to push <see langword="false"/> as the first bit when the stack is empty.
-    /// </summary>
-    public void ResetFirstBit()
-    {
-        Debug.Assert(_currentDepth == 0, "Only call ResetFirstBit when depth is 0");
-        _currentDepth++;
-        _allocationFreeContainer = 0;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static int Div32Rem(int number, out int remainder)
-    {
-        uint quotient = (uint)number / 32;
-        remainder = number & (32 - 1);   // equivalent to number % 32, since 32 is a power of 2
-        return (int)quotient;
     }
 }

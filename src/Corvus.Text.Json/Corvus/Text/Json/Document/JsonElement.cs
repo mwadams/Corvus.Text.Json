@@ -1140,7 +1140,6 @@ public readonly partial struct JsonElement : IJsonElement<JsonElement>
         return _parent.TryGetValue(_idx, out value);
     }
 
-
     /// <summary>
     ///   Gets the current JSON number as a <see cref="BigNumber"/>.
     /// </summary>
@@ -1192,7 +1191,6 @@ public readonly partial struct JsonElement : IJsonElement<JsonElement>
 
         return _parent.TryGetValue(_idx, out value);
     }
-
 
     /// <summary>
     ///   Gets the current JSON number as a <see cref="BigInteger"/>.
@@ -1938,8 +1936,10 @@ public readonly partial struct JsonElement : IJsonElement<JsonElement>
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
+
     /// <inheritdoc/>
     static JsonElement IJsonElement<JsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+
 #endif
 
     /// <inheritdoc/>

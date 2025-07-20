@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 
-
 namespace Corvus.Text.Json.CodeGeneration;
 
 /// <summary>
@@ -14,64 +13,6 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// </summary>
 internal static partial class CodeGeneratorExtensions
 {
-    /// <summary>
-    /// Appends <c>TryGet()</c> methods for composition types.
-    /// </summary>
-    /// <param name="generator">The code generator.</param>
-    /// <param name="rootDeclaration">The type declaration which is the basis of the composition types.</param>
-    /// <returns>A reference to the generator having completed the operation.</returns>
-    public static CodeGenerator AppendTryGetAsCompositionTypeMethods(
-        this CodeGenerator generator,
-        TypeDeclaration rootDeclaration)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return generator;
-        }
-
-        HashSet<string> visitedTypes = [];
-
-        foreach (TypeDeclaration t in rootDeclaration.CompositionTypeDeclarations())
-        {
-            if (generator.IsCancellationRequested)
-            {
-                return generator;
-            }
-
-            if (!visitedTypes.Add(t.FullyQualifiedDotnetTypeName()))
-            {
-                continue;
-            }
-
-            string methodName = generator.GetMethodNameInScope("TryGetAs", suffix: t.DotnetTypeName());
-            string typeName = t.FullyQualifiedDotnetTypeName();
-            generator
-                .AppendSeparatorLine()
-                .AppendLineIndent("/// <summary>")
-                .AppendLineIndent("/// Gets the value as a <see cref=\"", typeName, "\" />.")
-                .AppendLineIndent("/// </summary>")
-                .AppendLineIndent("/// <param name=\"result\">The result of the conversions.</param>")
-                .AppendLineIndent("/// <returns><see langword=\"true\" /> if the conversion was valid.</returns>")
-                .AppendLineIndent("public bool ", methodName, "(out ", typeName, " result)")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .AppendLineIndent("if (", typeName, ".", generator.JsonSchemaClassName(typeName), ".Evaluate(_parent, _idx))")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("result = ", typeName, ".From(this);")
-                        .AppendLineIndent("return true;")
-                    .PopIndent()
-                    .AppendLineIndent("}")
-                    .AppendSeparatorLine()
-                    .AppendLineIndent("result = default;")
-                    .AppendLineIndent("return false;")
-                .PopIndent()
-                .AppendLineIndent("}");
-        }
-
-        return generator;
-    }
-
     /// <summary>
     /// Appends conversions from dotnet type of the <paramref name="rootDeclaration"/>
     /// to the composition types.
@@ -249,7 +190,6 @@ internal static partial class CodeGeneratorExtensions
             return true;
         }
     }
-
 
     /// <summary>
     /// Appends the pattern-matching methods.
@@ -853,5 +793,63 @@ internal static partial class CodeGeneratorExtensions
                 .PopIndent()
                 .AppendLineIndent("}");
         }
+    }
+
+    /// <summary>
+    /// Appends <c>TryGet()</c> methods for composition types.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="rootDeclaration">The type declaration which is the basis of the composition types.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendTryGetAsCompositionTypeMethods(
+        this CodeGenerator generator,
+        TypeDeclaration rootDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        HashSet<string> visitedTypes = [];
+
+        foreach (TypeDeclaration t in rootDeclaration.CompositionTypeDeclarations())
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            if (!visitedTypes.Add(t.FullyQualifiedDotnetTypeName()))
+            {
+                continue;
+            }
+
+            string methodName = generator.GetMethodNameInScope("TryGetAs", suffix: t.DotnetTypeName());
+            string typeName = t.FullyQualifiedDotnetTypeName();
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Gets the value as a <see cref=\"", typeName, "\" />.")
+                .AppendLineIndent("/// </summary>")
+                .AppendLineIndent("/// <param name=\"result\">The result of the conversions.</param>")
+                .AppendLineIndent("/// <returns><see langword=\"true\" /> if the conversion was valid.</returns>")
+                .AppendLineIndent("public bool ", methodName, "(out ", typeName, " result)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("if (", typeName, ".", generator.JsonSchemaClassName(typeName), ".Evaluate(_parent, _idx))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("result = ", typeName, ".From(this);")
+                        .AppendLineIndent("return true;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("result = default;")
+                    .AppendLineIndent("return false;")
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
+
+        return generator;
     }
 }

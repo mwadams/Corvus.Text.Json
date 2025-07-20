@@ -273,5 +273,4 @@ internal static partial class IPv6AddressHelper
     private static bool IsBetween(char c, char minInclusive, char maxInclusive) =>
         (uint)(c - minInclusive) <= (uint)(maxInclusive - minInclusive);
 #endif
-
 }

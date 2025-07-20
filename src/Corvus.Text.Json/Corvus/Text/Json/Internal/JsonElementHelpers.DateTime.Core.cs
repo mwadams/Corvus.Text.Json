@@ -2,8 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #if CORVUS_TEXT_JSON_CODEGENERATION
+
 namespace Corvus.Text.Json.CodeGeneration.Internal;
 #else
+
 namespace Corvus.Text.Json.Internal;
 #endif
 

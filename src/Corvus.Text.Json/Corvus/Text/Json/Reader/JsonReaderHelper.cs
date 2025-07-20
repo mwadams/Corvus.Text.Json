@@ -17,6 +17,7 @@ internal static partial class JsonReaderHelper
 
     public static bool ContainsSpecialCharacters(this ReadOnlySpan<char> text) =>
         text.ContainsAny(s_specialCharacters);
+
 #else
     public static bool ContainsSpecialCharacters(this ReadOnlySpan<char> text) =>
         text.IndexOfAny(SpecialCharacters.AsSpan()) >= 0;
@@ -201,6 +202,7 @@ internal static partial class JsonReaderHelper
 
         return JsonElementHelpers.TryParseOffsetDate(segment, out value);
     }
+
     public static bool TryGetValue(ReadOnlySpan<byte> segment, bool hasComplexChildren, out OffsetTime value)
     {
         if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
@@ -298,6 +300,7 @@ internal static partial class JsonReaderHelper
     }
 
 #if NET
+
     public static bool TryGetFloatingPointConstant(ReadOnlySpan<byte> span, out Half value)
     {
         if (span.Length == 3)
@@ -328,6 +331,7 @@ internal static partial class JsonReaderHelper
         value = default;
         return false;
     }
+
 #endif
 
     /// <summary>
@@ -386,7 +390,6 @@ internal static partial class JsonReaderHelper
             }
         }
     }
-
 
     /// <summary>
     /// Encodes the ~ encoding in a pointer.

@@ -62,7 +62,6 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("}");
     }
 
-
     /// <summary>
     /// Appends a binary operator for the <paramref name="typeDeclaration"/>
     /// to JsonAny.

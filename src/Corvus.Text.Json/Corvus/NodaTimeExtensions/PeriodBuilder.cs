@@ -17,24 +17,6 @@ namespace Corvus.Text.Json;
 public struct PeriodBuilder
 {
     /// <summary>
-    /// Gets or sets the number of years within the period.
-    /// </summary>
-    /// <value>The number of years within the period.</value>
-    public int Years { get; set; }
-
-    /// <summary>
-    /// Gets or sets the number of months within the period.
-    /// </summary>
-    /// <value>The number of months within the period.</value>
-    public int Months { get; set; }
-
-    /// <summary>
-    /// Gets or sets the number of weeks within the period.
-    /// </summary>
-    /// <value>The number of weeks within the period.</value>
-    public int Weeks { get; set; }
-
-    /// <summary>
     /// Gets or sets the number of days within the period.
     /// </summary>
     /// <value>The number of days within the period.</value>
@@ -47,10 +29,28 @@ public struct PeriodBuilder
     public long Hours { get; set; }
 
     /// <summary>
+    /// Gets or sets the number of milliseconds within the period.
+    /// </summary>
+    /// <value>The number of milliseconds within the period.</value>
+    public long Milliseconds { get; set; }
+
+    /// <summary>
     /// Gets or sets the number of minutes within the period.
     /// </summary>
     /// <value>The number of minutes within the period.</value>
     public long Minutes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of months within the period.
+    /// </summary>
+    /// <value>The number of months within the period.</value>
+    public int Months { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of nanoseconds within the period.
+    /// </summary>
+    /// <value>The number of nanoseconds within the period.</value>
+    public long Nanoseconds { get; set; }
 
     /// <summary>
     /// Gets or sets the number of seconds within the period.
@@ -59,22 +59,22 @@ public struct PeriodBuilder
     public long Seconds { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of milliseconds within the period.
-    /// </summary>
-    /// <value>The number of milliseconds within the period.</value>
-    public long Milliseconds { get; set; }
-
-    /// <summary>
     /// Gets or sets the number of ticks within the period.
     /// </summary>
     /// <value>The number of ticks within the period.</value>
     public long Ticks { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of nanoseconds within the period.
+    /// Gets or sets the number of weeks within the period.
     /// </summary>
-    /// <value>The number of nanoseconds within the period.</value>
-    public long Nanoseconds { get; set; }
+    /// <value>The number of weeks within the period.</value>
+    public int Weeks { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of years within the period.
+    /// </summary>
+    /// <value>The number of years within the period.</value>
+    public int Years { get; set; }
 
     /// <summary>
     /// Gets or sets the value of a single unit.
@@ -153,4 +153,3 @@ public struct PeriodBuilder
         return new Period(this.Years, this.Months, 0 /* weeks */, days, hours, minutes, seconds, milliseconds, 0 /* ticks */, nanoseconds);
     }
 }
-

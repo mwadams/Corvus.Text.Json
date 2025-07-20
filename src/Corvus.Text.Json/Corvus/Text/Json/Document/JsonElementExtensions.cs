@@ -13,29 +13,15 @@ namespace Corvus.Text.Json;
 public static class JsonElementExtensions
 {
     /// <summary>
-    /// Gets a value indicating whether this value is null.
+    /// Gets a nullable instance of the value.
     /// </summary>
-    /// <typeparam name="T">The type of the value to check.</typeparam>
+    /// <typeparam name="T">The type of the value for wich to get a nullable instance.</typeparam>
     /// <param name="value">The value to check.</param>
-    /// <returns><c>True</c> if the value is null.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNull<T>(this T value)
-    where T : struct, IJsonElement
+    /// <returns><c>null</c> if the value is null, or undefined. Otherwise an instance of the value.</returns>
+    public static T? AsOptional<T>(this T value)
+        where T : struct, IJsonElement<T>
     {
-        return value.ParentDocument is not null && value.TokenType is JsonTokenType.Null;
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether this value is undefined.
-    /// </summary>
-    /// <typeparam name="T">The type of the value to check.</typeparam>
-    /// <param name="value">The value to check.</param>
-    /// <returns><c>True</c> if the value is undefined.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsUndefined<T>(this T value)
-        where T : struct, IJsonElement
-    {
-        return value.ParentDocument is null || value.TokenType is not JsonTokenType.None;
+        return value.IsNullOrUndefined() ? null : value;
     }
 
     /// <summary>
@@ -52,6 +38,19 @@ public static class JsonElementExtensions
     }
 
     /// <summary>
+    /// Gets a value indicating whether this value is neither null nor undefined.
+    /// </summary>
+    /// <typeparam name="T">The type of the value to check.</typeparam>
+    /// <param name="value">The value to check.</param>
+    /// <returns><c>True</c> if the value is neither null nor undefined.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNotNullOrUndefined<T>(this T value)
+        where T : struct, IJsonElement
+    {
+        return value.ParentDocument is not null && value.TokenType is not JsonTokenType.None and not JsonTokenType.Null;
+    }
+
+    /// <summary>
     /// Gets a value indicating whether this value is not undefined.
     /// </summary>
     /// <typeparam name="T">The type of the value to check.</typeparam>
@@ -62,6 +61,19 @@ public static class JsonElementExtensions
         where T : struct, IJsonElement
     {
         return value.ParentDocument is not null && value.TokenType is not JsonTokenType.None;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether this value is null.
+    /// </summary>
+    /// <typeparam name="T">The type of the value to check.</typeparam>
+    /// <param name="value">The value to check.</param>
+    /// <returns><c>True</c> if the value is null.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNull<T>(this T value)
+    where T : struct, IJsonElement
+    {
+        return value.ParentDocument is not null && value.TokenType is JsonTokenType.Null;
     }
 
     /// <summary>
@@ -78,27 +90,15 @@ public static class JsonElementExtensions
     }
 
     /// <summary>
-    /// Gets a value indicating whether this value is neither null nor undefined.
+    /// Gets a value indicating whether this value is undefined.
     /// </summary>
     /// <typeparam name="T">The type of the value to check.</typeparam>
     /// <param name="value">The value to check.</param>
-    /// <returns><c>True</c> if the value is neither null nor undefined.</returns>
+    /// <returns><c>True</c> if the value is undefined.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNotNullOrUndefined<T>(this T value)
+    public static bool IsUndefined<T>(this T value)
         where T : struct, IJsonElement
     {
-        return value.ParentDocument is not null && value.TokenType is not JsonTokenType.None and not JsonTokenType.Null;
-    }
-
-    /// <summary>
-    /// Gets a nullable instance of the value.
-    /// </summary>
-    /// <typeparam name="T">The type of the value for wich to get a nullable instance.</typeparam>
-    /// <param name="value">The value to check.</param>
-    /// <returns><c>null</c> if the value is null, or undefined. Otherwise an instance of the value.</returns>
-    public static T? AsOptional<T>(this T value)
-        where T : struct, IJsonElement<T>
-    {
-        return value.IsNullOrUndefined() ? null : value;
+        return value.ParentDocument is null || value.TokenType is not JsonTokenType.None;
     }
 }

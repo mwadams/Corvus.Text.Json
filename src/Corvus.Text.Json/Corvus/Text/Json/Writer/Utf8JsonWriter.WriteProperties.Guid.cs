@@ -106,6 +106,40 @@ public sealed partial class Utf8JsonWriter
         _tokenType = JsonTokenType.String;
     }
 
+    internal void WritePropertyName(Guid value)
+    {
+        Span<byte> utf8PropertyName = stackalloc byte[JsonConstants.MaximumFormatGuidLength];
+        bool result = Utf8Formatter.TryFormat(value, utf8PropertyName, out int bytesWritten);
+        Debug.Assert(result);
+        WritePropertyNameUnescaped(utf8PropertyName.Slice(0, bytesWritten));
+    }
+
+    private void WriteStringByOptions(ReadOnlySpan<char> propertyName, Guid value)
+    {
+        ValidateWritingProperty();
+        if (_options.Indented)
+        {
+            WriteStringIndented(propertyName, value);
+        }
+        else
+        {
+            WriteStringMinimized(propertyName, value);
+        }
+    }
+
+    private void WriteStringByOptions(ReadOnlySpan<byte> utf8PropertyName, Guid value)
+    {
+        ValidateWritingProperty();
+        if (_options.Indented)
+        {
+            WriteStringIndented(utf8PropertyName, value);
+        }
+        else
+        {
+            WriteStringMinimized(utf8PropertyName, value);
+        }
+    }
+
     private void WriteStringEscape(ReadOnlySpan<char> propertyName, Guid value)
     {
         int propertyIdx = JsonWriterHelper.NeedsEscaping(propertyName, _options.Encoder);
@@ -182,102 +216,6 @@ public sealed partial class Utf8JsonWriter
         {
             ArrayPool<byte>.Shared.Return(propertyArray);
         }
-    }
-
-    private void WriteStringByOptions(ReadOnlySpan<char> propertyName, Guid value)
-    {
-        ValidateWritingProperty();
-        if (_options.Indented)
-        {
-            WriteStringIndented(propertyName, value);
-        }
-        else
-        {
-            WriteStringMinimized(propertyName, value);
-        }
-    }
-
-    private void WriteStringByOptions(ReadOnlySpan<byte> utf8PropertyName, Guid value)
-    {
-        ValidateWritingProperty();
-        if (_options.Indented)
-        {
-            WriteStringIndented(utf8PropertyName, value);
-        }
-        else
-        {
-            WriteStringMinimized(utf8PropertyName, value);
-        }
-    }
-
-    private void WriteStringMinimized(ReadOnlySpan<char> escapedPropertyName, Guid value)
-    {
-        Debug.Assert(escapedPropertyName.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - JsonConstants.MaximumFormatGuidLength - 6);
-
-        // All ASCII, 2 quotes for property name, 2 quotes for date, and 1 colon => escapedPropertyName.Length + JsonConstants.MaximumFormatGuidLength + 5
-        // Optionally, 1 list separator, and up to 3x growth when transcoding
-        int maxRequired = (escapedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) + JsonConstants.MaximumFormatGuidLength + 6;
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-        output[BytesPending++] = JsonConstants.Quote;
-
-        TranscodeAndWrite(escapedPropertyName, output);
-
-        output[BytesPending++] = JsonConstants.Quote;
-        output[BytesPending++] = JsonConstants.KeyValueSeparator;
-
-        output[BytesPending++] = JsonConstants.Quote;
-
-        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
-        Debug.Assert(result);
-        BytesPending += bytesWritten;
-
-        output[BytesPending++] = JsonConstants.Quote;
-    }
-
-    private void WriteStringMinimized(ReadOnlySpan<byte> escapedPropertyName, Guid value)
-    {
-        Debug.Assert(escapedPropertyName.Length < int.MaxValue - JsonConstants.MaximumFormatGuidLength - 6);
-
-        int minRequired = escapedPropertyName.Length + JsonConstants.MaximumFormatGuidLength + 5; // 2 quotes for property name, 2 quotes for date, and 1 colon
-        int maxRequired = minRequired + 1; // Optionally, 1 list separator
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-        output[BytesPending++] = JsonConstants.Quote;
-
-        escapedPropertyName.CopyTo(output.Slice(BytesPending));
-        BytesPending += escapedPropertyName.Length;
-
-        output[BytesPending++] = JsonConstants.Quote;
-        output[BytesPending++] = JsonConstants.KeyValueSeparator;
-
-        output[BytesPending++] = JsonConstants.Quote;
-
-        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
-        Debug.Assert(result);
-        BytesPending += bytesWritten;
-
-        output[BytesPending++] = JsonConstants.Quote;
     }
 
     private void WriteStringIndented(ReadOnlySpan<char> escapedPropertyName, Guid value)
@@ -380,11 +318,73 @@ public sealed partial class Utf8JsonWriter
         output[BytesPending++] = JsonConstants.Quote;
     }
 
-    internal void WritePropertyName(Guid value)
+    private void WriteStringMinimized(ReadOnlySpan<char> escapedPropertyName, Guid value)
     {
-        Span<byte> utf8PropertyName = stackalloc byte[JsonConstants.MaximumFormatGuidLength];
-        bool result = Utf8Formatter.TryFormat(value, utf8PropertyName, out int bytesWritten);
+        Debug.Assert(escapedPropertyName.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - JsonConstants.MaximumFormatGuidLength - 6);
+
+        // All ASCII, 2 quotes for property name, 2 quotes for date, and 1 colon => escapedPropertyName.Length + JsonConstants.MaximumFormatGuidLength + 5
+        // Optionally, 1 list separator, and up to 3x growth when transcoding
+        int maxRequired = (escapedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) + JsonConstants.MaximumFormatGuidLength + 6;
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
+        }
+        output[BytesPending++] = JsonConstants.Quote;
+
+        TranscodeAndWrite(escapedPropertyName, output);
+
+        output[BytesPending++] = JsonConstants.Quote;
+        output[BytesPending++] = JsonConstants.KeyValueSeparator;
+
+        output[BytesPending++] = JsonConstants.Quote;
+
+        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
         Debug.Assert(result);
-        WritePropertyNameUnescaped(utf8PropertyName.Slice(0, bytesWritten));
+        BytesPending += bytesWritten;
+
+        output[BytesPending++] = JsonConstants.Quote;
+    }
+
+    private void WriteStringMinimized(ReadOnlySpan<byte> escapedPropertyName, Guid value)
+    {
+        Debug.Assert(escapedPropertyName.Length < int.MaxValue - JsonConstants.MaximumFormatGuidLength - 6);
+
+        int minRequired = escapedPropertyName.Length + JsonConstants.MaximumFormatGuidLength + 5; // 2 quotes for property name, 2 quotes for date, and 1 colon
+        int maxRequired = minRequired + 1; // Optionally, 1 list separator
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
+        }
+        output[BytesPending++] = JsonConstants.Quote;
+
+        escapedPropertyName.CopyTo(output.Slice(BytesPending));
+        BytesPending += escapedPropertyName.Length;
+
+        output[BytesPending++] = JsonConstants.Quote;
+        output[BytesPending++] = JsonConstants.KeyValueSeparator;
+
+        output[BytesPending++] = JsonConstants.Quote;
+
+        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
+        Debug.Assert(result);
+        BytesPending += bytesWritten;
+
+        output[BytesPending++] = JsonConstants.Quote;
     }
 }

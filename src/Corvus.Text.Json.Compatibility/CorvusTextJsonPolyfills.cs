@@ -9,18 +9,18 @@ namespace Corvus.Text.Json.Compatibility
     public static class CorvusTextJsonPolyfills
     {
         /// <summary>
-        /// Gets the JSON element as a <see cref="System.Text.Json.JsonElement"/>.
+        /// Gets the JSON element as a <see cref="Corvus.Json.JsonAny"/>.
         /// </summary>
-        /// <typeparam name="T">The type of the instance for which to get the <see cref="System.Text.Json.JsonElement"/>.</typeparam>
-        /// <param name="element">The instance for which to get the <see cref="System.Text.Json.JsonElement"/>.</param>
+        /// <typeparam name="T">The type of the instance for which to get the <see cref="Corvus.Json.JsonAny"/>.</typeparam>
+        /// <param name="element">The instance for which to get the <see cref="Corvus.Json.JsonAny"/>.</param>
         /// <param name="options">The (optional) JSON reader options to use when transforming the element.</param>
         /// <returns>The transformed element.</returns>
-        public static System.Text.Json.JsonElement AsSTJsonElement<T>(this T element, System.Text.Json.JsonReaderOptions options = default)
+        public static Corvus.Json.JsonAny AsCorvusJsonAny<T>(this T element, System.Text.Json.JsonReaderOptions options = default)
             where T : struct, IJsonElement<T>
         {
             using RawUtf8JsonString rawValue = element.ParentDocument.GetRawValue(element.ParentDocumentIndex, true);
             System.Text.Json.Utf8JsonReader reader = new System.Text.Json.Utf8JsonReader(rawValue.Span, options);
-            return System.Text.Json.JsonElement.ParseValue(ref reader);
+            return Corvus.Json.JsonAny.ParseValue(ref reader);
         }
 
         /// <summary>
@@ -38,18 +38,18 @@ namespace Corvus.Text.Json.Compatibility
         }
 
         /// <summary>
-        /// Gets the JSON element as a <see cref="Corvus.Json.JsonAny"/>.
+        /// Gets the JSON element as a <see cref="System.Text.Json.JsonElement"/>.
         /// </summary>
-        /// <typeparam name="T">The type of the instance for which to get the <see cref="Corvus.Json.JsonAny"/>.</typeparam>
-        /// <param name="element">The instance for which to get the <see cref="Corvus.Json.JsonAny"/>.</param>
+        /// <typeparam name="T">The type of the instance for which to get the <see cref="System.Text.Json.JsonElement"/>.</typeparam>
+        /// <param name="element">The instance for which to get the <see cref="System.Text.Json.JsonElement"/>.</param>
         /// <param name="options">The (optional) JSON reader options to use when transforming the element.</param>
         /// <returns>The transformed element.</returns>
-        public static Corvus.Json.JsonAny AsCorvusJsonAny<T>(this T element, System.Text.Json.JsonReaderOptions options = default)
+        public static System.Text.Json.JsonElement AsSTJsonElement<T>(this T element, System.Text.Json.JsonReaderOptions options = default)
             where T : struct, IJsonElement<T>
         {
             using RawUtf8JsonString rawValue = element.ParentDocument.GetRawValue(element.ParentDocumentIndex, true);
             System.Text.Json.Utf8JsonReader reader = new System.Text.Json.Utf8JsonReader(rawValue.Span, options);
-            return Corvus.Json.JsonAny.ParseValue(ref reader);
+            return System.Text.Json.JsonElement.ParseValue(ref reader);
         }
 
         extension<T>(T element)

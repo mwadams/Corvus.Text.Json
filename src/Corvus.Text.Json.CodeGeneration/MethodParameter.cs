@@ -10,8 +10,8 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// </summary>
 public readonly struct MethodParameter
 {
-    private readonly string? specificParameterName;
     private readonly MemberName? parameterMemberName;
+    private readonly string? specificParameterName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MethodParameter"/> struct.
@@ -46,9 +46,19 @@ public readonly struct MethodParameter
     }
 
     /// <summary>
+    /// Gets the (optional) default value for the parameter.
+    /// </summary>
+    public string? DefaultValue { get; }
+
+    /// <summary>
     /// Gets the explicit modifiers.
     /// </summary>
     public string Modifiers { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this requires a specifically reserved name in the scope.
+    /// </summary>
+    public bool RequiresReservedName => this.specificParameterName is not null;
 
     /// <summary>
     /// Gets the type for the parameter.
@@ -59,16 +69,6 @@ public readonly struct MethodParameter
     /// Gets a value indicating whether the type is nullable.
     /// </summary>
     public bool TypeIsNullable { get; }
-
-    /// <summary>
-    /// Gets the (optional) default value for the parameter.
-    /// </summary>
-    public string? DefaultValue { get; }
-
-    /// <summary>
-    /// Gets a value indicating whether this requires a specifically reserved name in the scope.
-    /// </summary>
-    public bool RequiresReservedName => this.specificParameterName is not null;
 
     /// <summary>
     /// Implicit conversion from type, modifiers and parameter name.

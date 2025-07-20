@@ -28,6 +28,7 @@ public readonly partial struct JsonElement
             // We only need to include the kinds we
             // actually need!
             Unknown,
+
             JsonElement,
             Null,
             True,
@@ -42,6 +43,7 @@ public readonly partial struct JsonElement
 
             // Add additional kinds for composed schema builders
             JsonArrayBuilderInstance,
+
             JsonObjectBuilderInstance,
         }
 
@@ -218,6 +220,7 @@ public readonly partial struct JsonElement
         }
 
 #if NET
+
         private Source(Int128 value)
         {
             SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written));
@@ -235,6 +238,7 @@ public readonly partial struct JsonElement
             SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written));
             _kind = Kind.NumericSimpleType;
         }
+
 #endif
 
         /// <summary>
@@ -353,7 +357,6 @@ public readonly partial struct JsonElement
         {
             return new(value);
         }
-
 
         /// <summary>
         /// Implicitly converts a <see cref="LocalDate"/> to a <see cref="Source"/>.
@@ -572,6 +575,7 @@ public readonly partial struct JsonElement
         }
 
 #if NET
+
         /// <summary>
         /// Implicitly converts an Int128 value to a <see cref="Source"/>.
         /// </summary>
@@ -603,7 +607,9 @@ public readonly partial struct JsonElement
         {
             return new(value);
         }
+
 #endif
+
         /// <summary>
         /// Adds this source as a property to a complex value builder.
         /// </summary>
@@ -618,42 +624,55 @@ public readonly partial struct JsonElement
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
                     break;
+
                 case Kind.Null:
                     valueBuilder.AddPropertyNull(utf8Name, escapeName, nameRequiresUnescaping);
                     break;
+
                 case Kind.True:
                     valueBuilder.AddProperty(utf8Name, true, escapeName, nameRequiresUnescaping);
                     break;
+
                 case Kind.False:
                     valueBuilder.AddProperty(utf8Name, false, escapeName, nameRequiresUnescaping);
                     break;
+
                 case Kind.NumericSimpleType:
                     valueBuilder.AddPropertyFormattedNumber(utf8Name, _simpleTypeBacking.Span(), escapeName, nameRequiresUnescaping);
                     break;
+
                 case Kind.FormattedNumber:
                     valueBuilder.AddPropertyFormattedNumber(utf8Name, _utf8Backing, escapeName, nameRequiresUnescaping);
                     break;
+
                 case Kind.StringSimpleType:
                     valueBuilder.AddProperty(utf8Name, _simpleTypeBacking.Span(), escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
                     break;
+
                 case Kind.RawUtf8StringRequiresUnescaping:
                     valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: true);
                     break;
+
                 case Kind.RawUtf8StringNotRequiresUnescaping:
                     valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false);
                     break;
+
                 case Kind.Utf8String:
                     valueBuilder.AddProperty(utf8Name, _utf8Backing, escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
                     break;
+
                 case Kind.Utf16String:
                     valueBuilder.AddProperty(utf8Name, _utf16Backing, escapeName, nameRequiresUnescaping);
                     break;
+
                 case Kind.JsonArrayBuilderInstance:
                     valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
+
                 case Kind.JsonObjectBuilderInstance:
                     valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
+
                 default:
                     Debug.Fail("Unrecognized kind.");
                     break;
@@ -682,42 +701,55 @@ public readonly partial struct JsonElement
                 case Kind.JsonElement:
                     valueBuilder.AddProperty(name, _jsonElement);
                     break;
+
                 case Kind.Null:
                     valueBuilder.AddPropertyNull(name);
                     break;
+
                 case Kind.True:
                     valueBuilder.AddProperty(name, true);
                     break;
+
                 case Kind.False:
                     valueBuilder.AddProperty(name, false);
                     break;
+
                 case Kind.NumericSimpleType:
                     valueBuilder.AddPropertyFormattedNumber(name, _simpleTypeBacking.Span());
                     break;
+
                 case Kind.FormattedNumber:
                     valueBuilder.AddPropertyFormattedNumber(name, _utf8Backing);
                     break;
+
                 case Kind.StringSimpleType:
                     valueBuilder.AddProperty(name, _simpleTypeBacking.Span(), escapeValue: true, valueRequiresUnescaping: false);
                     break;
+
                 case Kind.RawUtf8StringRequiresUnescaping:
                     valueBuilder.AddProperty(name, _utf8Backing, escapeValue: false, valueRequiresUnescaping: true);
                     break;
+
                 case Kind.RawUtf8StringNotRequiresUnescaping:
                     valueBuilder.AddProperty(name, _utf8Backing, escapeValue: false, valueRequiresUnescaping: false);
                     break;
+
                 case Kind.Utf8String:
                     valueBuilder.AddProperty(name, _utf8Backing, escapeValue: true, valueRequiresUnescaping: false);
                     break;
+
                 case Kind.Utf16String:
                     valueBuilder.AddProperty(name, _utf16Backing);
                     break;
+
                 case Kind.JsonArrayBuilderInstance:
                     valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o));
                     break;
+
                 case Kind.JsonObjectBuilderInstance:
                     valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o));
                     break;
+
                 default:
                     Debug.Fail("Unrecognized kind.");
                     break;
@@ -735,42 +767,55 @@ public readonly partial struct JsonElement
                 case Kind.JsonElement:
                     valueBuilder.AddItem(_jsonElement);
                     break;
+
                 case Kind.Null:
                     valueBuilder.AddItemNull();
                     break;
+
                 case Kind.True:
                     valueBuilder.AddItem(true);
                     break;
+
                 case Kind.False:
                     valueBuilder.AddItem(false);
                     break;
+
                 case Kind.NumericSimpleType:
                     valueBuilder.AddItemFormattedNumber(_simpleTypeBacking.Span());
                     break;
+
                 case Kind.FormattedNumber:
                     valueBuilder.AddItemFormattedNumber(_utf8Backing);
                     break;
+
                 case Kind.StringSimpleType:
                     valueBuilder.AddItem(_simpleTypeBacking.Span());
                     break;
+
                 case Kind.RawUtf8StringRequiresUnescaping:
                     valueBuilder.AddItem(_utf8Backing, escapeValue: false, requiresUnescaping: true);
                     break;
+
                 case Kind.RawUtf8StringNotRequiresUnescaping:
                     valueBuilder.AddItem(_utf8Backing, escapeValue: false, requiresUnescaping: false);
                     break;
+
                 case Kind.Utf8String:
                     valueBuilder.AddItem(_utf8Backing, escapeValue: true, requiresUnescaping: false);
                     break;
+
                 case Kind.Utf16String:
                     valueBuilder.AddItem(_utf16Backing);
                     break;
+
                 case Kind.JsonArrayBuilderInstance:
                     valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o));
                     break;
+
                 case Kind.JsonObjectBuilderInstance:
                     valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o));
                     break;
+
                 default:
                     Debug.Fail("Unrecognized kind.");
                     break;
@@ -808,6 +853,7 @@ public readonly partial struct JsonElement
         private ulong _documentVersion;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
         internal Mutable(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
@@ -819,6 +865,7 @@ public readonly partial struct JsonElement
             _idx = idx;
             _documentVersion = _parent?.Version ?? 0;
         }
+
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1955,6 +2002,7 @@ public readonly partial struct JsonElement
         }
 
 #if NET
+
         /// <summary>
         ///   Attempts to represent the current JSON number as a <see cref="Int128"/>.
         /// </summary>
@@ -2112,6 +2160,7 @@ public readonly partial struct JsonElement
 
             return value;
         }
+
 #endif
 
         /// <summary>
@@ -2138,7 +2187,6 @@ public readonly partial struct JsonElement
 
             return _parent.TryGetValue(_idx, out value);
         }
-
 
         /// <summary>
         ///   Gets the current JSON number as a <see cref="BigNumber"/>.
@@ -2191,7 +2239,6 @@ public readonly partial struct JsonElement
 
             return _parent.TryGetValue(_idx, out value);
         }
-
 
         /// <summary>
         ///   Gets the current JSON number as a <see cref="BigInteger"/>.
@@ -3107,6 +3154,7 @@ public readonly partial struct JsonElement
         {
             SetPropertyNull(propertyName.AsSpan());
         }
+
         public void SetPropertyNull(ReadOnlySpan<char> propertyName)
         {
             CheckValidInstance();
@@ -3375,7 +3423,6 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
-
         public void SetProperty(ReadOnlySpan<byte> propertyName, in DateTimeOffset value)
         {
             CheckValidInstance();
@@ -3636,7 +3683,6 @@ public readonly partial struct JsonElement
 
             _documentVersion = _parent.Version;
         }
-
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
@@ -4179,6 +4225,7 @@ public readonly partial struct JsonElement
         }
 
 #if NET
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, Int128 value)
         {
@@ -4834,8 +4881,8 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
-
 #if NET
+
         public void SetItem(int itemIndex, Int128 value)
         {
             CheckValidInstance();
@@ -4893,6 +4940,7 @@ public readonly partial struct JsonElement
 
             _documentVersion = _parent.Version;
         }
+
 #endif
 
         private readonly void CheckValidInstance()
@@ -4911,7 +4959,9 @@ public readonly partial struct JsonElement
         readonly void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
+
         static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+
 #endif
 
         /// <summary>

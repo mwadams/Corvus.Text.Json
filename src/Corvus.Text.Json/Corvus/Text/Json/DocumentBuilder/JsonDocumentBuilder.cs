@@ -284,7 +284,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
             byte[] additionalRentedBytes = ArrayPool<byte>.Shared.Rent(length);
             bufferWriter.WrittenSpan.CopyTo(additionalRentedBytes.AsSpan());
             return new(additionalRentedBytes.AsMemory(0, length));
-
         }
         finally
         {
@@ -726,6 +725,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     }
 
 #if NET
+
     /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out Int128 value)
     {
@@ -736,7 +736,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
-
 
         if (Int128.TryParse(segment, out Int128 tmp))
         {
@@ -759,7 +758,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
 
-
         if (UInt128.TryParse(segment, out UInt128 tmp))
         {
             value = tmp;
@@ -781,7 +779,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
 
-
         if (Half.TryParse(segment, out Half tmp))
         {
             value = tmp;
@@ -791,6 +788,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         value = default;
         return false;
     }
+
 #endif
 
     bool IJsonDocument.TryGetValue(int index, out DateTime value)
@@ -829,7 +827,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
-
 
     bool IJsonDocument.TryGetValue(int index, out OffsetDate value)
     {
@@ -937,10 +934,13 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
             case JsonTokenType.None:
             case JsonTokenType.Null:
                 return string.Empty;
+
             case JsonTokenType.True:
                 return bool.TrueString;
+
             case JsonTokenType.False:
                 return bool.FalseString;
+
             case JsonTokenType.Number:
             case JsonTokenType.StartArray:
             case JsonTokenType.StartObject:
@@ -950,6 +950,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
             }
             case JsonTokenType.String:
                 return GetStringUnsafe(index, JsonTokenType.String)!;
+
             case JsonTokenType.Comment:
             case JsonTokenType.EndArray:
             case JsonTokenType.EndObject:
@@ -1063,9 +1064,11 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
             case JsonTokenType.StartObject:
                 WriteComplexElementToUnsafe(index, writer);
                 return;
+
             case JsonTokenType.StartArray:
                 WriteComplexElementToUnsafe(index, writer);
                 return;
+
             case JsonTokenType.String:
                 if (row.HasComplexChildren)
                 {
@@ -1077,15 +1080,19 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
                     writer.WriteStringValue(GetRawSimpleValueUnsafe(index, false).Span);
                 }
                 return;
+
             case JsonTokenType.Number:
                 writer.WriteNumberValue(GetRawSimpleValueUnsafe(index, includeQuotes: false).Span);
                 return;
+
             case JsonTokenType.True:
                 writer.WriteBooleanValue(value: true);
                 return;
+
             case JsonTokenType.False:
                 writer.WriteBooleanValue(value: false);
                 return;
+
             case JsonTokenType.Null:
                 writer.WriteNullValue();
                 return;
@@ -1239,7 +1246,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
-
     bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value)
     {
         CheckNotDisposed();
@@ -1293,7 +1299,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         value = default;
         return false;
-
     }
 
     bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement.Mutable value)
@@ -1383,7 +1388,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         int workspaceDocumentIndex = workspace.GetDocumentIndex(this);
         AppendElement(index, workspace, ref db, workspaceDocumentIndex);
     }
-
 
     private void AppendElement(int index, JsonWorkspace workspace, ref MetadataDb db, int workspaceDocumentIndex)
     {
@@ -1485,7 +1489,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
-
     bool IMutableJsonDocument.TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, out int valueIndex)
     {
         CheckNotDisposed();
@@ -1493,35 +1496,66 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     }
 
     int IMutableJsonDocument.StoreBooleanValue(bool value) => StoreBooleanValue(value);
+
     int IMutableJsonDocument.StoreNullValue() => StoreNullValue();
+
     int IMutableJsonDocument.StoreRawNumberValue(ReadOnlySpan<byte> value) => StoreRawNumberValue(value);
+
     int IMutableJsonDocument.EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping) => EscapeAndStoreRawStringValue(value, out requiredEscaping, _workspace.Options.Encoder);
+
     int IMutableJsonDocument.EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, out bool requiredEscaping) => EscapeAndStoreRawStringValue(value, out requiredEscaping, _workspace.Options.Encoder);
+
     int IMutableJsonDocument.StoreRawStringValue(ReadOnlySpan<byte> value) => StoreRawStringValue(value);
+
     int IMutableJsonDocument.StoreValue(Guid value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in DateTime value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in DateTimeOffset value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in OffsetDateTime value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in OffsetDate value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in OffsetTime value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in LocalDate value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in Period value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(sbyte value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(byte value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(int value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(uint value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(long value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(ulong value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(short value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(ushort value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(float value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(double value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(decimal value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in BigNumber value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(in BigInteger value) => StoreValue(value);
+
 #if NET
+
     int IMutableJsonDocument.StoreValue(Int128 value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(UInt128 value) => StoreValue(value);
+
     int IMutableJsonDocument.StoreValue(Half value) => StoreValue(value);
+
 #endif
 }

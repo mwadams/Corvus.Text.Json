@@ -12,10 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.3-nightly.20250616.264" />
-    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.15.3-nightly.20250616.264" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.3-nightly.20250711.276" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.15.3-nightly.20250711.276" />
     <PackageReference Include="Microsoft.VisualStudio.DiagnosticsHub.BenchmarkDotNetDiagnosers" Version="18.0.36313.1" />
-    <PackageReference Include="System.Text.Json" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0-preview.6.25358.103" />
   </ItemGroup>
 
   <ItemGroup>

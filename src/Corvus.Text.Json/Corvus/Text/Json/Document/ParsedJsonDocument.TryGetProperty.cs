@@ -30,7 +30,6 @@ public sealed partial class ParsedJsonDocument<T>
     {
         CheckNotDisposed();
 
-
         if (TryGetNamedPropertyValueIndexUnsafe(
             index,
             propertyName,
@@ -48,7 +47,6 @@ public sealed partial class ParsedJsonDocument<T>
     bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
     {
         CheckNotDisposed();
-
 
         if (TryGetNamedPropertyValueIndexUnsafe(
             index,
@@ -71,7 +69,6 @@ public sealed partial class ParsedJsonDocument<T>
     bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value)
     {
         CheckNotDisposed();
-
 
         if (TryGetNamedPropertyValueIndexUnsafe(
             index,

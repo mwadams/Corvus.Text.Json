@@ -35,16 +35,6 @@ internal ref struct Utf8ValueCursor
     }
 
     /// <summary>
-    /// Gets the length of the string being parsed.
-    /// </summary>
-    internal int Length { get; }
-
-    /// <summary>
-    /// Gets the string being parsed.
-    /// </summary>
-    internal ReadOnlySpan<byte> Value { get; }
-
-    /// <summary>
     /// Gets the current character.
     /// </summary>
     internal byte Current { get; private set; }
@@ -53,6 +43,16 @@ internal ref struct Utf8ValueCursor
     /// Gets the current index into the string being parsed.
     /// </summary>
     internal int Index { get; private set; }
+
+    /// <summary>
+    /// Gets the length of the string being parsed.
+    /// </summary>
+    internal int Length { get; }
+
+    /// <summary>
+    /// Gets the string being parsed.
+    /// </summary>
+    internal ReadOnlySpan<byte> Value { get; }
 
     /// <summary>
     ///   Returns a <see cref="string" /> that represents this instance.
@@ -119,6 +119,56 @@ internal ref struct Utf8ValueCursor
             this.Current = Nul;
             this.Index = this.Length;
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Parses digits at the current point in the string as a fractional value.
+    /// </summary>
+    /// <param name="maximumDigits">The maximum allowed digits. Trusted to be less than or equal to scale.</param>
+    /// <param name="scale">The scale of the fractional value.</param>
+    /// <param name="result">The result value scaled by scale. The value of this is not guaranteed
+    /// to be anything specific if the return value is false.</param>
+    /// <param name="minimumDigits">The minimum number of digits that must be specified in the value.</param>
+    /// <returns><c>true</c> if the digits were parsed.</returns>
+    internal bool ParseFraction(int maximumDigits, int scale, out int result, int minimumDigits)
+    {
+        unchecked
+        {
+            result = 0;
+            int localIndex = this.Index;
+            int minIndex = localIndex + minimumDigits;
+            if (minIndex > this.Length)
+            {
+                // If we don't have all the digits we're meant to have, we can't possibly succeed.
+                return false;
+            }
+
+            int maxIndex = Math.Min(localIndex + maximumDigits, this.Length);
+            for (; localIndex < maxIndex; localIndex++)
+            {
+                // Optimized digit handling: rather than checking for the range, returning -1
+                // and then checking whether the result is -1, we can do both checks at once.
+                int digit = this.Value[localIndex] - '0';
+                if (digit < 0 || digit > 9)
+                {
+                    break;
+                }
+
+                result = (result * 10) + digit;
+            }
+
+            int count = localIndex - this.Index;
+
+            // Couldn't parse the minimum number of digits required?
+            if (count < minimumDigits)
+            {
+                return false;
+            }
+
+            result = (int)(result * Math.Pow(10.0, scale - count));
+            this.Move(localIndex);
+            return true;
         }
     }
 
@@ -198,56 +248,6 @@ internal ref struct Utf8ValueCursor
                 result = -result;
             }
 
-            return true;
-        }
-    }
-
-    /// <summary>
-    /// Parses digits at the current point in the string as a fractional value.
-    /// </summary>
-    /// <param name="maximumDigits">The maximum allowed digits. Trusted to be less than or equal to scale.</param>
-    /// <param name="scale">The scale of the fractional value.</param>
-    /// <param name="result">The result value scaled by scale. The value of this is not guaranteed
-    /// to be anything specific if the return value is false.</param>
-    /// <param name="minimumDigits">The minimum number of digits that must be specified in the value.</param>
-    /// <returns><c>true</c> if the digits were parsed.</returns>
-    internal bool ParseFraction(int maximumDigits, int scale, out int result, int minimumDigits)
-    {
-        unchecked
-        {
-            result = 0;
-            int localIndex = this.Index;
-            int minIndex = localIndex + minimumDigits;
-            if (minIndex > this.Length)
-            {
-                // If we don't have all the digits we're meant to have, we can't possibly succeed.
-                return false;
-            }
-
-            int maxIndex = Math.Min(localIndex + maximumDigits, this.Length);
-            for (; localIndex < maxIndex; localIndex++)
-            {
-                // Optimized digit handling: rather than checking for the range, returning -1
-                // and then checking whether the result is -1, we can do both checks at once.
-                int digit = this.Value[localIndex] - '0';
-                if (digit < 0 || digit > 9)
-                {
-                    break;
-                }
-
-                result = (result * 10) + digit;
-            }
-
-            int count = localIndex - this.Index;
-
-            // Couldn't parse the minimum number of digits required?
-            if (count < minimumDigits)
-            {
-                return false;
-            }
-
-            result = (int)(result * Math.Pow(10.0, scale - count));
-            this.Move(localIndex);
             return true;
         }
     }

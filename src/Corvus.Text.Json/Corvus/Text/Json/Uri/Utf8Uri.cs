@@ -2,8 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #if NET
+
 using System.Buffers;
+
 #endif
+
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -61,7 +64,6 @@ internal static class Utf8Uri
 
         E_NonCanonical = E_UserNotCanonical | E_HostNotCanonical | E_PortNotCanonical | E_PathNotCanonical | E_QueryNotCanonical | E_FragmentNotCanonical | E_CannotDisplayCanonical,
 
-
         ShouldBeCompressed = 0x2000,
         FirstSlashAbsent = 0x4000,
         BackslashInPath = 0x8000,
@@ -86,16 +88,20 @@ internal static class Utf8Uri
         UserDrivenParsing = 0x01000000,
         CanonicalDnsHost = 0x02000000,
         ErrorOrParsingRecursion = 0x04000000,   // Used to signal a default parser error and also to confirm Port
-                                                // and Host values in case of a custom user Parser
+
+        // and Host values in case of a custom user Parser
         DosPath = 0x08000000,
+
         UncPath = 0x10000000,
         ImplicitFile = 0x20000000,
         MinimalUriInfoSet = 0x40000000,
         AllUriInfoSet = unchecked(0x80000000),
         IdnHost = 0x100000000,
         HasUnicode = 0x200000000,
+
         // Is this component Iri canonical
         UserIriCanonical = 0x8000000000,
+
         PathIriCanonical = 0x10000000000,
         QueryIriCanonical = 0x20000000000,
         FragmentIriCanonical = 0x40000000000,
@@ -300,7 +306,6 @@ internal static class Utf8Uri
         int queryIdx = uriString.IndexOf((byte)'?');
         int hashIdx = uriString.IndexOf((byte)'#');
 
-
         if (hashIdx > 0)
         {
             info.Fragment = (ushort)hashIdx;
@@ -339,7 +344,6 @@ internal static class Utf8Uri
         int hashIdx = uriString.IndexOf((byte)'#');
 
         return ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, queryIdx, hashIdx);
-
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -518,7 +522,6 @@ internal static class Utf8Uri
         uriInfo = success ? info : default;
         return success;
     }
-
 
     private static bool ValidateCore(Utf8UriParsingError err, ref Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, bool requireAbsolute, bool allowUNCPath)
     {
@@ -869,7 +872,6 @@ internal static class Utf8Uri
                 }
             }
 
-
             //Check the form of the user info
             if ((flags & Flags.HasUserInfo) != 0)
             {
@@ -1028,13 +1030,11 @@ internal static class Utf8Uri
 
                 if ((result & (Check.EscapedCanonical | Check.BackslashInPath)) != Check.EscapedCanonical)
                 {
-
                     if ((cF & Flags.QueryIriCanonical) == 0)
                     {
                         cF |= Flags.E_QueryNotCanonical;
                     }
                 }
-
             }
         }
 
@@ -1386,6 +1386,7 @@ internal static class Utf8Uri
     }
 
 #if NET
+
     private static readonly SearchValues<byte> s_asciiOtherThanPercent = SearchValues.Create([
         0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
         0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
@@ -1409,7 +1410,6 @@ internal static class Utf8Uri
         0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077, 0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
         ];
 #endif
-
 
     /// <summary>
     /// Unescapes entire string and checks if it has unicode chars.Also checks for sequences that are 3986 Unreserved characters as these should be un-escaped
@@ -1595,8 +1595,10 @@ internal static class Utf8Uri
     }
 
 #if NET
+
     private static readonly SearchValues<byte> s_schemeChars =
         SearchValues.Create("+-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"u8);
+
 #else
     private static ReadOnlySpan<byte> s_schemeChars => "+-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"u8;
 #endif
@@ -2152,8 +2154,10 @@ internal static class Utf8Uri
     }
 
 #if NET
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool ContainsAnyInRange(ReadOnlySpan<byte> source, byte start, byte end) => source.ContainsAnyInRange(start, end);
+
 #else
     internal static bool ContainsAnyInRange(ReadOnlySpan<byte> source, byte start, byte end)
     {
@@ -2170,8 +2174,10 @@ internal static class Utf8Uri
 #endif
 
 #if NET
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool ContainsAnyExcept(ReadOnlySpan<byte> container, SearchValues<byte> exceptions) => container.ContainsAnyExcept(exceptions);
+
 #else
     private static bool ContainsAnyExcept(ReadOnlySpan<byte> scheme, ReadOnlySpan<byte> schemaChars)
     {
@@ -2187,8 +2193,10 @@ internal static class Utf8Uri
 #endif
 
 #if NET
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static int IndexOfAnyExcept(ReadOnlySpan<byte> value, SearchValues<byte> exceptions) => value.IndexOfAnyExcept(exceptions);
+
 #else
     internal static int IndexOfAnyExcept(ReadOnlySpan<byte> value, ReadOnlySpan<byte> exceptions)
     {
@@ -2204,8 +2212,10 @@ internal static class Utf8Uri
 #endif
 
 #if NET
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool Contains(char value, SearchValues<char> search) => search.Contains(value);
+
 #else
     private static bool Contains(char value, ReadOnlySpan<char> search)
     {
@@ -2242,7 +2252,6 @@ internal static class Utf8Uri
         return v >= (byte)'0' && v <= (byte)'9';
 #endif
     }
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool IsAscii(char v)

@@ -48,6 +48,7 @@ public static class BigIntegerPolyfills
 #endif
 
 #if NET
+
     /// <summary>
     /// Gets the minimum format buffer length.
     /// </summary>
@@ -75,6 +76,7 @@ public static class BigIntegerPolyfills
         minimumLength = (int)value;
         return true;
     }
+
 #endif
 
     /// <summary>
@@ -102,7 +104,6 @@ public static class BigIntegerPolyfills
             }
 
             return JsonReaderHelper.TryGetUtf8FromText(charSpan.Slice(0, charsWritten), destination, out bytesWritten);
-
         }
         finally
         {
@@ -117,7 +118,6 @@ public static class BigIntegerPolyfills
 
     extension(BigInteger i)
     {
-
         /// <summary>
         /// Tries to parse a span of UTF-8 characters into a <see cref="BigInteger"/> value.
         /// 1</summary>

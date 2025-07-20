@@ -3,13 +3,21 @@
 
 using System.Buffers;
 using System.Diagnostics;
+
 #if NET
+
 using System.Numerics;
+
 #endif
+
 using System.Runtime.CompilerServices;
+
 #if NET
+
 using System.Runtime.InteropServices;
+
 #endif
+
 using System.Threading;
 
 namespace Corvus.Text.Json.Internal;
@@ -24,12 +32,16 @@ public struct JsonSchemaContext
     private const int InitialRentedBufferSize = 8192; // This allows for 65,536 property/item bits without reallocation
 
 #if NET
+
     // This allows for 255 property/item bits without allocation, and is exactly one 256Bit Vector in size so merging values will be as simple a SIMD instruction as possible
     // on the most common processors at the time of writing.
     private const int BufferSize = 8;
+
     private const int BitsInAnInt = sizeof(int) * 8;
+
     // This is the maximum number of properties/items for which we can store bits without allocation.
     private const int MaxComplexValueCount = (BufferSize * BitsInAnInt) - 1;
+
 #endif
 
     private readonly IJsonSchemaResultsCollector? _resultsCollector;
@@ -40,16 +52,19 @@ public struct JsonSchemaContext
     private uint _lengthAndUsingFeatures;
 
 #if NET
+
     // If the top bit of the last byte of _localEvaluated is set, it indicates that we are using the rented buffer
     // for local evaluated bits and the first int is interpreted as the offset into the _rentedBuffer where the
     // local evaluated bits start with the second int interpreted as the bit buffer length.
     // If clear, then the remaining bits represent local evaluated indices.
     private EvaluatedIndexBuffer _localEvaluated;
+
     // If the top bit of the last byte of _appliedEvaluated is set, it indicates that we are using the rented buffer
     // for applied evaluated bits, and the first int is interpreted as the offset into the _rentedBuffer where the
     // applied evaluated bits start with the second int interpreted as the bit buffer length.
     // If clear, then the remaining bits represent applied evaluated indices.
     private EvaluatedIndexBuffer _appliedEvaluated;
+
 #else
     private readonly int _localEvaluatedOffset;
     private readonly int _localEvaluatedLength;
@@ -67,7 +82,6 @@ public struct JsonSchemaContext
 
         EvaluatedPropertiesOrItems = EvaluatedProperties | EvaluatedItems
     }
-
 
     private JsonSchemaContext(int sequenceNumber, int[]? rentedBuffer, uint lengthAndUsingFeatures, int offset, int evaluatedCount, IJsonSchemaResultsCollector? resultsCollector = null)
     {
@@ -416,7 +430,6 @@ public struct JsonSchemaContext
         }
     }
 
-
     /// <summary>
     /// Records the evaluation of a schema keyword using a path-based approach.
     /// </summary>
@@ -716,6 +729,7 @@ public struct JsonSchemaContext
             evaluatedCount: -1,
             resultsCollector: _resultsCollector);
     }
+
     private int EnsureBitBufferLengths(int count)
     {
         Debug.Assert(count != 0);
@@ -784,6 +798,7 @@ public struct JsonSchemaContext
     }
 
 #if NET
+
     /// <summary>
     /// Represents an inline array buffer for storing evaluated index information.
     /// </summary>
@@ -792,5 +807,6 @@ public struct JsonSchemaContext
     {
         private int _element0;
     }
+
 #endif
 }

@@ -15,10 +15,36 @@ namespace System.Buffers
             return new DefaultImplementation<T>(elementCount);
         }
 
+        private sealed class AllocHGlobalHandle : SafeHandle
+        {
+            // Called by P/Invoke when returning SafeHandles
+            private AllocHGlobalHandle()
+                : base(IntPtr.Zero, ownsHandle: true)
+            {
+            }
+
+            public override bool IsInvalid => (handle == IntPtr.Zero);
+
+            internal static AllocHGlobalHandle Allocate(nint byteLength)
+            {
+                AllocHGlobalHandle retVal = new AllocHGlobalHandle();
+                retVal.SetHandle(Marshal.AllocHGlobal(byteLength)); // this is for unit testing; don't bother setting up a CER on Full Framework
+                return retVal;
+            }
+
+            // Do not provide a finalizer - SafeHandle's critical finalizer will
+            // call ReleaseHandle for you.
+            protected override bool ReleaseHandle()
+            {
+                Marshal.FreeHGlobal(handle);
+                return true;
+            }
+        }
+
         private sealed class DefaultImplementation<T> : BoundedMemory<T> where T : unmanaged
         {
-            private readonly AllocHGlobalHandle _handle;
             private readonly int _elementCount;
+            private readonly AllocHGlobalHandle _handle;
             private readonly BoundedMemoryManager _memoryManager;
 
             public DefaultImplementation(int elementCount)
@@ -80,11 +106,6 @@ namespace System.Buffers
 
                 public override Memory<T> Memory => CreateMemory(_impl._elementCount);
 
-                protected override void Dispose(bool disposing)
-                {
-                    // no-op; the handle will be disposed separately
-                }
-
                 public override Span<T> GetSpan() => _impl.Span;
 
                 public override MemoryHandle Pin(int elementIndex)
@@ -113,33 +134,11 @@ namespace System.Buffers
                 {
                     // no-op - we don't unpin native memory
                 }
-            }
-        }
 
-        private sealed class AllocHGlobalHandle : SafeHandle
-        {
-            // Called by P/Invoke when returning SafeHandles
-            private AllocHGlobalHandle()
-                : base(IntPtr.Zero, ownsHandle: true)
-            {
-            }
-
-            internal static AllocHGlobalHandle Allocate(nint byteLength)
-            {
-                AllocHGlobalHandle retVal = new AllocHGlobalHandle();
-                retVal.SetHandle(Marshal.AllocHGlobal(byteLength)); // this is for unit testing; don't bother setting up a CER on Full Framework
-                return retVal;
-            }
-
-            // Do not provide a finalizer - SafeHandle's critical finalizer will
-            // call ReleaseHandle for you.
-
-            public override bool IsInvalid => (handle == IntPtr.Zero);
-
-            protected override bool ReleaseHandle()
-            {
-                Marshal.FreeHGlobal(handle);
-                return true;
+                protected override void Dispose(bool disposing)
+                {
+                    // no-op; the handle will be disposed separately
+                }
             }
         }
     }

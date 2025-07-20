@@ -4,36 +4,6 @@
 namespace Corvus.Text.Json;
 
 /// <summary>
-/// Provides a path segment for a JSON Schema location or instance path.
-/// </summary>
-/// <param name="buffer">
-/// The buffer to which the path segment should be written as UTF-8 bytes.
-/// </param>
-/// <param name="written">
-/// When this method returns, contains the number of bytes written to <paramref name="buffer"/>.
-/// </param>
-/// <returns>
-/// <see langword="true"/> if the path segment was successfully written to the buffer; otherwise, <see langword="false"/>.
-/// </returns>
-public delegate bool JsonSchemaPathProvider(Span<byte> buffer, out int written);
-
-/// <summary>
-/// Provides a path segment for a JSON Schema location or instance path, using a context value.
-/// </summary>
-/// <typeparam name="TContext">The type of the context value.</typeparam>
-/// <param name="context">The context value used to generate the path segment.</param>
-/// <param name="buffer">
-/// The buffer to which the path segment should be written as UTF-8 bytes.
-/// </param>
-/// <param name="written">
-/// When this method returns, contains the number of bytes written to <paramref name="buffer"/>.
-/// </param>
-/// <returns>
-/// <see langword="true"/> if the path segment was successfully written to the buffer; otherwise, <see langword="false"/>.
-/// </returns>
-public delegate bool JsonSchemaPathProvider<TContext>(TContext context, Span<byte> buffer, out int written);
-
-/// <summary>
 /// Provides a message for a JSON Schema validation result.
 /// </summary>
 /// <param name="buffer">
@@ -62,6 +32,36 @@ public delegate bool JsonSchemaMessageProvider(Span<byte> buffer, out int writte
 /// <see langword="true"/> if the message was successfully written to the buffer; otherwise, <see langword="false"/>.
 /// </returns>
 public delegate bool JsonSchemaMessageProvider<TContext>(TContext context, Span<byte> buffer, out int written);
+
+/// <summary>
+/// Provides a path segment for a JSON Schema location or instance path.
+/// </summary>
+/// <param name="buffer">
+/// The buffer to which the path segment should be written as UTF-8 bytes.
+/// </param>
+/// <param name="written">
+/// When this method returns, contains the number of bytes written to <paramref name="buffer"/>.
+/// </param>
+/// <returns>
+/// <see langword="true"/> if the path segment was successfully written to the buffer; otherwise, <see langword="false"/>.
+/// </returns>
+public delegate bool JsonSchemaPathProvider(Span<byte> buffer, out int written);
+
+/// <summary>
+/// Provides a path segment for a JSON Schema location or instance path, using a context value.
+/// </summary>
+/// <typeparam name="TContext">The type of the context value.</typeparam>
+/// <param name="context">The context value used to generate the path segment.</param>
+/// <param name="buffer">
+/// The buffer to which the path segment should be written as UTF-8 bytes.
+/// </param>
+/// <param name="written">
+/// When this method returns, contains the number of bytes written to <paramref name="buffer"/>.
+/// </param>
+/// <returns>
+/// <see langword="true"/> if the path segment was successfully written to the buffer; otherwise, <see langword="false"/>.
+/// </returns>
+public delegate bool JsonSchemaPathProvider<TContext>(TContext context, Span<byte> buffer, out int written);
 
 /// <summary>
 /// Implemented by types that accumulate the results of a JSON Schema evaluation.
@@ -113,26 +113,6 @@ public interface IJsonSchemaResultsCollector : IDisposable
         JsonSchemaPathProvider? schemaEvaluationPath = null);
 
     /// <summary>
-    /// Begin a child context for a property evaluation.
-    /// </summary>
-    /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
-    /// <param name="unescapedPropertyName">The name of the property for which to begin a child context.</param>
-    /// <param name="reducedEvaluationPath">The fully reduced evaluation path for the keyword.</param>
-    /// <param name="schemaEvaluationPath">The schema evaluation path of the target schema.</param>
-    /// <returns>The sequence number of the child context.</returns>
-    /// <remarks>
-    /// <para>
-    /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
-    /// or abandoned with <see cref="PopChildContext"/>.
-    /// </para>
-    /// </remarks>
-    int BeginChildContextUnescaped(
-        int parentSequenceNumber,
-        ReadOnlySpan<byte> unescapedPropertyName,
-        JsonSchemaPathProvider? reducedEvaluationPath = null,
-        JsonSchemaPathProvider? schemaEvaluationPath = null);
-
-    /// <summary>
     /// Begin a child context.
     /// </summary>
     /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
@@ -158,6 +138,26 @@ public interface IJsonSchemaResultsCollector : IDisposable
         JsonSchemaPathProvider<TProviderContext>? reducedEvaluationPath,
         JsonSchemaPathProvider<TProviderContext>? schemaEvaluationPath,
         JsonSchemaPathProvider<TProviderContext>? documentEvaluationPath);
+
+    /// <summary>
+    /// Begin a child context for a property evaluation.
+    /// </summary>
+    /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
+    /// <param name="unescapedPropertyName">The name of the property for which to begin a child context.</param>
+    /// <param name="reducedEvaluationPath">The fully reduced evaluation path for the keyword.</param>
+    /// <param name="schemaEvaluationPath">The schema evaluation path of the target schema.</param>
+    /// <returns>The sequence number of the child context.</returns>
+    /// <remarks>
+    /// <para>
+    /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
+    /// or abandoned with <see cref="PopChildContext"/>.
+    /// </para>
+    /// </remarks>
+    int BeginChildContextUnescaped(
+        int parentSequenceNumber,
+        ReadOnlySpan<byte> unescapedPropertyName,
+        JsonSchemaPathProvider? reducedEvaluationPath = null,
+        JsonSchemaPathProvider? schemaEvaluationPath = null);
 
     /// <summary>
     /// Commits the last child context.
@@ -194,13 +194,25 @@ public interface IJsonSchemaResultsCollector : IDisposable
         JsonSchemaMessageProvider<TProviderContext>? messageProvider);
 
     /// <summary>
-    /// Abandons the last child context.
+    /// Indicates that a boolean schema was evaluated.
     /// </summary>
-    /// <param name="sequenceNumber">The sequence number of the child context to commit.</param>
+    /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+    /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
     /// <remarks>
-    /// This will not update the match state, and allows the collector to release any resources associated with the child context.
+    /// This is used when evaluating a schema of the form <c>true</c> or <c>false</c>.
     /// </remarks>
-    void PopChildContext(int sequenceNUmber);
+    void EvaluatedBooleanSchema(bool isMatch, JsonSchemaMessageProvider? messageProvider);
+
+    /// <summary>
+    /// Indicates that a boolean schema was evaluated.
+    /// </summary>
+    /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
+    /// <param name="providerContext">The context to provide to the message provider.</param>
+    /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+    /// <remarks>
+    /// This is used when evaluating a schema of the form <c>true</c> or <c>false</c>.
+    /// </remarks>
+    void EvaluatedBooleanSchema<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider);
 
     /// <summary>
     /// Updates the match state for the given evaluated keyword.
@@ -300,23 +312,11 @@ public interface IJsonSchemaResultsCollector : IDisposable
         ReadOnlySpan<byte> encodedKeyword);
 
     /// <summary>
-    /// Indicates that a boolean schema was evaluated.
+    /// Abandons the last child context.
     /// </summary>
-    /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
-    /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
+    /// <param name="sequenceNumber">The sequence number of the child context to commit.</param>
     /// <remarks>
-    /// This is used when evaluating a schema of the form <c>true</c> or <c>false</c>.
+    /// This will not update the match state, and allows the collector to release any resources associated with the child context.
     /// </remarks>
-    void EvaluatedBooleanSchema(bool isMatch, JsonSchemaMessageProvider? messageProvider);
-
-    /// <summary>
-    /// Indicates that a boolean schema was evaluated.
-    /// </summary>
-    /// <param name="isMatch">If <see langword="true"/> then this indicates that the current context produced a successful match.</param>
-    /// <param name="providerContext">The context to provide to the message provider.</param>
-    /// <param name="messageProvider">The (optional) provider for a JSON schema evaluation message.</param>
-    /// <remarks>
-    /// This is used when evaluating a schema of the form <c>true</c> or <c>false</c>.
-    /// </remarks>
-    void EvaluatedBooleanSchema<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider);
+    void PopChildContext(int sequenceNUmber);
 }

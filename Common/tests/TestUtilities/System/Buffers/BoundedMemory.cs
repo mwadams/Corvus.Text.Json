@@ -30,6 +30,24 @@ namespace System.Buffers
         public abstract Span<T> Span { get; }
 
         /// <summary>
+        /// Gets a reference to the element at the specified index.
+        /// This <see cref="BoundedMemory{T}"/> instance must be kept alive while working with the reference.
+        /// </summary>
+        public ref T this[int index] => ref Span[index];
+
+        /// <summary>
+        /// Gets the <see cref="ReadOnlySpan{Byte}"/> which represents this native memory.
+        /// This <see cref="BoundedMemory{T}"/> instance must be kept alive while working with the <see cref="ReadOnlySpan{Byte}"/>.
+        /// </summary>
+        public static implicit operator ReadOnlySpan<T>(BoundedMemory<T> boundedMemory) => boundedMemory.Span;
+
+        /// <summary>
+        /// Gets the <see cref="Span{Byte}"/> which represents this native memory.
+        /// This <see cref="BoundedMemory{T}"/> instance must be kept alive while working with the <see cref="Span{Byte}"/>.
+        /// </summary>
+        public static implicit operator Span<T>(BoundedMemory<T> boundedMemory) => boundedMemory.Span;
+
+        /// <summary>
         /// Disposes this <see cref="BoundedMemory{T}"/> instance.
         /// </summary>
         public abstract void Dispose();
@@ -47,23 +65,5 @@ namespace System.Buffers
         /// OS does not support marking the memory block as read+write.
         /// </summary>
         public abstract void MakeWriteable();
-
-        /// <summary>
-        /// Gets the <see cref="Span{Byte}"/> which represents this native memory.
-        /// This <see cref="BoundedMemory{T}"/> instance must be kept alive while working with the <see cref="Span{Byte}"/>.
-        /// </summary>
-        public static implicit operator Span<T>(BoundedMemory<T> boundedMemory) => boundedMemory.Span;
-
-        /// <summary>
-        /// Gets the <see cref="ReadOnlySpan{Byte}"/> which represents this native memory.
-        /// This <see cref="BoundedMemory{T}"/> instance must be kept alive while working with the <see cref="ReadOnlySpan{Byte}"/>.
-        /// </summary>
-        public static implicit operator ReadOnlySpan<T>(BoundedMemory<T> boundedMemory) => boundedMemory.Span;
-
-        /// <summary>
-        /// Gets a reference to the element at the specified index.
-        /// This <see cref="BoundedMemory{T}"/> instance must be kept alive while working with the reference.
-        /// </summary>
-        public ref T this[int index] => ref Span[index];
     }
 }

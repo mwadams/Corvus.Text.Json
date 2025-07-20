@@ -12,10 +12,10 @@ namespace Corvus.Text.Json.Internal;
 [CLSCompliant(false)]
 public struct ArrayEnumerator
 {
-    private readonly IJsonDocument _targetDocument;
-    private readonly int _initialIndex;
-    private int _curIdx;
     private readonly int _endIdxOrVersion;
+    private readonly int _initialIndex;
+    private readonly IJsonDocument _targetDocument;
+    private int _curIdx;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ArrayEnumerator"/> struct.
@@ -51,14 +51,6 @@ public struct ArrayEnumerator
     }
 
     /// <summary>
-    /// Sets the enumerator to its initial position, which is before the first element in the collection.
-    /// </summary>
-    public void Reset()
-    {
-        _curIdx = -1;
-    }
-
-    /// <summary>
     /// Advances the enumerator to the next element of the collection.
     /// </summary>
     /// <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
@@ -79,5 +71,13 @@ public struct ArrayEnumerator
         }
 
         return _curIdx < _endIdxOrVersion;
+    }
+
+    /// <summary>
+    /// Sets the enumerator to its initial position, which is before the first element in the collection.
+    /// </summary>
+    public void Reset()
+    {
+        _curIdx = -1;
     }
 }

@@ -27,18 +27,6 @@ public readonly struct ValidationResult
     }
 
     /// <summary>
-    /// Gets a value indicating whether the validation result is valid.
-    /// </summary>
-    public bool Valid
-    {
-        get
-        {
-            JsonSchemaResultsCollector.Result result = _collector.ReadResult(_resultIndex);
-            return result.IsMatch;
-        }
-    }
-
-    /// <summary>
     /// Gets the location information for this validation result.
     /// </summary>
     public LocationTuple Location
@@ -63,13 +51,25 @@ public readonly struct ValidationResult
     }
 
     /// <summary>
+    /// Gets a value indicating whether the validation result is valid.
+    /// </summary>
+    public bool Valid
+    {
+        get
+        {
+            JsonSchemaResultsCollector.Result result = _collector.ReadResult(_resultIndex);
+            return result.IsMatch;
+        }
+    }
+
+    /// <summary>
     /// Represents the locations associated with a validation result, including validation, schema, and document locations.
     /// </summary>
     public readonly ref struct LocationTuple
     {
-        private readonly ReadOnlySpan<byte> _validationLocation;
-        private readonly ReadOnlySpan<byte> _schemaLocation;
         private readonly ReadOnlySpan<byte> _documentLocation;
+        private readonly ReadOnlySpan<byte> _schemaLocation;
+        private readonly ReadOnlySpan<byte> _validationLocation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationTuple"/> struct.
@@ -85,9 +85,9 @@ public readonly struct ValidationResult
         }
 
         /// <summary>
-        /// Gets the validation location as a JSON reference.
+        /// Gets the document location as a JSON reference.
         /// </summary>
-        public JsonReference ValidationLocation => JsonReference.Create(_validationLocation);
+        public JsonReference DocumentLocation => JsonReference.Create(_documentLocation);
 
         /// <summary>
         /// Gets the schema location as a JSON reference.
@@ -95,8 +95,8 @@ public readonly struct ValidationResult
         public JsonReference SchemaLocation => JsonReference.Create(_schemaLocation);
 
         /// <summary>
-        /// Gets the document location as a JSON reference.
+        /// Gets the validation location as a JSON reference.
         /// </summary>
-        public JsonReference DocumentLocation => JsonReference.Create(_documentLocation);
+        public JsonReference ValidationLocation => JsonReference.Create(_validationLocation);
     }
 }

@@ -2,9 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #if NET
+
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text.Unicode;
+
 #endif
 
 namespace Corvus.Text.Json.Internal;
@@ -16,6 +18,7 @@ namespace Corvus.Text.Json.Internal;
 internal class Utf8UriDomainNameHelper
 {
 #if NET
+
     // Takes into account the additional legal domain name characters '-' and '_'
     // Note that '_' char is formally invalid but is historically in use, especially on corpnets
     private static readonly SearchValues<byte> s_validChars =
@@ -28,6 +31,7 @@ internal class Utf8UriDomainNameHelper
         " !\"#$%&'()*+,/:;<=>?@[\\]^`{|}~\u007F" +
         "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008A\u008B\u008C\u008D\u008E\u008F" +
         "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009A\u009B\u009C\u009D\u009E\u009F");
+
 #else
     // Takes into account the additional legal domain name characters '-' and '_'
     // Note that '_' char is formally invalid but is historically in use, especially on corpnets
@@ -41,6 +45,7 @@ internal class Utf8UriDomainNameHelper
         "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008A\u008B\u008C\u008D\u008E\u008F" +
         "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009A\u009B\u009C\u009D\u009E\u009F";
 #endif
+
     /// <summary>
     /// Determines whether the specified hostname is valid.
     /// </summary>
@@ -140,6 +145,7 @@ internal class Utf8UriDomainNameHelper
     }
 
 #if NET
+
     private static int IndexOfAny(ReadOnlySpan<byte> hostname, SearchValues<char> s_iriInvalidChars)
     {
         for (int i = 0; i < hostname.Length;)
@@ -151,11 +157,11 @@ internal class Utf8UriDomainNameHelper
             }
 
             i += bytesConsumed;
-
         }
 
         return -1;
     }
+
 #else
     private static int IndexOfAny(ReadOnlySpan<byte> hostname, ReadOnlySpan<char> s_iriInvalidChars)
     {
@@ -168,12 +174,12 @@ internal class Utf8UriDomainNameHelper
             }
 
             i += bytesConsumed;
-
         }
 
         return -1;
     }
 #endif
+
     private static int IndexOfIriDot(ReadOnlySpan<byte> hostname)
     {
         for (int i = 0; i < hostname.Length;)
@@ -196,7 +202,6 @@ internal class Utf8UriDomainNameHelper
             }
 
             i += bytesConsumed;
-
         }
 
         return -1;

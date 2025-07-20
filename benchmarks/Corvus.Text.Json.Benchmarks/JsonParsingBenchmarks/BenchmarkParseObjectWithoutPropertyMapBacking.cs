@@ -11,10 +11,10 @@ namespace JsonParsingBenchmarks;
 [MemoryDiagnoser]
 public class BenchmarkParseObjectWithoutPropertyMapBacking
 {
-    [Benchmark(Baseline = true)]
-    public System.Text.Json.JsonValueKind ParseObjectToJsonElement()
+    [Benchmark]
+    public Corvus.Text.Json.JsonValueKind ParseObjectToCorvusJsonElement()
     {
-        using var document = System.Text.Json.JsonDocument.Parse(
+        using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(
             """
             {
                 "name": "John",
@@ -28,10 +28,10 @@ public class BenchmarkParseObjectWithoutPropertyMapBacking
         return document.RootElement.ValueKind;
     }
 
-    [Benchmark]
-    public Corvus.Text.Json.JsonValueKind ParseObjectToCorvusJsonElement()
+    [Benchmark(Baseline = true)]
+    public System.Text.Json.JsonValueKind ParseObjectToJsonElement()
     {
-        using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(
+        using var document = System.Text.Json.JsonDocument.Parse(
             """
             {
                 "name": "John",

@@ -26,9 +26,10 @@ namespace Corvus.Text.Json.Tests.Resources
 #if CORECLR || LEGACY_GETRESOURCESTRING_USER
         internal
 #else
+
         private
 #endif
-        static string GetResourceString(string resourceKey)
+            static string GetResourceString(string resourceKey)
         {
             if (UsingResourceKeys())
             {
@@ -53,6 +54,7 @@ namespace Corvus.Text.Json.Tests.Resources
 #if LEGACY_GETRESOURCESTRING_USER
         internal
 #else
+
         private
 #endif
         static string GetResourceString(string resourceKey, string defaultString)

@@ -9,18 +9,6 @@ namespace Corvus.Text.Json.CodeGeneration;
 public readonly struct SimpleTypeAndFormatterAndKind
 {
     /// <summary>
-    /// Creates an instance of the <see cref="SimpleTypeAndFormatterAndKind"/>.
-    /// </summary>
-    /// <param name="dotnetTypeName">The appropriately qualified .NET type name.</param>
-    /// <param name="formatterExpression">The expression that will format an instance of <paramref name="dotnetTypeName"/>.</param>
-    public SimpleTypeAndFormatterAndKind(string dotnetTypeName, string formatterExpression, string kind)
-    {
-        DotnetTypeName = dotnetTypeName;
-        FormatterExpression = formatterExpression;
-        Kind = kind;
-    }
-
-    /// <summary>
     /// The appropriately qualified .NET type name for the type.
     /// </summary>
     public readonly string DotnetTypeName;
@@ -42,4 +30,16 @@ public readonly struct SimpleTypeAndFormatterAndKind
     /// This will determine how the value is interpreted
     /// </remarks>
     public readonly string Kind;
+
+    /// <summary>
+    /// Creates an instance of the <see cref="SimpleTypeAndFormatterAndKind"/>.
+    /// </summary>
+    /// <param name="dotnetTypeName">The appropriately qualified .NET type name.</param>
+    /// <param name="formatterExpression">The expression that will format an instance of <paramref name="dotnetTypeName"/>.</param>
+    public SimpleTypeAndFormatterAndKind(string dotnetTypeName, string formatterExpression, string kind)
+    {
+        DotnetTypeName = dotnetTypeName;
+        FormatterExpression = formatterExpression;
+        Kind = kind;
+    }
 }

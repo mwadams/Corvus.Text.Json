@@ -7,11 +7,9 @@ namespace Corvus.Text.Json;
 
 public interface IByteBufferWriter : IBufferWriter<byte>, IDisposable
 {
-    ReadOnlySpan<byte> WrittenSpan { get; }
-
-    ReadOnlyMemory<byte> WrittenMemory { get; }
-
     int Capacity { get; }
+    ReadOnlyMemory<byte> WrittenMemory { get; }
+    ReadOnlySpan<byte> WrittenSpan { get; }
 
     void ClearAndReturnBuffers();
 }

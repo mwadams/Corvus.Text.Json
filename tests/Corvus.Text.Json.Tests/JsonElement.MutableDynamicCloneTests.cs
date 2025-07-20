@@ -10,6 +10,108 @@ namespace Corvus.Text.Json.Tests
     public static class JsonElementMutableDynamicCloneTests
     {
         [Fact]
+        public static void CloneAtInnerArray()
+        {
+            // Very weird whitespace is used here just to ensure that the
+            // clone API isn't making any whitespace assumptions.
+            CloneAtInner(
+                @"[
+{
+  ""this"":
+  [
+    {
+      ""object"": 0,
+
+      ""has"": [ ""whitespace"" ]
+    }
+  ]
+},
+
+5
+
+,
+
+false,
+
+null
+]",
+                JsonValueKind.Array);
+        }
+
+        [Fact]
+        public static void CloneAtInnerFalse()
+        {
+            CloneAtInner("false", JsonValueKind.False);
+        }
+
+        [Fact]
+        public static void CloneAtInnerNull()
+        {
+            CloneAtInner("null", JsonValueKind.Null);
+        }
+
+        [Fact]
+        public static void CloneAtInnerNumber()
+        {
+            CloneAtInner("1.21e9", JsonValueKind.Number);
+        }
+
+        [Fact]
+        public static void CloneAtInnerObject()
+        {
+            // Very weird whitespace is used here just to ensure that the
+            // clone API isn't making any whitespace assumptions.
+            CloneAtInner(
+                @"{
+  ""this"":
+  [
+    {
+      ""object"": 0,
+
+      ""has"": [ ""whitespace"" ]
+    }
+  ]
+}",
+                JsonValueKind.Object);
+        }
+
+        [Fact]
+        public static void CloneAtInnerString()
+        {
+            CloneAtInner("\"  this  string  has  \\u0039 spaces\"", JsonValueKind.String);
+        }
+
+        [Fact]
+        public static void CloneAtInnerTrue()
+        {
+            CloneAtInner("true", JsonValueKind.True);
+        }
+
+        [Fact]
+        public static void CloneInnerElementFromClonedElement()
+        {
+            JsonElement clone;
+
+            using (JsonWorkspace workspace = JsonWorkspace.Create())
+            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[[]]]"))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
+            {
+                JsonElement middle = doc.RootElement[0].Clone();
+                JsonElement inner = middle[0];
+                clone = inner.Clone();
+
+                Assert.Equal(inner.GetRawText(), clone.GetRawText());
+                Assert.NotSame(doc, clone.SniffDocument());
+                Assert.Same(middle.SniffDocument(), clone.SniffDocument());
+                Assert.Same(inner.SniffDocument(), clone.SniffDocument());
+                Assert.False(clone.SniffDocument().IsDisposable());
+            }
+
+            // After document Dispose
+            Assert.Equal("[]", clone.GetRawText());
+        }
+
+        [Fact]
         public static void CloneTwiceFromSameDocument()
         {
             string json = "[[]]";
@@ -41,116 +143,16 @@ namespace Corvus.Text.Json.Tests
             Assert.Throws<ObjectDisposedException>(() => root.GetRawText());
         }
 
-        [Fact]
-        public static void CloneInnerElementFromClonedElement()
+        internal static bool IsDisposable(this JsonDocumentBuilder<JsonElement.Mutable> document)
         {
-            JsonElement clone;
-
-            using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[[]]]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDynamicDocument(workspace))
-            {
-                JsonElement middle = doc.RootElement[0].Clone();
-                JsonElement inner = middle[0];
-                clone = inner.Clone();
-
-                Assert.Equal(inner.GetRawText(), clone.GetRawText());
-                Assert.NotSame(doc, clone.SniffDocument());
-                Assert.Same(middle.SniffDocument(), clone.SniffDocument());
-                Assert.Same(inner.SniffDocument(), clone.SniffDocument());
-                Assert.False(clone.SniffDocument().IsDisposable());
-            }
-
-            // After document Dispose
-            Assert.Equal("[]", clone.GetRawText());
+            return ((IJsonDocument)document).IsDisposable;
         }
 
-        [Fact]
-        public static void CloneAtInnerNumber()
+        internal static JsonDocumentBuilder<JsonElement.Mutable> SniffDocument(this JsonElement.Mutable element)
         {
-            CloneAtInner("1.21e9", JsonValueKind.Number);
-        }
-
-        [Fact]
-        public static void CloneAtInnerString()
-        {
-            CloneAtInner("\"  this  string  has  \\u0039 spaces\"", JsonValueKind.String);
-        }
-
-        [Fact]
-        public static void CloneAtInnerTrue()
-        {
-            CloneAtInner("true", JsonValueKind.True);
-        }
-
-        [Fact]
-        public static void CloneAtInnerFalse()
-        {
-            CloneAtInner("false", JsonValueKind.False);
-        }
-
-        [Fact]
-        public static void CloneAtInnerNull()
-        {
-            CloneAtInner("null", JsonValueKind.Null);
-        }
-
-        [Fact]
-        public static void CloneAtInnerObject()
-        {
-            // Very weird whitespace is used here just to ensure that the
-            // clone API isn't making any whitespace assumptions.
-            CloneAtInner(
-                @"{
-  ""this"":
-  [
-    {
-      ""object"": 0,
-
-
-
-
-      ""has"": [ ""whitespace"" ]
-    }
-  ]
-}",
-                JsonValueKind.Object);
-        }
-
-        [Fact]
-        public static void CloneAtInnerArray()
-        {
-            // Very weird whitespace is used here just to ensure that the
-            // clone API isn't making any whitespace assumptions.
-            CloneAtInner(
-                @"[
-{
-  ""this"":
-  [
-    {
-      ""object"": 0,
-
-
-
-
-      ""has"": [ ""whitespace"" ]
-    }
-  ]
-},
-
-5
-
-,
-
-
-
-false,
-
-
-
-null
-]",
-                JsonValueKind.Array);
+            return (JsonDocumentBuilder<JsonElement.Mutable>)typeof(JsonElement.Mutable)
+                .GetField("_parent", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(element);
         }
 
         private static void CloneAtInner(string innerJson, JsonValueKind valueType)
@@ -171,18 +173,6 @@ null
             }
 
             Assert.Equal(rawTarget, clone.GetRawText());
-        }
-
-        internal static JsonDocumentBuilder<JsonElement.Mutable> SniffDocument(this JsonElement.Mutable element)
-        {
-            return (JsonDocumentBuilder<JsonElement.Mutable>)typeof(JsonElement.Mutable)
-                .GetField("_parent", BindingFlags.Instance | BindingFlags.NonPublic)
-                .GetValue(element);
-        }
-
-        internal static bool IsDisposable(this JsonDocumentBuilder<JsonElement.Mutable> document)
-        {
-            return ((IJsonDocument)document).IsDisposable;
         }
     }
 }

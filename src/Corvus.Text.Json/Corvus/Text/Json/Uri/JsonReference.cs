@@ -23,29 +23,25 @@ namespace Corvus.Text.Json;
 /// </remarks>
 public readonly ref struct JsonReference
 {
-    private readonly ReadOnlySpan<byte> _originalUri;
-    private readonly Utf8UriOffset _offsets;
     private readonly Utf8Uri.Flags _flags;
+    private readonly Utf8UriOffset _offsets;
+    private readonly ReadOnlySpan<byte> _originalUri;
+
+    private JsonReference(ReadOnlySpan<byte> uri)
+    {
+        _originalUri = uri;
+        IsValidReference = Utf8Uri.ParseUriInfo(_originalUri, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false, out _offsets, out _flags);
+    }
 
     /// <summary>
-    /// Gets a value indicating whether this is a valid reference.
+    /// Gets the authority component of the reference.
     /// </summary>
-    public bool IsValidReference { get; }
+    public ReadOnlySpan<byte> Authority => _originalUri.Slice(_offsets.User, _offsets.Path - _offsets.User);
 
     /// <summary>
-    /// Gets a value indicating whether this is a relative reference.
+    /// Gets the fragment component of the reference.
     /// </summary>
-    public bool IsRelative => (_flags & Utf8Uri.Flags.UserEscaped) != 0;
-
-    /// <summary>
-    /// Gets a value indicating whether this is the default port for the scheme.
-    /// </summary>
-    public bool IsDefaultPort => (_flags & Utf8Uri.Flags.NotDefaultPort) == 0;
-
-    /// <summary>
-    /// Gets a value indicating whether this reference has a scheme
-    /// </summary>
-    public bool HasScheme => _offsets.User - _offsets.Scheme > 0;
+    public ReadOnlySpan<byte> Fragment => HasFragment ? _originalUri.Slice(_offsets.Fragment + 1, _offsets.End - _offsets.Fragment - 1) : [];
 
     /// <summary>
     /// Gets a value indicating whether this reference has an authority
@@ -53,25 +49,54 @@ public readonly ref struct JsonReference
     public bool HasAuthority => _offsets.Path - _offsets.User > 0;
 
     /// <summary>
-    /// Gets a value indicating whether this reference has a user
+    /// Gets a value indicating whether this reference has a fragment
     /// </summary>
-    public bool HasUser => _offsets.Host - _offsets.User > 0;
+    public bool HasFragment => _offsets.End - _offsets.Fragment > 0;
+
     /// <summary>
     /// Gets a value indicating whether this reference has a host
     /// </summary>
     public bool HasHost => _offsets.Path - _offsets.Host > 0;
+
     /// <summary>
     /// Gets a value indicating whether this reference has a path
     /// </summary>
     public bool HasPath => _offsets.Query - _offsets.Path > 0;
+
     /// <summary>
     /// Gets a value indicating whether this reference has a query
     /// </summary>
     public bool HasQuery => _offsets.Fragment - _offsets.Query > 0;
+
     /// <summary>
-    /// Gets a value indicating whether this reference has a fragment
+    /// Gets a value indicating whether this reference has a scheme
     /// </summary>
-    public bool HasFragment => _offsets.End - _offsets.Fragment > 0;
+    public bool HasScheme => _offsets.User - _offsets.Scheme > 0;
+
+    /// <summary>
+    /// Gets a value indicating whether this reference has a user
+    /// </summary>
+    public bool HasUser => _offsets.Host - _offsets.User > 0;
+
+    /// <summary>
+    /// Gets the host component of the reference (includes both host and port).
+    /// </summary>
+    public ReadOnlySpan<byte> Host => _originalUri.Slice(_offsets.Host, _offsets.Port - _offsets.Host);
+
+    /// <summary>
+    /// Gets a value indicating whether this is the default port for the scheme.
+    /// </summary>
+    public bool IsDefaultPort => (_flags & Utf8Uri.Flags.NotDefaultPort) == 0;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a relative reference.
+    /// </summary>
+    public bool IsRelative => (_flags & Utf8Uri.Flags.UserEscaped) != 0;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a valid reference.
+    /// </summary>
+    public bool IsValidReference { get; }
 
     /// <summary>
     /// Gets the original (fully encoded) string.
@@ -79,19 +104,34 @@ public readonly ref struct JsonReference
     public ReadOnlySpan<byte> OriginalUri => _originalUri;
 
     /// <summary>
-    /// Gets the value as a <see cref="Uri"/>.
+    /// Gets the path component of the reference.
     /// </summary>
-    /// <returns>The URI representation of the reference.</returns>
-    public Uri GetUri()
-    {
-        return new Uri(JsonReaderHelper.TranscodeHelper(_originalUri), UriKind.RelativeOrAbsolute);
-    }
+    public ReadOnlySpan<byte> Path => _originalUri.Slice(_offsets.Path, _offsets.Query - _offsets.Path);
 
-    private JsonReference(ReadOnlySpan<byte> uri)
-    {
-        _originalUri = uri;
-        IsValidReference = Utf8Uri.ParseUriInfo(_originalUri, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false, out _offsets, out _flags);
-    }
+    /// <summary>
+    /// Gets the port component of the reference as a byte span.
+    /// </summary>
+    public ReadOnlySpan<byte> Port => HasAuthority ? _originalUri.Slice(_offsets.Port + 1, _offsets.Path - _offsets.Port - 1) : [];
+
+    /// <summary>
+    /// Gets the port value as an integer.
+    /// </summary>
+    public int PortValue => _offsets.PortValue;
+
+    /// <summary>
+    /// Gets the query component of the reference.
+    /// </summary>
+    public ReadOnlySpan<byte> Query => HasQuery ? _originalUri.Slice(_offsets.Query + 1, _offsets.Fragment - _offsets.Query - 1) : [];
+
+    /// <summary>
+    /// Gets the scheme component of the reference.
+    /// </summary>
+    public ReadOnlySpan<byte> Scheme => HasAuthority ? _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 3) : _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 1);
+
+    /// <summary>
+    /// Gets the user component of the reference.
+    /// </summary>
+    public ReadOnlySpan<byte> User => HasAuthority ? _originalUri.Slice(_offsets.User, _offsets.Host - _offsets.User - 1) : [];
 
     /// <summary>
     /// Creates a new JSON reference from the specified URI bytes.
@@ -134,47 +174,11 @@ public readonly ref struct JsonReference
     }
 
     /// <summary>
-    /// Gets the scheme component of the reference.
+    /// Gets the value as a <see cref="Uri"/>.
     /// </summary>
-    public ReadOnlySpan<byte> Scheme => HasAuthority ? _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 3) : _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 1);
-
-    /// <summary>
-    /// Gets the authority component of the reference.
-    /// </summary>
-    public ReadOnlySpan<byte> Authority => _originalUri.Slice(_offsets.User, _offsets.Path - _offsets.User);
-
-    /// <summary>
-    /// Gets the user component of the reference.
-    /// </summary>
-    public ReadOnlySpan<byte> User => HasAuthority ? _originalUri.Slice(_offsets.User, _offsets.Host - _offsets.User - 1) : [];
-
-    /// <summary>
-    /// Gets the host component of the reference (includes both host and port).
-    /// </summary>
-    public ReadOnlySpan<byte> Host => _originalUri.Slice(_offsets.Host, _offsets.Port - _offsets.Host);
-
-    /// <summary>
-    /// Gets the port component of the reference as a byte span.
-    /// </summary>
-    public ReadOnlySpan<byte> Port => HasAuthority ? _originalUri.Slice(_offsets.Port + 1, _offsets.Path - _offsets.Port - 1) : [];
-
-    /// <summary>
-    /// Gets the port value as an integer.
-    /// </summary>
-    public int PortValue => _offsets.PortValue;
-
-    /// <summary>
-    /// Gets the path component of the reference.
-    /// </summary>
-    public ReadOnlySpan<byte> Path => _originalUri.Slice(_offsets.Path, _offsets.Query - _offsets.Path);
-
-    /// <summary>
-    /// Gets the query component of the reference.
-    /// </summary>
-    public ReadOnlySpan<byte> Query => HasQuery ? _originalUri.Slice(_offsets.Query + 1, _offsets.Fragment - _offsets.Query - 1) : [];
-
-    /// <summary>
-    /// Gets the fragment component of the reference.
-    /// </summary>
-    public ReadOnlySpan<byte> Fragment => HasFragment ? _originalUri.Slice(_offsets.Fragment + 1, _offsets.End - _offsets.Fragment - 1) : [];
+    /// <returns>The URI representation of the reference.</returns>
+    public Uri GetUri()
+    {
+        return new Uri(JsonReaderHelper.TranscodeHelper(_originalUri), UriKind.RelativeOrAbsolute);
+    }
 }

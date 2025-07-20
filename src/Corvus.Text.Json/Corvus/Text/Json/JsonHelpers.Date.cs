@@ -106,6 +106,7 @@ internal static partial class JsonHelpers
     }
 
 #if NET
+
     /// <summary>
     /// Parse the given UTF-8 <paramref name="source"/> as extended ISO 8601 date format.
     /// </summary>
@@ -125,6 +126,7 @@ internal static partial class JsonHelpers
         value = default;
         return false;
     }
+
 #endif
 
     /// <summary>
@@ -268,12 +270,15 @@ internal static partial class JsonHelpers
             case JsonConstants.UtcOffsetToken:
                 parseData.OffsetToken = JsonConstants.UtcOffsetToken;
                 return sourceIndex == source.Length;
+
             case JsonConstants.Plus:
             case JsonConstants.Hyphen:
                 parseData.OffsetToken = curByte;
                 return ParseOffset(ref parseData, source.Slice(sourceIndex));
+
             case JsonConstants.Colon:
                 break;
+
             default:
                 return false;
         }
@@ -301,12 +306,15 @@ internal static partial class JsonHelpers
             case JsonConstants.UtcOffsetToken:
                 parseData.OffsetToken = JsonConstants.UtcOffsetToken;
                 return sourceIndex == source.Length;
+
             case JsonConstants.Plus:
             case JsonConstants.Hyphen:
                 parseData.OffsetToken = curByte;
                 return ParseOffset(ref parseData, source.Slice(sourceIndex));
+
             case JsonConstants.Period:
                 break;
+
             default:
                 return false;
         }
@@ -359,10 +367,12 @@ internal static partial class JsonHelpers
             case JsonConstants.UtcOffsetToken:
                 parseData.OffsetToken = JsonConstants.UtcOffsetToken;
                 return sourceIndex == source.Length;
+
             case JsonConstants.Plus:
             case JsonConstants.Hyphen:
                 parseData.OffsetToken = curByte;
                 return ParseOffset(ref parseData, source.Slice(sourceIndex));
+
             default:
                 return false;
         }

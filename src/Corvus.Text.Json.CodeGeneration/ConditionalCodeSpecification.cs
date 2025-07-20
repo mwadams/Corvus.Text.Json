@@ -13,8 +13,8 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// </summary>
 public readonly struct ConditionalCodeSpecification
 {
-    private readonly string? explicitString;
     private readonly FrameworkType condition;
+    private readonly string? explicitString;
     private readonly Action<CodeGenerator>? generationFunction;
 
     /// <summary>
@@ -51,16 +51,6 @@ public readonly struct ConditionalCodeSpecification
     public static ConditionalCodeSpecification DoNotEmit => default;
 
     /// <summary>
-    /// Implicit conversion of a string to a <see cref="ConditionalCodeSpecification"/> with
-    /// <see cref="FrameworkType.All"/>.
-    /// </summary>
-    /// <param name="explicitString">The explicit string.</param>
-    public static implicit operator ConditionalCodeSpecification(string explicitString)
-    {
-        return new ConditionalCodeSpecification(explicitString);
-    }
-
-    /// <summary>
     /// Append conditional code for the given framework type.
     /// </summary>
     /// <param name="generator">The code generator.</param>
@@ -95,73 +85,6 @@ public readonly struct ConditionalCodeSpecification
         conditionalCode(generator);
 
         return generator.AppendLine("#endif");
-    }
-
-    /// <summary>
-    /// Append conditionals to the generator, preserving their ordering.
-    /// </summary>
-    /// <param name="generator">The generator to which to append the set of conditionals.</param>
-    /// <param name="conditionalSpecifications">
-    /// The conditional specifications to assemble into conditional blocks and appended.</param>
-    /// <param name="appendCallback">The callback to append a single block.</param>
-    /// <remarks>
-    /// <para>
-    /// This method expects the <paramref name="appendCallback"/> to leave the generator at the end of the
-    /// line that it appends, rather than appending an additional newline, and leaving it at the start of the
-    /// next line.
-    /// </para>
-    /// <para>
-    /// The callback is passed the generator to emit, a function that will emit the conditional code itself, and
-    /// an integer that indicates the index of the item in the conditional block. This allows the caller to wrap
-    /// the conditional code appropriately (e.g. if it requires comma separation as in a set of interfaces or wrapping
-    /// with <c>using [conditional block];</c> as in a using statement.
-    /// </para>
-    /// </remarks>
-    public static void AppendConditionalsInOrder(
-        CodeGenerator generator,
-        ConditionalCodeSpecification[] conditionalSpecifications,
-        Action<CodeGenerator, Action<CodeGenerator>, int> appendCallback)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return;
-        }
-
-        FrameworkType lastFrameworkType = FrameworkType.All;
-        int i = 0;
-
-        foreach (ConditionalCodeSpecification spec in conditionalSpecifications)
-        {
-            if (generator.IsCancellationRequested)
-            {
-                return;
-            }
-
-            if (spec.condition == FrameworkType.NotEmitted)
-            {
-                continue;
-            }
-
-            if (spec.condition != lastFrameworkType)
-            {
-                if (lastFrameworkType != FrameworkType.All)
-                {
-                    generator.AppendLine("#endif");
-                    i = 0;
-                }
-
-                if (spec.condition != FrameworkType.All)
-                {
-                    generator.AppendSeparatorLine();
-                    generator.Append("#if ");
-                    generator.AppendLine(GetCondition(spec.condition));
-                }
-            }
-
-            appendCallback(generator, spec.Append, i++);
-
-            lastFrameworkType = spec.condition;
-        }
     }
 
     /// <summary>
@@ -334,6 +257,83 @@ public readonly struct ConditionalCodeSpecification
     }
 
     /// <summary>
+    /// Append conditionals to the generator, preserving their ordering.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the set of conditionals.</param>
+    /// <param name="conditionalSpecifications">
+    /// The conditional specifications to assemble into conditional blocks and appended.</param>
+    /// <param name="appendCallback">The callback to append a single block.</param>
+    /// <remarks>
+    /// <para>
+    /// This method expects the <paramref name="appendCallback"/> to leave the generator at the end of the
+    /// line that it appends, rather than appending an additional newline, and leaving it at the start of the
+    /// next line.
+    /// </para>
+    /// <para>
+    /// The callback is passed the generator to emit, a function that will emit the conditional code itself, and
+    /// an integer that indicates the index of the item in the conditional block. This allows the caller to wrap
+    /// the conditional code appropriately (e.g. if it requires comma separation as in a set of interfaces or wrapping
+    /// with <c>using [conditional block];</c> as in a using statement.
+    /// </para>
+    /// </remarks>
+    public static void AppendConditionalsInOrder(
+        CodeGenerator generator,
+        ConditionalCodeSpecification[] conditionalSpecifications,
+        Action<CodeGenerator, Action<CodeGenerator>, int> appendCallback)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return;
+        }
+
+        FrameworkType lastFrameworkType = FrameworkType.All;
+        int i = 0;
+
+        foreach (ConditionalCodeSpecification spec in conditionalSpecifications)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return;
+            }
+
+            if (spec.condition == FrameworkType.NotEmitted)
+            {
+                continue;
+            }
+
+            if (spec.condition != lastFrameworkType)
+            {
+                if (lastFrameworkType != FrameworkType.All)
+                {
+                    generator.AppendLine("#endif");
+                    i = 0;
+                }
+
+                if (spec.condition != FrameworkType.All)
+                {
+                    generator.AppendSeparatorLine();
+                    generator.Append("#if ");
+                    generator.AppendLine(GetCondition(spec.condition));
+                }
+            }
+
+            appendCallback(generator, spec.Append, i++);
+
+            lastFrameworkType = spec.condition;
+        }
+    }
+
+    /// <summary>
+    /// Implicit conversion of a string to a <see cref="ConditionalCodeSpecification"/> with
+    /// <see cref="FrameworkType.All"/>.
+    /// </summary>
+    /// <param name="explicitString">The explicit string.</param>
+    public static implicit operator ConditionalCodeSpecification(string explicitString)
+    {
+        return new ConditionalCodeSpecification(explicitString);
+    }
+
+    /// <summary>
     /// Append the interface to the generator.
     /// </summary>
     /// <param name="generator">The generator to which to append the interface.</param>
@@ -350,8 +350,19 @@ public readonly struct ConditionalCodeSpecification
         }
     }
 
+    private static string GetCondition(FrameworkType condition)
+    {
+        return condition switch
+        {
+            FrameworkType.Net80OrGreater => "NET8_0_OR_GREATER",
+            FrameworkType.Net80 => "NET8_0",
+            FrameworkType.PreNet80 => "!NET8_0_OR_GREATER",
+            _ => throw new InvalidOperationException($"Unsupported framework type: {condition}"),
+        };
+    }
+
     private static void GroupConditionals(
-        ConditionalCodeSpecification[] conditionalSpecifications,
+            ConditionalCodeSpecification[] conditionalSpecifications,
         List<ConditionalCodeSpecification> all,
         List<ConditionalCodeSpecification> preNet80,
         List<ConditionalCodeSpecification> net80,
@@ -384,16 +395,5 @@ public readonly struct ConditionalCodeSpecification
                     throw new NotSupportedException($"Unsupported framework type: {spec.condition}");
             }
         }
-    }
-
-    private static string GetCondition(FrameworkType condition)
-    {
-        return condition switch
-        {
-            FrameworkType.Net80OrGreater => "NET8_0_OR_GREATER",
-            FrameworkType.Net80 => "NET8_0",
-            FrameworkType.PreNet80 => "!NET8_0_OR_GREATER",
-            _ => throw new InvalidOperationException($"Unsupported framework type: {condition}"),
-        };
     }
 }

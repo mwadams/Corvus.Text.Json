@@ -14,6 +14,26 @@ internal static class Utf8JsonWriterCache
     [ThreadStatic]
     private static ThreadLocalState? t_threadLocalState;
 
+    public static Utf8JsonWriter RentWriter(JsonWriterOptions options, IBufferWriter<byte> bufferWriter)
+    {
+        ThreadLocalState state = t_threadLocalState ??= new();
+        Utf8JsonWriter writer;
+
+        if (state.RentedWriters++ == 0)
+        {
+            // First call in the stack -- initialize & return the cached instance.
+            writer = state.Writer;
+            writer.Reset(bufferWriter, options);
+        }
+        else
+        {
+            // We're in a recursive call -- return a fresh instance.
+            writer = new Utf8JsonWriter(bufferWriter, options);
+        }
+
+        return writer;
+    }
+
     public static Utf8JsonWriter RentWriterAndBuffer(JsonWriterOptions options, int defaultBufferSize, out PooledByteBufferWriter bufferWriter)
     {
         ThreadLocalState state = t_threadLocalState ??= new();
@@ -38,24 +58,15 @@ internal static class Utf8JsonWriterCache
         return writer;
     }
 
-    public static Utf8JsonWriter RentWriter(JsonWriterOptions options, IBufferWriter<byte> bufferWriter)
+    public static void ReturnWriter(Utf8JsonWriter writer)
     {
-        ThreadLocalState state = t_threadLocalState ??= new();
-        Utf8JsonWriter writer;
+        Debug.Assert(t_threadLocalState != null);
+        ThreadLocalState state = t_threadLocalState;
 
-        if (state.RentedWriters++ == 0)
-        {
-            // First call in the stack -- initialize & return the cached instance.
-            writer = state.Writer;
-            writer.Reset(bufferWriter, options);
-        }
-        else
-        {
-            // We're in a recursive call -- return a fresh instance.
-            writer = new Utf8JsonWriter(bufferWriter, options);
-        }
+        writer.ResetAllStateForCacheReuse();
 
-        return writer;
+        int rentedWriters = --state.RentedWriters;
+        Debug.Assert((rentedWriters == 0) == ReferenceEquals(state.Writer, writer));
     }
 
     public static void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)
@@ -68,17 +79,6 @@ internal static class Utf8JsonWriterCache
 
         int rentedWriters = --state.RentedWriters;
         Debug.Assert((rentedWriters == 0) == (ReferenceEquals(state.BufferWriter, bufferWriter) && ReferenceEquals(state.Writer, writer)));
-    }
-
-    public static void ReturnWriter(Utf8JsonWriter writer)
-    {
-        Debug.Assert(t_threadLocalState != null);
-        ThreadLocalState state = t_threadLocalState;
-
-        writer.ResetAllStateForCacheReuse();
-
-        int rentedWriters = --state.RentedWriters;
-        Debug.Assert((rentedWriters == 0) == ReferenceEquals(state.Writer, writer));
     }
 
     private sealed class ThreadLocalState

@@ -16,6 +16,27 @@ public class BenchmarkEqualsOutOfOrderProperties
     private Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>? documentB1;
     private Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>? documentB2;
 
+    [GlobalCleanup]
+    public void CleanUp()
+    {
+        this.documentA1?.Dispose();
+        this.documentA2?.Dispose();
+        this.documentB1?.Dispose();
+        this.documentB2?.Dispose();
+    }
+
+    [Benchmark]
+    public bool CorvusJsonElementDeepEqualsOutOfOrder()
+    {
+        return Corvus.Text.Json.Internal.JsonElementHelpers.DeepEquals(this.documentB1!.RootElement, this.documentB2!.RootElement);
+    }
+
+    [Benchmark(Baseline = true)]
+    public bool JsonElementDeepEqualsOutOfOrder()
+    {
+        return System.Text.Json.JsonElement.DeepEquals(this.documentA1!.RootElement, this.documentA2!.RootElement);
+    }
+
     [GlobalSetup]
     public void Setup()
     {
@@ -134,26 +155,5 @@ public class BenchmarkEqualsOutOfOrderProperties
                 "age": 30
             }
             """);
-    }
-
-    [GlobalCleanup]
-    public void CleanUp()
-    {
-        this.documentA1?.Dispose();
-        this.documentA2?.Dispose();
-        this.documentB1?.Dispose();
-        this.documentB2?.Dispose();
-    }
-
-    [Benchmark(Baseline = true)]
-    public bool JsonElementDeepEqualsOutOfOrder()
-    {
-        return System.Text.Json.JsonElement.DeepEquals(this.documentA1!.RootElement, this.documentA2!.RootElement);
-    }
-
-    [Benchmark]
-    public bool CorvusJsonElementDeepEqualsOutOfOrder()
-    {
-        return Corvus.Text.Json.Internal.JsonElementHelpers.DeepEquals(this.documentB1!.RootElement, this.documentB2!.RootElement);
     }
 }

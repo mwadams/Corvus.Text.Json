@@ -16,11 +16,10 @@ public class CSharpMemberName(
     string? suffix = null)
     : MemberName(fullyQualifiedScope, baseName, casing, prefix, suffix)
 {
+    private static ReadOnlySpan<char> CamelPrefix => "value".AsSpan();
     private static ReadOnlySpan<char> FallbackName => "Value".AsSpan();
 
     private static ReadOnlySpan<char> PascalPrefix => "Value".AsSpan();
-
-    private static ReadOnlySpan<char> CamelPrefix => "value".AsSpan();
 
     /// <inheritdoc/>
     public override string BuildName()

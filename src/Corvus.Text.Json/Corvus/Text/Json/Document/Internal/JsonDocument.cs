@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -11,9 +10,10 @@ using NodaTime;
 using System.Collections.Generic;
 using System.Numerics;
 
-
 #if NET
+
 using System.Globalization;
+
 #endif
 
 using System.Threading;
@@ -31,6 +31,7 @@ public abstract partial class JsonDocument
     /// </summary>
     [CLSCompliant(false)]
     protected const ulong HashMask = 0xFFUL << 56;
+
     /// <summary>
     /// Length in bytes of hash values stored in metadata.
     /// </summary>
@@ -41,46 +42,55 @@ public abstract partial class JsonDocument
     /// </summary>
     [CLSCompliant(false)]
     protected byte[]? _propertyMapBacking;
+
     /// <summary>
     /// Backing array for the hash buckets used in property lookups.
     /// </summary>
     [CLSCompliant(false)]
     protected int[]? _bucketsBacking;
+
     /// <summary>
     /// Backing array for the hash table entries used in property lookups.
     /// </summary>
     [CLSCompliant(false)]
     protected byte[]? _entriesBacking;
+
     /// <summary>
     /// Backing array for storing dynamic values created during document manipulation.
     /// </summary>
     [CLSCompliant(false)]
     protected byte[]? _valueBacking;
+
     /// <summary>
     /// Current offset into the property map backing array.
     /// </summary>
     [CLSCompliant(false)]
     protected int _propertyMapOffset;
+
     /// <summary>
     /// Current offset into the buckets backing array.
     /// </summary>
     [CLSCompliant(false)]
     protected int _bucketOffset;
+
     /// <summary>
     /// Current offset into the entries backing array.
     /// </summary>
     [CLSCompliant(false)]
     protected int _entryOffset;
+
     /// <summary>
     /// Current offset into the value backing array.
     /// </summary>
     [CLSCompliant(false)]
     protected int _valueOffset;
+
     /// <summary>
     /// The metadata database containing all parsed JSON structure information.
     /// </summary>
     [CLSCompliant(false)]
     protected MetadataDb _parsedData;
+
     /// <summary>
     /// Indicates whether this document instance is immutable and cannot be modified.
     /// </summary>
@@ -89,6 +99,7 @@ public abstract partial class JsonDocument
 
     // These are the indices of the one-and-only instances of the "null", "true", and "false" text in this document.
     private int _nullIndex = -1;
+
     private int _trueIndex = -1;
     private int _falseIndex = -1;
 
@@ -512,7 +523,6 @@ public abstract partial class JsonDocument
 
         _valueOffset = offset;
         return result;
-
     }
 
     /// <summary>
@@ -546,7 +556,6 @@ public abstract partial class JsonDocument
 
         _valueOffset = offset;
         return result;
-
     }
 
     /// <summary>
@@ -580,7 +589,6 @@ public abstract partial class JsonDocument
 
         _valueOffset = offset;
         return result;
-
     }
 
     /// <summary>
@@ -1095,7 +1103,6 @@ public abstract partial class JsonDocument
 #else
         Enlarge(JsonConstants.InitialFormatBigIntegerLength, ref _valueBacking);
 
-
         while(!value.TryFormat(_valueBacking.AsSpan(offset), out length))
         {
             Enlarge(JsonConstants.InitialFormatBigIntegerLength, ref _valueBacking);
@@ -1138,14 +1145,12 @@ public abstract partial class JsonDocument
 #else
         Enlarge(JsonConstants.InitialFormatBigNumberLength, ref _valueBacking);
 
-
         while (!value.Normalize().TryFormat(_valueBacking.AsSpan(offset), out length))
         {
             Enlarge(JsonConstants.InitialFormatBigIntegerLength, ref _valueBacking);
         }
 #endif
         offset += length;
-
 
 #if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
@@ -1158,6 +1163,7 @@ public abstract partial class JsonDocument
     }
 
 #if NET
+
     /// <summary>
     /// Stores a 128-bit signed integer value as a number in the dynamic value buffer and returns its offset.
     /// </summary>
@@ -1230,6 +1236,7 @@ public abstract partial class JsonDocument
         _valueOffset = offset;
         return result;
     }
+
 #endif
 
     /// <summary>
@@ -1543,7 +1550,6 @@ public abstract partial class JsonDocument
 
         int maxBytes = JsonReaderHelper.s_utf8Encoding.GetMaxByteCount(propertyName.Length);
 
-
         byte[]? byteBuffer = null;
 
         Span<byte> utf8Name =
@@ -1769,7 +1775,6 @@ public abstract partial class JsonDocument
             JsonTokenType.Null => s_nullHashCode,
             _ => s_undefinedHashCode,
         };
-
     }
 
     private int GetHashCodeForProperty(int index)
@@ -1861,7 +1866,6 @@ public abstract partial class JsonDocument
         }
 
         return hash.ToHashCode();
-
     }
 
     private int GetHashCodeForArray(int index)
@@ -1905,5 +1909,4 @@ public abstract partial class JsonDocument
         code.Add(Guid.NewGuid());
         return code.ToHashCode();
     }
-
 }

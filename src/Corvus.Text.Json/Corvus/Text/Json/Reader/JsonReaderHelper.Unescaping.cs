@@ -490,7 +490,6 @@ internal static partial class JsonReaderHelper
         }
     }
 
-
     internal static int GetUtf8FromText(ReadOnlySpan<char> text, Span<byte> dest)
     {
         try
@@ -606,27 +605,35 @@ internal static partial class JsonReaderHelper
                 case JsonConstants.Quote:
                     destination[written++] = JsonConstants.Quote;
                     break;
+
                 case (byte)'n':
                     destination[written++] = JsonConstants.LineFeed;
                     break;
+
                 case (byte)'r':
                     destination[written++] = JsonConstants.CarriageReturn;
                     break;
+
                 case JsonConstants.BackSlash:
                     destination[written++] = JsonConstants.BackSlash;
                     break;
+
                 case JsonConstants.Slash:
                     destination[written++] = JsonConstants.Slash;
                     break;
+
                 case (byte)'t':
                     destination[written++] = JsonConstants.Tab;
                     break;
+
                 case (byte)'b':
                     destination[written++] = JsonConstants.BackSpace;
                     break;
+
                 case (byte)'f':
                     destination[written++] = JsonConstants.FormFeed;
                     break;
+
                 default:
                     Debug.Assert(source[idx] == 'u', "invalid escape sequences must have already been caught by Utf8JsonReader.Read()");
 
@@ -712,15 +719,18 @@ internal static partial class JsonReaderHelper
                     case 1:
                         destination[written++] = source[idx++];
                         break;
+
                     case 2:
                         destination[written++] = source[idx++];
                         destination[written++] = source[idx++];
                         break;
+
                     case 3:
                         destination[written++] = source[idx++];
                         destination[written++] = source[idx++];
                         destination[written++] = source[idx++];
                         break;
+
                     default:
                         remaining.Slice(0, nextUnescapedSegmentLength).CopyTo(destination.Slice(written));
                         written += nextUnescapedSegmentLength;

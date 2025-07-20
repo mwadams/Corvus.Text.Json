@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-
-
 #if !NET
 using System.Collections.Concurrent;
 #endif
@@ -314,18 +312,25 @@ public static partial class JsonElementHelpers
                 return true; // 0 mod 1 == 0
             case 2:
                 return IsDivisibleByTwo(integral, fractional, totalLength + netExponent - 1);
+
             case 3:
                 return IsDivisibleByThree(integral, fractional);
+
             case 4:
                 return IsDivisibleByFour(integral, fractional, totalLength + netExponent - 1);
+
             case 5:
                 return IsDivisibleByFive(integral, fractional, totalLength + netExponent - 1);
+
             case 6:
                 return IsDivisibleBySix(integral, fractional, totalLength + netExponent - 1);
+
             case 8:
                 return IsDivisibleByEight(integral, fractional, totalLength + netExponent - 1);
+
             case 10:
                 return IsDivisibleByTen(integral, fractional, totalLength + netExponent - 1);
+
             default:
                 return GeneralPurposeIsMultipleOf(integral, fractional, totalLength + netExponent - 1, divisor);
         }
@@ -402,7 +407,6 @@ public static partial class JsonElementHelpers
             return IsDivisibleByTwo(integral, fractional, totalLength + netExponent - 1);
         }
 
-
         if (divisor.Equals(3))
         {
             return IsDivisibleByThree(integral, fractional);
@@ -458,6 +462,7 @@ public static partial class JsonElementHelpers
                 case (byte)'7':
                     accumulator += 1;
                     break;
+
                 case (byte)'2':
                 case (byte)'5':
                 case (byte)'8':
@@ -504,6 +509,7 @@ public static partial class JsonElementHelpers
                 case (byte)'7':
                     accumulator += 1;
                     break;
+
                 case (byte)'2':
                 case (byte)'5':
                 case (byte)'8':

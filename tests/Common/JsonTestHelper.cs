@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 ////using Corvus.Text.Json.Serialization;
 ////using Corvus.Text.Json.Serialization.Metadata;
 using System.Text.RegularExpressions;
@@ -22,6 +23,7 @@ namespace Corvus.Text.Json
 #endif
 
 #if NET
+
         public static Half NextHalf(Random random)
         {
             double mantissa = (random.NextDouble() * 2.0) - 1.0;
@@ -29,6 +31,7 @@ namespace Corvus.Text.Json
             Half value = (Half)(mantissa * exponent);
             return value;
         }
+
 #endif
 
         public static float NextFloat(Random random)
@@ -100,6 +103,7 @@ namespace Corvus.Text.Json
                         path.Pop();
                     }
                     break;
+
                 case JsonValueKind.Array:
                     ArrayEnumerator<JsonElement> expectedEnumerator = expected.EnumerateArray();
                     ArrayEnumerator<JsonElement> actualEnumerator = actual.EnumerateArray();
@@ -115,15 +119,18 @@ namespace Corvus.Text.Json
 
                     AssertTrue(passCondition: !actualEnumerator.MoveNext(), "Actual array contains additional elements.");
                     break;
+
                 case JsonValueKind.String:
                     AssertTrue(passCondition: expected.GetString() == actual.GetString());
                     break;
+
                 case JsonValueKind.Number:
                 case JsonValueKind.True:
                 case JsonValueKind.False:
                 case JsonValueKind.Null:
                     AssertTrue(passCondition: expected.GetRawText() == actual.GetRawText());
                     break;
+
                 default:
                     Debug.Fail($"Unexpected JsonValueKind: JsonValueKind.{valueKind}.");
                     break;

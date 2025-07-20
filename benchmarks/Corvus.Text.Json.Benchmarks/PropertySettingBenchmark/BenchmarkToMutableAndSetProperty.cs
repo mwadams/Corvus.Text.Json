@@ -13,7 +13,7 @@ namespace PropertySettingBenchmarks;
 public class BenchmarkToMutableAndSetProperty
 {
     // Create a JSON document to work with.
-    const string Json = """
+    private const string Json = """
             {
                 "age": 51,
                 "name": {
@@ -24,25 +24,6 @@ public class BenchmarkToMutableAndSetProperty
                 "competedInYears": [2012, 2016, 2024]
             }
             """;
-
-    [Benchmark(Baseline = true)]
-    public string SetPropertyJsonObjectDirect()
-    {
-        System.Text.Json.Nodes.JsonNode? node = System.Text.Json.Nodes.JsonNode.Parse(Json);
-        JsonObject nameValue = node!["name"]?.AsObject() ?? throw new InvalidOperationException();
-        nameValue["firstName"] = "Matthew";
-        return nameValue.ToJsonString();
-    }
-
-    [Benchmark]
-    public string SetPropertyJsonObjectFromJsonElement()
-    {
-        using System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(Json);
-        System.Text.Json.Nodes.JsonObject nameValue = System.Text.Json.JsonSerializer.SerializeToNode(document.RootElement.GetProperty("name"))?.AsObject() ?? throw new InvalidOperationException();
-        nameValue["firstName"] = "Matthew";
-        return nameValue.ToJsonString();
-    }
-
 
     [Benchmark]
     public string SetPropertyCorvusJsonSchema()
@@ -65,5 +46,23 @@ public class BenchmarkToMutableAndSetProperty
         using Corvus.Text.Json.JsonDocumentBuilder<Corvus.Text.Json.JsonElement.Mutable> nameValueDoc = corvusDocument!.RootElement.GetProperty("name").CreateDocumentBuilder(workspace);
         nameValueDoc.RootElement.SetProperty("firstName"u8, "Matthew"u8);
         return nameValueDoc.RootElement.ToString();
+    }
+
+    [Benchmark(Baseline = true)]
+    public string SetPropertyJsonObjectDirect()
+    {
+        System.Text.Json.Nodes.JsonNode? node = System.Text.Json.Nodes.JsonNode.Parse(Json);
+        JsonObject nameValue = node!["name"]?.AsObject() ?? throw new InvalidOperationException();
+        nameValue["firstName"] = "Matthew";
+        return nameValue.ToJsonString();
+    }
+
+    [Benchmark]
+    public string SetPropertyJsonObjectFromJsonElement()
+    {
+        using System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(Json);
+        System.Text.Json.Nodes.JsonObject nameValue = System.Text.Json.JsonSerializer.SerializeToNode(document.RootElement.GetProperty("name"))?.AsObject() ?? throw new InvalidOperationException();
+        nameValue["firstName"] = "Matthew";
+        return nameValue.ToJsonString();
     }
 }

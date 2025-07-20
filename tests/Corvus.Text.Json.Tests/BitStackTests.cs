@@ -9,42 +9,6 @@ namespace Corvus.Text.Json.Tests
     {
         private static readonly Random s_random = new Random(42);
 
-        [Fact]
-        public static void DefaultBitStack()
-        {
-            BitStack bitStack = default;
-            Assert.Equal(0, bitStack.CurrentDepth);
-        }
-
-        [Fact]
-        public static void SetResetFirstBit()
-        {
-            BitStack bitStack = default;
-            Assert.Equal(0, bitStack.CurrentDepth);
-            bitStack.SetFirstBit();
-            Assert.Equal(1, bitStack.CurrentDepth);
-            Assert.False(bitStack.Pop());
-            Assert.Equal(0, bitStack.CurrentDepth);
-
-            bitStack = default;
-            Assert.Equal(0, bitStack.CurrentDepth);
-            bitStack.ResetFirstBit();
-            Assert.Equal(1, bitStack.CurrentDepth);
-            Assert.False(bitStack.Pop());
-            Assert.Equal(0, bitStack.CurrentDepth);
-
-            bitStack = default;
-            Assert.Equal(0, bitStack.CurrentDepth);
-            bitStack.SetFirstBit();
-            Assert.Equal(1, bitStack.CurrentDepth);
-            Assert.False(bitStack.Pop());
-            Assert.Equal(0, bitStack.CurrentDepth);
-            bitStack.ResetFirstBit();
-            Assert.Equal(1, bitStack.CurrentDepth);
-            Assert.False(bitStack.Pop());
-            Assert.Equal(0, bitStack.CurrentDepth);
-        }
-
         [Theory]
         [InlineData(32)]
         [InlineData(64)]
@@ -147,6 +111,42 @@ namespace Corvus.Text.Json.Tests
                 expectedDepth--;
                 Assert.Equal(expectedDepth, bitStack.CurrentDepth);
             }
+        }
+
+        [Fact]
+        public static void DefaultBitStack()
+        {
+            BitStack bitStack = default;
+            Assert.Equal(0, bitStack.CurrentDepth);
+        }
+
+        [Fact]
+        public static void SetResetFirstBit()
+        {
+            BitStack bitStack = default;
+            Assert.Equal(0, bitStack.CurrentDepth);
+            bitStack.SetFirstBit();
+            Assert.Equal(1, bitStack.CurrentDepth);
+            Assert.False(bitStack.Pop());
+            Assert.Equal(0, bitStack.CurrentDepth);
+
+            bitStack = default;
+            Assert.Equal(0, bitStack.CurrentDepth);
+            bitStack.ResetFirstBit();
+            Assert.Equal(1, bitStack.CurrentDepth);
+            Assert.False(bitStack.Pop());
+            Assert.Equal(0, bitStack.CurrentDepth);
+
+            bitStack = default;
+            Assert.Equal(0, bitStack.CurrentDepth);
+            bitStack.SetFirstBit();
+            Assert.Equal(1, bitStack.CurrentDepth);
+            Assert.False(bitStack.Pop());
+            Assert.Equal(0, bitStack.CurrentDepth);
+            bitStack.ResetFirstBit();
+            Assert.Equal(1, bitStack.CurrentDepth);
+            Assert.False(bitStack.Pop());
+            Assert.Equal(0, bitStack.CurrentDepth);
         }
     }
 }

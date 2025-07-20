@@ -78,6 +78,7 @@ public class JsonWorkspace : IDisposable
     }
 
 #pragma warning disable CA1822 // Mark members as static
+
     /// <summary>
     /// Returns a rented UTF-8 JSON writer and buffer writer to the pool.
     /// </summary>
@@ -96,6 +97,7 @@ public class JsonWorkspace : IDisposable
     {
         Utf8JsonWriterCache.ReturnWriter(writer);
     }
+
 #pragma warning restore CA1822 // Mark members as static
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize

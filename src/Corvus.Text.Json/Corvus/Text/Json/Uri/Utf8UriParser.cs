@@ -8,16 +8,7 @@ namespace Corvus.Text.Json.Internal;
 /// </summary>
 internal partial class Utf8UriParser
 {
-    /// <summary>
-    /// Gets the scheme name for this parser.
-    /// </summary>
-    internal string SchemeName
-    {
-        get
-        {
-            return _scheme;
-        }
-    }
+    private const Utf8UriSyntaxFlags SchemeOnlyFlags = Utf8UriSyntaxFlags.MayHavePath;
 
     /// <summary>
     /// Gets the default port for this parser's scheme.
@@ -30,5 +21,14 @@ internal partial class Utf8UriParser
         }
     }
 
-    private const Utf8UriSyntaxFlags SchemeOnlyFlags = Utf8UriSyntaxFlags.MayHavePath;
+    /// <summary>
+    /// Gets the scheme name for this parser.
+    /// </summary>
+    internal string SchemeName
+    {
+        get
+        {
+            return _scheme;
+        }
+    }
 }

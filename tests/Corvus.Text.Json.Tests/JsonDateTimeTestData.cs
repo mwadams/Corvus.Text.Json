@@ -7,99 +7,38 @@ namespace Corvus.Text.Json.Tests
 {
     internal class JsonDateTimeTestData
     {
-        // Test string, Argument to DateTime(Offset).Parse(Exact)
-        public static IEnumerable<object[]> ValidISO8601Tests()
+        public static IEnumerable<object[]> DateTimeFractionTrimBaseTests()
         {
-            yield return new object[] { "\"0997-07-16\"", "0997-07-16" };
-            yield return new object[] { "\"1997-07-16\"", "1997-07-16" };
-            yield return new object[] { "\"1997-07-16T19:20\"", "1997-07-16T19:20" };
-            yield return new object[] { "\"1997-07-16T19:20:30\"", "1997-07-16T19:20:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.45\"", "1997-07-16T19:20:30.45" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555\"", "1997-07-16T19:20:30.4555555" };
-
-            // Test fractions.
-            yield return new object[] { "\"1997-07-16T19:20:30.0\"", "1997-07-16T19:20:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.000\"", "1997-07-16T19:20:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.0000000\"", "1997-07-16T19:20:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.01\"", "1997-07-16T19:20:30.01" };
-            yield return new object[] { "\"1997-07-16T19:20:30.0001\"", "1997-07-16T19:20:30.0001" };
-            yield return new object[] { "\"1997-07-16T19:20:30.0000001\"", "1997-07-16T19:20:30.0000001" };
-            yield return new object[] { "\"1997-07-16T19:20:30.0000323\"", "1997-07-16T19:20:30.0000323" };
-            yield return new object[] { "\"1997-07-16T19:20:30.1\"", "1997-07-16T19:20:30.1" };
-            yield return new object[] { "\"1997-07-16T19:20:30.22\"", "1997-07-16T19:20:30.22" };
-            yield return new object[] { "\"1997-07-16T19:20:30.333\"", "1997-07-16T19:20:30.333" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4444\"", "1997-07-16T19:20:30.4444" };
-            yield return new object[] { "\"1997-07-16T19:20:30.55555\"", "1997-07-16T19:20:30.55555" };
-            yield return new object[] { "\"1997-07-16T19:20:30.666666\"", "1997-07-16T19:20:30.666666" };
-            yield return new object[] { "\"1997-07-16T19:20:30.7777777\"", "1997-07-16T19:20:30.7777777" };
-            yield return new object[] { "\"1997-07-16T19:20:30.1000000\"", "1997-07-16T19:20:30.1" };
-            yield return new object[] { "\"1997-07-16T19:20:30.2200000\"", "1997-07-16T19:20:30.22" };
-            yield return new object[] { "\"1997-07-16T19:20:30.3330000\"", "1997-07-16T19:20:30.333" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4444000\"", "1997-07-16T19:20:30.4444" };
-            yield return new object[] { "\"1997-07-16T19:20:30.5555500\"", "1997-07-16T19:20:30.55555" };
-            yield return new object[] { "\"1997-07-16T19:20:30.6666660\"", "1997-07-16T19:20:30.666666" };
-
-            // Test fraction truncation.
-            yield return new object[] { "\"1997-07-16T19:20:30.00000001\"", "1997-07-16T19:20:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.000000001\"", "1997-07-16T19:20:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.77777770\"", "1997-07-16T19:20:30.7777777" };
-            yield return new object[] { "\"1997-07-16T19:20:30.777777700\"", "1997-07-16T19:20:30.7777777" };
-            yield return new object[] { "\"1997-07-16T19:20:30.45555554\"", "1997-07-16T19:20:30.45555554" };
-            // We expect the parser to truncate. `DateTime(Offset).Parse` will round up to 7dp in these cases,
-            // so we pass a string representing the Datetime(Offset) we expect to the `Parse` method.
-            yield return new object[] { "\"1997-07-16T19:20:30.45555555\"", "1997-07-16T19:20:30.4555555" };
-            yield return new object[] { "\"1997-07-16T19:20:30.455555555\"", "1997-07-16T19:20:30.4555555" };
-            yield return new object[] { "\"1997-07-16T19:20:30.0000000000000\"", "1997-07-16T19:20:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.00000000000001\"", "1997-07-16T19:20:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555555\"", "1997-07-16T19:20:30.4555555" };
-            yield return new object[] { "\"1997-07-16T19:20:30.45555555555\"", "1997-07-16T19:20:30.4555555" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555555555555\"", "1997-07-16T19:20:30.4555555" };
-
-            // Test Non-UTC timezone designator (TZD).
-            yield return new object[] { "\"1997-07-16T19:20+01:00\"", "1997-07-16T19:20+01:00" };
-            yield return new object[] { "\"1997-07-16T19:20-01:00\"", "1997-07-16T19:20-01:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30+01:00\"", "1997-07-16T19:20:30+01:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30-01:00\"", "1997-07-16T19:20:30-01:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555+01:00\"", "1997-07-16T19:20:30.4555555+01:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555-01:00\"", "1997-07-16T19:20:30.4555555-01:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555+04:30\"", "1997-07-16T19:20:30.4555555+04:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555-04:30\"", "1997-07-16T19:20:30.4555555-04:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555555555555+01:30\"", "1997-07-16T19:20:30.4555555+01:30" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555555555555+01\"", "1997-07-16T19:20:30.4555555+01:00" };
-            // Test Non-UTC TZD without minute.
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555+01\"", "1997-07-16T19:20:30.4555555+01:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555-01\"", "1997-07-16T19:20:30.4555555-01:00" };
-            // Test Non-UTC TZD with max UTC offset hour.
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555+14:00\"", "1997-07-16T19:20:30.4555555+14:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555-14:00\"", "1997-07-16T19:20:30.4555555-14:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555+14\"", "1997-07-16T19:20:30.4555555+14:00" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555-14\"", "1997-07-16T19:20:30.4555555-14:00" };
-            // Test February 29 on a leap year
-            yield return new object[] { "\"2020-02-29T19:20:30.4555555+10:00\"", "2020-02-29T19:20:30.4555555+10:00" };
-
-            // Hex string
-            yield return new object[] { "\"\\u0031\\u0039\\u0039\\u0037\\u002d\\u0030\\u0037\\u002d\\u0031\\u0036\\u0054\\u0031\\u0039\\u003a\\u0032\\u0030\\u003a\\u0033\\u0030\\u002e\\u0034\\u0035\\u0035\\u0035\\u0035\\u0035\\u0035\"", "1997-07-16T19:20:30.4555555" };
-
-            // Mix of hex and plain string
-            yield return new object[] { "\"1997\\u002d07\\u002d16T19:20:30\\u002e4555\\u003555+14\"", "1997-07-16T19:20:30.4555555+14:00" };
+            yield return new object[] { "2019-04-24T14:50:17.0000000", "2019-04-24T14:50:17" };
+            yield return new object[] { "2019-04-24T14:50:17.1000000", "2019-04-24T14:50:17.1" };
+            yield return new object[] { "2019-04-24T14:50:17.1100000", "2019-04-24T14:50:17.11" };
+            yield return new object[] { "2019-04-24T14:50:17.1110000", "2019-04-24T14:50:17.111" };
+            yield return new object[] { "2019-04-24T14:50:17.1111000", "2019-04-24T14:50:17.1111" };
+            yield return new object[] { "2019-04-24T14:50:17.1111100", "2019-04-24T14:50:17.11111" };
+            yield return new object[] { "2019-04-24T14:50:17.1111110", "2019-04-24T14:50:17.111111" };
+            yield return new object[] { "2019-04-24T14:50:17.1111111", "2019-04-24T14:50:17.1111111" };
+            yield return new object[] { "2019-04-24T14:50:17.0000001", "2019-04-24T14:50:17.0000001" };
+            yield return new object[] { "2019-04-24T14:50:17.0000010", "2019-04-24T14:50:17.000001" };
+            yield return new object[] { "2019-04-24T14:50:17.0000100", "2019-04-24T14:50:17.00001" };
+            yield return new object[] { "2019-04-24T14:50:17.0001000", "2019-04-24T14:50:17.0001" };
+            yield return new object[] { "2019-04-24T14:50:17.0010000", "2019-04-24T14:50:17.001" };
+            yield return new object[] { "2019-04-24T14:50:17.0100000", "2019-04-24T14:50:17.01" };
         }
 
-        // UTC TZD tests are separate because `DateTime.Parse` for strings with `Z` TZD will return
-        // a `DateTime` with `DateTimeKind.Local` i.e `+00:00` which does not equal our expected result,
-        // a `DateTime` with `DateTimeKind.Utc` i.e `Z`.
-        // Instead, we need to use `DateTime.ParseExact` which returns a DateTime Utc `DateTimeKind`.
-        //
-        // Test string, Argument to DateTime(Offset).Parse(Exact)
-        public static IEnumerable<object[]> ValidISO8601TestsWithUtcOffset()
+        public static IEnumerable<object[]> DateTimeFractionTrimUtcOffsetTests()
         {
-            yield return new object[] { "\"1997-07-16T19:20Z\"", "1997-07-16T19:20:00.0000000Z" };
-            yield return new object[] { "\"1997-07-16T19:20:30Z\"", "1997-07-16T19:20:30.0000000Z" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555Z\"", "1997-07-16T19:20:30.4555555Z" };
-            yield return new object[] { "\"1997-07-16T19:20:30.455555555Z\"", "1997-07-16T19:20:30.4555555Z" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555555555555Z\"", "1997-07-16T19:20:30.4555555Z" };
-            yield return new object[] { "\"1997-07-16T19:20:30.4555555555000000Z\"", "1997-07-16T19:20:30.4555555Z" };
-            // Hex string
-            yield return new object[] { "\"1\\u003997-07-16T19:2\\u0030:30.4555555Z\"", "1997-07-16T19:20:30.4555555Z" };
+            foreach (object[] test in DateTimeFractionTrimBaseTests())
+            {
+                yield return new object[] { $"{(string)(test[0])}Z", $"{(string)(test[1])}Z" };
+            }
+        }
+
+        public static IEnumerable<object[]> DateTimeOffsetFractionTrimTests()
+        {
+            foreach (object[] test in DateTimeFractionTrimBaseTests())
+            {
+                yield return new object[] { $"{(string)(test[0])}+01:00", $"{(string)(test[1])}+01:00" };
+            }
         }
 
         public static IEnumerable<object[]> InvalidISO8601Tests()
@@ -239,38 +178,99 @@ namespace Corvus.Text.Json.Tests
             yield return new object[] { "\"   1997-07-16   \"" };
         }
 
-        public static IEnumerable<object[]> DateTimeFractionTrimBaseTests()
+        // Test string, Argument to DateTime(Offset).Parse(Exact)
+        public static IEnumerable<object[]> ValidISO8601Tests()
         {
-            yield return new object[] { "2019-04-24T14:50:17.0000000", "2019-04-24T14:50:17" };
-            yield return new object[] { "2019-04-24T14:50:17.1000000", "2019-04-24T14:50:17.1" };
-            yield return new object[] { "2019-04-24T14:50:17.1100000", "2019-04-24T14:50:17.11" };
-            yield return new object[] { "2019-04-24T14:50:17.1110000", "2019-04-24T14:50:17.111" };
-            yield return new object[] { "2019-04-24T14:50:17.1111000", "2019-04-24T14:50:17.1111" };
-            yield return new object[] { "2019-04-24T14:50:17.1111100", "2019-04-24T14:50:17.11111" };
-            yield return new object[] { "2019-04-24T14:50:17.1111110", "2019-04-24T14:50:17.111111" };
-            yield return new object[] { "2019-04-24T14:50:17.1111111", "2019-04-24T14:50:17.1111111" };
-            yield return new object[] { "2019-04-24T14:50:17.0000001", "2019-04-24T14:50:17.0000001" };
-            yield return new object[] { "2019-04-24T14:50:17.0000010", "2019-04-24T14:50:17.000001" };
-            yield return new object[] { "2019-04-24T14:50:17.0000100", "2019-04-24T14:50:17.00001" };
-            yield return new object[] { "2019-04-24T14:50:17.0001000", "2019-04-24T14:50:17.0001" };
-            yield return new object[] { "2019-04-24T14:50:17.0010000", "2019-04-24T14:50:17.001" };
-            yield return new object[] { "2019-04-24T14:50:17.0100000", "2019-04-24T14:50:17.01" };
+            yield return new object[] { "\"0997-07-16\"", "0997-07-16" };
+            yield return new object[] { "\"1997-07-16\"", "1997-07-16" };
+            yield return new object[] { "\"1997-07-16T19:20\"", "1997-07-16T19:20" };
+            yield return new object[] { "\"1997-07-16T19:20:30\"", "1997-07-16T19:20:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.45\"", "1997-07-16T19:20:30.45" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555\"", "1997-07-16T19:20:30.4555555" };
+
+            // Test fractions.
+            yield return new object[] { "\"1997-07-16T19:20:30.0\"", "1997-07-16T19:20:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.000\"", "1997-07-16T19:20:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.0000000\"", "1997-07-16T19:20:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.01\"", "1997-07-16T19:20:30.01" };
+            yield return new object[] { "\"1997-07-16T19:20:30.0001\"", "1997-07-16T19:20:30.0001" };
+            yield return new object[] { "\"1997-07-16T19:20:30.0000001\"", "1997-07-16T19:20:30.0000001" };
+            yield return new object[] { "\"1997-07-16T19:20:30.0000323\"", "1997-07-16T19:20:30.0000323" };
+            yield return new object[] { "\"1997-07-16T19:20:30.1\"", "1997-07-16T19:20:30.1" };
+            yield return new object[] { "\"1997-07-16T19:20:30.22\"", "1997-07-16T19:20:30.22" };
+            yield return new object[] { "\"1997-07-16T19:20:30.333\"", "1997-07-16T19:20:30.333" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4444\"", "1997-07-16T19:20:30.4444" };
+            yield return new object[] { "\"1997-07-16T19:20:30.55555\"", "1997-07-16T19:20:30.55555" };
+            yield return new object[] { "\"1997-07-16T19:20:30.666666\"", "1997-07-16T19:20:30.666666" };
+            yield return new object[] { "\"1997-07-16T19:20:30.7777777\"", "1997-07-16T19:20:30.7777777" };
+            yield return new object[] { "\"1997-07-16T19:20:30.1000000\"", "1997-07-16T19:20:30.1" };
+            yield return new object[] { "\"1997-07-16T19:20:30.2200000\"", "1997-07-16T19:20:30.22" };
+            yield return new object[] { "\"1997-07-16T19:20:30.3330000\"", "1997-07-16T19:20:30.333" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4444000\"", "1997-07-16T19:20:30.4444" };
+            yield return new object[] { "\"1997-07-16T19:20:30.5555500\"", "1997-07-16T19:20:30.55555" };
+            yield return new object[] { "\"1997-07-16T19:20:30.6666660\"", "1997-07-16T19:20:30.666666" };
+
+            // Test fraction truncation.
+            yield return new object[] { "\"1997-07-16T19:20:30.00000001\"", "1997-07-16T19:20:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.000000001\"", "1997-07-16T19:20:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.77777770\"", "1997-07-16T19:20:30.7777777" };
+            yield return new object[] { "\"1997-07-16T19:20:30.777777700\"", "1997-07-16T19:20:30.7777777" };
+            yield return new object[] { "\"1997-07-16T19:20:30.45555554\"", "1997-07-16T19:20:30.45555554" };
+            // We expect the parser to truncate. `DateTime(Offset).Parse` will round up to 7dp in these cases,
+            // so we pass a string representing the Datetime(Offset) we expect to the `Parse` method.
+            yield return new object[] { "\"1997-07-16T19:20:30.45555555\"", "1997-07-16T19:20:30.4555555" };
+            yield return new object[] { "\"1997-07-16T19:20:30.455555555\"", "1997-07-16T19:20:30.4555555" };
+            yield return new object[] { "\"1997-07-16T19:20:30.0000000000000\"", "1997-07-16T19:20:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.00000000000001\"", "1997-07-16T19:20:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555555\"", "1997-07-16T19:20:30.4555555" };
+            yield return new object[] { "\"1997-07-16T19:20:30.45555555555\"", "1997-07-16T19:20:30.4555555" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555555555555\"", "1997-07-16T19:20:30.4555555" };
+
+            // Test Non-UTC timezone designator (TZD).
+            yield return new object[] { "\"1997-07-16T19:20+01:00\"", "1997-07-16T19:20+01:00" };
+            yield return new object[] { "\"1997-07-16T19:20-01:00\"", "1997-07-16T19:20-01:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30+01:00\"", "1997-07-16T19:20:30+01:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30-01:00\"", "1997-07-16T19:20:30-01:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555+01:00\"", "1997-07-16T19:20:30.4555555+01:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555-01:00\"", "1997-07-16T19:20:30.4555555-01:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555+04:30\"", "1997-07-16T19:20:30.4555555+04:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555-04:30\"", "1997-07-16T19:20:30.4555555-04:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555555555555+01:30\"", "1997-07-16T19:20:30.4555555+01:30" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555555555555+01\"", "1997-07-16T19:20:30.4555555+01:00" };
+            // Test Non-UTC TZD without minute.
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555+01\"", "1997-07-16T19:20:30.4555555+01:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555-01\"", "1997-07-16T19:20:30.4555555-01:00" };
+            // Test Non-UTC TZD with max UTC offset hour.
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555+14:00\"", "1997-07-16T19:20:30.4555555+14:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555-14:00\"", "1997-07-16T19:20:30.4555555-14:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555+14\"", "1997-07-16T19:20:30.4555555+14:00" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555-14\"", "1997-07-16T19:20:30.4555555-14:00" };
+            // Test February 29 on a leap year
+            yield return new object[] { "\"2020-02-29T19:20:30.4555555+10:00\"", "2020-02-29T19:20:30.4555555+10:00" };
+
+            // Hex string
+            yield return new object[] { "\"\\u0031\\u0039\\u0039\\u0037\\u002d\\u0030\\u0037\\u002d\\u0031\\u0036\\u0054\\u0031\\u0039\\u003a\\u0032\\u0030\\u003a\\u0033\\u0030\\u002e\\u0034\\u0035\\u0035\\u0035\\u0035\\u0035\\u0035\"", "1997-07-16T19:20:30.4555555" };
+
+            // Mix of hex and plain string
+            yield return new object[] { "\"1997\\u002d07\\u002d16T19:20:30\\u002e4555\\u003555+14\"", "1997-07-16T19:20:30.4555555+14:00" };
         }
 
-        public static IEnumerable<object[]> DateTimeFractionTrimUtcOffsetTests()
+        // UTC TZD tests are separate because `DateTime.Parse` for strings with `Z` TZD will return
+        // a `DateTime` with `DateTimeKind.Local` i.e `+00:00` which does not equal our expected result,
+        // a `DateTime` with `DateTimeKind.Utc` i.e `Z`.
+        // Instead, we need to use `DateTime.ParseExact` which returns a DateTime Utc `DateTimeKind`.
+        //
+        // Test string, Argument to DateTime(Offset).Parse(Exact)
+        public static IEnumerable<object[]> ValidISO8601TestsWithUtcOffset()
         {
-            foreach (object[] test in DateTimeFractionTrimBaseTests())
-            {
-                yield return new object[] { $"{(string)(test[0])}Z", $"{(string)(test[1])}Z" };
-            }
-        }
-
-        public static IEnumerable<object[]> DateTimeOffsetFractionTrimTests()
-        {
-            foreach (object[] test in DateTimeFractionTrimBaseTests())
-            {
-                yield return new object[] { $"{(string)(test[0])}+01:00", $"{(string)(test[1])}+01:00" };
-            }
+            yield return new object[] { "\"1997-07-16T19:20Z\"", "1997-07-16T19:20:00.0000000Z" };
+            yield return new object[] { "\"1997-07-16T19:20:30Z\"", "1997-07-16T19:20:30.0000000Z" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555Z\"", "1997-07-16T19:20:30.4555555Z" };
+            yield return new object[] { "\"1997-07-16T19:20:30.455555555Z\"", "1997-07-16T19:20:30.4555555Z" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555555555555Z\"", "1997-07-16T19:20:30.4555555Z" };
+            yield return new object[] { "\"1997-07-16T19:20:30.4555555555000000Z\"", "1997-07-16T19:20:30.4555555Z" };
+            // Hex string
+            yield return new object[] { "\"1\\u003997-07-16T19:2\\u0030:30.4555555Z\"", "1997-07-16T19:20:30.4555555Z" };
         }
     }
 }

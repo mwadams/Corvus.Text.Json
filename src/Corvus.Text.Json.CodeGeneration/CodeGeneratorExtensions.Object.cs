@@ -52,7 +52,6 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
-
         foreach (TypeDeclaration? type in typeDeclaration.OneOfCompositionTypes().Values.SelectMany(t => t).Select(t => t.ReducedTypeDeclaration().ReducedType))
         {
             if (generator.IsCancellationRequested)
@@ -80,7 +79,6 @@ internal static partial class CodeGeneratorExtensions
                 return generator;
             }
 
-
             string fqdtn = typeDeclaration.FullyQualifiedDotnetTypeName();
             return generator
                 .AppendSeparatorLine()
@@ -107,7 +105,6 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("}");
         }
     }
-
 
     /// <summary>
     /// Append EnumerateObject() method.
@@ -178,6 +175,39 @@ internal static partial class CodeGeneratorExtensions
             .PushIndent()
                 .AppendLineIndent("CheckValidInstance();")
                 .AppendLineIndent("return EnumeratorCreator.CreateObjectEnumerator<", fqdtn, ">(_parent, _idx);")
+            .PopIndent()
+            .AppendLineIndent("}");
+    }
+
+    /// <summary>
+    /// Append GetPropertyCount() method.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the indexers.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendGetPropertyCount(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Object) == 0)
+        {
+            return generator;
+        }
+
+        return generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// Gets the number of properties in the object.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">The value is not an object.</exception>")
+            .AppendLineIndent("public int GetPropertyCount()")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("return _parent.GetPropertyCount(_idx);")
             .PopIndent()
             .AppendLineIndent("}");
     }
@@ -321,7 +351,6 @@ internal static partial class CodeGeneratorExtensions
 
         return generator
             .EndClassStructOrEnumDeclaration();
-
     }
 
     /// <summary>
@@ -413,38 +442,5 @@ internal static partial class CodeGeneratorExtensions
                                 .AppendLineIndent("}")
                             .PopIndent()
                             .AppendLineIndent("}");
-    }
-
-    /// <summary>
-    /// Append GetPropertyCount() method.
-    /// </summary>
-    /// <param name="generator">The code generator.</param>
-    /// <param name="typeDeclaration">The type declaration for which to emit the indexers.</param>
-    /// <returns>A reference to the generator having completed the operation.</returns>
-    public static CodeGenerator AppendGetPropertyCount(this CodeGenerator generator, TypeDeclaration typeDeclaration)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return generator;
-        }
-
-        if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Object) == 0)
-        {
-            return generator;
-        }
-
-        return generator
-            .AppendSeparatorLine()
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// Gets the number of properties in the object.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">The value is not an object.</exception>")
-            .AppendLineIndent("public int GetPropertyCount()")
-            .AppendLineIndent("{")
-            .PushIndent()
-                .AppendLineIndent("CheckValidInstance();")
-                .AppendLineIndent("return _parent.GetPropertyCount(_idx);")
-            .PopIndent()
-            .AppendLineIndent("}");
     }
 }

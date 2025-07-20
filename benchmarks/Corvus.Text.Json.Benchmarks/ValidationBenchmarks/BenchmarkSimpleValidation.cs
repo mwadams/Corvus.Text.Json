@@ -15,6 +15,13 @@ public class BenchmarkSimpleValidation
     private System.Text.Json.JsonDocument? documentA1;
     private Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson.Person>? documentB1;
 
+    [GlobalCleanup]
+    public void CleanUp()
+    {
+        this.documentA1?.Dispose();
+        this.documentB1?.Dispose();
+    }
+
     [GlobalSetup]
     public void Setup()
     {
@@ -28,13 +35,6 @@ public class BenchmarkSimpleValidation
 
         this.documentA1 = System.Text.Json.JsonDocument.Parse(json);
         this.documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson.Person>.Parse(json);
-    }
-
-    [GlobalCleanup]
-    public void CleanUp()
-    {
-        this.documentA1?.Dispose();
-        this.documentB1?.Dispose();
     }
 
     [Benchmark(Baseline = true)]

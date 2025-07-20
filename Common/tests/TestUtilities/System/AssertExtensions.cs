@@ -5,9 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
 #if NET
+
 using System.Runtime.Intrinsics;
+
 #endif
+
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,7 +22,6 @@ namespace System
     public static class AssertExtensions
     {
         private static bool IsNetFramework => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework");
-
 
         /// <summary>
         /// Helper for AOT tests that verifies that the compile succeeds, or throws PlatformNotSupported
@@ -648,12 +651,13 @@ namespace System
                 exception = ex;
             }
 
-            switch(exception)
+            switch (exception)
             {
                 case null:
                     throw ThrowsException.ForNoException(typeof(E));
                 case E ex when (ex.GetType() == typeof(E)):
                     return ex;
+
                 default:
                     throw ThrowsException.ForIncorrectExceptionType(typeof(E), exception);
             }
@@ -673,12 +677,13 @@ namespace System
                 exception = ex;
             }
 
-            switch(exception)
+            switch (exception)
             {
                 case null:
                     throw ThrowsException.ForNoException(typeof(E));
                 case E ex when (ex.GetType() == typeof(E)):
                     return ex;
+
                 default:
                     throw ThrowsException.ForIncorrectExceptionType(typeof(E), exception);
             }
@@ -722,41 +727,43 @@ namespace System
             }
         }
 
-        static unsafe bool IsNegativeZero(float value)
+        private static unsafe bool IsNegativeZero(float value)
         {
             return (*(uint*)(&value)) == 0x80000000;
         }
 
-        static unsafe bool IsPositiveZero(float value)
+        private static unsafe bool IsPositiveZero(float value)
         {
             return (*(uint*)(&value)) == 0x00000000;
         }
 
-        static unsafe bool IsNegativeZero(double value)
+        private static unsafe bool IsNegativeZero(double value)
         {
             return (*(ulong*)(&value)) == 0x8000000000000000;
         }
 
-        static unsafe bool IsPositiveZero(double value)
+        private static unsafe bool IsPositiveZero(double value)
         {
             return (*(ulong*)(&value)) == 0x0000000000000000;
         }
 
 #if NET
-        static unsafe bool IsNegativeZero(Half value)
+
+        private static unsafe bool IsNegativeZero(Half value)
         {
             return (*(ushort*)(&value)) == 0x8000;
         }
 
-        static unsafe bool IsPositiveZero(Half value)
+        private static unsafe bool IsPositiveZero(Half value)
         {
             return (*(ushort*)(&value)) == 0x0000;
         }
+
 #endif
 
         // We have a custom ToString here to ensure that edge cases (specifically +-0.0,
         // but also NaN and +-infinity) are correctly and consistently represented.
-        static string ToStringPadded(float value)
+        private static string ToStringPadded(float value)
         {
             if (float.IsNaN(value))
             {
@@ -784,7 +791,7 @@ namespace System
             }
         }
 
-        static string ToStringPadded(double value)
+        private static string ToStringPadded(double value)
         {
             if (double.IsNaN(value))
             {
@@ -813,7 +820,8 @@ namespace System
         }
 
 #if NET
-        static string ToStringPadded(Half value)
+
+        private static string ToStringPadded(Half value)
         {
             if (Half.IsNaN(value))
             {
@@ -840,6 +848,7 @@ namespace System
                 return $"{value,5:G5}";
             }
         }
+
 #endif
 
         /// <summary>Verifies that two <see cref="double"/> values are equal, within the <paramref name="allowedVariance"/>.</summary>
@@ -1073,6 +1082,7 @@ namespace System
         }
 
 #if NET
+
         /// <summary>Verifies that two <see cref="Half"/> values are equal, within the <paramref name="variance"/>.</summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The value to be compared against</param>
@@ -1187,6 +1197,7 @@ namespace System
                 throw EqualException.ForMismatchedValues(ToStringPadded(expected), ToStringPadded(actual), banner);
             }
         }
+
 #endif
 
         /// <summary>Verifies that two <see cref="double"/> values's binary representations are identical.</summary>
@@ -1235,6 +1246,7 @@ namespace System
         }
 
 #if NET
+
         /// <summary>Verifies that two <see cref="Half"/> values's binary representations are identical.</summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The value to be compared against</param>
@@ -1254,6 +1266,7 @@ namespace System
 
             throw EqualException.ForMismatchedValues(ToStringPadded(expected), ToStringPadded(actual));
         }
+
 #endif
     }
 }

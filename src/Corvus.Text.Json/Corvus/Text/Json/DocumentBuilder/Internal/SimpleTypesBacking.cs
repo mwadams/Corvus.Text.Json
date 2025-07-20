@@ -14,6 +14,10 @@ namespace Corvus.Text.Json.Internal;
 /// </remarks>
 public ref struct SimpleTypesBacking
 {
+    private FixedSizeSimpleTypesBuffer _buffer;
+
+    private int _length;
+
     /// <summary>
     /// Delegate for writing a value to a byte buffer.
     /// </summary>
@@ -22,9 +26,6 @@ public ref struct SimpleTypesBacking
     /// <param name="buffer">The buffer to write to.</param>
     /// <param name="written">The number of bytes written.</param>
     public delegate void Writer<T>(T value, Span<byte> buffer, out int written);
-
-    private FixedSizeSimpleTypesBuffer _buffer;
-    private int _length;
 
     /// <summary>
     /// Initializes the backing with a value using the provided writer delegate.

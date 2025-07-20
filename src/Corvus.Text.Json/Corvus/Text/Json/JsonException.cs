@@ -75,24 +75,14 @@ public class JsonException : Exception
     public JsonException() : base() { }
 
     /// <summary>
-    /// Specifies that 'try' logic should append Path information to the exception message.
-    /// </summary>
-    internal bool AppendPathInformation { get; set; }
-
-    /// <summary>
-    /// Gets the number of lines read so far before the exception (starting at 0).
-    /// </summary>
-    public long? LineNumber { get; internal set; }
-
-    /// <summary>
     /// Gets the number of bytes read within the current line before the exception (starting at 0).
     /// </summary>
     public long? BytePositionInLine { get; internal set; }
 
     /// <summary>
-    /// Gets the path within the JSON where the exception was encountered.
+    /// Gets the number of lines read so far before the exception (starting at 0).
     /// </summary>
-    public string? Path { get; internal set; }
+    public long? LineNumber { get; internal set; }
 
     /// <summary>
     /// Gets a message that describes the current exception.
@@ -104,6 +94,16 @@ public class JsonException : Exception
             return _message ?? base.Message;
         }
     }
+
+    /// <summary>
+    /// Gets the path within the JSON where the exception was encountered.
+    /// </summary>
+    public string? Path { get; internal set; }
+
+    /// <summary>
+    /// Specifies that 'try' logic should append Path information to the exception message.
+    /// </summary>
+    internal bool AppendPathInformation { get; set; }
 
     internal void SetMessage(string? message)
     {

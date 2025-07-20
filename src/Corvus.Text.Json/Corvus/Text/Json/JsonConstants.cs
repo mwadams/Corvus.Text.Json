@@ -115,6 +115,7 @@ internal static partial class JsonConstants
     public const long ArrayPoolMaxSizeBeforeUsingNormalAlloc =
 #if NET
         1024 * 1024 * 1024; // ArrayPool limit increased in .NET 6
+
 #else
         1024 * 1024;
 #endif
@@ -151,8 +152,10 @@ internal static partial class JsonConstants
     public const int DateTimeNumFractionDigits = 7;  // TimeSpan and DateTime formats allow exactly up to many digits for specifying the fraction after the seconds.
     public const int MaxDateTimeFraction = 9_999_999;  // The largest fraction expressible by TimeSpan and DateTime formats
     public const int DateTimeParseNumFractionDigits = 16; // The maximum number of fraction digits the Json DateTime parser allows
+
     public const int MaximumDateTimeOffsetParseLength = (MaximumFormatDateTimeOffsetLength +
         (DateTimeParseNumFractionDigits - DateTimeNumFractionDigits)); // Like StandardFormat 'O' for DateTimeOffset, but allowing 9 additional (up to 16) fraction digits.
+
     public const int MinimumDateTimeParseLength = 10; // YYYY-MM-DD
     public const int MinimumDateTimeOffsetParseLength = 19; // YYYY-MM-DDTHH:MM:SS
     public const int MinimumDateParseLength = 10; // YYYY-MM-DD
@@ -163,6 +166,7 @@ internal static partial class JsonConstants
 
     // Encoding Helpers
     public const char HighSurrogateStart = '\ud800';
+
     public const char HighSurrogateEnd = '\udbff';
     public const char LowSurrogateStart = '\udc00';
     public const char LowSurrogateEnd = '\udfff';
@@ -180,9 +184,9 @@ internal static partial class JsonConstants
 
     // Two space characters is the default indentation.
     public const char DefaultIndentCharacter = ' ';
+
     public const char TabIndentCharacter = '\t';
     public const int DefaultIndentSize = 2;
     public const int MinimumIndentSize = 0;
     public const int MaximumIndentSize = 127; // If this value is changed, the impact on the options masking used in the JsonWriterOptions struct must be checked carefully.
-
 }

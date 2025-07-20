@@ -11,6 +11,17 @@ namespace Corvus.Text.Json.Internal;
 internal class Utf8IriHelper
 {
     /// <summary>
+    /// Determines whether a value is within the specified inclusive range.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <param name="min">The minimum value of the range (inclusive).</param>
+    /// <param name="max">The maximum value of the range (inclusive).</param>
+    /// <returns><see langword="true"/> if the value is within the range; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsInInclusiveRange(uint value, uint min, uint max)
+        => (value - min) <= (max - min);
+
+    /// <summary>
     /// Checks if a Unicode value is within the valid IRI Unicode range.
     /// </summary>
     /// <param name="value">The Unicode value to check.</param>
@@ -32,15 +43,4 @@ internal class Utf8IriHelper
                 && (isQuery || value < 0xF0000);
         }
     }
-
-    /// <summary>
-    /// Determines whether a value is within the specified inclusive range.
-    /// </summary>
-    /// <param name="value">The value to check.</param>
-    /// <param name="min">The minimum value of the range (inclusive).</param>
-    /// <param name="max">The maximum value of the range (inclusive).</param>
-    /// <returns><see langword="true"/> if the value is within the range; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsInInclusiveRange(uint value, uint min, uint max)
-        => (value - min) <= (max - min);
 }

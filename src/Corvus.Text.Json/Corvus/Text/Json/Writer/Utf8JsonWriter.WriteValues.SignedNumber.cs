@@ -53,25 +53,12 @@ public sealed partial class Utf8JsonWriter
         _tokenType = JsonTokenType.Number;
     }
 
-    private void WriteNumberValueMinimized(long value)
+    internal void WriteNumberValueAsString(long value)
     {
-        int maxRequired = JsonConstants.MaximumFormatInt64Length + 1; // Optionally, 1 list separator
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-
-        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
+        Span<byte> utf8Number = stackalloc byte[JsonConstants.MaximumFormatInt64Length];
+        bool result = Utf8Formatter.TryFormat(value, utf8Number, out int bytesWritten);
         Debug.Assert(result);
-        BytesPending += bytesWritten;
+        WriteNumberValueAsStringUnescaped(utf8Number.Slice(0, bytesWritten));
     }
 
     private void WriteNumberValueIndented(long value)
@@ -108,11 +95,24 @@ public sealed partial class Utf8JsonWriter
         BytesPending += bytesWritten;
     }
 
-    internal void WriteNumberValueAsString(long value)
+    private void WriteNumberValueMinimized(long value)
     {
-        Span<byte> utf8Number = stackalloc byte[JsonConstants.MaximumFormatInt64Length];
-        bool result = Utf8Formatter.TryFormat(value, utf8Number, out int bytesWritten);
+        int maxRequired = JsonConstants.MaximumFormatInt64Length + 1; // Optionally, 1 list separator
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
+        }
+
+        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
         Debug.Assert(result);
-        WriteNumberValueAsStringUnescaped(utf8Number.Slice(0, bytesWritten));
+        BytesPending += bytesWritten;
     }
 }

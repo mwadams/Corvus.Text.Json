@@ -18,19 +18,19 @@ public class BenchmarkMatchUri
     private JsonUri _cjsUriElement;
     private ParsedJsonDocument<JsonElement>? _ctjUri;
 
+    [GlobalCleanup]
+    public void GlobalCleanup()
+    {
+        _cjsUri?.Dispose();
+        _ctjUri?.Dispose();
+    }
+
     [GlobalSetup]
     public void GlobalSetup()
     {
         _cjsUri = System.Text.Json.JsonDocument.Parse("\"http://foo.bar/?q=Test%20URL-encoded%20stuff\"");
         _ctjUri = ParsedJsonDocument<JsonElement>.Parse("\"http://foo.bar/?q=Test%20URL-encoded%20stuff\"");
         _cjsUriElement = JsonUri.FromJson(_cjsUri.RootElement);
-    }
-
-    [GlobalCleanup]
-    public void GlobalCleanup()
-    {
-        _cjsUri?.Dispose();
-        _ctjUri?.Dispose();
     }
 
     [Benchmark(Baseline = true)]

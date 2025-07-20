@@ -83,27 +83,57 @@ public sealed partial class IdnMapping
         return GetUnicodeInvariant(ascii, outputBuffer, index, count, out written);
     }
 
-    private bool GetUnicodeInvariant(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, out int written)
+    private static bool ConvertFromUtf32AndInsert(Span<char> outputBuffer, int index, int utf32, ref int written)
     {
-        if (index > 0 || count < ascii.Length)
-        {
-            // We're only using part of the string
-            ascii = ascii.Slice(index, count);
-        }
-        // Convert Punycode to Unicode
-        if (!PunycodeDecode(ascii, outputBuffer, out written))
+        Debug.Assert(index >= 0 && index <= outputBuffer.Length, "[IdnMapping.ConvertFromUtf32AndInsert]Expected index to be within bounds of outputBuffer.");
+        if (!Rune.TryCreate(utf32, out Rune rune))
         {
             written = 0;
             return false;
         }
 
-        // We should not need to assert the round trip rule here
-        ////GetAscii(strUnicode)
-        ////// Output name MUST obey IDNA rules & round trip (casing differences are allowed)
-        ////if (!ascii.Equals(, StringComparison.OrdinalIgnoreCase))
-        ////    throw new ArgumentException(SR.Argument_IdnIllegalName, nameof(ascii));
+        Span<char> buffer = stackalloc char[2]; // Max UTF16 chars per rune
+        int localWritten = rune.EncodeToUtf16(buffer);
+        if (outputBuffer.Length < written + localWritten)
+        {
+            written = 0;
+            return false;
+        }
 
+        // Copy up
+        outputBuffer.Slice(index, written - index).CopyTo(outputBuffer.Slice(index + localWritten));
+        // Insert in the space
+        buffer.Slice(0, localWritten).CopyTo(outputBuffer.Slice(index));
+        written += localWritten;
         return true;
+    }
+
+    // DecodeDigit(cp) returns the numeric value of a basic code */
+    // point (for use in representing integers) in the range 0 to */
+    // c_punycodeBase-1, or <0 if cp is does not represent a value. */
+    private static bool DecodeDigit(char cp, out int decoded)
+    {
+        if (IsAsciiDigit(cp))
+        {
+            decoded = cp - '0' + 26;
+            return true;
+        }
+
+        // Two flavors for case differences
+        if (IsAsciiLetterLower(cp))
+        {
+            decoded = cp - 'a';
+            return true;
+        }
+
+        if (IsAsciiLetterUpper(cp))
+        {
+            decoded = cp - 'A';
+            return true;
+        }
+
+        decoded = -1;
+        return false;
     }
 
     /* PunycodeDecode() converts Punycode to Unicode.  The input is  */
@@ -121,7 +151,6 @@ public sealed partial class IdnMapping
     /* forced to lowercase (if possible).  ASCII code points are      */
     /* output already in the proper case, but their flags will be set */
     /* appropriately so that applying the flags would be harmless.    */
-
     private static bool PunycodeDecode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, out int written)
     {
         written = 0;
@@ -423,58 +452,26 @@ public sealed partial class IdnMapping
         return true;
     }
 
-    private static bool ConvertFromUtf32AndInsert(Span<char> outputBuffer, int index, int utf32, ref int written)
+    private bool GetUnicodeInvariant(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, out int written)
     {
-        Debug.Assert(index >= 0 && index <= outputBuffer.Length, "[IdnMapping.ConvertFromUtf32AndInsert]Expected index to be within bounds of outputBuffer.");
-        if (!Rune.TryCreate(utf32, out Rune rune))
+        if (index > 0 || count < ascii.Length)
+        {
+            // We're only using part of the string
+            ascii = ascii.Slice(index, count);
+        }
+        // Convert Punycode to Unicode
+        if (!PunycodeDecode(ascii, outputBuffer, out written))
         {
             written = 0;
             return false;
         }
 
-        Span<char> buffer = stackalloc char[2]; // Max UTF16 chars per rune
-        int localWritten = rune.EncodeToUtf16(buffer);
-        if (outputBuffer.Length < written + localWritten)
-        {
-            written = 0;
-            return false;
-        }
+        // We should not need to assert the round trip rule here
+        ////GetAscii(strUnicode)
+        ////// Output name MUST obey IDNA rules & round trip (casing differences are allowed)
+        ////if (!ascii.Equals(, StringComparison.OrdinalIgnoreCase))
+        ////    throw new ArgumentException(SR.Argument_IdnIllegalName, nameof(ascii));
 
-        // Copy up
-        outputBuffer.Slice(index, written - index).CopyTo(outputBuffer.Slice(index + localWritten));
-        // Insert in the space
-        buffer.Slice(0, localWritten).CopyTo(outputBuffer.Slice(index));
-        written += localWritten;
         return true;
-    }
-
-
-    // DecodeDigit(cp) returns the numeric value of a basic code */
-    // point (for use in representing integers) in the range 0 to */
-    // c_punycodeBase-1, or <0 if cp is does not represent a value. */
-
-    private static bool DecodeDigit(char cp, out int decoded)
-    {
-        if (IsAsciiDigit(cp))
-        {
-            decoded = cp - '0' + 26;
-            return true;
-        }
-
-        // Two flavors for case differences
-        if (IsAsciiLetterLower(cp))
-        {
-            decoded = cp - 'a';
-            return true;
-        }
-
-        if (IsAsciiLetterUpper(cp))
-        {
-            decoded = cp - 'A';
-            return true;
-        }
-
-        decoded = -1;
-        return false;
     }
 }

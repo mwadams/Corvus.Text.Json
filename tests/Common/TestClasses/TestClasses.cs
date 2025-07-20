@@ -12,6 +12,7 @@ namespace Corvus.Text.Json.Serialization.Tests
     public interface ITestClass
     {
         void Initialize();
+
         void Verify();
     }
 
@@ -96,7 +97,7 @@ namespace Corvus.Text.Json.Serialization.Tests
         public double Two { get; set; }
     }
 
-    public struct SimpleStructWithSimpleClass: ITestClass
+    public struct SimpleStructWithSimpleClass : ITestClass
     {
         public short MyInt32 { get; set; }
         public SimpleTestClass MySimpleClass { get; set; }
@@ -128,6 +129,7 @@ namespace Corvus.Text.Json.Serialization.Tests
     public class TestClassWithNull
     {
         public string? MyString { get; set; }
+
         public static readonly string s_json =
                 @"{" +
                 @"""MyString"" : null" +
@@ -151,12 +153,15 @@ namespace Corvus.Text.Json.Serialization.Tests
         public List<int?>? MyNullableIntList { get; set; } = new List<int?> { 1 };
         public List<object>? MyObjectList { get; set; } = new List<object> { 1 };
         public List<List<object>>? MyListList { get; set; } = new List<List<object>> { new List<object> { 1 } };
+
         public List<Dictionary<string, string>>? MyDictionaryList { get; set; } = new List<Dictionary<string, string>> {
             new Dictionary<string, string> { ["key"] = "value" }
         };
+
         public Dictionary<string, string>? MyStringDictionary { get; set; } = new Dictionary<string, string> { ["key"] = "value" };
         public Dictionary<string, DateTime?>? MyNullableDateTimeDictionary { get; set; } = new Dictionary<string, DateTime?> { ["key"] = new DateTime(1995, 04, 16) };
         public Dictionary<string, object>? MyObjectDictionary { get; set; } = new Dictionary<string, object> { ["key"] = "value" };
+
         public Dictionary<string, Dictionary<string, string>>? MyStringDictionaryDictionary { get; set; } = new Dictionary<string, Dictionary<string, string>>
         {
             ["key"] = new Dictionary<string, string>
@@ -164,9 +169,12 @@ namespace Corvus.Text.Json.Serialization.Tests
                 ["key"] = "value"
             }
         };
-        public Dictionary<string, List<object>>? MyListDictionary { get; set; } = new Dictionary<string, List<object>> {
+
+        public Dictionary<string, List<object>>? MyListDictionary { get; set; } = new Dictionary<string, List<object>>
+        {
             ["key"] = new List<object> { "value" }
         };
+
         public Dictionary<string, Dictionary<string, object>>? MyObjectDictionaryDictionary { get; set; } = new Dictionary<string, Dictionary<string, object>>
         {
             ["key"] = new Dictionary<string, object>
@@ -702,6 +710,7 @@ namespace Corvus.Text.Json.Serialization.Tests
         public int MyInt { get; set; }
         public Dictionary<string, string>? MyDictionary { get; set; }
     }
+
     public class OuterClassHavingPropertiesDefinedAfterClassWithDictionary
     {
         public double MyDouble { get; set; }
@@ -1672,7 +1681,8 @@ namespace Corvus.Text.Json.Serialization.Tests
         public const int MyStringArrayElementStringLength = 50;
     }
 
-    public class EmptyClass { }
+    public class EmptyClass
+    { }
 
     public class BasicPerson : ITestClass
     {
@@ -1885,35 +1895,37 @@ namespace Corvus.Text.Json.Serialization.Tests
         public T Prop { get; set; }
     }
 
-////    public class ConverterForInt32 : JsonConverter<int>
-////    {
-////        public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-////        {
-////            return 25;
-////        }
+    ////    public class ConverterForInt32 : JsonConverter<int>
+    ////    {
+    ////        public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    ////        {
+    ////            return 25;
+    ////        }
 
-////        public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
-////        {
-////            throw new NotImplementedException("Converter was called");
-////        }
+    ////        public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
+    ////        {
+    ////            throw new NotImplementedException("Converter was called");
+    ////        }
 
-////        // In source-gen, internal converters are not used as fallbacks when custom converters don't provide an implementation.
-////#if BUILDING_SOURCE_GENERATOR_TESTS
-////        public override int ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-////            => int.Parse(reader.GetString());
+    ////        // In source-gen, internal converters are not used as fallbacks when custom converters don't provide an implementation.
+    ////#if BUILDING_SOURCE_GENERATOR_TESTS
+    ////        public override int ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    ////            => int.Parse(reader.GetString());
 
-////        public override void WriteAsPropertyName(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
-////            => writer.WritePropertyName(value.ToString());
-////#endif
-////    }
+    ////        public override void WriteAsPropertyName(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
+    ////            => writer.WritePropertyName(value.ToString());
+    ////#endif
+    ////    }
 
     public static class ReflectionExtensions
     {
 #if NET
+
         [return: System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)]
         public static Type WithConstructors(
             [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)]
             this Type type) => type;
+
 #else
         public static Type WithConstructors(this Type type) => type;
 #endif

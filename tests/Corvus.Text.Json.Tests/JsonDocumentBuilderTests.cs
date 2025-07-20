@@ -17,7 +17,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NodaTime;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Corvus.Text.Json.Tests
 {
@@ -172,7 +171,6 @@ namespace Corvus.Text.Json.Tests
                 }
                 sb.Append((string)token["greeting"]);
                 sb.Append((string)token["favoriteFruit"]);
-
             }
             return sb.ToString();
         }
@@ -473,6 +471,7 @@ namespace Corvus.Text.Json.Tests
                         expectedFunc = token => ReadJson400KB(token);
                         actualFunc = element => ReadJson400KB(element);
                         break;
+
                     case TestCaseType.HelloWorld:
                         expectedFunc = token => ReadHelloWorld(token);
                         actualFunc = element => ReadHelloWorld(element);
@@ -3693,7 +3692,6 @@ namespace Corvus.Text.Json.Tests
                     isFinalBlock,
                     state);
             }
-
         }
 
         private static string GetExpectedConcat(TestCaseType testCaseType, string jsonString)
@@ -4185,6 +4183,7 @@ namespace Corvus.Text.Json.Tests
         }
 
 #if NET
+
         [Fact]
         public static void SetItem_Int128_Works()
         {
@@ -4238,6 +4237,7 @@ namespace Corvus.Text.Json.Tests
             root.SetItem(1, value2);
             Assert.Equal(value2, root[1].GetHalf());
         }
+
 #endif
 
         [Fact]
@@ -4474,6 +4474,7 @@ namespace Corvus.Text.Json.Tests
         }
 
 #if NET
+
         [Fact]
         public static void SetItem_Int128_Throws_WhenIndexOutOfBounds()
         {
@@ -4515,6 +4516,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, value));
         }
+
 #endif
 
         [Fact]
@@ -4630,7 +4632,6 @@ namespace Corvus.Text.Json.Tests
             root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
-
 
         [Fact]
         public static void SetProperty_Array_Creator_Works()
@@ -5124,6 +5125,7 @@ namespace Corvus.Text.Json.Tests
         }
 
 #if NET
+
         [Fact]
         public static void SetProperty_Int128_Works()
         {
@@ -5186,6 +5188,7 @@ namespace Corvus.Text.Json.Tests
             root.SetProperty("foo\"bar"u8, (Half)0.0);
             Assert.Equal((Half)0.0, root.GetProperty("foo\"bar").GetHalf());
         }
+
 #endif
 
         [Fact]
@@ -5427,6 +5430,7 @@ namespace Corvus.Text.Json.Tests
         }
 
 #if NET
+
         [Fact]
         public static void SetProperty_Int128_StringPropertyName_Works()
         {
@@ -5489,6 +5493,7 @@ namespace Corvus.Text.Json.Tests
             root.SetProperty("foo\"bar", (Half)0.0);
             Assert.Equal((Half)0.0, root.GetProperty("foo\"bar").GetHalf());
         }
+
 #endif
 
         [Fact]
@@ -5545,7 +5550,6 @@ namespace Corvus.Text.Json.Tests
             root.SetProperty("foo\"bar"u8, "baz"u8);
             Assert.Equal("baz", root.GetProperty("foo\"bar").GetString());
         }
-
 
         [Fact]
         public static void SetProperty_Generic_Works()
@@ -5613,7 +5617,6 @@ namespace Corvus.Text.Json.Tests
             root.SetPropertyNull("foo\"bar");
             Assert.Null(root.GetProperty("foo\"bar").GetString());
         }
-
 
         [Fact]
         public static void SetProperty_JsonElement_Works()
@@ -5799,6 +5802,7 @@ namespace Corvus.Text.Json.Tests
         }
 
 #if NET
+
         [Fact]
         public static void SetProperty_Int128_WithNonAsciiAndEscapedNames_Works()
         {
@@ -5852,6 +5856,7 @@ namespace Corvus.Text.Json.Tests
             root.SetProperty("foo\"bar"u8, value2);
             Assert.Equal(value2, root.GetProperty("foo\"bar").GetHalf());
         }
+
 #endif
 
         [Fact]
@@ -6019,7 +6024,6 @@ namespace Corvus.Text.Json.Tests
             Half[] halfArray = [(Half)1.5, (Half)2.5, (Half)3.5];
 #endif
 
-
             using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
             // Build an array using every method on JsonArrayBuilder
@@ -6096,7 +6100,6 @@ namespace Corvus.Text.Json.Tests
                     arrayBuilder.AddArrayValue(halfArray);
 #endif
 
-
                     arrayBuilder.Add(parsedDoc.RootElement);
                 }));
 
@@ -6138,7 +6141,6 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(ot, root[i++].GetOffsetTime());
             Assert.Equal(ld, root[i++].GetLocalDate());
             Assert.Equal(period, root[i++].GetPeriod());
-
 
             // Nested array
             JsonElement.Mutable nestedArray = root[i++];
@@ -6237,10 +6239,8 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal((Half)3.5, halfArrayElem[2].GetHalf());
 #endif
 
-
             JsonElement.Mutable element = root[i++];
             Assert.Equal(3, element.GetProperty("foo").GetInt32());
-
         }
 
         [Fact]
@@ -6344,7 +6344,6 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(3, root.GetPropertyCount());
             Assert.Equal("{\"name\":\"John Doe\",\"isActive\":true,\"score\":10.3}", root.ToString());
         }
-
 
         [Fact]
         public static void CreateObject_RemoveProperty()
@@ -6840,7 +6839,6 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(ld, root.GetProperty("localdate").GetLocalDate());
             Assert.Equal(period, root.GetProperty("period").GetPeriod());
 
-
             JsonElement.Mutable elementValue = root.GetProperty("elementValue");
             Assert.Equal(3, elementValue.GetProperty("foo").GetInt32());
 
@@ -6941,7 +6939,6 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal((Half)3.5, halfArrayElem[2].GetHalf());
 #endif
         }
-
 
         [Fact]
         public static void SetItem_Array_Creator_Works()

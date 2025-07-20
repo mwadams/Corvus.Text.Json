@@ -5,10 +5,13 @@ using System.Buffers.Text;
 using System.Diagnostics;
 
 #if CORVUS_TEXT_JSON_CODEGENERATION
+
 using Corvus.Text.Json.Internal;
 
-namespace Corvus.Text.Json.CodeGeneration.Internal
+namespace Corvus.Text.Json.CodeGeneration.Internal;
+
 #else
+
 namespace Corvus.Text.Json.Internal;
 #endif
 
@@ -162,15 +165,15 @@ public static partial class JsonElementHelpers
             int firstNonZero = span.IndexOfAnyExcept((byte)'0');
             return firstNonZero < 0 ? span.Length - 1 : firstNonZero - 1;
 #else
-                for (int i = 0; i < span.Length; i++)
+            for (int i = 0; i < span.Length; i++)
+            {
+                if (span[i] != '0')
                 {
-                    if (span[i] != '0')
-                    {
-                        return i - 1;
-                    }
+                    return i - 1;
                 }
+            }
 
-                return span.Length - 1;
+            return span.Length - 1;
 #endif
         }
 
@@ -180,20 +183,20 @@ public static partial class JsonElementHelpers
             int lastNonZero = span.LastIndexOfAnyExcept((byte)'0');
             return lastNonZero == span.Length - 1 ? -1 : lastNonZero + 1;
 #else
-                if (span.IsEmpty)
-                {
-                    return -1;
-                }
+            if (span.IsEmpty)
+            {
+                return -1;
+            }
 
-                for (int i = span.Length - 1; i >= 0; i--)
+            for (int i = span.Length - 1; i >= 0; i--)
+            {
+                if (span[i] != '0')
                 {
-                    if (span[i] != '0')
-                    {
-                        return i == span.Length - 1 ? -1 : i + 1;
-                    }
+                    return i == span.Length - 1 ? -1 : i + 1;
                 }
+            }
 
-                return 0;
+            return 0;
 #endif
         }
     }

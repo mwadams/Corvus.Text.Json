@@ -440,6 +440,7 @@ public ref partial struct Utf8JsonReader
                 {
                     case JsonCommentHandling.Disallow:
                         break;
+
                     case JsonCommentHandling.Allow:
                         if (marker == JsonConstants.Slash)
                         {
@@ -452,6 +453,7 @@ public ref partial struct Utf8JsonReader
                             return true;
                         }
                         break;
+
                     default:
                         Debug.Assert(_readerOptions.CommentHandling == JsonCommentHandling.Skip);
                         if (marker == JsonConstants.Slash)
@@ -666,9 +668,11 @@ public ref partial struct Utf8JsonReader
             case (byte)'t':
                 resource = ExceptionResource.ExpectedTrue;
                 break;
+
             case (byte)'f':
                 resource = ExceptionResource.ExpectedFalse;
                 break;
+
             default:
                 Debug.Assert(firstByte == 'n');
                 resource = ExceptionResource.ExpectedNull;
@@ -1417,7 +1421,6 @@ public ref partial struct Utf8JsonReader
                     break;
                 }
             }
-
         }
         else
         {
@@ -2561,10 +2564,12 @@ public ref partial struct Utf8JsonReader
                         expectSlash = true;
                         _bytePositionInLine += nextIdx;
                         break;
+
                     case JsonConstants.LineFeed:
                         _bytePositionInLine = 0;
                         _lineNumber++;
                         break;
+
                     default:
                         Debug.Assert(marker == JsonConstants.CarriageReturn);
                         _bytePositionInLine = 0;

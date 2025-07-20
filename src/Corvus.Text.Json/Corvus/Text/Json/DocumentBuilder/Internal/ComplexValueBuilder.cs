@@ -326,7 +326,6 @@ public ref struct ComplexValueBuilder
         AddPropertyRawString(propertyName.AsSpan(), value, valueRequiresUnescaping);
     }
 
-
     /// <summary>
     /// Adds a property with a raw string value.
     /// </summary>
@@ -1302,6 +1301,7 @@ public ref struct ComplexValueBuilder
     }
 
 #if NET
+
     /// <summary>
     /// Adds a property with an <see cref="Int128"/> value to the current object.
     /// </summary>
@@ -1421,6 +1421,7 @@ public ref struct ComplexValueBuilder
         _memberCount += 1;
         _rowCount += 2;
     }
+
 #endif
 
     /// <summary>
@@ -1538,6 +1539,7 @@ public ref struct ComplexValueBuilder
     }
 
 #if NET
+
     /// <summary>
     /// Adds a property with an array of <see cref="Int128"/> values to the current object.
     /// </summary>
@@ -1570,6 +1572,7 @@ public ref struct ComplexValueBuilder
     {
         AddPropertyArrayValue(name.AsSpan(), array);
     }
+
 #endif
 
     /// <summary>
@@ -1841,6 +1844,7 @@ public ref struct ComplexValueBuilder
     }
 
 #if NET
+
     /// <summary>
     /// Adds a property with an array of <see cref="Int128"/> values to the current object.
     /// </summary>
@@ -1915,6 +1919,7 @@ public ref struct ComplexValueBuilder
         _memberCount = currentMemberCount + 1;
         _rowCount = currentRowCount + _rowCount + 1;
     }
+
 #endif
 
     /// <summary>
@@ -2208,6 +2213,7 @@ public ref struct ComplexValueBuilder
     }
 
 #if NET
+
     /// <summary>
     /// Adds a property with an array of <see cref="Int128"/> values to the current object, with control over escaping.
     /// </summary>
@@ -2288,6 +2294,7 @@ public ref struct ComplexValueBuilder
         _memberCount = currentMemberCount + 1;
         _rowCount = currentRowCount + _rowCount + 1;
     }
+
 #endif
 
     /// <summary>
@@ -2660,8 +2667,8 @@ public ref struct ComplexValueBuilder
         _rowCount++;
     }
 
-
 #if NET
+
     /// <summary>
     /// Adds an <see cref="Int128"/> item to the current array.
     /// </summary>
@@ -2695,6 +2702,7 @@ public ref struct ComplexValueBuilder
         _memberCount += 1;
         _rowCount++;
     }
+
 #endif
 
     /// <summary>
@@ -2966,6 +2974,7 @@ public ref struct ComplexValueBuilder
     }
 
 #if NET
+
     /// <summary>
     /// Adds an array of <see cref="Int128"/> values as an item to the current array.
     /// </summary>
@@ -3040,6 +3049,7 @@ public ref struct ComplexValueBuilder
         _memberCount = currentMemberCount + 1;
         _rowCount += currentRowCount;
     }
+
 #endif
 
     /// <summary>

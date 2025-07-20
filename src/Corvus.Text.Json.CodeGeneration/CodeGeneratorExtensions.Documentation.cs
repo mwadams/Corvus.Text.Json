@@ -38,12 +38,12 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
-    /// Appends a summary, ensuring that the summary text is correctly formatted.
+    /// Append the text as a code-formatted example.
     /// </summary>
-    /// <param name="generator">The generator to which to append the summary.</param>
-    /// <param name="summaryText">The summary text to append. Multiple lines will be correctly indented.</param>
+    /// <param name="generator">The generator to which to append the example.</param>
+    /// <param name="example">The example to append.</param>
     /// <returns>A reference to the generator having completed the operation.</returns>
-    public static CodeGenerator AppendSummary(this CodeGenerator generator, string summaryText)
+    public static CodeGenerator AppendExample(this CodeGenerator generator, string example)
     {
         if (generator.IsCancellationRequested)
         {
@@ -51,9 +51,42 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator
-            .AppendLineIndent("/// <summary>")
-            .AppendBlockIndentWithPrefix(HttpUtility.HtmlEncode(summaryText), "/// ")
-            .AppendLineIndent("/// </summary>");
+            .AppendLineIndent("/// <example>")
+            .AppendLineIndent("/// <code>")
+            .AppendBlockIndentWithPrefix(HttpUtility.HtmlEncode(example), "/// ")
+            .AppendLineIndent("/// </code>")
+            .AppendLineIndent("/// </example>");
+    }
+
+    /// <summary>
+    /// Append the examples as a code-formatted examples paragraph.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the example.</param>
+    /// <param name="examples">The examples to append.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendExamples(this CodeGenerator generator, string[] examples)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        generator
+            .AppendLineIndent("/// <para>")
+            .AppendLineIndent("/// Examples:");
+
+        foreach (string example in examples)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            generator.AppendExample(example);
+        }
+
+        return generator
+            .AppendLineIndent("/// </para>");
     }
 
     /// <summary>
@@ -95,43 +128,12 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
-    /// Append the examples as a code-formatted examples paragraph.
+    /// Appends a summary, ensuring that the summary text is correctly formatted.
     /// </summary>
-    /// <param name="generator">The generator to which to append the example.</param>
-    /// <param name="examples">The examples to append.</param>
+    /// <param name="generator">The generator to which to append the summary.</param>
+    /// <param name="summaryText">The summary text to append. Multiple lines will be correctly indented.</param>
     /// <returns>A reference to the generator having completed the operation.</returns>
-    public static CodeGenerator AppendExamples(this CodeGenerator generator, string[] examples)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return generator;
-        }
-
-        generator
-            .AppendLineIndent("/// <para>")
-            .AppendLineIndent("/// Examples:");
-
-        foreach (string example in examples)
-        {
-            if (generator.IsCancellationRequested)
-            {
-                return generator;
-            }
-
-            generator.AppendExample(example);
-        }
-
-        return generator
-            .AppendLineIndent("/// </para>");
-    }
-
-    /// <summary>
-    /// Append the text as a code-formatted example.
-    /// </summary>
-    /// <param name="generator">The generator to which to append the example.</param>
-    /// <param name="example">The example to append.</param>
-    /// <returns>A reference to the generator having completed the operation.</returns>
-    public static CodeGenerator AppendExample(this CodeGenerator generator, string example)
+    public static CodeGenerator AppendSummary(this CodeGenerator generator, string summaryText)
     {
         if (generator.IsCancellationRequested)
         {
@@ -139,13 +141,10 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator
-            .AppendLineIndent("/// <example>")
-            .AppendLineIndent("/// <code>")
-            .AppendBlockIndentWithPrefix(HttpUtility.HtmlEncode(example), "/// ")
-            .AppendLineIndent("/// </code>")
-            .AppendLineIndent("/// </example>");
+            .AppendLineIndent("/// <summary>")
+            .AppendBlockIndentWithPrefix(HttpUtility.HtmlEncode(summaryText), "/// ")
+            .AppendLineIndent("/// </summary>");
     }
-
 
     /// <summary>
     /// Append <c>&lt;see cref="[typeName]"/&gt;</c>.

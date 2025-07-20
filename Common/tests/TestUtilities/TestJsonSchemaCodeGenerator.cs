@@ -74,7 +74,7 @@ namespace TestUtilities
                 CancellationToken.None,
                 rootType);
 
-            // Set to false if we don't want to emit the types            
+            // Set to false if we don't want to emit the types
 #if true
             foreach (var item in generatedCode)
             {

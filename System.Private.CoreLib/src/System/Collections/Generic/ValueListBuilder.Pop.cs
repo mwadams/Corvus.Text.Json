@@ -8,7 +8,7 @@ namespace System.Collections.Generic;
 /// <summary>
 /// These public methods are required by RegexWriter.
 /// </summary>
-internal ref partial struct ValueListBuilder<T>
+internal partial struct ValueListBuilder<T>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T Pop()

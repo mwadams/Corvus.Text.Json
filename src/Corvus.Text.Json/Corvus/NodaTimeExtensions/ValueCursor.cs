@@ -77,6 +77,7 @@ internal ref struct ValueCursor
         this.Index <= 0 ? $"^{this.Value}"
             : this.Index >= this.Length ? $"{this.Value}^"
             : this.Value.ToString().Insert(this.Index, "^");
+
 #else
         this.Index <= 0 ? $"^{this.Value.ToString()}"
             : this.Index >= this.Length ? $"{this.Value.ToString()}^"

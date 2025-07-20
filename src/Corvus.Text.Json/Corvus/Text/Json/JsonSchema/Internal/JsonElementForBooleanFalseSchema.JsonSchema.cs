@@ -29,36 +29,6 @@ public readonly partial struct JsonElementForBooleanFalseSchema
     public static class JsonSchema
     {
         /// <summary>
-        /// Evaluates the boolean false schema against the JSON element at the specified index.
-        /// </summary>
-        /// <param name="parentDocument">The parent document containing the JSON element.</param>
-        /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
-        /// <param name="context">The schema evaluation context.</param>
-        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
-        {
-            // You're not allowed to ask about non-value-like entities
-            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
-                JsonTokenType.None or
-                JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
-
-            context.EvaluatedBooleanSchema(false);
-        }
-
-        /// <summary>
-        /// Evaluates the boolean false schema against the JSON element at the specified index.
-        /// </summary>
-        /// <param name="parentDocument">The parent document containing the JSON element.</param>
-        /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
-        /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
-        /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
-        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
-        {
-            return false;
-        }
-
-        /// <summary>
         /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation.
         /// </summary>
         /// <typeparam name="T">The type of the instance to which to apply the child context.</typeparam>
@@ -114,6 +84,36 @@ public readonly partial struct JsonElementForBooleanFalseSchema
                     evaluationPath: schemaEvaluationPath,
                     documentEvaluationPath: documentEvaluationPath,
                     providerContext: providerContext);
+        }
+
+        /// <summary>
+        /// Evaluates the boolean false schema against the JSON element at the specified index.
+        /// </summary>
+        /// <param name="parentDocument">The parent document containing the JSON element.</param>
+        /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
+        /// <param name="context">The schema evaluation context.</param>
+        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        {
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            context.EvaluatedBooleanSchema(false);
+        }
+
+        /// <summary>
+        /// Evaluates the boolean false schema against the JSON element at the specified index.
+        /// </summary>
+        /// <param name="parentDocument">The parent document containing the JSON element.</param>
+        /// <param name="parentIndex">The index of the JSON element within the parent document.</param>
+        /// <param name="resultsCollector">The optional results collector for schema evaluation.</param>
+        /// <returns><see langword="false"/> because this represents a boolean false schema.</returns>
+        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
+        {
+            return false;
         }
     }
 }

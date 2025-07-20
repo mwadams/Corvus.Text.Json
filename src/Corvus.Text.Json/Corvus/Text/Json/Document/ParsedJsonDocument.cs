@@ -335,7 +335,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
             }
         }
 
-
         ReadOnlyMemory<byte> segment = _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (row.HasComplexChildren)
@@ -706,6 +705,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     }
 
 #if NET
+
     /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out Int128 value)
     {
@@ -716,7 +716,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         CheckExpectedType(JsonTokenType.Number, row.TokenType);
 
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
-
 
         if (Int128.TryParse(segment, out Int128 tmp))
         {
@@ -739,7 +738,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
 
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
 
-
         if (UInt128.TryParse(segment, out UInt128 tmp))
         {
             value = tmp;
@@ -761,7 +759,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
 
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
 
-
         if (Half.TryParse(segment, out Half tmp))
         {
             value = tmp;
@@ -771,6 +768,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         value = default;
         return false;
     }
+
 #endif
 
     /// <inheritdoc />
@@ -836,7 +834,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
 
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
-
 
     bool IJsonDocument.TryGetValue(int index, out OffsetTime value)
     {
@@ -942,10 +939,13 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
             case JsonTokenType.None:
             case JsonTokenType.Null:
                 return string.Empty;
+
             case JsonTokenType.True:
                 return bool.TrueString;
+
             case JsonTokenType.False:
                 return bool.FalseString;
+
             case JsonTokenType.Number:
             case JsonTokenType.StartArray:
             case JsonTokenType.StartObject:
@@ -955,6 +955,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
             }
             case JsonTokenType.String:
                 return GetStringUnsafe(index, JsonTokenType.String)!;
+
             case JsonTokenType.Comment:
             case JsonTokenType.EndArray:
             case JsonTokenType.EndObject:
@@ -1072,7 +1073,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
 #else
         return JsonElementHelpers.CreateInstance<TElement>(element.ParentDocument, element.ParentDocumentIndex);
 #endif
-
     }
 
     /// <inheritdoc />
@@ -1090,25 +1090,31 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
                 writer.WriteStartObject();
                 WriteComplexElement(index, writer);
                 return;
+
             case JsonTokenType.StartArray:
                 writer.WriteStartArray();
                 WriteComplexElement(index, writer);
                 return;
+
             case JsonTokenType.String:
             {
                 using UnescapedUtf8JsonString unescaped = GetUtf8JsonStringUnsafe(index, JsonTokenType.String);
                 writer.WriteStringValue(unescaped.Span);
             }
             return;
+
             case JsonTokenType.Number:
                 writer.WriteNumberValue(_utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex).Span);
                 return;
+
             case JsonTokenType.True:
                 writer.WriteBooleanValue(value: true);
                 return;
+
             case JsonTokenType.False:
                 writer.WriteBooleanValue(value: false);
                 return;
+
             case JsonTokenType.Null:
                 writer.WriteNullValue();
                 return;

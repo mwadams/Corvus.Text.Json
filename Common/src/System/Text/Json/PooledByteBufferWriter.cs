@@ -68,7 +68,9 @@ internal sealed class PooledByteBufferWriter : PipeWriter, IByteBufferWriter
     }
 
 #if NET
+
     internal void WriteToStream(Stream destination) => destination.Write(_buffer.ActiveSpan);
+
 #else
     internal void WriteToStream(Stream destination) => destination.Write(_buffer.ActiveMemory);
 #endif
@@ -88,5 +90,6 @@ internal sealed class PooledByteBufferWriter : PipeWriter, IByteBufferWriter
     // This type is used internally in JsonSerializer to help buffer and flush bytes to the underlying Stream.
     // It's only pretending to be a PipeWriter and doesn't need Complete or CancelPendingFlush for the internal usage.
     public override void CancelPendingFlush() => throw new NotImplementedException();
+
     public override void Complete(Exception? exception = null) => throw new NotImplementedException();
 }

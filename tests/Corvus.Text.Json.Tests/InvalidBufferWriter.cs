@@ -12,14 +12,14 @@ namespace Corvus.Text.Json.Tests
         {
         }
 
-        public Memory<byte> GetMemory(int minimumLength = 0) => new byte[10];
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Span<byte> GetSpan(int minimumLength = 0) => new byte[10];
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Advance(int bytes)
         {
         }
+
+        public Memory<byte> GetMemory(int minimumLength = 0) => new byte[10];
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Span<byte> GetSpan(int minimumLength = 0) => new byte[10];
     }
 }

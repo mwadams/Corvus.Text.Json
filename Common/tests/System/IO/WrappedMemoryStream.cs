@@ -8,10 +8,10 @@ namespace System.IO.Tests
     /// </summary>
     public class WrappedMemoryStream : Stream
     {
-        MemoryStream wrapped;
-        private bool _canWrite;
         private bool _canRead;
         private bool _canSeek;
+        private bool _canWrite;
+        private MemoryStream wrapped;
 
         public WrappedMemoryStream(bool canRead, bool canWrite, bool canSeek) :
             this(canRead, canWrite, canSeek, null)
@@ -83,7 +83,7 @@ namespace System.IO.Tests
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-           return  wrapped.Seek(offset, origin);
+            return wrapped.Seek(offset, origin);
         }
 
         public override void SetLength(long value)

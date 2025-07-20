@@ -54,7 +54,6 @@ public static partial class JsonElementTensorHelpers
         return true;
     }
 
-
     /// <summary>
     /// Tries to copy the array data from the instance to the given array.
     /// </summary>
@@ -486,6 +485,7 @@ public static partial class JsonElementTensorHelpers
     }
 
 #if NET
+
     /// <summary>
     /// Tries to copy the array data from the instance to the given array.
     /// </summary>
@@ -614,6 +614,7 @@ public static partial class JsonElementTensorHelpers
         written = localWritten;
         return true;
     }
+
 #endif
 
     private static bool TryCopyArbitraryRankUnsafe(IJsonDocument parentDocument, int parentDocumentIndex, Span<long> array, int rank, ref int written)
@@ -1313,6 +1314,7 @@ public static partial class JsonElementTensorHelpers
     }
 
 #if NET
+
     private static bool TryCopyArbitraryRankUnsafe(IJsonDocument parentDocument, int parentDocumentIndex, Span<Int128> array, int rank, ref int written)
     {
         int localWritten = written;
@@ -1498,5 +1500,6 @@ public static partial class JsonElementTensorHelpers
 
         return true;
     }
+
 #endif
 }

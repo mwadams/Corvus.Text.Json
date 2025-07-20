@@ -12,14 +12,14 @@ namespace Corvus.Text.Json.Compatibility;
 public readonly struct ValidationContext
 {
     /// <summary>
-    /// Gets a valid context.
-    /// </summary>
-    public static readonly ValidationContext ValidContext = new(true);
-
-    /// <summary>
     /// Gets an invalid context.
     /// </summary>
     public static readonly ValidationContext InvalidContext = new(false);
+
+    /// <summary>
+    /// Gets a valid context.
+    /// </summary>
+    public static readonly ValidationContext ValidContext = new(true);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidationContext"/> struct.
@@ -58,6 +58,18 @@ public readonly struct ValidationContext
     /// </summary>
     internal JsonSchemaResultsCollector? Collector { get; }
 
+    internal static JsonSchemaResultsLevel MapLevel(ValidationLevel level)
+    {
+        return level switch
+        {
+            // Do not allow Flag
+            ValidationLevel.Basic => JsonSchemaResultsLevel.Basic,
+            ValidationLevel.Detailed => JsonSchemaResultsLevel.Detailed,
+            ValidationLevel.Verbose => JsonSchemaResultsLevel.Verbose,
+            _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
+        };
+    }
+
     private static ReadOnlyCollection<ValidationResult> BuildResults(JsonSchemaResultsCollector? collector)
     {
         if (collector is null)
@@ -75,17 +87,5 @@ public readonly struct ValidationContext
         }
 
         return new ReadOnlyCollection<ValidationResult>(result);
-    }
-
-    internal static JsonSchemaResultsLevel MapLevel(ValidationLevel level)
-    {
-        return level switch
-        {
-            // Do not allow Flag
-            ValidationLevel.Basic => JsonSchemaResultsLevel.Basic,
-            ValidationLevel.Detailed => JsonSchemaResultsLevel.Detailed,
-            ValidationLevel.Verbose => JsonSchemaResultsLevel.Verbose,
-            _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
-        };
     }
 }

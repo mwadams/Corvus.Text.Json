@@ -13,6 +13,7 @@ internal enum Utf8UriParsingError
 
     // These first errors indicate that the Uri cannot be absolute, but may be relative.
     BadFormat = 1,
+
     BadScheme = 2,
     BadAuthority = 3,
     EmptyUriString = 4,
@@ -21,11 +22,13 @@ internal enum Utf8UriParsingError
     // All higher error values are fatal, indicating that neither an absolute or relative
     // Uri could be generated.
     SchemeLimit = 5,
+
     SizeLimit = 6,
     MustRootedPath = 7,
 
     // derived class controlled
     BadHostName = 8,
+
     NonEmptyHost = 9, // unix only
     BadPort = 10,
     BadAuthorityTerminator = 11,

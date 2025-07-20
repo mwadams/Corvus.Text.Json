@@ -7,6 +7,7 @@ using CommunityToolkit.HighPerformance.Buffers;
 using Corvus.Text.Json;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
+
 namespace BuildAndWriteBenchmarks;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 

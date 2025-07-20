@@ -56,6 +56,7 @@ public readonly struct Period : IEquatable<Period>
     /// Creates a new period from the given values.
     /// </summary>
 #pragma warning disable SA1611
+
     internal Period(int years, int months, int weeks, int days, long hours, long minutes, long seconds, long milliseconds, long ticks, long nanoseconds)
 #pragma warning restore SA1611
     {

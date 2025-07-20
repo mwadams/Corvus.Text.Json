@@ -11,9 +11,9 @@ namespace System
 {
     public static partial class RetryHelper
     {
+        private static readonly bool s_debug = Environment.GetEnvironmentVariable("DEBUG_RETRYHELPER") == "1";
         private static readonly Func<int, int> s_defaultBackoffFunc = i => Math.Min(i * 100, 60_000);
         private static readonly Predicate<Exception> s_defaultRetryWhenFunc = _ => true;
-        private static readonly bool s_debug = Environment.GetEnvironmentVariable("DEBUG_RETRYHELPER") == "1";
 
         /// <summary>Executes the <paramref name="test"/> action up to a maximum of <paramref name="maxAttempts"/> times.</summary>
         /// <param name="maxAttempts">The maximum number of times to invoke <paramref name="test"/>.</param>

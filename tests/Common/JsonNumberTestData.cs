@@ -54,6 +54,7 @@ namespace Corvus.Text.Json.Tests
             // Make sure we have 1_005 values in each numeric list.
 
             #region generate bytes and sbytes
+
             Bytes = new List<byte>
             {
                 byte.MinValue,
@@ -81,9 +82,11 @@ namespace Corvus.Text.Json.Tests
             {
                 SBytes.Add((sbyte)item);
             }
-            #endregion
+
+            #endregion generate bytes and sbytes
 
             #region generate shorts
+
             Shorts = new List<short>
             {
                 0,
@@ -98,9 +101,11 @@ namespace Corvus.Text.Json.Tests
             {
                 Shorts.Add(BitConverter.ToInt16(b16, i * 2));
             }
-            #endregion
+
+            #endregion generate shorts
 
             #region generate ints
+
             Ints = new List<int>
             {
                 0,
@@ -114,9 +119,11 @@ namespace Corvus.Text.Json.Tests
                 int value = random.Next(int.MinValue, int.MaxValue);
                 Ints.Add(value);
             }
-            #endregion
+
+            #endregion generate ints
 
             #region generate longs
+
             Longs = new List<long>
             {
                 0,
@@ -134,9 +141,11 @@ namespace Corvus.Text.Json.Tests
                     value += int.MaxValue;
                 Longs.Add(value);
             }
-            #endregion
+
+            #endregion generate longs
 
             #region generate ushorts
+
             UShorts = new List<ushort>
             {
                 ushort.MaxValue,
@@ -151,9 +160,11 @@ namespace Corvus.Text.Json.Tests
             {
                 UShorts.Add(BitConverter.ToUInt16(ub16, i * 2));
             }
-            #endregion
+
+            #endregion generate ushorts
 
             #region generate uints
+
             UInts = new List<uint>
             {
                 uint.MinValue,
@@ -169,9 +180,11 @@ namespace Corvus.Text.Json.Tests
                 random.NextBytes(b32);
                 UInts.Add(BitConverter.ToUInt32(b32, 0));
             }
-            #endregion
+
+            #endregion generate uints
 
             #region generate ulongs
+
             ULongs = new List<ulong>
             {
                 ulong.MinValue,
@@ -187,9 +200,11 @@ namespace Corvus.Text.Json.Tests
                 random.NextBytes(b64);
                 ULongs.Add(BitConverter.ToUInt64(b64, 0));
             }
-            #endregion
+
+            #endregion generate ulongs
 
             #region generate doubles
+
             Doubles = new List<double>
             {
                 0.000,
@@ -208,9 +223,11 @@ namespace Corvus.Text.Json.Tests
                 double value = JsonTestHelper.NextDouble(random, 1_000_000, -1_000_000);
                 Doubles.Add(value);
             }
-            #endregion
+
+            #endregion generate doubles
 
             #region generate floats
+
             Floats = new List<float>
             {
                 0.000f,
@@ -224,9 +241,11 @@ namespace Corvus.Text.Json.Tests
                 float value = JsonTestHelper.NextFloat(random);
                 Floats.Add(value);
             }
-            #endregion
+
+            #endregion generate floats
 
             #region generate decimals
+
             Decimals = new List<decimal>
             {
                 (decimal)0.000,
@@ -245,10 +264,13 @@ namespace Corvus.Text.Json.Tests
                 decimal value = JsonTestHelper.NextDecimal(random, 1_000_000, -1_000_000);
                 Decimals.Add(value);
             }
-            #endregion
+
+            #endregion generate decimals
 
 #if NET
+
             #region generate Int128s
+
             Int128s = new List<Int128>
             {
                 0,
@@ -266,9 +288,11 @@ namespace Corvus.Text.Json.Tests
                     value += Int128.MaxValue;
                 Int128s.Add(value);
             }
-            #endregion
+
+            #endregion generate Int128s
 
             #region generate UInt128s
+
             UInt128s = new List<UInt128>
             {
                 (UInt128)ulong.MaxValue + 1,
@@ -280,9 +304,11 @@ namespace Corvus.Text.Json.Tests
                 UInt128 value = (UInt128)random.Next(int.MinValue, int.MaxValue);
                 UInt128s.Add(value);
             }
-            #endregion
+
+            #endregion generate UInt128s
 
             #region generate Halfs
+
             Halfs = new List<Half>
             {
                 (Half)0.000,
@@ -296,10 +322,13 @@ namespace Corvus.Text.Json.Tests
                 Half value = JsonTestHelper.NextHalf(random);
                 Halfs.Add(value);
             }
-            #endregion
+
+            #endregion generate Halfs
+
 #endif
 
             #region generate the json
+
             var builder = new StringBuilder();
             builder.Append("{");
 
@@ -367,7 +396,8 @@ namespace Corvus.Text.Json.Tests
             }
 
             builder.Append("\"intEnd\": 0}");
-            #endregion
+
+            #endregion generate the json
 
             // Make collections of nullable numbers.
             NullableBytes = new List<byte?>(Bytes.Select(num => (byte?)num));

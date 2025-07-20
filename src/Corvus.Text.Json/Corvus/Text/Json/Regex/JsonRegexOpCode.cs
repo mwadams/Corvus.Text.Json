@@ -82,33 +82,45 @@ internal enum JsonRegexOpCode
 
     /// <summary>Beginning-of-line anchor (^ with RegexOptions.Multiline).</summary>
     Bol = 14,
+
     /// <summary>End-of-line anchor ($ with RegexOptions.Multiline).</summary>
     Eol = 15,
+
     /// <summary>Word boundary (\b).</summary>
     Boundary = 16,
+
     /// <summary>Word non-boundary (\B).</summary>
     NonBoundary = 17,
+
     /// <summary>Beginning-of-input anchor (\A).</summary>
     Beginning = 18,
+
     /// <summary>Start-of-input anchor (\G).</summary>
     Start = 19,
+
     /// <summary>End-of-input anchor (\Z).</summary>
     EndZ = 20,
+
     /// <summary>End-of-input anchor (\z).</summary>
     End = 21,
+
     /// <summary>Match nothing (fail).</summary>
     Nothing = 22,
+
     /// <summary>Word boundary (\b with RegexOptions.ECMAScript).</summary>
     ECMABoundary = 41,
+
     /// <summary>Word non-boundary (\B with RegexOptions.ECMAScript).</summary>
     NonECMABoundary = 42,
 
     /// <summary>Atomic loop of the specified character.</summary>
     /// <remarks>Operand 0 is the character. Operand 1 is the max iteration count.</remarks>
     Oneloopatomic = 43,
+
     /// <summary>Atomic loop of a single character other than the one specified.</summary>
     /// <remarks>Operand 0 is the character. Operand 1 is the max iteration count.</remarks>
     Notoneloopatomic = 44,
+
     /// <summary>Atomic loop of a single character matching the specified set</summary>
     /// <remarks>Operand 0 is index into the strings table of the character class description. Operand 1 is the repetition count.</remarks>
     Setloopatomic = 45,

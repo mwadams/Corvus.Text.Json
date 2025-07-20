@@ -37,13 +37,40 @@ public sealed partial class Utf8JsonWriter
 
     private bool HasPartialStringData => _partialStringDataLength != 0;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void Base64EncodeAndWrite(ReadOnlySpan<byte> bytes, Span<byte> output)
+    {
+        Span<byte> destination = output.Slice(BytesPending);
+        OperationStatus status = Base64.EncodeToUtf8(bytes, destination, out int consumed, out int written);
+        Debug.Assert(status == OperationStatus.Done);
+        Debug.Assert(consumed == bytes.Length);
+        BytesPending += written;
+    }
+
     private void ClearPartialStringData() => _partialStringDataLength = 0;
 
-    private void ValidateWritingValue()
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void OnValidateWritingSegmentFailed(EnclosingContainerType currentSegmentEncoding)
     {
-        if (!CanWriteValue)
+        if (IsWritingPartialString)
         {
-            OnValidateWritingValueFailed();
+            ThrowHelper.ThrowInvalidOperationException_CannotMixEncodings(_enclosingContainer, currentSegmentEncoding);
+        }
+
+        Debug.Assert(!HasPartialStringData);
+
+        if (_enclosingContainer == EnclosingContainerType.Object)
+        {
+            Debug.Assert(_tokenType != JsonTokenType.PropertyName);
+            Debug.Assert(_tokenType != JsonTokenType.None && _tokenType != JsonTokenType.StartArray);
+            ThrowInvalidOperationException(ExceptionResource.CannotWriteValueWithinObject);
+        }
+        else
+        {
+            Debug.Assert(_tokenType != JsonTokenType.PropertyName);
+            Debug.Assert(CurrentDepth == 0 && _tokenType != JsonTokenType.None);
+            ThrowInvalidOperationException(ExceptionResource.CannotWriteValueAfterPrimitiveOrClose);
         }
     }
 
@@ -74,6 +101,16 @@ public sealed partial class Utf8JsonWriter
         }
     }
 
+    private void ValidateNotWithinUnfinalizedString()
+    {
+        if (IsWritingPartialString)
+        {
+            ThrowInvalidOperationException(ExceptionResource.CannotWriteWithinString);
+        }
+
+        Debug.Assert(!HasPartialStringData);
+    }
+
     private void ValidateWritingSegment(EnclosingContainerType currentSegmentEncoding)
     {
         Debug.Assert(currentSegmentEncoding is EnclosingContainerType.Utf8StringSequence or EnclosingContainerType.Utf16StringSequence or EnclosingContainerType.Base64StringSequence);
@@ -89,48 +126,11 @@ public sealed partial class Utf8JsonWriter
         }
     }
 
-    [DoesNotReturn]
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private void OnValidateWritingSegmentFailed(EnclosingContainerType currentSegmentEncoding)
+    private void ValidateWritingValue()
     {
-        if (IsWritingPartialString)
+        if (!CanWriteValue)
         {
-            ThrowHelper.ThrowInvalidOperationException_CannotMixEncodings(_enclosingContainer, currentSegmentEncoding);
+            OnValidateWritingValueFailed();
         }
-
-        Debug.Assert(!HasPartialStringData);
-
-        if (_enclosingContainer == EnclosingContainerType.Object)
-        {
-            Debug.Assert(_tokenType != JsonTokenType.PropertyName);
-            Debug.Assert(_tokenType != JsonTokenType.None && _tokenType != JsonTokenType.StartArray);
-            ThrowInvalidOperationException(ExceptionResource.CannotWriteValueWithinObject);
-        }
-        else
-        {
-            Debug.Assert(_tokenType != JsonTokenType.PropertyName);
-            Debug.Assert(CurrentDepth == 0 && _tokenType != JsonTokenType.None);
-            ThrowInvalidOperationException(ExceptionResource.CannotWriteValueAfterPrimitiveOrClose);
-        }
-    }
-
-    private void ValidateNotWithinUnfinalizedString()
-    {
-        if (IsWritingPartialString)
-        {
-            ThrowInvalidOperationException(ExceptionResource.CannotWriteWithinString);
-        }
-
-        Debug.Assert(!HasPartialStringData);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Base64EncodeAndWrite(ReadOnlySpan<byte> bytes, Span<byte> output)
-    {
-        Span<byte> destination = output.Slice(BytesPending);
-        OperationStatus status = Base64.EncodeToUtf8(bytes, destination, out int consumed, out int written);
-        Debug.Assert(status == OperationStatus.Done);
-        Debug.Assert(consumed == bytes.Length);
-        BytesPending += written;
     }
 }

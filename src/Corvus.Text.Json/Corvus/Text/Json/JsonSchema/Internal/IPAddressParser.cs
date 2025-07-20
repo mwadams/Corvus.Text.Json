@@ -21,25 +21,6 @@ internal static class IPAddressParser
     internal const int MaxIPv6StringLength = 65;
 
     /// <summary>
-    /// Determines whether the specified span represents a valid IPv6 address.
-    /// </summary>
-    /// <param name="ipSpan">The span containing the IPv6 address bytes to validate.</param>
-    /// <param name="disallowScope">If true, scope identifiers are not allowed in the IPv6 address.</param>
-    /// <returns>true if the span represents a valid IPv6 address; otherwise, false.</returns>
-    public static unsafe bool IsValidIPV6(ReadOnlySpan<byte> ipSpan, bool disallowScope = true)
-    {
-        fixed (byte* ipStringPtr = &MemoryMarshal.GetReference(ipSpan))
-        {
-            if (ipSpan.IndexOf((byte)':') >= 0)
-            {
-                return IPv6AddressHelper.IsValidStrict(ipStringPtr, 0, ipSpan.Length, disallowScope);
-            }
-
-            return false;
-        }
-    }
-
-    /// <summary>
     /// Determines whether the specified span represents a valid IPv4 address.
     /// </summary>
     /// <param name="ipSpan">The span containing the IPv4 address bytes to validate.</param>
@@ -59,6 +40,25 @@ internal static class IPAddressParser
                 long address = IPv4AddressHelper.ParseNonCanonical(ipStringPtr, 0, ref end, notImplicitFile: true, requireCanonical);
                 return address != IPv4AddressHelper.Invalid && end == ipSpan.Length;
             }
+        }
+    }
+
+    /// <summary>
+    /// Determines whether the specified span represents a valid IPv6 address.
+    /// </summary>
+    /// <param name="ipSpan">The span containing the IPv6 address bytes to validate.</param>
+    /// <param name="disallowScope">If true, scope identifiers are not allowed in the IPv6 address.</param>
+    /// <returns>true if the span represents a valid IPv6 address; otherwise, false.</returns>
+    public static unsafe bool IsValidIPV6(ReadOnlySpan<byte> ipSpan, bool disallowScope = true)
+    {
+        fixed (byte* ipStringPtr = &MemoryMarshal.GetReference(ipSpan))
+        {
+            if (ipSpan.IndexOf((byte)':') >= 0)
+            {
+                return IPv6AddressHelper.IsValidStrict(ipStringPtr, 0, ipSpan.Length, disallowScope);
+            }
+
+            return false;
         }
     }
 }

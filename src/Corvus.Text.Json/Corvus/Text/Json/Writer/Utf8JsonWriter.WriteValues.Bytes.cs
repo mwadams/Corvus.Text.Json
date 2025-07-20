@@ -48,44 +48,6 @@ public sealed partial class Utf8JsonWriter
     }
 
     // TODO: https://github.com/dotnet/runtime/issues/29293
-    private void WriteBase64Minimized(ReadOnlySpan<byte> bytes)
-    {
-        // Base64.GetMaxEncodedToUtf8Length checks to make sure the length is <= int.MaxValue / 4 * 3,
-        // as a length longer than that would overflow int.MaxValue when Base64 encoded. To ensure we
-        // throw an appropriate exception, we check the same condition here first.
-        const int MaxLengthAllowed = int.MaxValue / 4 * 3;
-        if (bytes.Length > MaxLengthAllowed)
-        {
-            ThrowHelper.ThrowArgumentException_ValueTooLarge(bytes.Length);
-        }
-
-        int encodingLength = Base64.GetMaxEncodedToUtf8Length(bytes.Length);
-        Debug.Assert(encodingLength <= int.MaxValue - 3);
-
-        // 2 quotes to surround the base-64 encoded string value.
-        // Optionally, 1 list separator
-        int maxRequired = encodingLength + 3;
-        Debug.Assert((uint)maxRequired <= int.MaxValue);
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-        output[BytesPending++] = JsonConstants.Quote;
-
-        Base64EncodeAndWrite(bytes, output);
-
-        output[BytesPending++] = JsonConstants.Quote;
-    }
-
-    // TODO: https://github.com/dotnet/runtime/issues/29293
     private void WriteBase64Indented(ReadOnlySpan<byte> bytes)
     {
         int indent = Indentation;
@@ -129,6 +91,44 @@ public sealed partial class Utf8JsonWriter
             BytesPending += indent;
         }
 
+        output[BytesPending++] = JsonConstants.Quote;
+
+        Base64EncodeAndWrite(bytes, output);
+
+        output[BytesPending++] = JsonConstants.Quote;
+    }
+
+    // TODO: https://github.com/dotnet/runtime/issues/29293
+    private void WriteBase64Minimized(ReadOnlySpan<byte> bytes)
+    {
+        // Base64.GetMaxEncodedToUtf8Length checks to make sure the length is <= int.MaxValue / 4 * 3,
+        // as a length longer than that would overflow int.MaxValue when Base64 encoded. To ensure we
+        // throw an appropriate exception, we check the same condition here first.
+        const int MaxLengthAllowed = int.MaxValue / 4 * 3;
+        if (bytes.Length > MaxLengthAllowed)
+        {
+            ThrowHelper.ThrowArgumentException_ValueTooLarge(bytes.Length);
+        }
+
+        int encodingLength = Base64.GetMaxEncodedToUtf8Length(bytes.Length);
+        Debug.Assert(encodingLength <= int.MaxValue - 3);
+
+        // 2 quotes to surround the base-64 encoded string value.
+        // Optionally, 1 list separator
+        int maxRequired = encodingLength + 3;
+        Debug.Assert((uint)maxRequired <= int.MaxValue);
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
+        }
         output[BytesPending++] = JsonConstants.Quote;
 
         Base64EncodeAndWrite(bytes, output);

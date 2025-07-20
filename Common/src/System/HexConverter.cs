@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+
 #if SYSTEM_PRIVATE_CORELIB
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
@@ -156,7 +157,6 @@ internal static class HexConverter
             {
                 pos = lengthSubVector128;
             }
-
         } while (true);
     }
 #endif

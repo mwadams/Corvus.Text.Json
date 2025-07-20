@@ -12,10 +12,12 @@ public enum JsonSchemaResultsLevel
     /// Includes basic location and message information about schema matching failures.
     /// </summary>
     Basic,
+
     /// <summary>
     /// Includes detailed location and message information about schema matching failures.
     /// </summary>
     Detailed,
+
     /// <summary>
     /// Includes full location and message information for schema matching.
     /// </summary>

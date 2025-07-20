@@ -12,8 +12,8 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// </summary>
 public sealed class NameCollisionResolverRegistry
 {
-    private readonly HashSet<INameCollisionResolver> registeredBuilders = [];
     private readonly Dictionary<IKeyword, IReadOnlyCollection<INameCollisionResolver>> buildersByKeyword = [];
+    private readonly HashSet<INameCollisionResolver> registeredBuilders = [];
 
     /// <summary>
     /// Gets the registered name heuristics.

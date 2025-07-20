@@ -22,7 +22,7 @@ public class JsonElementNumberTest
     [InlineData(false, "123", "45", -2, false, "123", "46", -2, -1)] // Mixed Integral and Fractional
     [InlineData(false, "123", "45", -2, false, "124", "00", -2, -1)] // Mixed Integral and Fractional
     [InlineData(false, "123", "", 0, false, "1234", "", 0, -1)] // Different Lengths
-    [InlineData(false, "12345", "", -2, false, "123","45", -2, 0)] // Mixed Integral and Fractional with Exponent
+    [InlineData(false, "12345", "", -2, false, "123", "45", -2, 0)] // Mixed Integral and Fractional with Exponent
     [InlineData(true, "1", "23", 2, true, "123", "", 2, 0)] // Negative Numbers with Exponent Adjustment
     [InlineData(true, "123", "", -2, true, "1", "23", -2, 0)] // Negative Numbers with Exponent Adjustment (Negative)
     [InlineData(false, "1", "12345678901234567890", 0, false, "1", "12345678901234567891", 0, -1)] // Very Long Fractional Parts
@@ -184,6 +184,7 @@ public class JsonElementNumberTest
     }
 
 #if NET
+
     [Theory]
     [InlineData("", "", 0, 1123, 0, true)] // Zero is always a multiple of any number, except zero
     [InlineData("", "", 0, 0, 0, false)] // A divisor of zero is never a multiple of any number
@@ -263,8 +264,8 @@ public class JsonElementNumberTest
         // Assert
         Assert.Equal(expected, result);
     }
-#endif
 
+#endif
 
     private static ReadOnlySpan<byte> GetUtf8Bytes(string value)
     {

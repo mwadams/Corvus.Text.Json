@@ -420,6 +420,7 @@ public struct MetadataDb : IDisposable
                     // Skip past the start object of this end object, and into the previous entry
                     currentIndex = GetStartIndex(currentIndex) - DbRow.Size;
                     break;
+
                 case JsonTokenType.StartObject:
                     // This was not skipped by hitting an EndObject/Array,
                     // so it must be the start of a containing object/array
@@ -429,6 +430,7 @@ public struct MetadataDb : IDisposable
                     memberCountToInsert = 0;
                     currentIndex -= DbRow.Size;
                     break;
+
                 case JsonTokenType.StartArray:
                     // This was not skipped by hitting an EndObject/Array,
                     // so it must be the start of a containing object/array
@@ -438,6 +440,7 @@ public struct MetadataDb : IDisposable
                     memberCountToInsert = 0;
                     currentIndex -= DbRow.Size;
                     break;
+
                 default:
                     currentIndex -= DbRow.Size;
                     break;

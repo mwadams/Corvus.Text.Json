@@ -23,23 +23,6 @@ public readonly partial struct JsonElement
     /// </summary>
     public static class JsonSchema
     {
-        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
-        {
-            // You're not allowed to ask about non-value-like entities
-            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
-                JsonTokenType.None or
-                JsonTokenType.EndObject or
-                JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
-
-            context.EvaluatedBooleanSchema(true);
-        }
-
-        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
-        {
-            return true;
-        }
-
         /// <summary>
         /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation.
         /// </summary>
@@ -96,6 +79,23 @@ public readonly partial struct JsonElement
                     evaluationPath: schemaEvaluationPath,
                     documentEvaluationPath: documentEvaluationPath,
                     providerContext: providerContext);
+        }
+
+        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        {
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
+                JsonTokenType.None or
+                JsonTokenType.EndObject or
+                JsonTokenType.EndArray or
+                JsonTokenType.PropertyName);
+
+            context.EvaluatedBooleanSchema(true);
+        }
+
+        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
+        {
+            return true;
         }
     }
 }

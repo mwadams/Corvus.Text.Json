@@ -18,11 +18,14 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
 {
     // Maximum message length is 1024 bytes
     private const int MaxMessageLength = 1024;
+
     private const int ResultHeaderSize = 4;
     private const int MaxPathSegmentLength = 1024;
     private const int MaxUriBaseLength = 4096;
+
     // We assume an initial estimate of 32 bytes per path segment, and 128 bytes per message
     private const int BytesPerPathSegment = 32;
+
     private const int BytesPerMessage = 128;
 
     /// <summary>
@@ -89,11 +92,12 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     // When pushing items onto a path stack, we just append it if it is an append
     // or push the whole path if it is change of base. We push the previous start/end
     // range onto the corresponding stack, and then update the _currentXYZPathRange.
-    ValueStack<ValueRange> _evaluationPathStack;
-    ValueStack<ValueRange> _documentEvaluationPathStack;
-    ValueStack<ValueRange> _schemaEvaluationPathStack;
-    ValueStack<ValueRangeWithCommitIndexAndSequenceNumber> _resultStack;
-    ValueStack<ValueRange> _committedResultStack;
+    private ValueStack<ValueRange> _evaluationPathStack;
+
+    private ValueStack<ValueRange> _documentEvaluationPathStack;
+    private ValueStack<ValueRange> _schemaEvaluationPathStack;
+    private ValueStack<ValueRangeWithCommitIndexAndSequenceNumber> _resultStack;
+    private ValueStack<ValueRange> _committedResultStack;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonSchemaResultsCollector"/> class.
@@ -132,7 +136,6 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
         _resultStack = new ValueStack<ValueRangeWithCommitIndexAndSequenceNumber>(JsonDocumentOptions.DefaultMaxDepth);
         _committedResultStack = new ValueStack<ValueRange>(JsonDocumentOptions.DefaultMaxDepth);
     }
-
 
     /// <summary>
     /// Creates an instance of a <see cref="JsonSchemaResultsCollector"/> rented from the pool.
@@ -193,14 +196,17 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
         /// Gets the message for this result as a UTF-8 byte span.
         /// </summary>
         public ReadOnlySpan<byte> Message => _collector.GetResultString(_message);
+
         /// <summary>
         /// Gets the evaluation location for this result as a UTF-8 byte span.
         /// </summary>
         public ReadOnlySpan<byte> EvaluationLocation => _collector.GetResultString(_evaluationLocation);
+
         /// <summary>
         /// Gets the schema evaluation location for this result as a UTF-8 byte span.
         /// </summary>
         public ReadOnlySpan<byte> SchemaEvaluationLocation => _collector.GetResultString(_schemaEvaluationLocation);
+
         /// <summary>
         /// Gets the document evaluation location for this result as a UTF-8 byte span.
         /// </summary>
@@ -210,14 +216,17 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
         /// Gets the message for this result as a string.
         /// </summary>
         public string GetMessageText() => JsonReaderHelper.GetTextFromUtf8(Message);
+
         /// <summary>
         /// Gets the evaluation location for this result as a string.
         /// </summary>
         public string GetEvaluationLocationText() => JsonReaderHelper.GetTextFromUtf8(EvaluationLocation);
+
         /// <summary>
         /// Gets the schema evaluation location for this result as a string.
         /// </summary>
         public string GetSchemaEvaluationLocationText() => JsonReaderHelper.GetTextFromUtf8(SchemaEvaluationLocation);
+
         /// <summary>
         /// Gets the document evaluation location for this result as a string.
         /// </summary>
@@ -359,7 +368,6 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
         }
     }
 
-
     internal void Reset(JsonSchemaResultsLevel level, int estimatedCapacity)
     {
         _isDisposed = false;
@@ -392,7 +400,6 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
             ArrayPool<byte>.Shared.Return(_evaluationPath, true);
             _evaluationPath = ArrayPool<byte>.Shared.Rent(pathCapacity);
         }
-
 
         _currentEvaluationPathRange = default;
         _currentSchemaEvaluationPathRange = default;
@@ -451,6 +458,7 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
      * The first string is the result message, the second is the evaluation path,
      * the third is the document evaluation path, and the fourth is the schema evaluation path.
      */
+
     private void WriteResult(bool match, JsonSchemaMessageProvider? messageProvider)
     {
         Debug.Assert(_resultStack.Length != 0, "No parent context.");
@@ -497,7 +505,6 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
         {
             ThrowHelper.ThrowArgumentException_DestinationTooShort();
         }
-
 
         int writtenAndMatch = written | (match ? 0x2000_0000 : 0x1000_0000);
 
@@ -555,7 +562,6 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
         Debug.Assert(resultIndex >= 0 && resultIndex < _committedResultStack.Length, "Invalid result index.");
         ValueRange range = _committedResultStack[resultIndex];
         Debug.Assert(range.Length > 0, "Result range must have a positive length.");
-
 
         int curIndex = range.Start;
 
@@ -720,7 +726,6 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
         _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
     }
 
-
     private void AppendToSchemaEvaluationPath(JsonSchemaPathProvider path)
     {
         if (_currentSchemaEvaluationPathRange.End + MaxPathSegmentLength > _schemaEvaluationPath.Length)
@@ -771,6 +776,7 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
 
         _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
     }
+
     private void AppendParallelDocumentEvaluationPath(int sequenceOffset, JsonSchemaPathProvider path)
     {
         ValueRange parentRange = _documentEvaluationPathStack[^(sequenceOffset + 1)];
@@ -951,7 +957,6 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
 
         _currentEvaluationPathRange = new ValueRange(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.End + written + 1);
     }
-
 
     int IJsonSchemaResultsCollector.BeginChildContext(int parentSequenceNumber, JsonSchemaPathProvider? evaluationPath, JsonSchemaPathProvider? schemaEvaluationPath, JsonSchemaPathProvider? documentEvaluationPath)
     {

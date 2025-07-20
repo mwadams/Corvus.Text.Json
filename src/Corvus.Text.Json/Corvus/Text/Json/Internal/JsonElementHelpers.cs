@@ -3,7 +3,6 @@
 
 using System.Buffers;
 
-
 #if !NET
 using System.Collections.Concurrent;
 #endif
@@ -69,10 +68,13 @@ public static partial class JsonElementHelpers
         {
             case JsonTokenType.None:
                 return JsonValueKind.Undefined;
+
             case JsonTokenType.StartArray:
                 return JsonValueKind.Array;
+
             case JsonTokenType.StartObject:
                 return JsonValueKind.Object;
+
             case JsonTokenType.String:
             case JsonTokenType.Number:
             case JsonTokenType.True:
@@ -81,6 +83,7 @@ public static partial class JsonElementHelpers
                 // This is the offset between the set of literals within JsonValueType and JsonTokenType
                 // Essentially: JsonTokenType.Null - JsonValueType.Null
                 return (JsonValueKind)((byte)tokenType - 4);
+
             default:
                 Debug.Fail($"No mapping for token type {tokenType}");
                 return JsonValueKind.Undefined;

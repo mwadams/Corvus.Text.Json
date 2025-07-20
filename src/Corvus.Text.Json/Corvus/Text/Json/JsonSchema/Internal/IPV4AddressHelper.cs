@@ -14,13 +14,13 @@ internal static partial class IPv4AddressHelper
     /// Represents an invalid IPv4 address parsing result.
     /// </summary>
     internal const long Invalid = -1;
-    private const long MaxIPv4Value = uint.MaxValue; // the native parser cannot handle MaxIPv4Value, only MaxIPv4Value - 1
 
-    private const int Octal = 8;
     private const int Decimal = 10;
     private const int Hex = 16;
+    private const long MaxIPv4Value = uint.MaxValue; // the native parser cannot handle MaxIPv4Value, only MaxIPv4Value - 1
 
     private const int NumberOfLabels = 4;
+    private const int Octal = 8;
 
     /// <summary>
     /// Performs validation on a substring to determine if it contains a valid IPv4 address.
@@ -272,6 +272,7 @@ internal static partial class IPv4AddressHelper
         {
             case 0: // 0xFFFFFFFF
                 return requireCanonical ? Invalid : currentValue;
+
             case 1: // 0xFF.0xFFFFFF
                 Debug.Assert(parts[0] <= 0xFF);
                 if (currentValue > 0xffffff || requireCanonical)
@@ -279,6 +280,7 @@ internal static partial class IPv4AddressHelper
                     return Invalid;
                 }
                 return (parts[0] << 24) | currentValue;
+
             case 2: // 0xFF.0xFF.0xFFFF
                 Debug.Assert(parts[0] <= 0xFF);
                 Debug.Assert(parts[1] <= 0xFF);
@@ -287,6 +289,7 @@ internal static partial class IPv4AddressHelper
                     return Invalid;
                 }
                 return (parts[0] << 24) | (parts[1] << 16) | currentValue;
+
             case 3: // 0xFF.0xFF.0xFF.0xFF
                 Debug.Assert(parts[0] <= 0xFF);
                 Debug.Assert(parts[1] <= 0xFF);
@@ -296,6 +299,7 @@ internal static partial class IPv4AddressHelper
                     return Invalid;
                 }
                 return (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | currentValue;
+
             default:
                 return Invalid;
         }

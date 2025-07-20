@@ -6,12 +6,24 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace System;
 
+//
+// The convention for this enum is using the argument name as the enum name
+//
+internal enum ExceptionArgument
+{
+    ch,
+    culture,
+    index,
+    input,
+    value,
+}
+
 internal static class ThrowHelper
 {
     [DoesNotReturn]
-    internal static void ThrowArgumentOutOfRangeException()
+    internal static void ThrowArgumentException_CannotExtractScalar(ExceptionArgument argument)
     {
-        throw new ArgumentOutOfRangeException();
+        throw GetArgumentException(ExceptionResource.Argument_CannotExtractScalar, argument);
     }
 
     [DoesNotReturn]
@@ -21,9 +33,9 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowArgumentException_CannotExtractScalar(ExceptionArgument argument)
+    internal static void ThrowArgumentNullException(ExceptionArgument argument)
     {
-        throw GetArgumentException(ExceptionResource.Argument_CannotExtractScalar, argument);
+        throw new ArgumentNullException(GetArgumentName(argument));
     }
 
     [DoesNotReturn]
@@ -34,20 +46,15 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowArgumentNullException(ExceptionArgument argument)
+    internal static void ThrowArgumentOutOfRangeException()
     {
-        throw new ArgumentNullException(GetArgumentName(argument));
+        throw new ArgumentOutOfRangeException();
     }
 
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument)
     {
         throw new ArgumentOutOfRangeException(GetArgumentName(argument));
-    }
-
-    private static ArgumentOutOfRangeException GetArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
-    {
-        return new ArgumentOutOfRangeException(GetArgumentName(argument), GetResourceString(resource));
     }
 
     private static ArgumentException GetArgumentException(ExceptionResource resource, ExceptionArgument argument)
@@ -61,19 +68,28 @@ internal static class ThrowHelper
         {
             case ExceptionArgument.ch:
                 return nameof(ExceptionArgument.ch);
+
             case ExceptionArgument.culture:
                 return nameof(ExceptionArgument.culture);
+
             case ExceptionArgument.index:
                 return nameof(ExceptionArgument.index);
+
             case ExceptionArgument.input:
                 return nameof(ExceptionArgument.input);
+
             case ExceptionArgument.value:
                 return nameof(ExceptionArgument.value);
+
             default:
                 Debug.Fail("The enum value is not defined, please check the ExceptionArgument Enum.");
                 return "";
-
         }
+    }
+
+    private static ArgumentOutOfRangeException GetArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+    {
+        return new ArgumentOutOfRangeException(GetArgumentName(argument), GetResourceString(resource));
     }
 
     private static string GetResourceString(ExceptionResource resource)
@@ -82,25 +98,15 @@ internal static class ThrowHelper
         {
             case ExceptionResource.ArgumentOutOfRange_IndexMustBeLess:
                 return SR.ArgumentOutOfRange_IndexMustBeLess;
+
             case ExceptionResource.Argument_CannotExtractScalar:
                 return SR.Argument_CannotExtractScalar;
+
             default:
                 Debug.Fail("The enum value is not defined, please check the ExceptionResource Enum.");
                 return "";
         }
     }
-}
-
-//
-// The convention for this enum is using the argument name as the enum name
-//
-internal enum ExceptionArgument
-{
-    ch,
-    culture,
-    index,
-    input,
-    value,
 }
 
 //

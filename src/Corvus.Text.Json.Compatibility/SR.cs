@@ -26,6 +26,7 @@ namespace Corvus.Text.Json.Compatibility.Resources
 #if CORECLR || LEGACY_GETRESOURCESTRING_USER
         internal
 #else
+
         private
 #endif
         static string GetResourceString(string resourceKey)
@@ -53,6 +54,7 @@ namespace Corvus.Text.Json.Compatibility.Resources
 #if LEGACY_GETRESOURCESTRING_USER
         internal
 #else
+
         private
 #endif
         static string GetResourceString(string resourceKey, string defaultString)

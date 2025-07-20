@@ -16,6 +16,16 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
     private Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.PersonArray>? documentB1;
     private Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson2.PersonArray.Mutable>? documentB2;
     private Corvus.Text.Json.JsonWorkspace? workspace;
+
+    [GlobalCleanup]
+    public void CleanUp()
+    {
+        documentA1?.Dispose();
+        documentB1?.Dispose();
+        documentB2?.Dispose();
+        workspace?.Dispose();
+    }
+
     [GlobalSetup]
     public void Setup()
     {
@@ -35,15 +45,6 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
         documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.PersonArray>.Parse(json);
         workspace = Corvus.Text.Json.JsonWorkspace.Create();
         documentB2 = documentB1.RootElement.CreateDocumentBuilder(workspace);
-    }
-
-    [GlobalCleanup]
-    public void CleanUp()
-    {
-        documentA1?.Dispose();
-        documentB1?.Dispose();
-        documentB2?.Dispose();
-        workspace?.Dispose();
     }
 
     [Benchmark(Baseline = true)]

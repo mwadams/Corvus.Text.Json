@@ -63,6 +63,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     {
         public byte byte0;
     }
+
 #endif
 
     /// <summary>
@@ -79,6 +80,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
 
     // Cache indentation settings from JsonWriterOptions to avoid recomputing them in the hot path.
     private byte _indentByte;
+
     private int _indentLength;
 
     // A length of 1 will emit LF for indented writes, a length of 2 will emit CRLF. Other values are invalid.

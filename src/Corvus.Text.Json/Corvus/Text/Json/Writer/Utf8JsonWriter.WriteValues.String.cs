@@ -80,20 +80,41 @@ public sealed partial class Utf8JsonWriter
         _tokenType = JsonTokenType.String;
     }
 
-    private void WriteStringEscape(ReadOnlySpan<char> value)
+    /// <summary>
+    /// Writes the UTF-8 text value (as a JSON string) as an element of a JSON array.
+    /// </summary>
+    /// <param name="utf8Value">The UTF-8 encoded value to be written as a JSON string element of a JSON array.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the specified value is too large.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if this would result in invalid JSON being written (while validation is enabled).
+    /// </exception>
+    /// <remarks>
+    /// The value is escaped before writing.
+    /// </remarks>
+    public void WriteStringValue(ReadOnlySpan<byte> utf8Value)
     {
-        int valueIdx = JsonWriterHelper.NeedsEscaping(value, _options.Encoder);
+        JsonWriterHelper.ValidateValue(utf8Value);
 
-        Debug.Assert(valueIdx >= -1 && valueIdx < value.Length);
+        WriteStringEscape(utf8Value);
 
-        if (valueIdx != -1)
-        {
-            WriteStringEscapeValue(value, valueIdx);
-        }
-        else
-        {
-            WriteStringByOptions(value);
-        }
+        SetFlagToAddListSeparatorBeforeNextItem();
+        _tokenType = JsonTokenType.String;
+    }
+
+    /// <summary>
+    /// Writes a number as a JSON string. The string value is not escaped.
+    /// </summary>
+    /// <param name="utf8Value"></param>
+    internal void WriteNumberValueAsStringUnescaped(ReadOnlySpan<byte> utf8Value)
+    {
+        // The value has been validated prior to calling this method.
+
+        WriteStringByOptions(utf8Value);
+
+        SetFlagToAddListSeparatorBeforeNextItem();
+        _tokenType = JsonTokenType.String;
     }
 
     private void WriteStringByOptions(ReadOnlySpan<char> value)
@@ -113,31 +134,99 @@ public sealed partial class Utf8JsonWriter
         }
     }
 
-    // TODO: https://github.com/dotnet/runtime/issues/29293
-    private void WriteStringMinimized(ReadOnlySpan<char> escapedValue)
+    private void WriteStringByOptions(ReadOnlySpan<byte> utf8Value)
     {
-        Debug.Assert(escapedValue.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - 3);
-
-        // All ASCII, 2 quotes => escapedValue.Length + 2
-        // Optionally, 1 list separator, and up to 3x growth when transcoding
-        int maxRequired = (escapedValue.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) + 3;
-
-        if (_memory.Length - BytesPending < maxRequired)
+        if (!_options.SkipValidation)
         {
-            Grow(maxRequired);
+            ValidateWritingValue();
         }
 
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
+        if (_options.Indented)
         {
-            output[BytesPending++] = JsonConstants.ListSeparator;
+            WriteStringIndented(utf8Value);
         }
-        output[BytesPending++] = JsonConstants.Quote;
+        else
+        {
+            WriteStringMinimized(utf8Value);
+        }
+    }
 
-        TranscodeAndWrite(escapedValue, output);
+    private void WriteStringEscape(ReadOnlySpan<char> value)
+    {
+        int valueIdx = JsonWriterHelper.NeedsEscaping(value, _options.Encoder);
 
-        output[BytesPending++] = JsonConstants.Quote;
+        Debug.Assert(valueIdx >= -1 && valueIdx < value.Length);
+
+        if (valueIdx != -1)
+        {
+            WriteStringEscapeValue(value, valueIdx);
+        }
+        else
+        {
+            WriteStringByOptions(value);
+        }
+    }
+
+    private void WriteStringEscape(ReadOnlySpan<byte> utf8Value)
+    {
+        int valueIdx = JsonWriterHelper.NeedsEscaping(utf8Value, _options.Encoder);
+
+        Debug.Assert(valueIdx >= -1 && valueIdx < utf8Value.Length);
+
+        if (valueIdx != -1)
+        {
+            WriteStringEscapeValue(utf8Value, valueIdx);
+        }
+        else
+        {
+            WriteStringByOptions(utf8Value);
+        }
+    }
+
+    private void WriteStringEscapeValue(ReadOnlySpan<char> value, int firstEscapeIndexVal)
+    {
+        Debug.Assert(int.MaxValue / JsonConstants.MaxExpansionFactorWhileEscaping >= value.Length);
+        Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < value.Length);
+
+        char[]? valueArray = null;
+
+        int length = JsonWriterHelper.GetMaxEscapedLength(value.Length, firstEscapeIndexVal);
+
+        Span<char> escapedValue = length <= JsonConstants.StackallocCharThreshold ?
+            stackalloc char[JsonConstants.StackallocCharThreshold] :
+            (valueArray = ArrayPool<char>.Shared.Rent(length));
+
+        JsonWriterHelper.EscapeString(value, escapedValue, firstEscapeIndexVal, _options.Encoder, out int written);
+
+        WriteStringByOptions(escapedValue.Slice(0, written));
+
+        if (valueArray != null)
+        {
+            ArrayPool<char>.Shared.Return(valueArray);
+        }
+    }
+
+    private void WriteStringEscapeValue(ReadOnlySpan<byte> utf8Value, int firstEscapeIndexVal)
+    {
+        Debug.Assert(int.MaxValue / JsonConstants.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
+        Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < utf8Value.Length);
+
+        byte[]? valueArray = null;
+
+        int length = JsonWriterHelper.GetMaxEscapedLength(utf8Value.Length, firstEscapeIndexVal);
+
+        Span<byte> escapedValue = length <= JsonConstants.StackallocByteThreshold ?
+            stackalloc byte[JsonConstants.StackallocByteThreshold] :
+            (valueArray = ArrayPool<byte>.Shared.Rent(length));
+
+        JsonWriterHelper.EscapeString(utf8Value, escapedValue, firstEscapeIndexVal, _options.Encoder, out int written);
+
+        WriteStringByOptions(escapedValue.Slice(0, written));
+
+        if (valueArray != null)
+        {
+            ArrayPool<byte>.Shared.Return(valueArray);
+        }
     }
 
     // TODO: https://github.com/dotnet/runtime/issues/29293
@@ -177,121 +266,6 @@ public sealed partial class Utf8JsonWriter
         output[BytesPending++] = JsonConstants.Quote;
 
         TranscodeAndWrite(escapedValue, output);
-
-        output[BytesPending++] = JsonConstants.Quote;
-    }
-
-    private void WriteStringEscapeValue(ReadOnlySpan<char> value, int firstEscapeIndexVal)
-    {
-        Debug.Assert(int.MaxValue / JsonConstants.MaxExpansionFactorWhileEscaping >= value.Length);
-        Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < value.Length);
-
-        char[]? valueArray = null;
-
-        int length = JsonWriterHelper.GetMaxEscapedLength(value.Length, firstEscapeIndexVal);
-
-        Span<char> escapedValue = length <= JsonConstants.StackallocCharThreshold ?
-            stackalloc char[JsonConstants.StackallocCharThreshold] :
-            (valueArray = ArrayPool<char>.Shared.Rent(length));
-
-        JsonWriterHelper.EscapeString(value, escapedValue, firstEscapeIndexVal, _options.Encoder, out int written);
-
-        WriteStringByOptions(escapedValue.Slice(0, written));
-
-        if (valueArray != null)
-        {
-            ArrayPool<char>.Shared.Return(valueArray);
-        }
-    }
-
-    /// <summary>
-    /// Writes the UTF-8 text value (as a JSON string) as an element of a JSON array.
-    /// </summary>
-    /// <param name="utf8Value">The UTF-8 encoded value to be written as a JSON string element of a JSON array.</param>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the specified value is too large.
-    /// </exception>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown if this would result in invalid JSON being written (while validation is enabled).
-    /// </exception>
-    /// <remarks>
-    /// The value is escaped before writing.
-    /// </remarks>
-    public void WriteStringValue(ReadOnlySpan<byte> utf8Value)
-    {
-        JsonWriterHelper.ValidateValue(utf8Value);
-
-        WriteStringEscape(utf8Value);
-
-        SetFlagToAddListSeparatorBeforeNextItem();
-        _tokenType = JsonTokenType.String;
-    }
-
-    ////internal void WriteStringValueUnescaped(ReadOnlySpan<byte> utf8Value)
-    ////{
-    ////    JsonWriterHelper.ValidateValue(utf8Value);
-    ////    WriteStringByOptions(utf8Value);
-    ////    SetFlagToAddListSeparatorBeforeNextItem();
-    ////    _tokenType = JsonTokenType.String;
-    ////}
-
-
-    private void WriteStringEscape(ReadOnlySpan<byte> utf8Value)
-    {
-        int valueIdx = JsonWriterHelper.NeedsEscaping(utf8Value, _options.Encoder);
-
-        Debug.Assert(valueIdx >= -1 && valueIdx < utf8Value.Length);
-
-        if (valueIdx != -1)
-        {
-            WriteStringEscapeValue(utf8Value, valueIdx);
-        }
-        else
-        {
-            WriteStringByOptions(utf8Value);
-        }
-    }
-
-    private void WriteStringByOptions(ReadOnlySpan<byte> utf8Value)
-    {
-        if (!_options.SkipValidation)
-        {
-            ValidateWritingValue();
-        }
-
-        if (_options.Indented)
-        {
-            WriteStringIndented(utf8Value);
-        }
-        else
-        {
-            WriteStringMinimized(utf8Value);
-        }
-    }
-
-    // TODO: https://github.com/dotnet/runtime/issues/29293
-    private void WriteStringMinimized(ReadOnlySpan<byte> escapedValue)
-    {
-        Debug.Assert(escapedValue.Length < int.MaxValue - 3);
-
-        int minRequired = escapedValue.Length + 2; // 2 quotes
-        int maxRequired = minRequired + 1; // Optionally, 1 list separator
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-        output[BytesPending++] = JsonConstants.Quote;
-
-        escapedValue.CopyTo(output.Slice(BytesPending));
-        BytesPending += escapedValue.Length;
 
         output[BytesPending++] = JsonConstants.Quote;
     }
@@ -337,40 +311,64 @@ public sealed partial class Utf8JsonWriter
         output[BytesPending++] = JsonConstants.Quote;
     }
 
-    private void WriteStringEscapeValue(ReadOnlySpan<byte> utf8Value, int firstEscapeIndexVal)
+    // TODO: https://github.com/dotnet/runtime/issues/29293
+    private void WriteStringMinimized(ReadOnlySpan<char> escapedValue)
     {
-        Debug.Assert(int.MaxValue / JsonConstants.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
-        Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < utf8Value.Length);
+        Debug.Assert(escapedValue.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - 3);
 
-        byte[]? valueArray = null;
+        // All ASCII, 2 quotes => escapedValue.Length + 2
+        // Optionally, 1 list separator, and up to 3x growth when transcoding
+        int maxRequired = (escapedValue.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) + 3;
 
-        int length = JsonWriterHelper.GetMaxEscapedLength(utf8Value.Length, firstEscapeIndexVal);
-
-        Span<byte> escapedValue = length <= JsonConstants.StackallocByteThreshold ?
-            stackalloc byte[JsonConstants.StackallocByteThreshold] :
-            (valueArray = ArrayPool<byte>.Shared.Rent(length));
-
-        JsonWriterHelper.EscapeString(utf8Value, escapedValue, firstEscapeIndexVal, _options.Encoder, out int written);
-
-        WriteStringByOptions(escapedValue.Slice(0, written));
-
-        if (valueArray != null)
+        if (_memory.Length - BytesPending < maxRequired)
         {
-            ArrayPool<byte>.Shared.Return(valueArray);
+            Grow(maxRequired);
         }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
+        }
+        output[BytesPending++] = JsonConstants.Quote;
+
+        TranscodeAndWrite(escapedValue, output);
+
+        output[BytesPending++] = JsonConstants.Quote;
     }
 
-    /// <summary>
-    /// Writes a number as a JSON string. The string value is not escaped.
-    /// </summary>
-    /// <param name="utf8Value"></param>
-    internal void WriteNumberValueAsStringUnescaped(ReadOnlySpan<byte> utf8Value)
+    ////internal void WriteStringValueUnescaped(ReadOnlySpan<byte> utf8Value)
+    ////{
+    ////    JsonWriterHelper.ValidateValue(utf8Value);
+    ////    WriteStringByOptions(utf8Value);
+    ////    SetFlagToAddListSeparatorBeforeNextItem();
+    ////    _tokenType = JsonTokenType.String;
+    ////}
+    // TODO: https://github.com/dotnet/runtime/issues/29293
+    private void WriteStringMinimized(ReadOnlySpan<byte> escapedValue)
     {
-        // The value has been validated prior to calling this method.
+        Debug.Assert(escapedValue.Length < int.MaxValue - 3);
 
-        WriteStringByOptions(utf8Value);
+        int minRequired = escapedValue.Length + 2; // 2 quotes
+        int maxRequired = minRequired + 1; // Optionally, 1 list separator
 
-        SetFlagToAddListSeparatorBeforeNextItem();
-        _tokenType = JsonTokenType.String;
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
+        }
+        output[BytesPending++] = JsonConstants.Quote;
+
+        escapedValue.CopyTo(output.Slice(BytesPending));
+        BytesPending += escapedValue.Length;
+
+        output[BytesPending++] = JsonConstants.Quote;
     }
 }

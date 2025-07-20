@@ -10,7 +10,6 @@ namespace Corvus.Text.Json.Tests
 {
     public static class JsonPropertyTests
     {
-
         [Fact]
         public static void CheckByPassingNullWriter()
         {

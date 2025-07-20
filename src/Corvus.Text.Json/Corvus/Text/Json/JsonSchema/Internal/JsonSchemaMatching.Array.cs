@@ -11,32 +11,14 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonSchemaEvaluation
 {
     /// <summary>
-    /// Provides a path provider for array item indices in JSON schema validation.
-    /// </summary>
-    public static readonly JsonSchemaPathProvider<int> ItemIndex = static (index, buffer, out written) => AppendIndex(index, buffer, out written);
-
-    private static bool AppendIndex(int index, Span<byte> buffer, out int written)
-    {
-        if (buffer.Length < 2)
-        {
-            written = 0;
-            return false;
-        }
-
-        if (!Utf8Formatter.TryFormat(index, buffer, out int bytesWritten))
-        {
-            written = 0;
-            return false;
-        }
-
-        written = bytesWritten;
-        return true;
-    }
-
-    /// <summary>
     /// Message provider for ignored "not array type" validation messages.
     /// </summary>
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeArray = static (buffer, out written) => IgnoredNotType("array"u8, buffer, out written);
+
+    /// <summary>
+    /// Provides a path provider for array item indices in JSON schema validation.
+    /// </summary>
+    public static readonly JsonSchemaPathProvider<int> ItemIndex = static (index, buffer, out written) => AppendIndex(index, buffer, out written);
 
     private static readonly JsonSchemaMessageProvider ExpectedTypeArray = static (buffer, out written) => ExpectedType("array"u8, buffer, out written);
 
@@ -100,6 +82,24 @@ public static partial class JsonSchemaEvaluation
         }
 
         written += bytesWritten;
+        return true;
+    }
+
+    private static bool AppendIndex(int index, Span<byte> buffer, out int written)
+    {
+        if (buffer.Length < 2)
+        {
+            written = 0;
+            return false;
+        }
+
+        if (!Utf8Formatter.TryFormat(index, buffer, out int bytesWritten))
+        {
+            written = 0;
+            return false;
+        }
+
+        written = bytesWritten;
         return true;
     }
 }

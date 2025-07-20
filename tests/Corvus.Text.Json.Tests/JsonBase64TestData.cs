@@ -7,16 +7,6 @@ namespace Corvus.Text.Json.Tests
 {
     internal class JsonBase64TestData
     {
-        public static IEnumerable<object[]> ValidBase64Tests()
-        {
-            yield return new object[] { "\"ABA=\"" };
-            yield return new object[] { "\"AB+D\"" };
-            yield return new object[] { "\"ABCD\"" };
-            yield return new object[] { "\"ABC/\"" };
-            yield return new object[] { "\"++++\"" };
-            yield return new object[] { GenerateRandomValidLargeString() };
-        }
-
         public static IEnumerable<object[]> InvalidBase64Tests()
         {
             yield return new object[] { "\"ABA===\"" };
@@ -26,18 +16,14 @@ namespace Corvus.Text.Json.Tests
             yield return new object[] { GenerateRandomInvalidLargeString(includeEscapedCharacter: false) };
         }
 
-        private static string GenerateRandomValidLargeString()
+        public static IEnumerable<object[]> ValidBase64Tests()
         {
-            var random = new Random(42);
-            char[] charArray = new char[502]; // valid Base64 strings must have length divisible by 4 (not including surrounding quotes)
-            charArray[0] = '"';
-            for (int i = 1; i < charArray.Length - 1; i++)
-            {
-                charArray[i] = (char)random.Next('A', 'Z'); // ASCII values (between 65 and 90) that constitute valid base 64 string.
-            }
-            charArray[charArray.Length - 1] = '"';
-            string jsonString = new string(charArray);
-            return jsonString;
+            yield return new object[] { "\"ABA=\"" };
+            yield return new object[] { "\"AB+D\"" };
+            yield return new object[] { "\"ABCD\"" };
+            yield return new object[] { "\"ABC/\"" };
+            yield return new object[] { "\"++++\"" };
+            yield return new object[] { GenerateRandomValidLargeString() };
         }
 
         private static string GenerateRandomInvalidLargeString(bool includeEscapedCharacter)
@@ -56,6 +42,20 @@ namespace Corvus.Text.Json.Tests
                 charArray[257] = '"';
             }
 
+            charArray[charArray.Length - 1] = '"';
+            string jsonString = new string(charArray);
+            return jsonString;
+        }
+
+        private static string GenerateRandomValidLargeString()
+        {
+            var random = new Random(42);
+            char[] charArray = new char[502]; // valid Base64 strings must have length divisible by 4 (not including surrounding quotes)
+            charArray[0] = '"';
+            for (int i = 1; i < charArray.Length - 1; i++)
+            {
+                charArray[i] = (char)random.Next('A', 'Z'); // ASCII values (between 65 and 90) that constitute valid base 64 string.
+            }
             charArray[charArray.Length - 1] = '"';
             string jsonString = new string(charArray);
             return jsonString;

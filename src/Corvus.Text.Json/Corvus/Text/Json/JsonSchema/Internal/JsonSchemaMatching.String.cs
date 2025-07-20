@@ -18,51 +18,54 @@ public static partial class JsonSchemaEvaluation
     /// </summary>
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeString = static (buffer, out written) => IgnoredNotType("string"u8, buffer, out written);
 
-    private static readonly JsonSchemaMessageProvider ExpectedTypeString = static (buffer, out written) => ExpectedType("string"u8, buffer, out written);
-
     private static readonly JsonSchemaMessageProvider ExpectedDate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601Date.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedDateTime = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601OffsetDateTime.AsSpan(), buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedTime = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601OffsetTime.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedDuration = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601Duration.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedEmail = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedEmail.AsSpan(), buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedIdnEmail = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIdnEmail.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedHostname = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedHostname.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedIdnEmail = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIdnEmail.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedIdnHostname = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIdnHostname.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedIPV4 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV4.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedIPV6 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV6.AsSpan(), buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedUuid = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUuid.AsSpan(), buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedUri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUri.AsSpan(), buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedUriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriReference.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedIri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIri.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedIriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIriReference.AsSpan(), buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedUriTemplate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriTemplate.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedJsonPointer.AsSpan(), buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedRelativeJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRelativeJsonPointer.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedRegex = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRegex.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedRelativeJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRelativeJsonPointer.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedTime = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601OffsetTime.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedTypeString = static (buffer, out written) => ExpectedType("string"u8, buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedUri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUri.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedUriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriReference.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedUriTemplate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriTemplate.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedUuid = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUuid.AsSpan(), buffer, out written);
 
     /// <summary>
-    /// Matches a JSON token type against the string type constraint.
+    /// Gets the allowed characters for the local part of an email address.
     /// </summary>
-    /// <param name="tokenType">The JSON token type to validate.</param>
-    /// <param name="typeKeyword">The type keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the token type matches the string type constraint; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchTypeString(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
-    {
-        // Allow property names for strings
-        if (tokenType is not JsonTokenType.String or JsonTokenType.PropertyName)
-        {
-            context.EvaluatedKeyword(false, ExpectedTypeString, typeKeyword);
-            return false;
-        }
-        else
-        {
-            context.EvaluatedKeyword(true, ExpectedTypeString, typeKeyword);
-        }
+    private static ReadOnlySpan<byte> AllowedLocalCharacters => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~"u8;
 
-        return true;
-    }
+    private static ReadOnlySpan<int> DisallowedIdn =>
+            [0x0640, 0x07FA, 0x302E, 0x302F,
+        0x3031, 0x3032, 0x3033, 0x3034,
+        0x3035, 0x303B];
+
+    private static ReadOnlySpan<int> ViramaTable =>
+            [0x094D, 0x09CD, 0x0A4D, 0x0ACD,
+        0x0B4D, 0x0BCD, 0x0C4D, 0x0CCD,
+        0x0D3B, 0x0D3C, 0x0D4D, 0x0DCA,
+        0x0E3A, 0x0EBA, 0x0F84, 0x1039,
+        0x103A, 0x1714, 0x1715, 0x1734,
+        0x17D2, 0x1A60, 0x1B44, 0x1BAA,
+        0x1BAB, 0x1BF2, 0x1BF3, 0x2D7F,
+        0xA806, 0xA82C, 0xA8C4, 0xA953,
+        0xA9C0, 0xAAF6, 0xABED, 0x10A3F,
+        0x11046, 0x11070, 0x1107F, 0x110B9,
+        0x11133, 0x11134, 0x111C0, 0x11235,
+        0x112EA, 0x1134D, 0x11442, 0x114C2,
+        0x115BF, 0x1163F, 0x116B6, 0x1172B,
+        0x11839, 0x1193D, 0x1193E, 0x119E0,
+        0x11A34, 0x11A47, 0x11A99, 0x11C3F,
+        0x11D44, 0x11D45, 0x11D97];
 
     /// <summary>
     /// Validates that a string value conforms to the ISO 8601 date format.
@@ -104,27 +107,6 @@ public static partial class JsonSchemaEvaluation
         return true;
     }
 
-
-    /// <summary>
-    /// Validates that a string value conforms to the ISO 8601 offset time format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid ISO 8601 offset time; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!JsonElementHelpers.TryParseOffsetTime(value, out _))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedTime, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedTime, keyword);
-        return true;
-    }
-
     /// <summary>
     /// Validates that a string value conforms to the ISO 8601 duration format.
     /// </summary>
@@ -146,13 +128,6 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
-    /// Gets the allowed characters for the local part of an email address.
-    /// </summary>
-    private static ReadOnlySpan<byte> AllowedLocalCharacters => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~"u8;
-
-
-
-    /// <summary>
     /// Validates that a string value is a valid email address format.
     /// </summary>
     /// <param name="value">The UTF-8 encoded string value to validate.</param>
@@ -172,177 +147,25 @@ public static partial class JsonSchemaEvaluation
         return true;
     }
 
-
     /// <summary>
-    /// Validates that a string value is a valid email address format.
+    /// Validates that a string value is a valid hostname format.
     /// </summary>
     /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid email address; otherwise, <see langword="false"/>.</returns>
-    internal static bool MatchEmail(ReadOnlySpan<byte> value)
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid hostname; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (value.Length > 320 || value.Length < 3)
+        if (!MatchHostname(value))
         {
-            // The maximum length of an email address is 320 characters (RFC 5321).
+            context.EvaluatedKeyword(false, messageProvider: ExpectedHostname, keyword);
             return false;
         }
 
-        int atIndex = value.IndexOf((byte)'@');
-        if (atIndex <= 0 || atIndex == value.Length - 1)
-        {
-            return false;
-        }
-
-        // Local part
-        ReadOnlySpan<byte> segment = value.Slice(0, atIndex);
-
-        if (!MatchEmailLocalPart(segment))
-        {
-            return false;
-        }
-
-        // Domain part
-        segment = value.Slice(atIndex + 1);
-
-        if (!MatchHostname(segment))
-        {
-            return false;
-        }
-
-        return true;
-
-    }
-
-    private static bool MatchEmailLocalPart(ReadOnlySpan<byte> segment)
-    {
-        if (segment.Length > 64)
-        {
-            return false;
-        }
-
-        // Skip an opening comment
-        if (segment[0] == (byte)'(')
-        {
-            int closeBracket = segment.IndexOf((byte)')');
-            if (closeBracket < 0)
-            {
-                return false;
-            }
-
-            segment = segment.Slice(closeBracket + 1);
-
-            if (segment.Length == 0)
-            {
-                return false;
-            }
-        }
-
-        int lastDot = -1;
-        for (int i = 0; i < segment.Length; i++)
-        {
-            byte c = segment[i];
-            if (c == (byte)'.')
-            {
-                if (i == 0 || i == segment.Length - 1 || lastDot == i - 1)
-                {
-                    // Dot at the start or end, or two dots in a row
-                    return false;
-                }
-
-                lastDot = i;
-            }
-            else if (c == (byte)'(')
-            {
-                // This is an end comment.
-                int closeBracket = segment.IndexOf((byte)')');
-                if (closeBracket < 0 || closeBracket != segment.Length - 1)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-            else if (AllowedLocalCharacters.IndexOf(c) < 0)
-            {
-                // Invalid character in local part
-                return false;
-            }
-        }
-
+        context.EvaluatedKeyword(true, ExpectedHostname, keyword);
         return true;
     }
-
-    private static bool MatchEmailLocalPartUnicode(ReadOnlySpan<byte> segment)
-    {
-        if (segment.Length > 64)
-        {
-            return false;
-        }
-
-        // Skip an opening comment
-        if (segment[0] == (byte)'(')
-        {
-            int closeBracket = segment.IndexOf((byte)')');
-            if (closeBracket < 0)
-            {
-                return false;
-            }
-
-            segment = segment.Slice(closeBracket + 1);
-
-            if (segment.Length == 0)
-            {
-                return false;
-            }
-        }
-
-        int lastDot = -1;
-        for (int i = 0; i < segment.Length; i++)
-        {
-            byte c = segment[i];
-            if (c == (byte)'.')
-            {
-                if (i == 0 || i == segment.Length - 1 || lastDot == i - 1)
-                {
-                    // Dot at the start or end, or two dots in a row
-                    return false;
-                }
-
-                lastDot = i;
-            }
-            else if (c == (byte)'(')
-            {
-                // This is an end comment.
-                int closeBracket = segment.IndexOf((byte)')');
-                if (closeBracket < 0 || closeBracket != segment.Length - 1)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-            else if (AllowedLocalCharacters.IndexOf(c) < 0)
-            {
-                // This could be a unicode character, so let's check
-                Rune.DecodeFromUtf8(segment.Slice(i), out Rune rune, out int bytesConsumed);
-                if (!Rune.IsLetterOrDigit(rune))
-                {
-                    System.Globalization.UnicodeCategory category = Rune.GetUnicodeCategory(rune);
-                    if (i == 0 ||
-                        (category != System.Globalization.UnicodeCategory.SpacingCombiningMark &&
-                         category != System.Globalization.UnicodeCategory.EnclosingMark &&
-                         category != System.Globalization.UnicodeCategory.NonSpacingMark))
-                    {
-                        return false;
-                    }
-                }
-
-                i += bytesConsumed - 1; // Adjust i to account for the bytes consumed by the rune
-            }
-        }
-
-        return true;
-    }
-
 
     /// <summary>
     /// Validates that a string value is a valid internationalized domain name (IDN) email address format.
@@ -361,41 +184,6 @@ public static partial class JsonSchemaEvaluation
         }
 
         context.EvaluatedKeyword(true, ExpectedIdnEmail, keyword);
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid internationalized domain name (IDN) email address format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid IDN email address; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool MatchIdnEmail(ReadOnlySpan<byte> value)
-    {
-        if (value.Length > 320 || value.Length < 3)
-        {
-            // The maximum length of an email address is 320 characters (RFC 5321).
-            return false;
-        }
-
-        int atIndex = value.IndexOf((byte)'@');
-
-        // Local part
-        ReadOnlySpan<byte> segment = value.Slice(0, atIndex);
-
-        if (!MatchEmailLocalPartUnicode(segment))
-        {
-            return false;
-        }
-
-        // Domain part
-        segment = value.Slice(atIndex + 1);
-
-        if (!MatchIdnHostname(segment))
-        {
-            return false;
-        }
-
         return true;
     }
 
@@ -420,137 +208,266 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
-    /// Validates that a string value is a valid internationalized domain name (IDN) hostname format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid IDN hostname; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool MatchIdnHostname(ReadOnlySpan<byte> value)
-    {
-        if (value.Length > 254)
-        {
-            return false;
-        }
-
-        Span<byte> decoded = stackalloc byte[256];
-
-        if (!IdnMapping.Default.GetUnicode(value, decoded, out int written))
-        {
-            return false;
-        }
-
-        scoped ReadOnlySpan<byte> segment = decoded.Slice(0, written);
-
-        return MatchDecodedHostname(segment);
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid hostname format.
+    /// Validates that a string value is a valid IPv4 address format.
     /// </summary>
     /// <param name="value">The UTF-8 encoded string value to validate.</param>
     /// <param name="keyword">The keyword being evaluated.</param>
     /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid hostname; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if the value is a valid IPv4 address; otherwise, <see langword="false"/>.</returns>
     [CLSCompliant(false)]
-    public static bool MatchHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    public static bool MatchIPV4(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!MatchHostname(value))
+        if (!MatchIPV4(value))
         {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedHostname, keyword);
+            context.EvaluatedKeyword(false, messageProvider: ExpectedIPV4, keyword);
             return false;
         }
 
-        context.EvaluatedKeyword(true, ExpectedHostname, keyword);
+        context.EvaluatedKeyword(true, ExpectedIPV4, keyword);
         return true;
     }
 
     /// <summary>
-    /// Validates that a string value is a valid hostname format.
+    /// Validates that a string value is a valid IPv6 address format.
     /// </summary>
     /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid hostname; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool MatchHostname(ReadOnlySpan<byte> value)
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid IPv6 address; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchIPV6(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (value.Length > 253)
+        if (!MatchIPV6(value))
         {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedIPV6, keyword);
             return false;
         }
 
-        Span<byte> decoded = stackalloc byte[256];
-        int i = 0;
-        int characterCount = 0;
-        byte lastAscii = 0;
-        bool decodePunicode = false;
-        while (i < value.Length)
+        context.EvaluatedKeyword(true, ExpectedIPV6, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid IRI; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchIri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchIri(value))
         {
-            if (value[i] > 0x7F)
-            {
-                // This is not ASCII, so give up
-                return false;
-            }
-
-            if (lastAscii == (byte)'-' && value[i] == (byte)'-')
-            {
-                // Look for punicode signature
-
-                if (characterCount != 3 ||
-                    !((value[i - 3] == (byte)'x' || value[i - 3] == (byte)'X') &&
-                      (value[i - 2] == (byte)'n' || value[i - 2] == (byte)'N')))
-                {
-                    // Disallow "--" for non-punicode signature
-                    return false;
-                }
-
-                decodePunicode = true;
-                break;
-            }
-
-            lastAscii = value[i];
-
-            if (lastAscii == (byte)'.')
-            {
-                if (characterCount > 63)
-                {
-                    return false;
-                }
-
-                characterCount = 0;
-                i++;
-                continue;
-            }
-
-            if (!char.IsLetterOrDigit((char)lastAscii) && !(characterCount != 0 && lastAscii == (byte)'-'))
-            {
-                return false;
-            }
-
-            characterCount++;
-            i++;
-        }
-
-        if (decodePunicode)
-        {
-            if (!IdnMapping.Default.GetUnicode(value, decoded, out int written))
-            {
-                return false;
-            }
-
-            scoped ReadOnlySpan<byte> segment = decoded.Slice(0, written);
-
-            return MatchDecodedHostname(segment);
-        }
-
-        if (characterCount > 63)
-        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedIri, keyword);
             return false;
         }
 
-        if (lastAscii == '-')
+        context.EvaluatedKeyword(true, ExpectedIri, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) reference format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid IRI reference; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchIriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchIriReference(value))
         {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedIriReference, keyword);
             return false;
         }
 
+        context.EvaluatedKeyword(true, ExpectedIriReference, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid JSON Pointer format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid JSON Pointer; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchJsonPointer(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedJsonPointer, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedJsonPointer, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid ECMAScript regular expression format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid regex; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchRegex(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchRegex(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedRegex, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedRegex, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid relative JSON Pointer format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid relative JSON Pointer; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchRelativeJsonPointer(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedRelativeJsonPointer, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedRelativeJsonPointer, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value conforms to the ISO 8601 offset time format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid ISO 8601 offset time; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!JsonElementHelpers.TryParseOffsetTime(value, out _))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedTime, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedTime, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Matches a JSON token type against the string type constraint.
+    /// </summary>
+    /// <param name="tokenType">The JSON token type to validate.</param>
+    /// <param name="typeKeyword">The type keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the token type matches the string type constraint; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchTypeString(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
+    {
+        // Allow property names for strings
+        if (tokenType is not JsonTokenType.String or JsonTokenType.PropertyName)
+        {
+            context.EvaluatedKeyword(false, ExpectedTypeString, typeKeyword);
+            return false;
+        }
+        else
+        {
+            context.EvaluatedKeyword(true, ExpectedTypeString, typeKeyword);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid URI format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid URI; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchUri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchUri(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedUri, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedUri, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid URI reference format (absolute or relative URI).
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid URI reference; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchUriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchUriReference(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedUriReference, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedUriReference, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid URI template format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid URI template; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchUriTemplate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchUriTemplate(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedUriTemplate, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedUriTemplate, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid UUID format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid UUID; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchUuid(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchUuid(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedUuid, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedUuid, keyword);
         return true;
     }
 
@@ -722,72 +639,192 @@ public static partial class JsonSchemaEvaluation
         return true;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsHiraganaKatakanaOrHanNotMiddleDot(int value)
-    {
-        // Don't allow middle dot
-        if (value == 0x30FB)
-        {
-            return false;
-        }
-
-        return
-            (value >= 0x30A0 && value <= 0x30FF) ||
-            (value >= 0x3040 && value <= 0x309F) ||
-            (value >= 0x3400 && value <= 0x4DB5) ||
-            (value >= 0x4E00 && value <= 0x9FCB) ||
-            (value >= 0xF900 && value <= 0xFA6A);
-    }
-
-    private static ReadOnlySpan<int> DisallowedIdn =>
-        [0x0640, 0x07FA, 0x302E, 0x302F,
-        0x3031, 0x3032, 0x3033, 0x3034,
-        0x3035, 0x303B];
-
-    private static ReadOnlySpan<int> ViramaTable =>
-        [0x094D, 0x09CD, 0x0A4D, 0x0ACD,
-        0x0B4D, 0x0BCD, 0x0C4D, 0x0CCD,
-        0x0D3B, 0x0D3C, 0x0D4D, 0x0DCA,
-        0x0E3A, 0x0EBA, 0x0F84, 0x1039,
-        0x103A, 0x1714, 0x1715, 0x1734,
-        0x17D2, 0x1A60, 0x1B44, 0x1BAA,
-        0x1BAB, 0x1BF2, 0x1BF3, 0x2D7F,
-        0xA806, 0xA82C, 0xA8C4, 0xA953,
-        0xA9C0, 0xAAF6, 0xABED, 0x10A3F,
-        0x11046, 0x11070, 0x1107F, 0x110B9,
-        0x11133, 0x11134, 0x111C0, 0x11235,
-        0x112EA, 0x1134D, 0x11442, 0x114C2,
-        0x115BF, 0x1163F, 0x116B6, 0x1172B,
-        0x11839, 0x1193D, 0x1193E, 0x119E0,
-        0x11A34, 0x11A47, 0x11A99, 0x11C3F,
-        0x11D44, 0x11D45, 0x11D97];
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsHebrew(int value) => (value >= 0x0590 && value <= 0x05FF);
-    private static bool IsGreek(int value) => (value >= 0x0370 && value <= 0x03FF) || (value >= 0x1F00 && value <= 0x1FFF);
-
-    private static bool IsArabicIndicDigit(int value) => (value >= 0x0660 && value <= 0x0669);
-    private static bool IsExtendedArabicIndicDigit(int value) => (value >= 0x06F0 && value <= 0x06F9);
-    private static bool IsVirama(int value) => ViramaTable.IndexOf(value) >= 0;
-
     /// <summary>
-    /// Validates that a string value is a valid IPv4 address format.
+    /// Validates that a string value is a valid email address format.
     /// </summary>
     /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid IPv4 address; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchIPV4(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    /// <returns><see langword="true"/> if the value is a valid email address; otherwise, <see langword="false"/>.</returns>
+    internal static bool MatchEmail(ReadOnlySpan<byte> value)
     {
-        if (!MatchIPV4(value))
+        if (value.Length > 320 || value.Length < 3)
         {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedIPV4, keyword);
+            // The maximum length of an email address is 320 characters (RFC 5321).
             return false;
         }
 
-        context.EvaluatedKeyword(true, ExpectedIPV4, keyword);
+        int atIndex = value.IndexOf((byte)'@');
+        if (atIndex <= 0 || atIndex == value.Length - 1)
+        {
+            return false;
+        }
+
+        // Local part
+        ReadOnlySpan<byte> segment = value.Slice(0, atIndex);
+
+        if (!MatchEmailLocalPart(segment))
+        {
+            return false;
+        }
+
+        // Domain part
+        segment = value.Slice(atIndex + 1);
+
+        if (!MatchHostname(segment))
+        {
+            return false;
+        }
+
         return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid hostname format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid hostname; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool MatchHostname(ReadOnlySpan<byte> value)
+    {
+        if (value.Length > 253)
+        {
+            return false;
+        }
+
+        Span<byte> decoded = stackalloc byte[256];
+        int i = 0;
+        int characterCount = 0;
+        byte lastAscii = 0;
+        bool decodePunicode = false;
+        while (i < value.Length)
+        {
+            if (value[i] > 0x7F)
+            {
+                // This is not ASCII, so give up
+                return false;
+            }
+
+            if (lastAscii == (byte)'-' && value[i] == (byte)'-')
+            {
+                // Look for punicode signature
+
+                if (characterCount != 3 ||
+                    !((value[i - 3] == (byte)'x' || value[i - 3] == (byte)'X') &&
+                      (value[i - 2] == (byte)'n' || value[i - 2] == (byte)'N')))
+                {
+                    // Disallow "--" for non-punicode signature
+                    return false;
+                }
+
+                decodePunicode = true;
+                break;
+            }
+
+            lastAscii = value[i];
+
+            if (lastAscii == (byte)'.')
+            {
+                if (characterCount > 63)
+                {
+                    return false;
+                }
+
+                characterCount = 0;
+                i++;
+                continue;
+            }
+
+            if (!char.IsLetterOrDigit((char)lastAscii) && !(characterCount != 0 && lastAscii == (byte)'-'))
+            {
+                return false;
+            }
+
+            characterCount++;
+            i++;
+        }
+
+        if (decodePunicode)
+        {
+            if (!IdnMapping.Default.GetUnicode(value, decoded, out int written))
+            {
+                return false;
+            }
+
+            scoped ReadOnlySpan<byte> segment = decoded.Slice(0, written);
+
+            return MatchDecodedHostname(segment);
+        }
+
+        if (characterCount > 63)
+        {
+            return false;
+        }
+
+        if (lastAscii == '-')
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid internationalized domain name (IDN) email address format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid IDN email address; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool MatchIdnEmail(ReadOnlySpan<byte> value)
+    {
+        if (value.Length > 320 || value.Length < 3)
+        {
+            // The maximum length of an email address is 320 characters (RFC 5321).
+            return false;
+        }
+
+        int atIndex = value.IndexOf((byte)'@');
+
+        // Local part
+        ReadOnlySpan<byte> segment = value.Slice(0, atIndex);
+
+        if (!MatchEmailLocalPartUnicode(segment))
+        {
+            return false;
+        }
+
+        // Domain part
+        segment = value.Slice(atIndex + 1);
+
+        if (!MatchIdnHostname(segment))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid internationalized domain name (IDN) hostname format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid IDN hostname; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool MatchIdnHostname(ReadOnlySpan<byte> value)
+    {
+        if (value.Length > 254)
+        {
+            return false;
+        }
+
+        Span<byte> decoded = stackalloc byte[256];
+
+        if (!IdnMapping.Default.GetUnicode(value, decoded, out int written))
+        {
+            return false;
+        }
+
+        scoped ReadOnlySpan<byte> segment = decoded.Slice(0, written);
+
+        return MatchDecodedHostname(segment);
     }
 
     /// <summary>
@@ -810,140 +847,16 @@ public static partial class JsonSchemaEvaluation
     /// Validates that a string value is a valid IPv6 address format.
     /// </summary>
     /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid IPv6 address; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchIPV6(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchIPV6(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedIPV6, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedIPV6, keyword);
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid IPv6 address format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
     /// <returns><see langword="true"/> if the value is a valid IPv6 address; otherwise, <see langword="false"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchIPV6(ReadOnlySpan<byte> value)
     {
-
         if (value.Length > IPAddressParser.MaxIPv6StringLength)
         {
             return false;
         }
 
         return IPAddressParser.IsValidIPV6(value);
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid UUID format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid UUID; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchUuid(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchUuid(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedUuid, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedUuid, keyword);
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid UUID format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid UUID; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool MatchUuid(ReadOnlySpan<byte> value)
-    {
-        return Utf8Parser.TryParse(value, out Guid _, out _);
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid URI format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid URI; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchUri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchUri(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedUri, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedUri, keyword);
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid URI format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid URI; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool MatchUri(ReadOnlySpan<byte> value)
-    {
-        // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
-        // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
-        // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
-        // of a problem because a lot of relative Uris of the kind you come across on the web
-        // look exactly like Unix file paths.)
-        // https://github.com/dotnet/runtime/issues/22718
-        // However, this only needs to be a problem if you insist that the Uri is absolute.
-        // If you accept either absolute or relative Uris, it will interpret "/abc" as a
-        // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
-        // if you pass UriKind.Absolute when parsing.
-        // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
-        // and then rejecting relative Uris. This causes this method to reject "/abc" on all
-        // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
-        // "abc".
-
-        if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: false, allowUNCPath: false))
-        {
-            // We may need the extra tests here
-            return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid IRI; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchIri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchIri(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedIri, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedIri, keyword);
-        return true;
     }
 
     /// <summary>
@@ -979,63 +892,6 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
-    /// Validates that a string value is a valid URI reference format (absolute or relative URI).
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid URI reference; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchUriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchUriReference(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedUriReference, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedUriReference, keyword);
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid URI reference format (absolute or relative URI).
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid URI reference; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool MatchUriReference(ReadOnlySpan<byte> value)
-    {
-        if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: false, allowUNCPath: false))
-        {
-            // We may need the extra tests for empty fragment etc.
-            return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) reference format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid IRI reference; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchIriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchIriReference(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedIriReference, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedIriReference, keyword);
-        return true;
-    }
-
-    /// <summary>
     /// Validates that a string value is a valid Internationalized Resource Identifier (IRI) reference format.
     /// </summary>
     /// <param name="value">The UTF-8 encoded string value to validate.</param>
@@ -1052,62 +908,6 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
-    /// Validates that a string value is a valid URI template format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid URI template; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchUriTemplate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchUriTemplate(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedUriTemplate, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedUriTemplate, keyword);
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid URI template format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid URI template; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool MatchUriTemplate(ReadOnlySpan<byte> value)
-    {
-        if (!Utf8UriTemplate.Validate(value))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid JSON Pointer format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid JSON Pointer; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchJsonPointer(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedJsonPointer, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedJsonPointer, keyword);
-        return true;
-    }
-
-    /// <summary>
     /// Validates that a string value is a valid JSON Pointer format.
     /// </summary>
     /// <param name="value">The UTF-8 encoded string value to validate.</param>
@@ -1120,62 +920,6 @@ public static partial class JsonSchemaEvaluation
             return false;
         }
 
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid relative JSON Pointer format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid relative JSON Pointer; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchRelativeJsonPointer(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedRelativeJsonPointer, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedRelativeJsonPointer, keyword);
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid relative JSON Pointer format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <returns><see langword="true"/> if the value is a valid relative JSON Pointer; otherwise, <see langword="false"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value)
-    {
-        if (!Utf8JsonPointer.ValidateRelative(value))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Validates that a string value is a valid ECMAScript regular expression format.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is a valid regex; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchRegex(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (!MatchRegex(value))
-        {
-            context.EvaluatedKeyword(false, messageProvider: ExpectedRegex, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, ExpectedRegex, keyword);
         return true;
     }
 
@@ -1219,5 +963,256 @@ public static partial class JsonSchemaEvaluation
                 ArrayPool<char>.Shared.Return(charBuffer);
             }
         }
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid relative JSON Pointer format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid relative JSON Pointer; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value)
+    {
+        if (!Utf8JsonPointer.ValidateRelative(value))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid URI format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid URI; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool MatchUri(ReadOnlySpan<byte> value)
+    {
+        // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
+        // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
+        // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
+        // of a problem because a lot of relative Uris of the kind you come across on the web
+        // look exactly like Unix file paths.)
+        // https://github.com/dotnet/runtime/issues/22718
+        // However, this only needs to be a problem if you insist that the Uri is absolute.
+        // If you accept either absolute or relative Uris, it will interpret "/abc" as a
+        // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
+        // if you pass UriKind.Absolute when parsing.
+        // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
+        // and then rejecting relative Uris. This causes this method to reject "/abc" on all
+        // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
+        // "abc".
+
+        if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: false, allowUNCPath: false))
+        {
+            // We may need the extra tests here
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid URI reference format (absolute or relative URI).
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid URI reference; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool MatchUriReference(ReadOnlySpan<byte> value)
+    {
+        if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: false, allowUNCPath: false))
+        {
+            // We may need the extra tests for empty fragment etc.
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid URI template format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid URI template; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool MatchUriTemplate(ReadOnlySpan<byte> value)
+    {
+        if (!Utf8UriTemplate.Validate(value))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid UUID format.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid UUID; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool MatchUuid(ReadOnlySpan<byte> value)
+    {
+        return Utf8Parser.TryParse(value, out Guid _, out _);
+    }
+
+    private static bool IsArabicIndicDigit(int value) => (value >= 0x0660 && value <= 0x0669);
+
+    private static bool IsExtendedArabicIndicDigit(int value) => (value >= 0x06F0 && value <= 0x06F9);
+
+    private static bool IsGreek(int value) => (value >= 0x0370 && value <= 0x03FF) || (value >= 0x1F00 && value <= 0x1FFF);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsHebrew(int value) => (value >= 0x0590 && value <= 0x05FF);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsHiraganaKatakanaOrHanNotMiddleDot(int value)
+    {
+        // Don't allow middle dot
+        if (value == 0x30FB)
+        {
+            return false;
+        }
+
+        return
+            (value >= 0x30A0 && value <= 0x30FF) ||
+            (value >= 0x3040 && value <= 0x309F) ||
+            (value >= 0x3400 && value <= 0x4DB5) ||
+            (value >= 0x4E00 && value <= 0x9FCB) ||
+            (value >= 0xF900 && value <= 0xFA6A);
+    }
+
+    private static bool IsVirama(int value) => ViramaTable.IndexOf(value) >= 0;
+
+    private static bool MatchEmailLocalPart(ReadOnlySpan<byte> segment)
+    {
+        if (segment.Length > 64)
+        {
+            return false;
+        }
+
+        // Skip an opening comment
+        if (segment[0] == (byte)'(')
+        {
+            int closeBracket = segment.IndexOf((byte)')');
+            if (closeBracket < 0)
+            {
+                return false;
+            }
+
+            segment = segment.Slice(closeBracket + 1);
+
+            if (segment.Length == 0)
+            {
+                return false;
+            }
+        }
+
+        int lastDot = -1;
+        for (int i = 0; i < segment.Length; i++)
+        {
+            byte c = segment[i];
+            if (c == (byte)'.')
+            {
+                if (i == 0 || i == segment.Length - 1 || lastDot == i - 1)
+                {
+                    // Dot at the start or end, or two dots in a row
+                    return false;
+                }
+
+                lastDot = i;
+            }
+            else if (c == (byte)'(')
+            {
+                // This is an end comment.
+                int closeBracket = segment.IndexOf((byte)')');
+                if (closeBracket < 0 || closeBracket != segment.Length - 1)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            else if (AllowedLocalCharacters.IndexOf(c) < 0)
+            {
+                // Invalid character in local part
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool MatchEmailLocalPartUnicode(ReadOnlySpan<byte> segment)
+    {
+        if (segment.Length > 64)
+        {
+            return false;
+        }
+
+        // Skip an opening comment
+        if (segment[0] == (byte)'(')
+        {
+            int closeBracket = segment.IndexOf((byte)')');
+            if (closeBracket < 0)
+            {
+                return false;
+            }
+
+            segment = segment.Slice(closeBracket + 1);
+
+            if (segment.Length == 0)
+            {
+                return false;
+            }
+        }
+
+        int lastDot = -1;
+        for (int i = 0; i < segment.Length; i++)
+        {
+            byte c = segment[i];
+            if (c == (byte)'.')
+            {
+                if (i == 0 || i == segment.Length - 1 || lastDot == i - 1)
+                {
+                    // Dot at the start or end, or two dots in a row
+                    return false;
+                }
+
+                lastDot = i;
+            }
+            else if (c == (byte)'(')
+            {
+                // This is an end comment.
+                int closeBracket = segment.IndexOf((byte)')');
+                if (closeBracket < 0 || closeBracket != segment.Length - 1)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            else if (AllowedLocalCharacters.IndexOf(c) < 0)
+            {
+                // This could be a unicode character, so let's check
+                Rune.DecodeFromUtf8(segment.Slice(i), out Rune rune, out int bytesConsumed);
+                if (!Rune.IsLetterOrDigit(rune))
+                {
+                    System.Globalization.UnicodeCategory category = Rune.GetUnicodeCategory(rune);
+                    if (i == 0 ||
+                        (category != System.Globalization.UnicodeCategory.SpacingCombiningMark &&
+                         category != System.Globalization.UnicodeCategory.EnclosingMark &&
+                         category != System.Globalization.UnicodeCategory.NonSpacingMark))
+                    {
+                        return false;
+                    }
+                }
+
+                i += bytesConsumed - 1; // Adjust i to account for the bytes consumed by the rune
+            }
+        }
+
+        return true;
     }
 }

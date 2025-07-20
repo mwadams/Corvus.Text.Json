@@ -57,6 +57,37 @@ public sealed partial class Utf8JsonWriter
         }
     }
 
+    /// <summary>
+    /// Writes the UTF-8 text value (as a JSON comment).
+    /// </summary>
+    /// <param name="utf8Value">The UTF-8 encoded value to be written as a JSON comment within /*..*/.</param>
+    /// <remarks>
+    /// The comment value is not escaped before writing.
+    /// </remarks>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the specified value is too large OR if the given UTF-8 text value contains a comment delimiter (that is, */).
+    /// </exception>
+    public void WriteCommentValue(ReadOnlySpan<byte> utf8Value)
+    {
+        JsonWriterHelper.ValidateValue(utf8Value);
+
+        if (utf8Value.IndexOf(SingleLineCommentDelimiterUtf8) != -1)
+        {
+            ThrowHelper.ThrowArgumentException_InvalidCommentValue();
+        }
+
+        if (!JsonWriterHelper.IsValidUtf8String(utf8Value))
+        {
+            ThrowHelper.ThrowArgumentException_InvalidUTF8(utf8Value);
+        }
+
+        WriteCommentByOptions(utf8Value);
+        if (_tokenType is JsonTokenType.PropertyName or JsonTokenType.None)
+        {
+            _commentAfterNoneOrPropertyName = true;
+        }
+    }
+
     private void WriteCommentByOptions(ReadOnlySpan<char> value)
     {
         if (!_options.SkipValidation)
@@ -76,35 +107,16 @@ public sealed partial class Utf8JsonWriter
         }
     }
 
-    private void WriteCommentMinimized(ReadOnlySpan<char> value)
+    private void WriteCommentByOptions(ReadOnlySpan<byte> utf8Value)
     {
-        Debug.Assert(value.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - 4);
-
-        // All ASCII, /*...*/ => escapedValue.Length + 4
-        // Optionally, up to 3x growth when transcoding
-        int maxRequired = (value.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) + 4;
-
-        if (_memory.Length - BytesPending < maxRequired)
+        if (_options.Indented)
         {
-            Grow(maxRequired);
+            WriteCommentIndented(utf8Value);
         }
-
-        Span<byte> output = _memory.Span;
-
-        output[BytesPending++] = JsonConstants.Slash;
-        output[BytesPending++] = JsonConstants.Asterisk;
-
-        OperationStatus status = JsonWriterHelper.ToUtf8(value, output.Slice(BytesPending), out int written);
-        Debug.Assert(status != OperationStatus.DestinationTooSmall);
-        if (status == OperationStatus.InvalidData)
+        else
         {
-            ThrowHelper.ThrowArgumentException_InvalidUTF16(value[written]);
+            WriteCommentMinimized(utf8Value);
         }
-
-        BytesPending += written;
-
-        output[BytesPending++] = JsonConstants.Asterisk;
-        output[BytesPending++] = JsonConstants.Slash;
     }
 
     private void WriteCommentIndented(ReadOnlySpan<char> value)
@@ -148,72 +160,6 @@ public sealed partial class Utf8JsonWriter
         output[BytesPending++] = JsonConstants.Slash;
     }
 
-    /// <summary>
-    /// Writes the UTF-8 text value (as a JSON comment).
-    /// </summary>
-    /// <param name="utf8Value">The UTF-8 encoded value to be written as a JSON comment within /*..*/.</param>
-    /// <remarks>
-    /// The comment value is not escaped before writing.
-    /// </remarks>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the specified value is too large OR if the given UTF-8 text value contains a comment delimiter (that is, */).
-    /// </exception>
-    public void WriteCommentValue(ReadOnlySpan<byte> utf8Value)
-    {
-        JsonWriterHelper.ValidateValue(utf8Value);
-
-        if (utf8Value.IndexOf(SingleLineCommentDelimiterUtf8) != -1)
-        {
-            ThrowHelper.ThrowArgumentException_InvalidCommentValue();
-        }
-
-        if (!JsonWriterHelper.IsValidUtf8String(utf8Value))
-        {
-            ThrowHelper.ThrowArgumentException_InvalidUTF8(utf8Value);
-        }
-
-        WriteCommentByOptions(utf8Value);
-        if (_tokenType is JsonTokenType.PropertyName or JsonTokenType.None)
-        {
-            _commentAfterNoneOrPropertyName = true;
-        }
-    }
-
-    private void WriteCommentByOptions(ReadOnlySpan<byte> utf8Value)
-    {
-        if (_options.Indented)
-        {
-            WriteCommentIndented(utf8Value);
-        }
-        else
-        {
-            WriteCommentMinimized(utf8Value);
-        }
-    }
-
-    private void WriteCommentMinimized(ReadOnlySpan<byte> utf8Value)
-    {
-        Debug.Assert(utf8Value.Length < int.MaxValue - 4);
-
-        int maxRequired = utf8Value.Length + 4; // /*...*/
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        output[BytesPending++] = JsonConstants.Slash;
-        output[BytesPending++] = JsonConstants.Asterisk;
-
-        utf8Value.CopyTo(output.Slice(BytesPending));
-        BytesPending += utf8Value.Length;
-
-        output[BytesPending++] = JsonConstants.Asterisk;
-        output[BytesPending++] = JsonConstants.Slash;
-    }
-
     private void WriteCommentIndented(ReadOnlySpan<byte> utf8Value)
     {
         int indent = Indentation;
@@ -238,6 +184,60 @@ public sealed partial class Utf8JsonWriter
             WriteIndentation(output.Slice(BytesPending), indent);
             BytesPending += indent;
         }
+
+        output[BytesPending++] = JsonConstants.Slash;
+        output[BytesPending++] = JsonConstants.Asterisk;
+
+        utf8Value.CopyTo(output.Slice(BytesPending));
+        BytesPending += utf8Value.Length;
+
+        output[BytesPending++] = JsonConstants.Asterisk;
+        output[BytesPending++] = JsonConstants.Slash;
+    }
+
+    private void WriteCommentMinimized(ReadOnlySpan<char> value)
+    {
+        Debug.Assert(value.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - 4);
+
+        // All ASCII, /*...*/ => escapedValue.Length + 4
+        // Optionally, up to 3x growth when transcoding
+        int maxRequired = (value.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) + 4;
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        output[BytesPending++] = JsonConstants.Slash;
+        output[BytesPending++] = JsonConstants.Asterisk;
+
+        OperationStatus status = JsonWriterHelper.ToUtf8(value, output.Slice(BytesPending), out int written);
+        Debug.Assert(status != OperationStatus.DestinationTooSmall);
+        if (status == OperationStatus.InvalidData)
+        {
+            ThrowHelper.ThrowArgumentException_InvalidUTF16(value[written]);
+        }
+
+        BytesPending += written;
+
+        output[BytesPending++] = JsonConstants.Asterisk;
+        output[BytesPending++] = JsonConstants.Slash;
+    }
+
+    private void WriteCommentMinimized(ReadOnlySpan<byte> utf8Value)
+    {
+        Debug.Assert(utf8Value.Length < int.MaxValue - 4);
+
+        int maxRequired = utf8Value.Length + 4; // /*...*/
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
 
         output[BytesPending++] = JsonConstants.Slash;
         output[BytesPending++] = JsonConstants.Asterisk;

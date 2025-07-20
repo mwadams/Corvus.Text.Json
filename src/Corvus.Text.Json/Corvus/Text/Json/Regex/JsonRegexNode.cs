@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-
 using System.Diagnostics;
 
 namespace Corvus.Text.Json.Internal;
@@ -16,10 +15,7 @@ internal readonly struct JsonRegexNode
     /// </summary>
     internal const int MultiVsRepeaterLimit = 64;
 
-    /// <summary>
-    /// Gets a null regex node instance.
-    /// </summary>
-    internal static JsonRegexNode Null { get; } = new JsonRegexNode(-1);
+    private readonly int _idx;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonRegexNode"/> struct.
@@ -30,7 +26,10 @@ internal readonly struct JsonRegexNode
         _idx = index;
     }
 
-    private readonly int _idx;
+    /// <summary>
+    /// Gets a null regex node instance.
+    /// </summary>
+    internal static JsonRegexNode Null { get; } = new JsonRegexNode(-1);
 
     /// <summary>
     /// Gets a value indicating whether this node is null.
@@ -48,18 +47,11 @@ internal readonly struct JsonRegexNode
     }
 
     /// <summary>
-    /// Sets the parent of this node.
+    /// Gets the number of child nodes for this node.
     /// </summary>
-    /// <param name="validator">The regex validator managing the node relationships.</param>
-    /// <param name="parent">The parent node to set.</param>
-    public void SetParent(ref JsonRegexValidator validator, in JsonRegexNode parent) => validator.SetParent(_idx, parent._idx);
-
-    /// <summary>
-    /// Gets the parent node of this node.
-    /// </summary>
-    /// <param name="validator">The regex validator managing the node relationships.</param>
-    /// <returns>The parent node.</returns>
-    public readonly JsonRegexNode GetParent(ref JsonRegexValidator validator) => validator.GetParent(_idx);
+    /// <param name="validator">The regex validator managing the node data.</param>
+    /// <returns>The number of child nodes.</returns>
+    public readonly int GetChildCount(ref JsonRegexValidator validator) => validator.GetChildCount(_idx);
 
     /// <summary>
     /// Gets the kind of this regex node.
@@ -69,11 +61,18 @@ internal readonly struct JsonRegexNode
     public readonly JsonRegexNodeKind GetNodeKind(ref JsonRegexValidator validator) => validator.GetNodeKind(_idx);
 
     /// <summary>
-    /// Gets the number of child nodes for this node.
+    /// Gets the parent node of this node.
     /// </summary>
-    /// <param name="validator">The regex validator managing the node data.</param>
-    /// <returns>The number of child nodes.</returns>
-    public readonly int GetChildCount(ref JsonRegexValidator validator) => validator.GetChildCount(_idx);
+    /// <param name="validator">The regex validator managing the node relationships.</param>
+    /// <returns>The parent node.</returns>
+    public readonly JsonRegexNode GetParent(ref JsonRegexValidator validator) => validator.GetParent(_idx);
+
+    /// <summary>
+    /// Sets the parent of this node.
+    /// </summary>
+    /// <param name="validator">The regex validator managing the node relationships.</param>
+    /// <param name="parent">The parent node to set.</param>
+    public void SetParent(ref JsonRegexValidator validator, in JsonRegexNode parent) => validator.SetParent(_idx, parent._idx);
 
     /// <summary>
     /// Creates a quantifier node from this node.
@@ -133,5 +132,4 @@ internal readonly struct JsonRegexNode
         currentKind += kind - JsonRegexNodeKind.One;
         validator.SetKind(_idx, currentKind);
     }
-
 }

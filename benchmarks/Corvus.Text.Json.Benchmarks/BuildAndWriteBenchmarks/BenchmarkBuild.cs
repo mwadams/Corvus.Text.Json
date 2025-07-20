@@ -12,23 +12,6 @@ namespace ValidationBenchmarks;
 [MemoryDiagnoser]
 public class BenchmarkBuild
 {
-    [Benchmark(Baseline = true)]
-    public System.Text.Json.Nodes.JsonObject BuildJsonObject()
-    {
-        System.Text.Json.Nodes.JsonObject jsonObject =
-        [
-            new ("age", 51),
-            new ("name",
-            new System.Text.Json.Nodes.JsonObject([
-                new ("firstName", "Michael"),
-                new ("lastName", "Adams"),
-                new ("otherNames", new System.Text.Json.Nodes.JsonArray("Francis", "James")),
-            new ("competedInYears", new System.Text.Json.Nodes.JsonArray(2012, 2016, 2024))])),
-        ];
-
-        return jsonObject;
-    }
-
     [Benchmark]
     public Person BuildCorvusJsonSchema()
     {
@@ -70,5 +53,22 @@ public class BenchmarkBuild
             }));
 
         return person.RootElement;
+    }
+
+    [Benchmark(Baseline = true)]
+    public System.Text.Json.Nodes.JsonObject BuildJsonObject()
+    {
+        System.Text.Json.Nodes.JsonObject jsonObject =
+        [
+            new ("age", 51),
+            new ("name",
+            new System.Text.Json.Nodes.JsonObject([
+                new ("firstName", "Michael"),
+                new ("lastName", "Adams"),
+                new ("otherNames", new System.Text.Json.Nodes.JsonArray("Francis", "James")),
+            new ("competedInYears", new System.Text.Json.Nodes.JsonArray(2012, 2016, 2024))])),
+        ];
+
+        return jsonObject;
     }
 }

@@ -80,6 +80,32 @@ public sealed partial class Utf8JsonWriter
         _tokenType = JsonTokenType.Number;
     }
 
+    private void WriteNumberByOptions(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
+    {
+        ValidateWritingProperty();
+        if (_options.Indented)
+        {
+            WriteLiteralIndented(propertyName, value);
+        }
+        else
+        {
+            WriteLiteralMinimized(propertyName, value);
+        }
+    }
+
+    private void WriteNumberByOptions(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> value)
+    {
+        ValidateWritingProperty();
+        if (_options.Indented)
+        {
+            WriteLiteralIndented(utf8PropertyName, value);
+        }
+        else
+        {
+            WriteLiteralMinimized(utf8PropertyName, value);
+        }
+    }
+
     private void WriteNumberEscape(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
     {
         int propertyIdx = JsonWriterHelper.NeedsEscaping(propertyName, _options.Encoder);
@@ -155,32 +181,6 @@ public sealed partial class Utf8JsonWriter
         if (propertyArray != null)
         {
             ArrayPool<byte>.Shared.Return(propertyArray);
-        }
-    }
-
-    private void WriteNumberByOptions(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
-    {
-        ValidateWritingProperty();
-        if (_options.Indented)
-        {
-            WriteLiteralIndented(propertyName, value);
-        }
-        else
-        {
-            WriteLiteralMinimized(propertyName, value);
-        }
-    }
-
-    private void WriteNumberByOptions(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> value)
-    {
-        ValidateWritingProperty();
-        if (_options.Indented)
-        {
-            WriteLiteralIndented(utf8PropertyName, value);
-        }
-        else
-        {
-            WriteLiteralMinimized(utf8PropertyName, value);
         }
     }
 }

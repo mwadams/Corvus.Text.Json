@@ -11,24 +11,6 @@ internal static partial class JsonWriterHelper
 {
     private static readonly StandardFormat s_dateTimeStandardFormat = new StandardFormat('O');
 
-    public static void WriteDateTimeTrimmed(Span<byte> buffer, DateTime value, out int bytesWritten)
-    {
-        Span<byte> tempSpan = stackalloc byte[JsonConstants.MaximumFormatDateTimeOffsetLength];
-        bool result = Utf8Formatter.TryFormat(value, tempSpan, out bytesWritten, s_dateTimeStandardFormat);
-        Debug.Assert(result);
-        TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-        tempSpan.Slice(0, bytesWritten).CopyTo(buffer);
-    }
-
-    public static void WriteDateTimeOffsetTrimmed(Span<byte> buffer, DateTimeOffset value, out int bytesWritten)
-    {
-        Span<byte> tempSpan = stackalloc byte[JsonConstants.MaximumFormatDateTimeOffsetLength];
-        bool result = Utf8Formatter.TryFormat(value, tempSpan, out bytesWritten, s_dateTimeStandardFormat);
-        Debug.Assert(result);
-        TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-        tempSpan.Slice(0, bytesWritten).CopyTo(buffer);
-    }
-
     //
     // Trims roundtrippable DateTime(Offset) input.
     // If the milliseconds part of the date is zero, we omit the fraction part of the date,
@@ -103,5 +85,23 @@ internal static partial class JsonWriterHelper
             buffer[curIndex] = (byte)'Z';
             bytesWritten = curIndex + 1;
         }
+    }
+
+    public static void WriteDateTimeOffsetTrimmed(Span<byte> buffer, DateTimeOffset value, out int bytesWritten)
+    {
+        Span<byte> tempSpan = stackalloc byte[JsonConstants.MaximumFormatDateTimeOffsetLength];
+        bool result = Utf8Formatter.TryFormat(value, tempSpan, out bytesWritten, s_dateTimeStandardFormat);
+        Debug.Assert(result);
+        TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
+        tempSpan.Slice(0, bytesWritten).CopyTo(buffer);
+    }
+
+    public static void WriteDateTimeTrimmed(Span<byte> buffer, DateTime value, out int bytesWritten)
+    {
+        Span<byte> tempSpan = stackalloc byte[JsonConstants.MaximumFormatDateTimeOffsetLength];
+        bool result = Utf8Formatter.TryFormat(value, tempSpan, out bytesWritten, s_dateTimeStandardFormat);
+        Debug.Assert(result);
+        TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
+        tempSpan.Slice(0, bytesWritten).CopyTo(buffer);
     }
 }

@@ -8,24 +8,6 @@ namespace Corvus.Text.Json.Tests;
 
 public class JsonSchemaMatchingStringTests
 {
-    private JsonSchemaContext CreateContext(DummyResultsCollector collector, JsonTokenType tokenType)
-    {
-        return JsonSchemaContext.BeginContext(new DummyDocument(tokenType), 0, false, false, collector);
-    }
-
-    [Theory]
-    [InlineData(JsonTokenType.String, true)]
-    [InlineData(JsonTokenType.Number, false)]
-    public void MatchTypeString_ValidatesTokenType(JsonTokenType tokenType, bool expected)
-    {
-        var collector = new DummyResultsCollector();
-        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchTypeString(tokenType, "dummy"u8, ref context);
-        Assert.Equal(expected, result);
-        collector.AssertState();
-        context.Dispose();
-    }
-
     [Theory]
     [InlineData("2023-06-01", true)]
     [InlineData("not-a-date", false)]
@@ -47,19 +29,6 @@ public class JsonSchemaMatchingStringTests
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
         bool result = JsonSchemaEvaluation.MatchDateTime(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
-        Assert.Equal(expected, result);
-        collector.AssertState();
-        context.Dispose();
-    }
-
-    [Theory]
-    [InlineData("12:34:56+00:00", true)]
-    [InlineData("not-a-time", false)]
-    public void MatchTime_ValidatesTime(string value, bool expected)
-    {
-        var collector = new DummyResultsCollector();
-        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchTime(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -99,30 +68,6 @@ public class JsonSchemaMatchingStringTests
     }
 
     [Theory]
-    [InlineData("用户@例子.广告", true)]
-    [InlineData("(allows leading comment)用户@例子.广告", true)]
-    [InlineData("用户(allows trailing comment)@例子.广告", true)]
-    [InlineData("(allows leading comment)用户(and allows trailing comment)@例子.广告", true)]
-    [InlineData("(用户@例子.广告", false)]
-    [InlineData("用户(sdk@例子.广告", false)]
-    [InlineData("ಬೆಂಬಲ@ಡೇಟಾಮೇಲ್.ಭಾರತ", true)]
-    [InlineData("अजय@डाटा.भारत", true)]
-    [InlineData("квіточка@пошта.укр", true)]
-    [InlineData("χρήστης@παράδειγμα.ελ", true)]
-    [InlineData("Dörte@Sörensen.example.com", true)]
-    [InlineData("مثال@موقع.عر", true)]
-    [InlineData("jo@\u0640\u07fa", false)]
-    public void MatchIdnEmail_ValidatesIdnEmail(string value, bool expected)
-    {
-        var collector = new DummyResultsCollector();
-        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchIdnEmail(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
-        Assert.Equal(expected, result);
-        collector.AssertState();
-        context.Dispose();
-    }
-
-    [Theory]
     [InlineData("example.com", true)]
     [InlineData("sub.domain.example.com", true)]
     [InlineData("xn--4gbwdl.xn--wgbh1c", true)] // Punycode
@@ -148,6 +93,30 @@ public class JsonSchemaMatchingStringTests
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
         bool result = JsonSchemaEvaluation.MatchHostname(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("用户@例子.广告", true)]
+    [InlineData("(allows leading comment)用户@例子.广告", true)]
+    [InlineData("用户(allows trailing comment)@例子.广告", true)]
+    [InlineData("(allows leading comment)用户(and allows trailing comment)@例子.广告", true)]
+    [InlineData("(用户@例子.广告", false)]
+    [InlineData("用户(sdk@例子.广告", false)]
+    [InlineData("ಬೆಂಬಲ@ಡೇಟಾಮೇಲ್.ಭಾರತ", true)]
+    [InlineData("अजय@डाटा.भारत", true)]
+    [InlineData("квіточка@пошта.укр", true)]
+    [InlineData("χρήστης@παράδειγμα.ελ", true)]
+    [InlineData("Dörte@Sörensen.example.com", true)]
+    [InlineData("مثال@موقع.عر", true)]
+    [InlineData("jo@\u0640\u07fa", false)]
+    public void MatchIdnEmail_ValidatesIdnEmail(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaEvaluation.MatchIdnEmail(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -215,6 +184,27 @@ public class JsonSchemaMatchingStringTests
     }
 
     [Theory]
+    [InlineData("192.168.0.1", true)]
+    [InlineData("127.0.0.0.1", false)]
+    [InlineData("256.256.256.256", false)]
+    [InlineData("127.0", false)]
+    [InlineData("0x7f000001", false)]
+    [InlineData("2130706433", false)]
+    [InlineData("087.10.0.1", false)]
+    [InlineData("87.10.0.1", true)]
+    [InlineData("1২7.0.0.1", false)]
+    [InlineData("192.168.1.0/24", false)]
+    public void MatchIPV4_ValidatesIPV4(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaEvaluation.MatchIPV4(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
     [InlineData("::1", true)]
     [InlineData("12345::", false)]
     [InlineData("::abef", true)]
@@ -260,49 +250,143 @@ public class JsonSchemaMatchingStringTests
     }
 
     [Theory]
-    [InlineData("192.168.0.1", true)]
-    [InlineData("127.0.0.0.1", false)]
-    [InlineData("256.256.256.256", false)]
-    [InlineData("127.0", false)]
-    [InlineData("0x7f000001", false)]
-    [InlineData("2130706433", false)]
-    [InlineData("087.10.0.1", false)]
-    [InlineData("87.10.0.1", true)]
-    [InlineData("1২7.0.0.1", false)]
-    [InlineData("192.168.1.0/24", false)]
-
-    public void MatchIPV4_ValidatesIPV4(string value, bool expected)
+    [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
+    [InlineData("http://ƒøø.com/blah_(wîkïpédiå)_blah#ßité-1", false)]
+    [InlineData("http://ƒøø.ßår/?q=Test%20URL-encoded%20stuff", true)]
+    [InlineData("http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com", true)]
+    [InlineData("http://[2001:0db8:85a3:0000:0000:8a2e:0370:7334]", true)]
+    [InlineData("http://2001:0db8:85a3:0000:0000:8a2e:0370:7334", false)]
+    [InlineData("/abc", false)]
+    [InlineData("\\\\WINDOWS\\filëßåré", false)]
+    [InlineData("âππ", false)]
+    public void MatchIri_ValidatesIri(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchIPV4(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        bool result = JsonSchemaEvaluation.MatchIri(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
     }
 
-
     [Theory]
-    [InlineData("2EB8AA08-AA98-11EA-B4AA-73B441D16380", true)]
-    [InlineData("2eb8aa08-aa98-11ea-b4aa-73b441d16380", true)]
-    [InlineData("2eb8aa08-AA98-11ea-B4Aa-73B441D16380", true)]
-    [InlineData("00000000-0000-0000-0000-000000000000", true)]
-    [InlineData("2eb8aa08-aa98-11ea-b4aa-73b441d1638", false)]
-    [InlineData("2eb8aa08-aa98-11ea-73b441d16380", false)]
-    [InlineData("2eb8aa08-aa98-11ea-b4ga-73b441d16380", false)]
-    [InlineData("2eb8aa08aa9811eab4aa73b441d16380", false)]
-    [InlineData("2eb8aa08aa98-11ea-b4aa73b441d16380", false)]
-    [InlineData("2eb8-aa08-aa98-11ea-b4aa73b44-1d16380", false)]
-    [InlineData("2eb8aa08aa9811eab4aa73b441d16380----", false)]
-    [InlineData("98d80576-482e-427f-8434-7f86890ab222", true)]
-    [InlineData("99c17cbb-656f-564a-940f-1a4568f03487", true)]
-    [InlineData("99c17cbb-656f-664a-940f-1a4568f03487", true)]
-    [InlineData("99c17cbb-656f-f64a-940f-1a4568f03487", true)]
-    public void MatchUuid_ValidatesUuid(string value, bool expected)
+    [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
+    [InlineData("//ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
+    [InlineData("/âππ", true)]
+    [InlineData("\\\\WINDOWS\\filëßåré", false)]
+    [InlineData("âππ", true)]
+    [InlineData("#ƒrägmênt", true)]
+    [InlineData("#ƒräg\\mênt", false)]
+    public void MatchIriReference_ValidatesIriReference(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchUuid(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        bool result = JsonSchemaEvaluation.MatchIriReference(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("/foo/bar~0/baz~1/%a", true)]
+    [InlineData("/foo/bar~", false)]
+    [InlineData("/foo//bar", true)]
+    [InlineData("/foo/bar/", true)]
+    [InlineData("", true)]
+    [InlineData("/foo", true)]
+    [InlineData("/foo/0", true)]
+    [InlineData("/", true)]
+    [InlineData("/a~1b", true)]
+    [InlineData("/c%d", true)]
+    [InlineData("/e^f", true)]
+    [InlineData("/g|h", true)]
+    [InlineData("/i\\j", true)]
+    [InlineData("/k\"l", true)]
+    [InlineData("/ ", true)]
+    [InlineData("/m~0n", true)]
+    [InlineData("/foo/-", true)]
+    [InlineData("/foo/-/bar", true)]
+    [InlineData("/~1~0~0~1~1", true)]
+    [InlineData("/~1.1", true)]
+    [InlineData("/~0.1", true)]
+    [InlineData("#", false)]
+    [InlineData("#/", false)]
+    [InlineData("#a", false)]
+    [InlineData("/~0~", false)]
+    [InlineData("/~0/~", false)]
+    [InlineData("/~2", false)]
+    [InlineData("/~-1", false)]
+    [InlineData("/~~", false)]
+    [InlineData("a", false)]
+    [InlineData("0", false)]
+    [InlineData("a/a", false)]
+    public void MatchJsonPointer_ValidatesJsonPointer(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaEvaluation.MatchJsonPointer(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("([abc])+\\s+$", true)]
+    [InlineData("^(abc]", false)]
+    public void MatchRegex_ValidatesRegex(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaEvaluation.MatchRegex(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("1", true)]
+    [InlineData("0/foo/bar", true)]
+    [InlineData("2/0/baz/1/zip", true)]
+    [InlineData("0#", true)]
+    [InlineData("/foo/bar", false)]
+    [InlineData("-1/foo/bar", false)]
+    [InlineData("+1/foo/bar", false)]
+    [InlineData("0##", false)]
+    [InlineData("01/a", false)]
+    [InlineData("01#", false)]
+    [InlineData("", false)]
+    [InlineData("120/foo/bar", true)]
+    public void MatchRelativeJsonPointer_ValidatesRelativeJsonPointer(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaEvaluation.MatchRelativeJsonPointer(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData("12:34:56+00:00", true)]
+    [InlineData("not-a-time", false)]
+    public void MatchTime_ValidatesTime(string value, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaEvaluation.MatchTime(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        Assert.Equal(expected, result);
+        collector.AssertState();
+        context.Dispose();
+    }
+
+    [Theory]
+    [InlineData(JsonTokenType.String, true)]
+    [InlineData(JsonTokenType.Number, false)]
+    public void MatchTypeString_ValidatesTokenType(JsonTokenType tokenType, bool expected)
+    {
+        var collector = new DummyResultsCollector();
+        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
+        bool result = JsonSchemaEvaluation.MatchTypeString(tokenType, "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
@@ -359,47 +443,6 @@ public class JsonSchemaMatchingStringTests
         collector.AssertState();
         context.Dispose();
     }
-
-
-    [Theory]
-    [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
-    [InlineData("http://ƒøø.com/blah_(wîkïpédiå)_blah#ßité-1", false)]
-    [InlineData("http://ƒøø.ßår/?q=Test%20URL-encoded%20stuff", true)]
-    [InlineData("http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com", true)]
-    [InlineData("http://[2001:0db8:85a3:0000:0000:8a2e:0370:7334]", true)]
-    [InlineData("http://2001:0db8:85a3:0000:0000:8a2e:0370:7334", false)]
-    [InlineData("/abc", false)]
-    [InlineData("\\\\WINDOWS\\filëßåré", false)]
-    [InlineData("âππ", false)]
-    public void MatchIri_ValidatesIri(string value, bool expected)
-    {
-        var collector = new DummyResultsCollector();
-        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchIri(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
-        Assert.Equal(expected, result);
-        collector.AssertState();
-        context.Dispose();
-    }
-
-
-    [Theory]
-    [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
-    [InlineData("//ƒøø.ßår/?∂éœ=πîx#πîüx", true)]
-    [InlineData("/âππ", true)]
-    [InlineData("\\\\WINDOWS\\filëßåré", false)]
-    [InlineData("âππ", true)]
-    [InlineData("#ƒrägmênt", true)]
-    [InlineData("#ƒräg\\mênt", false)]
-    public void MatchIriReference_ValidatesIriReference(string value, bool expected)
-    {
-        var collector = new DummyResultsCollector();
-        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchIriReference(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
-        Assert.Equal(expected, result);
-        collector.AssertState();
-        context.Dispose();
-    }
-
 
     [Theory]
     [InlineData("http://example.com/dictionary/{term:1}/{term}", true)]
@@ -482,81 +525,33 @@ public class JsonSchemaMatchingStringTests
     }
 
     [Theory]
-    [InlineData("/foo/bar~0/baz~1/%a", true)]
-    [InlineData("/foo/bar~", false)]
-    [InlineData("/foo//bar", true)]
-    [InlineData("/foo/bar/", true)]
-    [InlineData("", true)]
-    [InlineData("/foo", true)]
-    [InlineData("/foo/0", true)]
-    [InlineData("/", true)]
-    [InlineData("/a~1b", true)]
-    [InlineData("/c%d", true)]
-    [InlineData("/e^f", true)]
-    [InlineData("/g|h", true)]
-    [InlineData("/i\\j", true)]
-    [InlineData("/k\"l", true)]
-    [InlineData("/ ", true)]
-    [InlineData("/m~0n", true)]
-    [InlineData("/foo/-", true)]
-    [InlineData("/foo/-/bar", true)]
-    [InlineData("/~1~0~0~1~1", true)]
-    [InlineData("/~1.1", true)]
-    [InlineData("/~0.1", true)]
-    [InlineData("#", false)]
-    [InlineData("#/", false)]
-    [InlineData("#a", false)]
-    [InlineData("/~0~", false)]
-    [InlineData("/~0/~", false)]
-    [InlineData("/~2", false)]
-    [InlineData("/~-1", false)]
-    [InlineData("/~~", false)]
-    [InlineData("a", false)]
-    [InlineData("0", false)]
-    [InlineData("a/a", false)]
-    public void MatchJsonPointer_ValidatesJsonPointer(string value, bool expected)
+    [InlineData("2EB8AA08-AA98-11EA-B4AA-73B441D16380", true)]
+    [InlineData("2eb8aa08-aa98-11ea-b4aa-73b441d16380", true)]
+    [InlineData("2eb8aa08-AA98-11ea-B4Aa-73B441D16380", true)]
+    [InlineData("00000000-0000-0000-0000-000000000000", true)]
+    [InlineData("2eb8aa08-aa98-11ea-b4aa-73b441d1638", false)]
+    [InlineData("2eb8aa08-aa98-11ea-73b441d16380", false)]
+    [InlineData("2eb8aa08-aa98-11ea-b4ga-73b441d16380", false)]
+    [InlineData("2eb8aa08aa9811eab4aa73b441d16380", false)]
+    [InlineData("2eb8aa08aa98-11ea-b4aa73b441d16380", false)]
+    [InlineData("2eb8-aa08-aa98-11ea-b4aa73b44-1d16380", false)]
+    [InlineData("2eb8aa08aa9811eab4aa73b441d16380----", false)]
+    [InlineData("98d80576-482e-427f-8434-7f86890ab222", true)]
+    [InlineData("99c17cbb-656f-564a-940f-1a4568f03487", true)]
+    [InlineData("99c17cbb-656f-664a-940f-1a4568f03487", true)]
+    [InlineData("99c17cbb-656f-f64a-940f-1a4568f03487", true)]
+    public void MatchUuid_ValidatesUuid(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
         JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchJsonPointer(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
+        bool result = JsonSchemaEvaluation.MatchUuid(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
         Assert.Equal(expected, result);
         collector.AssertState();
         context.Dispose();
     }
 
-    [Theory]
-    [InlineData("1", true)]
-    [InlineData("0/foo/bar", true)]
-    [InlineData("2/0/baz/1/zip", true)]
-    [InlineData("0#", true)]
-    [InlineData("/foo/bar", false)]
-    [InlineData("-1/foo/bar", false)]
-    [InlineData("+1/foo/bar", false)]
-    [InlineData("0##", false)]
-    [InlineData("01/a", false)]
-    [InlineData("01#", false)]
-    [InlineData("", false)]
-    [InlineData("120/foo/bar", true)]
-    public void MatchRelativeJsonPointer_ValidatesRelativeJsonPointer(string value, bool expected)
+    private JsonSchemaContext CreateContext(DummyResultsCollector collector, JsonTokenType tokenType)
     {
-        var collector = new DummyResultsCollector();
-        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchRelativeJsonPointer(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
-        Assert.Equal(expected, result);
-        collector.AssertState();
-        context.Dispose();
-    }
-
-    [Theory]
-    [InlineData("([abc])+\\s+$", true)]
-    [InlineData("^(abc]", false)]
-    public void MatchRegex_ValidatesRegex(string value, bool expected)
-    {
-        var collector = new DummyResultsCollector();
-        JsonSchemaContext context = CreateContext(collector, JsonTokenType.String);
-        bool result = JsonSchemaEvaluation.MatchRegex(Encoding.UTF8.GetBytes(value), "dummy"u8, ref context);
-        Assert.Equal(expected, result);
-        collector.AssertState();
-        context.Dispose();
+        return JsonSchemaContext.BeginContext(new DummyDocument(tokenType), 0, false, false, collector);
     }
 }

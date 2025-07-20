@@ -12,6 +12,7 @@ public interface IJsonElement<T> : IJsonElement
     where T : struct, IJsonElement<T>
 {
 #if NET
+
     /// <summary>
     /// Creates an instance of the element from the parent document and the handle of
     /// the element in the parent document.
@@ -20,5 +21,6 @@ public interface IJsonElement<T> : IJsonElement
     /// <param name="parentDocumentIndex">The handle of the element in the parent document.</param>
     /// <returns>An instance of the implementing element type.</returns>
     static abstract T CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex);
+
 #endif
 }

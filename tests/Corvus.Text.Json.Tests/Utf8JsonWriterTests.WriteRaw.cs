@@ -14,110 +14,16 @@ namespace Corvus.Text.Json.Tests
     public partial class Utf8JsonWriterTests
     {
         private const string TestGuidAsStr = "eb97fadd-3ebf-4781-8722-f4773989160e";
-        private readonly static Guid s_guid = Guid.Parse(TestGuidAsStr);
+        private static readonly Guid s_guid = Guid.Parse(TestGuidAsStr);
 
         private static byte[] s_oneAsJson = new byte[] { (byte)'1' };
 
-        [Theory]
-        [MemberData(nameof(GetRootLevelPrimitives))]
-        [MemberData(nameof(GetArrays))]
-        public static void WriteRawValidJson(byte[] rawJson, Action<byte[]> verifyWithDeserialize)
+        private enum OverloadParamType
         {
-            using MemoryStream ms = new();
-            using Utf8JsonWriter writer = new(ms);
-
-            string rawJsonAsStr = Encoding.UTF8.GetString(rawJson);
-
-            RunTests(skipInputValidation: true);
-            RunTests(skipInputValidation: false);
-
-            void RunTests(bool skipInputValidation)
-            {
-                // ROS<byte>
-                writer.Reset();
-                ms.SetLength(0);
-                WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.ByteArray, skipInputValidation);
-                writer.Flush();
-                verifyWithDeserialize(ms.ToArray());
-
-                // string
-
-                writer.Reset();
-                ms.SetLength(0);
-                WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.String, skipInputValidation);
-                writer.Flush();
-                verifyWithDeserialize(ms.ToArray());
-
-                // ROS<char>
-                writer.Reset();
-                ms.SetLength(0);
-                WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.ROSChar, skipInputValidation);
-                writer.Flush();
-                verifyWithDeserialize(ms.ToArray());
-
-                // ROS<char>
-                writer.Reset();
-                ms.SetLength(0);
-                WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.ROSeqByte, skipInputValidation);
-                writer.Flush();
-                verifyWithDeserialize(ms.ToArray());
-            }
-        }
-
-        public static IEnumerable<object[]> GetRootLevelPrimitives()
-        {
-            Action<byte[]> validate;
-
-
-            validate = (data) =>
-            {
-                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
-                Assert.Equal(123456789, doc.RootElement.GetInt64());
-            };
-
-            yield return new object[] { "123456789"u8.ToArray(), validate };
-
-            validate = (data) =>
-            {
-                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
-                Assert.Equal(1234.56789, doc.RootElement.GetDouble());
-            };
-
-            yield return new object[] { "1234.56789"u8.ToArray(), validate };
-
-            validate = (data) =>
-            {
-                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
-                Assert.Equal(1234.56789, doc.RootElement.GetDouble());
-            };
-
-            yield return new object[] { " 1234.56789 "u8.ToArray(), validate };
-
-            validate = (data) =>
-            {
-                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
-                Assert.Equal(@"Hello", doc.RootElement.GetString());
-            };
-
-            yield return new object[] { Encoding.UTF8.GetBytes(@"""Hello"""), validate };
-
-            validate = (data) =>
-            {
-                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
-                Assert.Equal(@"Hello", doc.RootElement.GetString());
-            };
-
-            yield return new object[] { Encoding.UTF8.GetBytes(@"  ""Hello""  "), validate };
-
-            validate = (data) =>
-            {
-                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
-
-                Assert.Equal(s_guid, doc.RootElement.GetGuid());
-            };
-
-            byte[] guidAsJson = WrapInQuotes(Encoding.UTF8.GetBytes(TestGuidAsStr));
-            yield return new object[] { guidAsJson, validate };
+            ROSChar,
+            String,
+            ByteArray,
+            ROSeqByte
         }
 
         public static IEnumerable<object[]> GetArrays()
@@ -198,13 +104,59 @@ namespace Corvus.Text.Json.Tests
             yield return new object[] { json, validate };
         }
 
-        private static byte[] WrapInQuotes(ReadOnlySpan<byte> buffer)
+        public static IEnumerable<object[]> GetRootLevelPrimitives()
         {
-            byte[] quotedBuffer = new byte[buffer.Length + 2];
-            quotedBuffer[0] = (byte)'"';
-            buffer.CopyTo(quotedBuffer.AsSpan(1));
-            quotedBuffer[buffer.Length + 1] = (byte)'"';
-            return quotedBuffer;
+            Action<byte[]> validate;
+
+            validate = (data) =>
+            {
+                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
+                Assert.Equal(123456789, doc.RootElement.GetInt64());
+            };
+
+            yield return new object[] { "123456789"u8.ToArray(), validate };
+
+            validate = (data) =>
+            {
+                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
+                Assert.Equal(1234.56789, doc.RootElement.GetDouble());
+            };
+
+            yield return new object[] { "1234.56789"u8.ToArray(), validate };
+
+            validate = (data) =>
+            {
+                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
+                Assert.Equal(1234.56789, doc.RootElement.GetDouble());
+            };
+
+            yield return new object[] { " 1234.56789 "u8.ToArray(), validate };
+
+            validate = (data) =>
+            {
+                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
+                Assert.Equal(@"Hello", doc.RootElement.GetString());
+            };
+
+            yield return new object[] { Encoding.UTF8.GetBytes(@"""Hello"""), validate };
+
+            validate = (data) =>
+            {
+                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
+                Assert.Equal(@"Hello", doc.RootElement.GetString());
+            };
+
+            yield return new object[] { Encoding.UTF8.GetBytes(@"  ""Hello""  "), validate };
+
+            validate = (data) =>
+            {
+                using var doc = ParsedJsonDocument<JsonElement>.Parse(data);
+
+                Assert.Equal(s_guid, doc.RootElement.GetGuid());
+            };
+
+            byte[] guidAsJson = WrapInQuotes(Encoding.UTF8.GetBytes(TestGuidAsStr));
+            yield return new object[] { guidAsJson, validate };
         }
 
         [Theory]
@@ -231,29 +183,59 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(expectedJson, Encoding.UTF8.GetString(ms.ToArray()));
         }
 
-        [Theory]
-        [InlineData(true, 0, "{}")]
-        [InlineData(false, 0, "{}")]
-        [InlineData(true, 1, @"{""int"":1}")]
-        [InlineData(false, 1, @"{""int"":1}")]
-        [InlineData(true, 3, @"{""int"":1,""int"":1,""int"":1}")]
-        [InlineData(false, 3, @"{""int"":1,""int"":1,""int"":1}")]
-        public static void WriteRawObjectProperty(bool skipInputValidation, int numElements, string expectedJson)
+        [Fact]
+        public static void WriteRawDepthExceedsMaxOf64Fail()
         {
-            using MemoryStream ms = new();
-            using Utf8JsonWriter writer = new(ms);
-            writer.WriteStartObject();
+            RunTest(GenerateJsonUsingDepth(1), false);
+            RunTest(GenerateJsonUsingDepth(64), false);
+            RunTest(GenerateJsonUsingDepth(65), true);
+            RunTest(GenerateJsonUsingDepth(65), false, true);
 
-            for (int i = 0; i < numElements; i++)
+            void RunTest(string json, bool expectFail, bool skipInputValidation = false)
             {
-                writer.WritePropertyName("int");
-                writer.WriteRawValue(s_oneAsJson, skipInputValidation);
+                using MemoryStream ms = new();
+                using Utf8JsonWriter writer = new(ms);
+
+                if (expectFail)
+                {
+                    Assert.ThrowsAny<JsonException>(() => writer.WriteRawValue(json, skipInputValidation));
+                }
+                else
+                {
+                    writer.WriteRawValue(json, skipInputValidation);
+                    writer.Flush();
+
+                    Assert.Equal(json, Encoding.UTF8.GetString(ms.ToArray()));
+                }
             }
+        }
 
-            writer.WriteEndObject();
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public static void WriteRawHonorSkipValidation(bool skipValidation)
+        {
+            RunTest(true);
+            RunTest(false);
 
-            writer.Flush();
-            Assert.Equal(expectedJson, Encoding.UTF8.GetString(ms.ToArray()));
+            void RunTest(bool skipInputValidation)
+            {
+                using MemoryStream ms = new();
+                using Utf8JsonWriter writer = new(ms, new JsonWriterOptions { SkipValidation = skipValidation });
+
+                writer.WriteStartObject();
+
+                if (skipValidation)
+                {
+                    writer.WriteRawValue(@"{}", skipInputValidation);
+                    writer.Flush();
+                    Assert.True(ms.ToArray().SequenceEqual(new byte[] { (byte)'{', (byte)'{', (byte)'}' }));
+                }
+                else
+                {
+                    Assert.Throws<InvalidOperationException>(() => writer.WriteRawValue(@"{}", skipInputValidation));
+                }
+            }
         }
 
         [Theory]
@@ -290,6 +272,83 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
+        [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
+        [ConditionalTheory(typeof(Environment), nameof(Environment.Is64BitProcess))]
+        [OuterLoop]
+        [InlineData(JsonTokenType.String)]
+        [InlineData(JsonTokenType.StartArray)]
+        [InlineData(JsonTokenType.StartObject)]
+        public static void WriteRawMaxUtf16InputLength(JsonTokenType tokenType)
+        {
+            try
+            {
+                // Max raw payload length supported by the writer.
+                int maxLength = int.MaxValue / 3;
+
+                StringBuilder sb = new(maxLength + 2);
+                sb.Append('"');
+
+                for (int i = 1; i < maxLength - 1; i++)
+                {
+                    sb.Append('a');
+                }
+
+                sb.Append('"');
+
+                string payload = sb.ToString();
+
+                RunTest(OverloadParamType.ROSChar);
+                RunTest(OverloadParamType.String);
+                RunTest(OverloadParamType.ByteArray);
+                RunTest(OverloadParamType.ROSeqByte);
+
+                void RunTest(OverloadParamType paramType)
+                {
+                    using MemoryStream ms = new();
+                    using Utf8JsonWriter writer = new(ms);
+
+                    switch (tokenType)
+                    {
+                        case JsonTokenType.String:
+                            WriteRawValueWithSetting(writer, payload, paramType);
+                            writer.Flush();
+                            Assert.Equal(payload.Length, writer.BytesCommitted);
+                            break;
+
+                        case JsonTokenType.StartArray:
+                            writer.WriteStartArray();
+                            WriteRawValueWithSetting(writer, payload, paramType);
+                            WriteRawValueWithSetting(writer, payload, paramType);
+                            writer.WriteEndArray();
+                            writer.Flush();
+                            // Start/EndArray + comma, 2 array elements
+                            Assert.Equal(3 + (payload.Length * 2), writer.BytesCommitted);
+                            break;
+
+                        case JsonTokenType.StartObject:
+                            writer.WriteStartObject();
+                            writer.WritePropertyName("1");
+                            WriteRawValueWithSetting(writer, payload, paramType);
+                            writer.WritePropertyName("2");
+                            WriteRawValueWithSetting(writer, payload, paramType);
+                            writer.WriteEndObject();
+                            writer.Flush();
+                            // Start/EndToken + comma, 2 property names, 2 property values
+                            Assert.Equal(3 + (4 * 2) + (payload.Length * 2), writer.BytesCommitted);
+                            break;
+
+                        default:
+                            Assert.Fail("Unexpected test configuration");
+                            break;
+                    }
+                }
+            }
+            catch (OutOfMemoryException)
+            {
+                throw new SkipTestException("Out of memory allocating large objects");
+            }
+        }
+
         [Fact]
         public static void WriteRawNullOrEmptyTokenInvalid()
         {
@@ -302,81 +361,169 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public static void WriteRawHonorSkipValidation(bool skipValidation)
+        [InlineData(true, 0, "{}")]
+        [InlineData(false, 0, "{}")]
+        [InlineData(true, 1, @"{""int"":1}")]
+        [InlineData(false, 1, @"{""int"":1}")]
+        [InlineData(true, 3, @"{""int"":1,""int"":1,""int"":1}")]
+        [InlineData(false, 3, @"{""int"":1,""int"":1,""int"":1}")]
+        public static void WriteRawObjectProperty(bool skipInputValidation, int numElements, string expectedJson)
         {
-            RunTest(true);
-            RunTest(false);
+            using MemoryStream ms = new();
+            using Utf8JsonWriter writer = new(ms);
+            writer.WriteStartObject();
 
-            void RunTest(bool skipInputValidation)
+            for (int i = 0; i < numElements; i++)
             {
-                using MemoryStream ms = new();
-                using Utf8JsonWriter writer = new(ms, new JsonWriterOptions { SkipValidation = skipValidation });
+                writer.WritePropertyName("int");
+                writer.WriteRawValue(s_oneAsJson, skipInputValidation);
+            }
 
-                writer.WriteStartObject();
+            writer.WriteEndObject();
 
-                if (skipValidation)
+            writer.Flush();
+            Assert.Equal(expectedJson, Encoding.UTF8.GetString(ms.ToArray()));
+        }
+
+        [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
+        [ConditionalFact(typeof(Environment), nameof(Environment.Is64BitProcess))]
+        [OuterLoop]
+        public static void WriteRawTranscodeFromUtf16ToUtf8TooLong()
+        {
+            try
+            {
+                // Max raw payload length supported by the writer.
+                int maxLength = int.MaxValue / 3;
+
+                StringBuilder sb = new(maxLength + 2);
+                sb.Append('"');
+
+                for (int i = 1; i < maxLength - 1; i++)
                 {
-                    writer.WriteRawValue(@"{}", skipInputValidation);
-                    writer.Flush();
-                    Assert.True(ms.ToArray().SequenceEqual(new byte[] { (byte)'{', (byte)'{', (byte)'}' }));
+                    sb.Append('\u7684'); // Non-UTF-8 character than will expand during transcoding
                 }
-                else
+
+                sb.Append('"');
+
+                string payload = sb.ToString();
+
+                RunTest(OverloadParamType.ROSChar);
+                RunTest(OverloadParamType.String);
+                RunTest(OverloadParamType.ByteArray);
+                RunTest(OverloadParamType.ROSeqByte);
+
+                void RunTest(OverloadParamType paramType)
                 {
-                    Assert.Throws<InvalidOperationException>(() => writer.WriteRawValue(@"{}", skipInputValidation));
+                    using MemoryStream ms = new();
+                    using Utf8JsonWriter writer = new(ms);
+
+                    try
+                    {
+                        WriteRawValueWithSetting(writer, payload, paramType);
+                        writer.Flush();
+
+                        // All characters in the payload will be expanded during transcoding, except for the quotes.
+                        int expectedLength = ((payload.Length - 2) * 3) + 2;
+                        Assert.Equal(expectedLength, writer.BytesCommitted);
+                    }
+                    catch (OutOfMemoryException) { } // OutOfMemoryException is okay since the transcoding output is probably too large.
                 }
+            }
+            catch (OutOfMemoryException)
+            {
+                throw new SkipTestException("Out of memory allocating large objects");
             }
         }
 
-        [Fact]
-        public static void WriteRawDepthExceedsMaxOf64Fail()
+        [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
+        [ConditionalTheory(typeof(Environment), nameof(Environment.Is64BitProcess))]
+        [InlineData((int.MaxValue / 3) + 1)]
+        [InlineData(int.MaxValue / 3 + 2)]
+        [OuterLoop]
+        public static void WriteRawUtf16LengthGreaterThanMax(int len)
         {
-
-            RunTest(GenerateJsonUsingDepth(1), false);
-            RunTest(GenerateJsonUsingDepth(64), false);
-            RunTest(GenerateJsonUsingDepth(65), true);
-            RunTest(GenerateJsonUsingDepth(65), false, true);
-
-            void RunTest(string json, bool expectFail, bool skipInputValidation = false)
+            try
             {
+                StringBuilder sb = new(len + 2);
+                sb.Append('"');
+
+                for (int i = 1; i < len - 1; i++)
+                {
+                    sb.Append('a');
+                }
+
+                sb.Append('"');
+
+                string payload = sb.ToString();
+
                 using MemoryStream ms = new();
                 using Utf8JsonWriter writer = new(ms);
 
-                if (expectFail)
-                {
-                    Assert.ThrowsAny<JsonException>(() => writer.WriteRawValue(json, skipInputValidation));
-                }
-                else
-                {
-                    writer.WriteRawValue(json, skipInputValidation);
-                    writer.Flush();
+                // UTF-16 overloads not compatible with this length.
+                Assert.Throws<ArgumentException>(() => WriteRawValueWithSetting(writer, payload, OverloadParamType.ROSChar));
+                Assert.Throws<ArgumentException>(() => WriteRawValueWithSetting(writer, payload, OverloadParamType.String));
 
-                    Assert.Equal(json, Encoding.UTF8.GetString(ms.ToArray()));
-                }
+                // UTF-8 overload is okay.
+                WriteRawValueWithSetting(writer, payload, OverloadParamType.ByteArray);
+                writer.Flush();
+                Assert.Equal(payload.Length, Encoding.UTF8.GetString(ms.ToArray()).Length);
+
+                writer.Reset();
+                ms.SetLength(0);
+                WriteRawValueWithSetting(writer, payload, OverloadParamType.ROSeqByte);
+                writer.Flush();
+                Assert.Equal(payload.Length, Encoding.UTF8.GetString(ms.ToArray()).Length);
+            }
+            catch (OutOfMemoryException)
+            {
+                throw new SkipTestException("Out of memory allocating large objects");
             }
         }
 
-        private static string GenerateJsonUsingDepth(int depth)
+        [Theory]
+        [MemberData(nameof(GetRootLevelPrimitives))]
+        [MemberData(nameof(GetArrays))]
+        public static void WriteRawValidJson(byte[] rawJson, Action<byte[]> verifyWithDeserialize)
         {
-            Assert.True(depth > 0 && depth <= 65, "Test depth out of range");
+            using MemoryStream ms = new();
+            using Utf8JsonWriter writer = new(ms);
 
-            StringBuilder sb = new();
-            sb.Append("{");
+            string rawJsonAsStr = Encoding.UTF8.GetString(rawJson);
 
-            for (int i = 0; i < depth - 1; i++)
+            RunTests(skipInputValidation: true);
+            RunTests(skipInputValidation: false);
+
+            void RunTests(bool skipInputValidation)
             {
-                sb.Append(@"""prop"":{");
+                // ROS<byte>
+                writer.Reset();
+                ms.SetLength(0);
+                WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.ByteArray, skipInputValidation);
+                writer.Flush();
+                verifyWithDeserialize(ms.ToArray());
+
+                // string
+
+                writer.Reset();
+                ms.SetLength(0);
+                WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.String, skipInputValidation);
+                writer.Flush();
+                verifyWithDeserialize(ms.ToArray());
+
+                // ROS<char>
+                writer.Reset();
+                ms.SetLength(0);
+                WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.ROSChar, skipInputValidation);
+                writer.Flush();
+                verifyWithDeserialize(ms.ToArray());
+
+                // ROS<char>
+                writer.Reset();
+                ms.SetLength(0);
+                WriteRawValueWithSetting(writer, rawJsonAsStr, OverloadParamType.ROSeqByte, skipInputValidation);
+                writer.Flush();
+                verifyWithDeserialize(ms.ToArray());
             }
-
-            for (int i = 0; i < depth - 1; i++)
-            {
-                sb.Append("}");
-            }
-
-            sb.Append("}");
-
-            return sb.ToString();
         }
 
         /// <summary>
@@ -444,154 +591,6 @@ namespace Corvus.Text.Json.Tests
 
         [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
         [ConditionalTheory(typeof(Environment), nameof(Environment.Is64BitProcess))]
-        [OuterLoop]
-        [InlineData(JsonTokenType.String)]
-        [InlineData(JsonTokenType.StartArray)]
-        [InlineData(JsonTokenType.StartObject)]
-        public static void WriteRawMaxUtf16InputLength(JsonTokenType tokenType)
-        {
-            try
-            {
-                // Max raw payload length supported by the writer.
-                int maxLength = int.MaxValue / 3;
-
-                StringBuilder sb = new(maxLength + 2);
-                sb.Append('"');
-
-                for (int i = 1; i < maxLength - 1; i++)
-                {
-                    sb.Append('a');
-                }
-
-                sb.Append('"');
-
-                string payload = sb.ToString();
-
-                RunTest(OverloadParamType.ROSChar);
-                RunTest(OverloadParamType.String);
-                RunTest(OverloadParamType.ByteArray);
-                RunTest(OverloadParamType.ROSeqByte);
-
-                void RunTest(OverloadParamType paramType)
-                {
-                    using MemoryStream ms = new();
-                    using Utf8JsonWriter writer = new(ms);
-
-                    switch (tokenType)
-                    {
-                        case JsonTokenType.String:
-                            WriteRawValueWithSetting(writer, payload, paramType);
-                            writer.Flush();
-                            Assert.Equal(payload.Length, writer.BytesCommitted);
-                            break;
-                        case JsonTokenType.StartArray:
-                            writer.WriteStartArray();
-                            WriteRawValueWithSetting(writer, payload, paramType);
-                            WriteRawValueWithSetting(writer, payload, paramType);
-                            writer.WriteEndArray();
-                            writer.Flush();
-                            // Start/EndArray + comma, 2 array elements
-                            Assert.Equal(3 + (payload.Length * 2), writer.BytesCommitted);
-                            break;
-                        case JsonTokenType.StartObject:
-                            writer.WriteStartObject();
-                            writer.WritePropertyName("1");
-                            WriteRawValueWithSetting(writer, payload, paramType);
-                            writer.WritePropertyName("2");
-                            WriteRawValueWithSetting(writer, payload, paramType);
-                            writer.WriteEndObject();
-                            writer.Flush();
-                            // Start/EndToken + comma, 2 property names, 2 property values
-                            Assert.Equal(3 + (4 * 2) + (payload.Length * 2), writer.BytesCommitted);
-                            break;
-                        default:
-                            Assert.Fail("Unexpected test configuration");
-                            break;
-                    }
-                }
-            }
-            catch (OutOfMemoryException)
-            {
-                throw new SkipTestException("Out of memory allocating large objects");
-            }
-        }
-
-        private enum OverloadParamType
-        {
-            ROSChar,
-            String,
-            ByteArray,
-            ROSeqByte
-        }
-
-        private static void WriteRawValueWithSetting(Utf8JsonWriter writer, string payload, OverloadParamType param, bool skipInputValidation = false)
-        {
-            switch (param)
-            {
-                case OverloadParamType.ROSChar:
-                    writer.WriteRawValue(payload.AsSpan(), skipInputValidation);
-                    break;
-                case OverloadParamType.String:
-                    writer.WriteRawValue(payload, skipInputValidation);
-                    break;
-                case OverloadParamType.ByteArray:
-                    byte[] payloadAsBytes = Encoding.UTF8.GetBytes(payload);
-                    writer.WriteRawValue(payloadAsBytes, skipInputValidation);
-                    break;
-                case OverloadParamType.ROSeqByte:
-                    ReadOnlySequence<byte> payloadAsSequence = new(Encoding.UTF8.GetBytes(payload));
-                    writer.WriteRawValue(payloadAsSequence, skipInputValidation);
-                    break;
-            }
-        }
-
-        [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
-        [ConditionalTheory(typeof(Environment), nameof(Environment.Is64BitProcess))]
-        [InlineData((int.MaxValue / 3) + 1)]
-        [InlineData(int.MaxValue / 3 + 2)]
-        [OuterLoop]
-        public static void WriteRawUtf16LengthGreaterThanMax(int len)
-        {
-            try
-            {
-                StringBuilder sb = new(len + 2);
-                sb.Append('"');
-
-                for (int i = 1; i < len - 1; i++)
-                {
-                    sb.Append('a');
-                }
-
-                sb.Append('"');
-
-                string payload = sb.ToString();
-
-                using MemoryStream ms = new();
-                using Utf8JsonWriter writer = new(ms);
-
-                // UTF-16 overloads not compatible with this length.
-                Assert.Throws<ArgumentException>(() => WriteRawValueWithSetting(writer, payload, OverloadParamType.ROSChar));
-                Assert.Throws<ArgumentException>(() => WriteRawValueWithSetting(writer, payload, OverloadParamType.String));
-
-                // UTF-8 overload is okay.
-                WriteRawValueWithSetting(writer, payload, OverloadParamType.ByteArray);
-                writer.Flush();
-                Assert.Equal(payload.Length, Encoding.UTF8.GetString(ms.ToArray()).Length);
-
-                writer.Reset();
-                ms.SetLength(0);
-                WriteRawValueWithSetting(writer, payload, OverloadParamType.ROSeqByte);
-                writer.Flush();
-                Assert.Equal(payload.Length, Encoding.UTF8.GetString(ms.ToArray()).Length);
-            }
-            catch (OutOfMemoryException)
-            {
-                throw new SkipTestException("Out of memory allocating large objects");
-            }
-        }
-
-        [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
-        [ConditionalTheory(typeof(Environment), nameof(Environment.Is64BitProcess))]
         [InlineData(int.MaxValue)]
         [InlineData((long)int.MaxValue + 1)]
         [OuterLoop]
@@ -603,56 +602,6 @@ namespace Corvus.Text.Json.Tests
                 using Utf8JsonWriter writer = new(ms);
                 ReadOnlySequence<byte> readonlySeq = CreateLargeReadOnlySequence(len);
                 Assert.Throws<ArgumentException>(() => writer.WriteRawValue(readonlySeq));
-            }
-            catch (OutOfMemoryException)
-            {
-                throw new SkipTestException("Out of memory allocating large objects");
-            }
-        }
-
-        [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
-        [ConditionalFact(typeof(Environment), nameof(Environment.Is64BitProcess))]
-        [OuterLoop]
-        public static void WriteRawTranscodeFromUtf16ToUtf8TooLong()
-        {
-            try
-            {
-                // Max raw payload length supported by the writer.
-                int maxLength = int.MaxValue / 3;
-
-                StringBuilder sb = new(maxLength + 2);
-                sb.Append('"');
-
-                for (int i = 1; i < maxLength - 1; i++)
-                {
-                    sb.Append('\u7684'); // Non-UTF-8 character than will expand during transcoding
-                }
-
-                sb.Append('"');
-
-                string payload = sb.ToString();
-
-                RunTest(OverloadParamType.ROSChar);
-                RunTest(OverloadParamType.String);
-                RunTest(OverloadParamType.ByteArray);
-                RunTest(OverloadParamType.ROSeqByte);
-
-                void RunTest(OverloadParamType paramType)
-                {
-                    using MemoryStream ms = new();
-                    using Utf8JsonWriter writer = new(ms);
-
-                    try
-                    {
-                        WriteRawValueWithSetting(writer, payload, paramType);
-                        writer.Flush();
-
-                        // All characters in the payload will be expanded during transcoding, except for the quotes.
-                        int expectedLength = ((payload.Length - 2) * 3) + 2;
-                        Assert.Equal(expectedLength, writer.BytesCommitted);
-                    }
-                    catch (OutOfMemoryException) { } // OutOfMemoryException is okay since the transcoding output is probably too large.
-                }
             }
             catch (OutOfMemoryException)
             {
@@ -713,6 +662,61 @@ namespace Corvus.Text.Json.Tests
                 {
                     bytes[i] = value;
                 }
+            }
+        }
+
+        private static string GenerateJsonUsingDepth(int depth)
+        {
+            Assert.True(depth > 0 && depth <= 65, "Test depth out of range");
+
+            StringBuilder sb = new();
+            sb.Append("{");
+
+            for (int i = 0; i < depth - 1; i++)
+            {
+                sb.Append(@"""prop"":{");
+            }
+
+            for (int i = 0; i < depth - 1; i++)
+            {
+                sb.Append("}");
+            }
+
+            sb.Append("}");
+
+            return sb.ToString();
+        }
+
+        private static byte[] WrapInQuotes(ReadOnlySpan<byte> buffer)
+        {
+            byte[] quotedBuffer = new byte[buffer.Length + 2];
+            quotedBuffer[0] = (byte)'"';
+            buffer.CopyTo(quotedBuffer.AsSpan(1));
+            quotedBuffer[buffer.Length + 1] = (byte)'"';
+            return quotedBuffer;
+        }
+
+        private static void WriteRawValueWithSetting(Utf8JsonWriter writer, string payload, OverloadParamType param, bool skipInputValidation = false)
+        {
+            switch (param)
+            {
+                case OverloadParamType.ROSChar:
+                    writer.WriteRawValue(payload.AsSpan(), skipInputValidation);
+                    break;
+
+                case OverloadParamType.String:
+                    writer.WriteRawValue(payload, skipInputValidation);
+                    break;
+
+                case OverloadParamType.ByteArray:
+                    byte[] payloadAsBytes = Encoding.UTF8.GetBytes(payload);
+                    writer.WriteRawValue(payloadAsBytes, skipInputValidation);
+                    break;
+
+                case OverloadParamType.ROSeqByte:
+                    ReadOnlySequence<byte> payloadAsSequence = new(Encoding.UTF8.GetBytes(payload));
+                    writer.WriteRawValue(payloadAsSequence, skipInputValidation);
+                    break;
             }
         }
 

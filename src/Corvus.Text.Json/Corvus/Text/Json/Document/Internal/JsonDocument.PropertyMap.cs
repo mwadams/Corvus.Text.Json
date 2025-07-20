@@ -23,18 +23,22 @@ public abstract partial class JsonDocument
         /// The number of buckets in the bucket set.
         /// </summary>
         public int BucketCount; // The BucketCount of our bucket set.
+
         /// <summary>
         /// The number of entries in the map.
         /// </summary>
         public int Count; // The number of entries in the map.
+
         /// <summary>
         /// The offset into the buckets buffer where our buckets start.
         /// </summary>
         public int BucketOffset; // The offset into the buckets buffer where our buckets start.
+
         /// <summary>
         /// The offset into the entries buffer where our entries start.
         /// </summary>
         public int EntryOffset; // The offset into the entries buffer where our entries start.
+
         /// <summary>
         /// The length of the end token.
         /// </summary>
@@ -51,10 +55,12 @@ public abstract partial class JsonDocument
         internal const int Size = 20;
 
 #if DEBUG
+
         static unsafe PropertyMap()
         {
             Debug.Assert(sizeof(PropertyMap) == Size, "Size");
         }
+
 #endif
 
         /// <summary>
@@ -146,24 +152,29 @@ public abstract partial class JsonDocument
             /// The index of the next entry in the chain.
             /// </summary>
             public int Next;
+
             /// <summary>
             /// The index of the value for this entry.
             /// </summary>
             public int ValueIndex;
+
             /// <summary>
             /// The hash code for this entry.
             /// </summary>
             public ulong HashCode;
+
             /// <summary>
             /// The key offset for dynamic unescaped keys. Top bit indicates if the value is present.
             /// </summary>
             private int keyOffsetForDynamicUnescapedKey; // Top bit is 1 if the value , and the rest == offset into the key buffer if the name is escaped; otherwise all 0
 
 #if DEBUG
+
             static unsafe Entry()
             {
                 Debug.Assert(sizeof(Entry) == Size, "Size");
             }
+
 #endif
 
             /// <summary>

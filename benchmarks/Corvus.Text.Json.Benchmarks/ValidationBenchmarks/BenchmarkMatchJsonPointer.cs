@@ -18,19 +18,19 @@ public class BenchmarkMatchJsonPointer
     private JsonPointer _cjsJsonPointerElement;
     private ParsedJsonDocument<JsonElement>? _ctjJsonPointer;
 
+    [GlobalCleanup]
+    public void GlobalCleanup()
+    {
+        _cjsJsonPointer?.Dispose();
+        _ctjJsonPointer?.Dispose();
+    }
+
     [GlobalSetup]
     public void GlobalSetup()
     {
         _cjsJsonPointer = System.Text.Json.JsonDocument.Parse("\"/foo/-/bar/~1~0.1~0~1~1\"");
         _ctjJsonPointer = ParsedJsonDocument<JsonElement>.Parse("\"/foo/-/bar/~1~0.1~0~1~1\"");
         _cjsJsonPointerElement = JsonPointer.FromJson(_cjsJsonPointer.RootElement);
-    }
-
-    [GlobalCleanup]
-    public void GlobalCleanup()
-    {
-        _cjsJsonPointer?.Dispose();
-        _ctjJsonPointer?.Dispose();
     }
 
     [Benchmark(Baseline = true)]
@@ -58,6 +58,6 @@ public class BenchmarkMatchJsonPointer
         }
     }
 
-    private static bool DummyPathProvider(Span<byte> buffer, out int written) { written = 0; return true; }
-
+    private static bool DummyPathProvider(Span<byte> buffer, out int written)
+    { written = 0; return true; }
 }

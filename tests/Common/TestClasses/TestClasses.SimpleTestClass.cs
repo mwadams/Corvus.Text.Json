@@ -11,130 +11,9 @@ namespace Corvus.Text.Json.Serialization.Tests
 {
     public class SimpleTestClass : ITestClass
     {
-        public short MyInt16 { get; set; }
-        public int MyInt32 { get; set; }
-        public long MyInt64 { get; set; }
-        public ushort MyUInt16 { get; set; }
-        public uint MyUInt32 { get; set; }
-        public ulong MyUInt64 { get; set; }
-        public byte MyByte { get; set; }
-        public sbyte MySByte { get; set; }
-        public char MyChar { get; set; }
-        public string? MyString { get; set; }
-        public decimal MyDecimal { get; set; }
-        public bool MyBooleanTrue { get; set; }
-        public bool MyBooleanFalse { get; set; }
-        public float MySingle { get; set; }
-        public double MyDouble { get; set; }
-        public DateTime MyDateTime { get; set; }
-        public DateTimeOffset MyDateTimeOffset { get; set; }
-        public Guid MyGuid { get; set; }
-        public Uri? MyUri { get; set; }
-        public SampleEnumSByte MySByteEnum { get; set; }
-        public SampleEnumByte MyByteEnum { get; set; }
-        public SampleEnum MyEnum { get; set; }
-        public SampleEnumInt16 MyInt16Enum { get; set; }
-        public SampleEnumInt32 MyInt32Enum { get; set; }
-        public SampleEnumInt64 MyInt64Enum { get; set; }
-        public SampleEnumUInt16 MyUInt16Enum { get; set; }
-        public SampleEnumUInt32 MyUInt32Enum { get; set; }
-        public SampleEnumUInt64 MyUInt64Enum { get; set; }
-        public SimpleStruct MySimpleStruct { get; set; }
-        public SimpleTestStruct MySimpleTestStruct { get; set; }
-        public short[]? MyInt16Array { get; set; }
-        public int[]? MyInt32Array { get; set; }
-        public long[]? MyInt64Array { get; set; }
-        public ushort[]? MyUInt16Array { get; set; }
-        public uint[]? MyUInt32Array { get; set; }
-        public ulong[]? MyUInt64Array { get; set; }
-        public byte[]? MyByteArray { get; set; }
-        public sbyte[]? MySByteArray { get; set; }
-        public char[]? MyCharArray { get; set; }
-        public string[]? MyStringArray { get; set; }
-        public decimal[]? MyDecimalArray { get; set; }
-        public bool[]? MyBooleanTrueArray { get; set; }
-        public bool[]? MyBooleanFalseArray { get; set; }
-        public float[]? MySingleArray { get; set; }
-        public double[]? MyDoubleArray { get; set; }
-        public DateTime[]? MyDateTimeArray { get; set; }
-        public DateTimeOffset[]? MyDateTimeOffsetArray { get; set; }
-        public Guid[]? MyGuidArray { get; set; }
-        public Uri[]? MyUriArray { get; set; }
-        public SampleEnum[]? MyEnumArray { get; set; }
-        public int[][]? MyInt16TwoDimensionArray { get; set; }
-        public List<List<int>>? MyInt16TwoDimensionList { get; set; }
-        public int[][][]? MyInt16ThreeDimensionArray { get; set; }
-        public List<List<List<int>>>? MyInt16ThreeDimensionList { get; set; }
-        public List<string>? MyStringList { get; set; }
-        public IEnumerable? MyStringIEnumerable { get; set; }
-        public IList? MyStringIList { get; set; }
-        public ICollection? MyStringICollection { get; set; }
-        public IEnumerable<string>? MyStringIEnumerableT { get; set; }
-        public IList<string>? MyStringIListT { get; set; }
-        public ICollection<string>? MyStringICollectionT { get; set; }
-        public IReadOnlyCollection<string>? MyStringIReadOnlyCollectionT { get; set; }
-        public IReadOnlyList<string>? MyStringIReadOnlyListT { get; set; }
-        public ISet<string>? MyStringISetT { get; set; }
-        public KeyValuePair<string, string> MyStringToStringKeyValuePair { get; set; }
-        public IDictionary? MyStringToStringIDict { get; set; }
-        public Dictionary<string, string>? MyStringToStringGenericDict { get; set; }
-        public IDictionary<string, string>? MyStringToStringGenericIDict { get; set; }
-        public IReadOnlyDictionary<string, string>? MyStringToStringGenericIReadOnlyDict { get; set; }
-        public ImmutableDictionary<string, string>? MyStringToStringImmutableDict { get; set; }
-        public IImmutableDictionary<string, string>? MyStringToStringIImmutableDict { get; set; }
-        public ImmutableSortedDictionary<string, string>? MyStringToStringImmutableSortedDict { get; set; }
-        public Stack<string>? MyStringStackT { get; set; }
-        public Queue<string>? MyStringQueueT { get; set; }
-        public HashSet<string>? MyStringHashSetT { get; set; }
-        public LinkedList<string>? MyStringLinkedListT { get; set; }
-        public SortedSet<string>? MyStringSortedSetT { get; set; }
-        public IImmutableList<string>? MyStringIImmutableListT { get; set; }
-        public IImmutableStack<string>? MyStringIImmutableStackT { get; set; }
-        public IImmutableQueue<string>? MyStringIImmutableQueueT { get; set; }
-        public IImmutableSet<string>? MyStringIImmutableSetT { get; set; }
-        public ImmutableHashSet<string>? MyStringImmutableHashSetT { get; set; }
-        public ImmutableList<string>? MyStringImmutableListT { get; set; }
-        public ImmutableStack<string>? MyStringImmutableStackT { get; set; }
-        public ImmutableQueue<string>? MyStringImmutablQueueT { get; set; }
-        public ImmutableSortedSet<string>? MyStringImmutableSortedSetT { get; set; }
-        public List<string>? MyListOfNullString { get; set; }
-
+        public static readonly byte[] s_data = Encoding.UTF8.GetBytes(s_json);
         public static readonly string s_json = $"{{{s_partialJsonProperties},{s_partialJsonArrays}}}";
         public static readonly string s_json_flipped = $"{{{s_partialJsonArrays},{s_partialJsonProperties}}}";
-
-        private const string s_partialJsonProperties =
-                @"""MyInt16"" : 1," +
-                @"""MyInt32"" : 2," +
-                @"""MyInt64"" : 3," +
-                @"""MyUInt16"" : 4," +
-                @"""MyUInt32"" : 5," +
-                @"""MyUInt64"" : 6," +
-                @"""MyByte"" : 7," +
-                @"""MySByte"" : 8," +
-                @"""MyChar"" : ""a""," +
-                @"""MyString"" : ""Hello""," +
-                @"""MyBooleanTrue"" : true," +
-                @"""MyBooleanFalse"" : false," +
-                @"""MySingle"" : 1.1," +
-                @"""MyDouble"" : 2.2," +
-                @"""MyDecimal"" : 3.3," +
-                @"""MyDateTime"" : ""2019-01-30T12:01:02.0000000Z""," +
-                @"""MyDateTimeOffset"" : ""2019-01-30T12:01:02.0000000+01:00""," +
-                @"""MyGuid"" : ""1B33498A-7B7D-4DDA-9C13-F6AA4AB449A6""," +
-                @"""MyUri"" : ""https://github.com/dotnet/runtime""," +
-                @"""MyEnum"" : 2," + // int by default
-                @"""MyInt64Enum"" : -9223372036854775808," +
-                @"""MyUInt64Enum"" : 18446744073709551615," +
-                @"""MyStringToStringKeyValuePair"" : {""Key"" : ""myKey"", ""Value"" : ""myValue""}," +
-                @"""MyStringToStringIDict"" : {""key"" : ""value""}," +
-                @"""MyStringToStringGenericDict"" : {""key"" : ""value""}," +
-                @"""MyStringToStringGenericIDict"" : {""key"" : ""value""}," +
-                @"""MyStringToStringGenericIReadOnlyDict"" : {""key"" : ""value""}," +
-                @"""MyStringToStringImmutableDict"" : {""key"" : ""value""}," +
-                @"""MyStringToStringIImmutableDict"" : {""key"" : ""value""}," +
-                @"""MyStringToStringImmutableSortedDict"" : {""key"" : ""value""}," +
-                @"""MySimpleStruct"" : {""One"" : 11, ""Two"" : 1.9999, ""Three"" : 33}," +
-                @"""MySimpleTestStruct"" : {""MyInt64"" : 64, ""MyString"" :""Hello"", ""MyInt32Array"" : [32]}";
 
         private const string s_partialJsonArrays =
                 @"""MyInt16Array"" : [1]," +
@@ -187,7 +66,127 @@ namespace Corvus.Text.Json.Serialization.Tests
                 @"""MyStringImmutableSortedSetT"" : [""Hello""]," +
                 @"""MyListOfNullString"" : [null]";
 
-        public static readonly byte[] s_data = Encoding.UTF8.GetBytes(s_json);
+        private const string s_partialJsonProperties =
+                @"""MyInt16"" : 1," +
+                @"""MyInt32"" : 2," +
+                @"""MyInt64"" : 3," +
+                @"""MyUInt16"" : 4," +
+                @"""MyUInt32"" : 5," +
+                @"""MyUInt64"" : 6," +
+                @"""MyByte"" : 7," +
+                @"""MySByte"" : 8," +
+                @"""MyChar"" : ""a""," +
+                @"""MyString"" : ""Hello""," +
+                @"""MyBooleanTrue"" : true," +
+                @"""MyBooleanFalse"" : false," +
+                @"""MySingle"" : 1.1," +
+                @"""MyDouble"" : 2.2," +
+                @"""MyDecimal"" : 3.3," +
+                @"""MyDateTime"" : ""2019-01-30T12:01:02.0000000Z""," +
+                @"""MyDateTimeOffset"" : ""2019-01-30T12:01:02.0000000+01:00""," +
+                @"""MyGuid"" : ""1B33498A-7B7D-4DDA-9C13-F6AA4AB449A6""," +
+                @"""MyUri"" : ""https://github.com/dotnet/runtime""," +
+                @"""MyEnum"" : 2," + // int by default
+                @"""MyInt64Enum"" : -9223372036854775808," +
+                @"""MyUInt64Enum"" : 18446744073709551615," +
+                @"""MyStringToStringKeyValuePair"" : {""Key"" : ""myKey"", ""Value"" : ""myValue""}," +
+                @"""MyStringToStringIDict"" : {""key"" : ""value""}," +
+                @"""MyStringToStringGenericDict"" : {""key"" : ""value""}," +
+                @"""MyStringToStringGenericIDict"" : {""key"" : ""value""}," +
+                @"""MyStringToStringGenericIReadOnlyDict"" : {""key"" : ""value""}," +
+                @"""MyStringToStringImmutableDict"" : {""key"" : ""value""}," +
+                @"""MyStringToStringIImmutableDict"" : {""key"" : ""value""}," +
+                @"""MyStringToStringImmutableSortedDict"" : {""key"" : ""value""}," +
+                @"""MySimpleStruct"" : {""One"" : 11, ""Two"" : 1.9999, ""Three"" : 33}," +
+                @"""MySimpleTestStruct"" : {""MyInt64"" : 64, ""MyString"" :""Hello"", ""MyInt32Array"" : [32]}";
+
+        public bool MyBooleanFalse { get; set; }
+        public bool[]? MyBooleanFalseArray { get; set; }
+        public bool MyBooleanTrue { get; set; }
+        public bool[]? MyBooleanTrueArray { get; set; }
+        public byte MyByte { get; set; }
+        public byte[]? MyByteArray { get; set; }
+        public SampleEnumByte MyByteEnum { get; set; }
+        public char MyChar { get; set; }
+        public char[]? MyCharArray { get; set; }
+        public DateTime MyDateTime { get; set; }
+        public DateTime[]? MyDateTimeArray { get; set; }
+        public DateTimeOffset MyDateTimeOffset { get; set; }
+        public DateTimeOffset[]? MyDateTimeOffsetArray { get; set; }
+        public decimal MyDecimal { get; set; }
+        public decimal[]? MyDecimalArray { get; set; }
+        public double MyDouble { get; set; }
+        public double[]? MyDoubleArray { get; set; }
+        public SampleEnum MyEnum { get; set; }
+        public SampleEnum[]? MyEnumArray { get; set; }
+        public Guid MyGuid { get; set; }
+        public Guid[]? MyGuidArray { get; set; }
+        public short MyInt16 { get; set; }
+        public short[]? MyInt16Array { get; set; }
+        public SampleEnumInt16 MyInt16Enum { get; set; }
+        public int[][][]? MyInt16ThreeDimensionArray { get; set; }
+        public List<List<List<int>>>? MyInt16ThreeDimensionList { get; set; }
+        public int[][]? MyInt16TwoDimensionArray { get; set; }
+        public List<List<int>>? MyInt16TwoDimensionList { get; set; }
+        public int MyInt32 { get; set; }
+        public int[]? MyInt32Array { get; set; }
+        public SampleEnumInt32 MyInt32Enum { get; set; }
+        public long MyInt64 { get; set; }
+        public long[]? MyInt64Array { get; set; }
+        public SampleEnumInt64 MyInt64Enum { get; set; }
+        public List<string>? MyListOfNullString { get; set; }
+        public sbyte MySByte { get; set; }
+        public sbyte[]? MySByteArray { get; set; }
+        public SampleEnumSByte MySByteEnum { get; set; }
+        public SimpleStruct MySimpleStruct { get; set; }
+        public SimpleTestStruct MySimpleTestStruct { get; set; }
+        public float MySingle { get; set; }
+        public float[]? MySingleArray { get; set; }
+        public string? MyString { get; set; }
+        public string[]? MyStringArray { get; set; }
+        public HashSet<string>? MyStringHashSetT { get; set; }
+        public ICollection? MyStringICollection { get; set; }
+        public ICollection<string>? MyStringICollectionT { get; set; }
+        public IEnumerable? MyStringIEnumerable { get; set; }
+        public IEnumerable<string>? MyStringIEnumerableT { get; set; }
+        public IImmutableList<string>? MyStringIImmutableListT { get; set; }
+        public IImmutableQueue<string>? MyStringIImmutableQueueT { get; set; }
+        public IImmutableSet<string>? MyStringIImmutableSetT { get; set; }
+        public IImmutableStack<string>? MyStringIImmutableStackT { get; set; }
+        public IList? MyStringIList { get; set; }
+        public IList<string>? MyStringIListT { get; set; }
+        public ImmutableHashSet<string>? MyStringImmutableHashSetT { get; set; }
+        public ImmutableList<string>? MyStringImmutableListT { get; set; }
+        public ImmutableSortedSet<string>? MyStringImmutableSortedSetT { get; set; }
+        public ImmutableStack<string>? MyStringImmutableStackT { get; set; }
+        public ImmutableQueue<string>? MyStringImmutablQueueT { get; set; }
+        public IReadOnlyCollection<string>? MyStringIReadOnlyCollectionT { get; set; }
+        public IReadOnlyList<string>? MyStringIReadOnlyListT { get; set; }
+        public ISet<string>? MyStringISetT { get; set; }
+        public LinkedList<string>? MyStringLinkedListT { get; set; }
+        public List<string>? MyStringList { get; set; }
+        public Queue<string>? MyStringQueueT { get; set; }
+        public SortedSet<string>? MyStringSortedSetT { get; set; }
+        public Stack<string>? MyStringStackT { get; set; }
+        public Dictionary<string, string>? MyStringToStringGenericDict { get; set; }
+        public IDictionary<string, string>? MyStringToStringGenericIDict { get; set; }
+        public IReadOnlyDictionary<string, string>? MyStringToStringGenericIReadOnlyDict { get; set; }
+        public IDictionary? MyStringToStringIDict { get; set; }
+        public IImmutableDictionary<string, string>? MyStringToStringIImmutableDict { get; set; }
+        public ImmutableDictionary<string, string>? MyStringToStringImmutableDict { get; set; }
+        public ImmutableSortedDictionary<string, string>? MyStringToStringImmutableSortedDict { get; set; }
+        public KeyValuePair<string, string> MyStringToStringKeyValuePair { get; set; }
+        public ushort MyUInt16 { get; set; }
+        public ushort[]? MyUInt16Array { get; set; }
+        public SampleEnumUInt16 MyUInt16Enum { get; set; }
+        public uint MyUInt32 { get; set; }
+        public uint[]? MyUInt32Array { get; set; }
+        public SampleEnumUInt32 MyUInt32Enum { get; set; }
+        public ulong MyUInt64 { get; set; }
+        public ulong[]? MyUInt64Array { get; set; }
+        public SampleEnumUInt64 MyUInt64Enum { get; set; }
+        public Uri? MyUri { get; set; }
+        public Uri[]? MyUriArray { get; set; }
 
         public void Initialize()
         {
@@ -286,7 +285,7 @@ namespace Corvus.Text.Json.Serialization.Tests
             MyStringToStringIImmutableDict = ImmutableDictionary.CreateRange(MyStringToStringGenericDict);
             MyStringToStringImmutableSortedDict = ImmutableSortedDictionary.CreateRange(MyStringToStringGenericDict);
 
-            MyStringStackT = new Stack<string>(new List<string>() { "Hello", "World" } );
+            MyStringStackT = new Stack<string>(new List<string>() { "Hello", "World" });
             MyStringQueueT = new Queue<string>(new List<string>() { "Hello", "World" });
             MyStringHashSetT = new HashSet<string>(new List<string>() { "Hello" });
             MyStringLinkedListT = new LinkedList<string>(new List<string>() { "Hello" });

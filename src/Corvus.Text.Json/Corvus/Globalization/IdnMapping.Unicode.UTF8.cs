@@ -31,6 +31,8 @@ namespace Corvus.Globalization;
 // IdnMapping class used to map names to Punycode
 public sealed partial class IdnMapping
 {
+    private static ReadOnlySpan<byte> c_strAcePrefixUtf8 => "xn--"u8;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, out int written) =>
        GetUnicode(ascii, outputBuffer, 0, out written);
@@ -83,46 +85,140 @@ public sealed partial class IdnMapping
         return GetUnicodeInvariant(ascii, outputBuffer, index, count, out written);
     }
 
-    private bool GetUnicodeInvariant(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, out int written)
+    internal static bool EqualAcePrefix(ReadOnlySpan<byte> readOnlySpan)
     {
-        if (index > 0 || count < ascii.Length)
-        {
-            // We're only using part of the string
-            ascii = ascii.Slice(index, count);
-        }
-        // Convert Punycode to Unicode
-        if (!PunycodeDecode(ascii, outputBuffer, out written))
+        Debug.Assert(readOnlySpan.Length >= c_strAcePrefixUtf8.Length, "[IdnMapping.EqualAcePrefix]Expected readOnlySpan to be at least as long as c_strAcePrefixUtf8.");
+        return (readOnlySpan[0] == (byte)'x' || readOnlySpan[0] == (byte)'X') &&
+               (readOnlySpan[1] == (byte)'n' || readOnlySpan[1] == (byte)'N') &&
+               readOnlySpan[2] == (byte)'-' &&
+               readOnlySpan[3] == (byte)'-';
+    }
+
+    private static bool ConvertFromUtf32AndInsert(Span<byte> outputBuffer, int index, int utf32, ref int written)
+    {
+        Debug.Assert(index >= 0 && index <= outputBuffer.Length, "[IdnMapping.ConvertFromUtf32AndInsert]Expected index to be within bounds of outputBuffer.");
+        if (!Rune.TryCreate(utf32, out Rune rune))
         {
             written = 0;
             return false;
         }
 
-        // We should not need to assert the round trip rule here
-        ////GetAscii(strUnicode)
-        ////// Output name MUST obey IDNA rules & round trip (casing differences are allowed)
-        ////if (!ascii.Equals(, StringComparison.OrdinalIgnoreCase))
-        ////    throw new ArgumentException(SR.Argument_IdnIllegalName, nameof(ascii));
+        Span<byte> buffer = stackalloc byte[4]; // Max UTF8 bytes per rune
+        int localWritten = rune.EncodeToUtf8(buffer);
+        if (outputBuffer.Length < written + localWritten)
+        {
+            written = 0;
+            return false;
+        }
 
+        // Copy up
+        outputBuffer.Slice(index, written - index).CopyTo(outputBuffer.Slice(index + localWritten));
+        // Insert in the space
+        buffer.Slice(0, localWritten).CopyTo(outputBuffer.Slice(index));
+        written += localWritten;
         return true;
     }
 
-    private static ReadOnlySpan<byte> c_strAcePrefixUtf8 => "xn--"u8;
+    private static bool DecodeDigit(byte cp, out int decoded)
+    {
+        if (IsAsciiDigit(cp))
+        {
+            decoded = cp - (byte)'0' + 26;
+            return true;
+        }
 
-    /* PunycodeDecode() converts Punycode to Unicode.  The input is  */
-    /* represented as an array of ASCII code points, and the output   */
-    /* will be represented as an array of Unicode code points.  The   */
-    /* input_length is the number of code points in the input.  The   */
-    /* output_length is an in/out argument: the caller passes in      */
-    /* the maximum number of code points that it can receive, and     */
-    /* on successful return it will contain the actual number of      */
-    /* code points output.  The case_flags array needs room for at    */
-    /* least output_length values, or it can be a null pointer if the */
-    /* case information is not needed.  A nonzero flag suggests that  */
-    /* the corresponding Unicode character be forced to uppercase     */
-    /* by the caller (if possible), while zero suggests that it be    */
-    /* forced to lowercase (if possible).  ASCII code points are      */
-    /* output already in the proper case, but their flags will be set */
-    /* appropriately so that applying the flags would be harmless.    */
+        // Two flavors for case differences
+        if (IsAsciiLetterLower(cp))
+        {
+            decoded = cp - (byte)'a';
+            return true;
+        }
+
+        if (IsAsciiLetterUpper(cp))
+        {
+            decoded = cp - (byte)'A';
+            return true;
+        }
+
+        decoded = -1;
+        return false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsAsciiDigit(byte v)
+    {
+        return IsBetween(v, (byte)'0', (byte)'9');
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsAsciiLetterLower(byte v)
+    {
+        return IsBetween(v, (byte)'a', (byte)'z');
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsAsciiLetterUpper(byte v)
+    {
+        return IsBetween(v, (byte)'A', (byte)'Z');
+    }
+
+    /// <summary>Indicates whether a character is within the specified inclusive range.</summary>
+    /// <param name="c">The character to evaluate.</param>
+    /// <param name="minInclusive">The lower bound, inclusive.</param>
+    /// <param name="maxInclusive">The upper bound, inclusive.</param>
+    /// <returns>true if <paramref name="c"/> is within the specified range; otherwise, false.</returns>
+    /// <remarks>
+    /// The method does not validate that <paramref name="maxInclusive"/> is greater than or equal
+    /// to <paramref name="minInclusive"/>.  If <paramref name="maxInclusive"/> is less than
+    /// <paramref name="minInclusive"/>, the behavior is undefined.
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsBetween(byte c, byte minInclusive, byte maxInclusive) =>
+        (uint)(c - minInclusive) <= (uint)(maxInclusive - minInclusive);
+
+    // Is it a dot?
+    // are we U+002E (., full stop), U+3002 (ideographic full stop), U+FF0E (fullwidth full stop), or
+    // U+FF61 (halfwidth ideographic full stop).
+    // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
+    private static bool IsDot(ReadOnlySpan<byte> ascii)
+    {
+        if (ascii[0] == (byte)'.')
+        {
+            return true;
+        }
+
+        if (ascii.Length > 1)
+        {
+            Rune.DecodeLastFromUtf8(ascii, out Rune rune, out _);
+            if (rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    // Is it a dot?
+    // are we U+002E (., full stop), U+3002 (ideographic full stop), U+FF0E (fullwidth full stop), or
+    // U+FF61 (halfwidth ideographic full stop).
+    // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
+    private static bool LastCharacterIsDot(ReadOnlySpan<byte> ascii)
+    {
+        if (ascii[^1] == (byte)'.')
+        {
+            return true;
+        }
+
+        if (Rune.DecodeLastFromUtf8(ascii.Slice(ascii.Length - 2), out Rune rune, out _) == System.Buffers.OperationStatus.Done)
+        {
+            return rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61;
+        }
+
+        return false;
+    }
 
     private static bool PunycodeDecode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, out int written)
     {
@@ -355,7 +451,7 @@ public sealed partial class IdnMapping
                         return false;
                     }
 
-                    // If it was a surrogate increment our counter                        
+                    // If it was a surrogate increment our counter
                     surrogatePairLength += (written - prevWritten) - 1;
 
                     // Index gets updated
@@ -424,70 +520,9 @@ public sealed partial class IdnMapping
         return true;
     }
 
-    internal static bool EqualAcePrefix(ReadOnlySpan<byte> readOnlySpan)
-    {
-        Debug.Assert(readOnlySpan.Length >= c_strAcePrefixUtf8.Length, "[IdnMapping.EqualAcePrefix]Expected readOnlySpan to be at least as long as c_strAcePrefixUtf8.");
-        return (readOnlySpan[0] == (byte)'x' || readOnlySpan[0] == (byte)'X') &&
-               (readOnlySpan[1] == (byte)'n' || readOnlySpan[1] == (byte)'N') &&
-               readOnlySpan[2] == (byte)'-' &&
-               readOnlySpan[3] == (byte)'-';
-    }
-
-    private static bool ConvertFromUtf32AndInsert(Span<byte> outputBuffer, int index, int utf32, ref int written)
-    {
-        Debug.Assert(index >= 0 && index <= outputBuffer.Length, "[IdnMapping.ConvertFromUtf32AndInsert]Expected index to be within bounds of outputBuffer.");
-        if (!Rune.TryCreate(utf32, out Rune rune))
-        {
-            written = 0;
-            return false;
-        }
-
-        Span<byte> buffer = stackalloc byte[4]; // Max UTF8 bytes per rune
-        int localWritten = rune.EncodeToUtf8(buffer);
-        if (outputBuffer.Length < written + localWritten)
-        {
-            written = 0;
-            return false;
-        }
-
-        // Copy up
-        outputBuffer.Slice(index, written - index).CopyTo(outputBuffer.Slice(index + localWritten));
-        // Insert in the space
-        buffer.Slice(0, localWritten).CopyTo(outputBuffer.Slice(index));
-        written += localWritten;
-        return true;
-    }
-
-
     // DecodeDigit(cp) returns the numeric value of a basic code */
     // point (for use in representing integers) in the range 0 to */
     // c_punycodeBase-1, or <0 if cp is does not represent a value. */
-
-    private static bool DecodeDigit(byte cp, out int decoded)
-    {
-        if (IsAsciiDigit(cp))
-        {
-            decoded = cp - (byte)'0' + 26;
-            return true;
-        }
-
-        // Two flavors for case differences
-        if (IsAsciiLetterLower(cp))
-        {
-            decoded = cp - (byte)'a';
-            return true;
-        }
-
-        if (IsAsciiLetterUpper(cp))
-        {
-            decoded = cp - (byte)'A';
-            return true;
-        }
-
-        decoded = -1;
-        return false;
-    }
-
     private static bool ValidateStd3(byte c, bool bNextToDot)
     {
         // Check for illegal characters
@@ -496,79 +531,42 @@ public sealed partial class IdnMapping
             (c == (byte)'-' && bNextToDot));
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsAsciiLetterUpper(byte v)
+    private bool GetUnicodeInvariant(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, out int written)
     {
-        return IsBetween(v, (byte)'A', (byte)'Z');
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsAsciiDigit(byte v)
-    {
-        return IsBetween(v, (byte)'0', (byte)'9');
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsAsciiLetterLower(byte v)
-    {
-        return IsBetween(v, (byte)'a', (byte)'z');
-    }
-
-    /// <summary>Indicates whether a character is within the specified inclusive range.</summary>
-    /// <param name="c">The character to evaluate.</param>
-    /// <param name="minInclusive">The lower bound, inclusive.</param>
-    /// <param name="maxInclusive">The upper bound, inclusive.</param>
-    /// <returns>true if <paramref name="c"/> is within the specified range; otherwise, false.</returns>
-    /// <remarks>
-    /// The method does not validate that <paramref name="maxInclusive"/> is greater than or equal
-    /// to <paramref name="minInclusive"/>.  If <paramref name="maxInclusive"/> is less than
-    /// <paramref name="minInclusive"/>, the behavior is undefined.
-    /// </remarks>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsBetween(byte c, byte minInclusive, byte maxInclusive) =>
-        (uint)(c - minInclusive) <= (uint)(maxInclusive - minInclusive);
-
-    // Is it a dot?
-    // are we U+002E (., full stop), U+3002 (ideographic full stop), U+FF0E (fullwidth full stop), or
-    // U+FF61 (halfwidth ideographic full stop).
-    // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
-    private static bool IsDot(ReadOnlySpan<byte> ascii)
-    {
-        if (ascii[0] == (byte)'.')
+        if (index > 0 || count < ascii.Length)
         {
-            return true;
+            // We're only using part of the string
+            ascii = ascii.Slice(index, count);
         }
-
-        if (ascii.Length > 1)
+        // Convert Punycode to Unicode
+        if (!PunycodeDecode(ascii, outputBuffer, out written))
         {
-            Rune.DecodeLastFromUtf8(ascii, out Rune rune, out _);
-            if (rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61)
-            {
-                return true;
-            }
-
+            written = 0;
             return false;
         }
 
-        return false;
+        // We should not need to assert the round trip rule here
+        ////GetAscii(strUnicode)
+        ////// Output name MUST obey IDNA rules & round trip (casing differences are allowed)
+        ////if (!ascii.Equals(, StringComparison.OrdinalIgnoreCase))
+        ////    throw new ArgumentException(SR.Argument_IdnIllegalName, nameof(ascii));
+
+        return true;
     }
 
-    // Is it a dot?
-    // are we U+002E (., full stop), U+3002 (ideographic full stop), U+FF0E (fullwidth full stop), or
-    // U+FF61 (halfwidth ideographic full stop).
-    // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
-    private static bool LastCharacterIsDot(ReadOnlySpan<byte> ascii)
-    {
-        if (ascii[^1] == (byte)'.')
-        {
-            return true;
-        }
-
-        if (Rune.DecodeLastFromUtf8(ascii.Slice(ascii.Length - 2), out Rune rune, out _) == System.Buffers.OperationStatus.Done)
-        {
-            return rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61;
-        }
-
-        return false;
-    }
+    /* PunycodeDecode() converts Punycode to Unicode.  The input is  */
+    /* represented as an array of ASCII code points, and the output   */
+    /* will be represented as an array of Unicode code points.  The   */
+    /* input_length is the number of code points in the input.  The   */
+    /* output_length is an in/out argument: the caller passes in      */
+    /* the maximum number of code points that it can receive, and     */
+    /* on successful return it will contain the actual number of      */
+    /* code points output.  The case_flags array needs room for at    */
+    /* least output_length values, or it can be a null pointer if the */
+    /* case information is not needed.  A nonzero flag suggests that  */
+    /* the corresponding Unicode character be forced to uppercase     */
+    /* by the caller (if possible), while zero suggests that it be    */
+    /* forced to lowercase (if possible).  ASCII code points are      */
+    /* output already in the proper case, but their flags will be set */
+    /* appropriately so that applying the flags would be harmless.    */
 }

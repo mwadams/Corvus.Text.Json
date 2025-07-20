@@ -93,7 +93,6 @@ internal static class FormatHandlerExtensions
         return false;
     }
 
-
     /// <summary>
     /// Get the preferred numeric type for a format.
     /// </summary>

@@ -19,6 +19,14 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
     internal readonly byte[] _utf8Value;
     internal readonly string _value;
 
+    private JsonEncodedText(byte[] utf8Value)
+    {
+        Debug.Assert(utf8Value != null);
+
+        _value = JsonReaderHelper.GetTextFromUtf8(utf8Value);
+        _utf8Value = utf8Value;
+    }
+
     /// <summary>
     /// Returns the UTF-8 encoded representation of the pre-encoded JSON text.
     /// </summary>
@@ -28,14 +36,6 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
     /// Returns the UTF-16 encoded representation of the pre-encoded JSON text as a <see cref="string"/>.
     /// </summary>
     public string Value => _value ?? string.Empty;
-
-    private JsonEncodedText(byte[] utf8Value)
-    {
-        Debug.Assert(utf8Value != null);
-
-        _value = JsonReaderHelper.GetTextFromUtf8(utf8Value);
-        _utf8Value = utf8Value;
-    }
 
     /// <summary>
     /// Encodes the string text value as a JSON string.
@@ -73,35 +73,6 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
         return TranscodeAndEncode(value, encoder);
     }
 
-    private static JsonEncodedText TranscodeAndEncode(ReadOnlySpan<char> value, JavaScriptEncoder? encoder)
-    {
-        JsonWriterHelper.ValidateValue(value);
-
-        int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(value);
-
-        byte[]? array = null;
-        Span<byte> utf8Bytes = expectedByteCount <= JsonConstants.StackallocByteThreshold ?
-            stackalloc byte[JsonConstants.StackallocByteThreshold] :
-            (array = ArrayPool<byte>.Shared.Rent(expectedByteCount));
-
-        // Since GetUtf8ByteCount above already throws on invalid input, the transcoding
-        // to UTF-8 is guaranteed to succeed here. Therefore, there's no need for a try-catch-finally block.
-        int actualByteCount = JsonReaderHelper.GetUtf8FromText(value, utf8Bytes);
-        utf8Bytes = utf8Bytes.Slice(0, actualByteCount);
-        Debug.Assert(expectedByteCount == utf8Bytes.Length);
-
-        JsonEncodedText encodedText = EncodeHelper(utf8Bytes, encoder);
-
-        if (array is not null)
-        {
-            // On the basis that this is user data, go ahead and clear it.
-            utf8Bytes.Clear();
-            ArrayPool<byte>.Shared.Return(array);
-        }
-
-        return encodedText;
-    }
-
     /// <summary>
     /// Encodes the UTF-8 text value as a JSON string.
     /// </summary>
@@ -119,20 +90,6 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
 
         JsonWriterHelper.ValidateValue(utf8Value);
         return EncodeHelper(utf8Value, encoder);
-    }
-
-    private static JsonEncodedText EncodeHelper(ReadOnlySpan<byte> utf8Value, JavaScriptEncoder? encoder)
-    {
-        int idx = JsonWriterHelper.NeedsEscaping(utf8Value, encoder);
-
-        if (idx != -1)
-        {
-            return new JsonEncodedText(JsonHelpers.EscapeValue(utf8Value, idx, encoder));
-        }
-        else
-        {
-            return new JsonEncodedText(utf8Value.ToArray());
-        }
     }
 
     /// <summary>
@@ -169,6 +126,15 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
     }
 
     /// <summary>
+    /// Returns the hash code for this <see cref="JsonEncodedText"/>.
+    /// </summary>
+    /// <remarks>
+    /// Returns 0 on a default instance of <see cref="JsonEncodedText"/>.
+    /// </remarks>
+    public override int GetHashCode()
+        => _value == null ? 0 : _value.GetHashCode();
+
+    /// <summary>
     /// Converts the value of this instance to a <see cref="string"/>.
     /// </summary>
     /// <remarks>
@@ -180,12 +146,46 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
     public override string ToString()
         => _value ?? string.Empty;
 
-    /// <summary>
-    /// Returns the hash code for this <see cref="JsonEncodedText"/>.
-    /// </summary>
-    /// <remarks>
-    /// Returns 0 on a default instance of <see cref="JsonEncodedText"/>.
-    /// </remarks>
-    public override int GetHashCode()
-        => _value == null ? 0 : _value.GetHashCode();
+    private static JsonEncodedText EncodeHelper(ReadOnlySpan<byte> utf8Value, JavaScriptEncoder? encoder)
+    {
+        int idx = JsonWriterHelper.NeedsEscaping(utf8Value, encoder);
+
+        if (idx != -1)
+        {
+            return new JsonEncodedText(JsonHelpers.EscapeValue(utf8Value, idx, encoder));
+        }
+        else
+        {
+            return new JsonEncodedText(utf8Value.ToArray());
+        }
+    }
+
+    private static JsonEncodedText TranscodeAndEncode(ReadOnlySpan<char> value, JavaScriptEncoder? encoder)
+    {
+        JsonWriterHelper.ValidateValue(value);
+
+        int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(value);
+
+        byte[]? array = null;
+        Span<byte> utf8Bytes = expectedByteCount <= JsonConstants.StackallocByteThreshold ?
+            stackalloc byte[JsonConstants.StackallocByteThreshold] :
+            (array = ArrayPool<byte>.Shared.Rent(expectedByteCount));
+
+        // Since GetUtf8ByteCount above already throws on invalid input, the transcoding
+        // to UTF-8 is guaranteed to succeed here. Therefore, there's no need for a try-catch-finally block.
+        int actualByteCount = JsonReaderHelper.GetUtf8FromText(value, utf8Bytes);
+        utf8Bytes = utf8Bytes.Slice(0, actualByteCount);
+        Debug.Assert(expectedByteCount == utf8Bytes.Length);
+
+        JsonEncodedText encodedText = EncodeHelper(utf8Bytes, encoder);
+
+        if (array is not null)
+        {
+            // On the basis that this is user data, go ahead and clear it.
+            utf8Bytes.Clear();
+            ArrayPool<byte>.Shared.Return(array);
+        }
+
+        return encodedText;
+    }
 }

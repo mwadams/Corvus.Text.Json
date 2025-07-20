@@ -95,6 +95,7 @@ public static partial class JsonElementHelpers
 
         return value;
     }
+
     /// <summary>
     /// Parse a period from a string for the <c>duration</c> format.
     /// </summary>
@@ -652,7 +653,6 @@ public static partial class JsonElementHelpers
         index += localWritten;
         destination[index++] = (byte)'Y';
 
-
         if (!Utf8Formatter.TryFormat(period.Months, destination.Slice(index), out localWritten))
         {
             bytesWritten = 0;
@@ -679,7 +679,6 @@ public static partial class JsonElementHelpers
 
         index += localWritten;
         destination[index++] = (byte)'D';
-
 
         if (period.HasTimeComponent)
         {

@@ -10,6 +10,86 @@ namespace Corvus.Text.Json.Tests
     public class JsonElementHelpersDateTimeTests
     {
         [Fact]
+        public void CreateOffsetDateTimeCore_ProducesExpected()
+        {
+            var dt = JsonElementHelpers.CreateOffsetDateTimeCore(2024, 6, 7, 12, 34, 56, 789, 0, 0, 3600);
+            Assert.Equal(new OffsetDateTime(new LocalDateTime(2024, 6, 7, 12, 34, 56, 789), Offset.FromHours(1)), dt);
+        }
+
+        [Fact]
+        public void CreateOffsetDateTimeCore_WithMicroAndNano_ProducesExpected()
+        {
+            // 2024-06-07T12:34:56.7891234+01:00
+            // 789 ms, 1234 ns = 789 ms, 1 us, 234 ns
+            var dt = JsonElementHelpers.CreateOffsetDateTimeCore(
+                2024, 6, 7, 12, 34, 56, 789, 1, 234, 3600);
+
+            var expected = new OffsetDateTime(
+                new LocalDateTime(2024, 6, 7, 12, 34, 56)
+                    .PlusMilliseconds(789)
+                    .PlusNanoseconds((1 * 1000) + 234),
+                Offset.FromHours(1));
+
+            Assert.Equal(expected, dt);
+        }
+
+        [Fact]
+        public void CreateOffsetDateTimeCore_WithoutMicroNano()
+        {
+            var dt = JsonElementHelpers.CreateOffsetDateTimeCore(2024, 6, 7, 12, 34, 56, 789, 3600);
+            Assert.Equal(new OffsetDateTime(new LocalDateTime(2024, 6, 7, 12, 34, 56, 789), Offset.FromHours(1)), dt);
+        }
+
+        [Fact]
+        public void CreateOffsetTimeCore_ProducesExpected()
+        {
+            var t = JsonElementHelpers.CreateOffsetTimeCore(12, 34, 56, 789, 0, 0, 3600);
+            Assert.Equal(new OffsetTime(new LocalTime(12, 34, 56, 789), Offset.FromHours(1)), t);
+        }
+
+        [Fact]
+        public void CreateOffsetTimeCore_WithoutMicroNano()
+        {
+            var t = JsonElementHelpers.CreateOffsetTimeCore(12, 34, 56, 789, 3600);
+            Assert.Equal(new OffsetTime(new LocalTime(12, 34, 56, 789), Offset.FromHours(1)), t);
+        }
+
+        [Fact]
+        public void ParseLocalDate_ThrowsOnInvalid()
+        {
+            var invalid = Encoding.UTF8.GetBytes("2024-13-40");
+            Assert.Throws<FormatException>(() => JsonElementHelpers.ParseLocalDate(invalid));
+        }
+
+        [Fact]
+        public void ParseOffsetDate_ThrowsOnInvalid()
+        {
+            var invalid = Encoding.UTF8.GetBytes("2024-13-40+01:00");
+            Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetDate(invalid));
+        }
+
+        [Fact]
+        public void ParseOffsetDateTime_ThrowsOnInvalid()
+        {
+            var invalid = Encoding.UTF8.GetBytes("2024-06-07T25:00:00+01:00");
+            Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetDateTime(invalid));
+        }
+
+        [Fact]
+        public void ParseOffsetTime_ThrowsOnInvalid()
+        {
+            var invalid = Encoding.UTF8.GetBytes("25:00:00+01:00");
+            Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetTime(invalid));
+        }
+
+        [Fact]
+        public void ParsePeriod_ThrowsOnInvalid()
+        {
+            var invalid = Encoding.UTF8.GetBytes("notaperiod");
+            Assert.Throws<FormatException>(() => JsonElementHelpers.ParsePeriod(invalid));
+        }
+
+        [Fact]
         public void TryFormatLocalDate_RoundTrip()
         {
             var date = new LocalDate(2024, 6, 7);
@@ -112,10 +192,47 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void ParsePeriod_ThrowsOnInvalid()
+        public void TryParseLocalDate_ValidAndInvalid()
         {
-            var invalid = Encoding.UTF8.GetBytes("notaperiod");
-            Assert.Throws<FormatException>(() => JsonElementHelpers.ParsePeriod(invalid));
+            var valid = Encoding.UTF8.GetBytes("2024-06-07");
+            Assert.True(JsonElementHelpers.TryParseLocalDate(valid, out var date));
+            Assert.Equal(new LocalDate(2024, 6, 7), date);
+
+            var invalid = Encoding.UTF8.GetBytes("2024-13-40");
+            Assert.False(JsonElementHelpers.TryParseLocalDate(invalid, out _));
+        }
+
+        [Fact]
+        public void TryParseOffsetDate_ValidAndInvalid()
+        {
+            var valid = Encoding.UTF8.GetBytes("2024-06-07+01:00");
+            Assert.True(JsonElementHelpers.TryParseOffsetDate(valid, out var date));
+            Assert.Equal(new OffsetDate(new LocalDate(2024, 6, 7), Offset.FromHours(1)), date);
+
+            var invalid = Encoding.UTF8.GetBytes("2024-13-40+01:00");
+            Assert.False(JsonElementHelpers.TryParseOffsetDate(invalid, out _));
+        }
+
+        [Fact]
+        public void TryParseOffsetDateTime_ValidAndInvalid()
+        {
+            var valid = Encoding.UTF8.GetBytes("2024-06-07T12:34:56.7890000+01:00");
+            Assert.True(JsonElementHelpers.TryParseOffsetDateTime(valid, out var dt));
+            Assert.Equal(new OffsetDateTime(new LocalDateTime(2024, 6, 7, 12, 34, 56, 789), Offset.FromHours(1)), dt);
+
+            var invalid = Encoding.UTF8.GetBytes("2024-06-07T25:00:00+01:00");
+            Assert.False(JsonElementHelpers.TryParseOffsetDateTime(invalid, out _));
+        }
+
+        [Fact]
+        public void TryParseOffsetTime_ValidAndInvalid()
+        {
+            var valid = Encoding.UTF8.GetBytes("12:34:56.7890000+01:00");
+            Assert.True(JsonElementHelpers.TryParseOffsetTime(valid, out var t));
+            Assert.Equal(new OffsetTime(new LocalTime(12, 34, 56, 789), Offset.FromHours(1)), t);
+
+            var invalid = Encoding.UTF8.GetBytes("25:00:00+01:00");
+            Assert.False(JsonElementHelpers.TryParseOffsetTime(invalid, out _));
         }
 
         [Fact]
@@ -168,123 +285,6 @@ namespace Corvus.Text.Json.Tests
 
             var invalidDoubleT = Encoding.UTF8.GetBytes("P1YT2H3MT4S");
             Assert.False(JsonElementHelpers.TryParsePeriod(invalidDoubleT, out _));
-        }
-
-        [Fact]
-        public void ParseLocalDate_ThrowsOnInvalid()
-        {
-            var invalid = Encoding.UTF8.GetBytes("2024-13-40");
-            Assert.Throws<FormatException>(() => JsonElementHelpers.ParseLocalDate(invalid));
-        }
-
-        [Fact]
-        public void TryParseLocalDate_ValidAndInvalid()
-        {
-            var valid = Encoding.UTF8.GetBytes("2024-06-07");
-            Assert.True(JsonElementHelpers.TryParseLocalDate(valid, out var date));
-            Assert.Equal(new LocalDate(2024, 6, 7), date);
-
-            var invalid = Encoding.UTF8.GetBytes("2024-13-40");
-            Assert.False(JsonElementHelpers.TryParseLocalDate(invalid, out _));
-        }
-
-        [Fact]
-        public void ParseOffsetTime_ThrowsOnInvalid()
-        {
-            var invalid = Encoding.UTF8.GetBytes("25:00:00+01:00");
-            Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetTime(invalid));
-        }
-
-        [Fact]
-        public void TryParseOffsetTime_ValidAndInvalid()
-        {
-            var valid = Encoding.UTF8.GetBytes("12:34:56.7890000+01:00");
-            Assert.True(JsonElementHelpers.TryParseOffsetTime(valid, out var t));
-            Assert.Equal(new OffsetTime(new LocalTime(12, 34, 56, 789), Offset.FromHours(1)), t);
-
-            var invalid = Encoding.UTF8.GetBytes("25:00:00+01:00");
-            Assert.False(JsonElementHelpers.TryParseOffsetTime(invalid, out _));
-        }
-
-        [Fact]
-        public void CreateOffsetTimeCore_ProducesExpected()
-        {
-            var t = JsonElementHelpers.CreateOffsetTimeCore(12, 34, 56, 789, 0, 0, 3600);
-            Assert.Equal(new OffsetTime(new LocalTime(12, 34, 56, 789), Offset.FromHours(1)), t);
-        }
-
-        [Fact]
-        public void CreateOffsetTimeCore_WithoutMicroNano()
-        {
-            var t = JsonElementHelpers.CreateOffsetTimeCore(12, 34, 56, 789, 3600);
-            Assert.Equal(new OffsetTime(new LocalTime(12, 34, 56, 789), Offset.FromHours(1)), t);
-        }
-
-        [Fact]
-        public void ParseOffsetDateTime_ThrowsOnInvalid()
-        {
-            var invalid = Encoding.UTF8.GetBytes("2024-06-07T25:00:00+01:00");
-            Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetDateTime(invalid));
-        }
-
-        [Fact]
-        public void TryParseOffsetDateTime_ValidAndInvalid()
-        {
-            var valid = Encoding.UTF8.GetBytes("2024-06-07T12:34:56.7890000+01:00");
-            Assert.True(JsonElementHelpers.TryParseOffsetDateTime(valid, out var dt));
-            Assert.Equal(new OffsetDateTime(new LocalDateTime(2024, 6, 7, 12, 34, 56, 789), Offset.FromHours(1)), dt);
-
-            var invalid = Encoding.UTF8.GetBytes("2024-06-07T25:00:00+01:00");
-            Assert.False(JsonElementHelpers.TryParseOffsetDateTime(invalid, out _));
-        }
-
-        [Fact]
-        public void CreateOffsetDateTimeCore_ProducesExpected()
-        {
-            var dt = JsonElementHelpers.CreateOffsetDateTimeCore(2024, 6, 7, 12, 34, 56, 789, 0, 0, 3600);
-            Assert.Equal(new OffsetDateTime(new LocalDateTime(2024, 6, 7, 12, 34, 56, 789), Offset.FromHours(1)), dt);
-        }
-
-        [Fact]
-        public void CreateOffsetDateTimeCore_WithoutMicroNano()
-        {
-            var dt = JsonElementHelpers.CreateOffsetDateTimeCore(2024, 6, 7, 12, 34, 56, 789, 3600);
-            Assert.Equal(new OffsetDateTime(new LocalDateTime(2024, 6, 7, 12, 34, 56, 789), Offset.FromHours(1)), dt);
-        }
-
-        [Fact]
-        public void CreateOffsetDateTimeCore_WithMicroAndNano_ProducesExpected()
-        {
-            // 2024-06-07T12:34:56.7891234+01:00
-            // 789 ms, 1234 ns = 789 ms, 1 us, 234 ns
-            var dt = JsonElementHelpers.CreateOffsetDateTimeCore(
-                2024, 6, 7, 12, 34, 56, 789, 1, 234, 3600);
-
-            var expected = new OffsetDateTime(
-                new LocalDateTime(2024, 6, 7, 12, 34, 56)
-                    .PlusMilliseconds(789)
-                    .PlusNanoseconds((1 * 1000) + 234),
-                Offset.FromHours(1));
-
-            Assert.Equal(expected, dt);
-        }
-
-        [Fact]
-        public void ParseOffsetDate_ThrowsOnInvalid()
-        {
-            var invalid = Encoding.UTF8.GetBytes("2024-13-40+01:00");
-            Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetDate(invalid));
-        }
-
-        [Fact]
-        public void TryParseOffsetDate_ValidAndInvalid()
-        {
-            var valid = Encoding.UTF8.GetBytes("2024-06-07+01:00");
-            Assert.True(JsonElementHelpers.TryParseOffsetDate(valid, out var date));
-            Assert.Equal(new OffsetDate(new LocalDate(2024, 6, 7), Offset.FromHours(1)), date);
-
-            var invalid = Encoding.UTF8.GetBytes("2024-13-40+01:00");
-            Assert.False(JsonElementHelpers.TryParseOffsetDate(invalid, out _));
         }
     }
 }

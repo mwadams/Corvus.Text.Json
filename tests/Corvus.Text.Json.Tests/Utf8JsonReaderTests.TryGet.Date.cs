@@ -10,6 +10,61 @@ namespace Corvus.Text.Json.Tests
 {
     public static partial class Utf8JsonReaderTests
     {
+        [Fact]
+        public static void TestingDateTimeMaxValue()
+        {
+            string jsonString = @"""9999-12-31T23:59:59""";
+            string expectedString = "9999-12-31T23:59:59";
+            byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
+
+            var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
+            while (json.Read())
+            {
+                if (json.TokenType == JsonTokenType.String)
+                {
+                    DateTime expected = DateTime.Parse(expectedString);
+
+                    Assert.True(json.TryGetDateTime(out DateTime actual));
+                    Assert.Equal(expected, actual);
+
+                    Assert.Equal(expected, json.GetDateTime());
+                }
+            }
+
+            Assert.Equal(dataUtf8.Length, json.BytesConsumed);
+
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString);
+            Assert.Equal(DateTime.Parse(expectedString), doc.RootElement.GetDateTime());
+        }
+
+        [Fact]
+        public static void TestingDateTimeMinValue_UtcOffsetGreaterThan0()
+        {
+            string jsonString = @"""0001-01-01T00:00:00""";
+            string expectedString = "0001-01-01T00:00:00";
+            byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
+
+            var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
+            while (json.Read())
+            {
+                if (json.TokenType == JsonTokenType.String)
+                {
+                    DateTime expected = DateTime.Parse(expectedString);
+
+                    Assert.True(json.TryGetDateTime(out DateTime actual));
+                    Assert.Equal(expected, actual);
+
+                    Assert.Equal(expected, json.GetDateTime());
+                }
+            }
+
+            Assert.Equal(dataUtf8.Length, json.BytesConsumed);
+
+            // Test upstream
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString);
+            Assert.Equal(DateTime.Parse(expectedString), doc.RootElement.GetDateTime());
+        }
+
         [Theory]
         [MemberData(nameof(JsonDateTimeTestData.ValidISO8601Tests), MemberType = typeof(JsonDateTimeTestData))]
         public static void TestingStringsConversionToDateTime(string jsonString, string expectedString)
@@ -45,52 +100,6 @@ namespace Corvus.Text.Json.Tests
                 if (json.TokenType == JsonTokenType.String)
                 {
                     DateTimeOffset expected = DateTimeOffset.Parse(expectedString);
-
-                    Assert.True(json.TryGetDateTimeOffset(out DateTimeOffset actual));
-                    Assert.Equal(expected, actual);
-
-                    Assert.Equal(expected, json.GetDateTimeOffset());
-                }
-            }
-
-            Assert.Equal(dataUtf8.Length, json.BytesConsumed);
-        }
-
-        [Theory]
-        [MemberData(nameof(JsonDateTimeTestData.ValidISO8601TestsWithUtcOffset), MemberType = typeof(JsonDateTimeTestData))]
-        public static void TestingStringsWithUTCOffsetToDateTime(string jsonString, string expectedString)
-        {
-            byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
-
-            var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
-            while (json.Read())
-            {
-                if (json.TokenType == JsonTokenType.String)
-                {
-                    DateTime expected = DateTime.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-
-                    Assert.True(json.TryGetDateTime(out DateTime actual));
-                    Assert.Equal(expected, actual);
-
-                    Assert.Equal(expected, json.GetDateTime());
-                }
-            }
-
-            Assert.Equal(dataUtf8.Length, json.BytesConsumed);
-        }
-
-        [Theory]
-        [MemberData(nameof(JsonDateTimeTestData.ValidISO8601TestsWithUtcOffset), MemberType = typeof(JsonDateTimeTestData))]
-        public static void TestingStringsWithUTCOffsetToDateTimeOffset(string jsonString, string expectedString)
-        {
-            byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
-
-            var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
-            while (json.Read())
-            {
-                if (json.TokenType == JsonTokenType.String)
-                {
-                    DateTimeOffset expected = DateTimeOffset.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 
                     Assert.True(json.TryGetDateTimeOffset(out DateTimeOffset actual));
                     Assert.Equal(expected, actual);
@@ -149,12 +158,10 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-        [Fact]
-        // https://github.com/dotnet/runtime/issues/30095
-        public static void TestingDateTimeMinValue_UtcOffsetGreaterThan0()
+        [Theory]
+        [MemberData(nameof(JsonDateTimeTestData.ValidISO8601TestsWithUtcOffset), MemberType = typeof(JsonDateTimeTestData))]
+        public static void TestingStringsWithUTCOffsetToDateTime(string jsonString, string expectedString)
         {
-            string jsonString = @"""0001-01-01T00:00:00""";
-            string expectedString = "0001-01-01T00:00:00";
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
             var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
@@ -162,7 +169,7 @@ namespace Corvus.Text.Json.Tests
             {
                 if (json.TokenType == JsonTokenType.String)
                 {
-                    DateTime expected = DateTime.Parse(expectedString);
+                    DateTime expected = DateTime.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 
                     Assert.True(json.TryGetDateTime(out DateTime actual));
                     Assert.Equal(expected, actual);
@@ -172,17 +179,12 @@ namespace Corvus.Text.Json.Tests
             }
 
             Assert.Equal(dataUtf8.Length, json.BytesConsumed);
-
-            // Test upstream
-            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString);
-            Assert.Equal(DateTime.Parse(expectedString), doc.RootElement.GetDateTime());
         }
 
-        [Fact]
-        public static void TestingDateTimeMaxValue()
+        [Theory]
+        [MemberData(nameof(JsonDateTimeTestData.ValidISO8601TestsWithUtcOffset), MemberType = typeof(JsonDateTimeTestData))]
+        public static void TestingStringsWithUTCOffsetToDateTimeOffset(string jsonString, string expectedString)
         {
-            string jsonString = @"""9999-12-31T23:59:59""";
-            string expectedString = "9999-12-31T23:59:59";
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
             var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
@@ -190,19 +192,16 @@ namespace Corvus.Text.Json.Tests
             {
                 if (json.TokenType == JsonTokenType.String)
                 {
-                    DateTime expected = DateTime.Parse(expectedString);
+                    DateTimeOffset expected = DateTimeOffset.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 
-                    Assert.True(json.TryGetDateTime(out DateTime actual));
+                    Assert.True(json.TryGetDateTimeOffset(out DateTimeOffset actual));
                     Assert.Equal(expected, actual);
 
-                    Assert.Equal(expected, json.GetDateTime());
+                    Assert.Equal(expected, json.GetDateTimeOffset());
                 }
             }
 
             Assert.Equal(dataUtf8.Length, json.BytesConsumed);
-
-            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString);
-            Assert.Equal(DateTime.Parse(expectedString), doc.RootElement.GetDateTime());
         }
 
         [Theory]
@@ -231,6 +230,24 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Theory]
+        [InlineData(@"""\u001c\u0001""")]
+        [InlineData(@"""\u001c\u0001\u0001""")]
+        public static void TryGetDateTimeAndOffset_InvalidPropertyValue(string testString)
+        {
+            byte[] dataUtf8 = Encoding.UTF8.GetBytes(testString);
+            var json = new Utf8JsonReader(dataUtf8);
+            Assert.True(json.Read());
+
+            Assert.False(json.TryGetDateTime(out DateTime dateTime));
+            Assert.Equal(default, dateTime);
+            JsonTestHelper.AssertThrows<FormatException>(ref json, (ref json) => json.GetDateTime());
+
+            Assert.False(json.TryGetDateTimeOffset(out DateTimeOffset dateTimeOffset));
+            Assert.Equal(default, dateTimeOffset);
+            JsonTestHelper.AssertThrows<FormatException>(ref json, (ref json) => json.GetDateTimeOffset());
+        }
+
+        [Theory]
         [MemberData(nameof(JsonDateTimeTestData.InvalidISO8601Tests), MemberType = typeof(JsonDateTimeTestData))]
         public static void TryGetDateTimeOffset_HasValueSequence_False(string testString)
         {
@@ -253,24 +270,6 @@ namespace Corvus.Text.Json.Tests
 
             Test(testString, isFinalBlock: true);
             Test(testString, isFinalBlock: false);
-        }
-
-        [Theory]
-        [InlineData(@"""\u001c\u0001""")]
-        [InlineData(@"""\u001c\u0001\u0001""")]
-        public static void TryGetDateTimeAndOffset_InvalidPropertyValue(string testString)
-        {
-            byte[] dataUtf8 = Encoding.UTF8.GetBytes(testString);
-            var json = new Utf8JsonReader(dataUtf8);
-            Assert.True(json.Read());
-
-            Assert.False(json.TryGetDateTime(out DateTime dateTime));
-            Assert.Equal(default, dateTime);
-            JsonTestHelper.AssertThrows<FormatException>(ref json, (ref json) => json.GetDateTime());
-
-            Assert.False(json.TryGetDateTimeOffset(out DateTimeOffset dateTimeOffset));
-            Assert.Equal(default, dateTimeOffset);
-            JsonTestHelper.AssertThrows<FormatException>(ref json, (ref json) => json.GetDateTimeOffset());
         }
     }
 }

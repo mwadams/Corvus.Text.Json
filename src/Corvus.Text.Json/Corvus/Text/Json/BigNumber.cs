@@ -63,6 +63,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>
     }
 
 #if NET
+
     /// <summary>
     /// Gets the minimum format buffer length.
     /// </summary>
@@ -95,6 +96,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>
         minimumLength = (int)value;
         return true;
     }
+
 #endif
 
     /// <summary>
@@ -122,14 +124,12 @@ public readonly struct BigNumber : IEquatable<BigNumber>
 
             destination[result++] = 'E';
 
-
 #if NET
             if (!Exponent.TryFormat(destination.Slice(result), out int exponentBytesWritten))
             {
                 charsWritten = 0;
                 return false;
             }
-
 
             result += exponentBytesWritten;
 #else
@@ -257,7 +257,6 @@ public readonly struct BigNumber : IEquatable<BigNumber>
                 end--;
             }
 #endif
-
         }
 
         charsWritten = result;
@@ -325,7 +324,6 @@ public readonly struct BigNumber : IEquatable<BigNumber>
 
             value = default;
             return false;
-
         }
         finally
         {

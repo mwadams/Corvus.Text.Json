@@ -8,15 +8,15 @@ namespace System.Collections.Generic;
 internal partial struct ValueStack<T>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Peek()
+    {
+        return Span[_pos - 1];
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T Pop()
     {
         _pos--;
         return Span[_pos];
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T Peek()
-    {
-        return Span[_pos - 1];
     }
 }

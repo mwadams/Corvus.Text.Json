@@ -16,21 +16,11 @@ namespace Corvus.Text.Json.Tests
             _buffer = new byte[capacity];
         }
 
-        public void Clear()
-        {
-            _count = 0;
-        }
-
-        public Span<byte> Free => _buffer.AsSpan(_count);
-
         public byte[] Formatted => _buffer.AsSpan(0, _count).ToArray();
 
         public int FormattedCount => _count;
 
-        public Memory<byte> GetMemory(int minimumLength = 0) => _buffer.AsMemory(_count);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Span<byte> GetSpan(int minimumLength = 0) => _buffer.AsSpan(_count);
+        public Span<byte> Free => _buffer.AsSpan(_count);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Advance(int bytes)
@@ -41,5 +31,15 @@ namespace Corvus.Text.Json.Tests
             }
             _count += bytes;
         }
+
+        public void Clear()
+        {
+            _count = 0;
+        }
+
+        public Memory<byte> GetMemory(int minimumLength = 0) => _buffer.AsMemory(_count);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Span<byte> GetSpan(int minimumLength = 0) => _buffer.AsSpan(_count);
     }
 }

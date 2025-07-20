@@ -213,7 +213,6 @@ public sealed partial class IdnMapping
                     }
                 }
 
-
                 // Remember where the last dot is
                 iLastDot = i;
                 continue;
@@ -274,6 +273,7 @@ public sealed partial class IdnMapping
     /* value can be any of the punycode_status values defined above   */
     /* except punycode_bad_input; if not punycode_success, then       */
     /* output_size and output might contain garbage.                  */
+
     private static bool PunycodeEncode(ReadOnlySpan<char> unicode, Span<char> buffer, out int written)
     {
         // 0 length strings aren't allowed
@@ -591,7 +591,6 @@ public sealed partial class IdnMapping
 
             utf32 = 0;
             return false;
-
         }
 
         // Not a high-surrogate or low-surrogate. Generate the UTF32 value for the BMP characters.

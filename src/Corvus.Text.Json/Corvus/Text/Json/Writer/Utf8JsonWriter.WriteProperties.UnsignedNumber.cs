@@ -188,6 +188,45 @@ public sealed partial class Utf8JsonWriter
     public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, uint value)
         => WriteNumber(utf8PropertyName, (ulong)value);
 
+    internal void WritePropertyName(uint value)
+        => WritePropertyName((ulong)value);
+
+    internal void WritePropertyName(ulong value)
+    {
+        Span<byte> utf8PropertyName = stackalloc byte[JsonConstants.MaximumFormatUInt64Length];
+
+        bool result = Utf8Formatter.TryFormat(value, utf8PropertyName, out int bytesWritten);
+        Debug.Assert(result);
+
+        WritePropertyNameUnescaped(utf8PropertyName.Slice(0, bytesWritten));
+    }
+
+    private void WriteNumberByOptions(ReadOnlySpan<char> propertyName, ulong value)
+    {
+        ValidateWritingProperty();
+        if (_options.Indented)
+        {
+            WriteNumberIndented(propertyName, value);
+        }
+        else
+        {
+            WriteNumberMinimized(propertyName, value);
+        }
+    }
+
+    private void WriteNumberByOptions(ReadOnlySpan<byte> utf8PropertyName, ulong value)
+    {
+        ValidateWritingProperty();
+        if (_options.Indented)
+        {
+            WriteNumberIndented(utf8PropertyName, value);
+        }
+        else
+        {
+            WriteNumberMinimized(utf8PropertyName, value);
+        }
+    }
+
     private void WriteNumberEscape(ReadOnlySpan<char> propertyName, ulong value)
     {
         int propertyIdx = JsonWriterHelper.NeedsEscaping(propertyName, _options.Encoder);
@@ -264,94 +303,6 @@ public sealed partial class Utf8JsonWriter
         {
             ArrayPool<byte>.Shared.Return(propertyArray);
         }
-    }
-
-    private void WriteNumberByOptions(ReadOnlySpan<char> propertyName, ulong value)
-    {
-        ValidateWritingProperty();
-        if (_options.Indented)
-        {
-            WriteNumberIndented(propertyName, value);
-        }
-        else
-        {
-            WriteNumberMinimized(propertyName, value);
-        }
-    }
-
-    private void WriteNumberByOptions(ReadOnlySpan<byte> utf8PropertyName, ulong value)
-    {
-        ValidateWritingProperty();
-        if (_options.Indented)
-        {
-            WriteNumberIndented(utf8PropertyName, value);
-        }
-        else
-        {
-            WriteNumberMinimized(utf8PropertyName, value);
-        }
-    }
-
-    private void WriteNumberMinimized(ReadOnlySpan<char> escapedPropertyName, ulong value)
-    {
-        Debug.Assert(escapedPropertyName.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - JsonConstants.MaximumFormatUInt64Length - 4);
-
-        // All ASCII, 2 quotes for property name, and 1 colon => escapedPropertyName.Length + JsonConstants.MaximumFormatUInt64Length + 3
-        // Optionally, 1 list separator, and up to 3x growth when transcoding
-        int maxRequired = (escapedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) + JsonConstants.MaximumFormatUInt64Length + 4;
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-        output[BytesPending++] = JsonConstants.Quote;
-
-        TranscodeAndWrite(escapedPropertyName, output);
-
-        output[BytesPending++] = JsonConstants.Quote;
-        output[BytesPending++] = JsonConstants.KeyValueSeparator;
-
-        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
-        Debug.Assert(result);
-        BytesPending += bytesWritten;
-    }
-
-    private void WriteNumberMinimized(ReadOnlySpan<byte> escapedPropertyName, ulong value)
-    {
-        Debug.Assert(escapedPropertyName.Length < int.MaxValue - JsonConstants.MaximumFormatUInt64Length - 4);
-
-        int minRequired = escapedPropertyName.Length + JsonConstants.MaximumFormatUInt64Length + 3; // 2 quotes for property name, and 1 colon
-        int maxRequired = minRequired + 1; // Optionally, 1 list separator
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-        output[BytesPending++] = JsonConstants.Quote;
-
-        escapedPropertyName.CopyTo(output.Slice(BytesPending));
-        BytesPending += escapedPropertyName.Length;
-
-        output[BytesPending++] = JsonConstants.Quote;
-        output[BytesPending++] = JsonConstants.KeyValueSeparator;
-
-        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
-        Debug.Assert(result);
-        BytesPending += bytesWritten;
     }
 
     private void WriteNumberIndented(ReadOnlySpan<char> escapedPropertyName, ulong value)
@@ -446,16 +397,65 @@ public sealed partial class Utf8JsonWriter
         BytesPending += bytesWritten;
     }
 
-    internal void WritePropertyName(uint value)
-        => WritePropertyName((ulong)value);
-
-    internal void WritePropertyName(ulong value)
+    private void WriteNumberMinimized(ReadOnlySpan<char> escapedPropertyName, ulong value)
     {
-        Span<byte> utf8PropertyName = stackalloc byte[JsonConstants.MaximumFormatUInt64Length];
+        Debug.Assert(escapedPropertyName.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - JsonConstants.MaximumFormatUInt64Length - 4);
 
-        bool result = Utf8Formatter.TryFormat(value, utf8PropertyName, out int bytesWritten);
+        // All ASCII, 2 quotes for property name, and 1 colon => escapedPropertyName.Length + JsonConstants.MaximumFormatUInt64Length + 3
+        // Optionally, 1 list separator, and up to 3x growth when transcoding
+        int maxRequired = (escapedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) + JsonConstants.MaximumFormatUInt64Length + 4;
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
+        }
+        output[BytesPending++] = JsonConstants.Quote;
+
+        TranscodeAndWrite(escapedPropertyName, output);
+
+        output[BytesPending++] = JsonConstants.Quote;
+        output[BytesPending++] = JsonConstants.KeyValueSeparator;
+
+        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
         Debug.Assert(result);
+        BytesPending += bytesWritten;
+    }
 
-        WritePropertyNameUnescaped(utf8PropertyName.Slice(0, bytesWritten));
+    private void WriteNumberMinimized(ReadOnlySpan<byte> escapedPropertyName, ulong value)
+    {
+        Debug.Assert(escapedPropertyName.Length < int.MaxValue - JsonConstants.MaximumFormatUInt64Length - 4);
+
+        int minRequired = escapedPropertyName.Length + JsonConstants.MaximumFormatUInt64Length + 3; // 2 quotes for property name, and 1 colon
+        int maxRequired = minRequired + 1; // Optionally, 1 list separator
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
+        }
+        output[BytesPending++] = JsonConstants.Quote;
+
+        escapedPropertyName.CopyTo(output.Slice(BytesPending));
+        BytesPending += escapedPropertyName.Length;
+
+        output[BytesPending++] = JsonConstants.Quote;
+        output[BytesPending++] = JsonConstants.KeyValueSeparator;
+
+        bool result = Utf8Formatter.TryFormat(value, output.Slice(BytesPending), out int bytesWritten);
+        Debug.Assert(result);
+        BytesPending += bytesWritten;
     }
 }

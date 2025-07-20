@@ -20,6 +20,7 @@ internal static partial class JsonWriterHelper
     //
     // non-zero = allowed, 0 = disallowed
     public const int LastAsciiCharacter = 0x7F;
+
     private static ReadOnlySpan<byte> AllowList => // byte.MaxValue + 1
     [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // U+0000..U+000F
@@ -169,24 +170,31 @@ internal static partial class JsonWriterHelper
                 destination[written++] = (byte)'2';
                 destination[written++] = (byte)'2';
                 break;
+
             case JsonConstants.LineFeed:
                 destination[written++] = (byte)'n';
                 break;
+
             case JsonConstants.CarriageReturn:
                 destination[written++] = (byte)'r';
                 break;
+
             case JsonConstants.Tab:
                 destination[written++] = (byte)'t';
                 break;
+
             case JsonConstants.BackSlash:
                 destination[written++] = (byte)'\\';
                 break;
+
             case JsonConstants.BackSpace:
                 destination[written++] = (byte)'b';
                 break;
+
             case JsonConstants.FormFeed:
                 destination[written++] = (byte)'f';
                 break;
+
             default:
                 destination[written++] = (byte)'u';
 
@@ -289,24 +297,31 @@ internal static partial class JsonWriterHelper
                 destination[written++] = '2';
                 destination[written++] = '2';
                 break;
+
             case JsonConstants.LineFeed:
                 destination[written++] = 'n';
                 break;
+
             case JsonConstants.CarriageReturn:
                 destination[written++] = 'r';
                 break;
+
             case JsonConstants.Tab:
                 destination[written++] = 't';
                 break;
+
             case JsonConstants.BackSlash:
                 destination[written++] = '\\';
                 break;
+
             case JsonConstants.BackSpace:
                 destination[written++] = 'b';
                 break;
+
             case JsonConstants.FormFeed:
                 destination[written++] = 'f';
                 break;
+
             default:
                 destination[written++] = 'u';
 #if NET

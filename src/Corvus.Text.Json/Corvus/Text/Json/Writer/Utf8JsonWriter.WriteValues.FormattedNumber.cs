@@ -45,26 +45,6 @@ public sealed partial class Utf8JsonWriter
         _tokenType = JsonTokenType.Number;
     }
 
-    private void WriteNumberValueMinimized(ReadOnlySpan<byte> utf8Value)
-    {
-        int maxRequired = utf8Value.Length + 1; // Optionally, 1 list separator
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-
-        utf8Value.CopyTo(output.Slice(BytesPending));
-        BytesPending += utf8Value.Length;
-    }
-
     private void WriteNumberValueIndented(ReadOnlySpan<byte> utf8Value)
     {
         int indent = Indentation;
@@ -94,6 +74,26 @@ public sealed partial class Utf8JsonWriter
             }
             WriteIndentation(output.Slice(BytesPending), indent);
             BytesPending += indent;
+        }
+
+        utf8Value.CopyTo(output.Slice(BytesPending));
+        BytesPending += utf8Value.Length;
+    }
+
+    private void WriteNumberValueMinimized(ReadOnlySpan<byte> utf8Value)
+    {
+        int maxRequired = utf8Value.Length + 1; // Optionally, 1 list separator
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
         }
 
         utf8Value.CopyTo(output.Slice(BytesPending));

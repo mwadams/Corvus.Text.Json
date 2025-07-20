@@ -35,15 +35,15 @@ public interface IJsonElement
     void CheckValidInstance();
 
     /// <summary>
-    /// Writes this element to the specified <see cref="Utf8JsonWriter"/>.
-    /// </summary>
-    /// <param name="writer">The writer to which to write the element.</param>
-    void WriteTo(Utf8JsonWriter writer);
-
-    /// <summary>
     /// Evaluates the schema for this element.
     /// </summary>
     /// <param name="resultsCollector">The results collector for schema evaluation (optional).</param>
     /// <returns><c>true</c> if the schema evaluation succeeded; otherwise, <c>false</c>.</returns>
     bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null);
+
+    /// <summary>
+    /// Writes this element to the specified <see cref="Utf8JsonWriter"/>.
+    /// </summary>
+    /// <param name="writer">The writer to which to write the element.</param>
+    void WriteTo(Utf8JsonWriter writer);
 }

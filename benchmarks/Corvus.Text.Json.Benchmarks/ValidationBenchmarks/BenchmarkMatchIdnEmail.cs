@@ -18,19 +18,19 @@ public class BenchmarkMatchIdnEmail
     private JsonIdnEmail _cjsEmailElement;
     private ParsedJsonDocument<JsonElement>? _ctjEmail;
 
+    [GlobalCleanup]
+    public void GlobalCleanup()
+    {
+        _cjsEmail?.Dispose();
+        _ctjEmail?.Dispose();
+    }
+
     [GlobalSetup]
     public void GlobalSetup()
     {
         _cjsEmail = System.Text.Json.JsonDocument.Parse("\"Dörte@Sörensen.example.com\"");
         _ctjEmail = ParsedJsonDocument<JsonElement>.Parse("\"Dörte@Sörensen.example.com\"");
         _cjsEmailElement = JsonIdnEmail.FromJson(_cjsEmail.RootElement);
-    }
-
-    [GlobalCleanup]
-    public void GlobalCleanup()
-    {
-        _cjsEmail?.Dispose();
-        _ctjEmail?.Dispose();
     }
 
     [Benchmark(Baseline = true)]
@@ -55,5 +55,4 @@ public class BenchmarkMatchIdnEmail
             context.Dispose();
         }
     }
-
 }

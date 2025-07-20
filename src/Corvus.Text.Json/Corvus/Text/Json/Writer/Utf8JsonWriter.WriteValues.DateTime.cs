@@ -39,30 +39,6 @@ public sealed partial class Utf8JsonWriter
         _tokenType = JsonTokenType.String;
     }
 
-    private void WriteStringValueMinimized(DateTime value)
-    {
-        int maxRequired = JsonConstants.MaximumFormatDateTimeOffsetLength + 3; // 2 quotes, and optionally, 1 list separator
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-
-        output[BytesPending++] = JsonConstants.Quote;
-
-        JsonWriterHelper.WriteDateTimeTrimmed(output.Slice(BytesPending), value, out int bytesWritten);
-        BytesPending += bytesWritten;
-
-        output[BytesPending++] = JsonConstants.Quote;
-    }
-
     private void WriteStringValueIndented(DateTime value)
     {
         int indent = Indentation;
@@ -91,6 +67,30 @@ public sealed partial class Utf8JsonWriter
             }
             WriteIndentation(output.Slice(BytesPending), indent);
             BytesPending += indent;
+        }
+
+        output[BytesPending++] = JsonConstants.Quote;
+
+        JsonWriterHelper.WriteDateTimeTrimmed(output.Slice(BytesPending), value, out int bytesWritten);
+        BytesPending += bytesWritten;
+
+        output[BytesPending++] = JsonConstants.Quote;
+    }
+
+    private void WriteStringValueMinimized(DateTime value)
+    {
+        int maxRequired = JsonConstants.MaximumFormatDateTimeOffsetLength + 3; // 2 quotes, and optionally, 1 list separator
+
+        if (_memory.Length - BytesPending < maxRequired)
+        {
+            Grow(maxRequired);
+        }
+
+        Span<byte> output = _memory.Span;
+
+        if (_currentDepth < 0)
+        {
+            output[BytesPending++] = JsonConstants.ListSeparator;
         }
 
         output[BytesPending++] = JsonConstants.Quote;

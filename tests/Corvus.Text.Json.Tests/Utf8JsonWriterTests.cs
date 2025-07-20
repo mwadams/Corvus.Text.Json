@@ -1515,7 +1515,7 @@ namespace Corvus.Text.Json.Tests
         public async Task WriteLargeToStream(JsonWriterOptions options)
         {
             var stream = new MemoryStream();
-            
+
             await WriteLargeToStreamHelper(stream, options);
 
             string expectedString = GetExpectedLargeString(options);
@@ -1530,7 +1530,7 @@ namespace Corvus.Text.Json.Tests
         {
             const int InitialGrowthSize = 256;
             var output = new FixedSizedBufferWriter(InitialGrowthSize);
-            
+
             byte[] utf8String = "this is a string long enough to overflow the buffer and cause an exception to be thrown."u8.ToArray();
 
             using var jsonUtf8 = new Utf8JsonWriter(output, options);
@@ -1796,6 +1796,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         private const JsonValueKind JsonValueKindStringSegment = (JsonValueKind)(1 << 7);
+
         public static IEnumerable<object[]> InvalidJsonDueToWritingMultipleValues_TestData() =>
             JsonOptionsWith([
                 JsonValueKind.Array,
@@ -2115,29 +2116,37 @@ namespace Corvus.Text.Json.Tests
                     writer.WriteStartObject();
                     writer.WriteEndObject();
                     break;
+
                 case JsonValueKind.Array:
                     writer.WriteStartArray();
                     writer.WriteEndArray();
                     break;
+
                 case JsonValueKind.String:
                     writer.WriteStringValue("foo");
                     break;
+
                 case JsonValueKind.Number:
                     writer.WriteNumberValue(1);
                     break;
+
                 case JsonValueKind.True:
                     writer.WriteBooleanValue(true);
                     break;
+
                 case JsonValueKind.False:
                     writer.WriteBooleanValue(false);
                     break;
+
                 case JsonValueKind.Null:
                     writer.WriteNullValue();
                     break;
+
                 case JsonValueKindStringSegment:
                     writer.WriteStringValueSegment("foo".ToCharArray(), false);
                     writer.WriteStringValueSegment("bar".ToCharArray(), true);
                     break;
+
                 default:
                     Debug.Fail($"Invalid JsonValueKind passed in '{kind}'.");
                     break;
@@ -2889,7 +2898,7 @@ namespace Corvus.Text.Json.Tests
                 (nameof(Utf8JsonWriter.WriteStringValue), writer => writer.WriteStringValue("foo")),
                 (nameof(Utf8JsonWriter.WritePropertyName), writer => writer.WritePropertyName("foo")),
             }
-            from option in new [] { new JsonWriterOptions { SkipValidation = true }, new JsonWriterOptions { SkipValidation = false } }
+            from option in new[] { new JsonWriterOptions { SkipValidation = true }, new JsonWriterOptions { SkipValidation = false } }
             select new object[] { write.methodName, write.method, option };
 
         [Theory]
@@ -3320,7 +3329,7 @@ namespace Corvus.Text.Json.Tests
                 key.AsSpan().Fill((byte)'a');
                 keyChars.AsSpan().Fill('a');
 
-                    var output = new ArrayBufferWriter<byte>(1024);
+                var output = new ArrayBufferWriter<byte>(1024);
 
                 using (var jsonUtf8 = new Utf8JsonWriter(output, options))
                 {
@@ -3430,7 +3439,7 @@ namespace Corvus.Text.Json.Tests
 
                 value.AsSpan().Fill(168);
 
-                    var output = new ArrayBufferWriter<byte>(1024);
+                var output = new ArrayBufferWriter<byte>(1024);
 
                 using (var jsonUtf8 = new Utf8JsonWriter(output, options))
                 {
@@ -3542,7 +3551,6 @@ namespace Corvus.Text.Json.Tests
         {
             string expectedStr = "123456789012345";
 
-            
             var output = new ArrayBufferWriter<byte>(1024);
             using var jsonUtf8 = new Utf8JsonWriter(output, options);
 
@@ -3567,7 +3575,6 @@ namespace Corvus.Text.Json.Tests
             ReadOnlySpan<byte> utf8PropertyName = "message"u8;
             ReadOnlySpan<byte> utf8Value = "Hello, World!"u8;
 
-
             for (int i = 0; i < 32; i++)
             {
                 var output = new ArrayBufferWriter<byte>(32);
@@ -3581,156 +3588,187 @@ namespace Corvus.Text.Json.Tests
                         jsonUtf8.WriteString(propertyName, value);
                         jsonUtf8.WriteString(propertyName, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteString(propertyName, value.AsSpan());
                         jsonUtf8.WriteString(propertyName, value.AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteString(propertyName, utf8Value);
                         jsonUtf8.WriteString(propertyName, utf8Value);
                         break;
+
                     case 3:
                         jsonUtf8.WriteString(propertyName.AsSpan(), value);
                         jsonUtf8.WriteString(propertyName.AsSpan(), value);
                         break;
+
                     case 4:
                         jsonUtf8.WriteString(propertyName.AsSpan(), value.AsSpan());
                         jsonUtf8.WriteString(propertyName.AsSpan(), value.AsSpan());
                         break;
+
                     case 5:
                         jsonUtf8.WriteString(propertyName.AsSpan(), utf8Value);
                         jsonUtf8.WriteString(propertyName.AsSpan(), utf8Value);
                         break;
+
                     case 6:
                         jsonUtf8.WriteString(utf8PropertyName, value);
                         jsonUtf8.WriteString(utf8PropertyName, value);
                         break;
+
                     case 7:
                         jsonUtf8.WriteString(utf8PropertyName, value.AsSpan());
                         jsonUtf8.WriteString(utf8PropertyName, value.AsSpan());
                         break;
+
                     case 8:
                         jsonUtf8.WriteString(utf8PropertyName, utf8Value);
                         jsonUtf8.WriteString(utf8PropertyName, utf8Value);
                         break;
+
                     case 9:
                         jsonUtf8.WriteString(encodedPropertyName, value);
                         jsonUtf8.WriteString(encodedPropertyName, value);
                         break;
+
                     case 10:
                         jsonUtf8.WriteString(encodedPropertyName, value.AsSpan());
                         jsonUtf8.WriteString(encodedPropertyName, value.AsSpan());
                         break;
+
                     case 11:
                         jsonUtf8.WriteString(encodedPropertyName, utf8Value);
                         jsonUtf8.WriteString(encodedPropertyName, utf8Value);
                         break;
+
                     case 12:
                         jsonUtf8.WriteString(encodedPropertyName, encodedValue);
                         jsonUtf8.WriteString(encodedPropertyName, encodedValue);
                         break;
+
                     case 13:
                         jsonUtf8.WriteString(propertyName, encodedValue);
                         jsonUtf8.WriteString(propertyName, encodedValue);
                         break;
+
                     case 14:
                         jsonUtf8.WriteString(propertyName.AsSpan(), encodedValue);
                         jsonUtf8.WriteString(propertyName.AsSpan(), encodedValue);
                         break;
+
                     case 15:
                         jsonUtf8.WriteString(utf8PropertyName, encodedValue);
                         jsonUtf8.WriteString(utf8PropertyName, encodedValue);
                         break;
+
                     case 16:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value);
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 17:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 18:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(utf8Value);
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(utf8Value);
                         break;
+
                     case 19:
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(value);
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 20:
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 21:
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(utf8Value);
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(utf8Value);
                         break;
+
                     case 22:
                         jsonUtf8.WritePropertyName(utf8PropertyName);
                         jsonUtf8.WriteStringValue(value);
                         jsonUtf8.WritePropertyName(utf8PropertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 23:
                         jsonUtf8.WritePropertyName(utf8PropertyName);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         jsonUtf8.WritePropertyName(utf8PropertyName);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 24:
                         jsonUtf8.WritePropertyName(utf8PropertyName);
                         jsonUtf8.WriteStringValue(utf8Value);
                         jsonUtf8.WritePropertyName(utf8PropertyName);
                         jsonUtf8.WriteStringValue(utf8Value);
                         break;
+
                     case 25:
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(value);
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 26:
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 27:
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(utf8Value);
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(utf8Value);
                         break;
+
                     case 28:
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 29:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 30:
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(encodedValue);
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 31:
                         jsonUtf8.WritePropertyName(utf8PropertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
@@ -3775,156 +3813,187 @@ namespace Corvus.Text.Json.Tests
                         jsonUtf8.WriteString(propertyName, value);
                         jsonUtf8.WriteString(propertyName, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteString(propertyName, valueSpan);
                         jsonUtf8.WriteString(propertyName, valueSpan);
                         break;
+
                     case 2:
                         jsonUtf8.WriteString(propertyName, valueSpanUtf8);
                         jsonUtf8.WriteString(propertyName, valueSpanUtf8);
                         break;
+
                     case 3:
                         jsonUtf8.WriteString(propertyNameSpan, value);
                         jsonUtf8.WriteString(propertyNameSpan, value);
                         break;
+
                     case 4:
                         jsonUtf8.WriteString(propertyNameSpan, valueSpan);
                         jsonUtf8.WriteString(propertyNameSpan, valueSpan);
                         break;
+
                     case 5:
                         jsonUtf8.WriteString(propertyNameSpan, valueSpanUtf8);
                         jsonUtf8.WriteString(propertyNameSpan, valueSpanUtf8);
                         break;
+
                     case 6:
                         jsonUtf8.WriteString(propertyNameSpanUtf8, value);
                         jsonUtf8.WriteString(propertyNameSpanUtf8, value);
                         break;
+
                     case 7:
                         jsonUtf8.WriteString(propertyNameSpanUtf8, valueSpan);
                         jsonUtf8.WriteString(propertyNameSpanUtf8, valueSpan);
                         break;
+
                     case 8:
                         jsonUtf8.WriteString(propertyNameSpanUtf8, valueSpanUtf8);
                         jsonUtf8.WriteString(propertyNameSpanUtf8, valueSpanUtf8);
                         break;
+
                     case 9:
                         jsonUtf8.WriteString(encodedPropertyName, value);
                         jsonUtf8.WriteString(encodedPropertyName, value);
                         break;
+
                     case 10:
                         jsonUtf8.WriteString(encodedPropertyName, value.AsSpan());
                         jsonUtf8.WriteString(encodedPropertyName, value.AsSpan());
                         break;
+
                     case 11:
                         jsonUtf8.WriteString(encodedPropertyName, valueSpanUtf8);
                         jsonUtf8.WriteString(encodedPropertyName, valueSpanUtf8);
                         break;
+
                     case 12:
                         jsonUtf8.WriteString(encodedPropertyName, encodedValue);
                         jsonUtf8.WriteString(encodedPropertyName, encodedValue);
                         break;
+
                     case 13:
                         jsonUtf8.WriteString(propertyName, encodedValue);
                         jsonUtf8.WriteString(propertyName, encodedValue);
                         break;
+
                     case 14:
                         jsonUtf8.WriteString(propertyName.AsSpan(), encodedValue);
                         jsonUtf8.WriteString(propertyName.AsSpan(), encodedValue);
                         break;
+
                     case 15:
                         jsonUtf8.WriteString(propertyNameSpanUtf8, encodedValue);
                         jsonUtf8.WriteString(propertyNameSpanUtf8, encodedValue);
                         break;
+
                     case 16:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value);
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 17:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(valueSpan);
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(valueSpan);
                         break;
+
                     case 18:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(valueSpanUtf8);
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(valueSpanUtf8);
                         break;
+
                     case 19:
                         jsonUtf8.WritePropertyName(propertyNameSpan);
                         jsonUtf8.WriteStringValue(value);
                         jsonUtf8.WritePropertyName(propertyNameSpan);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 20:
                         jsonUtf8.WritePropertyName(propertyNameSpan);
                         jsonUtf8.WriteStringValue(valueSpan);
                         jsonUtf8.WritePropertyName(propertyNameSpan);
                         jsonUtf8.WriteStringValue(valueSpan);
                         break;
+
                     case 21:
                         jsonUtf8.WritePropertyName(propertyNameSpan);
                         jsonUtf8.WriteStringValue(valueSpanUtf8);
                         jsonUtf8.WritePropertyName(propertyNameSpan);
                         jsonUtf8.WriteStringValue(valueSpanUtf8);
                         break;
+
                     case 22:
                         jsonUtf8.WritePropertyName(propertyNameSpanUtf8);
                         jsonUtf8.WriteStringValue(value);
                         jsonUtf8.WritePropertyName(propertyNameSpanUtf8);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 23:
                         jsonUtf8.WritePropertyName(propertyNameSpanUtf8);
                         jsonUtf8.WriteStringValue(valueSpan);
                         jsonUtf8.WritePropertyName(propertyNameSpanUtf8);
                         jsonUtf8.WriteStringValue(valueSpan);
                         break;
+
                     case 24:
                         jsonUtf8.WritePropertyName(propertyNameSpanUtf8);
                         jsonUtf8.WriteStringValue(valueSpanUtf8);
                         jsonUtf8.WritePropertyName(propertyNameSpanUtf8);
                         jsonUtf8.WriteStringValue(valueSpanUtf8);
                         break;
+
                     case 25:
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(value);
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 26:
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 27:
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(valueSpanUtf8);
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(valueSpanUtf8);
                         break;
+
                     case 28:
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
                         jsonUtf8.WritePropertyName(encodedPropertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 29:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 30:
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(encodedValue);
                         jsonUtf8.WritePropertyName(propertyName.AsSpan());
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 31:
                         jsonUtf8.WritePropertyName(propertyNameSpanUtf8);
                         jsonUtf8.WriteStringValue(encodedValue);
@@ -4033,14 +4102,17 @@ namespace Corvus.Text.Json.Tests
                         jsonUtf8.WriteBase64String(propertyName, value);
                         jsonUtf8.WriteBase64String(propertyName, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteBase64String(propertyNameSpan, value);
                         jsonUtf8.WriteBase64String(propertyNameSpan, value);
                         break;
+
                     case 2:
                         jsonUtf8.WriteBase64String(propertyNameSpanUtf8, value);
                         jsonUtf8.WriteBase64String(propertyNameSpanUtf8, value);
                         break;
+
                     case 3:
                         jsonUtf8.WriteBase64String(encodedPropertyName, value);
                         jsonUtf8.WriteBase64String(encodedPropertyName, value);
@@ -4251,7 +4323,7 @@ namespace Corvus.Text.Json.Tests
         public void WriteInvalidDepthPartial(JsonWriterOptions options)
         {
             {
-                    var output = new ArrayBufferWriter<byte>(10);
+                var output = new ArrayBufferWriter<byte>(10);
                 using var jsonUtf8 = new Utf8JsonWriter(output, options);
 
                 jsonUtf8.WriteStartObject();
@@ -4271,7 +4343,7 @@ namespace Corvus.Text.Json.Tests
             }
 
             {
-                    var output = new ArrayBufferWriter<byte>(10);
+                var output = new ArrayBufferWriter<byte>(10);
                 using var jsonUtf8 = new Utf8JsonWriter(output, options);
 
                 jsonUtf8.WriteStartObject();
@@ -4320,9 +4392,11 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteStringValue(comment);
                         break;
+
                     case 1:
                         jsonUtf8.WriteStringValue(comment.AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteStringValue(Encoding.UTF8.GetBytes(comment));
                         break;
@@ -4398,9 +4472,11 @@ namespace Corvus.Text.Json.Tests
                 case 0:
                     jsonUtf8.WriteCommentValue(comment);
                     break;
+
                 case 1:
                     jsonUtf8.WriteCommentValue(comment.AsSpan());
                     break;
+
                 case 2:
                     jsonUtf8.WriteCommentValue(Encoding.UTF8.GetBytes(comment));
                     break;
@@ -4579,7 +4655,7 @@ namespace Corvus.Text.Json.Tests
         {
             string value = "temp";
             string expectedStr = GetStringsExpectedString(options, value);
-            
+
             for (int i = 0; i < 3; i++)
             {
                 var output = new ArrayBufferWriter<byte>(1024);
@@ -4594,9 +4670,11 @@ namespace Corvus.Text.Json.Tests
                         case 0:
                             jsonUtf8.WriteStringValue(value);
                             break;
+
                         case 1:
                             jsonUtf8.WriteStringValue(value.AsSpan());
                             break;
+
                         case 2:
                             jsonUtf8.WriteStringValue(Encoding.UTF8.GetBytes(value));
                             break;
@@ -4644,111 +4722,142 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteString(key, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteString(key, value.AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteString(key, valueUtf8);
                         break;
+
                     case 3:
                         jsonUtf8.WriteString(key.AsSpan(), value);
                         break;
+
                     case 4:
                         jsonUtf8.WriteString(key.AsSpan(), value.AsSpan());
                         break;
+
                     case 5:
                         jsonUtf8.WriteString(key.AsSpan(), valueUtf8);
                         break;
+
                     case 6:
                         jsonUtf8.WriteString(keyUtf8, value);
                         break;
+
                     case 7:
                         jsonUtf8.WriteString(keyUtf8, value.AsSpan());
                         break;
+
                     case 8:
                         jsonUtf8.WriteString(keyUtf8, valueUtf8);
                         break;
+
                     case 9:
                         jsonUtf8.WriteString(encodedKey, value);
                         break;
+
                     case 10:
                         jsonUtf8.WriteString(encodedKey, value.AsSpan());
                         break;
+
                     case 11:
                         jsonUtf8.WriteString(encodedKey, valueUtf8);
                         break;
+
                     case 12:
                         jsonUtf8.WriteString(encodedKey, encodedValue);
                         break;
+
                     case 13:
                         jsonUtf8.WriteString(key, encodedValue);
                         break;
+
                     case 14:
                         jsonUtf8.WriteString(key.AsSpan(), encodedValue);
                         break;
+
                     case 15:
                         jsonUtf8.WriteString(keyUtf8, encodedValue);
                         break;
+
                     case 16:
                         jsonUtf8.WritePropertyName(key);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 17:
                         jsonUtf8.WritePropertyName(key);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 18:
                         jsonUtf8.WritePropertyName(key);
                         jsonUtf8.WriteStringValue(valueUtf8);
                         break;
+
                     case 19:
                         jsonUtf8.WritePropertyName(key.AsSpan());
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 20:
                         jsonUtf8.WritePropertyName(key.AsSpan());
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 21:
                         jsonUtf8.WritePropertyName(key.AsSpan());
                         jsonUtf8.WriteStringValue(valueUtf8);
                         break;
+
                     case 22:
                         jsonUtf8.WritePropertyName(keyUtf8);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 23:
                         jsonUtf8.WritePropertyName(keyUtf8);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 24:
                         jsonUtf8.WritePropertyName(keyUtf8);
                         jsonUtf8.WriteStringValue(valueUtf8);
                         break;
+
                     case 25:
                         jsonUtf8.WritePropertyName(encodedKey);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 26:
                         jsonUtf8.WritePropertyName(encodedKey);
                         jsonUtf8.WriteStringValue(value.AsSpan());
                         break;
+
                     case 27:
                         jsonUtf8.WritePropertyName(encodedKey);
                         jsonUtf8.WriteStringValue(valueUtf8);
                         break;
+
                     case 28:
                         jsonUtf8.WritePropertyName(encodedKey);
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 29:
                         jsonUtf8.WritePropertyName(key);
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 30:
                         jsonUtf8.WritePropertyName(key.AsSpan());
                         jsonUtf8.WriteStringValue(encodedValue);
                         break;
+
                     case 31:
                         jsonUtf8.WritePropertyName(keyUtf8);
                         jsonUtf8.WriteStringValue(encodedValue);
@@ -4798,20 +4907,25 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteString(propertyName, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteString(Encoding.UTF8.GetBytes(propertyName), Encoding.UTF8.GetBytes(value));
                         break;
+
                     case 2:
                         jsonUtf8.WriteString(JsonEncodedText.Encode(propertyName), JsonEncodedText.Encode(value));
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 4:
                         jsonUtf8.WritePropertyName(Encoding.UTF8.GetBytes(propertyName));
                         jsonUtf8.WriteStringValue(Encoding.UTF8.GetBytes(value));
                         break;
+
                     case 5:
                         jsonUtf8.WritePropertyName(JsonEncodedText.Encode(propertyName));
                         jsonUtf8.WriteStringValue(JsonEncodedText.Encode(value));
@@ -4827,7 +4941,6 @@ namespace Corvus.Text.Json.Tests
 
         [Theory]
         [MemberData(nameof(JsonOptions_TestData))]
-        ////[OuterLoop("Too slow", typeof(PlatformDetection), nameof(PlatformDetection.IsMonoRuntime))]
         public void EscapeCharacters(JsonWriterOptions options)
         {
             // Do not include surrogate pairs.
@@ -4858,20 +4971,25 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteString(propertyName, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteString(Encoding.UTF8.GetBytes(propertyName), Encoding.UTF8.GetBytes(value));
                         break;
+
                     case 2:
                         jsonUtf8.WriteString(JsonEncodedText.Encode(propertyName), JsonEncodedText.Encode(value));
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 4:
                         jsonUtf8.WritePropertyName(Encoding.UTF8.GetBytes(propertyName));
                         jsonUtf8.WriteStringValue(Encoding.UTF8.GetBytes(value));
                         break;
+
                     case 5:
                         jsonUtf8.WritePropertyName(JsonEncodedText.Encode(propertyName));
                         jsonUtf8.WriteStringValue(JsonEncodedText.Encode(value));
@@ -4908,20 +5026,25 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteString(propertyName, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteString(Encoding.UTF8.GetBytes(propertyName), Encoding.UTF8.GetBytes(value));
                         break;
+
                     case 2:
                         jsonUtf8.WriteString(JsonEncodedText.Encode(propertyName), JsonEncodedText.Encode(value));
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName(propertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 4:
                         jsonUtf8.WritePropertyName(Encoding.UTF8.GetBytes(propertyName));
                         jsonUtf8.WriteStringValue(Encoding.UTF8.GetBytes(value));
                         break;
+
                     case 5:
                         jsonUtf8.WritePropertyName(JsonEncodedText.Encode(propertyName));
                         jsonUtf8.WriteStringValue(JsonEncodedText.Encode(value));
@@ -5165,20 +5288,25 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteString(PropertyName, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteString(Encoding.UTF8.GetBytes(PropertyName), Encoding.UTF8.GetBytes(value));
                         break;
+
                     case 2:
                         jsonUtf8.WriteString(JsonEncodedText.Encode(PropertyName), JsonEncodedText.Encode(value, encoder));
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName(PropertyName);
                         jsonUtf8.WriteStringValue(value);
                         break;
+
                     case 4:
                         jsonUtf8.WritePropertyName(Encoding.UTF8.GetBytes(PropertyName));
                         jsonUtf8.WriteStringValue(Encoding.UTF8.GetBytes(value));
                         break;
+
                     case 5:
                         jsonUtf8.WritePropertyName(JsonEncodedText.Encode(PropertyName, encoder));
                         jsonUtf8.WriteStringValue(JsonEncodedText.Encode(value, encoder));
@@ -5280,7 +5408,6 @@ namespace Corvus.Text.Json.Tests
         {
             string expectedStr = GetStartEndWithPropertyArrayExpectedString(options);
 
-            
             for (int i = 0; i < 3; i++)
             {
                 var output = new ArrayBufferWriter<byte>(1024);
@@ -5293,9 +5420,11 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteStartArray("property name");
                         break;
+
                     case 1:
                         jsonUtf8.WriteStartArray("property name".AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteStartArray("property name"u8);
                         break;
@@ -5340,9 +5469,11 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteStartArray(key);
                         break;
+
                     case 1:
                         jsonUtf8.WriteStartArray(key.AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteStartArray(Encoding.UTF8.GetBytes(key));
                         break;
@@ -5374,9 +5505,11 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteStartObject("property name");
                         break;
+
                     case 1:
                         jsonUtf8.WriteStartObject("property name".AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteStartObject("property name"u8);
                         break;
@@ -5415,9 +5548,11 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteStartObject(key);
                         break;
+
                     case 1:
                         jsonUtf8.WriteStartObject(key.AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteStartObject(Encoding.UTF8.GetBytes(key));
                         break;
@@ -5449,9 +5584,11 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteStartArray("message");
                         break;
+
                     case 1:
                         jsonUtf8.WriteStartArray("message".AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteStartArray("message"u8);
                         break;
@@ -5494,12 +5631,15 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteBoolean(keyString, value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteBoolean(keyString.AsSpan(), value);
                         break;
+
                     case 2:
                         jsonUtf8.WriteBoolean(Encoding.UTF8.GetBytes(keyString), value);
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName(keyString);
                         jsonUtf8.WriteBooleanValue(value);
@@ -5546,14 +5686,17 @@ namespace Corvus.Text.Json.Tests
                         jsonUtf8.WriteNull(keyString);
                         jsonUtf8.WriteNull(keyString);
                         break;
+
                     case 1:
                         jsonUtf8.WriteNull(keyString.AsSpan());
                         jsonUtf8.WriteNull(keyString.AsSpan());
                         break;
+
                     case 2:
                         jsonUtf8.WriteNull(Encoding.UTF8.GetBytes(keyString));
                         jsonUtf8.WriteNull(Encoding.UTF8.GetBytes(keyString));
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName(keyString);
                         jsonUtf8.WriteNullValue();
@@ -5602,12 +5745,15 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteNumber("message", value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteNumber("message".AsSpan(), value);
                         break;
+
                     case 2:
                         jsonUtf8.WriteNumber("message"u8, value);
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName("message");
                         jsonUtf8.WriteNumberValue(value);
@@ -5645,12 +5791,15 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteNumber("message", value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteNumber("message".AsSpan(), value);
                         break;
+
                     case 2:
                         jsonUtf8.WriteNumber("message"u8, value);
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName("message");
                         jsonUtf8.WriteNumberValue(value);
@@ -5688,12 +5837,15 @@ namespace Corvus.Text.Json.Tests
                     case 0:
                         jsonUtf8.WriteNumber("message", value);
                         break;
+
                     case 1:
                         jsonUtf8.WriteNumber("message".AsSpan(), value);
                         break;
+
                     case 2:
                         jsonUtf8.WriteNumber("message"u8, value);
                         break;
+
                     case 3:
                         jsonUtf8.WritePropertyName("message");
                         jsonUtf8.WriteNumberValue(value);
@@ -5710,7 +5862,6 @@ namespace Corvus.Text.Json.Tests
         [Theory]
         [SkipOnTargetFramework(TargetFrameworkMonikers.NetFramework)]
         [MemberData(nameof(WriteValue_TestData))]
-        ////[OuterLoop("Too slow", typeof(PlatformDetection), nameof(PlatformDetection.IsMonoRuntime))]
         public void WriteNumbers(JsonWriterOptions options, string keyString)
         {
             var random = new Random(42);
@@ -5758,7 +5909,6 @@ namespace Corvus.Text.Json.Tests
             ulongs[2] = 10446744073709551615;
             for (int i = 3; i < numberOfItems; i++)
             {
-
             }
 
             double[] doubles = new double[numberOfItems * 2];
@@ -5870,6 +6020,7 @@ namespace Corvus.Text.Json.Tests
                             jsonUtf8.WriteNumber(keyString, decimals[i]);
                         jsonUtf8.WriteStartArray(keyString);
                         break;
+
                     case 1:
                         for (int i = 0; i < floats.Length; i++)
                             jsonUtf8.WriteNumber(keyUtf16, floats[i]);
@@ -5887,6 +6038,7 @@ namespace Corvus.Text.Json.Tests
                             jsonUtf8.WriteNumber(keyUtf16, decimals[i]);
                         jsonUtf8.WriteStartArray(keyUtf16);
                         break;
+
                     case 2:
                         for (int i = 0; i < floats.Length; i++)
                             jsonUtf8.WriteNumber(keyUtf8, floats[i]);
@@ -6135,10 +6287,12 @@ namespace Corvus.Text.Json.Tests
                         jsonUtf8.WriteString(keyString, keyString);
                         jsonUtf8.WriteStartArray(keyString);
                         break;
+
                     case 1:
                         jsonUtf8.WriteString(keyUtf16, keyString);
                         jsonUtf8.WriteStartArray(keyUtf16);
                         break;
+
                     case 2:
                         jsonUtf8.WriteString(keyUtf8, keyString);
                         jsonUtf8.WriteStartArray(keyUtf8);
@@ -6194,11 +6348,13 @@ namespace Corvus.Text.Json.Tests
                             jsonUtf8.WriteString(keyString, guids[j]);
                         jsonUtf8.WriteStartArray(keyString);
                         break;
+
                     case 1:
                         for (int j = 0; j < numberOfItems; j++)
                             jsonUtf8.WriteString(keyUtf16, guids[j]);
                         jsonUtf8.WriteStartArray(keyUtf16);
                         break;
+
                     case 2:
                         for (int j = 0; j < numberOfItems; j++)
                             jsonUtf8.WriteString(keyUtf8, guids[j]);
@@ -6250,11 +6406,13 @@ namespace Corvus.Text.Json.Tests
                             jsonUtf8.WriteString(keyString, dates[j]);
                         jsonUtf8.WriteStartArray(keyString);
                         break;
+
                     case 1:
                         for (int j = 0; j < numberOfItems; j++)
                             jsonUtf8.WriteString(keyUtf16, dates[j]);
                         jsonUtf8.WriteStartArray(keyUtf16);
                         break;
+
                     case 2:
                         for (int j = 0; j < numberOfItems; j++)
                             jsonUtf8.WriteString(keyUtf8, dates[j]);
@@ -6306,11 +6464,13 @@ namespace Corvus.Text.Json.Tests
                             jsonUtf8.WriteString(keyString, dates[j]);
                         jsonUtf8.WriteStartArray(keyString);
                         break;
+
                     case 1:
                         for (int j = 0; j < numberOfItems; j++)
                             jsonUtf8.WriteString(keyUtf16, dates[j]);
                         jsonUtf8.WriteStartArray(keyUtf16);
                         break;
+
                     case 2:
                         for (int j = 0; j < numberOfItems; j++)
                             jsonUtf8.WriteString(keyUtf8, dates[j]);
@@ -6384,7 +6544,6 @@ namespace Corvus.Text.Json.Tests
         {
             try
             {
-                
                 Span<byte> key;
                 Span<byte> value;
 
@@ -6414,7 +6573,6 @@ namespace Corvus.Text.Json.Tests
         {
             try
             {
-                
                 Span<byte> key;
                 Span<byte> value;
 
@@ -6462,14 +6620,13 @@ namespace Corvus.Text.Json.Tests
         {
             DateTime utcNow = DateTimeTestHelpers.FixedDateTimeValue;
 
-
             var output = new ArrayBufferWriter<byte>(1024);
             using var jsonUtf8 = new Utf8JsonWriter(output);
 
             jsonUtf8.WriteStringValue(utcNow);
             jsonUtf8.Flush();
 
-            using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(output.WrittenMemory);            
+            using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(output.WrittenMemory);
             Assert.Equal(utcNow, doc.RootElement.GetDateTime());
         }
 
@@ -7474,7 +7631,7 @@ namespace Corvus.Text.Json.Tests
 
             json.WritePropertyName("property1");
 
-            CompensateWhitespaces(options.Indented, json, streamWriter); 
+            CompensateWhitespaces(options.Indented, json, streamWriter);
             CompensateNewLine(options.Indented, json, streamWriter);
             CompensateWhitespaces(options.Indented, json, streamWriter);
 
@@ -8075,7 +8232,6 @@ namespace Corvus.Text.Json.Tests
             from inputValue in others
             from anotherValue in anothers
             select new object[] { options, inputValue, anotherValue };
-
     }
 
     public static class WriterHelpers

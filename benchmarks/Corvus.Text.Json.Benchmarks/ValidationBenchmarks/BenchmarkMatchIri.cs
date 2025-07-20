@@ -18,19 +18,19 @@ public class BenchmarkMatchIri
     private JsonIri _cjsIriElement;
     private ParsedJsonDocument<JsonElement>? _ctjIri;
 
+    [GlobalCleanup]
+    public void GlobalCleanup()
+    {
+        _cjsIri?.Dispose();
+        _ctjIri?.Dispose();
+    }
+
     [GlobalSetup]
     public void GlobalSetup()
     {
         _cjsIri = System.Text.Json.JsonDocument.Parse("\"http://ƒøø.ßår/?∂éœ=πîx#πîüx\"");
         _ctjIri = ParsedJsonDocument<JsonElement>.Parse("\"http://ƒøø.ßår/?∂éœ=πîx#πîüx\"");
         _cjsIriElement = JsonIri.FromJson(_cjsIri.RootElement);
-    }
-
-    [GlobalCleanup]
-    public void GlobalCleanup()
-    {
-        _cjsIri?.Dispose();
-        _ctjIri?.Dispose();
     }
 
     [Benchmark(Baseline = true)]

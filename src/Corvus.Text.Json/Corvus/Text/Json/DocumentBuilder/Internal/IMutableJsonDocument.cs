@@ -255,6 +255,7 @@ public interface IMutableJsonDocument : IJsonDocument
     int StoreValue(in BigNumber value);
 
 #if NET
+
     /// <summary>
     /// Stores an <see cref="Int128"/> value in the document.
     /// </summary>
@@ -275,6 +276,7 @@ public interface IMutableJsonDocument : IJsonDocument
     /// <param name="value">The <see cref="Half"/> value to store.</param>
     /// <returns>The index of the stored value.</returns>
     int StoreValue(Half value);
+
 #endif
 
     /// <summary>

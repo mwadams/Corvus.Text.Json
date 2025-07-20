@@ -1,10 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Xunit;
 using System.Collections.Generic;
 using Corvus.Runtime.InteropServices;
 using Corvus.Text.Json.Internal;
+using Xunit;
 
 namespace Corvus.Text.Json.Tests
 {
@@ -26,214 +26,6 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-        [Theory]
-        [MemberData(nameof(ElementParseCases))]
-        public static void ParseValue(string json, JsonValueKind kind)
-        {
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
-
-            JsonElement element = JsonElement.ParseValue(ref reader);
-            Assert.Equal(kind, element.ValueKind);
-            Assert.Equal(json.Length, reader.BytesConsumed);
-            Assert.False(element.SniffDocument().IsDisposable());
-        }
-
-        [Theory]
-        [MemberData(nameof(ElementParseCases))]
-        public static void Parse_Valid(string json, JsonValueKind kind)
-        {
-            Validate(JsonElement.Parse(json));
-            Validate(JsonElement.Parse(json.AsSpan()));
-            Validate(JsonElement.Parse(Encoding.UTF8.GetBytes(json).AsSpan()));
-
-            void Validate(JsonElement element)
-            {
-                Assert.Equal(kind, element.ValueKind);
-                Assert.False(element.SniffDocument().IsDisposable());
-            }
-        }
-
-        [Fact]
-        public static void Parse_RespectsOptions()
-        {
-            const string Json = """
-                {
-                    /* comment */
-                    "someProp": "value"
-                }
-                """;
-
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Json));
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Json.AsSpan()));
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Encoding.UTF8.GetBytes(Json).AsSpan()));
-
-            JsonDocumentOptions options = new()
-            {
-                CommentHandling = JsonCommentHandling.Skip,
-            };
-
-            Validate(JsonElement.Parse(Json, options));
-            Validate(JsonElement.Parse(Json.AsSpan(), options));
-            Validate(JsonElement.Parse(Encoding.UTF8.GetBytes(Json).AsSpan(), options));
-
-            void Validate(JsonElement element)
-            {
-                Assert.Equal(JsonValueKind.Object, element.ValueKind);
-                Assert.Equal(JsonValueKind.String, element.GetProperty("someProp").ValueKind);
-            }
-        }
-
-
-        [Theory]
-        [MemberData(nameof(ElementParseCases))]
-        public static void TryParseValue(string json, JsonValueKind kind)
-        {
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
-
-            bool success = JsonElement.TryParseValue(ref reader, out JsonElement? element);
-            Assert.True(success);
-            Assert.Equal(kind, element!.Value.ValueKind);
-            Assert.Equal(json.Length, reader.BytesConsumed);
-            Assert.False(element!.Value.SniffDocument().IsDisposable());
-        }
-
-        [Fact]
-        public static void ParseValue_AllowMultipleValues_TrailingJson()
-        {
-            var options = new JsonReaderOptions { AllowMultipleValues = true };
-            var reader = new Utf8JsonReader("[null,false,42,{},[1]]             [43]"u8, options);
-
-            JsonElement element;
-            element = JsonElement.ParseValue(ref reader);
-            Assert.Equal("[null,false,42,{},[1]]", element.GetRawText());
-            Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
-
-            Assert.True(reader.Read());
-            element = JsonElement.ParseValue(ref reader);
-            Assert.Equal("[43]", element.GetRawText());
-
-            Assert.False(reader.Read());
-        }
-
-
-        [Fact]
-        public static void ParseValue_AllowMultipleValues_TrailingContent()
-        {
-            var options = new JsonReaderOptions { AllowMultipleValues = true };
-            var reader = new Utf8JsonReader("[null,false,42,{},[1]]             <NotJson/>"u8, options);
-
-            JsonElement element = JsonElement.ParseValue(ref reader);
-            Assert.Equal("[null,false,42,{},[1]]", element.GetRawText());
-            Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
-
-            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref reader) => reader.Read());
-        }
-
-        public static IEnumerable<object[]> ElementParsePartialDataCases
-        {
-            get
-            {
-                yield return new object[] { "\"MyString"};
-                yield return new object[] { "{" };
-                yield return new object[] { "[" };
-                yield return new object[] { " \n" };
-            }
-        }
-
-        [Theory]
-        [MemberData(nameof(ElementParsePartialDataCases))]
-        public static void ParseValuePartialDataFail(string json)
-        {
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
-
-            Exception ex;
-            try
-            {
-                JsonElement.ParseValue(ref reader);
-                ex = null;
-            }
-            catch (Exception e)
-            {
-                ex = e;
-            }
-
-            Assert.NotNull(ex);
-            Assert.IsAssignableFrom<JsonException>(ex);
-
-            Assert.Equal(0, reader.BytesConsumed);
-        }
-
-        [Theory]
-        [MemberData(nameof(ElementParsePartialDataCases))]
-        public static void Parse_Invalid(string json)
-        {
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(json));
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(json.AsSpan()));
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Encoding.UTF8.GetBytes(json).AsSpan()));
-        }
-
-        [Fact]
-        public static void Parse_NullString_Throws()
-        {
-            AssertExtensions.Throws<ArgumentNullException>("json", () => JsonElement.Parse((string)null));
-        }
-
-        [Theory]
-        [MemberData(nameof(ElementParsePartialDataCases))]
-        public static void TryParseValuePartialDataFail(string json)
-        {
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
-
-            Exception ex;
-            try
-            {
-                JsonElement.TryParseValue(ref reader, out JsonElement? element);
-                ex = null;
-            }
-            catch (Exception e)
-            {
-                ex = e;
-            }
-
-            Assert.NotNull(ex);
-            Assert.IsAssignableFrom<JsonException>(ex);
-
-            Assert.Equal(0, reader.BytesConsumed);
-        }
-
-        [Theory]
-        [MemberData(nameof(ElementParsePartialDataCases))]
-        public static void ParseValueOutOfData(string json)
-        {
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json), isFinalBlock: false, new JsonReaderState());
-
-            Exception ex;
-            try
-            {
-                JsonElement.ParseValue(ref reader);
-                ex = null;
-            }
-            catch (Exception e)
-            {
-                ex = e;
-            }
-
-            Assert.NotNull(ex);
-            Assert.IsAssignableFrom<JsonException>(ex);
-
-            Assert.Equal(0, reader.BytesConsumed);
-        }
-
-        [Theory]
-        [MemberData(nameof(ElementParsePartialDataCases))]
-        public static void TryParseValueOutOfData(string json)
-        {
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json), isFinalBlock: false, new JsonReaderState());
-            Assert.False(JsonElement.TryParseValue(ref reader, out JsonElement? element));
-            Assert.Null(element);
-            Assert.Equal(0, reader.BytesConsumed);
-        }
-
         public static IEnumerable<object[]> ElementParseInvalidDataCases
         {
             get
@@ -243,81 +35,25 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-        [Theory]
-        [MemberData(nameof(ElementParseInvalidDataCases))]
-        public static void ParseValueInvalidDataFail(string json)
+        public static IEnumerable<object[]> ElementParsePartialDataCases
         {
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
-
-            Exception ex;
-            try
+            get
             {
-                JsonElement.ParseValue(ref reader);
-                ex = null;
+                yield return new object[] { "\"MyString" };
+                yield return new object[] { "{" };
+                yield return new object[] { "[" };
+                yield return new object[] { " \n" };
             }
-            catch (Exception e)
-            {
-                ex = e;
-            }
-
-            Assert.NotNull(ex);
-            Assert.IsAssignableFrom<JsonException>(ex);
-
-            Assert.Equal(0, reader.BytesConsumed);
         }
 
-        [Theory]
-        [MemberData(nameof(ElementParseInvalidDataCases))]
-        public static void TryParseValueInvalidDataFail(string json)
+        [Fact]
+        public static void JsonMarshal_GetRawUtf8Value_DisposedDocument_ThrowsObjectDisposedException()
         {
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
-
-            Exception ex;
-            try
-            {
-                JsonElement.TryParseValue(ref reader, out JsonElement? element);
-                ex = null;
-            }
-            catch (Exception e)
-            {
-                ex = e;
-            }
-
-            Assert.NotNull(ex);
-            Assert.IsAssignableFrom<JsonException>(ex);
-
-            Assert.Equal(0, reader.BytesConsumed);
-        }
-
-        [Theory]
-        [InlineData("null")]
-        [InlineData("\r\n    null ")]
-        [InlineData("false")]
-        [InlineData("true ")]
-        [InlineData("   42.0 ")]
-        [InlineData(" \"str\" \r\n")]
-        [InlineData(" \"string with escaping: \\u0041\\u0042\\u0043\" \r\n")]
-        [InlineData(" [     ]")]
-        [InlineData(" [null, true, 42.0, \"str\", [], {}, ]")]
-        [InlineData(" {  } ")]
-        [InlineData("""
-
-            {
-                /* I am a comment */
-                "key1" : 1,
-                "key2" : null,
-                "key3" : true,
-            }
-
-            """)]
-        public static void JsonMarshal_GetRawUtf8Value_RootValue_ReturnsFullValue(string json)
-        {
-            JsonDocumentOptions options = new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip };
-            using ParsedJsonDocument<JsonElement> jDoc = ParsedJsonDocument<JsonElement>.Parse(json, options);
+            ParsedJsonDocument<JsonElement> jDoc = ParsedJsonDocument<JsonElement>.Parse("{}");
             JsonElement element = jDoc.RootElement;
+            jDoc.Dispose();
 
-            using RawUtf8JsonString rawValue = JsonMarshal.GetRawUtf8Value(element);
-            Assert.Equal(json.Trim(), Encoding.UTF8.GetString(rawValue.Memory.ToArray()));
+            Assert.Throws<ObjectDisposedException>(() => JsonMarshal.GetRawUtf8Value(element));
         }
 
         [Fact]
@@ -408,14 +144,276 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-        [Fact]
-        public static void JsonMarshal_GetRawUtf8Value_DisposedDocument_ThrowsObjectDisposedException()
-        {
-            ParsedJsonDocument<JsonElement> jDoc = ParsedJsonDocument<JsonElement>.Parse("{}");
-            JsonElement element = jDoc.RootElement;
-            jDoc.Dispose();
+        [Theory]
+        [InlineData("null")]
+        [InlineData("\r\n    null ")]
+        [InlineData("false")]
+        [InlineData("true ")]
+        [InlineData("   42.0 ")]
+        [InlineData(" \"str\" \r\n")]
+        [InlineData(" \"string with escaping: \\u0041\\u0042\\u0043\" \r\n")]
+        [InlineData(" [     ]")]
+        [InlineData(" [null, true, 42.0, \"str\", [], {}, ]")]
+        [InlineData(" {  } ")]
+        [InlineData("""
 
-            Assert.Throws<ObjectDisposedException>(() => JsonMarshal.GetRawUtf8Value(element));
+            {
+                /* I am a comment */
+                "key1" : 1,
+                "key2" : null,
+                "key3" : true,
+            }
+
+            """)]
+        public static void JsonMarshal_GetRawUtf8Value_RootValue_ReturnsFullValue(string json)
+        {
+            JsonDocumentOptions options = new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip };
+            using ParsedJsonDocument<JsonElement> jDoc = ParsedJsonDocument<JsonElement>.Parse(json, options);
+            JsonElement element = jDoc.RootElement;
+
+            using RawUtf8JsonString rawValue = JsonMarshal.GetRawUtf8Value(element);
+            Assert.Equal(json.Trim(), Encoding.UTF8.GetString(rawValue.Memory.ToArray()));
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParsePartialDataCases))]
+        public static void Parse_Invalid(string json)
+        {
+            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(json));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(json.AsSpan()));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Encoding.UTF8.GetBytes(json).AsSpan()));
+        }
+
+        [Fact]
+        public static void Parse_NullString_Throws()
+        {
+            AssertExtensions.Throws<ArgumentNullException>("json", () => JsonElement.Parse((string)null));
+        }
+
+        [Fact]
+        public static void Parse_RespectsOptions()
+        {
+            const string Json = """
+                {
+                    /* comment */
+                    "someProp": "value"
+                }
+                """;
+
+            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Json));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Json.AsSpan()));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Encoding.UTF8.GetBytes(Json).AsSpan()));
+
+            JsonDocumentOptions options = new()
+            {
+                CommentHandling = JsonCommentHandling.Skip,
+            };
+
+            Validate(JsonElement.Parse(Json, options));
+            Validate(JsonElement.Parse(Json.AsSpan(), options));
+            Validate(JsonElement.Parse(Encoding.UTF8.GetBytes(Json).AsSpan(), options));
+
+            void Validate(JsonElement element)
+            {
+                Assert.Equal(JsonValueKind.Object, element.ValueKind);
+                Assert.Equal(JsonValueKind.String, element.GetProperty("someProp").ValueKind);
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParseCases))]
+        public static void Parse_Valid(string json, JsonValueKind kind)
+        {
+            Validate(JsonElement.Parse(json));
+            Validate(JsonElement.Parse(json.AsSpan()));
+            Validate(JsonElement.Parse(Encoding.UTF8.GetBytes(json).AsSpan()));
+
+            void Validate(JsonElement element)
+            {
+                Assert.Equal(kind, element.ValueKind);
+                Assert.False(element.SniffDocument().IsDisposable());
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParseCases))]
+        public static void ParseValue(string json, JsonValueKind kind)
+        {
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
+
+            JsonElement element = JsonElement.ParseValue(ref reader);
+            Assert.Equal(kind, element.ValueKind);
+            Assert.Equal(json.Length, reader.BytesConsumed);
+            Assert.False(element.SniffDocument().IsDisposable());
+        }
+
+        [Fact]
+        public static void ParseValue_AllowMultipleValues_TrailingContent()
+        {
+            var options = new JsonReaderOptions { AllowMultipleValues = true };
+            var reader = new Utf8JsonReader("[null,false,42,{},[1]]             <NotJson/>"u8, options);
+
+            JsonElement element = JsonElement.ParseValue(ref reader);
+            Assert.Equal("[null,false,42,{},[1]]", element.GetRawText());
+            Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
+
+            JsonTestHelper.AssertThrows<JsonException>(ref reader, (ref reader) => reader.Read());
+        }
+
+        [Fact]
+        public static void ParseValue_AllowMultipleValues_TrailingJson()
+        {
+            var options = new JsonReaderOptions { AllowMultipleValues = true };
+            var reader = new Utf8JsonReader("[null,false,42,{},[1]]             [43]"u8, options);
+
+            JsonElement element;
+            element = JsonElement.ParseValue(ref reader);
+            Assert.Equal("[null,false,42,{},[1]]", element.GetRawText());
+            Assert.Equal(JsonTokenType.EndArray, reader.TokenType);
+
+            Assert.True(reader.Read());
+            element = JsonElement.ParseValue(ref reader);
+            Assert.Equal("[43]", element.GetRawText());
+
+            Assert.False(reader.Read());
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParseInvalidDataCases))]
+        public static void ParseValueInvalidDataFail(string json)
+        {
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
+
+            Exception ex;
+            try
+            {
+                JsonElement.ParseValue(ref reader);
+                ex = null;
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+
+            Assert.NotNull(ex);
+            Assert.IsAssignableFrom<JsonException>(ex);
+
+            Assert.Equal(0, reader.BytesConsumed);
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParsePartialDataCases))]
+        public static void ParseValueOutOfData(string json)
+        {
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json), isFinalBlock: false, new JsonReaderState());
+
+            Exception ex;
+            try
+            {
+                JsonElement.ParseValue(ref reader);
+                ex = null;
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+
+            Assert.NotNull(ex);
+            Assert.IsAssignableFrom<JsonException>(ex);
+
+            Assert.Equal(0, reader.BytesConsumed);
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParsePartialDataCases))]
+        public static void ParseValuePartialDataFail(string json)
+        {
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
+
+            Exception ex;
+            try
+            {
+                JsonElement.ParseValue(ref reader);
+                ex = null;
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+
+            Assert.NotNull(ex);
+            Assert.IsAssignableFrom<JsonException>(ex);
+
+            Assert.Equal(0, reader.BytesConsumed);
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParseCases))]
+        public static void TryParseValue(string json, JsonValueKind kind)
+        {
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
+
+            bool success = JsonElement.TryParseValue(ref reader, out JsonElement? element);
+            Assert.True(success);
+            Assert.Equal(kind, element!.Value.ValueKind);
+            Assert.Equal(json.Length, reader.BytesConsumed);
+            Assert.False(element!.Value.SniffDocument().IsDisposable());
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParseInvalidDataCases))]
+        public static void TryParseValueInvalidDataFail(string json)
+        {
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
+
+            Exception ex;
+            try
+            {
+                JsonElement.TryParseValue(ref reader, out JsonElement? element);
+                ex = null;
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+
+            Assert.NotNull(ex);
+            Assert.IsAssignableFrom<JsonException>(ex);
+
+            Assert.Equal(0, reader.BytesConsumed);
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParsePartialDataCases))]
+        public static void TryParseValueOutOfData(string json)
+        {
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json), isFinalBlock: false, new JsonReaderState());
+            Assert.False(JsonElement.TryParseValue(ref reader, out JsonElement? element));
+            Assert.Null(element);
+            Assert.Equal(0, reader.BytesConsumed);
+        }
+
+        [Theory]
+        [MemberData(nameof(ElementParsePartialDataCases))]
+        public static void TryParseValuePartialDataFail(string json)
+        {
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
+
+            Exception ex;
+            try
+            {
+                JsonElement.TryParseValue(ref reader, out JsonElement? element);
+                ex = null;
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+
+            Assert.NotNull(ex);
+            Assert.IsAssignableFrom<JsonException>(ex);
+
+            Assert.Equal(0, reader.BytesConsumed);
         }
     }
 }

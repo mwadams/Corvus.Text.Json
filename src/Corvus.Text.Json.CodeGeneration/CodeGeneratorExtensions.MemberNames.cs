@@ -11,70 +11,6 @@ namespace Corvus.Text.Json.CodeGeneration;
 internal static partial class CodeGeneratorExtensions
 {
     /// <summary>
-    /// Gets the name for a parameter.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetParameterNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetOrAddMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.CamelCase,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
-    /// Gets the unique name for a parameter.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetUniqueParameterNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetUniqueMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.CamelCase,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
     /// Gets the name for a field.
     /// </summary>
     /// <param name="generator">The generator from which to get the name.</param>
@@ -107,7 +43,7 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
-    /// Gets unique name for a field.
+    /// Gets the name for a method.
     /// </summary>
     /// <param name="generator">The generator from which to get the name.</param>
     /// <param name="baseName">The base name.</param>
@@ -116,7 +52,7 @@ internal static partial class CodeGeneratorExtensions
     /// <param name="prefix">The (optional) prefix for the name.</param>
     /// <param name="suffix">The (optional) suffix for the name.</param>
     /// <returns>A unique name in the scope.</returns>
-    public static string GetUniqueFieldNameInScope(
+    public static string GetMethodNameInScope(
         this CodeGenerator generator,
         string baseName,
         string? childScope = null,
@@ -129,11 +65,75 @@ internal static partial class CodeGeneratorExtensions
             return string.Empty;
         }
 
-        return generator.GetUniqueMemberName(
+        return generator.GetOrAddMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.PascalCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets the name for a parameter.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetParameterNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetOrAddMemberName(
             new CSharpMemberName(
                 generator.GetChildScope(childScope, rootScope),
                 baseName,
                 Casing.CamelCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets the name for a property.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetPropertyNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetOrAddMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.PascalCase,
                 prefix,
                 suffix));
     }
@@ -171,39 +171,6 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
-    /// Gets a unique name for a static readonly field.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetUniqueStaticReadOnlyFieldNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetUniqueMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.PascalCase,
-                prefix,
-                suffix));
-    }
-
-
-    /// <summary>
     /// Gets the name for a static readonly property.
     /// </summary>
     /// <param name="generator">The generator from which to get the name.</param>
@@ -227,6 +194,230 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator.GetOrAddMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.PascalCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets the name for a type.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetTypeNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetOrAddMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.PascalCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets the name for a class.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetUniqueClassNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetUniqueMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.PascalCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets unique name for a field.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetUniqueFieldNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetUniqueMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.CamelCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets the name for a method.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetUniqueMethodNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetUniqueMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.PascalCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets the unique name for a parameter.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetUniqueParameterNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetUniqueMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.CamelCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets the name for a property.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetUniquePropertyNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetUniqueMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.PascalCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets a unique name for a static readonly field.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetUniqueStaticReadOnlyFieldNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetUniqueMemberName(
             new CSharpMemberName(
                 generator.GetChildScope(childScope, rootScope),
                 baseName,
@@ -268,7 +459,7 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
-    /// Gets the name for a property.
+    /// Gets a unique name for a variable.
     /// </summary>
     /// <param name="generator">The generator from which to get the name.</param>
     /// <param name="baseName">The base name.</param>
@@ -277,7 +468,39 @@ internal static partial class CodeGeneratorExtensions
     /// <param name="prefix">The (optional) prefix for the name.</param>
     /// <param name="suffix">The (optional) suffix for the name.</param>
     /// <returns>A unique name in the scope.</returns>
-    public static string GetPropertyNameInScope(
+    public static string GetUniqueVariableNameInScope(
+        this CodeGenerator generator,
+        string baseName,
+        string? childScope = null,
+        string? rootScope = null,
+        string? prefix = null,
+        string? suffix = null)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return string.Empty;
+        }
+
+        return generator.GetUniqueMemberName(
+            new CSharpMemberName(
+                generator.GetChildScope(childScope, rootScope),
+                baseName,
+                Casing.CamelCase,
+                prefix,
+                suffix));
+    }
+
+    /// <summary>
+    /// Gets the name for a variable.
+    /// </summary>
+    /// <param name="generator">The generator from which to get the name.</param>
+    /// <param name="baseName">The base name.</param>
+    /// <param name="childScope">The (optional) child scope from the root scope.</param>
+    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
+    /// <param name="prefix">The (optional) prefix for the name.</param>
+    /// <param name="suffix">The (optional) suffix for the name.</param>
+    /// <returns>A unique name in the scope.</returns>
+    public static string GetVariableNameInScope(
         this CodeGenerator generator,
         string baseName,
         string? childScope = null,
@@ -294,135 +517,7 @@ internal static partial class CodeGeneratorExtensions
             new CSharpMemberName(
                 generator.GetChildScope(childScope, rootScope),
                 baseName,
-                Casing.PascalCase,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
-    /// Gets the name for a property.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetUniquePropertyNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetUniqueMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.PascalCase,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
-    /// Gets the name for a method.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetMethodNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetOrAddMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.PascalCase,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
-    /// Gets the name for a method.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetUniqueMethodNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetUniqueMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.PascalCase,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
-    /// Gets the name for a class.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetUniqueClassNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetUniqueMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.PascalCase,
+                Casing.CamelCase,
                 prefix,
                 suffix));
     }
@@ -519,102 +614,6 @@ internal static partial class CodeGeneratorExtensions
                 generator.GetChildScope(childScope, rootScope),
                 baseName,
                 Casing.Unmodified,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
-    /// Gets the name for a variable.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetVariableNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetOrAddMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.CamelCase,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
-    /// Gets a unique name for a variable.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetUniqueVariableNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetUniqueMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.CamelCase,
-                prefix,
-                suffix));
-    }
-
-    /// <summary>
-    /// Gets the name for a type.
-    /// </summary>
-    /// <param name="generator">The generator from which to get the name.</param>
-    /// <param name="baseName">The base name.</param>
-    /// <param name="childScope">The (optional) child scope from the root scope.</param>
-    /// <param name="rootScope">The (optional) root scope overriding the current scope.</param>
-    /// <param name="prefix">The (optional) prefix for the name.</param>
-    /// <param name="suffix">The (optional) suffix for the name.</param>
-    /// <returns>A unique name in the scope.</returns>
-    public static string GetTypeNameInScope(
-        this CodeGenerator generator,
-        string baseName,
-        string? childScope = null,
-        string? rootScope = null,
-        string? prefix = null,
-        string? suffix = null)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return string.Empty;
-        }
-
-        return generator.GetOrAddMemberName(
-            new CSharpMemberName(
-                generator.GetChildScope(childScope, rootScope),
-                baseName,
-                Casing.PascalCase,
                 prefix,
                 suffix));
     }

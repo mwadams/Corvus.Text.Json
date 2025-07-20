@@ -229,6 +229,7 @@ namespace Corvus.Text.Json
             }
             return sequences;
         }
+
         public static ReadOnlySequence<byte> GetSequence(IEnumerable<byte[]> json)
         {
             return BufferFactory.Create(json.ToArray());
@@ -321,27 +322,38 @@ namespace Corvus.Text.Json
             {
                 case JsonToken.None:
                     return JsonTokenType.None;
+
                 case JsonToken.StartObject:
                     return JsonTokenType.StartObject;
+
                 case JsonToken.StartArray:
                     return JsonTokenType.StartArray;
+
                 case JsonToken.PropertyName:
                     return JsonTokenType.PropertyName;
+
                 case JsonToken.Comment:
                     return JsonTokenType.Comment;
+
                 case JsonToken.Integer:
                 case JsonToken.Float:
                     return JsonTokenType.Number;
+
                 case JsonToken.String:
                     return JsonTokenType.String;
+
                 case JsonToken.Boolean:
                     return JsonTokenType.True;
+
                 case JsonToken.Null:
                     return JsonTokenType.Null;
+
                 case JsonToken.EndObject:
                     return JsonTokenType.EndObject;
+
                 case JsonToken.EndArray:
                     return JsonTokenType.EndArray;
+
                 case JsonToken.StartConstructor:
                 case JsonToken.EndConstructor:
                 case JsonToken.Date:
@@ -434,6 +446,7 @@ namespace Corvus.Text.Json
                         destination[valueSpan.Length + 1] = (byte)' ';
                         destination = destination.Slice(valueSpan.Length + 2);
                         break;
+
                     case JsonTokenType.Number:
                     case JsonTokenType.String:
                     case JsonTokenType.Comment:
@@ -442,6 +455,7 @@ namespace Corvus.Text.Json
                         destination[valueSpan.Length + 1] = (byte)' ';
                         destination = destination.Slice(valueSpan.Length + 2);
                         break;
+
                     case JsonTokenType.True:
                         // Special casing True/False so that the casing matches with Json.NET
                         destination[0] = (byte)'T';
@@ -452,6 +466,7 @@ namespace Corvus.Text.Json
                         destination[valueSpan.Length + 1] = (byte)' ';
                         destination = destination.Slice(valueSpan.Length + 2);
                         break;
+
                     case JsonTokenType.False:
                         destination[0] = (byte)'F';
                         destination[1] = (byte)'a';
@@ -462,25 +477,31 @@ namespace Corvus.Text.Json
                         destination[valueSpan.Length + 1] = (byte)' ';
                         destination = destination.Slice(valueSpan.Length + 2);
                         break;
+
                     case JsonTokenType.Null:
                         // Special casing Null so that it matches what JSON.NET does
                         break;
+
                     case JsonTokenType.StartObject:
                         Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)'{' }));
                         Assert.True(json.ValueSequence.IsEmpty);
                         break;
+
                     case JsonTokenType.EndObject:
                         Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)'}' }));
                         Assert.True(json.ValueSequence.IsEmpty);
                         break;
+
                     case JsonTokenType.StartArray:
                         Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)'[' }));
                         Assert.True(json.ValueSequence.IsEmpty);
                         break;
+
                     case JsonTokenType.EndArray:
                         Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)']' }));
                         Assert.True(json.ValueSequence.IsEmpty);
                         break;
+
                     default:
                         break;
                 }
@@ -503,30 +524,38 @@ namespace Corvus.Text.Json
                     case JsonTokenType.False:
                         root = valueSpan[0] == 't';
                         break;
+
                     case JsonTokenType.Number:
                         json.TryGetDouble(out double valueDouble);
                         root = valueDouble;
                         break;
+
                     case JsonTokenType.String:
                         string valueString = json.GetString();
                         root = valueString;
                         break;
+
                     case JsonTokenType.Null:
                         break;
+
                     case JsonTokenType.StartObject:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'{' }));
                         root = ReaderDictionaryLoop(ref json);
                         break;
+
                     case JsonTokenType.StartArray:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'[' }));
                         root = ReaderListLoop(ref json);
                         break;
+
                     case JsonTokenType.EndObject:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'}' }));
                         break;
+
                     case JsonTokenType.EndArray:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)']' }));
                         break;
+
                     case JsonTokenType.None:
                     case JsonTokenType.Comment:
                     default:
@@ -553,6 +582,7 @@ namespace Corvus.Text.Json
                         key = json.GetString();
                         dictionary.Add(key, null);
                         break;
+
                     case JsonTokenType.True:
                     case JsonTokenType.False:
                         value = valueSpan[0] == 't';
@@ -565,6 +595,7 @@ namespace Corvus.Text.Json
                             dictionary.Add(key, value);
                         }
                         break;
+
                     case JsonTokenType.Number:
                         json.TryGetDouble(out double valueDouble);
                         if (dictionary.TryGetValue(key, out _))
@@ -576,6 +607,7 @@ namespace Corvus.Text.Json
                             dictionary.Add(key, valueDouble);
                         }
                         break;
+
                     case JsonTokenType.String:
                         string valueString = json.GetString();
                         if (dictionary.TryGetValue(key, out _))
@@ -587,6 +619,7 @@ namespace Corvus.Text.Json
                             dictionary.Add(key, valueString);
                         }
                         break;
+
                     case JsonTokenType.Null:
                         value = null;
                         if (dictionary.TryGetValue(key, out _))
@@ -598,6 +631,7 @@ namespace Corvus.Text.Json
                             dictionary.Add(key, value);
                         }
                         break;
+
                     case JsonTokenType.StartObject:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'{' }));
                         value = ReaderDictionaryLoop(ref json);
@@ -610,6 +644,7 @@ namespace Corvus.Text.Json
                             dictionary.Add(key, value);
                         }
                         break;
+
                     case JsonTokenType.StartArray:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'[' }));
                         value = ReaderListLoop(ref json);
@@ -622,9 +657,11 @@ namespace Corvus.Text.Json
                             dictionary.Add(key, value);
                         }
                         break;
+
                     case JsonTokenType.EndObject:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'}' }));
                         return dictionary;
+
                     case JsonTokenType.None:
                     case JsonTokenType.Comment:
                     default:
@@ -651,31 +688,38 @@ namespace Corvus.Text.Json
                         value = valueSpan[0] == 't';
                         arrayList.Add(value);
                         break;
+
                     case JsonTokenType.Number:
                         json.TryGetDouble(out double doubleValue);
                         arrayList.Add(doubleValue);
                         break;
+
                     case JsonTokenType.String:
                         string valueString = json.GetString();
                         arrayList.Add(valueString);
                         break;
+
                     case JsonTokenType.Null:
                         value = null;
                         arrayList.Add(value);
                         break;
+
                     case JsonTokenType.StartObject:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'{' }));
                         value = ReaderDictionaryLoop(ref json);
                         arrayList.Add(value);
                         break;
+
                     case JsonTokenType.StartArray:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'[' }));
                         value = ReaderListLoop(ref json);
                         arrayList.Add(value);
                         break;
+
                     case JsonTokenType.EndArray:
                         Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)']' }));
                         return arrayList;
+
                     case JsonTokenType.None:
                     case JsonTokenType.Comment:
                     default:
@@ -797,8 +841,10 @@ namespace Corvus.Text.Json
         }
 
 #if NET
+
         // This is needed due to the fact that git might normalize line endings when checking-out files
         public static string NormalizeLineEndings(this string value) => value.ReplaceLineEndings();
+
 #else
         private const string CompiledNewline = @"
 ";

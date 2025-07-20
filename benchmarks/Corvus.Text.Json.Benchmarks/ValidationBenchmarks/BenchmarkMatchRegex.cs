@@ -14,10 +14,16 @@ namespace ValidationBenchmarks;
 [MemoryDiagnoser]
 public class BenchmarkMatchRegex
 {
-
     private System.Text.Json.JsonDocument? _cjsRegex;
     private JsonRegex _cjsRegexElement;
     private ParsedJsonDocument<JsonElement>? _ctjRegex;
+
+    [GlobalCleanup]
+    public void GlobalCleanup()
+    {
+        _cjsRegex?.Dispose();
+        _ctjRegex?.Dispose();
+    }
 
     [GlobalSetup]
     public void GlobalSetup()
@@ -25,13 +31,6 @@ public class BenchmarkMatchRegex
         _cjsRegex = System.Text.Json.JsonDocument.Parse("\"\\\\D+(?<digit>\\\\d+)\\\\D+(?<digit>\\\\d+)?\"");
         _ctjRegex = ParsedJsonDocument<JsonElement>.Parse("\"\\\\D+(?<digit>\\\\d+)\\\\D+(?<digit>\\\\d+)?\"");
         _cjsRegexElement = JsonRegex.FromJson(_cjsRegex.RootElement);
-    }
-
-    [GlobalCleanup]
-    public void GlobalCleanup()
-    {
-        _cjsRegex?.Dispose();
-        _ctjRegex?.Dispose();
     }
 
     [Benchmark(Baseline = true)]

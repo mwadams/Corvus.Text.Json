@@ -26,6 +26,7 @@ internal static partial class Strings
 #if CORECLR || LEGACY_GETRESOURCESTRING_USER
     internal
 #else
+
     private
 #endif
     static string GetResourceString(string resourceKey)

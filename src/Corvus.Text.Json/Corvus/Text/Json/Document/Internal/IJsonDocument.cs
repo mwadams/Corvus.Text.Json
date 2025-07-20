@@ -318,6 +318,7 @@ public interface IJsonDocument : IDisposable
     bool TryGetValue(int index, out Guid value);
 
 #if NET
+
     /// <summary>
     /// Tries to get the value of the element at the specified index as an <see cref="Int128"/>.
     /// </summary>
@@ -341,6 +342,7 @@ public interface IJsonDocument : IDisposable
     /// <param name="value">The <see cref="Half"/> value.</param>
     /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
     bool TryGetValue(int index, out Half value);
+
 #endif
 
     /// <summary>

@@ -17,6 +17,7 @@ internal static class GregorianYearMonthDayCalculator
     // We precompute useful values for each month between these years, as we anticipate most
     // dates will be in this range.
     private const int FirstOptimizedYear = 1900;
+
     private const int LastOptimizedYear = 2100;
     private const int FirstOptimizedDay = -25567;
     private const int LastOptimizedDay = 47846;
@@ -31,6 +32,7 @@ internal static class GregorianYearMonthDayCalculator
     // is correct. This behavior (textual order for initialization) is guaranteed by the spec. We'd normally
     // try to avoid relying on it, but that's quite hard here.
     private static readonly int[] NonLeapTotalDaysByMonth = GenerateTotalDaysByMonth(NonLeapDaysPerMonth);
+
     private static readonly int[] LeapTotalDaysByMonth = GenerateTotalDaysByMonth(LeapDaysPerMonth);
 
     internal static bool TryValidateGregorianYearMonthDay(int year, int month, int day)

@@ -351,6 +351,7 @@ public ref struct JsonArrayBuilder()
     }
 
 #if NET
+
     /// <summary>
     /// Adds an <see cref="Int128"/> value to the array.
     /// </summary>
@@ -378,6 +379,7 @@ public ref struct JsonArrayBuilder()
     {
         _builder.AddItem(value);
     }
+
 #endif
 
     /// <summary>
@@ -484,6 +486,7 @@ public ref struct JsonArrayBuilder()
     }
 
 #if NET
+
     /// <summary>
     /// Adds an array of <see cref="Int128"/> values to the array.
     /// </summary>
@@ -513,5 +516,6 @@ public ref struct JsonArrayBuilder()
     {
         _builder.AddItemArrayValue(array);
     }
+
 #endif
 }

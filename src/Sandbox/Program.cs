@@ -118,8 +118,6 @@ Console.WriteLine(documentB5.RootElement.EvaluateSchema() ? "Person B5 is a matc
 Console.WriteLine(documentB6.RootElement.EvaluateSchema() ? "Person B6 is a match" : "Person B6 is not a match");
 Console.WriteLine(documentB7.RootElement.EvaluateSchema() ? "Person B7 is a match" : "Person B7 is not a match");
 
-
-
 Console.WriteLine(documentB1.RootElement.Equals(documentB2.RootElement) ? "The documents are equal" : "The documents are not equal");
 
 documentB1.RootElement.EnsurePropertyMap();
@@ -156,7 +154,6 @@ initializedBuilder.RootElement.SetProperty("age"u8, 51);
 
 Console.WriteLine(initializedBuilder.RootElement.ToString());
 
-
 Console.WriteLine();
 Console.WriteLine("**************");
 Console.WriteLine("*** BEFORE ***");
@@ -187,8 +184,6 @@ Console.WriteLine("*************");
 Console.WriteLine();
 
 Console.WriteLine(b8Builder.RootElement.ToString());
-
-
 
 Console.WriteLine();
 Console.WriteLine("**************");
@@ -237,7 +232,6 @@ Console.WriteLine(System.Text.Encoding.UTF8.GetString(bufferWriter.WrittenSpan))
 workspace.ReturnWriterAndBuffer(writer, bufferWriter);
 
 #endif
-
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -332,7 +326,6 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocumentBui
         competedInYears.Add(2024);
     }));
 
-
 Console.WriteLine();
 Console.WriteLine("************");
 Console.WriteLine();
@@ -379,7 +372,6 @@ string json =
     """;
 
 var personDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-
 
 using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").CreateDocumentBuilder(workspace);
 
@@ -434,7 +426,6 @@ var brokenPerson = brokenPersonDoc.RootElement;
 EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Basic);
 EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Detailed);
 EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Verbose);
-
 
 static void EvaluateAndWriteResults(Person person, JsonSchemaResultsLevel level)
 {

@@ -19,6 +19,39 @@ public class BenchmarkEqualsInOrderProperties
     private Corvus.Text.Json.JsonElementA documentC1;
     private Corvus.Text.Json.JsonElementB documentC2;
 
+    [GlobalCleanup]
+    public void CleanUp()
+    {
+        this.documentA1?.Dispose();
+        this.documentA2?.Dispose();
+        this.documentB1?.Dispose();
+        this.documentB2?.Dispose();
+    }
+
+    [Benchmark]
+    public bool CorvusJsonElementDeepEquals()
+    {
+        return Corvus.Text.Json.Internal.JsonElementHelpers.DeepEquals(this.documentB1!.RootElement, this.documentB2!.RootElement);
+    }
+
+    [Benchmark]
+    public bool CorvusJsonElementGenericDeepEquals()
+    {
+        return Corvus.Text.Json.Internal.JsonElementHelpers.DeepEquals<JsonElement, JsonElement>(this.documentB1!.RootElement, this.documentB2!.RootElement);
+    }
+
+    [Benchmark]
+    public bool CorvusJsonElementHeterogenousDeepEquals()
+    {
+        return Corvus.Text.Json.Internal.JsonElementHelpers.DeepEquals(this.documentC1, this.documentC2);
+    }
+
+    [Benchmark(Baseline = true)]
+    public bool JsonElementDeepEquals()
+    {
+        return System.Text.Json.JsonElement.DeepEquals(this.documentA1!.RootElement, this.documentA2!.RootElement);
+    }
+
     [GlobalSetup]
     public void Setup()
     {
@@ -139,38 +172,5 @@ public class BenchmarkEqualsInOrderProperties
             """);
         this.documentC1 = JsonElementA.From(this.documentB1.RootElement);
         this.documentC2 = JsonElementB.From(this.documentB2.RootElement);
-    }
-
-    [GlobalCleanup]
-    public void CleanUp()
-    {
-        this.documentA1?.Dispose();
-        this.documentA2?.Dispose();
-        this.documentB1?.Dispose();
-        this.documentB2?.Dispose();
-    }
-
-    [Benchmark(Baseline = true)]
-    public bool JsonElementDeepEquals()
-    {
-        return System.Text.Json.JsonElement.DeepEquals(this.documentA1!.RootElement, this.documentA2!.RootElement);
-    }
-
-    [Benchmark]
-    public bool CorvusJsonElementDeepEquals()
-    {
-        return Corvus.Text.Json.Internal.JsonElementHelpers.DeepEquals(this.documentB1!.RootElement, this.documentB2!.RootElement);
-    }
-
-    [Benchmark]
-    public bool CorvusJsonElementGenericDeepEquals()
-    {
-        return Corvus.Text.Json.Internal.JsonElementHelpers.DeepEquals<JsonElement, JsonElement>(this.documentB1!.RootElement, this.documentB2!.RootElement);
-    }
-
-    [Benchmark]
-    public bool CorvusJsonElementHeterogenousDeepEquals()
-    {
-        return Corvus.Text.Json.Internal.JsonElementHelpers.DeepEquals(this.documentC1, this.documentC2);
     }
 }

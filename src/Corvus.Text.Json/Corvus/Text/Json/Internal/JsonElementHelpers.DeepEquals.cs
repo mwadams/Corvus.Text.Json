@@ -57,7 +57,6 @@ public static partial class JsonElementHelpers
             element2.ParentDocument,
             element1.ParentDocumentIndex,
             element2.ParentDocumentIndex);
-
     }
 
     /// <summary>
@@ -198,6 +197,23 @@ public static partial class JsonElementHelpers
         }
     }
 
+    private static bool NameEquals(JsonProperty<JsonElement> left, JsonProperty<JsonElement> right)
+    {
+        if (right.NameIsEscaped)
+        {
+            if (left.NameIsEscaped)
+            {
+                // Need to unescape and compare both inputs.
+                return JsonReaderHelper.UnescapeAndCompareBothInputs(left.RawNameSpan, right.RawNameSpan);
+            }
+
+            // Swap values so that unescaping is handled by the LHS
+            (left, right) = (right, left);
+        }
+
+        return left.NameEquals(right.RawNameSpan);
+    }
+
     private static bool UnorderedObjectDeepEquals(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, ref ObjectEnumerator<JsonElement> objectEnumerator2)
     {
         // JsonElement objects allow duplicate property names, which is optional per the JSON RFC.
@@ -231,7 +247,6 @@ public static partial class JsonElementHelpers
                 unescapedRightNameSpan = unescapedRightNameSpan.Slice(0, written);
                 Debug.Assert(!unescapedRightNameSpan.IsEmpty);
 
-
                 try
                 {
                     if (!element1ParentDocument.TryGetNamedPropertyValue(element1ParentDocumentIndex, unescapedRightNameSpan, out leftValue) ||
@@ -257,28 +272,9 @@ public static partial class JsonElementHelpers
                     return false;
                 }
             }
-
-
         }
         while (objectEnumerator2.MoveNext());
 
         return true;
-    }
-
-    private static bool NameEquals(JsonProperty<JsonElement> left, JsonProperty<JsonElement> right)
-    {
-        if (right.NameIsEscaped)
-        {
-            if (left.NameIsEscaped)
-            {
-                // Need to unescape and compare both inputs.
-                return JsonReaderHelper.UnescapeAndCompareBothInputs(left.RawNameSpan, right.RawNameSpan);
-            }
-
-            // Swap values so that unescaping is handled by the LHS
-            (left, right) = (right, left);
-        }
-
-        return left.NameEquals(right.RawNameSpan);
     }
 }

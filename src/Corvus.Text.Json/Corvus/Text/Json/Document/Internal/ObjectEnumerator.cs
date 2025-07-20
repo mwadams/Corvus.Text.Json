@@ -12,10 +12,10 @@ namespace Corvus.Text.Json.Internal;
 [CLSCompliant(false)]
 public struct ObjectEnumerator
 {
-    private readonly IJsonDocument _targetDocument;
-    private readonly int _initialIndex;
-    private int _curIdx;
     private readonly int _endIdxOrVersion;
+    private readonly int _initialIndex;
+    private readonly IJsonDocument _targetDocument;
+    private int _curIdx;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObjectEnumerator"/> struct.
@@ -51,14 +51,6 @@ public struct ObjectEnumerator
     }
 
     /// <summary>
-    /// Sets the enumerator to its initial position, which is before the first element.
-    /// </summary>
-    public void Reset()
-    {
-        _curIdx = -1;
-    }
-
-    /// <summary>
     /// Advances the enumerator to the next element of the collection.
     /// </summary>
     /// <returns>
@@ -85,5 +77,13 @@ public struct ObjectEnumerator
         _curIdx += DbRow.Size;
 
         return _curIdx < _endIdxOrVersion;
+    }
+
+    /// <summary>
+    /// Sets the enumerator to its initial position, which is before the first element.
+    /// </summary>
+    public void Reset()
+    {
+        _curIdx = -1;
     }
 }

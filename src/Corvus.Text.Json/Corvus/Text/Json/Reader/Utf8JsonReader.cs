@@ -31,6 +31,7 @@ public ref partial struct Utf8JsonReader
 
     // bytes consumed in the current segment (not token)
     private int _consumed;
+
     private bool _inObject;
     private bool _isNotPrimitive;
     private JsonTokenType _tokenType;
@@ -1080,12 +1081,14 @@ public ref partial struct Utf8JsonReader
                 {
                     case JsonCommentHandling.Disallow:
                         break;
+
                     case JsonCommentHandling.Allow:
                         if (marker == JsonConstants.Slash)
                         {
                             return ConsumeComment();
                         }
                         break;
+
                     default:
                         Debug.Assert(_readerOptions.CommentHandling == JsonCommentHandling.Skip);
                         if (marker == JsonConstants.Slash)
@@ -1192,9 +1195,11 @@ public ref partial struct Utf8JsonReader
             case (byte)'t':
                 resource = ExceptionResource.ExpectedTrue;
                 break;
+
             case (byte)'f':
                 resource = ExceptionResource.ExpectedFalse;
                 break;
+
             default:
                 Debug.Assert(firstByte == 'n');
                 resource = ExceptionResource.ExpectedNull;
@@ -1371,7 +1376,6 @@ public ref partial struct Utf8JsonReader
                         idx = data.Length;
                         break;
                     }
-
                 }
                 nextCharEscaped = false;
             }

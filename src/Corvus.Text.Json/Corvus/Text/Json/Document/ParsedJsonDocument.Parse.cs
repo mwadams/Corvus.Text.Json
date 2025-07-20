@@ -17,6 +17,7 @@ public sealed partial class ParsedJsonDocument<T>
 {
     // Cached unrented documents for literal values.
     private static ParsedJsonDocument<T>? s_nullLiteral;
+
     private static ParsedJsonDocument<T>? s_trueLiteral;
     private static ParsedJsonDocument<T>? s_falseLiteral;
 
@@ -651,9 +652,11 @@ public sealed partial class ParsedJsonDocument<T>
             case JsonTokenType.False:
                 s_falseLiteral ??= Create(JsonConstants.FalseValue.ToArray());
                 return s_falseLiteral;
+
             case JsonTokenType.True:
                 s_trueLiteral ??= Create(JsonConstants.TrueValue.ToArray());
                 return s_trueLiteral;
+
             default:
                 Debug.Assert(tokenType == JsonTokenType.Null);
                 s_nullLiteral ??= Create(JsonConstants.NullValue.ToArray());
@@ -871,7 +874,6 @@ public sealed partial class ParsedJsonDocument<T>
                 lastRead = await stream.ReadAsync(rented.AsMemory(written), cancellationToken).ConfigureAwait(false);
 
                 written += lastRead;
-
             } while (lastRead > 0);
 
             return new ArraySegment<byte>(rented, 0, written);
