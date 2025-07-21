@@ -18,11 +18,106 @@ public readonly partial struct JsonElement
     /// Represents a source for creating mutable JSON elements from various value types.
     /// </summary>
     /// <remarks>
-    /// This ref struct provides implicit conversions from various types to create JSON element sources,
-    /// enabling flexible construction of mutable JSON documents.
+    /// <para>
+    /// The <see cref="Source"/> ref struct provides a unified abstraction for converting .NET values
+    /// into JSON element sources, enabling type-safe and efficient construction of mutable JSON documents
+    /// through the <see cref="JsonDocumentBuilder{T}"/> infrastructure.
+    /// </para>
+    /// <para>
+    /// <strong>Core Architecture:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Type Abstraction:</strong> Unified interface for 40+ .NET types including primitives, strings, dates, and custom types</description></item>
+    /// <item><description><strong>Value Storage:</strong> Optimized backing stores for different value categories (simple types, UTF-8/UTF-16 strings, complex builders)</description></item>
+    /// <item><description><strong>Kind Classification:</strong> Internal discrimination system for efficient dispatch during JSON construction</description></item>
+    /// <item><description><strong>Zero-Copy Design:</strong> Direct span-based operations for string and numeric data where possible</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Integration with JsonDocumentBuilder:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><see cref="CreateDocumentBuilder"/> creates document builders from Source instances</description></item>
+    /// <item><description><see cref="AddAsProperty"/> and <see cref="AddAsItem"/> integrate with <see cref="ComplexValueBuilder"/> for nested structures</description></item>
+    /// <item><description>Automatic format selection and optimization based on value type and characteristics</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Performance Characteristics:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description>Stack-allocated ref struct with minimal heap allocations</description></item>
+    /// <item><description>Direct UTF-8 formatting for numeric types using <see cref="SimpleTypesBacking"/></description></item>
+    /// <item><description>Efficient span-based string handling with escape analysis</description></item>
+    /// <item><description>Lazy evaluation and format-on-demand for complex values</description></item>
+    /// </list>
     /// </remarks>
+    /// <example>
+    /// <para>Basic value construction:</para>
+    /// <code>
+    /// using JsonWorkspace workspace = JsonWorkspace.Create();
+    ///
+    /// // Numeric values
+    /// using var intDoc = JsonElement.CreateDocumentBuilder(workspace, 42);
+    /// using var doubleDoc = JsonElement.CreateDocumentBuilder(workspace, 3.14159);
+    ///
+    /// // String values
+    /// using var stringDoc = JsonElement.CreateDocumentBuilder(workspace, "Hello, World!");
+    /// using var utf8Doc = JsonElement.CreateDocumentBuilder(workspace, "Hello"u8);
+    ///
+    /// // Boolean and null
+    /// using var boolDoc = JsonElement.CreateDocumentBuilder(workspace, true);
+    /// using var nullDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Source.Null());
+    /// </code>
+    /// </example>
+    /// <example>
+    /// <para>Complex object construction:</para>
+    /// <code>
+    /// using var objectDoc = JsonElement.CreateDocumentBuilder(workspace,
+    ///     new((ref JsonObjectBuilder objBuilder) =>
+    ///     {
+    ///         objBuilder.Add("name", "John Doe");
+    ///         objBuilder.Add("age", 30);
+    ///         objBuilder.Add("active", true);
+    ///         objBuilder.Add("metadata", new((ref JsonObjectBuilder metaBuilder) =>
+    ///         {
+    ///             metaBuilder.Add("created", DateTime.UtcNow);
+    ///             metaBuilder.Add("version", 1);
+    ///         }));
+    ///     }));
+    /// </code>
+    /// </example>
+    /// <example>
+    /// <para>Array construction:</para>
+    /// <code>
+    /// using var arrayDoc = JsonElement.CreateDocumentBuilder(workspace,
+    ///     new((ref JsonArrayBuilder arrayBuilder) =>
+    ///     {
+    ///         arrayBuilder.Add(1);
+    ///         arrayBuilder.Add("two");
+    ///         arrayBuilder.Add(3.0);
+    ///         arrayBuilder.Add(new((ref JsonObjectBuilder objBuilder) =>
+    ///         {
+    ///             objBuilder.Add("nested", true);
+    ///         }));
+    ///     }));
+    /// </code>
+    /// </example>
     public readonly ref struct Source
     {
+        /// <summary>
+        /// Discriminates the type and storage mechanism for the source value.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The Kind enum enables efficient dispatch during JSON construction by categorizing
+        /// values based on their storage requirements and formatting needs:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><strong>Simple Values:</strong> Null, True, False - stored as kind only</description></item>
+        /// <item><description><strong>Numeric Types:</strong> NumericSimpleType - formatted via SimpleTypesBacking</description></item>
+        /// <item><description><strong>String Types:</strong> Multiple variants for UTF-8/UTF-16, escaped/unescaped</description></item>
+        /// <item><description><strong>Complex Types:</strong> Array and object builders for nested structures</description></item>
+        /// </list>
+        /// </remarks>
         private enum Kind
         {
             // We only need to include the kinds we
@@ -135,30 +230,157 @@ public readonly partial struct JsonElement
             _kind = Kind.NumericSimpleType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from a byte value.
+        /// </summary>
+        /// <param name="value">The byte value to convert to a JSON source.</param>
+        /// <remarks>
+        /// <para>
+        /// This constructor uses <see cref="SimpleTypesBacking"/> to efficiently format the numeric value
+        /// into UTF-8 bytes using <see cref="Utf8Formatter.TryFormat(byte, Span{byte}, out int)"/>.
+        /// The formatted bytes are stored in a stack-allocated buffer for zero-allocation JSON generation.
+        /// </para>
+        /// <para>
+        /// <strong>Performance Notes:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>No heap allocations during construction or formatting</description></item>
+        /// <item><description>Direct UTF-8 output eliminates string conversion overhead</description></item>
+        /// <item><description>Uses optimized formatting paths from System.Buffers.Text</description></item>
+        /// </list>
+        /// <para>
+        /// The resulting JSON will represent this value as a JSON number without quotes.
+        /// </para>
+        /// </remarks>
         private Source(byte value)
         {
             SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
             _kind = Kind.NumericSimpleType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from a decimal value.
+        /// </summary>
+        /// <param name="value">The decimal value to convert to a JSON source.</param>
+        /// <remarks>
+        /// <para>
+        /// This constructor uses <see cref="SimpleTypesBacking"/> to efficiently format the numeric value
+        /// into UTF-8 bytes using <see cref="Utf8Formatter.TryFormat(decimal, Span{byte}, out int)"/>.
+        /// The formatted bytes are stored in a stack-allocated buffer for zero-allocation JSON generation.
+        /// </para>
+        /// <para>
+        /// <strong>Performance Notes:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>No heap allocations during construction or formatting</description></item>
+        /// <item><description>Direct UTF-8 output eliminates string conversion overhead</description></item>
+        /// <item><description>Uses optimized formatting paths from System.Buffers.Text</description></item>
+        /// </list>
+        /// <para>
+        /// The resulting JSON will represent this value as a JSON number without quotes.
+        /// </para>
+        /// </remarks>
         private Source(decimal value)
         {
             SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
             _kind = Kind.NumericSimpleType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from a double value.
+        /// </summary>
+        /// <param name="value">The double value to convert to a JSON source.</param>
+        /// <remarks>
+        /// <para>
+        /// This constructor uses <see cref="SimpleTypesBacking"/> to efficiently format the numeric value
+        /// into UTF-8 bytes using <see cref="Utf8Formatter.TryFormat(double, Span{byte}, out int)"/>.
+        /// The formatted bytes are stored in a stack-allocated buffer for zero-allocation JSON generation.
+        /// </para>
+        /// <para>
+        /// <strong>Performance Notes:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>No heap allocations during construction or formatting</description></item>
+        /// <item><description>Direct UTF-8 output eliminates string conversion overhead</description></item>
+        /// <item><description>Uses optimized formatting paths from System.Buffers.Text</description></item>
+        /// </list>
+        /// <para>
+        /// <strong>Special Values:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>NaN values are formatted as "NaN" (not valid JSON, use with caution)</description></item>
+        /// <item><description>Infinity values are formatted as "Infinity" or "-Infinity"</description></item>
+        /// <item><description>Consider validation for JSON compliance in strict scenarios</description></item>
+        /// </list>
+        /// <para>
+        /// The resulting JSON will represent this value as a JSON number without quotes.
+        /// </para>
+        /// </remarks>
         private Source(double value)
         {
             SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
             _kind = Kind.NumericSimpleType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from a float value.
+        /// </summary>
+        /// <param name="value">The float value to convert to a JSON source.</param>
+        /// <remarks>
+        /// <para>
+        /// This constructor uses <see cref="SimpleTypesBacking"/> to efficiently format the numeric value
+        /// into UTF-8 bytes using <see cref="Utf8Formatter.TryFormat(float, Span{byte}, out int)"/>.
+        /// The formatted bytes are stored in a stack-allocated buffer for zero-allocation JSON generation.
+        /// </para>
+        /// <para>
+        /// <strong>Performance Notes:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>No heap allocations during construction or formatting</description></item>
+        /// <item><description>Direct UTF-8 output eliminates string conversion overhead</description></item>
+        /// <item><description>Uses optimized formatting paths from System.Buffers.Text</description></item>
+        /// </list>
+        /// <para>
+        /// <strong>Special Values:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>NaN values are formatted as "NaN" (not valid JSON, use with caution)</description></item>
+        /// <item><description>Infinity values are formatted as "Infinity" or "-Infinity"</description></item>
+        /// <item><description>Consider validation for JSON compliance in strict scenarios</description></item>
+        /// </list>
+        /// <para>
+        /// The resulting JSON will represent this value as a JSON number without quotes.
+        /// </para>
+        /// </remarks>
         private Source(float value)
         {
             SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
             _kind = Kind.NumericSimpleType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from a DateTimeOffset value.
+        /// </summary>
+        /// <param name="value">The DateTimeOffset value to convert to a JSON source.</param>
+        /// <remarks>
+        /// <para>
+        /// Date and time values are formatted as JSON strings using specialized formatting logic.
+        /// The value is pre-formatted into UTF-8 bytes and stored with <see cref="Kind.StringSimpleType"/>
+        /// to indicate string representation in the final JSON.
+        /// </para>
+        /// <para>
+        /// <strong>Formatting Behavior:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Uses <see cref="Utf8Formatter.TryFormat(DateTimeOffset, Span{byte}, out int)"/> with ISO 8601 format</description></item>
+        /// <item><description>Output includes surrounding quotes as per JSON string specification</description></item>
+        /// <item><description>Preserves timezone offset information in the formatted output</description></item>
+        /// </list>
+        /// <para>
+        /// The resulting JSON will represent this value as a quoted JSON string with ISO 8601 format
+        /// including timezone offset (e.g., "2023-07-20T10:30:00+00:00").
+        /// </para>
+        /// </remarks>
         private Source(DateTimeOffset value)
         {
             //                                                                We inject the actual formatting code from the formatter infrastructure
@@ -177,6 +399,29 @@ public readonly partial struct JsonElement
             _kind = Kind.StringSimpleType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from an OffsetDateTime value.
+        /// </summary>
+        /// <param name="value">The OffsetDateTime value to convert to a JSON source.</param>
+        /// <remarks>
+        /// <para>
+        /// NodaTime date and time values are formatted as JSON strings using specialized formatting logic
+        /// from <see cref="JsonElementHelpers"/>. The value is pre-formatted into UTF-8 bytes and stored
+        /// with <see cref="Kind.StringSimpleType"/> to indicate string representation in the final JSON.
+        /// </para>
+        /// <para>
+        /// <strong>Formatting Behavior:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Uses <see cref="JsonElementHelpers.TryFormatOffsetDateTime"/> for specialized NodaTime formatting</description></item>
+        /// <item><description>Output includes surrounding quotes as per JSON string specification</description></item>
+        /// <item><description>Preserves precise NodaTime semantics and timezone offset information</description></item>
+        /// </list>
+        /// <para>
+        /// The resulting JSON will represent this value as a quoted JSON string with NodaTime's
+        /// standard OffsetDateTime format including timezone offset.
+        /// </para>
+        /// </remarks>
         private Source(OffsetDateTime value)
         {
             SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetDateTime(v, buffer, out written));
@@ -398,36 +643,104 @@ public readonly partial struct JsonElement
             return new(value);
         }
 
-        // If the CoreTypes offer nullable, we add this method
         /// <summary>
         /// Creates a <see cref="Source"/> representing a null value.
         /// </summary>
         /// <returns>A source representing a null JSON value.</returns>
+        /// <remarks>
+        /// <para>
+        /// This method creates a lightweight source that represents a JSON null value.
+        /// The source stores only the <see cref="Kind.Null"/> discriminator without any
+        /// additional data, making it extremely efficient for null value construction.
+        /// </para>
+        /// <para>
+        /// <strong>Usage Examples:</strong>
+        /// </para>
+        /// <code>
+        /// // Create a document with null value
+        /// using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Source.Null());
+        ///
+        /// // Add null property to object
+        /// objBuilder.Add("nullProp", JsonElement.Source.Null());
+        /// </code>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Source Null()
         {
             return new(Kind.Null);
         }
 
-        // If the CoreTypes offer string, we add this method
         /// <summary>
         /// Creates a <see cref="Source"/> from a raw UTF-8 string.
         /// </summary>
         /// <param name="value">The raw UTF-8 string bytes.</param>
         /// <param name="requiresUnescaping">Whether the string requires unescaping.</param>
         /// <returns>A source representing the raw UTF-8 string.</returns>
+        /// <remarks>
+        /// <para>
+        /// This method creates a source from pre-existing UTF-8 string data, avoiding
+        /// encoding conversion overhead. The <paramref name="requiresUnescaping"/> parameter
+        /// indicates whether the string contains JSON escape sequences that need processing.
+        /// </para>
+        /// <para>
+        /// <strong>Escape Handling:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><c>requiresUnescaping = true</c>: String contains escape sequences like \n, \", \\</description></item>
+        /// <item><description><c>requiresUnescaping = false</c>: String is literal and needs no unescaping</description></item>
+        /// <item><description>The choice affects performance during JSON construction</description></item>
+        /// </list>
+        /// <para>
+        /// <strong>Usage Examples:</strong>
+        /// </para>
+        /// <code>
+        /// // Raw string without escapes
+        /// var source1 = JsonElement.Source.RawString("hello"u8, requiresUnescaping: false);
+        ///
+        /// // String with escape sequences
+        /// var source2 = JsonElement.Source.RawString("hello\\nworld"u8, requiresUnescaping: true);
+        /// </code>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
         {
             return new(value, requiresUnescaping);
         }
 
-        // If the CoreTypes offer number, we add this method
         /// <summary>
         /// Creates a <see cref="Source"/> from a formatted number value.
         /// </summary>
         /// <param name="value">The raw UTF-8 bytes representing the formatted number.</param>
         /// <returns>A source representing the formatted number.</returns>
+        /// <remarks>
+        /// <para>
+        /// This method creates a source from pre-formatted numeric data in UTF-8 encoding,
+        /// avoiding the overhead of numeric formatting during JSON construction. The provided
+        /// bytes should represent a valid JSON number without quotes.
+        /// </para>
+        /// <para>
+        /// <strong>Format Requirements:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Must be valid JSON number format (e.g., "123", "-45.67", "1.23e-4")</description></item>
+        /// <item><description>Must not include surrounding quotes</description></item>
+        /// <item><description>Must be UTF-8 encoded</description></item>
+        /// <item><description>Should follow JSON numeric format specification</description></item>
+        /// </list>
+        /// <para>
+        /// <strong>Usage Examples:</strong>
+        /// </para>
+        /// <code>
+        /// // Pre-formatted integer
+        /// var source1 = JsonElement.Source.FormattedNumber("12345"u8);
+        ///
+        /// // Pre-formatted decimal
+        /// var source2 = JsonElement.Source.FormattedNumber("123.456"u8);
+        ///
+        /// // Scientific notation
+        /// var source3 = JsonElement.Source.FormattedNumber("1.23e+10"u8);
+        /// </code>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Source FormattedNumber(ReadOnlySpan<byte> value)
         {
@@ -617,6 +930,30 @@ public readonly partial struct JsonElement
         /// <param name="valueBuilder">The complex value builder to add the property to.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        /// <remarks>
+        /// <para>
+        /// This method implements type-specific dispatch based on the internal <see cref="Kind"/> value,
+        /// routing each source type to the appropriate <see cref="ComplexValueBuilder"/> method:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><strong>Primitives:</strong> Direct calls to type-specific AddProperty overloads</description></item>
+        /// <item><description><strong>Numeric Types:</strong> Formatted as JSON numbers using pre-computed UTF-8 bytes</description></item>
+        /// <item><description><strong>String Types:</strong> Handled with appropriate escaping and encoding parameters</description></item>
+        /// <item><description><strong>Complex Types:</strong> Delegates to builder instances for recursive construction</description></item>
+        /// </list>
+        /// <para>
+        /// <strong>Escape Handling:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><c>escapeName</c>: Controls whether property names are JSON-escaped</description></item>
+        /// <item><description><c>nameRequiresUnescaping</c>: Indicates pre-escaped property names</description></item>
+        /// <item><description>String values have separate escape handling based on their source type</description></item>
+        /// </list>
+        /// <para>
+        /// This method is typically called automatically during JSON object construction and
+        /// forms part of the internal document building pipeline.
+        /// </para>
+        /// </remarks>
         public void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             switch (_kind)
@@ -760,6 +1097,27 @@ public readonly partial struct JsonElement
         /// Adds this source as an item to a complex value builder.
         /// </summary>
         /// <param name="valueBuilder">The complex value builder to add the item to.</param>
+        /// <remarks>
+        /// <para>
+        /// This method implements type-specific dispatch based on the internal <see cref="Kind"/> value,
+        /// routing each source type to the appropriate <see cref="ComplexValueBuilder"/> method for array items:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><strong>Primitives:</strong> Direct calls to type-specific AddItem overloads</description></item>
+        /// <item><description><strong>Numeric Types:</strong> Formatted as JSON numbers using pre-computed UTF-8 bytes</description></item>
+        /// <item><description><strong>String Types:</strong> Handled with appropriate escaping parameters</description></item>
+        /// <item><description><strong>Complex Types:</strong> Delegates to builder instances for recursive construction</description></item>
+        /// </list>
+        /// <para>
+        /// Unlike <see cref="AddAsProperty"/>, this method does not handle property name escaping
+        /// since array items do not have names. String values are processed with their appropriate
+        /// escape handling based on the source type.
+        /// </para>
+        /// <para>
+        /// This method is typically called automatically during JSON array construction and
+        /// forms part of the internal document building pipeline.
+        /// </para>
+        /// </remarks>
         public void AddAsItem(ref ComplexValueBuilder valueBuilder)
         {
             switch (_kind)
@@ -830,6 +1188,61 @@ public readonly partial struct JsonElement
     /// <param name="source">The source value to build the document from.</param>
     /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
     /// <returns>A JSON document builder containing the source value.</returns>
+    /// <remarks>
+    /// <para>
+    /// This method represents the primary integration point between <see cref="Source"/> values
+    /// and the <see cref="JsonDocumentBuilder{T}"/> infrastructure. It creates a complete
+    /// mutable JSON document from any compatible .NET value.
+    /// </para>
+    /// <para>
+    /// <strong>Construction Process:</strong>
+    /// </para>
+    /// <list type="number">
+    /// <item><description>Creates a new <see cref="JsonDocumentBuilder{Mutable}"/> from the workspace</description></item>
+    /// <item><description>Initializes a <see cref="ComplexValueBuilder"/> with the estimated capacity</description></item>
+    /// <item><description>Calls <see cref="Source.AddAsItem"/> to convert the source into the document structure</description></item>
+    /// <item><description>Finalizes the document and transfers ownership to the returned builder</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Memory Management:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description>Uses workspace-managed memory pools for efficient allocation</description></item>
+    /// <item><description>EstimatedMemberCount pre-sizes internal data structures to minimize reallocations</description></item>
+    /// <item><description>Returns a disposable document builder that manages resource cleanup</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Performance Best Practices:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Capacity Estimation:</strong> Provide accurate <c>estimatedMemberCount</c> to minimize internal reallocations</description></item>
+    /// <item><description><strong>String Handling:</strong> Use UTF-8 spans when possible to avoid encoding overhead</description></item>
+    /// <item><description><strong>Nested Structures:</strong> Consider flattening deeply nested objects for better performance</description></item>
+    /// <item><description><strong>Workspace Reuse:</strong> Reuse <see cref="JsonWorkspace"/> instances across multiple document creations</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Memory Allocation Patterns:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Stack Allocation:</strong> Source and ComplexValueBuilder are ref structs with stack-only allocation</description></item>
+    /// <item><description><strong>Pooled Memory:</strong> Document storage uses workspace-managed memory pools</description></item>
+    /// <item><description><strong>Zero-Copy Scenarios:</strong> String and span data often referenced without copying</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Usage Examples:</strong>
+    /// </para>
+    /// <code>
+    /// // Simple value
+    /// using var doc = JsonElement.CreateDocumentBuilder(workspace, 42);
+    ///
+    /// // Complex object
+    /// using var doc = JsonElement.CreateDocumentBuilder(workspace,
+    ///     new(objectBuilder => { /* build object */ }));
+    ///
+    /// // From existing JsonElement
+    /// using var doc = JsonElement.CreateDocumentBuilder(workspace, existingElement);
+    /// </code>
+    /// </remarks>
     /// <remarks>This method is not CLS compliant.</remarks>
     [CLSCompliant(false)]
     public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int estimatedMemberCount = 30)

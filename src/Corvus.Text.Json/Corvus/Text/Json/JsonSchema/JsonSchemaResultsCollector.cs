@@ -11,9 +11,173 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json;
 
 /// <summary>
-/// Collects and manages results from JSON schema validation operations, supporting pooling and efficient memory usage.
-/// This class is not thread-safe and should be used by a single consumer at a time.
+/// Collects and manages results from JSON schema validation operations with high-performance memory management,
+/// stack-based evaluation tracking, and configurable verbosity levels.
 /// </summary>
+/// <remarks>
+/// <para>
+/// <strong>Core Architecture:</strong>
+/// </para>
+/// <para>
+/// The <see cref="JsonSchemaResultsCollector"/> provides a sophisticated result collection system optimized
+/// for JSON schema validation workflows. It manages multiple evaluation paths simultaneously and supports
+/// hierarchical validation contexts through a stack-based approach.
+/// </para>
+/// <list type="bullet">
+/// <item><description><strong>Multi-Path Tracking:</strong> Maintains evaluation, schema, and document paths separately for precise error reporting</description></item>
+/// <item><description><strong>Stack-Based Contexts:</strong> Hierarchical validation contexts with proper nesting and cleanup</description></item>
+/// <item><description><strong>Pooled Memory Management:</strong> Thread-local pooling for high-throughput validation scenarios</description></item>
+/// <item><description><strong>Configurable Verbosity:</strong> Three levels from basic failures to comprehensive validation logs</description></item>
+/// <item><description><strong>UTF-8 Optimized:</strong> Direct UTF-8 processing for reduced encoding overhead</description></item>
+/// </list>
+///
+/// <para>
+/// <strong>Lifecycle Management:</strong>
+/// </para>
+/// <para>
+/// The collector follows a strict lifecycle pattern designed for efficient resource management:
+/// </para>
+/// <list type="number">
+/// <item><description><strong>Creation:</strong> Use <see cref="Create"/> for pooled instances or <see cref="CreateUnrented"/> for standalone use</description></item>
+/// <item><description><strong>Configuration:</strong> Set verbosity level and capacity estimates during creation</description></item>
+/// <item><description><strong>Collection:</strong> Use context methods to track validation hierarchy and results</description></item>
+/// <item><description><strong>Enumeration:</strong> Access results through <see cref="EnumerateResults"/> after validation completion</description></item>
+/// <item><description><strong>Disposal:</strong> Always dispose to return pooled resources and clear sensitive data</description></item>
+/// </list>
+///
+/// <para>
+/// <strong>Memory Management:</strong>
+/// </para>
+/// <para>
+/// Designed for high-performance scenarios with minimal garbage collection pressure:
+/// </para>
+/// <list type="bullet">
+/// <item><description><strong>Pooled Instances:</strong> Thread-local caching reduces allocation overhead in high-throughput scenarios</description></item>
+/// <item><description><strong>ArrayPool Integration:</strong> Uses shared array pools for internal buffers with proper cleanup</description></item>
+/// <item><description><strong>Stack Allocation:</strong> ValueStack structures minimize heap allocations for context management</description></item>
+/// <item><description><strong>Capacity Estimation:</strong> Pre-sizing based on expected result count prevents reallocations</description></item>
+/// <item><description><strong>Security Clearing:</strong> Sensitive data is explicitly cleared on disposal</description></item>
+/// </list>
+///
+/// <para>
+/// <strong>Performance Characteristics:</strong>
+/// </para>
+/// <list type="bullet">
+/// <item><description><strong>Time Complexity:</strong> O(1) result insertion, O(n) enumeration where n is result count</description></item>
+/// <item><description><strong>Space Complexity:</strong> O(d + r) where d is max validation depth, r is result count</description></item>
+/// <item><description><strong>Memory Overhead:</strong> ~32 bytes per path segment, ~128 bytes per message (configurable)</description></item>
+/// <item><description><strong>Thread Safety:</strong> Not thread-safe; use separate instances per thread</description></item>
+/// </list>
+///
+/// <para>
+/// <strong>Verbosity Level Guidance:</strong>
+/// </para>
+/// <list type="bullet">
+/// <item><description><strong>Basic:</strong> Failure messages only - minimal overhead, use for production validation</description></item>
+/// <item><description><strong>Detailed:</strong> Failure messages with detailed context - moderate overhead, use for debugging</description></item>
+/// <item><description><strong>Verbose:</strong> All validation events including successes - high overhead, use for comprehensive analysis</description></item>
+/// </list>
+///
+/// <para>
+/// <strong>Usage Patterns:</strong>
+/// </para>
+/// <list type="bullet">
+/// <item><description><strong>High-Throughput:</strong> Use pooled instances with accurate capacity estimation</description></item>
+/// <item><description><strong>One-Off Validation:</strong> Use unpooled instances for occasional validation</description></item>
+/// <item><description><strong>Debugging:</strong> Use Detailed or Verbose levels with comprehensive result analysis</description></item>
+/// <item><description><strong>Production:</strong> Use Basic level with pooled instances for optimal performance</description></item>
+/// </list>
+///
+/// <para>
+/// <strong>Context Hierarchy:</strong>
+/// </para>
+/// <para>
+/// The collector maintains a stack-based context system where each validation step creates a child context.
+/// Contexts must be completed in reverse order (stack discipline) using either commit or pop operations.
+/// This enables precise error location tracking and efficient resource cleanup.
+/// </para>
+///
+/// <para>
+/// <strong>Thread Safety:</strong>
+/// </para>
+/// <para>
+/// This class is <strong>not thread-safe</strong>. Each thread must use its own collector instance.
+/// The internal thread-local pooling system handles concurrent access to the cache safely.
+/// </para>
+/// </remarks>
+/// <example>
+/// <para>Basic validation with pooled collector:</para>
+/// <code>
+/// using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic, estimatedCapacity: 50);
+///
+/// // Perform validation operations...
+/// int context = collector.BeginChildContext(0, evaluationPath, schemaPath, documentPath);
+/// collector.CommitChildContext(context, parentMatch: true, childMatch: false, messageProvider);
+///
+/// // Enumerate results
+/// foreach (var result in collector.EnumerateResults())
+/// {
+///     if (!result.IsMatch)
+///     {
+///         Console.WriteLine($"Validation failed: {result.GetMessageText()}");
+///         Console.WriteLine($"  Location: {result.GetDocumentEvaluationLocationText()}");
+///     }
+/// }
+/// </code>
+/// </example>
+/// <example>
+/// <para>High-performance validation pattern:</para>
+/// <code>
+/// // Pre-size for expected validation complexity
+/// using var collector = JsonSchemaResultsCollector.Create(
+///     JsonSchemaResultsLevel.Basic,
+///     estimatedCapacity: documentSize / 10);
+///
+/// // Use UTF-8 paths for optimal performance
+/// ReadOnlySpan&lt;byte&gt; propertyName = "username"u8;
+/// int context = collector.BeginChildContext(0, propertyName, evaluationPath, schemaPath);
+///
+/// // Minimal overhead result reporting
+/// collector.CommitChildContext(context, true, validationResult, messageProvider);
+///
+/// // Fast result access
+/// int resultCount = collector.GetResultCount();
+/// if (resultCount > 0)
+/// {
+///     var enumerator = collector.EnumerateResults();
+///     while (enumerator.MoveNext())
+///     {
+///         ProcessResult(enumerator.Current);
+///     }
+/// }
+/// </code>
+/// </example>
+/// <example>
+/// <para>Debugging with verbose output:</para>
+/// <code>
+/// using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose, 100);
+///
+/// // Verbose mode captures all validation steps
+/// int rootContext = collector.BeginChildContext(0, rootEvalPath, rootSchemaPath, rootDocPath);
+///
+/// // All keyword evaluations are recorded
+/// collector.EvaluatedKeyword(true, successMessageProvider, "type"u8);
+/// collector.EvaluatedKeyword(false, failureMessageProvider, "pattern"u8);
+///
+/// collector.CommitChildContext(rootContext, true, false, summaryMessageProvider);
+///
+/// // Comprehensive result analysis
+/// foreach (var result in collector.EnumerateResults())
+/// {
+///     LogValidationResult(
+///         result.IsMatch,
+///         result.GetEvaluationLocationText(),
+///         result.GetSchemaEvaluationLocationText(),
+///         result.GetDocumentEvaluationLocationText(),
+///         result.GetMessageText());
+/// }
+/// </code>
+/// </example>
 public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
 {
     // Maximum message length is 1024 bytes
@@ -29,8 +193,22 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     private const int BytesPerMessage = 128;
 
     /// <summary>
-    /// Represents a range of values in the results buffer.
+    /// Represents a range of values in the results buffer with efficient bounds tracking.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This structure is used internally to track segments within the UTF-8 result buffer,
+    /// enabling O(1) access to result components without string allocation overhead.
+    /// The sequential layout optimizes for cache performance during result enumeration.
+    /// </para>
+    /// <para>
+    /// <strong>Memory Layout:</strong>
+    /// </para>
+    /// <para>
+    /// Designed as a sequential structure to minimize memory fragmentation and optimize
+    /// cache line utilization during result processing operations.
+    /// </para>
+    /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     internal readonly struct ValueRange
     {
@@ -48,8 +226,23 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     }
 
     /// <summary>
-    /// Represents a range of values in the results buffer, including commit index and sequence number.
+    /// Represents a range of values in the results buffer, including commit index and sequence number for hierarchical context tracking.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This structure extends <see cref="ValueRange"/> with additional metadata required for managing
+    /// hierarchical validation contexts. The commit index and sequence number enable proper stack
+    /// discipline and result rollback during validation tree traversal.
+    /// </para>
+    /// <para>
+    /// <strong>Context Management:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>CommitIndex:</strong> Tracks the committed result stack state at context creation</description></item>
+    /// <item><description><strong>SequenceNumber:</strong> Enforces proper nesting order in debug builds</description></item>
+    /// <item><description><strong>Range:</strong> Tracks buffer positions for efficient result storage</description></item>
+    /// </list>
+    /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     private readonly struct ValueRangeWithCommitIndexAndSequenceNumber
     {
@@ -138,30 +331,149 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     }
 
     /// <summary>
-    /// Creates an instance of a <see cref="JsonSchemaResultsCollector"/> rented from the pool.
+    /// Creates a JSON schema results collector from the thread-local pool with optimal memory management.
     /// </summary>
-    /// <param name="level">Controls the verbosity of the results output.</param>
-    /// <param name="estimatedCapacity">An estimate of the number of results rows that will be produced.</param>
-    /// <returns>The <see cref="JsonSchemaResultsCollector"/> instance.</returns>
+    /// <param name="level">
+    /// Controls result verbosity and collection overhead:
+    /// <list type="bullet">
+    /// <item><description><see cref="JsonSchemaResultsLevel.Basic"/>: Failure messages only (lowest overhead)</description></item>
+    /// <item><description><see cref="JsonSchemaResultsLevel.Detailed"/>: Detailed failure context (moderate overhead)</description></item>
+    /// <item><description><see cref="JsonSchemaResultsLevel.Verbose"/>: All validation events (highest overhead)</description></item>
+    /// </list>
+    /// </param>
+    /// <param name="estimatedCapacity">
+    /// Expected number of validation results to optimize internal buffer sizing.
+    /// Accurate estimation prevents reallocations and improves performance.
+    /// Use 0 for unknown capacity (defaults to 30).
+    /// </param>
+    /// <returns>
+    /// A pooled <see cref="JsonSchemaResultsCollector"/> instance ready for validation result collection.
+    /// Must be disposed to return resources to the pool.
+    /// </returns>
+    /// <remarks>
+    /// <para>
+    /// <strong>Pooling Behavior:</strong>
+    /// </para>
+    /// <para>
+    /// This method leverages thread-local pooling for optimal performance in high-throughput scenarios.
+    /// The first call per thread returns a cached instance; subsequent concurrent calls create new instances.
+    /// Always dispose the returned collector to ensure proper pool management.
+    /// </para>
+    /// <para>
+    /// <strong>Memory Pre-allocation:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Path Buffers:</strong> (estimatedCapacity × 32 bytes) + 1024 bytes for path segments</description></item>
+    /// <item><description><strong>Message Buffer:</strong> Varies by level - Basic: minimal, Verbose: (estimatedCapacity × 128 bytes)</description></item>
+    /// <item><description><strong>Schema Path Buffer:</strong> Additional 4096 bytes for URI base length</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Performance Guidelines:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>High Throughput:</strong> Use accurate capacity estimation to minimize allocations</description></item>
+    /// <item><description><strong>Memory Constrained:</strong> Use lower verbosity levels and conservative capacity estimates</description></item>
+    /// <item><description><strong>Debugging:</strong> Use Verbose level with generous capacity estimates for complete information</description></item>
+    /// </list>
+    /// </remarks>
+    /// <example>
+    /// <para>Production validation with optimized settings:</para>
+    /// <code>
+    /// // Estimate capacity based on schema complexity
+    /// int expectedResults = schemaKeywordCount * documentDepth / 4;
+    /// using var collector = JsonSchemaResultsCollector.Create(
+    ///     JsonSchemaResultsLevel.Basic,
+    ///     expectedResults);
+    ///
+    /// // Validation operations...
+    /// </code>
+    /// </example>
+    /// <example>
+    /// <para>Development debugging with comprehensive logging:</para>
+    /// <code>
+    /// // Liberal capacity for complete validation trace
+    /// using var collector = JsonSchemaResultsCollector.Create(
+    ///     JsonSchemaResultsLevel.Verbose,
+    ///     estimatedCapacity: 200);
+    ///
+    /// // All validation steps will be captured
+    /// </code>
+    /// </example>
     public static JsonSchemaResultsCollector Create(JsonSchemaResultsLevel level, int estimatedCapacity = 30)
     {
         return JsonSchemaResultsCollectorCache.RentResultsCollector(level, estimatedCapacity);
     }
 
     /// <summary>
-    /// Creates an instance of a <see cref="JsonSchemaResultsCollector"/> that is not pooled.
+    /// Creates a non-pooled JSON schema results collector for standalone or specialized usage scenarios.
     /// </summary>
-    /// <param name="level">Controls the verbosity of the results output.</param>
-    /// <param name="estimatedCapacity">An estimate of the number of results rows that will be produced.</param>
-    /// <returns>The <see cref="JsonSchemaResultsCollector"/> instance.</returns>
+    /// <param name="level">Controls result verbosity and collection overhead.</param>
+    /// <param name="estimatedCapacity">Expected number of validation results for buffer pre-sizing.</param>
+    /// <returns>
+    /// A standalone <see cref="JsonSchemaResultsCollector"/> instance that is not managed by the thread-local pool.
+    /// Resources are released directly on disposal without pool interaction.
+    /// </returns>
+    /// <remarks>
+    /// <para>
+    /// <strong>Use Cases:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Long-lived Instances:</strong> When the collector lifetime exceeds typical validation scope</description></item>
+    /// <item><description><strong>Memory Isolation:</strong> When pool interaction is undesirable for security or debugging</description></item>
+    /// <item><description><strong>Testing:</strong> When predictable memory behavior is required for unit tests</description></item>
+    /// <item><description><strong>Single-use:</strong> When validation frequency doesn't justify pooling overhead</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Performance Considerations:</strong>
+    /// </para>
+    /// <para>
+    /// Non-pooled instances have higher allocation overhead but provide complete memory isolation.
+    /// Each instance allocates fresh buffers from ArrayPool and returns them directly on disposal.
+    /// Use when pool interaction is problematic or when instance lifetime is unpredictable.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// // Standalone collector for isolated validation
+    /// using var collector = JsonSchemaResultsCollector.CreateUnrented(
+    ///     JsonSchemaResultsLevel.Detailed,
+    ///     estimatedCapacity: 75);
+    ///
+    /// // Validation operations with complete memory isolation...
+    /// </code>
+    /// </example>
     public static JsonSchemaResultsCollector CreateUnrented(JsonSchemaResultsLevel level, int estimatedCapacity = 30)
     {
         return new(false, level, estimatedCapacity);
     }
 
     /// <summary>
-    /// Represents a single result from a JSON schema validation operation, including match status and evaluation locations.
+    /// Represents a single validation result with efficient UTF-8 data access and optional string conversion.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <strong>Data Access Performance:</strong>
+    /// </para>
+    /// <para>
+    /// The Result structure provides direct access to UTF-8 validation data stored in the collector's
+    /// internal buffers. This design minimizes string allocation overhead while providing convenient
+    /// conversion methods for display and logging scenarios.
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>UTF-8 Properties:</strong> Direct span access with zero allocation overhead</description></item>
+    /// <item><description><strong>String Properties:</strong> On-demand conversion using helper methods</description></item>
+    /// <item><description><strong>Lifetime:</strong> Valid until the parent collector is disposed</description></item>
+    /// <item><description><strong>Thread Safety:</strong> Read-only access is safe; parent collector is not thread-safe</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Memory Efficiency:</strong>
+    /// </para>
+    /// <para>
+    /// Result instances are lightweight value types that reference data in the collector's internal
+    /// buffers. No additional allocations occur during result creation or enumeration, making this
+    /// structure suitable for high-performance validation scenarios.
+    /// </para>
+    /// </remarks>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct Result
     {
@@ -237,8 +549,26 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     }
 
     /// <summary>
-    /// Enumerates the results from a <see cref="JsonSchemaResultsCollector"/>. Not thread-safe.
+    /// Enumerates validation results with efficient memory access patterns and minimal allocation overhead.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <strong>Performance Characteristics:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Value Type:</strong> Lightweight enumerator with minimal allocation overhead</description></item>
+    /// <item><description><strong>Forward-Only:</strong> Sequential access optimized for cache-friendly iteration</description></item>
+    /// <item><description><strong>Direct Access:</strong> Results reference internal buffers without additional copies</description></item>
+    /// <item><description><strong>Thread Safety:</strong> Not thread-safe; do not use concurrently with collection operations</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Usage Patterns:</strong>
+    /// </para>
+    /// <para>
+    /// The enumerator provides both <c>foreach</c> support and manual iteration capabilities.
+    /// Results are stable during enumeration but become invalid when the parent collector is disposed.
+    /// </para>
+    /// </remarks>
     [DebuggerDisplay("{Current,nq}")]
     [CLSCompliant(false)]
     public struct ResultsEnumerator : IEnumerable<Result>, IEnumerator<Result>
@@ -306,12 +636,70 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     }
 
     /// <summary>
-    /// Enumerate the results from this collector.
+    /// Enumerates validation results in collection order with efficient memory access patterns.
     /// </summary>
-    /// <returns>An enumerator for the results from the collector.</returns>
+    /// <returns>
+    /// A <see cref="ResultsEnumerator"/> that provides forward-only iteration over committed validation results.
+    /// The enumerator is a value type optimized for minimal allocation overhead.
+    /// </returns>
     /// <remarks>
-    /// The enumerator is not thread-safe and should not be used concurrently from multiple threads.
+    /// <para>
+    /// <strong>Enumeration Characteristics:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Order:</strong> Results are returned in the order they were committed to the collector</description></item>
+    /// <item><description><strong>Stability:</strong> Result order and content remain stable until collector disposal</description></item>
+    /// <item><description><strong>Performance:</strong> O(1) per result access with minimal memory allocation</description></item>
+    /// <item><description><strong>Thread Safety:</strong> Not thread-safe; do not enumerate concurrently with result collection</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Memory Access Pattern:</strong>
+    /// </para>
+    /// <para>
+    /// The enumerator provides direct access to UTF-8 result data stored in internal buffers.
+    /// Result strings are accessed as ReadOnlySpan&lt;byte&gt; for optimal performance, with helper
+    /// methods available for string conversion when needed.
+    /// </para>
+    /// <para>
+    /// <strong>Usage Guidelines:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Performance Critical:</strong> Use UTF-8 span accessors (e.g., <see cref="Result.Message"/>) when possible</description></item>
+    /// <item><description><strong>Convenience:</strong> Use string accessors (e.g., <see cref="Result.GetMessageText"/>) for display purposes</description></item>
+    /// <item><description><strong>Filtering:</strong> Check <see cref="Result.IsMatch"/> early to optimize result processing</description></item>
+    /// </list>
     /// </remarks>
+    /// <example>
+    /// <para>High-performance result processing:</para>
+    /// <code>
+    /// var enumerator = collector.EnumerateResults();
+    /// while (enumerator.MoveNext())
+    /// {
+    ///     var result = enumerator.Current;
+    ///     if (!result.IsMatch)
+    ///     {
+    ///         // Direct UTF-8 processing for optimal performance
+    ///         ProcessValidationFailure(
+    ///             result.Message,
+    ///             result.DocumentEvaluationLocation,
+    ///             result.SchemaEvaluationLocation);
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// <example>
+    /// <para>User-friendly result display:</para>
+    /// <code>
+    /// foreach (var result in collector.EnumerateResults())
+    /// {
+    ///     Console.WriteLine($"Match: {result.IsMatch}");
+    ///     Console.WriteLine($"Message: {result.GetMessageText()}");
+    ///     Console.WriteLine($"Document Path: {result.GetDocumentEvaluationLocationText()}");
+    ///     Console.WriteLine($"Schema Path: {result.GetSchemaEvaluationLocationText()}");
+    ///     Console.WriteLine();
+    /// }
+    /// </code>
+    /// </example>
     [CLSCompliant(false)]
     public ResultsEnumerator EnumerateResults()
     {
@@ -319,17 +707,117 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     }
 
     /// <summary>
-    /// Gets the total number of committed results in this collector.
+    /// Gets the total count of committed validation results with O(1) performance.
     /// </summary>
-    /// <returns>The number of committed results.</returns>
+    /// <returns>
+    /// The number of validation results that have been committed and are available for enumeration.
+    /// This count includes both successful and failed validation results based on the configured verbosity level.
+    /// </returns>
+    /// <remarks>
+    /// <para>
+    /// <strong>Result Counting by Verbosity Level:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Basic:</strong> Counts failure results only</description></item>
+    /// <item><description><strong>Detailed:</strong> Counts failure results with enhanced context</description></item>
+    /// <item><description><strong>Verbose:</strong> Counts all validation events (successes and failures)</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Performance:</strong>
+    /// </para>
+    /// <para>
+    /// This operation is O(1) as it returns the length of the committed results stack without enumeration.
+    /// Use this method to determine if enumeration is necessary or to pre-size result processing structures.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// int resultCount = collector.GetResultCount();
+    /// if (resultCount > 0)
+    /// {
+    ///     Console.WriteLine($"Validation produced {resultCount} results");
+    ///
+    ///     // Pre-size collections if needed
+    ///     var issues = new List&lt;ValidationIssue&gt;(resultCount);
+    ///
+    ///     foreach (var result in collector.EnumerateResults())
+    ///     {
+    ///         issues.Add(ConvertToIssue(result));
+    ///     }
+    /// }
+    /// else
+    /// {
+    ///     Console.WriteLine("Validation completed successfully with no issues");
+    /// }
+    /// </code>
+    /// </example>
     public int GetResultCount()
     {
         return _committedResultStack.Length;
     }
 
     /// <summary>
-    /// Releases all resources used by this results collector and returns it to the pool if it is rented.
+    /// Releases all resources and returns the collector to the pool if rented, ensuring proper cleanup of sensitive data.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <strong>Resource Cleanup Process:</strong>
+    /// </para>
+    /// <list type="number">
+    /// <item><description><strong>Pooled Instances:</strong> Resets state and returns to thread-local cache for reuse</description></item>
+    /// <item><description><strong>Non-pooled Instances:</strong> Clears sensitive data and returns buffers to ArrayPool</description></item>
+    /// <item><description><strong>Security:</strong> All internal buffers containing validation data are explicitly cleared</description></item>
+    /// <item><description><strong>Stack Cleanup:</strong> Internal stacks are disposed and their resources released</description></item>
+    /// </list>
+    /// <para>
+    /// <strong>Security Considerations:</strong>
+    /// </para>
+    /// <para>
+    /// The disposal process explicitly clears all internal buffers that may contain sensitive validation
+    /// data, including validation messages, document paths, and schema paths. This ensures that sensitive
+    /// information does not persist in memory after validation completion.
+    /// </para>
+    /// <para>
+    /// <strong>Performance Impact:</strong>
+    /// </para>
+    /// <para>
+    /// Disposal is designed to be efficient, with O(1) pool return for rented instances and O(n) buffer
+    /// clearing for non-pooled instances where n is the total buffer usage. The explicit clearing overhead
+    /// is necessary for security but minimal in typical usage scenarios.
+    /// </para>
+    /// <para>
+    /// <strong>Important:</strong>
+    /// </para>
+    /// <para>
+    /// Always dispose collector instances to ensure proper resource management. Failure to dispose
+    /// rented instances can lead to pool exhaustion, while failure to dispose non-pooled instances
+    /// can lead to memory leaks and security concerns.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// // Recommended using pattern
+    /// using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
+    ///
+    /// // Validation operations...
+    ///
+    /// // Automatic disposal ensures proper cleanup
+    /// </code>
+    /// </example>
+    /// <example>
+    /// <code>
+    /// // Manual disposal when using pattern is not available
+    /// var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
+    /// try
+    /// {
+    ///     // Validation operations...
+    /// }
+    /// finally
+    /// {
+    ///     collector.Dispose(); // Essential for proper resource management
+    /// }
+    /// </code>
+    /// </example>
     public void Dispose()
     {
         if (_isDisposed)

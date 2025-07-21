@@ -235,6 +235,43 @@ public struct JsonSchemaContext
             resultsCollector);
     }
 
+    /// <summary>
+    /// Creates a new child context for schema evaluation with escaped property name tracking.
+    /// </summary>
+    /// <param name="parentDocument">The JSON document containing the element being evaluated.</param>
+    /// <param name="parentDocumentIndex">The index of the parent element in the document.</param>
+    /// <param name="useEvaluatedItems">Whether this child context should track evaluated array items.</param>
+    /// <param name="useEvaluatedProperties">Whether this child context should track evaluated object properties.</param>
+    /// <param name="escapedPropertyName">The escaped property name for path tracking in validation results.</param>
+    /// <param name="evaluationPath">Optional provider for the reduced evaluation path in the schema.</param>
+    /// <param name="schemaEvaluationPath">Optional provider for the full schema evaluation path.</param>
+    /// <returns>A new child context initialized for the specified element.</returns>
+    /// <remarks>
+    /// <para>
+    /// This method is part of the context lifecycle management system for JSON Schema validation.
+    /// Child contexts inherit buffer space and configuration from their parent but maintain
+    /// separate tracking for evaluated properties and items.
+    /// </para>
+    /// <para>
+    /// The child context shares the same underlying buffer as the parent but uses a different
+    /// offset to avoid conflicts. When the child context is committed via <see cref="CommitChildContext"/>,
+    /// its results are merged back into the parent's validation results.
+    /// </para>
+    /// <para>
+    /// <strong>Usage Pattern:</strong>
+    /// <code>
+    /// // Push child context for validating a property
+    /// JsonSchemaContext childContext = parentContext.PushChildContext(
+    ///     document, propertyIndex, useItems: false, useProperties: true, propertyName);
+    ///
+    /// // Perform validation using child context
+    /// bool isValid = ValidateProperty(ref childContext);
+    ///
+    /// // Commit results back to parent
+    /// parentContext.CommitChildContext(isValid, ref childContext);
+    /// </code>
+    /// </para>
+    /// </remarks>
     public readonly JsonSchemaContext PushChildContext(
         IJsonDocument parentDocument,
         int parentDocumentIndex,
@@ -249,6 +286,28 @@ public struct JsonSchemaContext
         return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
     }
 
+    /// <summary>
+    /// Creates a new child context for schema evaluation with unescaped property name tracking.
+    /// </summary>
+    /// <param name="parentDocument">The JSON document containing the element being evaluated.</param>
+    /// <param name="parentDocumentIndex">The index of the parent element in the document.</param>
+    /// <param name="useEvaluatedItems">Whether this child context should track evaluated array items.</param>
+    /// <param name="useEvaluatedProperties">Whether this child context should track evaluated object properties.</param>
+    /// <param name="unescapedPropertyName">The unescaped property name for path tracking in validation results.</param>
+    /// <param name="evaluationPath">Optional provider for the reduced evaluation path in the schema.</param>
+    /// <param name="schemaEvaluationPath">Optional provider for the full schema evaluation path.</param>
+    /// <returns>A new child context initialized for the specified element.</returns>
+    /// <remarks>
+    /// <para>
+    /// This is the unescaped variant of <see cref="PushChildContext"/>. Use this method when
+    /// the property name is already in unescaped form to avoid unnecessary processing overhead.
+    /// </para>
+    /// <para>
+    /// The context lifecycle and buffer management behavior is identical to the escaped variant.
+    /// The only difference is that the property name is passed directly to the results collector
+    /// without additional escaping processing.
+    /// </para>
+    /// </remarks>
     public readonly JsonSchemaContext PushChildContextUnescaped(
         IJsonDocument parentDocument,
         int parentDocumentIndex,
@@ -263,6 +322,30 @@ public struct JsonSchemaContext
         return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
     }
 
+    /// <summary>
+    /// Creates a new child context for schema evaluation with typed provider context for path generation.
+    /// </summary>
+    /// <typeparam name="TProviderContext">The type of the provider context used for path generation.</typeparam>
+    /// <param name="parentDocument">The JSON document containing the element being evaluated.</param>
+    /// <param name="parentDocumentIndex">The index of the parent element in the document.</param>
+    /// <param name="useEvaluatedItems">Whether this child context should track evaluated array items.</param>
+    /// <param name="useEvaluatedProperties">Whether this child context should track evaluated object properties.</param>
+    /// <param name="providerContext">The typed context object passed to path provider delegates.</param>
+    /// <param name="evaluationPath">Optional provider for the reduced evaluation path in the schema.</param>
+    /// <param name="schemaEvaluationPath">Optional provider for the full schema evaluation path.</param>
+    /// <param name="documentEvaluationPath">Optional provider for the document instance path.</param>
+    /// <returns>A new child context initialized for the specified element.</returns>
+    /// <remarks>
+    /// <para>
+    /// This overload provides strongly-typed context support for custom path providers.
+    /// The <paramref name="providerContext"/> is passed to each of the path provider delegates,
+    /// allowing for stateful or computed path generation based on validation context.
+    /// </para>
+    /// <para>
+    /// This is particularly useful for complex validation scenarios where path generation
+    /// depends on runtime state, computed values, or external configuration.
+    /// </para>
+    /// </remarks>
     public readonly JsonSchemaContext PushChildContext<TProviderContext>(
         IJsonDocument parentDocument,
         int parentDocumentIndex,
@@ -278,6 +361,29 @@ public struct JsonSchemaContext
         return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
     }
 
+    /// <summary>
+    /// Creates a new child context for schema evaluation with optional path providers.
+    /// </summary>
+    /// <param name="parentDocument">The JSON document containing the element being evaluated.</param>
+    /// <param name="parentDocumentIndex">The index of the parent element in the document.</param>
+    /// <param name="useEvaluatedItems">Whether this child context should track evaluated array items.</param>
+    /// <param name="useEvaluatedProperties">Whether this child context should track evaluated object properties.</param>
+    /// <param name="evaluationPath">Optional provider for the reduced evaluation path in the schema.</param>
+    /// <param name="schemaEvaluationPath">Optional provider for the full schema evaluation path.</param>
+    /// <param name="documentEvaluationPath">Optional provider for the document instance path.</param>
+    /// <returns>A new child context initialized for the specified element.</returns>
+    /// <remarks>
+    /// <para>
+    /// This is the most flexible overload for child context creation, allowing custom path
+    /// providers for all three path types: evaluation path, schema evaluation path, and
+    /// document evaluation path. These paths are used for generating detailed validation
+    /// error messages and tracing schema evaluation flow.
+    /// </para>
+    /// <para>
+    /// Use this overload when you need full control over path generation without requiring
+    /// a typed provider context object.
+    /// </para>
+    /// </remarks>
     public readonly JsonSchemaContext PushChildContext(
         IJsonDocument parentDocument,
         int parentDocumentIndex,
@@ -293,12 +399,50 @@ public struct JsonSchemaContext
     }
 
     /// <summary>
-    /// Commits the most recently pushed child context.
+    /// Commits a child context back to its parent, merging validation results and cleaning up resources.
     /// </summary>
+    /// <typeparam name="TProviderContext">The type of the provider context used for message generation.</typeparam>
+    /// <param name="isMatch">Whether the parent validation succeeded.</param>
+    /// <param name="childContext">The child context to commit (passed by readonly reference for performance).</param>
+    /// <param name="providerContext">The typed context object passed to the message provider.</param>
+    /// <param name="messageProvider">Optional provider for generating validation messages.</param>
     /// <remarks>
-    /// Note that this does not apply the evaluated properties/items from the child context
-    /// to the parent context, but is expected to merge any messages produced in the
-    /// child context.
+    /// <para>
+    /// This method completes the child context lifecycle by:
+    /// <list type="bullet">
+    /// <item><description>Merging validation results from the child into the results collector</description></item>
+    /// <item><description>Transferring ownership of shared buffer resources from child to parent</description></item>
+    /// <item><description>Updating the parent's match status based on both parent and child results</description></item>
+    /// <item><description>Generating validation messages using the provided message provider</description></item>
+    /// </list>
+    /// </para>
+    /// <para>
+    /// <strong>Important:</strong> This method does NOT automatically apply evaluated properties/items
+    /// from the child context to the parent. Use <see cref="ApplyEvaluated"/> separately if you need
+    /// to merge evaluated tracking information.
+    /// </para>
+    /// <para>
+    /// <strong>Performance Note:</strong> The child context is passed by readonly reference to avoid
+    /// copying the entire struct. The buffer ownership transfer ensures proper resource management
+    /// without requiring explicit disposal of the child context.
+    /// </para>
+    /// <para>
+    /// <strong>Usage Pattern:</strong>
+    /// <code>
+    /// // After validation with child context
+    /// bool childIsValid = ValidateWithChild(ref childContext);
+    /// bool parentIsValid = parentContext.IsMatch &amp;&amp; childIsValid;
+    ///
+    /// // Commit the child results
+    /// parentContext.CommitChildContext(parentIsValid, ref childContext, contextData, messageProvider);
+    ///
+    /// // Optionally merge evaluated tracking
+    /// if (needsEvaluatedTracking)
+    /// {
+    ///     parentContext.ApplyEvaluated(ref childContext);
+    /// }
+    /// </code>
+    /// </para>
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CommitChildContext<TProviderContext>(bool isMatch, ref readonly JsonSchemaContext childContext, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider = null)
@@ -312,12 +456,28 @@ public struct JsonSchemaContext
     }
 
     /// <summary>
-    /// Commits the most recently pushed child context.
+    /// Commits a child context back to its parent, merging validation results and cleaning up resources.
     /// </summary>
+    /// <param name="isMatch">Whether the parent validation succeeded.</param>
+    /// <param name="childContext">The child context to commit (passed by readonly reference for performance).</param>
+    /// <param name="messageProvider">Optional provider for generating validation messages.</param>
     /// <remarks>
-    /// Note that this does not apply the evaluated properties/items from the child context
-    /// to the parent context, but is expected to merge any messages produced in the
-    /// child context.
+    /// <para>
+    /// This is the non-generic overload of <see cref="CommitChildContext{TProviderContext}"/>.
+    /// Use this method when you don't need typed provider context for message generation.
+    /// </para>
+    /// <para>
+    /// The lifecycle management behavior is identical to the generic overload:
+    /// <list type="bullet">
+    /// <item><description>Validation results are merged into the results collector</description></item>
+    /// <item><description>Buffer ownership is transferred from child to parent</description></item>
+    /// <item><description>Parent match status is updated based on the provided <paramref name="isMatch"/> value</description></item>
+    /// </list>
+    /// </para>
+    /// <para>
+    /// <strong>Typical Usage:</strong> Use this overload for simple validation scenarios where
+    /// error messages don't require additional context beyond the standard validation paths.
+    /// </para>
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CommitChildContext(bool isMatch, ref readonly JsonSchemaContext childContext, JsonSchemaMessageProvider? messageProvider = null)
@@ -686,6 +846,41 @@ public struct JsonSchemaContext
         }
     }
 
+    /// <summary>
+    /// Core implementation for creating child contexts with optimized buffer allocation strategies.
+    /// </summary>
+    /// <param name="sequenceNumber">The sequence number assigned by the results collector for tracking.</param>
+    /// <param name="parentDocument">The JSON document containing the element being evaluated.</param>
+    /// <param name="parentDocumentIndex">The index of the parent element in the document.</param>
+    /// <param name="useEvaluatedItems">Whether to track evaluated array items for this context.</param>
+    /// <param name="useEvaluatedProperties">Whether to track evaluated object properties for this context.</param>
+    /// <returns>A new child context with appropriate buffer allocation and tracking configuration.</returns>
+    /// <remarks>
+    /// <para>
+    /// This method implements the core child context creation logic with several important optimizations:
+    /// </para>
+    /// <para>
+    /// <strong>Buffer Sharing Strategy:</strong>
+    /// <list type="bullet">
+    /// <item><description>Child contexts share the same underlying buffer as their parent</description></item>
+    /// <item><description>Each child gets a unique offset within the shared buffer</description></item>
+    /// <item><description>This avoids allocation overhead for short-lived child contexts</description></item>
+    /// </list>
+    /// </para>
+    /// <para>
+    /// <strong>Evaluated Tracking Optimization:</strong>
+    /// <list type="bullet">
+    /// <item><description>For JSON objects: allocates bit buffers sized to the object's property count</description></item>
+    /// <item><description>For JSON arrays: allocates bit buffers sized to the array's length</description></item>
+    /// <item><description>For other types: creates minimal context without evaluated tracking</description></item>
+    /// </list>
+    /// </para>
+    /// <para>
+    /// <strong>Feature Flag Management:</strong>
+    /// Child contexts inherit feature flags from their parent but are marked as non-disposable
+    /// since they share buffer ownership with the parent. The parent retains disposal responsibility.
+    /// </para>
+    /// </remarks>
     private readonly JsonSchemaContext PushChildContextCore(int sequenceNumber, IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties)
     {
         bool usesEvaluatedProperties = UseEvaluatedProperties || useEvaluatedProperties;
