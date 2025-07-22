@@ -1536,6 +1536,8 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
+    ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValueUnsafe(int index) => GetRawSimpleValueUnsafe(index);
+
     bool IMutableJsonDocument.TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, out int valueIndex)
     {
         CheckNotDisposed();
@@ -1603,6 +1605,5 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     int IMutableJsonDocument.StoreValue(UInt128 value) => StoreValue(value);
 
     int IMutableJsonDocument.StoreValue(Half value) => StoreValue(value);
-
 #endif
 }

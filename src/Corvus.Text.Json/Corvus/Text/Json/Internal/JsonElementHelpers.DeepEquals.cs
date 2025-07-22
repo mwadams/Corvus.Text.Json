@@ -102,8 +102,8 @@ public static partial class JsonElementHelpers
             case JsonTokenType.Number:
             {
                 return AreEqualJsonNumbers(
-                    element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex).Span,
-                    element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex).Span);
+                    element1ParentDocument.GetRawSimpleValueUnsafe(element1ParentDocumentIndex).Span,
+                    element2ParentDocument.GetRawSimpleValueUnsafe(element2ParentDocumentIndex).Span);
             }
 
             case JsonTokenType.String:
@@ -114,15 +114,15 @@ public static partial class JsonElementHelpers
                     {
                         // Need to unescape and compare both inputs.
                         return JsonReaderHelper.UnescapeAndCompareBothInputs(
-                            element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex).Span,
-                            element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex).Span);
+                            element1ParentDocument.GetRawSimpleValueUnsafe(element1ParentDocumentIndex).Span,
+                            element2ParentDocument.GetRawSimpleValueUnsafe(element2ParentDocumentIndex).Span);
                     }
 
                     // Note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
                     // Swap values so that unescaping is handled by the LHS.
                     return element2ParentDocument.TextEquals(
                         element2ParentDocumentIndex,
-                        element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex).Span,
+                        element1ParentDocument.GetRawSimpleValueUnsafe(element1ParentDocumentIndex).Span,
                         isPropertyName: false,
                         shouldUnescape: true);
                 }
@@ -130,18 +130,13 @@ public static partial class JsonElementHelpers
                 // As above, note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
                 return element1ParentDocument.TextEquals(
                     element1ParentDocumentIndex,
-                    element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex).Span,
+                    element2ParentDocument.GetRawSimpleValueUnsafe(element2ParentDocumentIndex).Span,
                     isPropertyName: false,
                     shouldUnescape: true);
             }
 
             case JsonTokenType.StartArray:
             {
-                ////if (element1ParentDocument.GetArrayLength(element1ParentDocumentIndex) != element2ParentDocument.GetArrayLength(element2ParentDocumentIndex))
-                ////{
-                ////    return false;
-                ////}
-
                 ArrayEnumerator<JsonElement> arrayEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
                 ArrayEnumerator<JsonElement> arrayEnumerator1 = new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex);
                 while(arrayEnumerator1.MoveNext())

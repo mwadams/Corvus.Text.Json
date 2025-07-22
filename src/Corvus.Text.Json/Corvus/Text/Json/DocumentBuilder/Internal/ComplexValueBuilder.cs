@@ -3055,6 +3055,7 @@ public ref struct ComplexValueBuilder
     /// <summary>
     /// Starts a new JSON object in the builder.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void StartObject()
     {
         _parsedData.Append(JsonTokenType.StartObject, 0, -1);
@@ -3065,6 +3066,7 @@ public ref struct ComplexValueBuilder
     /// Starts a new JSON array in the builder.
     /// </summary>
     [CLSCompliant(false)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void StartArray()
     {
         _parsedData.Append(JsonTokenType.StartArray, 0, -1);
@@ -3074,6 +3076,7 @@ public ref struct ComplexValueBuilder
     /// <summary>
     /// Ends the current JSON object, finalizing its structure in the builder.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EndObject()
     {
         int startRowIndex = Length - (_rowCount * DbRow.Size);
@@ -3090,6 +3093,7 @@ public ref struct ComplexValueBuilder
     /// Removes a property from the current object.
     /// </summary>
     /// <param name="utf8Name">The name of the property as a string.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RemoveProperty(string name)
     {
         RemoveProperty(name.AsSpan());
@@ -3253,6 +3257,7 @@ public ref struct ComplexValueBuilder
     /// <summary>
     /// Ends the current JSON array, finalizing its structure in the builder.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EndArray()
     {
         int startRowIndex = Length - (_rowCount * DbRow.Size);
@@ -3285,6 +3290,7 @@ public ref struct ComplexValueBuilder
     /// Transfers the built data to the specified <see cref="MetadataDb"/> and disposes this builder.
     /// </summary>
     /// <param name="targetData">The target metadata database to receive the data.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetAndDispose(ref MetadataDb targetData)
     {
         // We don't need to initialize the metadata DB if we are creating a whole document
@@ -3299,6 +3305,7 @@ public ref struct ComplexValueBuilder
     /// <param name="complexObjectStartIndex">The start index of the complex object in the target database.</param>
     /// <param name="targetIndex">The index at which to insert the data.</param>
     /// <param name="targetData">The target metadata database to receive the data.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void InsertAndDispose(int complexObjectStartIndex, int targetIndex, ref MetadataDb targetData)
     {
         targetData.InsertRowsInComplexObject(_parentDocument, complexObjectStartIndex, targetIndex, _rowCount, _memberCount);
@@ -3388,6 +3395,7 @@ public ref struct ComplexValueBuilder
     /// <param name="endIndex">The end index of the range to overwrite.</param>
     /// <param name="memberCountToReplace">The number of members to replace.</param>
     /// <param name="targetData">The target metadata database to receive the data.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref MetadataDb targetData)
     {
         targetData.ReplaceRowsInComplexObject(_parentDocument, complexObjectStartIndex, startIndex, endIndex, memberCountToReplace, _rowCount, _memberCount);
@@ -3410,6 +3418,7 @@ public ref struct ComplexValueBuilder
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void AddStringValue(JsonTokenType tokenType, ReadOnlySpan<char> stringValue)
     {
         Debug.Assert(tokenType is JsonTokenType.PropertyName or JsonTokenType.String);

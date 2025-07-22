@@ -71,6 +71,9 @@ internal class DummyDocument : IJsonDocument
     public ReadOnlyMemory<byte> GetRawSimpleValue(int index)
     { return default; }
 
+    public ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index)
+    { return default; }
+
     public RawUtf8JsonString GetRawValue(int index, bool includeQuotes)
     { return default; }
 

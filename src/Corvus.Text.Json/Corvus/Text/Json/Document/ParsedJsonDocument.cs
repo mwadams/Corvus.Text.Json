@@ -1447,6 +1447,16 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         AppendElement(index, ref db, workspaceDocumentIndex);
     }
 
+    /// <inheritdoc />
+    int IJsonDocument.GetHashCode(int index)
+    {
+        CheckNotDisposed();
+        return GetHashCodeUnsafe(index);
+    }
+
+    /// <inheritdoc />
+    ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValueUnsafe(int index) => GetRawSimpleValueUnsafe(index);
+
     private int AppendElement(int index, ref MetadataDb db, int workspaceDocumentIndex)
     {
         switch (_parsedData.GetJsonTokenType(index))
@@ -1489,11 +1499,5 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         int entityLength = complexObjectRow.HasPropertyMap ? GetLengthOfEndToken(complexObjectRow.SizeOrLengthOrPropertyMapIndex) : complexObjectRow.RawSizeOrLength;
         db.AppendExternal(complexObjectRow.TokenType, index, entityLength, complexObjectRow.NumberOfRows);
         return count;
-    }
-
-    int IJsonDocument.GetHashCode(int index)
-    {
-        CheckNotDisposed();
-        return GetHashCodeUnsafe(index);
     }
 }
