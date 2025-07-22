@@ -45,12 +45,7 @@ public class BenchmarkBuild
                         otherNames.Add("James"u8);
                     }));
             }),
-            competedInYears: new(static (ref competedInYears) =>
-            {
-                competedInYears.Add(2012);
-                competedInYears.Add(2016);
-                competedInYears.Add(2024);
-            }));
+            competedInYears: Benchmark.CorvusTextJson.CompetedInYears.Source.FromArray([2012,2106,2024]));
 
         return person.RootElement;
     }
