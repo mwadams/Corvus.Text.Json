@@ -71,7 +71,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     public void Dispose()
     {
         int length = _utf8Json.Length;
-        if (length == 0 || !_isDisposable)
+        if ((uint)length == 0 || !_isDisposable)
         {
             return;
         }
@@ -246,6 +246,15 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return GetRawSimpleValueUnsafe(index, includeQuotes);
     }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index)
+    {
+        CheckNotDisposed();
+
+        return GetRawSimpleValueUnsafe(index);
+    }
+
     /// <summary>
     /// Gets the raw simple value from the document without bounds checking.
     /// </summary>
@@ -256,6 +265,17 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes)
     {
         return GetRawSimpleValueUnsafe(ref _parsedData, index, includeQuotes);
+    }
+
+    /// <summary>
+    /// Gets the raw simple value from the document without bounds checking.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <returns>The raw value as a read-only memory of bytes.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index)
+    {
+        return GetRawSimpleValueUnsafe(ref _parsedData, index);
     }
 
     /// <summary>
@@ -276,6 +296,20 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
             // End one character after the value (the close quote)
             return _utf8Json.Slice(row.LocationOrIndex - 1, row.SizeOrLengthOrPropertyMapIndex + 2);
         }
+
+        return _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+    }
+
+    /// <summary>
+    /// Gets the raw simple value from the specified metadata database without bounds checking.
+    /// </summary>
+    /// <param name="parsedData">The metadata database to read from.</param>
+    /// <param name="index">The index of the element.</param>
+    /// <returns>The raw value as a read-only memory of bytes.</returns>
+    protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index)
+    {
+        DbRow row = parsedData.Get(index);
+        Debug.Assert(row.IsSimpleValue);
 
         return _utf8Json.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
     }
@@ -339,7 +373,8 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
 
         if (row.HasComplexChildren)
         {
-            byte[] rentedBytes = ArrayPool<byte>.Shared.Rent(segment.Length);
+            int segmentLength = segment.Length;
+            byte[] rentedBytes = ArrayPool<byte>.Shared.Rent(segmentLength);
             try
             {
                 JsonReaderHelper.Unescape(segment.Span, rentedBytes, out int written);
@@ -434,7 +469,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out sbyte tmp, out int consumed) &&
-            consumed == segment.Length)
+            (uint)consumed == (uint)segment.Length)
         {
             value = tmp;
             return true;
@@ -457,7 +492,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out byte tmp, out int consumed) &&
-            consumed == segment.Length)
+            (uint)consumed == (uint)segment.Length)
         {
             value = tmp;
             return true;
@@ -480,7 +515,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out short tmp, out int consumed) &&
-            consumed == segment.Length)
+            (uint)consumed == (uint)segment.Length)
         {
             value = tmp;
             return true;
@@ -503,7 +538,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out ushort tmp, out int consumed) &&
-            consumed == segment.Length)
+            (uint)consumed == (uint)segment.Length)
         {
             value = tmp;
             return true;
@@ -526,7 +561,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out int tmp, out int consumed) &&
-            consumed == segment.Length)
+            (uint)consumed == (uint)segment.Length)
         {
             value = tmp;
             return true;
@@ -549,7 +584,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out uint tmp, out int consumed) &&
-            consumed == segment.Length)
+            (uint)consumed == (uint)segment.Length)
         {
             value = tmp;
             return true;
@@ -572,7 +607,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out long tmp, out int consumed) &&
-            consumed == segment.Length)
+            (uint)consumed == (uint)segment.Length)
         {
             value = tmp;
             return true;
@@ -595,7 +630,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out ulong tmp, out int consumed) &&
-            consumed == segment.Length)
+            (uint)consumed == (uint)segment.Length)
         {
             value = tmp;
             return true;
@@ -618,7 +653,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out double tmp, out int bytesConsumed) &&
-            segment.Length == bytesConsumed)
+            (uint)segment.Length == (uint)bytesConsumed)
         {
             value = tmp;
             return true;
@@ -641,7 +676,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out float tmp, out int bytesConsumed) &&
-            segment.Length == bytesConsumed)
+            (uint)segment.Length == (uint)bytesConsumed)
         {
             value = tmp;
             return true;
@@ -664,7 +699,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
         if (Utf8Parser.TryParse(segment, out decimal tmp, out int bytesConsumed) &&
-            segment.Length == bytesConsumed)
+            (uint)segment.Length == (uint)bytesConsumed)
         {
             value = tmp;
             return true;
@@ -826,7 +861,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> data = _utf8Json.Span;
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-        if (segment.Length > JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
+        if ((uint)segment.Length > (uint)JsonConstants.MaximumEscapedDateTimeOffsetParseLength)
         {
             value = default;
             return false;
@@ -889,7 +924,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> data = _utf8Json.Span;
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-        if (segment.Length > JsonConstants.MaximumEscapedGuidLength)
+        if ((uint)segment.Length > (uint)JsonConstants.MaximumEscapedGuidLength)
         {
             value = default;
             return false;
@@ -1287,7 +1322,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
                 // This check is similar to tracking the start array and painting it when
                 // StartObject or StartArray is encountered, but avoids the mixed state
                 // where "UnknownSize" implies "has complex children".
-                if (arrayItemsOrPropertyCount + 1 != numberOfRowsForValues)
+                if ((uint)(arrayItemsOrPropertyCount + 1) != (uint)numberOfRowsForValues)
                 {
                     database.SetHasComplexChildren(rowIndex);
                 }

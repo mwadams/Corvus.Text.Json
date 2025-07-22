@@ -774,7 +774,7 @@ public sealed partial class ParsedJsonDocument<T>
             } while (lastRead > 0 && written < utf8Bom.Length);
 
             // If we have 3 bytes, and they're the BOM, reset the write position to 0.
-            if (written == utf8Bom.Length &&
+            if ((uint)written == (uint)utf8Bom.Length &&
                 utf8Bom.SequenceEqual(rented.AsSpan(0, utf8Bom.Length)))
             {
                 written = 0;
@@ -782,7 +782,7 @@ public sealed partial class ParsedJsonDocument<T>
 
             do
             {
-                if (rented.Length == written)
+                if ((uint)rented.Length == (uint)written)
                 {
                     byte[] toReturn = rented;
                     rented = ArrayPool<byte>.Shared.Rent(checked(toReturn.Length * 2));
@@ -854,7 +854,7 @@ public sealed partial class ParsedJsonDocument<T>
             } while (lastRead > 0 && written < utf8BomLength);
 
             // If we have 3 bytes, and they're the BOM, reset the write position to 0.
-            if (written == utf8BomLength &&
+            if ((uint)written == (uint)utf8BomLength &&
                 JsonConstants.Utf8Bom.SequenceEqual(rented.AsSpan(0, utf8BomLength)))
             {
                 written = 0;
@@ -862,7 +862,7 @@ public sealed partial class ParsedJsonDocument<T>
 
             do
             {
-                if (rented.Length == written)
+                if ((uint)rented.Length == (uint)written)
                 {
                     byte[] toReturn = rented;
                     rented = ArrayPool<byte>.Shared.Rent(toReturn.Length * 2);

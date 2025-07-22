@@ -48,11 +48,23 @@ public static partial class JsonElementHelpers
             return element2.ParentDocument == null;
         }
 
-        JsonValueKind kind = element1.ValueKind;
-
         return DeepEquals(
-            element1.ValueKind,
-            element2.ValueKind,
+            element1.TokenType,
+            element2.TokenType,
+            element1.ParentDocument,
+            element2.ParentDocument,
+            element1.ParentDocumentIndex,
+            element2.ParentDocumentIndex);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool DeepEqualsNoParentDocumentCheck<TLeft, TRight>(in TLeft element1, in TRight element2)
+        where TLeft : struct, IJsonElement
+        where TRight : struct, IJsonElement
+    {
+        return DeepEquals(
+            element1.TokenType,
+            element2.TokenType,
             element1.ParentDocument,
             element2.ParentDocument,
             element1.ParentDocumentIndex,
@@ -62,45 +74,39 @@ public static partial class JsonElementHelpers
     /// <summary>
     /// Compares the values of two JSON elements for equality based on their value kinds and document information.
     /// </summary>
-    /// <param name="element1Kind">The value kind of the first JSON element.</param>
-    /// <param name="element2Kind">The value kind of the second JSON element.</param>
+    /// <param name="element1TokenType">The token type of the first JSON element.</param>
+    /// <param name="element2TokenType">The token type of the second JSON element.</param>
     /// <param name="element1ParentDocument">The parent document containing the first JSON element.</param>
     /// <param name="element2ParentDocument">The parent document containing the second JSON element.</param>
     /// <param name="element1ParentDocumentIndex">The index of the first JSON element within its parent document.</param>
     /// <param name="element2ParentDocumentIndex">The index of the second JSON element within its parent document.</param>
     /// <returns><see langword="true"/> if the two JSON elements are equal; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool DeepEquals(
-        JsonValueKind element1Kind,
-        JsonValueKind element2Kind,
+    private static bool DeepEquals(
+        JsonTokenType element1TokenType,
+        JsonTokenType element2TokenType,
         IJsonDocument element1ParentDocument,
         IJsonDocument element2ParentDocument,
         int element1ParentDocumentIndex,
         int element2ParentDocumentIndex)
     {
-        if (element1Kind != element2Kind)
+        if (element1TokenType != element2TokenType)
         {
             return false;
         }
 
-        if (element1Kind is JsonValueKind.Null or JsonValueKind.False or JsonValueKind.True)
+        switch (element1TokenType)
         {
-            return true;
-        }
-
-        switch (element1Kind)
-        {
-            case JsonValueKind.Null or JsonValueKind.False or JsonValueKind.True:
+            case JsonTokenType.Null or JsonTokenType.False or JsonTokenType.True:
                 return true;
 
-            case JsonValueKind.Number:
+            case JsonTokenType.Number:
             {
                 return AreEqualJsonNumbers(
-                    element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-                    element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
+                    element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex).Span,
+                    element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex).Span);
             }
 
-            case JsonValueKind.String:
+            case JsonTokenType.String:
             {
                 if (element2ParentDocument.ValueIsEscaped(element2ParentDocumentIndex, isPropertyName: false))
                 {
@@ -108,15 +114,15 @@ public static partial class JsonElementHelpers
                     {
                         // Need to unescape and compare both inputs.
                         return JsonReaderHelper.UnescapeAndCompareBothInputs(
-                            element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
-                            element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span);
+                            element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex).Span,
+                            element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex).Span);
                     }
 
                     // Note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
                     // Swap values so that unescaping is handled by the LHS.
                     return element2ParentDocument.TextEquals(
                         element2ParentDocumentIndex,
-                        element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex, includeQuotes: false).Span,
+                        element1ParentDocument.GetRawSimpleValue(element1ParentDocumentIndex).Span,
                         isPropertyName: false,
                         shouldUnescape: true);
                 }
@@ -124,43 +130,44 @@ public static partial class JsonElementHelpers
                 // As above, note that we do not require the TokenType null test of the JsonElement ValueEquals, as this is TokenType string
                 return element1ParentDocument.TextEquals(
                     element1ParentDocumentIndex,
-                    element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex, includeQuotes: false).Span,
+                    element2ParentDocument.GetRawSimpleValue(element2ParentDocumentIndex).Span,
                     isPropertyName: false,
                     shouldUnescape: true);
             }
 
-            case JsonValueKind.Array:
+            case JsonTokenType.StartArray:
             {
-                if (element1ParentDocument.GetArrayLength(element1ParentDocumentIndex) != element2ParentDocument.GetArrayLength(element2ParentDocumentIndex))
-                {
-                    return false;
-                }
+                ////if (element1ParentDocument.GetArrayLength(element1ParentDocumentIndex) != element2ParentDocument.GetArrayLength(element2ParentDocumentIndex))
+                ////{
+                ////    return false;
+                ////}
 
                 ArrayEnumerator<JsonElement> arrayEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
-                foreach (JsonElement e1 in new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex))
+                ArrayEnumerator<JsonElement> arrayEnumerator1 = new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex);
+                while(arrayEnumerator1.MoveNext())
                 {
-                    bool success = arrayEnumerator2.MoveNext();
-                    Debug.Assert(success, "enumerators must have matching length");
+                   if (!arrayEnumerator2.MoveNext())
+                    {
+                        return false;
+                    }
 
-                    if (!DeepEquals(e1, arrayEnumerator2.Current))
+
+                    if (!DeepEqualsNoParentDocumentCheck(arrayEnumerator1.Current, arrayEnumerator2.Current))
                     {
                         return false;
                     }
                 }
 
-                Debug.Assert(!arrayEnumerator2.MoveNext());
-                return true;
+                return !arrayEnumerator2.MoveNext();
             }
 
-            default:
+            case JsonTokenType.StartObject:
             {
-                Debug.Assert(element1Kind is JsonValueKind.Object);
-
-                int count = element1ParentDocument.GetPropertyCount(element1ParentDocumentIndex);
-                if (count != element2ParentDocument.GetPropertyCount(element2ParentDocumentIndex))
-                {
-                    return false;
-                }
+                ////int count = element1ParentDocument.GetPropertyCount(element1ParentDocumentIndex);
+                ////if (count != element2ParentDocument.GetPropertyCount(element2ParentDocumentIndex))
+                ////{
+                ////    return false;
+                ////}
 
                 ObjectEnumerator<JsonElement> objectEnumerator1 = new(element1ParentDocument, element1ParentDocumentIndex);
                 ObjectEnumerator<JsonElement> objectEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
@@ -183,20 +190,23 @@ public static partial class JsonElementHelpers
                         return UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentIndex, ref objectEnumerator2);
                     }
 
-                    if (!DeepEquals(prop1.Value, prop2.Value))
+                    if (!DeepEqualsNoParentDocumentCheck(prop1.Value, prop2.Value))
                     {
                         return false;
                     }
-
-                    count--;
                 }
 
                 Debug.Assert(!objectEnumerator2.MoveNext());
                 return true;
             }
+
+            default:
+                Debug.Fail("Unexpected token type.");
+                return false;
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool NameEquals(JsonProperty<JsonElement> left, JsonProperty<JsonElement> right)
     {
         if (right.NameIsEscaped)

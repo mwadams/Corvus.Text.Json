@@ -397,6 +397,13 @@ public interface IJsonDocument : IDisposable
     ReadOnlyMemory<byte> GetRawSimpleValue(int index, bool includeQuotes);
 
     /// <summary>
+    /// Gets the raw simple value of the element at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <returns>The raw simple value.</returns>
+    ReadOnlyMemory<byte> GetRawSimpleValue(int index);
+
+    /// <summary>
     /// Determines whether the value at the specified index is escaped.
     /// </summary>
     /// <param name="index">The index of the value.</param>

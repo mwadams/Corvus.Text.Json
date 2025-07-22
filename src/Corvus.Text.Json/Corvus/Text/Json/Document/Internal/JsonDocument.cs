@@ -9,6 +9,7 @@ using System.Text.Encodings.Web;
 using NodaTime;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 #if NET
 
@@ -150,6 +151,21 @@ public abstract partial class JsonDocument
     /// <returns>The raw value as a memory span.</returns>
     protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index, bool includeQuotes);
 
+    /// Gets the raw simple value as a memory span for the specified index.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <returns>The raw value as a memory span.</returns>
+    protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index);
+
+    /// <summary>
+    /// Gets the raw simple value as a memory span for the specified index using external metadata.
+    /// </summary>
+    /// <param name="parsedData">The parsed data metadata database.</param>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="includeQuotes">Whether to include quotes in the result.</param>
+    /// <returns>The raw value as a memory span.</returns>
+    protected abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index);
+
     /// <summary>
     /// Checks that the actual token type matches the expected token type, throwing an exception if not.
     /// </summary>
@@ -201,7 +217,8 @@ public abstract partial class JsonDocument
         byte[]? otherUtf8TextArray = null;
 
         int length = checked(otherText.Length * JsonConstants.MaxExpansionFactorWhileTranscoding);
-        Span<byte> otherUtf8Text = length <= JsonConstants.StackallocByteThreshold ?
+        // Use unsigned comparison for efficient stackalloc threshold check
+        Span<byte> otherUtf8Text = (uint)length <= (uint)JsonConstants.StackallocByteThreshold ?
             stackalloc byte[JsonConstants.StackallocByteThreshold] :
             (otherUtf8TextArray = ArrayPool<byte>.Shared.Rent(length));
 
@@ -247,14 +264,16 @@ public abstract partial class JsonDocument
 
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(matchIndex, includeQuotes: false).Span;
 
-        if (otherUtf8Text.Length > segment.Length || (!shouldUnescape && otherUtf8Text.Length != segment.Length))
+        // Use unsigned comparison to optimize length checks
+        if ((uint)otherUtf8Text.Length > (uint)segment.Length || (!shouldUnescape && otherUtf8Text.Length != segment.Length))
         {
             return false;
         }
 
         if (row.HasComplexChildren && shouldUnescape)
         {
-            if (otherUtf8Text.Length < segment.Length / JsonConstants.MaxExpansionFactorWhileEscaping)
+            // Use unsigned comparison for length validation
+            if ((uint)otherUtf8Text.Length < (uint)(segment.Length / JsonConstants.MaxExpansionFactorWhileEscaping))
             {
                 return false;
             }
@@ -304,7 +323,8 @@ public abstract partial class JsonDocument
         int elementCount = 0;
         int objectOffset = currentIndex + DbRow.Size;
 
-        for (; objectOffset < _parsedData.Length; objectOffset += DbRow.Size)
+        // Use inlined unsigned comparison for optimized bounds checking
+        while ((uint)objectOffset < (uint)_parsedData.Length)
         {
             if (arrayIndex == elementCount)
             {
@@ -319,6 +339,7 @@ public abstract partial class JsonDocument
             }
 
             elementCount++;
+            objectOffset += DbRow.Size;
         }
 
         Debug.Fail(
@@ -354,7 +375,8 @@ public abstract partial class JsonDocument
             return;
         }
 
-        if (byteArray.Length > v)
+        // Use unsigned comparison to optimize length check
+        if ((uint)byteArray.Length > (uint)v)
         {
             return;
         }
@@ -1297,6 +1319,9 @@ public abstract partial class JsonDocument
 
         int maxRequiredSize = valueIdx == -1 ? utf8Value.Length + 2 + 4 : JsonWriterHelper.GetMaxEscapedLength(utf8Value.Length, valueIdx) + 2 + 4;
 
+        // Use unsigned comparison for efficient buffer size check
+        Debug.Assert((uint)maxRequiredSize > (uint)(utf8Value.Length + 6), "Max required size should be larger than minimum required");
+
         Enlarge(_valueOffset + maxRequiredSize, ref _valueBacking);
 
         int written;
@@ -1424,6 +1449,7 @@ public abstract partial class JsonDocument
         Enlarge(_valueOffset, ref _valueBacking);
 
         uint length = (uint)escapedString.Length + 2;
+        // Use unsigned comparison for efficient bounds check
         if (length > 0x0FFFFFFF)
         {
             ThrowHelper.ThrowArgumentException_ValueTooLarge(length);
@@ -1461,6 +1487,7 @@ public abstract partial class JsonDocument
         Enlarge(_valueOffset, ref _valueBacking);
 
         uint length = (uint)unescapedNumberValue.Length;
+        // Use unsigned comparison for efficient bounds check
         if (length > 0x0FFFFFFF)
         {
             ThrowHelper.ThrowArgumentException_ValueTooLarge(length);
@@ -1516,6 +1543,36 @@ public abstract partial class JsonDocument
         int start;
 
         if (!includeQuotes && valueType == DynamicValueType.QuotedUtf8String)
+        {
+            start = offset + 5;
+            length -= 2;
+        }
+        else
+        {
+            start = offset + 4;
+        }
+
+        return _valueBacking.AsMemory(start, (int)length);
+    }
+
+    /// <summary>
+    /// Reads a simple dynamic value (string, number, boolean, or null) from the dynamic value buffer at the specified offset.
+    /// </summary>
+    /// <param name="offset">The offset in the value buffer where the value is stored.</param>
+    /// <returns>A memory span containing the dynamic value data.</returns>
+    protected ReadOnlyMemory<byte> ReadRawSimpleDynamicValue(int offset)
+    {
+        // The first 4 bytes are the type and length
+        uint length = BitConverter.ToUInt32(_valueBacking!, offset);
+
+        DynamicValueType valueType = (DynamicValueType)(length & 0xF);
+        Debug.Assert(valueType is DynamicValueType.QuotedUtf8String or DynamicValueType.Number or DynamicValueType.Boolean or DynamicValueType.Null, $"Expected simple value at {offset}");
+
+        length >>= 4;
+
+        int start;
+
+        if (valueType == DynamicValueType.QuotedUtf8String)
         {
             start = offset + 5;
             length -= 2;
@@ -1649,14 +1706,15 @@ public abstract partial class JsonDocument
             if (row.HasComplexChildren)
             {
                 // An escaped property name will be longer than an unescaped candidate, so only unescape
-                // when the lengths are compatible.
-                if (currentPropertyName.Length > propertyName.Length)
+                // when the lengths are compatible. Use unsigned comparison for optimization.
+                if ((uint)currentPropertyName.Length > (uint)propertyName.Length)
                 {
                     int idx = currentPropertyName.IndexOf(JsonConstants.BackSlash);
                     Debug.Assert(idx >= 0);
 
                     // If everything up to where the property name has a backslash matches, keep going.
-                    if (propertyName.Length > idx &&
+                    // Use unsigned comparison for index validation
+                    if ((uint)propertyName.Length > (uint)idx &&
                         currentPropertyName.Slice(0, idx).SequenceEqual(propertyName.Slice(0, idx)))
                     {
                         int remaining = currentPropertyName.Length - idx;

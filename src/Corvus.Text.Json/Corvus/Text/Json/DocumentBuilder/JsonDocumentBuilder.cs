@@ -92,12 +92,14 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     {
         _parentWorkspaceIndex = parentWorkspaceIndex;
 
-        if (initialElementCount >= 0)
+        // Use unsigned comparison for efficient parameter validation
+        if ((uint)initialElementCount < int.MaxValue)
         {
             _parsedData = MetadataDb.CreateRented(initialElementCount * DbRow.Size, convertToAlloc: false);
         }
 
-        if (initialValueBufferSize > 0)
+        // Use unsigned comparison for efficient parameter validation
+        if ((uint)initialValueBufferSize > 0)
         {
             _valueBacking = ArrayPool<byte>.Shared.Rent(initialValueBufferSize);
         }
@@ -299,6 +301,14 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetRawSimpleValueUnsafe(index, includeQuotes);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index)
+    {
+        CheckNotDisposed();
+
+        return GetRawSimpleValueUnsafe(index);
+    }
+
     /// <summary>
     /// Gets the raw simple value from the document without bounds checking.
     /// </summary>
@@ -309,6 +319,17 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index, bool includeQuotes)
     {
         return GetRawSimpleValueUnsafe(ref _parsedData, index, includeQuotes);
+    }
+
+    /// <summary>
+    /// Gets the raw simple value from the document without bounds checking.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <returns>The raw value as a read-only memory of bytes.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index)
+    {
+        return GetRawSimpleValueUnsafe(ref _parsedData, index);
     }
 
     /// <summary>
@@ -331,6 +352,27 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
 
         return ReadRawSimpleDynamicValue(row.LocationOrIndex, includeQuotes);
+    }
+
+    /// <summary>
+    /// Gets the raw simple value from the specified metadata database without bounds checking.
+    /// </summary>
+    /// <param name="parsedData">The metadata database to read from.</param>
+    /// <param name="index">The index of the element.</param>
+    /// <returns>The raw value as a read-only memory of bytes.</returns>
+    protected override ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(ref MetadataDb parsedData, int index)
+    {
+        DbRow row = parsedData.Get(index);
+
+        Debug.Assert(row.IsSimpleValue);
+
+        if (row.FromExternalDocument)
+        {
+            IJsonDocument document = _workspace.GetDocument(row.WorkspaceDocumentId);
+            return document.GetRawSimpleValue(row.LocationOrIndex);
+        }
+
+        return ReadRawSimpleDynamicValue(row.LocationOrIndex);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -886,7 +928,8 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
 
-        if (segment.Length > JsonConstants.MaximumEscapedGuidLength)
+        // Use unsigned comparison for efficient length check
+        if ((uint)segment.Length > (uint)JsonConstants.MaximumEscapedGuidLength)
         {
             value = default;
             return false;
@@ -986,8 +1029,9 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         // quoted name, quoted value and a colon
         int length = name.Length + value.Span.Length + 1;
         byte[]? buffer = null;
+        // Use unsigned comparison for efficient stackalloc threshold check
         Span<byte> propertySpan =
-            length < JsonConstants.StackallocByteThreshold
+            (uint)length < (uint)JsonConstants.StackallocByteThreshold
                 ? stackalloc byte[JsonConstants.StackallocByteThreshold]
                 : (buffer = ArrayPool<byte>.Shared.Rent(length)).AsSpan();
 
@@ -1107,7 +1151,8 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     {
         int endIndex = index + GetDbSizeUnsafe(index, true);
 
-        for (int i = index; i < endIndex; i += DbRow.Size)
+        // Use unsigned comparison for optimized bounds checking
+        for (int i = index; (uint)i < (uint)endIndex; i += DbRow.Size)
         {
             DbRow row = _parsedData.Get(i);
 
@@ -1427,7 +1472,8 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         int endIndex = index + GetDbSizeUnsafe(index, false);
 
-        for (int i = index + DbRow.Size; i < endIndex; i += DbRow.Size)
+        // Use unsigned comparison for optimized bounds checking
+        for (int i = index + DbRow.Size; (uint)i < (uint)endIndex; i += DbRow.Size)
         {
             int currentLength = db.Length;
             AppendElement(i, workspace, ref db, workspaceDocumentIndex);
@@ -1465,7 +1511,8 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void CheckNotDisposed()
     {
-        if (_parentWorkspaceIndex < 0)
+        // Use unsigned comparison for efficient disposal check
+        if ((uint)_parentWorkspaceIndex >= (uint)int.MaxValue)
         {
             ThrowHelper.ThrowObjectDisposedException_JsonDocument();
         }

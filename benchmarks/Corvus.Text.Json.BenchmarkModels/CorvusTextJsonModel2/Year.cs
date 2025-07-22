@@ -573,7 +573,7 @@ public readonly struct Year : IJsonElement<Year>
             }
             else 
             {
-                ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex, false);
+                ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex);
                 JsonElementHelpers.ParseNumber(number.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
                 if (!JsonSchemaEvaluation.MatchInt32(isNegative, integral, fractional, exponent, "format"u8, ref context))
                 {

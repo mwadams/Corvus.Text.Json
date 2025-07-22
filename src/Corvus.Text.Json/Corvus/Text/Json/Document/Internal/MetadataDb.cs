@@ -186,7 +186,8 @@ public struct MetadataDb : IDisposable
         // were more frequent anyways.
         const int OneMegabyte = 1024 * 1024;
 
-        if (initialSize > OneMegabyte && initialSize <= 4 * OneMegabyte)
+        // Use unsigned comparison for efficient size range check
+        if ((uint)initialSize > (uint)OneMegabyte && (uint)initialSize <= (uint)(4 * OneMegabyte))
         {
             initialSize = OneMegabyte;
         }
@@ -258,12 +259,14 @@ public struct MetadataDb : IDisposable
                 // amount of usage (particularly if Enlarge ever got called); and there's
                 // the small copy-cost associated with trimming anyways. "Is half-empty" is
                 // just a rough metric for "is trimming worth it?".
-                if (Length <= _data.Length / 2)
+                // Use unsigned comparison for efficient size check
+                if ((uint)Length <= (uint)(_data.Length / 2))
                 {
                     byte[] newRent = ArrayPool<byte>.Shared.Rent(Length);
                     byte[] returnBuf = newRent;
 
-                    if (newRent.Length < _data.Length)
+                    // Use unsigned comparison for efficient size comparison
+                    if ((uint)newRent.Length < (uint)_data.Length)
                     {
                         Buffer.BlockCopy(_data, 0, newRent, 0, Length);
                         returnBuf = _data;
@@ -292,7 +295,8 @@ public struct MetadataDb : IDisposable
             (tokenType == JsonTokenType.StartArray || tokenType == JsonTokenType.StartObject) ==
             (length == DbRow.UnknownSize));
 
-        if (Length >= _data.Length - DbRow.Size)
+        // Use unsigned comparison for efficient bounds checking
+        if ((uint)Length >= (uint)(_data.Length - DbRow.Size))
         {
             Enlarge();
         }
@@ -312,7 +316,8 @@ public struct MetadataDb : IDisposable
     {
         Debug.Assert(tokenType >= JsonTokenType.PropertyName);
 
-        if (Length >= _data.Length - DbRow.Size)
+        // Use unsigned comparison for efficient bounds checking
+        if ((uint)Length >= (uint)(_data.Length - DbRow.Size))
         {
             Enlarge();
         }
@@ -454,7 +459,8 @@ public struct MetadataDb : IDisposable
             return;
         }
 
-        if (lengthToInsert > _data.Length - Length)
+        // Use unsigned comparison for efficient capacity check
+        if ((uint)lengthToInsert > (uint)(_data.Length - Length))
         {
             // We will need to reallocate
             byte[] toReturn = _data;
@@ -574,7 +580,8 @@ public struct MetadataDb : IDisposable
     /// <param name="workspaceDocumentIndexOrNumberOfRows">The workspace document index or number of rows.</param>
     internal void AppendExternal(JsonTokenType tokenType, int externalIndex, int sizeOrLength, int workspaceDocumentIndexOrNumberOfRows)
     {
-        if (Length >= _data.Length - DbRow.Size)
+        // Use unsigned comparison for efficient bounds checking
+        if ((uint)Length >= (uint)(_data.Length - DbRow.Size))
         {
             Enlarge();
         }
@@ -708,7 +715,8 @@ public struct MetadataDb : IDisposable
         int lengthToRemove = (length * DbRow.Size);
         Debug.Assert(startIndex + lengthToRemove <= Length, $"Length {lengthToRemove} is out of bounds of the array.");
         int sourceIndex = startIndex + lengthToRemove;
-        if (lengthToRemove > 0)
+        // Use unsigned comparison for efficient positive check
+        if ((uint)lengthToRemove > 0)
         {
             // We are removing rows, so we need to copy the data up
             // to fill the gap.

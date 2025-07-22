@@ -584,7 +584,7 @@ public readonly struct Age : IJsonElement<Age>
             }
             else
             {
-                ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex, false);
+                ReadOnlyMemory<byte> number = parentDocument.GetRawSimpleValue(parentIndex);
                 JsonElementHelpers.ParseNumber(number.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
                 if (JsonElementHelpers.CompareNormalizedJsonNumbers(
