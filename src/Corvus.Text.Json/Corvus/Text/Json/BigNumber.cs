@@ -44,6 +44,12 @@ public readonly struct BigNumber : IEquatable<BigNumber>
     public BigNumber Normalize()
     {
         BigInteger significand = Significand;
+
+        if (significand.IsZero)
+        {
+            return this;
+        }
+
         int exponent = Exponent;
         while (true)
         {
