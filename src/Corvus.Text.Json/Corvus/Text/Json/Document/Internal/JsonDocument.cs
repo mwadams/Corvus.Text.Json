@@ -1319,9 +1319,6 @@ public abstract partial class JsonDocument
 
         int maxRequiredSize = valueIdx == -1 ? utf8Value.Length + 2 + 4 : JsonWriterHelper.GetMaxEscapedLength(utf8Value.Length, valueIdx) + 2 + 4;
 
-        // Use unsigned comparison for efficient buffer size check
-        Debug.Assert((uint)maxRequiredSize > (uint)(utf8Value.Length + 6), "Max required size should be larger than minimum required");
-
         Enlarge(_valueOffset + maxRequiredSize, ref _valueBacking);
 
         int written;

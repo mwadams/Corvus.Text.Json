@@ -7145,5 +7145,298 @@ namespace Corvus.Text.Json.Tests
             root.SetItem(1, p2);
             Assert.Equal(p2, root[1].GetPeriod());
         }
+
+        [Fact]
+        public static void TryApply_WithSimpleObject_ReturnsTrue()
+        {
+            using var workspace = JsonWorkspace.Create();
+            
+            // Create source object to apply
+            using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"Jane\",\"city\":\"NYC\"}");
+            JsonElement sourceElement = sourceDoc.RootElement;
+            
+            // Create target object with TryApply
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    objBuilder.Add("name"u8, "John"u8);
+                    objBuilder.Add("age"u8, 30);
+                    
+                    bool result = objBuilder.TryApply(sourceElement);
+                    Assert.True(result);
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("Jane", root.GetProperty("name").GetString()); // Replaced
+            Assert.Equal(30, root.GetProperty("age").GetInt32()); // Preserved  
+            Assert.Equal("NYC", root.GetProperty("city").GetString()); // Added
+            Assert.Equal(3, root.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void TryApply_WithEmptyObject_ReturnsTrue()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse("{}");
+            JsonElement sourceElement = sourceDoc.RootElement;
+            
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    objBuilder.Add("name"u8, "John"u8);
+                    objBuilder.Add("age"u8, 30);
+                    
+                    bool result = objBuilder.TryApply(sourceElement);
+                    Assert.True(result);
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("John", root.GetProperty("name").GetString());
+            Assert.Equal(30, root.GetProperty("age").GetInt32());
+            Assert.Equal(2, root.GetPropertyCount());
+            Assert.Equal("{\"name\":\"John\",\"age\":30}", root.ToString());
+        }
+
+        [Fact]
+        public static void TryApply_WithComplexNestedObject_ReturnsTrue()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse("""
+                {
+                    "person": {
+                        "name": "Alice",
+                        "details": {
+                            "age": 25,
+                            "active": true
+                        }
+                    },
+                    "scores": [95, 87, 92],
+                    "metadata": null
+                }
+                """);
+            JsonElement sourceElement = sourceDoc.RootElement;
+            
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    objBuilder.Add("existing"u8, "value"u8);
+                    
+                    bool result = objBuilder.TryApply(sourceElement);
+                    Assert.True(result);
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("value", root.GetProperty("existing").GetString());
+            Assert.Equal("Alice", root.GetProperty("person").GetProperty("name").GetString());
+            Assert.Equal(25, root.GetProperty("person").GetProperty("details").GetProperty("age").GetInt32());
+            Assert.True(root.GetProperty("person").GetProperty("details").GetProperty("active").GetBoolean());
+            Assert.Equal(3, root.GetProperty("scores").GetArrayLength());
+            Assert.Equal(95, root.GetProperty("scores")[0].GetInt32());
+            Assert.Equal(JsonValueKind.Null, root.GetProperty("metadata").ValueKind);
+            Assert.Equal(4, root.GetPropertyCount());
+        }
+
+        [Theory]
+        [InlineData("\"string\"")]
+        [InlineData("42")]
+        [InlineData("true")]
+        [InlineData("null")]
+        [InlineData("[1,2,3]")]
+        public static void TryApply_WithNonObjectValue_ReturnsFalse(string jsonValue)
+        {
+            using var workspace = JsonWorkspace.Create();
+            using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            JsonElement sourceElement = sourceDoc.RootElement;
+            
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    objBuilder.Add("name"u8, "John"u8);
+                    objBuilder.Add("age"u8, 30);
+                    
+                    bool result = objBuilder.TryApply(sourceElement);
+                    Assert.False(result);
+                }));
+
+            // Verify original state is preserved
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("John", root.GetProperty("name").GetString());
+            Assert.Equal(30, root.GetProperty("age").GetInt32());
+            Assert.Equal(2, root.GetPropertyCount());
+            Assert.Equal("{\"name\":\"John\",\"age\":30}", root.ToString());
+        }
+
+        [Fact]
+        public static void TryApply_ReplacesExistingProperties_Works()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"NewName\",\"status\":\"active\"}");
+            JsonElement sourceElement = sourceDoc.RootElement;
+            
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    objBuilder.Add("name"u8, "OldName"u8);
+                    objBuilder.Add("age"u8, 30);
+                    objBuilder.Add("city"u8, "Boston"u8);
+                    
+                    bool result = objBuilder.TryApply(sourceElement);
+                    Assert.True(result);
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("NewName", root.GetProperty("name").GetString()); // Replaced
+            Assert.Equal(30, root.GetProperty("age").GetInt32()); // Preserved
+            Assert.Equal("Boston", root.GetProperty("city").GetString()); // Preserved
+            Assert.Equal("active", root.GetProperty("status").GetString()); // Added
+            Assert.Equal(4, root.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void TryApply_WithSpecialPropertyNames_Works()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse("""
+                {
+                    "héllo": "world",
+                    "foo\"bar": "baz",
+                    "": "empty",
+                    "with\nnewline": "value"
+                }
+                """);
+            JsonElement sourceElement = sourceDoc.RootElement;
+            
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    objBuilder.Add("existing"u8, "value"u8);
+                    
+                    bool result = objBuilder.TryApply(sourceElement);
+                    Assert.True(result);
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("value", root.GetProperty("existing").GetString());
+            Assert.Equal("world", root.GetProperty("héllo").GetString());
+            Assert.Equal("baz", root.GetProperty("foo\"bar").GetString());
+            Assert.Equal("empty", root.GetProperty("").GetString());
+            Assert.Equal("value", root.GetProperty("with\nnewline").GetString());
+            Assert.Equal(5, root.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void TryApply_MultipleCalls_AccumulatesProperties()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using var sourceDoc1 = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"John\",\"age\":30}");
+            using var sourceDoc2 = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"Jane\",\"city\":\"NYC\"}");
+            using var sourceDoc3 = ParsedJsonDocument<JsonElement>.Parse("{\"active\":true}");
+            
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    objBuilder.Add("initial"u8, "value"u8);
+                    
+                    bool result1 = objBuilder.TryApply(sourceDoc1.RootElement);
+                    bool result2 = objBuilder.TryApply(sourceDoc2.RootElement);
+                    bool result3 = objBuilder.TryApply(sourceDoc3.RootElement);
+                    
+                    Assert.True(result1);
+                    Assert.True(result2);
+                    Assert.True(result3);
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("value", root.GetProperty("initial").GetString());
+            Assert.Equal("Jane", root.GetProperty("name").GetString()); // Last wins
+            Assert.Equal(30, root.GetProperty("age").GetInt32()); // From first apply
+            Assert.Equal("NYC", root.GetProperty("city").GetString()); // From second apply
+            Assert.True(root.GetProperty("active").GetBoolean()); // From third apply
+            Assert.Equal(5, root.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void TryApply_CombinedWithOtherOperations_Works()
+        {
+            using var workspace = JsonWorkspace.Create();
+            using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"Applied\",\"temp\":\"remove\"}");
+            
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    // Initial setup
+                    objBuilder.Add("name"u8, "Initial"u8);
+                    objBuilder.Add("age"u8, 25);
+                    
+                    // Apply object
+                    bool result = objBuilder.TryApply(sourceDoc.RootElement);
+                    Assert.True(result);
+                    
+                    // Continue operations after apply
+                    objBuilder.RemoveProperty("temp"u8);
+                    objBuilder.Add("final"u8, "added"u8);
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("Applied", root.GetProperty("name").GetString());
+            Assert.Equal(25, root.GetProperty("age").GetInt32());
+            Assert.False(root.TryGetProperty("temp", out _)); // Removed
+            Assert.Equal("added", root.GetProperty("final").GetString());
+            Assert.Equal(3, root.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void TryApply_WithAllDataTypes_Works()
+        {
+            using var workspace = JsonWorkspace.Create();
+            
+            var guid = Guid.NewGuid();
+            var dt = new DateTime(2024, 5, 30, 12, 34, 56, DateTimeKind.Utc);
+            var dto = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            
+            // Create complex source object using document builder
+            using JsonDocumentBuilder<JsonElement.Mutable> sourceBuilder = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    objBuilder.Add("string"u8, "test"u8);
+                    objBuilder.Add("number"u8, 42);
+                    objBuilder.Add("bool"u8, true);
+                    objBuilder.Add("decimal"u8, 123.45m);
+                    objBuilder.Add("guid"u8, guid);
+                    objBuilder.Add("datetime"u8, dt);
+                    objBuilder.Add("datetimeoffset"u8, dto);
+                    objBuilder.AddNull("nullValue"u8);
+                }));
+            
+            JsonElement sourceElement = sourceBuilder.RootElement;
+            
+            using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new((ref JsonObjectBuilder objBuilder) =>
+                {
+                    bool result = objBuilder.TryApply(sourceElement);
+                    Assert.True(result);
+                }));
+
+            JsonElement.Mutable root = doc.RootElement;
+            Assert.Equal("test", root.GetProperty("string").GetString());
+            Assert.Equal(42, root.GetProperty("number").GetInt32());
+            Assert.True(root.GetProperty("bool").GetBoolean());
+            Assert.Equal(123.45m, root.GetProperty("decimal").GetDecimal());
+            Assert.Equal(guid, root.GetProperty("guid").GetGuid());
+            Assert.Equal(dt, root.GetProperty("datetime").GetDateTime());
+            Assert.Equal(dto, root.GetProperty("datetimeoffset").GetDateTimeOffset());
+            Assert.Equal(JsonValueKind.Null, root.GetProperty("nullValue").ValueKind);
+            Assert.Equal(8, root.GetPropertyCount());
+        }
     }
 }
