@@ -3259,13 +3259,6 @@ public readonly partial struct JsonElement
             return _parent.TextEquals(_idx, text, isPropertyName);
         }
 
-        internal readonly bool ValueIsEscapedHelper(bool isPropertyName)
-        {
-            CheckValidInstance();
-
-            return _parent.ValueIsEscaped(_idx, isPropertyName);
-        }
-
         /// <summary>
         ///   Write the element into the provided writer as a JSON value.
         /// </summary>
