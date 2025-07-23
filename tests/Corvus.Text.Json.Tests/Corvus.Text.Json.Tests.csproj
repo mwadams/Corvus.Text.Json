@@ -132,6 +132,16 @@
     <Compile Include="..\Common\TestClasses\TestClasses.cs" Link="CommonTest\System\Text\Json\Tests\Serialization\TestClasses\TestClasses.cs" />
     <Compile Include="..\Common\TestClasses\TestClasses.SimpleTestClass.cs" Link="CommonTest\System\Text\Json\Tests\Serialization\TestClasses\TestClasses.SimpleTestClass.cs" />
     <Compile Include="..\Common\TestClasses\TestClasses.SimpleTestStruct.cs" Link="CommonTest\System\Text\Json\Tests\Serialization\TestClasses\TestClasses.SimpleTestStruct.cs" />
+    <!-- BigNumber Tests -->
+    <Compile Include="BigNumber\BigNumberTestData.cs" />
+    <Compile Include="BigNumber\BigNumberConstructorTests.cs" />
+    <Compile Include="BigNumber\BigNumberNormalizeTests.cs" />
+    <Compile Include="BigNumber\BigNumberTryFormatCharTests.cs" />
+    <Compile Include="BigNumber\BigNumberTryFormatByteTests.cs" />
+    <Compile Include="BigNumber\BigNumberTryParseTests.cs" />
+    <Compile Include="BigNumber\BigNumberEqualityTests.cs" />
+    <Compile Include="BigNumber\BigNumberToStringTests.cs" />
+    <Compile Include="BigNumber\BigNumberEdgeCaseTests.cs" />
     <Compile Include="BitStackTests.cs" />
     <Compile Include="BufferFactory.cs" />
     <Compile Include="BufferSegment.cs" />
@@ -142,6 +152,11 @@
     <Compile Include="JsonDateTimeTestData.cs" />
     <Compile Include="ParsedJsonDocumentTests.cs" />
     <Compile Include="JsonElementCloneTests.cs" />
+    <Compile Include="JsonElementGetMethodEdgeCaseTests.cs" />
+    <Compile Include="JsonElementGetMethodExceptionTests.cs" />
+    <Compile Include="JsonElementGetMethodSuccessTests.cs" />
+    <Compile Include="JsonElementMutableImmutableConsistencyTests.cs" />
+    <Compile Include="JsonElementNumericBoundaryTests.cs" />
     <Compile Include="JsonElementParseTests.cs" />
     <Compile Include="JsonElementWriteTests.cs" />
     <Compile Include="JsonEncodedTextTests.cs" />

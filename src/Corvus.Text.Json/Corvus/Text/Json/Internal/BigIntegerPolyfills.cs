@@ -26,6 +26,12 @@ public static class BigIntegerPolyfills
         // allocating a string for these common cases.
         if (value.IsZero)
         {
+            if (destination.Length < 1)
+            {
+                charsWritten = 0;
+                return false;
+            }
+
             destination[0] = '0';
             charsWritten = 1;
             return true;
@@ -33,6 +39,12 @@ public static class BigIntegerPolyfills
 
         if (value.IsOne)
         {
+            if (destination.Length < 1)
+            {
+                charsWritten = 0;
+                return false;
+            }
+
             destination[0] = '1';
             charsWritten = 1;
             return true;

@@ -3088,20 +3088,6 @@ public readonly partial struct JsonElement
             return value;
         }
 
-        internal readonly string GetPropertyName()
-        {
-            CheckValidInstance();
-
-            return _parent.GetNameOfPropertyValue(_idx);
-        }
-
-        internal readonly ReadOnlySpan<byte> GetPropertyNameRaw()
-        {
-            CheckValidInstance();
-
-            return _parent.GetPropertyNameRaw(_idx);
-        }
-
         /// <summary>
         ///   Gets the original input data backing this value, returning it as a <see cref="string"/>.
         /// </summary>
@@ -3116,20 +3102,6 @@ public readonly partial struct JsonElement
             CheckValidInstance();
 
             return _parent.GetRawValueAsString(_idx);
-        }
-
-        internal readonly RawUtf8JsonString GetRawValue()
-        {
-            CheckValidInstance();
-
-            return _parent.GetRawValue(_idx, includeQuotes: true);
-        }
-
-        internal readonly string GetPropertyRawText()
-        {
-            CheckValidInstance();
-
-            return _parent.GetPropertyRawValueAsString(_idx);
         }
 
         internal readonly bool ValueIsEscaped

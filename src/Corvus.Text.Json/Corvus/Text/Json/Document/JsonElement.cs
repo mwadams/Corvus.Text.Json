@@ -1607,20 +1607,6 @@ public readonly partial struct JsonElement : IJsonElement<JsonElement>
         return _parent.GetRawValueAsString(_idx);
     }
 
-    internal RawUtf8JsonString GetRawValue()
-    {
-        CheckValidInstance();
-
-        return _parent.GetRawValue(_idx, includeQuotes: true);
-    }
-
-    internal string GetPropertyRawText()
-    {
-        CheckValidInstance();
-
-        return _parent.GetPropertyRawValueAsString(_idx);
-    }
-
     internal bool ValueIsEscaped
     {
         get
@@ -1757,13 +1743,6 @@ public readonly partial struct JsonElement : IJsonElement<JsonElement>
         CheckValidInstance();
 
         return _parent.TextEquals(_idx, text, isPropertyName);
-    }
-
-    internal bool ValueIsEscapedHelper(bool isPropertyName)
-    {
-        CheckValidInstance();
-
-        return _parent.ValueIsEscaped(_idx, isPropertyName);
     }
 
     /// <summary>

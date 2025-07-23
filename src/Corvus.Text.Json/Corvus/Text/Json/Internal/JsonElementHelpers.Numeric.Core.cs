@@ -3,6 +3,7 @@
 
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 #if CORVUS_TEXT_JSON_CODEGENERATION
 
@@ -36,7 +37,38 @@ public static partial class JsonElementHelpers
     /// Two such normal-form numbers are treated as equal if and only if they have
     /// equal signs, significands, and exponents.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ParseNumber(
+        ReadOnlySpan<byte> span,
+           out bool isNegative,
+           out ReadOnlySpan<byte> integral,
+           out ReadOnlySpan<byte> fractional,
+           out int exponent)
+    {
+        if (!TryParseNumber(span, out isNegative, out integral, out fractional, out exponent))
+        {
+            throw new FormatException();
+        }
+    }
+
+    /// <summary>
+    /// Parses a JSON number into its component parts using normal-form decimal representation.
+    /// </summary>
+    /// <param name="span">The UTF-8 encoded span containing the JSON number to parse.</param>
+    /// <param name="isNegative">When this method returns, indicates whether the number is negative.</param>
+    /// <param name="integral">When this method returns, contains the integral part of the number without leading zeros.</param>
+    /// <param name="fractional">When this method returns, contains the fractional part of the number without trailing zeros.</param>
+    /// <param name="exponent">When this method returns, contains the exponent value for scientific notation.</param>
+    /// <returns><see langword="true"/> if the value was parsed successfully, otherwise <see langword="false"/>.</returns>
+    /// <remarks>
+    /// The returned components use a normal-form decimal representation:
+    /// Number := sign * &lt;integral + fractional&gt; * 10^exponent
+    /// where integral and fractional are sequences of digits whose concatenation
+    /// represents the significand of the number without leading or trailing zeros.
+    /// Two such normal-form numbers are treated as equal if and only if they have
+    /// equal signs, significands, and exponents.
+    /// </remarks>
+    public static bool TryParseNumber(
        ReadOnlySpan<byte> span,
        out bool isNegative,
        out ReadOnlySpan<byte> integral,
@@ -58,7 +90,14 @@ public static partial class JsonElementHelpers
         ReadOnlySpan<byte> frac;
         int exp;
 
-        Debug.Assert(span.Length > 0);
+        if (span.Length <= 0)
+        {
+            isNegative = default;
+            integral = default;
+            fractional = default;
+            exponent = default;
+            return false;
+        }
 
         if (span[0] == '-')
         {
@@ -67,7 +106,15 @@ public static partial class JsonElementHelpers
         }
         else
         {
-            Debug.Assert(char.IsDigit((char)span[0]), "leading plus not allowed in valid JSON numbers.");
+            if (!char.IsDigit((char)span[0]))
+            {
+                isNegative = default;
+                integral = default;
+                fractional = default;
+                exponent = default;
+                return false;
+            }
+
             neg = false;
         }
 
@@ -85,6 +132,15 @@ public static partial class JsonElementHelpers
         if (span[i] == '.')
         {
             span = span.Slice(i + 1);
+            if (span.Length == 0)
+            {
+                isNegative = default;
+                integral = default;
+                fractional = default;
+                exponent = default;
+                return false;
+            }
+
             i = span.IndexOfAny((byte)'e', (byte)'E');
             if (i < 0)
             {
@@ -100,11 +156,22 @@ public static partial class JsonElementHelpers
             frac = default;
         }
 
-        Debug.Assert(span[i] is (byte)'e' or (byte)'E');
+        if (!(span[i] is (byte)'e' or (byte)'E'))
+        {
+            isNegative = default;
+            integral = default;
+            fractional = default;
+            exponent = default;
+            return false;
+        }
+
         if (!Utf8Parser.TryParse(span.Slice(i + 1), out exp, out _))
         {
-            Debug.Assert(span.Length >= 10);
-            ThrowHelper.ThrowArgumentOutOfRangeException_JsonNumberExponentTooLarge(nameof(exponent));
+            isNegative = default;
+            integral = default;
+            fractional = default;
+            exponent = default;
+            return false;
         }
 
     Normalize: // Calculates the normal form of the number.
@@ -118,7 +185,14 @@ public static partial class JsonElementHelpers
 
         if (intg[0] == '0')
         {
-            Debug.Assert(intg.Length == 1, "Leading zeros not permitted in JSON numbers.");
+            if (intg.Length != 1)
+            {
+                isNegative = default;
+                integral = default;
+                fractional = default;
+                exponent = default;
+                return false;
+            }
 
             if (IndexOfLastLeadingZero(frac) is >= 0 and int lz)
             {
@@ -158,6 +232,8 @@ public static partial class JsonElementHelpers
         integral = intg;
         fractional = frac;
         exponent = exp;
+
+        return true;
 
         static int IndexOfLastLeadingZero(ReadOnlySpan<byte> span)
         {

@@ -47,7 +47,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>
 
         if (significand.IsZero)
         {
-            return this;
+            return default;
         }
 
         int exponent = Exponent;
@@ -277,69 +277,74 @@ public readonly struct BigNumber : IEquatable<BigNumber>
     /// <returns><see langword="true"/> if the value is parsed successfully.</returns>
     public static bool TryParse(ReadOnlySpan<byte> segment, out BigNumber value)
     {
-        JsonElementHelpers.ParseNumber(
+        if (JsonElementHelpers.TryParseNumber(
             segment,
             out bool isNegative,
             out ReadOnlySpan<byte> integral,
             out ReadOnlySpan<byte> fractional,
-            out int exponent);
-
-        if (integral.Length == 0 && fractional.Length == 0)
+            out int exponent))
         {
-            value = new BigNumber(BigInteger.Zero, 0);
-            return true;
-        }
 
-        int requiredLength = integral.Length + fractional.Length + (isNegative ? 1 : 0);
-
-        char[]? charBuffer = null;
-        Span<char> significand =
-            requiredLength < JsonConstants.StackallocCharThreshold
-                ? stackalloc char[requiredLength] : (charBuffer = ArrayPool<char>.Shared.Rent(requiredLength));
-
-        int written = 0;
-        if (isNegative)
-        {
-            significand[written] = '-';
-            written++;
-        }
-
-        try
-        {
-            if (!JsonReaderHelper.TryGetTextFromUtf8(integral, significand.Slice(written), out int writtenIntegral))
+            if (integral.Length == 0 && fractional.Length == 0)
             {
-                value = default;
-                return false;
-            }
-
-            written += writtenIntegral;
-
-            if (!JsonReaderHelper.TryGetTextFromUtf8(fractional, significand.Slice(written), out int writtenFractional))
-            {
-                value = default;
-                return false;
-            }
-
-            written += writtenFractional;
-
-            if (BigInteger.TryParse(significand.Slice(0, written), out BigInteger bigSignificand))
-            {
-                value = new(bigSignificand, exponent);
+                value = new BigNumber(BigInteger.Zero, 0);
                 return true;
             }
 
-            value = default;
-            return false;
-        }
-        finally
-        {
-            if (charBuffer is char[] b)
+            int requiredLength = integral.Length + fractional.Length + (isNegative ? 1 : 0);
+
+            char[]? charBuffer = null;
+            Span<char> significand =
+                requiredLength < JsonConstants.StackallocCharThreshold
+                    ? stackalloc char[requiredLength] : (charBuffer = ArrayPool<char>.Shared.Rent(requiredLength));
+
+            int written = 0;
+            if (isNegative)
             {
-                // Clear as may be sensitive data.
-                significand.Slice(0, written).Clear();
-                ArrayPool<char>.Shared.Return(b);
+                significand[written] = '-';
+                written++;
+            }
+
+            try
+            {
+                if (!JsonReaderHelper.TryGetTextFromUtf8(integral, significand.Slice(written), out int writtenIntegral))
+                {
+                    value = default;
+                    return false;
+                }
+
+                written += writtenIntegral;
+
+                if (!JsonReaderHelper.TryGetTextFromUtf8(fractional, significand.Slice(written), out int writtenFractional))
+                {
+                    value = default;
+                    return false;
+                }
+
+                written += writtenFractional;
+
+                if (BigInteger.TryParse(significand.Slice(0, written), out BigInteger bigSignificand))
+                {
+                    value = new(bigSignificand, exponent);
+                    return true;
+                }
+
+                value = default;
+                return false;
+            }
+            finally
+            {
+                if (charBuffer is char[] b)
+                {
+                    // Clear as may be sensitive data.
+                    significand.Slice(0, written).Clear();
+                    ArrayPool<char>.Shared.Return(b);
+                }
             }
         }
+
+        value = default;
+        return false;
     }
 
     /// <inheritdoc/>
