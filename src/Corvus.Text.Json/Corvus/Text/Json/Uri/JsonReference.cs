@@ -44,44 +44,49 @@ public readonly ref struct JsonReference
     public ReadOnlySpan<byte> Fragment => HasFragment ? _originalUri.Slice(_offsets.Fragment + 1, _offsets.End - _offsets.Fragment - 1) : [];
 
     /// <summary>
-    /// Gets a value indicating whether this reference has an authority
+    /// Gets a value indicating whether this reference has an authority.
     /// </summary>
     public bool HasAuthority => _offsets.Path - _offsets.User > 0;
 
     /// <summary>
-    /// Gets a value indicating whether this reference has a fragment
+    /// Gets a value indicating whether this reference has a fragment.
     /// </summary>
     public bool HasFragment => _offsets.End - _offsets.Fragment > 0;
 
     /// <summary>
-    /// Gets a value indicating whether this reference has a host
+    /// Gets a value indicating whether this reference has a host.
     /// </summary>
     public bool HasHost => _offsets.Path - _offsets.Host > 0;
 
     /// <summary>
-    /// Gets a value indicating whether this reference has a path
+    /// Gets a value indicating whether this reference has a path.
     /// </summary>
     public bool HasPath => _offsets.Query - _offsets.Path > 0;
 
     /// <summary>
-    /// Gets a value indicating whether this reference has a query
+    /// Gets a value indicating whether this reference has a port.
+    /// </summary>
+    public bool HasPort =>  _offsets.Port > 0 && (_offsets.Path - _offsets.Port > 0);
+
+    /// <summary>
+    /// Gets a value indicating whether this reference has a query.
     /// </summary>
     public bool HasQuery => _offsets.Fragment - _offsets.Query > 0;
 
     /// <summary>
-    /// Gets a value indicating whether this reference has a scheme
+    /// Gets a value indicating whether this reference has a scheme.
     /// </summary>
     public bool HasScheme => _offsets.User - _offsets.Scheme > 0;
 
     /// <summary>
-    /// Gets a value indicating whether this reference has a user
+    /// Gets a value indicating whether this reference has a user.
     /// </summary>
     public bool HasUser => _offsets.Host - _offsets.User > 0;
 
     /// <summary>
     /// Gets the host component of the reference (includes both host and port).
     /// </summary>
-    public ReadOnlySpan<byte> Host => _originalUri.Slice(_offsets.Host, _offsets.Port - _offsets.Host);
+    public ReadOnlySpan<byte> Host => HasPort ? _originalUri.Slice(_offsets.Host, _offsets.Port - _offsets.Host) : _originalUri.Slice(_offsets.Host, _offsets.Path - _offsets.Host);
 
     /// <summary>
     /// Gets a value indicating whether this is the default port for the scheme.
@@ -106,12 +111,12 @@ public readonly ref struct JsonReference
     /// <summary>
     /// Gets the path component of the reference.
     /// </summary>
-    public ReadOnlySpan<byte> Path => _originalUri.Slice(_offsets.Path, _offsets.Query - _offsets.Path);
+    public ReadOnlySpan<byte> Path => HasPath ? _originalUri.Slice(_offsets.Path, _offsets.Query - _offsets.Path) : [];
 
     /// <summary>
     /// Gets the port component of the reference as a byte span.
     /// </summary>
-    public ReadOnlySpan<byte> Port => HasAuthority ? _originalUri.Slice(_offsets.Port + 1, _offsets.Path - _offsets.Port - 1) : [];
+    public ReadOnlySpan<byte> Port => HasPort ? _originalUri.Slice(_offsets.Port + 1, _offsets.Path - _offsets.Port - 1) : [];
 
     /// <summary>
     /// Gets the port value as an integer.
@@ -126,12 +131,29 @@ public readonly ref struct JsonReference
     /// <summary>
     /// Gets the scheme component of the reference.
     /// </summary>
-    public ReadOnlySpan<byte> Scheme => HasAuthority ? _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 3) : _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 1);
+    public ReadOnlySpan<byte> Scheme
+    {
+        get
+        {
+            if (!HasScheme)
+            {
+                return [];
+            }
+
+            // Distinguish between ':' and '://'
+            if (_originalUri[_offsets.User - 1] == '/')
+            {
+                return _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 3);
+            }
+
+            return _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 1);
+        }
+    }
 
     /// <summary>
     /// Gets the user component of the reference.
     /// </summary>
-    public ReadOnlySpan<byte> User => HasAuthority ? _originalUri.Slice(_offsets.User, _offsets.Host - _offsets.User - 1) : [];
+    public ReadOnlySpan<byte> User => HasUser ? _originalUri.Slice(_offsets.User, _offsets.Host - _offsets.User - 1) : [];
 
     /// <summary>
     /// Creates a new JSON reference from the specified URI bytes.
@@ -156,18 +178,6 @@ public readonly ref struct JsonReference
     /// <param name="reference">When this method returns, contains the created reference if successful; otherwise, the default value.</param>
     /// <returns><see langword="true"/> if the reference was created successfully; otherwise, <see langword="false"/>.</returns>
     public static bool TryCreate(ReadOnlySpan<byte> uri, out JsonReference reference)
-    {
-        reference = new(uri);
-        return reference.IsValidReference;
-    }
-
-    /// <summary>
-    /// Tries to encode and create a new JSON reference from the specified URI bytes.
-    /// </summary>
-    /// <param name="uri">The URI bytes to encode and create the reference from.</param>
-    /// <param name="reference">When this method returns, contains the created reference if successful; otherwise, the default value.</param>
-    /// <returns><see langword="true"/> if the reference was created successfully; otherwise, <see langword="false"/>.</returns>
-    public static bool TryEncodeAndCreate(ReadOnlySpan<byte> uri, out JsonReference reference)
     {
         reference = new(uri);
         return reference.IsValidReference;

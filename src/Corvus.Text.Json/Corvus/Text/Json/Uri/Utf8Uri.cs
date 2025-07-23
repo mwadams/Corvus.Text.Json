@@ -303,29 +303,38 @@ internal static class Utf8Uri
         int length = uriString.Length;
 
         info.End = (ushort)length;
-        int queryIdx = uriString.IndexOf((byte)'?');
-        int hashIdx = uriString.IndexOf((byte)'#');
 
-        if (hashIdx > 0)
+        int queryIdx = uriString.IndexOf((byte)'?');
+
+        int hashStart = 0;
+
+        if (queryIdx >= 0)
         {
-            info.Fragment = (ushort)hashIdx;
+            info.Query = (ushort)queryIdx;
+            hashStart = queryIdx + 1;
+        }
+        else
+        {
+            info.Query = info.End;
+        }
+
+        int hashIdx = uriString.Slice(hashStart).IndexOf((byte)'#');
+
+        if (hashIdx >= 0)
+        {
+            info.Fragment = (ushort)(hashIdx + hashStart);
+            if (info.Query == info.End)
+            {
+                info.Query = info.Fragment;
+            }
         }
         else
         {
             info.Fragment = info.End;
         }
 
-        if (queryIdx > 0)
-        {
-            info.Query = (ushort)queryIdx;
-        }
-        else
-        {
-            info.Query = info.Fragment;
-        }
-
         int idx = 0;
-        if (ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, queryIdx, hashIdx))
+        if (ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, hashIdx, queryIdx))
         {
             uriInfo = info;
             return true;
@@ -340,10 +349,14 @@ internal static class Utf8Uri
         int length = uriString.Length;
 
         int idx = 0;
-        int queryIdx = uriString.IndexOf((byte)'?');
-        int hashIdx = uriString.IndexOf((byte)'#');
 
-        return ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, queryIdx, hashIdx);
+        int queryIdx = uriString.IndexOf((byte)'?');
+
+        int hashStart = queryIdx > 0 ? queryIdx + 1 : 0;
+
+        int hashIdx = uriString.Slice(hashStart).IndexOf((byte)'#') + hashStart;
+
+        return ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, hashIdx, queryIdx);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1074,7 +1087,7 @@ internal static class Utf8Uri
         cF |= Flags.AllUriInfoSet;
 
         uriInfo = info;
-        return (cF & Flags.E_NonCanonical) == 0;
+        return (IriParsing(syntax) && ((cF & Flags.IriCanonical) != 0)) || (cF & Flags.E_NonCanonical) == 0;
     }
 
     //

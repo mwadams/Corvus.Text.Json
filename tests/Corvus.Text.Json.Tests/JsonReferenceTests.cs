@@ -1,0 +1,390 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using Xunit;
+
+namespace Corvus.Text.Json.Tests
+{
+    public static class JsonReferenceTests
+    {
+        [Theory]
+        [InlineData("https://example.com/path")]
+        [InlineData("http://user@example.com:8080/path?query=value#fragment")]
+        [InlineData("ftp://files.example.com/public/")]
+        [InlineData("mailto:user@example.com")]
+        [InlineData("file:///C:/Users/Documents/file.txt")]
+        [InlineData("relative/path")]
+        [InlineData("../parent/path")]
+        [InlineData("?query=only")]
+        [InlineData("#fragment-only")]
+        [InlineData("/absolute/path")]
+        [InlineData("")]
+        public static void Create_ValidUris_ReturnsJsonReference(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        [InlineData("http://[invalid-ipv6")]
+        [InlineData("http://example.com:99999")]
+        [InlineData("ht tp://example.com")]
+        [InlineData("\x01\x02\x03")]
+        [InlineData("http://example.com/path with spaces")]
+        public static void Create_InvalidUris_ThrowsArgumentException(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(() => JsonReference.Create(uriBytes));
+            Assert.Equal("The value is not a valid JSON reference.", exception.Message);
+        }
+
+        [Theory]
+        [InlineData("https://example.com/path")]
+        [InlineData("http://user@example.com:8080/path?query=value#fragment")]
+        [InlineData("ftp://files.example.com/public/")]
+        [InlineData("mailto:user@example.com")]
+        [InlineData("file:///C:/Users/Documents/file.txt")]
+        [InlineData("relative/path")]
+        [InlineData("../parent/path")]
+        [InlineData("?query=only")]
+        [InlineData("#fragment-only")]
+        [InlineData("/absolute/path")]
+        [InlineData("")]
+        public static void TryCreate_ValidUris_ReturnsTrueAndValidReference(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+
+            Assert.True(result);
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        [InlineData("http://[invalid-ipv6")]
+        [InlineData("http://example.com:99999")]
+        [InlineData("ht tp://example.com")]
+        [InlineData("\x01\x02\x03")]
+        [InlineData("http://example.com/path with spaces")]
+        public static void TryCreate_InvalidUris_ReturnsFalse(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+
+            Assert.False(result);
+            Assert.False(reference.IsValidReference);
+        }
+
+        [Theory]
+        [InlineData("https://user@example.com:8080/path?query=value#fragment", "https", "user@example.com:8080", "user", "example.com", "8080", "/path", "query=value", "fragment")]
+        [InlineData("http://example.com/path", "http", "example.com", "", "example.com", "", "/path", "", "")]
+        [InlineData("ftp://files.example.com:21/public/", "ftp", "files.example.com:21", "", "files.example.com", "21", "/public/", "", "")]
+        [InlineData("mailto:user@example.com", "mailto", "user@example.com", "user", "example.com", "", "", "", "")]
+        [InlineData("file:///C:/Users/Documents/file.txt", "file", "", "", "", "", "/C:/Users/Documents/file.txt", "", "")]
+        public static void ComponentExtraction_AbsoluteUris_ExtractsCorrectly(string uri, string expectedScheme, string expectedAuthority, string expectedUser, string expectedHost, string expectedPort, string expectedPath, string expectedQuery, string expectedFragment)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedScheme), reference.Scheme.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedAuthority), reference.Authority.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedUser), reference.User.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedHost), reference.Host.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedPort), reference.Port.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedPath), reference.Path.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedQuery), reference.Query.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedFragment), reference.Fragment.ToArray());
+        }
+
+        [Theory]
+        [InlineData("relative/path", "", "", "", "", "", "relative/path", "", "")]
+        [InlineData("../parent/path", "", "", "", "", "", "../parent/path", "", "")]
+        [InlineData("?query=only", "", "", "", "", "", "", "query=only", "")]
+        [InlineData("#fragment-only", "", "", "", "", "", "", "", "fragment-only")]
+        [InlineData("/absolute/path", "", "", "", "", "", "/absolute/path", "", "")]
+        [InlineData("path?query=value#fragment", "", "", "", "", "", "path", "query=value", "fragment")]
+        public static void ComponentExtraction_RelativeUris_ExtractsCorrectly(string uri, string expectedScheme, string expectedAuthority, string expectedUser, string expectedHost, string expectedPort, string expectedPath, string expectedQuery, string expectedFragment)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedScheme), reference.Scheme.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedAuthority), reference.Authority.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedUser), reference.User.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedHost), reference.Host.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedPort), reference.Port.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedPath), reference.Path.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedQuery), reference.Query.ToArray());
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedFragment), reference.Fragment.ToArray());
+        }
+
+        [Theory]
+        [InlineData("https://user@example.com:8080/path?query=value#fragment", true, true, true, true, true, true, true)]
+        [InlineData("http://example.com/path", true, true, false, true, true, false, false)]
+        [InlineData("ftp://files.example.com:21/public/", true, true, false, true, true, false, false)]
+        [InlineData("mailto:user@example.com", true, true, true, true, false, false, false)]
+        [InlineData("file:///C:/Users/Documents/file.txt", true, false, false, false, true, false, false)]
+        [InlineData("relative/path", false, false, false, false, true, false, false)]
+        [InlineData("../parent/path", false, false, false, false, true, false, false)]
+        [InlineData("?query=only", false, false, false, false, false, true, false)]
+        [InlineData("#fragment-only", false, false, false, false, false, false, true)]
+        [InlineData("/absolute/path", false, false, false, false, true, false, false)]
+        [InlineData("path?query=value#fragment", false, false, false, false, true, true, true)]
+        [InlineData("", false, false, false, false, false, false, false)]
+        public static void HasProperties_VariousUris_ReturnsCorrectValues(string uri, bool hasScheme, bool hasAuthority, bool hasUser, bool hasHost, bool hasPath, bool hasQuery, bool hasFragment)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.Equal(hasScheme, reference.HasScheme);
+            Assert.Equal(hasAuthority, reference.HasAuthority);
+            Assert.Equal(hasUser, reference.HasUser);
+            Assert.Equal(hasHost, reference.HasHost);
+            Assert.Equal(hasPath, reference.HasPath);
+            Assert.Equal(hasQuery, reference.HasQuery);
+            Assert.Equal(hasFragment, reference.HasFragment);
+        }
+
+        [Theory]
+        [InlineData("http://example.com", 80, true)]
+        [InlineData("https://example.com", 443, true)]
+        [InlineData("ftp://example.com", 21, true)]
+        [InlineData("http://example.com:8080", 8080, false)]
+        [InlineData("https://example.com:8443", 8443, false)]
+        [InlineData("ftp://example.com:2121", 2121, false)]
+        [InlineData("mailto:user@example.com", 25, true)]
+        [InlineData("relative/path", 0, true)]
+        public static void PortValue_VariousUris_ReturnsCorrectPortAndDefaultFlag(string uri, int expectedPort, bool expectedIsDefault)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.Equal(expectedPort, reference.PortValue);
+            Assert.Equal(expectedIsDefault, reference.IsDefaultPort);
+        }
+
+        [Theory]
+        [InlineData("https://example.com/path", false)]
+        [InlineData("http://example.com", false)]
+        [InlineData("ftp://files.example.com/public/", false)]
+        [InlineData("mailto:user@example.com", false)]
+        [InlineData("file:///C:/Users/Documents/file.txt", false)]
+        [InlineData("relative/path", true)]
+        [InlineData("../parent/path", true)]
+        [InlineData("?query=only", true)]
+        [InlineData("#fragment-only", true)]
+        [InlineData("/absolute/path", true)]
+        [InlineData("", true)]
+        public static void IsRelative_VariousUris_ReturnsCorrectValue(string uri, bool expectedIsRelative)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.Equal(expectedIsRelative, reference.IsRelative);
+        }
+
+        [Theory]
+        [InlineData("https://example.com/path")]
+        [InlineData("http://user@example.com:8080/path?query=value#fragment")]
+        [InlineData("ftp://files.example.com/public/")]
+        [InlineData("mailto:user@example.com")]
+        [InlineData("file:///C:/Users/Documents/file.txt")]
+        [InlineData("relative/path")]
+        [InlineData("../parent/path")]
+        [InlineData("?query=only")]
+        [InlineData("#fragment-only")]
+        [InlineData("/absolute/path")]
+        public static void GetUri_ValidUris_ReturnsEquivalentUri(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Uri systemUri = reference.GetUri();
+            Uri expectedUri = new Uri(uri, UriKind.RelativeOrAbsolute);
+
+            Assert.Equal(expectedUri.ToString(), systemUri.ToString());
+            Assert.Equal(expectedUri.IsAbsoluteUri, systemUri.IsAbsoluteUri);
+        }
+
+        [Theory]
+        [InlineData("http://example.com/path%20with%20spaces")]
+        [InlineData("http://example.com/path%2Fwith%2Fencoded%2Fslashes")]
+        [InlineData("http://example.com?query=value%26encoded")]
+        [InlineData("http://example.com#fragment%23encoded")]
+        [InlineData("http://example.com/path?query=value&param=encoded%20value#fragment")]
+        public static void Create_PercentEncodedUris_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        [InlineData("http://192.168.1.1")]
+        [InlineData("http://192.168.1.1:8080")]
+        [InlineData("http://[2001:db8::1]")]
+        [InlineData("http://[2001:db8::1]:8080")]
+        [InlineData("http://localhost")]
+        [InlineData("http://localhost:3000")]
+        public static void Create_IpAddresses_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        [InlineData("urn:isbn:0451450523")]
+        [InlineData("news:comp.lang.ada")]
+        [InlineData("tel:+1-816-555-1212")]
+        [InlineData("ldap://[2001:db8::7]/c=GB?objectClass?one")]
+        public static void Create_NonHttpSchemes_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Fact]
+        public static void Create_EmptySpan_HandlesCorrectly()
+        {
+            ReadOnlySpan<byte> emptySpan = ReadOnlySpan<byte>.Empty;
+
+            JsonReference reference = JsonReference.Create(emptySpan);
+
+            Assert.True(reference.IsValidReference);
+            Assert.True(reference.OriginalUri.IsEmpty);
+            Assert.True(reference.IsRelative);
+        }
+
+        [Theory]
+        [InlineData("http://测试.example.com")]
+        [InlineData("http://example.com/测试路径")]
+        [InlineData("http://example.com?查询=值")]
+        [InlineData("http://example.com#片段")]
+        [InlineData("http://пример.com")]
+        [InlineData("http://例え.テスト")]
+        public static void Create_UnicodeIri_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference.TryCreate(uriBytes, out JsonReference reference);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Fact]
+        public static void Create_LargeUri_HandlesCorrectly()
+        {
+            string largePathSegment = new string('a', 1000);
+            string largeUri = $"http://example.com/{largePathSegment}";
+            byte[] uriBytes = Encoding.UTF8.GetBytes(largeUri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Fact]
+        public static void Create_ManyQueryParameters_HandlesCorrectly()
+        {
+            StringBuilder uriBuilder = new StringBuilder("http://example.com/path?");
+            for (int i = 0; i < 100; i++)
+            {
+                if (i > 0) uriBuilder.Append('&');
+                uriBuilder.Append($"param{i}=value{i}");
+            }
+
+            string uri = uriBuilder.ToString();
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        [InlineData("http://example.com:1")]
+        [InlineData("http://example.com:65535")]
+        [InlineData("http://example.com:0")]
+        public static void Create_BoundaryPortValues_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        [InlineData("a", false)] // This looks like a:path which is a Windows file-path-like-thing
+        [InlineData("ab", true)]
+        [InlineData("abc", true)]
+        public static void Create_MinimalSchemes_HandlesCorrectly(string scheme, bool handlesCorrectly)
+        {
+            string uri = $"{scheme}:path";
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference.TryCreate(uriBytes, out JsonReference reference);
+
+            Assert.Equal(reference.IsValidReference, handlesCorrectly);
+            if (handlesCorrectly)
+            {
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+        }
+
+        [Theory]
+        [InlineData("scheme:")]
+        [InlineData("scheme:/")]
+        [InlineData("scheme://")]
+        [InlineData("scheme:///")]
+        public static void ComponentBoundaries_MinimalComponents_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Fact]
+        public static void ComponentAccess_DefaultReference_ReturnsEmptySpans()
+        {
+            JsonReference reference = default;
+
+            Assert.True(reference.Scheme.IsEmpty);
+            Assert.True(reference.Authority.IsEmpty);
+            Assert.True(reference.User.IsEmpty);
+            Assert.True(reference.Host.IsEmpty);
+            Assert.True(reference.Port.IsEmpty);
+            Assert.True(reference.Path.IsEmpty);
+            Assert.True(reference.Query.IsEmpty);
+            Assert.True(reference.Fragment.IsEmpty);
+            Assert.True(reference.OriginalUri.IsEmpty);
+            Assert.Equal(0, reference.PortValue);
+            Assert.False(reference.IsValidReference);
+        }
+    }
+}
