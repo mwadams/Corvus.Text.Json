@@ -1243,16 +1243,8 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
     private ReadOnlySpan<byte> UnescapeString(int index, out ArraySegment<byte> rented)
     {
-        DbRow row = _parsedData.Get(index);
-        Debug.Assert(row.TokenType is JsonTokenType.String or JsonTokenType.PropertyName);
+        Debug.Assert(_parsedData.Get(index).TokenType is JsonTokenType.String or JsonTokenType.PropertyName);
         ReadOnlySpan<byte> text = GetRawSimpleValueUnsafe(index, false).Span;
-
-        if (!row.HasComplexChildren)
-        {
-            rented = default;
-            return text;
-        }
-
         int length = text.Length;
         byte[] rent = ArrayPool<byte>.Shared.Rent(length);
         JsonReaderHelper.Unescape(text, rent, out int written);
@@ -1267,11 +1259,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
             rented.AsSpan().Clear();
             ArrayPool<byte>.Shared.Return(rented.Array);
         }
-    }
-
-    internal void CompleteAllocations()
-    {
-        _parsedData.CompleteAllocations();
     }
 
     bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value)

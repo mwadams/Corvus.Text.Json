@@ -131,36 +131,6 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
-    /// Gets an <see cref="InvalidOperationException"/> for when flush must be called first.
-    /// </summary>
-    /// <param name="_buffered">The number of buffered bytes.</param>
-    /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
-    public static InvalidOperationException GetInvalidOperationException_CallFlushFirst(int _buffered)
-    {
-        return GetInvalidOperationException(SR.Format(SR.CallFlushToAvoidDataLoss, _buffered));
-    }
-
-    /// <summary>
-    /// Gets an <see cref="InvalidOperationException"/> when an array token type is expected.
-    /// </summary>
-    /// <param name="tokenType">The actual token type encountered.</param>
-    /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
-    public static InvalidOperationException GetInvalidOperationException_ExpectedArray(JsonTokenType tokenType)
-    {
-        return GetInvalidOperationException("array", tokenType);
-    }
-
-    /// <summary>
-    /// Gets an <see cref="InvalidOperationException"/> when an object token type is expected.
-    /// </summary>
-    /// <param name="tokenType">The actual token type encountered.</param>
-    /// <returns>An <see cref="InvalidOperationException"/> with the appropriate message.</returns>
-    public static InvalidOperationException GetInvalidOperationException_ExpectedObject(JsonTokenType tokenType)
-    {
-        return GetInvalidOperationException("object", tokenType);
-    }
-
-    /// <summary>
     /// Gets an <see cref="InvalidOperationException"/> for invalid UTF-16 reading operations.
     /// </summary>
     /// <param name="innerException">The optional inner exception.</param>
@@ -287,16 +257,6 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
-    /// Throws an <see cref="ArgumentException"/> when an array is too small.
-    /// </summary>
-    /// <param name="paramName">The name of the parameter that caused the exception.</param>
-    [DoesNotReturn]
-    public static void ThrowArgumentException_ArrayTooSmall(string paramName)
-    {
-        throw new ArgumentException(SR.ArrayTooSmall, paramName);
-    }
-
-    /// <summary>
     /// Throws an <see cref="ArgumentException"/> when the destination span is too short.
     /// </summary>
     [DoesNotReturn]
@@ -312,15 +272,6 @@ internal static partial class ThrowHelper
     public static void ThrowArgumentException_InvalidCommentValue()
     {
         throw new ArgumentException(SR.CannotWriteCommentWithEmbeddedDelimiter);
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ArgumentException"/> for invalid offset and length parameters.
-    /// </summary>
-    [DoesNotReturn]
-    public static void ThrowArgumentException_InvalidOffLen()
-    {
-        throw new ArgumentException(SR.Argument_InvalidOffLen);
     }
 
     /// <summary>
@@ -395,16 +346,6 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> when an array index is negative.
-    /// </summary>
-    /// <param name="paramName">The name of the parameter that caused the exception.</param>
-    [DoesNotReturn]
-    public static void ThrowArgumentOutOfRangeException_ArrayIndexNegative(string paramName)
-    {
-        throw new ArgumentOutOfRangeException(paramName, SR.ArrayIndexNegative);
-    }
-
-    /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> when a comment enum value is out of range.
     /// </summary>
     /// <param name="parameterName">The name of the parameter that caused the exception.</param>
@@ -437,36 +378,6 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> when an index must be less than or equal to the collection size.
-    /// </summary>
-    /// <param name="paramName">The name of the parameter that caused the exception.</param>
-    [DoesNotReturn]
-    public static void ThrowArgumentOutOfRangeException_IndexMustBeLessOrEqual(string paramName)
-    {
-        throw new ArgumentOutOfRangeException(paramName, SR.ArgumentOutOfRange_IndexMustBeLessOrEqual);
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> when a JSON converter factory type is not supported.
-    /// </summary>
-    /// <param name="typeToConvert">The type that is not supported.</param>
-    [DoesNotReturn]
-    public static void ThrowArgumentOutOfRangeException_JsonConverterFactory_TypeNotSupported(Type typeToConvert)
-    {
-        throw new ArgumentOutOfRangeException(nameof(typeToConvert), SR.Format(SR.SerializerConverterFactoryInvalidArgument, typeToConvert.FullName));
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> when a JSON number exponent is too large.
-    /// </summary>
-    /// <param name="parameterName">The name of the parameter that caused the exception.</param>
-    [DoesNotReturn]
-    public static void ThrowArgumentOutOfRangeException_JsonNumberExponentTooLarge(string parameterName)
-    {
-        throw GetArgumentOutOfRangeException(parameterName, SR.JsonNumberExponentTooLarge);
-    }
-
-    /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> when max depth must be positive.
     /// </summary>
     /// <param name="parameterName">The name of the parameter that caused the exception.</param>
@@ -474,16 +385,6 @@ internal static partial class ThrowHelper
     public static void ThrowArgumentOutOfRangeException_MaxDepthMustBePositive(string parameterName)
     {
         throw GetArgumentOutOfRangeException(parameterName, SR.MaxDepthMustBePositive);
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> when a value must be non-negative.
-    /// </summary>
-    /// <param name="paramName">The name of the parameter that caused the exception.</param>
-    [DoesNotReturn]
-    public static void ThrowArgumentOutOfRangeException_NeedNonNegNum(string paramName)
-    {
-        throw new ArgumentOutOfRangeException(paramName, SR.ArgumentOutOfRange_Generic_MustBeNonNegative);
     }
 
     /// <summary>
@@ -619,15 +520,6 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
-    /// Throws an <see cref="InsufficientExecutionStackException"/> when deep equality checking causes stack overflow.
-    /// </summary>
-    [DoesNotReturn]
-    public static void ThrowInsufficientExecutionStackException_JsonElementDeepEqualsInsufficientExecutionStack()
-    {
-        throw new InsufficientExecutionStackException(SR.JsonElementDeepEqualsInsufficientExecutionStack);
-    }
-
-    /// <summary>
     /// Throws an <see cref="InvalidOperationException"/> when the depth is too large.
     /// </summary>
     /// <param name="currentDepth">The current depth.</param>
@@ -699,16 +591,6 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
-    /// Throws an <see cref="InvalidOperationException"/> when depth is not zero or JSON is empty.
-    /// </summary>
-    /// <param name="currentDepth">The current depth.</param>
-    [DoesNotReturn]
-    public static void ThrowInvalidOperationException_DepthNonZeroOrEmptyJson(int currentDepth)
-    {
-        throw GetInvalidOperationException(currentDepth);
-    }
-
-    /// <summary>
     /// Throws an <see cref="InvalidOperationException"/> when a boolean token type is expected.
     /// </summary>
     /// <param name="tokenType">The actual token type encountered.</param>
@@ -716,16 +598,6 @@ internal static partial class ThrowHelper
     public static void ThrowInvalidOperationException_ExpectedBoolean(JsonTokenType tokenType)
     {
         throw GetInvalidOperationException("boolean", tokenType);
-    }
-
-    /// <summary>
-    /// Throws an <see cref="InvalidOperationException"/> when a char token type is expected.
-    /// </summary>
-    /// <param name="tokenType">The actual token type encountered.</param>
-    [DoesNotReturn]
-    public static void ThrowInvalidOperationException_ExpectedChar(JsonTokenType tokenType)
-    {
-        throw GetInvalidOperationException("char", tokenType);
     }
 
     /// <summary>
@@ -759,16 +631,6 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
-    /// Throws an <see cref="InvalidOperationException"/> when a property name token type is expected.
-    /// </summary>
-    /// <param name="tokenType">The actual token type encountered.</param>
-    [DoesNotReturn]
-    public static void ThrowInvalidOperationException_ExpectedPropertyName(JsonTokenType tokenType)
-    {
-        throw GetInvalidOperationException("propertyName", tokenType);
-    }
-
-    /// <summary>
     /// Throws an <see cref="InvalidOperationException"/> when a string token type is expected.
     /// </summary>
     /// <param name="tokenType">The actual token type encountered.</param>
@@ -786,15 +648,6 @@ internal static partial class ThrowHelper
     public static void ThrowInvalidOperationException_ExpectedStringComparison(JsonTokenType tokenType)
     {
         throw GetInvalidOperationException(tokenType);
-    }
-
-    /// <summary>
-    /// Throws an <see cref="InvalidOperationException"/> when encoders are incompatible.
-    /// </summary>
-    [DoesNotReturn]
-    public static void ThrowInvalidOperationException_IncompatibleEncoders()
-    {
-        throw GetInvalidOperationException(SR.IncompatibleEncoders);
     }
 
     /// <summary>
@@ -992,19 +845,6 @@ internal static partial class ThrowHelper
     private static InvalidOperationException GetInvalidOperationException(string message)
     {
         return new InvalidOperationException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };
-    }
-
-    private static InvalidOperationException GetInvalidOperationException(int currentDepth)
-    {
-        currentDepth &= JsonConstants.RemoveFlagsBitMask;
-        if (currentDepth != 0)
-        {
-            return GetInvalidOperationException(SR.Format(SR.ZeroDepthAtEnd, currentDepth));
-        }
-        else
-        {
-            return GetInvalidOperationException(SR.EmptyJsonIsInvalid);
-        }
     }
 
     private static InvalidOperationException GetInvalidOperationException(string message, JsonTokenType tokenType)

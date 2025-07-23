@@ -487,27 +487,6 @@ public sealed partial class Utf8JsonWriter
         }
     }
 
-    internal void WritePropertyNameSection(ReadOnlySpan<byte> escapedPropertyNameSection)
-    {
-        if (_options.Indented)
-        {
-            ReadOnlySpan<byte> escapedPropertyName =
-                escapedPropertyNameSection.Slice(1, escapedPropertyNameSection.Length - 3);
-
-            WritePropertyNameHelper(escapedPropertyName);
-        }
-        else
-        {
-            Debug.Assert(escapedPropertyNameSection.Length <= JsonConstants.MaxUnescapedTokenSize - 3);
-
-            WriteStringPropertyNameSection(escapedPropertyNameSection);
-
-            _currentDepth &= JsonConstants.RemoveFlagsBitMask;
-            _tokenType = JsonTokenType.PropertyName;
-            _commentAfterNoneOrPropertyName = false;
-        }
-    }
-
     /// <summary>
     /// Writes the unescaped property name to the output
     /// </summary>
@@ -1675,30 +1654,5 @@ public sealed partial class Utf8JsonWriter
 
         output[BytesPending++] = JsonConstants.Quote;
         output[BytesPending++] = JsonConstants.KeyValueSeparator;
-    }
-
-    // AggressiveInlining used since this is only called from one location.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void WriteStringPropertyNameSection(ReadOnlySpan<byte> escapedPropertyNameSection)
-    {
-        Debug.Assert(escapedPropertyNameSection.Length <= JsonConstants.MaxEscapedTokenSize - 3);
-        Debug.Assert(escapedPropertyNameSection.Length < int.MaxValue - 4);
-
-        int maxRequired = escapedPropertyNameSection.Length + 1; // Optionally, 1 list separator
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-
-        escapedPropertyNameSection.CopyTo(output.Slice(BytesPending));
-        BytesPending += escapedPropertyNameSection.Length;
     }
 }
