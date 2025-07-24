@@ -373,7 +373,7 @@ internal static class Utf8Uri
                     return false;
                 }
 
-                if ((result & Check.DisplayCanonical) == 0)
+                if ((result & (Check.DisplayCanonical | Check.EscapedCanonical)) == 0)
                 {
                     return false;
                 }

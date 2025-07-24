@@ -510,7 +510,7 @@ public class JsonSchemaMatchingStringTests
     [InlineData("{+path}/here", true)]
     [InlineData("here?ref={+path}", true)]
     [InlineData("{var}", true)]
-    [InlineData("'{var}'", true)]
+    [InlineData("'{var}'", false)]
     [InlineData("{hello}", true)]
     [InlineData("http://ƒøø.ßår/?∂éœ={var}#πîüx", true)]
     [InlineData("#ƒräg\\mênt/{var}", false)]
