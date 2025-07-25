@@ -259,6 +259,18 @@ public class JsonSchemaMatchingStringTests
     [InlineData("/abc", false)]
     [InlineData("\\\\WINDOWS\\filëßåré", false)]
     [InlineData("âππ", false)]
+    // Unicode IRI test cases for optimization
+    [InlineData("http://example.com/ℌ𝔢𝔩𝔩𝔬", true)]
+    [InlineData("http://例え.テスト/パス", true)]
+    [InlineData("http://пример.испытание/путь", true)]
+    [InlineData("http://مثال.آزمایشی/مسیر", true)]
+    [InlineData("https://тест.рф/файл?параметр=значение", true)]
+    [InlineData("ftp://用戶:密碼@主機.網站/路徑/文件", true)]
+    [InlineData("http://🌍.example/🚀", true)]
+    [InlineData("http://café.com/naïve", true)]
+    // Mixed ASCII/Unicode
+    [InlineData("http://café.example.com/résumé", true)]
+    [InlineData("http://test.café/résumé?naïve=true", true)]
     public void MatchIri_ValidatesIri(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
@@ -277,6 +289,16 @@ public class JsonSchemaMatchingStringTests
     [InlineData("âππ", true)]
     [InlineData("#ƒrägmênt", true)]
     [InlineData("#ƒräg\\mênt", false)]
+    // Unicode IRI Reference test cases for optimization
+    [InlineData("//café.example.com/résumé", true)]
+    [InlineData("/naïve/påth", true)]
+    [InlineData("?naïve=café", true)]
+    [InlineData("#ƒrägmênt-ℌ𝔢𝔩𝔩𝔬", true)]
+    [InlineData("relative/påth/to/résource", true)]
+    [InlineData("../père/mère", true)]
+    [InlineData("./current/dîrectory", true)]
+    [InlineData("スキーム://ホスト.ドメイン/パス", true)]
+    [InlineData("протокол://хост.домен/путь", true)]
     public void MatchIriReference_ValidatesIriReference(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
@@ -415,6 +437,42 @@ public class JsonSchemaMatchingStringTests
     [InlineData(":// should fail", false)]
     [InlineData("bar,baz:foo", false)]
     [InlineData("http://ƒøø.ßår/?∂éœ=πîx#πîüx", false)]
+    // Fast-path scheme optimization tests
+    [InlineData("http://example.com", true)]
+    [InlineData("https://example.com", true)]
+    [InlineData("ftp://example.com", true)]
+    [InlineData("file:///C:/path", true)]
+    [InlineData("h://example.com", false)] // Single char scheme is actually invalid by most parsers
+    [InlineData("httpsx://example.com", true)] // Extended scheme
+    // Authority parsing edge cases
+    [InlineData("http://[::1]:8080/path", true)]
+    [InlineData("http://[2001:db8::1]/", true)]
+    [InlineData("http://user:pass@host:80/", true)]
+    [InlineData("http://user@host/", true)]
+    [InlineData("http://:pass@host/", true)]
+    [InlineData("http://host:8080/", true)]
+    [InlineData("http://192.168.1.1:3000/", true)]
+    // Percent-encoding stress tests
+    [InlineData("http://example.com/%20%21%22%23%24%25%26%27%28%29", true)]
+    [InlineData("http://example.com/a%2Fb%2Fc", true)]
+    [InlineData("http://example.com/%C2%A9", false)] // UTF-8 encoded may not be valid in strict URI mode
+    [InlineData("http://example.com/%", false)] // Incomplete percent-encoding
+    [InlineData("http://example.com/%2", false)] // Incomplete percent-encoding
+    [InlineData("http://example.com/%ZZ", false)] // Invalid hex
+    // Long URI performance tests
+    [InlineData("http://example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", true)]
+    [InlineData("http://example.com/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z", true)]
+    [InlineData("http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/", true)] // Max label length
+    [InlineData("http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/", true)] // we are permissive about label length
+    // Edge case schemes and invalid schemes
+    [InlineData("", false)]
+    [InlineData(":", false)]
+    [InlineData("://", false)]
+    [InlineData("1http://example.com", false)] // Scheme cannot start with digit
+    [InlineData("ht+tp://example.com", true)] // Valid scheme chars
+    [InlineData("ht_tp://example.com", false)] // Invalid scheme char
+    [InlineData("ht-tp://example.com", true)] // Valid scheme chars
+    [InlineData("ht.tp://example.com", true)] // Valid scheme chars
     public void MatchUri_ValidatesUri(string value, bool expected)
     {
         var collector = new DummyResultsCollector();
@@ -434,6 +492,45 @@ public class JsonSchemaMatchingStringTests
     [InlineData("#fragment", true)]
     [InlineData("#frag\\ment", false)]
     [InlineData("#ƒrägmênt", false)]
+    // Performance optimization test cases - common schemes (fast-path validation)
+    [InlineData("https://example.com", true)]
+    [InlineData("HTTPS://EXAMPLE.COM", true)] // Case insensitive scheme
+    [InlineData("http://api.service.com/v1/endpoint", true)]
+    [InlineData("ftp://files.example.org/path/file.txt", true)]
+    [InlineData("ws://websocket.example.com", true)]
+    [InlineData("wss://secure.websocket.example.com", true)]
+    // Edge cases for vectorized parsing optimization
+    [InlineData("", true)] // Empty string (relative reference)
+    [InlineData("?query=value", true)] // Query-only reference
+    [InlineData("?", true)] // Empty query
+    [InlineData("#", true)] // Empty fragment
+    [InlineData("?query=a&param=b&other=c#section", true)] // Complex query + fragment
+    // Percent-encoding stress tests (escape sequence optimization)
+    [InlineData("/path%20with%20spaces", true)]
+    [InlineData("/path%2Fwith%2Fencoded%2Fslashes", true)]
+    [InlineData("/path%20%21%22%23%24%25%26", true)] // Multiple percent sequences
+    [InlineData("path%GG", false)] // Invalid percent encoding
+    [InlineData("path%2", false)] // Incomplete percent encoding
+    // Long URI stress tests (memory allocation optimization)
+    [InlineData("http://very-long-subdomain-name-that-exceeds-normal-length.example.com/very/long/path/with/many/segments/that/tests/buffer/management/and/memory/allocation/patterns/in/the/optimized/parser", true)]
+    [InlineData("/very/long/relative/path/with/many/segments/that/tests/the/span-based/parsing/optimizations/and/ensures/no/performance/degradation/with/longer/content/that/might/stress/the/vectorized/operations", true)]
+    // Unicode and IRI test cases (IRI parsing optimization)
+    [InlineData("/пуṫḩ/ẅἰṫḩ/υηἰċøժε", false)] // Unicode paths fail in strict URI reference mode
+    [InlineData("//хост.example.com/пуṫḩ", false)]
+    // IPv6 address test cases (specialized parsing)
+    [InlineData("//[2001:db8::1]/path", true)]
+    [InlineData("//[::1]:8080/path", true)]
+    [InlineData("//[2001:db8::1", true)] // Missing closing bracket - parser is permissive
+    // Authority parsing edge cases
+    [InlineData("//user:pass@host.com:8080/path", true)]
+    [InlineData("//user@host.com/path", true)]
+    [InlineData("//host.com:8080/path", true)]
+    [InlineData("//[v1.1]:8080/", true)] // Parser allows IPv6 future format
+    // Scheme validation edge cases
+    [InlineData("custom-scheme://example.com", true)]
+    [InlineData("x-custom+scheme://example.com", true)]
+    [InlineData("123://example.com", true)] // Parser allows scheme starting with digit in URI reference
+    [InlineData("-scheme://example.com", true)] // Parser allows scheme starting with hyphen in URI reference
     public void MatchUriReference_ValidatesUriReference(string value, bool expected)
     {
         var collector = new DummyResultsCollector();

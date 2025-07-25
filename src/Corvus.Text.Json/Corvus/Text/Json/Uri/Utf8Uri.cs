@@ -400,6 +400,12 @@ internal static class Utf8Uri
                     {
                         return false;
                     }
+
+                    if (!iriParsing && (result & Check.FoundNonAscii) != 0)
+                    {
+                        // If we are not Iri parsing, we cannot have non-ascii characters in the query
+                        return false;
+                    }
                 }
             }
         }
@@ -416,6 +422,12 @@ internal static class Utf8Uri
                     Check result = CheckCanonical(str, ref idx, length, c_EOL, iriParsing, queryIdx >= 0, hashIdx >= 0);
                     if ((result & (Check.BackslashInPath | Check.ReservedFound | Check.NotIriCanonical)) != 0)
                     {
+                        return false;
+                    }
+
+                    if (!iriParsing && (result & Check.FoundNonAscii) != 0)
+                    {
+                        // If we are not Iri parsing, we cannot have non-ascii characters in the query
                         return false;
                     }
                 }
@@ -556,6 +568,12 @@ internal static class Utf8Uri
                 {
                     syntax = null!; //make it be relative Uri
                     flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
+
+                    if (CheckForUnicodeOrEscapedUnreserved(uriString))
+                    {
+                        flags |= Flags.HasUnicode;
+                    }
+
                     return requireAbsolute ? false : true;
                     // Otherwise an absolute file Uri wins when it's of the form "\\something"
                 }
@@ -1106,6 +1124,15 @@ internal static class Utf8Uri
         {
             int bytesConsumed = 1;
             c = str[i];
+
+            // Fast path for common ASCII characters that don't need special handling
+            if ((c >= (byte)'A' && c <= (byte)'Z') || (c >= (byte)'a' && c <= (byte)'z') || (c >= (byte)'0' && c <= (byte)'9'))
+            {
+                // alphanumeric characters are always safe
+                i++;
+                continue;
+            }
+
             // Control chars usually should be escaped in any case
             if (c <= (byte)'\x1F' || (c >= (byte)'\x7F' && c <= (byte)'\x9F'))
             {
@@ -1200,17 +1227,21 @@ internal static class Utf8Uri
             else if (c == (byte)'%')
             {
                 if (!foundEscaping) foundEscaping = true;
-                int unescaped = 0;
                 //try unescape a byte hex escaping
-                if (i + 2 < end && (unescaped = Utf8UriHelper.DecodeHexChars(str[i + 1], str[i + 2])) != c_DummyChar)
+                if (i + 2 < end)
                 {
-                    if (c == (byte)'.' || c == (byte)'/' || c == (byte)'\\')
+                    int unescaped = Utf8UriHelper.DecodeHexChars(str[i + 1], str[i + 2]);
+                    if (unescaped != c_DummyChar)
                     {
-                        res |= Check.DotSlashEscaped;
-                    }
+                        byte unescapedByte = (byte)unescaped;
+                        if (unescapedByte == (byte)'.' || unescapedByte == (byte)'/' || unescapedByte == (byte)'\\')
+                        {
+                            res |= Check.DotSlashEscaped;
+                        }
 
-                    i += bytesConsumed + 2;
-                    continue;
+                        i += 3; // Skip the '%' and two hex digits
+                        continue;
+                    }
                 }
 
                 // otherwise we follow to non escaped case
@@ -1255,6 +1286,15 @@ internal static class Utf8Uri
         {
             int bytesConsumed = 1;
             c = str[i];
+
+            // Fast path for common ASCII characters that don't need special handling
+            if ((c >= (byte)'A' && c <= (byte)'Z') || (c >= (byte)'a' && c <= (byte)'z') || (c >= (byte)'0' && c <= (byte)'9'))
+            {
+                // alphanumeric characters are always safe
+                i++;
+                continue;
+            }
+
             // Control chars usually should be escaped in any case
             if (c <= (byte)'\x1F' || (c >= (byte)'\x7F' && c <= (byte)'\x9F'))
             {
@@ -1348,17 +1388,21 @@ internal static class Utf8Uri
             else if (c == (byte)'%')
             {
                 if (!foundEscaping) foundEscaping = true;
-                int unescaped = 0;
                 //try unescape a byte hex escaping
-                if (i + 2 < end && (unescaped = Utf8UriHelper.DecodeHexChars(str[i + 1], str[i + 2])) != c_DummyChar)
+                if (i + 2 < end)
                 {
-                    if (c == (byte)'.' || c == (byte)'/' || c == (byte)'\\')
+                    int unescaped = Utf8UriHelper.DecodeHexChars(str[i + 1], str[i + 2]);
+                    if (unescaped != c_DummyChar)
                     {
-                        res |= Check.DotSlashEscaped;
-                    }
+                        byte unescapedByte = (byte)unescaped;
+                        if (unescapedByte == (byte)'.' || unescapedByte == (byte)'/' || unescapedByte == (byte)'\\')
+                        {
+                            res |= Check.DotSlashEscaped;
+                        }
 
-                    i += bytesConsumed + 2;
-                    continue;
+                        i += 3; // Skip the '%' and two hex digits
+                        continue;
+                    }
                 }
 
                 // otherwise we follow to non escaped case
@@ -1392,10 +1436,25 @@ internal static class Utf8Uri
 
     private static void GetLengthWithoutTrailingSpaces(ReadOnlySpan<byte> uriString, ref int length, int idx)
     {
+        // Early exit if no trimming needed
+        if (length <= idx)
+        {
+            return;
+        }
+
+        // Check if last character is whitespace before entering loop
+        if (!Utf8UriHelper.IsLWS(uriString[length - 1]))
+        {
+            return;
+        }
+
         // to avoid dereferencing ref length parameter for every update
-        int local = length;
-        while (local > idx && Utf8UriHelper.IsLWS(uriString[local - 1])) --local;
-        length = local;
+        int local = length - 1;
+        while (local > idx && Utf8UriHelper.IsLWS(uriString[local]))
+        {
+            --local;
+        }
+        length = local + 1; // Adjust for the fact we decremented past the last non-whitespace
     }
 
 #if NET
@@ -1432,12 +1491,14 @@ internal static class Utf8Uri
         int i = IndexOfAnyExcept(data, s_asciiOtherThanPercent);
         if (i >= 0)
         {
-            for (; i < data.Length; i++)
+            int length = data.Length;
+            for (; i < length; i++)
             {
                 byte b = data[i];
                 if (b == (byte)'%')
                 {
-                    if ((uint)(i + 2) < (uint)data.Length)
+                    // Optimized bounds check: ensure we have at least 2 more bytes
+                    if (i + 2 < length)
                     {
                         char value = Utf8UriHelper.DecodeHexChars(data[i + 1], data[i + 2]);
 
@@ -1446,8 +1507,9 @@ internal static class Utf8Uri
                             return true;
                         }
 
-                        i += 2;
+                        i += 2; // Skip the two hex chars we just processed
                     }
+                    // If we don't have enough bytes, continue to next iteration
                 }
                 else if (b > 0x7F)
                 {
@@ -1510,11 +1572,16 @@ internal static class Utf8Uri
         Debug.Assert((flags & Flags.Debug_LeftConstructor) == 0);
 
         int i = 0;
+        int length = uriString.Length;
 
-        // skip whitespace
-        while ((uint)i < (uint)uriString.Length && Utf8UriHelper.IsLWS(uriString[i]))
+        // Optimized whitespace skipping - first check if we even have whitespace
+        if ((uint)i < (uint)length && Utf8UriHelper.IsLWS(uriString[i]))
         {
-            i++;
+            do
+            {
+                i++;
+            }
+            while ((uint)i < (uint)length && Utf8UriHelper.IsLWS(uriString[i]));
         }
 
 #if NET
@@ -1535,12 +1602,9 @@ internal static class Utf8Uri
         // Note that we don't support one-letter schemes that will be put into a DOS path bucket
         int colonOffset = uriString.Slice(i).IndexOf((byte)':');
 
-        // NB: A string must have at least 3 characters and at least 1 before ':'
-        if ((uint)(i + 2) >= (uint)uriString.Length ||
-            colonOffset == 0 ||
-            // Redundant checks to eliminate range checks below
-            (uint)i >= (uint)uriString.Length ||
-            (uint)(i + 1) >= (uint)uriString.Length)
+        // Early bounds check: A string must have at least 3 characters and at least 1 before ':'
+        // Combine checks to reduce branching
+        if (colonOffset == 0 || (uint)(i + 2) >= (uint)length)
         {
             err = Utf8UriParsingError.BadFormat;
             return 0;
@@ -1620,6 +1684,27 @@ internal static class Utf8Uri
     {
         Debug.Assert(error == Utf8UriParsingError.None);
 
+        // Early validation for common error cases
+        if (scheme.Length == 0)
+        {
+            error = Utf8UriParsingError.BadScheme;
+            return null;
+        }
+
+        if (scheme.Length > c_MaxUriSchemeName)
+        {
+            error = Utf8UriParsingError.SchemeLimit;
+            return null;
+        }
+
+        // First character must be ASCII letter - check early to avoid further processing
+        byte firstChar = scheme[0];
+        if (!IsAsciiLetter(firstChar))
+        {
+            error = Utf8UriParsingError.BadScheme;
+            return null;
+        }
+
         switch (scheme.Length)
         {
             case 2:
@@ -1660,17 +1745,10 @@ internal static class Utf8Uri
         }
 
         // scheme = alpha *(alpha | digit | '+' | '-' | '.')
-        if (scheme.Length == 0 ||
-            !IsAsciiLetter(scheme[0]) ||
-            ContainsAnyExcept(scheme, s_schemeChars))
+        // We already checked length and first character, now check the rest
+        if (ContainsAnyExcept(scheme, s_schemeChars))
         {
             error = Utf8UriParsingError.BadScheme;
-            return null;
-        }
-
-        if (scheme.Length > c_MaxUriSchemeName)
-        {
-            error = Utf8UriParsingError.SchemeLimit;
             return null;
         }
 
@@ -1790,6 +1868,7 @@ internal static class Utf8Uri
                         flags |= Flags.UncPath;
                         idx = i;
                     }
+
 #if NET
                     // More "sorry Mono" - we don't support running the netstandard build on Linux; it's .NET only.
                     else if (!OperatingSystem.IsWindows() && syntax.InFact(Utf8UriSyntaxFlags.FileLikeUri) && pUriString[i - 1] == '/' && i - idx == 3)
