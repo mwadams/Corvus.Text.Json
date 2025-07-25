@@ -1590,6 +1590,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
@@ -1702,6 +1703,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
@@ -1809,6 +1811,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
@@ -1925,6 +1928,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
@@ -2011,6 +2015,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
@@ -2101,6 +2106,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
@@ -2339,6 +2345,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
@@ -2441,6 +2448,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.GetArrayLength());
@@ -2511,6 +2519,7 @@ namespace Corvus.Text.Json.Tests
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
                 Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+                Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
                 Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
                 Assert.Throws<InvalidOperationException>(() => root.GetGuid());
                 Assert.Throws<InvalidOperationException>(() => root.EnumerateObject());
@@ -2622,6 +2631,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Throws<InvalidOperationException>(() => root.GetOffsetDateTime());
             Assert.Throws<InvalidOperationException>(() => root.GetOffsetTime());
             Assert.Throws<InvalidOperationException>(() => root.GetLocalDate());
+            Assert.Throws<InvalidOperationException>(() => root.GetOffsetDate());
             Assert.Throws<InvalidOperationException>(() => root.GetPeriod());
             Assert.Throws<InvalidOperationException>(() => root.GetGuid());
             Assert.Throws<InvalidOperationException>(() => root.GetBoolean());

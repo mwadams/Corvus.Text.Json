@@ -138,15 +138,6 @@ public sealed partial class ParsedJsonDocument<T>
         }
     }
 
-    internal static ParsedJsonDocument<T> ParseRented(PooledByteBufferWriter utf8Json, JsonDocumentOptions options = default)
-    {
-        return Parse(
-            utf8Json.WrittenMemory,
-            options.GetReaderOptions(),
-            extraRentedArrayPoolBytes: null,
-            extraPooledByteBufferWriter: utf8Json);
-    }
-
     internal static ParsedJsonDocument<T> ParseValue(Stream utf8Json, JsonDocumentOptions options)
     {
         Debug.Assert(utf8Json != null);

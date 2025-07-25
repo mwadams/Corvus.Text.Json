@@ -53,6 +53,19 @@ namespace Corvus.Text.Json;
 public readonly struct Period : IEquatable<Period>
 {
     /// <summary>
+    /// A period containing the maximum value for all properties.
+    /// </summary>
+    /// <value>A period containing the maximum value for all properties.</value>
+    public static Period MaxValue { get; } = new Period(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue, long.MaxValue, long.MaxValue, long.MaxValue, long.MaxValue, long.MaxValue, long.MaxValue);
+
+    /// <summary>
+    /// A period containing the minimum value for all properties.
+    /// </summary>
+    /// <value>A period containing the minimum value for all properties.</value>
+    public static Period MinValue { get; } = new Period(int.MinValue, int.MinValue, int.MinValue, int.MinValue, long.MinValue, long.MinValue, long.MinValue, long.MinValue, long.MinValue, long.MinValue);
+
+
+    /// <summary>
     /// Creates a new period from the given values.
     /// </summary>
 #pragma warning disable SA1611
@@ -350,24 +363,6 @@ public readonly struct Period : IEquatable<Period>
     /// <param name="value">The string to parse.</param>
     /// <param name="result">The resulting period.</param>
     /// <returns><see langword="true"/> if the period could be parsed from the string.</returns>
-    public static bool TryParse(ReadOnlySpan<char> value, [NotNullWhen(true)] out Period result)
-    {
-        if (PeriodParser(value, out PeriodBuilder builder))
-        {
-            result = builder.BuildPeriod();
-            return true;
-        }
-
-        result = Zero;
-        return false;
-    }
-
-    /// <summary>
-    /// Parses a string into a Period.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <param name="result">The resulting period.</param>
-    /// <returns><see langword="true"/> if the period could be parsed from the string.</returns>
     public static bool TryParse(ReadOnlySpan<byte> value, [NotNullWhen(true)] out Period result)
     {
         if (PeriodParser(value, out PeriodBuilder builder))
@@ -378,50 +373,6 @@ public readonly struct Period : IEquatable<Period>
 
         result = Zero;
         return false;
-    }
-
-    /// <summary>
-    /// Parses a string into a Period.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>The resulting period.</returns>
-    public static Period Parse(string value)
-    {
-        return Parse(value.AsSpan());
-    }
-
-    /// <summary>
-    /// Parses a string into a Period.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>The resulting period.</returns>
-    public static Period Parse(ReadOnlySpan<char> value)
-    {
-        if (TryParse(value, out Period result))
-        {
-            return result;
-        }
-
-#if NET8_0_OR_GREATER
-        throw new InvalidOperationException($"Unable to parse a period from the string '{value}'");
-#else
-        throw new InvalidOperationException($"Unable to parse a period from the string '{value.ToString()}'");
-#endif
-    }
-
-    /// <summary>
-    /// Parses a string into a Period.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>The resulting period.</returns>
-    public static Period Parse(ReadOnlySpan<byte> value)
-    {
-        if (TryParse(value, out Period result))
-        {
-            return result;
-        }
-
-        throw new InvalidOperationException($"Unable to parse a period from the string '{JsonReaderHelper.GetTextFromUtf8(value)}'");
     }
 
     /// <summary>
@@ -537,142 +488,6 @@ public readonly struct Period : IEquatable<Period>
     public static int DaysBetween(LocalDate start, LocalDate end)
     {
         return NodaTime.Period.DaysBetween(start, end);
-    }
-
-    /// <summary>
-    /// A parser for a json period.
-    /// </summary>
-    /// <param name="text">The text to parse.</param>
-    /// <param name="builder">The resulting period builder.</param>
-    /// <returns>A period builder parsed from the read only span.</returns>
-    public static bool PeriodParser(ReadOnlySpan<char> text, out PeriodBuilder builder)
-    {
-        builder = default;
-
-        if (text.Length == 0)
-        {
-            return false;
-        }
-
-        ValueCursor valueCursor = new(text);
-        valueCursor.MoveNext();
-        if (valueCursor.Current != 'P')
-        {
-            return false;
-        }
-
-        bool inDate = true;
-        PeriodUnits unitsSoFar = 0;
-        while (valueCursor.MoveNext())
-        {
-            if (inDate && (valueCursor.Current == 'T' || valueCursor.Current == 't'))
-            {
-                inDate = false;
-                continue;
-            }
-
-            bool negative = valueCursor.Current == '-';
-            if (!valueCursor.ParseInt64(out long unitValue))
-            {
-                return false;
-            }
-
-            if (valueCursor.Length == valueCursor.Index)
-            {
-                return false;
-            }
-
-            // Various failure cases:
-            // - Repeated unit (e.g. P1M2M)
-            // - Time unit is in date part (e.g. P5M)
-            // - Date unit is in time part (e.g. PT1D)
-            // - Unit is in incorrect order (e.g. P5D1Y)
-            // - Unit is invalid (e.g. P5J)
-            // - Unit is missing (e.g. P5)
-            PeriodUnits unit;
-            switch (valueCursor.Current)
-            {
-                case 'Y': unit = PeriodUnits.Years; break;
-                case 'M': unit = inDate ? PeriodUnits.Months : PeriodUnits.Minutes; break;
-                case 'W': unit = PeriodUnits.Weeks; break;
-                case 'D': unit = PeriodUnits.Days; break;
-                case 'H': unit = PeriodUnits.Hours; break;
-                case 'S': unit = PeriodUnits.Seconds; break;
-                case ',':
-                case '.': unit = PeriodUnits.Nanoseconds; break; // Special handling below
-                default: return false;
-            }
-
-            if ((unit & unitsSoFar) != 0)
-            {
-                return false;
-            }
-
-            // This handles putting months before years, for example. Less significant units
-            // have higher integer representations.
-            if (unit < unitsSoFar)
-            {
-                return false;
-            }
-
-            // The result of checking "there aren't any time units in this unit" should be
-            // equal to "we're still in the date part".
-            if ((unit & PeriodUnits.AllTimeUnits) == 0 != inDate)
-            {
-                return false;
-            }
-
-            // Seen a . or , which need special handling.
-            if (unit == PeriodUnits.Nanoseconds)
-            {
-                // Check for already having seen seconds, e.g. PT5S0.5
-                if ((unitsSoFar & PeriodUnits.Seconds) != 0)
-                {
-                    return false;
-                }
-
-                builder.Seconds = unitValue;
-
-                if (!valueCursor.MoveNext())
-                {
-                    return false;
-                }
-
-                // Can cope with at most 999999999 nanoseconds
-                if (!valueCursor.ParseFraction(9, 9, out int totalNanoseconds, 1))
-                {
-                    return false;
-                }
-
-                // Use whether or not the seconds value was negative (even if 0)
-                // as the indication of whether this value is negative.
-                if (negative)
-                {
-                    totalNanoseconds = -totalNanoseconds;
-                }
-
-                builder.Milliseconds = (totalNanoseconds / NodaConstants.NanosecondsPerMillisecond) % NodaConstants.MillisecondsPerSecond;
-                builder.Ticks = (totalNanoseconds / NodaConstants.NanosecondsPerTick) % NodaConstants.TicksPerMillisecond;
-                builder.Nanoseconds = totalNanoseconds % NodaConstants.NanosecondsPerTick;
-
-                if (valueCursor.Current != 'S')
-                {
-                    return false;
-                }
-
-                if (valueCursor.MoveNext())
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
-            builder[unit] = unitValue;
-            unitsSoFar |= unit;
-        }
-
-        return unitsSoFar != 0;
     }
 
     /// <summary>
