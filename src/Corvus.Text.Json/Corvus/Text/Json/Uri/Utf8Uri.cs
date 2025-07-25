@@ -2061,7 +2061,7 @@ internal static class Utf8Uri
             flags |= Flags.IPv6HostType;
         }
         else if (IsAsciiDigit(ch) && syntax.InFact(Utf8UriSyntaxFlags.AllowIPv4Host) &&
-            IPv4AddressHelper.IsValid(pString, start, ref end, false, NotAny(flags, Flags.ImplicitFile), syntax.InFact(Utf8UriSyntaxFlags.V1_UnknownUri)))
+            IPv4AddressHelper.IsValid(pString, start, ref end, false, NotAny(flags, Flags.ImplicitFile), false))
         {
             flags |= Flags.IPv4HostType;
         }
@@ -2107,12 +2107,6 @@ internal static class Utf8Uri
         if (end < length && pString[end] == (byte)'\\' && (flags & Flags.HostTypeMask) != Flags.HostNotParsed
             && !IsFile(syntax))
         {
-            if (syntax.InFact(Utf8UriSyntaxFlags.V1_UnknownUri))
-            {
-                err = Utf8UriParsingError.BadHostName;
-                flags |= Flags.UnknownHostType;
-                return end;
-            }
             flags &= ~Flags.HostTypeMask;
         }
         // Here we have checked the syntax up to the end of host
@@ -2139,17 +2133,8 @@ internal static class Utf8Uri
                     else
                     {
                         // The second check is to keep compatibility with V1 until the Utf8UriParser is registered
-                        if (syntax.InFact(Utf8UriSyntaxFlags.AllowAnyOtherHost)
-                            && syntax.NotAny(Utf8UriSyntaxFlags.V1_UnknownUri))
-                        {
-                            flags &= ~Flags.HostTypeMask;
-                            break;
-                        }
-                        else
-                        {
-                            err = Utf8UriParsingError.BadPort;
-                            return idx;
-                        }
+                        err = Utf8UriParsingError.BadPort;
+                        return idx;
                     }
                 }
                 // check on 0-ffff range
@@ -2195,33 +2180,7 @@ internal static class Utf8Uri
                 //
                 // ATTN V1 compat: V1 supports hostnames like ".." and ".", and so we do but only for unknown schemes.
                 //
-                if (syntax.InFact(Utf8UriSyntaxFlags.V1_UnknownUri))
-                {
-                    // Can assert here that the host is not empty so we will set dotFound
-                    // at least once or fail before exiting the loop
-                    bool dotFound = false;
-                    int startOtherHost = idx;
-                    for (end = idx; end < length; ++end)
-                    {
-                        if (dotFound && (pString[end] == (byte)'/' || pString[end] == (byte)'?' || pString[end] == (byte)'#'))
-                            break;
-                        else if (end < (idx + 2) && pString[end] == (byte)'.')
-                        {
-                            // allow one or two dots
-                            dotFound = true;
-                        }
-                        else
-                        {
-                            //failure
-                            err = Utf8UriParsingError.BadHostName;
-                            flags |= Flags.UnknownHostType;
-                            return idx;
-                        }
-                    }
-                    //success
-                    flags |= Flags.BasicHostType;
-                }
-                else if (syntax.InFact(Utf8UriSyntaxFlags.MustHaveAuthority) ||
+                if (syntax.InFact(Utf8UriSyntaxFlags.MustHaveAuthority) ||
                          (syntax.InFact(Utf8UriSyntaxFlags.MailToLikeUri)))
                 {
                     err = Utf8UriParsingError.BadHostName;
