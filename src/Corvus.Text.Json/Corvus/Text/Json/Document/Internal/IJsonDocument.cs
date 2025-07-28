@@ -69,6 +69,15 @@ public interface IJsonDocument : IDisposable
     TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex) where TElement : struct, IJsonElement<TElement>;
 
     /// <summary>
+    /// Gets the element at the specified array index within the current index.
+    /// </summary>
+    /// <param name="currentIndex">The current index.</param>
+    /// <param name="arrayIndex">The array index.</param>
+    /// <param name="parentDocument">Produces the parent document of the result.</param>
+    /// <param name="parentDocumentIndex">Produces the parent document index.</param>
+    void GetArrayIndexElement(int currentIndex, int arrayIndex, out IJsonDocument parentDocument, out int parentDocumentIndex);
+
+    /// <summary>
     /// Gets the length of the array at the specified index.
     /// </summary>
     /// <param name="index">The index of the array.</param>

@@ -44,6 +44,12 @@ internal class DummyDocument : IJsonDocument
     public TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex) where TElement : struct, IJsonElement<TElement>
     { return default; }
 
+    void IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex, out IJsonDocument parentDocument, out int parentDocumentIndex)
+    { 
+        parentDocument = this; 
+        parentDocumentIndex = 0; 
+    }
+
     public int GetArrayLength(int index)
     { return 0; }
 

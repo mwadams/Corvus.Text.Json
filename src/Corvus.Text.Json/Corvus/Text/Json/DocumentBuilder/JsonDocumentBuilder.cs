@@ -194,6 +194,24 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex, out IJsonDocument parentDocument, out int parentDocumentIndex)
+    {
+        CheckNotDisposed();
+
+        parentDocument = this;
+        parentDocumentIndex = GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void IMutableJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex, out IMutableJsonDocument parentDocument, out int parentDocumentIndex)
+    {
+        CheckNotDisposed();
+
+        parentDocument = this;
+        parentDocumentIndex = GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetDbSize(int index, bool includeEndElement)
     {
         CheckNotDisposed();
@@ -250,6 +268,28 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         CheckNotImmutable();
         _version++;
         cvb.OverwriteAndDispose(complexObjectStartIndex, startIndex, endIndex, memberCountToReplace, ref _parsedData);
+    }
+
+    /// <summary>
+    /// Removes a range of values from the document.
+    /// </summary>
+    /// <param name="complexObjectStartIndex">The start index of the complex object.</param>
+    /// <param name="startIndex">The start index of the range to remove.</param>
+    /// <param name="endIndex">The end index of the range to remove.</param>
+    /// <param name="membersToRemove">The number of members to remove.</param>
+    /// <remarks>
+    /// This is similar to <see cref="OverwriteAndDispose"/>, but it does not replace the
+    /// values that are removed. Instead, it simply removes the specified range of members
+    /// from the document, effectively shifting subsequent members up.
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void IMutableJsonDocument.RemoveRange(int complexObjectStartIndex, int startIndex, int endIndex, int membersToRemove)
+    {
+        CheckNotImmutable();
+        _version++;
+
+        // Use ReplaceRowsInComplexObject with 0 insertions to effectively remove the range
+        _parsedData.ReplaceRowsInComplexObject(this, complexObjectStartIndex, startIndex, endIndex, membersToRemove, 0, 0);
     }
 
     private RawUtf8JsonString GetRawValueUnsafe(int index, bool includeQuotes)

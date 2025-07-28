@@ -259,14 +259,12 @@ public struct MetadataDb : IDisposable
                 // amount of usage (particularly if Enlarge ever got called); and there's
                 // the small copy-cost associated with trimming anyways. "Is half-empty" is
                 // just a rough metric for "is trimming worth it?".
-                // Use unsigned comparison for efficient size check
-                if ((uint)Length <= (uint)(_data.Length / 2))
+                if (Length <= (_data.Length / 2))
                 {
                     byte[] newRent = ArrayPool<byte>.Shared.Rent(Length);
                     byte[] returnBuf = newRent;
 
-                    // Use unsigned comparison for efficient size comparison
-                    if ((uint)newRent.Length < (uint)_data.Length)
+                    if (newRent.Length < _data.Length)
                     {
                         Buffer.BlockCopy(_data, 0, newRent, 0, Length);
                         returnBuf = _data;
@@ -295,8 +293,7 @@ public struct MetadataDb : IDisposable
             (tokenType == JsonTokenType.StartArray || tokenType == JsonTokenType.StartObject) ==
             (length == DbRow.UnknownSize));
 
-        // Use unsigned comparison for efficient bounds checking
-        if ((uint)Length >= (uint)(_data.Length - DbRow.Size))
+        if (Length >= (_data.Length - DbRow.Size))
         {
             Enlarge();
         }
@@ -317,7 +314,7 @@ public struct MetadataDb : IDisposable
         Debug.Assert(tokenType >= JsonTokenType.PropertyName);
 
         // Use unsigned comparison for efficient bounds checking
-        if ((uint)Length >= (uint)(_data.Length - DbRow.Size))
+        if (Length >= (_data.Length - DbRow.Size))
         {
             Enlarge();
         }
@@ -460,7 +457,7 @@ public struct MetadataDb : IDisposable
         }
 
         // Use unsigned comparison for efficient capacity check
-        if ((uint)lengthToInsert > (uint)(_data.Length - Length))
+        if (lengthToInsert > (_data.Length - Length))
         {
             // We will need to reallocate
             byte[] toReturn = _data;
@@ -559,7 +556,7 @@ public struct MetadataDb : IDisposable
             //
             // If the off-by-one relationship does not hold, then one of the values was
             // more than one row, making it a complex object. This is indicated by setting
-            // the top bit of currentLenght (which, handily, is just negating the value).
+            // the top bit of currentLength (which, handily, is just negating the value).
             // The current length must be greater than zero, as we must have at least
             // one row for this condition to hold.
             if (currentLength + 1 != numberOfRows)
@@ -581,7 +578,7 @@ public struct MetadataDb : IDisposable
     internal void AppendExternal(JsonTokenType tokenType, int externalIndex, int sizeOrLength, int workspaceDocumentIndexOrNumberOfRows)
     {
         // Use unsigned comparison for efficient bounds checking
-        if ((uint)Length >= (uint)(_data.Length - DbRow.Size))
+        if (Length >= (_data.Length - DbRow.Size))
         {
             Enlarge();
         }

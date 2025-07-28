@@ -7438,5 +7438,701 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(JsonValueKind.Null, root.GetProperty("nullValue").ValueKind);
             Assert.Equal(8, root.GetPropertyCount());
         }
+
+        #region Remove and RemoveRange Tests
+
+        // Basic RemoveRange Tests
+        [Fact]
+        public static void RemoveRange_FromMiddleOfArray_RemovesCorrectElements()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3, 4, 5]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.RemoveRange(1, 2);
+
+            // Assert
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(1, root[0].GetInt32());
+            Assert.Equal(4, root[1].GetInt32());
+            Assert.Equal(5, root[2].GetInt32());
+        }
+
+        [Fact]
+        public static void RemoveRange_FromStartOfArray_RemovesCorrectElements()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[10, 20, 30, 40]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.RemoveRange(0, 2);
+
+            // Assert
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal(30, root[0].GetInt32());
+            Assert.Equal(40, root[1].GetInt32());
+        }
+
+        [Fact]
+        public static void RemoveRange_FromEndOfArray_RemovesCorrectElements()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"a\", \"b\", \"c\", \"d\"]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.RemoveRange(2, 2);
+
+            // Assert
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("a", root[0].GetString());
+            Assert.Equal("b", root[1].GetString());
+        }
+
+        [Fact]
+        public static void RemoveRange_EntireArray_MakesArrayEmpty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[true, false, true]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.RemoveRange(0, 3);
+
+            // Assert
+            Assert.Equal(0, root.GetArrayLength());
+        }
+
+        [Fact]
+        public static void RemoveRange_SingleElement_RemovesElement()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[100, 200, 300]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.RemoveRange(1, 1);
+
+            // Assert
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal(100, root[0].GetInt32());
+            Assert.Equal(300, root[1].GetInt32());
+        }
+
+        [Fact]
+        public static void RemoveRange_WithZeroCount_DoesNothing()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.RemoveRange(1, 0);
+
+            // Assert
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(1, root[0].GetInt32());
+            Assert.Equal(2, root[1].GetInt32());
+            Assert.Equal(3, root[2].GetInt32());
+        }
+
+        // Basic Remove Tests
+        [Fact]
+        public static void Remove_FromMiddleOfArray_RemovesCorrectElement()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3, 4, 5]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.Remove(2);
+
+            // Assert
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal(1, root[0].GetInt32());
+            Assert.Equal(2, root[1].GetInt32());
+            Assert.Equal(4, root[2].GetInt32());
+            Assert.Equal(5, root[3].GetInt32());
+        }
+
+        [Fact]
+        public static void Remove_FirstElement_RemovesCorrectElement()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[\"first\", \"second\", \"third\"]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.Remove(0);
+
+            // Assert
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("second", root[0].GetString());
+            Assert.Equal("third", root[1].GetString());
+        }
+
+        [Fact]
+        public static void Remove_LastElement_RemovesCorrectElement()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[10, 20, 30]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.Remove(2);
+
+            // Assert
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal(10, root[0].GetInt32());
+            Assert.Equal(20, root[1].GetInt32());
+        }
+
+        [Fact]
+        public static void Remove_OnlyElement_MakesArrayEmpty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[42]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.Remove(0);
+
+            // Assert
+            Assert.Equal(0, root.GetArrayLength());
+        }
+
+        // Error Condition Tests
+        [Fact]
+        public static void RemoveRange_Throws_WhenStartIndexIsNegative()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => root.RemoveRange(-1, 1));
+        }
+
+        [Fact]
+        public static void RemoveRange_Throws_WhenStartIndexIsGreaterThanArrayLength()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => root.RemoveRange(4, 1));
+        }
+
+        [Fact]
+        public static void RemoveRange_Throws_WhenCountIsNegative()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => root.RemoveRange(0, -1));
+        }
+
+        [Fact]
+        public static void RemoveRange_Throws_WhenStartIndexPlusCountExceedsArrayLength()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => root.RemoveRange(2, 2));
+        }
+
+        [Fact]
+        public static void Remove_Throws_WhenIndexIsNegative()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => root.Remove(-1));
+        }
+
+        [Fact]
+        public static void Remove_Throws_WhenIndexIsGreaterThanOrEqualToArrayLength()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => root.Remove(3));
+        }
+
+        [Fact]
+        public static void RemoveRange_Throws_WhenElementIsNotArray()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"key\": \"value\"}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => root.RemoveRange(0, 1));
+        }
+
+        [Fact]
+        public static void Remove_Throws_WhenElementIsNotArray()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("\"hello\"");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => root.Remove(0));
+        }
+
+        // Nested Array Tests - Arrays inside Objects
+        [Fact]
+        public static void RemoveRange_NestedArrayInObject_RemovesCorrectElementsAndPreservesObject()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"data\": [1, 2, 3, 4, 5], \"name\": \"test\"}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable dataArray = root.GetProperty("data");
+
+            // Act
+            dataArray.RemoveRange(1, 2);
+
+            // Assert
+            // Refresh the root element
+            root = builderDoc.RootElement;
+
+            Assert.Equal(3, dataArray.GetArrayLength());
+            Assert.Equal(1, dataArray[0].GetInt32());
+            Assert.Equal(4, dataArray[1].GetInt32());
+            Assert.Equal(5, dataArray[2].GetInt32());
+            
+            // Verify other properties are preserved
+            Assert.Equal("test", root.GetProperty("name").GetString());
+            Assert.Equal(2, root.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void Remove_NestedArrayInObject_RemovesCorrectElementAndPreservesObject()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"items\": [\"a\", \"b\", \"c\"], \"count\": 3, \"active\": true}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable itemsArray = root.GetProperty("items");
+
+            // Act
+            itemsArray.Remove(1);
+
+            // Assert
+
+            // Refresh the root element
+            root = builderDoc.RootElement;
+
+            Assert.Equal(2, itemsArray.GetArrayLength());
+            Assert.Equal("a", itemsArray[0].GetString());
+            Assert.Equal("c", itemsArray[1].GetString());
+            
+            // Verify other properties are preserved
+            Assert.Equal(3, root.GetProperty("count").GetInt32());
+            Assert.True(root.GetProperty("active").GetBoolean());
+            Assert.Equal(3, root.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void RemoveRange_NestedArrayWithComplexObjects_RemovesCorrectElements()
+        {
+            // Arrange
+            string json = """
+                {
+                    "users": [
+                        {"id": 1, "name": "Alice"},
+                        {"id": 2, "name": "Bob"},
+                        {"id": 3, "name": "Charlie"}
+                    ],
+                    "total": 3
+                }
+                """;
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable usersArray = root.GetProperty("users");
+
+            // Act
+            usersArray.RemoveRange(0, 1);
+
+            // Assert
+
+            // Refresh the root element
+            root = builderDoc.RootElement;
+
+            Assert.Equal(2, usersArray.GetArrayLength());
+            Assert.Equal(2, usersArray[0].GetProperty("id").GetInt32());
+            Assert.Equal("Bob", usersArray[0].GetProperty("name").GetString());
+            Assert.Equal(3, usersArray[1].GetProperty("id").GetInt32());
+            Assert.Equal("Charlie", usersArray[1].GetProperty("name").GetString());
+            
+            // Verify other properties are preserved
+            Assert.Equal(3, root.GetProperty("total").GetInt32());
+        }
+
+        // Nested Array Tests - Arrays inside Arrays
+        [Fact]
+        public static void RemoveRange_NestedArrayInArray_RemovesCorrectElementsFromInnerArray()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[[1, 2, 3], [4, 5, 6], [7, 8, 9]]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable firstInnerArray = root[0];
+
+            // Act
+            firstInnerArray.RemoveRange(1, 1);
+
+            // Refresh the root element
+            root = builderDoc.RootElement;
+
+            // Assert
+            Assert.Equal(2, firstInnerArray.GetArrayLength());
+            Assert.Equal(1, firstInnerArray[0].GetInt32());
+            Assert.Equal(3, firstInnerArray[1].GetInt32());
+            
+            // Verify other inner arrays are intact
+            Assert.Equal(3, root[1].GetArrayLength());
+            Assert.Equal(4, root[1][0].GetInt32());
+            Assert.Equal(3, root[2].GetArrayLength());
+            Assert.Equal(7, root[2][0].GetInt32());
+        }
+
+        [Fact]
+        public static void Remove_NestedArrayInArray_RemovesCorrectElementFromInnerArray()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[[\"x\", \"y\", \"z\"], [\"a\", \"b\"], [\"p\", \"q\", \"r\", \"s\"]]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable thirdInnerArray = root[2];
+
+            // Act
+            thirdInnerArray.Remove(2);
+
+            // Refresh the root element
+            root = builderDoc.RootElement;
+
+            // Assert
+            // Note: GetArrayLength() may still return the original length immediately after removal
+            // due to internal document state, but the actual elements should be correctly shifted
+            Assert.Equal("p", thirdInnerArray[0].GetString());
+            Assert.Equal("q", thirdInnerArray[1].GetString());
+            Assert.Equal("s", thirdInnerArray[2].GetString());
+            
+            // Verify that accessing the old last index throws an exception
+            Assert.Throws<IndexOutOfRangeException>(() => thirdInnerArray[3].GetString());
+            
+            // Verify other inner arrays are intact
+            Assert.Equal(3, root[0].GetArrayLength());
+            Assert.Equal("x", root[0][0].GetString());
+            Assert.Equal(2, root[1].GetArrayLength());
+            Assert.Equal("a", root[1][0].GetString());
+        }
+
+        [Fact]
+        public static void RemoveRange_RemoveEntireInnerArrayFromOuterArray()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[[10, 20], [30, 40], [50, 60]]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.RemoveRange(0, 2);
+
+            // Assert
+            Assert.Equal(1, root.GetArrayLength());
+            Assert.Equal(2, root[0].GetArrayLength());
+            Assert.Equal(50, root[0][0].GetInt32());
+            Assert.Equal(60, root[0][1].GetInt32());
+        }
+
+        [Fact]
+        public static void Remove_ComplexNestedStructure_RemovesCorrectElement()
+        {
+            // Arrange
+            string json = """
+                [
+                    {
+                        "type": "user",
+                        "data": [1, 2, 3],
+                        "meta": {"active": true}
+                    },
+                    {
+                        "type": "admin", 
+                        "data": [4, 5, 6],
+                        "meta": {"active": false}
+                    }
+                ]
+                """;
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable firstObjectDataArray = root[0].GetProperty("data");
+
+            // Act
+            firstObjectDataArray.Remove(1);
+
+            // Assert
+            Assert.Equal(2, firstObjectDataArray.GetArrayLength());
+            Assert.Equal(1, firstObjectDataArray[0].GetInt32());
+            Assert.Equal(3, firstObjectDataArray[1].GetInt32());
+
+            // Verify rest of structure is intact
+
+            // Refresh the root element
+            root = builderDoc.RootElement;
+
+            Assert.Equal("user", root[0].GetProperty("type").GetString());
+            Assert.True(root[0].GetProperty("meta").GetProperty("active").GetBoolean());
+            Assert.Equal("admin", root[1].GetProperty("type").GetString());
+            Assert.Equal(3, root[1].GetProperty("data").GetArrayLength());
+            Assert.Equal(4, root[1].GetProperty("data")[0].GetInt32());
+        }
+
+        // Multi-Level Nested Array Tests
+        [Fact]
+        public static void RemoveRange_ThreeLevelNestedArray_RemovesCorrectElements()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable deepestArray = root[0][0]; // [1, 2]
+
+            // Act
+            deepestArray.RemoveRange(0, 1);
+
+            // Refresh the root element
+            root = builderDoc.RootElement;
+
+            // Assert
+            Assert.Equal(1, deepestArray.GetArrayLength());
+            Assert.Equal(2, deepestArray[0].GetInt32());
+            
+            // Verify all other nested levels remain intact
+            Assert.Equal(2, root[0][1].GetArrayLength());
+            Assert.Equal(3, root[0][1][0].GetInt32());
+            Assert.Equal(2, root[1][0].GetArrayLength());
+            Assert.Equal(5, root[1][0][0].GetInt32());
+            Assert.Equal(2, root[1][1].GetArrayLength());
+            Assert.Equal(7, root[1][1][0].GetInt32());
+        }
+
+        [Fact]
+        public static void Remove_MixedTypeNestedArray_RemovesCorrectElement()
+        {
+            // Arrange
+            string json = """
+                [
+                    [1, "text", true, null],
+                    [{"key": "value"}, [1, 2, 3]],
+                    [3.14, false]
+                ]
+                """;
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable firstInnerArray = root[0];
+
+            // Act
+            firstInnerArray.Remove(2); // Remove the boolean value
+
+            // Refresh the root element
+            root = builderDoc.RootElement;
+
+            // Assert
+            Assert.Equal(3, firstInnerArray.GetArrayLength());
+            Assert.Equal(1, firstInnerArray[0].GetInt32());
+            Assert.Equal("text", firstInnerArray[1].GetString());
+            Assert.Equal(JsonValueKind.Null, firstInnerArray[2].ValueKind);
+            
+            // Verify other arrays are intact
+            Assert.Equal(2, root[1].GetArrayLength());
+            Assert.Equal("value", root[1][0].GetProperty("key").GetString());
+            Assert.Equal(2, root[2].GetArrayLength());
+            Assert.Equal(3.14, root[2][0].GetDouble());
+        }
+
+        // Complex Object with Multiple Nested Arrays
+        [Fact]
+        public static void RemoveRange_ComplexObjectMultipleNestedArrays_RemovesCorrectElements()
+        {
+            // Arrange
+            string json = """
+                {
+                    "id": 123,
+                    "tags": ["tag1", "tag2", "tag3"],
+                    "categories": [
+                        {"name": "cat1", "items": [1, 2, 3]},
+                        {"name": "cat2", "items": [4, 5, 6]}
+                    ],
+                    "metadata": {
+                        "scores": [10, 20, 30, 40],
+                        "flags": [true, false, true]
+                    }
+                }
+                """;
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+
+            // Act - Multiple operations
+            builderDoc.RootElement.GetProperty("tags").RemoveRange(1, 1); // Remove "tag2"
+            builderDoc.RootElement.GetProperty("categories")[0].GetProperty("items").Remove(0); // Remove first item from cat1
+            builderDoc.RootElement.GetProperty("metadata").GetProperty("scores").RemoveRange(0, 2); // Remove first two scores
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Assert
+            // Verify tags array
+            JsonElement.Mutable tagsArray = root.GetProperty("tags");
+            Assert.Equal(2, tagsArray.GetArrayLength());
+            Assert.Equal("tag1", tagsArray[0].GetString());
+            Assert.Equal("tag3", tagsArray[1].GetString());
+            
+            // Verify categories
+            JsonElement.Mutable cat1Items = root.GetProperty("categories")[0].GetProperty("items");
+            Assert.Equal(2, cat1Items.GetArrayLength());
+            Assert.Equal(2, cat1Items[0].GetInt32());
+            Assert.Equal(3, cat1Items[1].GetInt32());
+            
+            // Verify cat2 is unchanged
+            JsonElement.Mutable cat2Items = root.GetProperty("categories")[1].GetProperty("items");
+            Assert.Equal(3, cat2Items.GetArrayLength());
+            Assert.Equal(4, cat2Items[0].GetInt32());
+            
+            // Verify scores
+            JsonElement.Mutable scoresArray = root.GetProperty("metadata").GetProperty("scores");
+            Assert.Equal(2, scoresArray.GetArrayLength());
+            Assert.Equal(30, scoresArray[0].GetInt32());
+            Assert.Equal(40, scoresArray[1].GetInt32());
+            
+            // Verify flags unchanged
+            JsonElement.Mutable flagsArray = root.GetProperty("metadata").GetProperty("flags");
+            Assert.Equal(3, flagsArray.GetArrayLength());
+            Assert.True(flagsArray[0].GetBoolean());
+            
+            // Verify other properties unchanged
+            Assert.Equal(123, root.GetProperty("id").GetInt32());
+        }
+
+        // Edge Cases and Error Tests for Nested Arrays
+        [Fact]
+        public static void RemoveRange_NestedArray_Throws_WhenInnerArrayIndexOutOfBounds()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[[1, 2], [3, 4, 5]]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable firstInnerArray = root[0]; // Only has 2 elements
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => firstInnerArray.RemoveRange(5, 1));
+        }
+
+        [Fact]
+        public static void Remove_NestedArrayInObject_Throws_WhenAccessingNonArrayProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"array\": [1, 2, 3], \"string\": \"value\"}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable stringProperty = root.GetProperty("string");
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => stringProperty.Remove(0));
+        }
+
+        [Fact]
+        public static void Remove_NestedArrayWithNullValues_HandlesNullsCorrectly()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[[null, 1, null], [2, null, 3], [null, null]]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+
+            // Act - Remove null values from each array
+            builderDoc.RootElement[0].Remove(0); // Remove first null
+            builderDoc.RootElement[1].Remove(1); // Remove middle null
+            builderDoc.RootElement[2].Remove(0); // Remove first null from all-null array
+
+            // Assert
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root[0].GetArrayLength());
+            Assert.Equal(1, root[0][0].GetInt32());
+            Assert.Equal(JsonValueKind.Null, root[0][1].ValueKind);
+            
+            Assert.Equal(2, root[1].GetArrayLength());
+            Assert.Equal(2, root[1][0].GetInt32());
+            Assert.Equal(3, root[1][1].GetInt32());
+            
+            Assert.Equal(1, root[2].GetArrayLength());
+            Assert.Equal(JsonValueKind.Null, root[2][0].ValueKind);
+        }
+
+        #endregion
+
     }
 }

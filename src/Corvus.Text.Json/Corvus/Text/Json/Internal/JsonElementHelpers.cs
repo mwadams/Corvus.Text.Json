@@ -58,6 +58,59 @@ public static partial class JsonElementHelpers
     }
 
     /// <summary>
+    /// Removes a range of items from an array element.
+    /// </summary>
+    /// <typeparam name="TArray">The type of the array element.</typeparam>
+    /// <param name="arrayElement">The array element instance.</param>
+    /// <param name="startIndex">The zero-based index at which to begin removing items.</param>
+    /// <param name="count">The number of items to remove.</param>
+    /// <exception cref="InvalidOperationException">
+    ///   The element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+    ///   or the element reference is stale due to document mutations.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///   <paramref name="startIndex"/> is negative or greater than the current array length,
+    ///   or <paramref name="count"/> is negative or causes the operation to exceed the array bounds.
+    /// </exception>
+    [CLSCompliant(false)]
+    public static void RemoveRangeUnsafe<TArray>(TArray arrayElement, int startIndex, int count)
+        where TArray : struct, IMutableJsonElement<TArray>
+    {
+        if (count < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count));
+        }
+
+        if (count == 0)
+        {
+            return; // Nothing to remove
+        }
+
+        IMutableJsonDocument parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
+        int arrayLength = parentDocument.GetArrayLength(arrayElement.ParentDocumentIndex);
+
+        if (startIndex < 0 || startIndex > arrayLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(startIndex));
+        }
+
+        if (startIndex + count > arrayLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count));
+        }
+
+        // Get the first element in the range to determine the start index
+        parentDocument.GetArrayIndexElement(arrayElement.ParentDocumentIndex, startIndex, out _, out int rangeStartIndex);
+
+        // Get the last element in the range to determine the end index
+        parentDocument.GetArrayIndexElement(arrayElement.ParentDocumentIndex, startIndex + count - 1, out IJsonDocument lastElementDoc, out int lastElementIndex);
+        int rangeEndIndex = lastElementIndex + lastElementDoc.GetDbSize(lastElementIndex, true);
+
+        // Remove the range using the document's RemoveRange method
+        parentDocument.RemoveRange(arrayElement.ParentDocumentIndex, rangeStartIndex, rangeEndIndex, count);
+    }
+
+    /// <summary>
     /// Converts a <see cref="JsonTokenType"/> to its corresponding <see cref="JsonValueKind"/>.
     /// </summary>
     /// <param name="tokenType">The token type to convert.</param>

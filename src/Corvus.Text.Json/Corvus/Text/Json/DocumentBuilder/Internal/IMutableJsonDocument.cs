@@ -25,6 +25,15 @@ public interface IMutableJsonDocument : IJsonDocument
     /// <returns>The mutable JSON element at the specified array index.</returns>
     new JsonElement.Mutable GetArrayIndexElement(int currentIndex, int arrayIndex);
 
+        /// <summary>
+    /// Gets the element at the specified array index within the current index.
+    /// </summary>
+    /// <param name="currentIndex">The current index.</param>
+    /// <param name="arrayIndex">The array index.</param>
+    /// <param name="parentDocument">Produces the parent document of the result.</param>
+    /// <param name="parentDocumentIndex">Produces the parent document index.</param>
+    void GetArrayIndexElement(int currentIndex, int arrayIndex, out IMutableJsonDocument parentDocument, out int parentDocumentIndex);
+
     /// <summary>
     /// Gets the named property value from a specific <see cref="MetadataDb"/>.
     /// </summary>
@@ -278,6 +287,20 @@ public interface IMutableJsonDocument : IJsonDocument
     int StoreValue(Half value);
 
 #endif
+
+    /// <summary>
+    /// Removes a range of values from the document.
+    /// </summary>
+    /// <param name="complexObjectStartIndex">The start index of the complex object.</param>
+    /// <param name="startIndex">The start index of the range to remove.</param>
+    /// <param name="endIndex">The end index of the range to remove.</param>
+    /// <param name="membersToRemove">The number of members to remove.</param>
+    /// <remarks>
+    /// This is similar to <see cref="OverwriteAndDispose"/>, but it does not replace the
+    /// values that are removed. Instead, it simply removes the specified range of members
+    /// from the document, effectively shifting subsequent members up.
+    /// </remarks>
+    void RemoveRange(int complexObjectStartIndex, int startIndex, int endIndex, int membersToRemove);
 
     /// <summary>
     /// Sets the value of the document and disposes the provided <see cref="ComplexValueBuilder"/>.

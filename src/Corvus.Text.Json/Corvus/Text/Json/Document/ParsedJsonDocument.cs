@@ -201,6 +201,16 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex, out IJsonDocument parentDocument, out int parentDocumentIndex)
+    {
+        CheckNotDisposed();
+
+        parentDocument = this;
+        parentDocumentIndex = GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetDbSize(int index, bool includeEndElement)
     {
         CheckNotDisposed();

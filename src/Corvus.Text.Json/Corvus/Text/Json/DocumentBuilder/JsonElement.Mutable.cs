@@ -1258,6 +1258,107 @@ public readonly partial struct JsonElement
     /// <summary>
     ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
     /// </summary>
+
+    /// <summary>
+    /// Represents a mutable JSON value within a <see cref="IMutableJsonDocument"/> that supports both read and write operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The <see cref="Mutable"/> struct is the primary interface for interacting with JSON data in a mutable document.
+    /// It provides comprehensive read access to JSON values, type-safe mutation operations, and efficient in-place
+    /// modification capabilities while maintaining document version consistency.
+    /// </para>
+    ///
+    /// <para>
+    /// <strong>Core Features:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Type Safety:</strong> Runtime validation ensures operations match actual JSON value types</description></item>
+    /// <item><description><strong>Version Tracking:</strong> Automatic staleness detection prevents use of outdated references</description></item>
+    /// <item><description><strong>In-Place Mutation:</strong> Direct document modification without full reconstruction</description></item>
+    /// <item><description><strong>Comprehensive Type Support:</strong> All .NET primitive types, dates, strings, and complex structures</description></item>
+    /// <item><description><strong>Memory Efficiency:</strong> Minimal per-instance overhead with workspace-managed memory pools</description></item>
+    /// </list>
+    ///
+    /// <para>
+    /// <strong>Usage Patterns:</strong>
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><strong>Property Access:</strong> <c>GetProperty(name)</c>, <c>TryGetProperty(name, out value)</c></description></item>
+    /// <item><description><strong>Array Access:</strong> <c>element[index]</c>, <c>EnumerateArray()</c></description></item>
+    /// <item><description><strong>Value Extraction:</strong> <c>GetString()</c>, <c>GetInt32()</c>, <c>GetBoolean()</c></description></item>
+    /// <item><description><strong>Mutation:</strong> <c>SetProperty(name, value)</c>, <c>SetItem(index, value)</c></description></item>
+    /// </list>
+    ///
+    /// <para>
+    /// <strong>Thread Safety:</strong> This type is not thread-safe. Concurrent access requires external synchronization.
+    /// </para>
+    ///
+    /// <para>
+    /// <strong>Version Management:</strong> Each mutation updates the document version. Stale references throw
+    /// <see cref="InvalidOperationException"/> when accessed.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <para>Basic property manipulation:</para>
+    /// <code>
+    /// using var workspace = JsonWorkspace.Create();
+    /// using var doc = JsonElement.CreateDocumentBuilder(workspace, new Source(
+    ///     new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
+    ///     {
+    ///         builder.Add("name", "John Doe");
+    ///         builder.Add("age", 30);
+    ///         builder.Add("active", true);
+    ///     })));
+    ///
+    /// var root = doc.RootElement;
+    ///
+    /// // Read properties
+    /// string name = root.GetProperty("name").GetString();
+    /// int age = root.GetProperty("age").GetInt32();
+    ///
+    /// // Modify properties
+    /// root.SetProperty("age", age + 1);
+    /// root.SetProperty("lastModified", DateTime.UtcNow);
+    ///
+    /// // Safe property access
+    /// if (root.TryGetProperty("email", out var emailElement))
+    /// {
+    ///     Console.WriteLine($"Email: {emailElement.GetString()}");
+    /// }
+    /// </code>
+    /// </example>
+    /// <example>
+    /// <para>Array manipulation:</para>
+    /// <code>
+    /// // Create array document
+    /// using var arrayDoc = JsonElement.CreateDocumentBuilder(workspace, new Source(
+    ///     new JsonArrayBuilder.Build((ref JsonArrayBuilder builder) =>
+    ///     {
+    ///         builder.Add(1);
+    ///         builder.Add(2);
+    ///         builder.Add(3);
+    ///     })));
+    ///
+    /// var array = arrayDoc.RootElement;
+    ///
+    /// // Read array elements
+    /// for (int i = 0; i &lt; array.GetArrayLength(); i++)
+    /// {
+    ///     Console.WriteLine(array[i].GetInt32());
+    /// }
+    ///
+    /// // Modify array elements
+    /// array.SetItem(0, 10);
+    /// array.SetItem(1, "modified");
+    ///
+    /// // Enumerate array
+    /// foreach (var item in array.EnumerateArray())
+    /// {
+    ///     Console.WriteLine(item.ToString());
+    /// }
+    /// </code>
+    /// </example>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public partial struct Mutable : IMutableJsonElement<Mutable>
     {
@@ -1267,6 +1368,27 @@ public readonly partial struct JsonElement
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Mutable"/> struct.
+        /// </summary>
+        /// <param name="parent">The parent document containing this JSON element. Must implement <see cref="IMutableJsonDocument"/>.</param>
+        /// <param name="idx">The zero-based index of this element within the document's internal structure.</param>
+        /// <remarks>
+        /// <para>
+        /// This constructor is internal and should not be called directly. Instances are typically created through:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Document builders (<see cref="JsonDocumentBuilder{T}"/>)</description></item>
+        /// <item><description>Property access methods (<see cref="GetProperty(string)"/>)</description></item>
+        /// <item><description>Array indexing (<see cref="this[int]"/>)</description></item>
+        /// <item><description>Enumeration operations</description></item>
+        /// </list>
+        /// <para>
+        /// The constructor captures the current document version for staleness detection and performs
+        /// runtime validation to ensure the parent implements the required mutable interface.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parent"/> does not implement <see cref="IMutableJsonDocument"/>.</exception>
         internal Mutable(IJsonDocument parent, int idx)
         {
             // parent is usually not null, but the Current property
@@ -1281,6 +1403,18 @@ public readonly partial struct JsonElement
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
+        /// <summary>
+        /// Gets the JSON token type for this element from the parent document.
+        /// </summary>
+        /// <value>
+        /// The <see cref="JsonTokenType"/> representing the low-level token type of this JSON element.
+        /// Returns <see cref="JsonTokenType.None"/> if the parent document is null or disposed.
+        /// </value>
+        /// <remarks>
+        /// This property provides access to the underlying JSON token representation used internally
+        /// by the document. It is primarily used for type validation and conversion to <see cref="JsonValueKind"/>.
+        /// Most consumers should use <see cref="ValueKind"/> instead for standard JSON value type checking.
+        /// </remarks>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly JsonTokenType TokenType
         {
@@ -1291,25 +1425,98 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   The <see cref="JsonValueKind"/> that the value is.
+        /// Gets the <see cref="JsonValueKind"/> that represents the type of this JSON value.
         /// </summary>
+        /// <value>
+        /// A <see cref="JsonValueKind"/> enumeration value indicating whether this element represents
+        /// a JSON null, boolean, number, string, array, or object.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// This property is the primary way to determine the type of a JSON value before performing
+        /// type-specific operations. It provides a high-level classification that corresponds to
+        /// the JSON specification's value types.
+        /// </para>
+        /// <para>
+        /// <strong>Possible Values:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><see cref="JsonValueKind.Null"/> - JSON null value</description></item>
+        /// <item><description><see cref="JsonValueKind.True"/> - JSON boolean true</description></item>
+        /// <item><description><see cref="JsonValueKind.False"/> - JSON boolean false</description></item>
+        /// <item><description><see cref="JsonValueKind.Number"/> - JSON numeric value</description></item>
+        /// <item><description><see cref="JsonValueKind.String"/> - JSON string value</description></item>
+        /// <item><description><see cref="JsonValueKind.Array"/> - JSON array</description></item>
+        /// <item><description><see cref="JsonValueKind.Object"/> - JSON object</description></item>
+        /// </list>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// switch (element.ValueKind)
+        /// {
+        ///     case JsonValueKind.String:
+        ///         Console.WriteLine($"String: {element.GetString()}");
+        ///         break;
+        ///     case JsonValueKind.Number:
+        ///         Console.WriteLine($"Number: {element.GetDouble()}");
+        ///         break;
+        ///     case JsonValueKind.Array:
+        ///         Console.WriteLine($"Array length: {element.GetArrayLength()}");
+        ///         break;
+        ///     case JsonValueKind.Object:
+        ///         Console.WriteLine($"Object properties: {element.GetPropertyCount()}");
+        ///         break;
+        /// }
+        /// </code>
+        /// </example>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly JsonValueKind ValueKind => TokenType.ToValueKind();
 
         /// <summary>
-        ///   Get the value at a specified index when the current value is a
-        ///   <see cref="JsonValueKind.Array"/>.
+        /// Gets the JSON array element at the specified zero-based index.
         /// </summary>
+        /// <param name="index">The zero-based index of the element to retrieve.</param>
+        /// <value>
+        /// A <see cref="Mutable"/> representing the JSON value at the specified array index.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// This indexer provides convenient access to array elements using familiar array syntax.
+        /// The returned element is a new <see cref="Mutable"/> instance that can be used for both
+        /// reading and writing operations on the array element.
+        /// </para>
+        /// <para>
+        /// <strong>Performance:</strong> Array element access is O(1) as it uses internal document indexing.
+        /// </para>
+        /// <para>
+        /// <strong>Type Safety:</strong> This operation validates that the current element is a JSON array
+        /// and that the index is within valid bounds before returning the element.
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// // Access array elements
+        /// var firstElement = arrayElement[0];
+        /// var secondElement = arrayElement[1];
+        ///
+        /// // Chain operations
+        /// string value = arrayElement[2].GetString();
+        /// int count = arrayElement[3].GetArrayLength(); // if nested array
+        ///
+        /// // Modify through indexer
+        /// arrayElement[0].SetProperty("name", "updated"); // if element is object
+        /// </code>
+        /// </example>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
         /// </exception>
         /// <exception cref="IndexOutOfRangeException">
-        ///   <paramref name="index"/> is not in the range [0, <see cref="GetArrayLength"/>()).
+        /// <paramref name="index"/> is not in the range [0, <see cref="GetArrayLength"/>()).
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly Mutable this[int index]
         {
@@ -1322,22 +1529,99 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        /// Implicitly converts a <see cref="Mutable"/> to a <see cref="JsonElement"/>.
+        /// Implicitly converts a <see cref="Mutable"/> to a read-only <see cref="JsonElement"/>.
         /// </summary>
         /// <param name="value">The mutable JSON element to convert.</param>
-        /// <returns>A <see cref="JsonElement"/> representing the same JSON value.</returns>
+        /// <returns>A read-only <see cref="JsonElement"/> representing the same JSON value.</returns>
+        /// <remarks>
+        /// <para>
+        /// This implicit conversion allows mutable elements to be used anywhere a read-only
+        /// <see cref="JsonElement"/> is expected, providing seamless interoperability between
+        /// mutable and immutable JSON APIs.
+        /// </para>
+        /// <para>
+        /// The conversion creates a new <see cref="JsonElement"/> that references the same
+        /// underlying document and element index, but restricts access to read-only operations.
+        /// </para>
+        /// <para>
+        /// <strong>Use Cases:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Passing mutable elements to methods expecting read-only elements</description></item>
+        /// <item><description>Interfacing with System.Text.Json APIs</description></item>
+        /// <item><description>Creating immutable snapshots for comparison or serialization</description></item>
+        /// </list>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// Mutable mutableElement = GetMutableElement();
+        ///
+        /// // Implicit conversion to JsonElement
+        /// JsonElement readOnlyElement = mutableElement;
+        ///
+        /// // Use with read-only APIs
+        /// ProcessReadOnlyElement(mutableElement); // implicit conversion
+        ///
+        /// void ProcessReadOnlyElement(JsonElement element)
+        /// {
+        ///     // Can only read, not modify
+        ///     Console.WriteLine(element.GetString());
+        /// }
+        /// </code>
+        /// </example>
         public static implicit operator JsonElement(Mutable value)
         {
             return new(value._parent, value._idx);
         }
 
         /// <summary>
-        /// Explicitly converts a <see cref="JsonElement"/> to a <see cref="Mutable"/>.
+        /// Explicitly converts a read-only <see cref="JsonElement"/> to a <see cref="Mutable"/>.
         /// </summary>
-        /// <param name="value">The JSON element to convert.</param>
-        /// <returns>A <see cref="Mutable"/> representing the same JSON value.</returns>
+        /// <param name="value">The read-only JSON element to convert.</param>
+        /// <returns>A <see cref="Mutable"/> representing the same JSON value with write capabilities.</returns>
+        /// <remarks>
+        /// <para>
+        /// This explicit conversion enables upgrading read-only elements back to mutable form,
+        /// but only when the underlying document supports mutation. The conversion validates
+        /// that the source element originates from a mutable document.
+        /// </para>
+        /// <para>
+        /// <strong>Requirements:</strong> The source <see cref="JsonElement"/> must have been created
+        /// from a document that implements <see cref="IMutableJsonDocument"/>. Elements from
+        /// read-only documents (such as those created by <see cref="JsonDocument.Parse(string)"/>)
+        /// cannot be converted to mutable form.
+        /// </para>
+        /// <para>
+        /// <strong>Use Cases:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Converting results from read-only API calls back to mutable form</description></item>
+        /// <item><description>Restoring mutability after passing through read-only interfaces</description></item>
+        /// <item><description>Type casting when element mutability is known at runtime</description></item>
+        /// </list>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// // Start with mutable element
+        /// Mutable mutableElement = GetMutableElement();
+        ///
+        /// // Convert to read-only for some operation
+        /// JsonElement readOnlyElement = mutableElement;
+        ///
+        /// // Convert back to mutable (explicit cast required)
+        /// Mutable backToMutable = (Mutable)readOnlyElement;
+        ///
+        /// // Now can modify again
+        /// backToMutable.SetProperty("modified", true);
+        ///
+        /// // This would fail - element from read-only document
+        /// JsonElement fromParse = JsonDocument.Parse("{}").RootElement;
+        /// Mutable invalid = (Mutable)fromParse; // throws FormatException
+        /// </code>
+        /// </example>
         /// <exception cref="FormatException">
-        /// The JSON element is not from a mutable JSON document.
+        /// The JSON element is not from a mutable JSON document (i.e., its parent document
+        /// does not implement <see cref="IMutableJsonDocument"/>).
         /// </exception>
         public static explicit operator Mutable(JsonElement value)
         {
@@ -1352,44 +1636,97 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        /// Determines whether two <see cref="Mutable"/> instances are equal.
+        /// Determines whether two <see cref="Mutable"/> instances represent equal JSON values.
         /// </summary>
         /// <param name="left">The first mutable JSON element to compare.</param>
         /// <param name="right">The second mutable JSON element to compare.</param>
-        /// <returns>True if the instances are equal; otherwise, false.</returns>
+        /// <returns><c>true</c> if the JSON values are structurally equal; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        /// <para>
+        /// This operator performs deep structural comparison of the JSON values, not reference equality.
+        /// Two elements are considered equal if they represent the same JSON value, regardless of
+        /// their source document or internal representation.
+        /// </para>
+        /// <para>
+        /// <strong>Comparison Rules:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><strong>Primitives:</strong> Values are compared directly (numbers, booleans, strings, null)</description></item>
+        /// <item><description><strong>Arrays:</strong> Elements are compared in order; lengths must match</description></item>
+        /// <item><description><strong>Objects:</strong> All properties are compared; order is irrelevant</description></item>
+        /// <item><description><strong>Cross-document:</strong> Elements from different documents can be equal if values match</description></item>
+        /// </list>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// var element1 = CreateElementWithValue(42);
+        /// var element2 = CreateElementWithValue(42);
+        /// var element3 = CreateElementWithValue(43);
+        ///
+        /// bool same = element1 == element2;      // true - same value
+        /// bool different = element1 == element3; // false - different value
+        ///
+        /// // Works across different documents
+        /// var doc1Element = doc1.RootElement.GetProperty("value");
+        /// var doc2Element = doc2.RootElement.GetProperty("value");
+        /// bool crossDoc = doc1Element == doc2Element; // true if values match
+        /// </code>
+        /// </example>
         public static bool operator ==(Mutable left, Mutable right)
         {
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Determines whether two <see cref="Mutable"/> instances are not equal.
+        /// Determines whether two <see cref="Mutable"/> instances represent different JSON values.
         /// </summary>
         /// <param name="left">The first mutable JSON element to compare.</param>
         /// <param name="right">The second mutable JSON element to compare.</param>
-        /// <returns>True if the instances are not equal; otherwise, false.</returns>
+        /// <returns><c>true</c> if the JSON values are structurally different; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        /// This operator is the logical inverse of the equality operator (<see cref="op_Equality"/>).
+        /// It returns <c>true</c> when the elements represent different JSON values using the same
+        /// deep structural comparison rules.
+        /// </remarks>
         public static bool operator !=(Mutable left, Mutable right)
         {
             return !left.Equals(right);
         }
 
         /// <summary>
-        /// Determines whether a <see cref="Mutable"/> and a <see cref="JsonElement"/> are equal.
+        /// Determines whether a <see cref="Mutable"/> and a read-only <see cref="JsonElement"/> represent equal JSON values.
         /// </summary>
         /// <param name="left">The mutable JSON element to compare.</param>
-        /// <param name="right">The JSON element to compare.</param>
-        /// <returns>True if the instances are equal; otherwise, false.</returns>
+        /// <param name="right">The read-only JSON element to compare.</param>
+        /// <returns><c>true</c> if the JSON values are structurally equal; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        /// This operator enables seamless comparison between mutable and read-only JSON elements,
+        /// using the same deep structural comparison as other equality operators. The mutability
+        /// difference does not affect equality - only the actual JSON values are compared.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// Mutable mutableElement = GetMutableElement();
+        /// JsonElement readOnlyElement = JsonDocument.Parse("42").RootElement;
+        ///
+        /// bool equal = mutableElement == readOnlyElement; // true if both represent 42
+        /// </code>
+        /// </example>
         public static bool operator ==(Mutable left, JsonElement right)
         {
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Determines whether a <see cref="Mutable"/> and a <see cref="JsonElement"/> are not equal.
+        /// Determines whether a <see cref="Mutable"/> and a read-only <see cref="JsonElement"/> represent different JSON values.
         /// </summary>
         /// <param name="left">The mutable JSON element to compare.</param>
-        /// <param name="right">The JSON element to compare.</param>
-        /// <returns>True if the instances are not equal; otherwise, false.</returns>
+        /// <param name="right">The read-only JSON element to compare.</param>
+        /// <returns><c>true</c> if the JSON values are structurally different; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        /// This operator is the logical inverse of the mixed equality operator. It returns <c>true</c>
+        /// when the mutable and read-only elements represent different JSON values.
+        /// </remarks>
         public static bool operator !=(Mutable left, JsonElement right)
         {
             return !left.Equals(right);
@@ -1399,7 +1736,37 @@ public readonly partial struct JsonElement
         /// Determines whether this JSON element is equal to the specified object.
         /// </summary>
         /// <param name="obj">The object to compare with this JSON element.</param>
-        /// <returns>True if the object is equal to this JSON element; otherwise, false.</returns>
+        /// <returns><c>true</c> if the object represents an equal JSON value; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        /// <para>
+        /// This method provides standard .NET equality semantics for JSON elements. It supports
+        /// comparison with other JSON element types implementing <see cref="IJsonElement"/>,
+        /// as well as null comparison for JSON null values.
+        /// </para>
+        /// <para>
+        /// <strong>Supported Comparisons:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><strong>IJsonElement implementations:</strong> Compares JSON values structurally</description></item>
+        /// <item><description><strong>null objects:</strong> Returns true only if this element represents JSON null</description></item>
+        /// <item><description><strong>Other types:</strong> Always returns false</description></item>
+        /// </list>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// Mutable element = GetElement();
+        ///
+        /// // Compare with other JSON elements
+        /// bool equal1 = element.Equals(otherMutableElement);
+        /// bool equal2 = element.Equals(readOnlyElement);
+        ///
+        /// // Null comparison for JSON null values
+        /// bool isNull = nullElement.Equals(null); // true for JSON null
+        ///
+        /// // Non-JSON objects always return false
+        /// bool notEqual = element.Equals("not a JSON element"); // false
+        /// </code>
+        /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override readonly bool Equals(object? obj)
         {
@@ -1408,12 +1775,33 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        /// Determines whether this JSON element is equal to another JSON element of type T.
+        /// Determines whether this JSON element is equal to another JSON element of any compatible type.
         /// </summary>
-        /// <typeparam name="T">The type of JSON element to compare with.</typeparam>
+        /// <typeparam name="T">The type of JSON element to compare with. Must implement <see cref="IJsonElement"/>.</typeparam>
         /// <param name="other">The JSON element to compare with this instance.</param>
-        /// <returns>True if the JSON elements are equal; otherwise, false.</returns>
-        /// <remarks>This method is not CLS compliant.</remarks>
+        /// <returns><c>true</c> if the JSON elements represent equal values; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        /// <para>
+        /// This generic method enables type-safe comparison with any JSON element type that implements
+        /// <see cref="IJsonElement"/>, providing compile-time type checking while maintaining the
+        /// same deep structural comparison semantics.
+        /// </para>
+        /// <para>
+        /// This method is not CLS compliant due to its generic constraint.
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// Mutable mutableElement = GetMutableElement();
+        /// JsonElement readOnlyElement = GetReadOnlyElement();
+        ///
+        /// // Type-safe comparison
+        /// bool equal = mutableElement.Equals(readOnlyElement);
+        ///
+        /// // Works with any IJsonElement implementation
+        /// bool customEqual = mutableElement.Equals(customJsonElement);
+        /// </code>
+        /// </example>
         [CLSCompliant(false)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly bool Equals<T>(T other)
@@ -3377,12 +3765,62 @@ public readonly partial struct JsonElement
             return _parent.CloneElement(_idx);
         }
 
+        /// <summary>
+        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="objectValue">A delegate that builds the JSON object value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             SetProperty(propertyName.AsSpan(), objectValue, estimatedMemberCount);
         }
 
+        /// <summary>
+        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="objectValue">A delegate that builds the JSON object value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
@@ -3405,6 +3843,33 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="objectValue">A delegate that builds the JSON object value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
@@ -3427,12 +3892,62 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of elements in the array for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             SetProperty(propertyName.AsSpan(), arrayValue, estimatedMemberCount);
         }
 
+        /// <summary>
+        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of elements in the array for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
@@ -3455,6 +3970,33 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of elements in the array for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
@@ -3477,12 +4019,58 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a string property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="utf8StringValue">The string value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be properly escaped according to JSON string rules.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, string utf8StringValue)
         {
             SetProperty(propertyName.AsSpan(), utf8StringValue.AsSpan());
         }
 
+        /// <summary>
+        ///   Sets a string property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="utf8StringValue">The string value to set as a character span.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts character spans to avoid string allocation when the property name
+        ///     and value are already available as spans.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be properly escaped according to JSON string rules.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> utf8StringValue)
         {
             CheckValidInstance();
@@ -3505,6 +4093,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a string property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="utf8StringValue">The string value to set as a UTF-8 encoded byte span.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts UTF-8 encoded byte spans for optimal performance when working
+        ///     with UTF-8 data, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be properly escaped according to JSON string rules.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8StringValue)
         {
             CheckValidInstance();
@@ -3527,12 +4140,56 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a property to JSON null on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set to null.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This sets the property to the JSON null value, not the .NET null reference.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced with null.
+        ///     If the property doesn't exist, it will be added to the object with a null value.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPropertyNull(string propertyName)
         {
             SetPropertyNull(propertyName.AsSpan());
         }
 
+        /// <summary>
+        ///   Sets a property to JSON null on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set to null as a character span.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     This sets the property to the JSON null value, not the .NET null reference.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced with null.
+        ///     If the property doesn't exist, it will be added to the object with a null value.
+        ///   </para>
+        /// </remarks>
         public void SetPropertyNull(ReadOnlySpan<char> propertyName)
         {
             CheckValidInstance();
@@ -3555,6 +4212,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a property to JSON null on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set to null as a UTF-8 encoded byte span.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     This sets the property to the JSON null value, not the .NET null reference.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced with null.
+        ///     If the property doesn't exist, it will be added to the object with a null value.
+        ///   </para>
+        /// </remarks>
         public void SetPropertyNull(ReadOnlySpan<byte> propertyName)
         {
             CheckValidInstance();
@@ -3577,12 +4258,52 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a boolean property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The boolean value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, bool value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a boolean property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The boolean value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, bool value)
         {
             CheckValidInstance();
@@ -3604,6 +4325,28 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a boolean property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The boolean value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, bool value)
         {
             CheckValidInstance();
@@ -3625,6 +4368,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a property value on this JSON object element using a generic JSON element type.
+        /// </summary>
+        /// <typeparam name="T">The type of JSON element to set, must implement <see cref="IJsonElement{T}"/>.</typeparam>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The JSON element value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This generic method allows setting properties using any JSON element type that
+        ///     implements the <see cref="IJsonElement{T}"/> interface.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty<T>(string propertyName, T value)
             where T : struct, IJsonElement<T>
@@ -3632,6 +4398,33 @@ public readonly partial struct JsonElement
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a property value on this JSON object element using a generic JSON element type.
+        /// </summary>
+        /// <typeparam name="T">The type of JSON element to set, must implement <see cref="IJsonElement{T}"/>.</typeparam>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The JSON element value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     This generic method allows setting properties using any JSON element type that
+        ///     implements the <see cref="IJsonElement{T}"/> interface.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty<T>(ReadOnlySpan<char> propertyName, T value)
             where T : struct, IJsonElement<T>
@@ -3655,6 +4448,33 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a property value on this JSON object element using a generic JSON element type.
+        /// </summary>
+        /// <typeparam name="T">The type of JSON element to set, must implement <see cref="IJsonElement{T}"/>.</typeparam>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The JSON element value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     This generic method allows setting properties using any JSON element type that
+        ///     implements the <see cref="IJsonElement{T}"/> interface.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty<T>(ReadOnlySpan<byte> propertyName, T value)
             where T : struct, IJsonElement<T>
@@ -3678,12 +4498,58 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a GUID property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The GUID value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The GUID will be serialized as a JSON string in standard format (e.g., "12345678-1234-5678-9abc-123456789abc").
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, Guid value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a GUID property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The GUID value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     The GUID will be serialized as a JSON string in standard format (e.g., "12345678-1234-5678-9abc-123456789abc").
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, Guid value)
         {
             CheckValidInstance();
@@ -3705,6 +4571,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a GUID property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The GUID value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The GUID will be serialized as a JSON string in standard format (e.g., "12345678-1234-5678-9abc-123456789abc").
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, Guid value)
         {
             CheckValidInstance();
@@ -3726,12 +4617,58 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a DateTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The DateTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, in DateTime value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a DateTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The DateTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, in DateTime value)
         {
             CheckValidInstance();
@@ -3753,6 +4690,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a DateTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The DateTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, in DateTime value)
         {
             CheckValidInstance();
@@ -3774,12 +4736,58 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a DateTimeOffset property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The DateTimeOffset value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, in DateTimeOffset value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a DateTimeOffset property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The DateTimeOffset value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, in DateTimeOffset value)
         {
             CheckValidInstance();
@@ -3801,6 +4809,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a DateTimeOffset property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The DateTimeOffset value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, in DateTimeOffset value)
         {
             CheckValidInstance();
@@ -3822,12 +4855,60 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an OffsetDateTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The OffsetDateTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///     This provides more precise timezone handling than standard .NET DateTime types.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, in OffsetDateTime value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets an OffsetDateTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The OffsetDateTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///     This provides more precise timezone handling than standard .NET DateTime types.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, in OffsetDateTime value)
         {
             CheckValidInstance();
@@ -3849,6 +4930,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an OffsetDateTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The OffsetDateTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///     This provides more precise timezone handling than standard .NET DateTime types.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, in OffsetDateTime value)
         {
             CheckValidInstance();
@@ -3870,12 +4976,60 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an OffsetDate property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The OffsetDate value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format with timezone offset.
+        ///     This represents a date with timezone information but no time component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, in OffsetDate value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets an OffsetDate property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The OffsetDate value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format with timezone offset.
+        ///     This represents a date with timezone information but no time component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, in OffsetDate value)
         {
             CheckValidInstance();
@@ -3897,6 +5051,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an OffsetDate property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The OffsetDate value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format with timezone offset.
+        ///     This represents a date with timezone information but no time component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, in OffsetDate value)
         {
             CheckValidInstance();
@@ -3918,12 +5097,60 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an OffsetTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The OffsetTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string in ISO 8601 time format with timezone offset.
+        ///     This represents a time with timezone information but no date component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, in OffsetTime value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets an OffsetTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The OffsetTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string in ISO 8601 time format with timezone offset.
+        ///     This represents a time with timezone information but no date component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, in OffsetTime value)
         {
             CheckValidInstance();
@@ -3945,6 +5172,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an OffsetTime property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The OffsetTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string in ISO 8601 time format with timezone offset.
+        ///     This represents a time with timezone information but no date component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, in OffsetTime value)
         {
             CheckValidInstance();
@@ -3966,12 +5218,60 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a LocalDate property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The LocalDate value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The LocalDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format.
+        ///     This represents a date without any timezone information or time component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, in LocalDate value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a LocalDate property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The LocalDate value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The LocalDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format.
+        ///     This represents a date without any timezone information or time component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, in LocalDate value)
         {
             CheckValidInstance();
@@ -3993,6 +5293,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a LocalDate property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The LocalDate value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The LocalDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format.
+        ///     This represents a date without any timezone information or time component.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, in LocalDate value)
         {
             CheckValidInstance();
@@ -4014,12 +5339,62 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a Period property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The Period value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 period format.
+        ///     This represents a time period (e.g., "P1Y2M3DT4H5M6S") with year, month, day, hour, minute,
+        ///     and second components.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, in Period value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a Period property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The Period value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 period format.
+        ///     This represents a time period (e.g., "P1Y2M3DT4H5M6S") with year, month, day, hour, minute,
+        ///     and second components.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, in Period value)
         {
             CheckValidInstance();
@@ -4041,6 +5416,32 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a Period property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The Period value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 period format.
+        ///     This represents a time period (e.g., "P1Y2M3DT4H5M6S") with year, month, day, hour, minute,
+        ///     and second components.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, in Period value)
         {
             CheckValidInstance();
@@ -4062,6 +5463,27 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an sbyte property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The sbyte value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The sbyte value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void SetProperty(string propertyName, sbyte value)
@@ -4069,6 +5491,30 @@ public readonly partial struct JsonElement
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets an sbyte property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The sbyte value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The sbyte value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<char> propertyName, sbyte value)
         {
@@ -4091,6 +5537,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an sbyte property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The sbyte value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The sbyte value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<byte> propertyName, sbyte value)
         {
@@ -4113,12 +5584,57 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a byte property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The byte value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The byte value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, byte value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a byte property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The byte value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The byte value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, byte value)
         {
             CheckValidInstance();
@@ -4140,6 +5656,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a byte property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The byte value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The byte value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, byte value)
         {
             CheckValidInstance();
@@ -4161,12 +5702,57 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an int property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The int value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The int value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, int value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets an int property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The int value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The int value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, int value)
         {
             CheckValidInstance();
@@ -4188,6 +5774,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an int property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The int value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The int value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, int value)
         {
             CheckValidInstance();
@@ -4209,6 +5820,27 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a uint property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The uint value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The uint value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void SetProperty(string propertyName, uint value)
@@ -4216,6 +5848,30 @@ public readonly partial struct JsonElement
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a uint property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The uint value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The uint value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<char> propertyName, uint value)
         {
@@ -4238,6 +5894,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a uint property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The uint value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The uint value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<byte> propertyName, uint value)
         {
@@ -4260,12 +5941,57 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a long property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The long value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The long value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, long value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a long property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The long value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The long value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, long value)
         {
             CheckValidInstance();
@@ -4287,6 +6013,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a long property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The long value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The long value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, long value)
         {
             CheckValidInstance();
@@ -4308,6 +6059,27 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a ulong property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The ulong value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The ulong value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void SetProperty(string propertyName, ulong value)
@@ -4315,6 +6087,30 @@ public readonly partial struct JsonElement
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a ulong property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The ulong value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The ulong value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<char> propertyName, ulong value)
         {
@@ -4337,6 +6133,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a ulong property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The ulong value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The ulong value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<byte> propertyName, ulong value)
         {
@@ -4359,12 +6180,57 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a short property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The short value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The short value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, short value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a short property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The short value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The short value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, short value)
         {
             CheckValidInstance();
@@ -4386,6 +6252,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a short property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The short value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The short value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, short value)
         {
             CheckValidInstance();
@@ -4407,6 +6298,27 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a ushort property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The ushort value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The ushort value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void SetProperty(string propertyName, ushort value)
@@ -4414,6 +6326,30 @@ public readonly partial struct JsonElement
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a ushort property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The ushort value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The ushort value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<char> propertyName, ushort value)
         {
@@ -4436,6 +6372,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a ushort property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The ushort value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The ushort value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<byte> propertyName, ushort value)
         {
@@ -4458,12 +6419,57 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a float property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The float value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The float value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, float value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a float property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The float value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The float value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, float value)
         {
             CheckValidInstance();
@@ -4485,6 +6491,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a float property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The float value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The float value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, float value)
         {
             CheckValidInstance();
@@ -4506,12 +6537,57 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a double property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The double value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The double value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, double value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a double property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The double value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The double value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, double value)
         {
             CheckValidInstance();
@@ -4533,6 +6609,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a double property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The double value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The double value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, double value)
         {
             CheckValidInstance();
@@ -4554,12 +6655,57 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a decimal property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The decimal value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The decimal value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, decimal value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a decimal property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The decimal value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The decimal value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, decimal value)
         {
             CheckValidInstance();
@@ -4581,6 +6727,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a decimal property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The decimal value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The decimal value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, decimal value)
         {
             CheckValidInstance();
@@ -4604,12 +6775,57 @@ public readonly partial struct JsonElement
 
 #if NET
 
+        /// <summary>
+        ///   Sets an Int128 property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The Int128 value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The Int128 value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, Int128 value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets an Int128 property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The Int128 value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient property name handling.
+        ///   </para>
+        ///   <para>
+        ///     The Int128 value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, Int128 value)
         {
             CheckValidInstance();
@@ -4631,6 +6847,32 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets an Int128 property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The Int128 value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The Int128 value will be serialized as a JSON number.
+        ///     This type is only available in .NET 7 and later.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, Int128 value)
         {
             CheckValidInstance();
@@ -4652,6 +6894,28 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a UInt128 property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The UInt128 value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void SetProperty(string propertyName, UInt128 value)
@@ -4659,6 +6923,32 @@ public readonly partial struct JsonElement
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a UInt128 property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The UInt128 value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<char> propertyName, UInt128 value)
         {
@@ -4681,6 +6971,32 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a UInt128 property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The UInt128 value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetProperty(ReadOnlySpan<byte> propertyName, UInt128 value)
         {
@@ -4703,12 +7019,58 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a Half property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The Half value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, Half value)
         {
             SetProperty(propertyName.AsSpan(), value);
         }
 
+        /// <summary>
+        ///   Sets a Half property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a character span.</param>
+        /// <param name="value">The Half value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, Half value)
         {
             CheckValidInstance();
@@ -4730,6 +7092,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets a Half property on this JSON object element.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
+        /// <param name="value">The Half value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, Half value)
         {
             CheckValidInstance();
@@ -4753,12 +7140,63 @@ public readonly partial struct JsonElement
 
 #endif
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The string value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method allows replacing existing array elements or appending new elements
+        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be serialized as a JSON string with proper escaping.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetItem(int itemIndex, string value)
         {
             SetItem(itemIndex, value.AsSpan());
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The string value to set as a character span.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient string handling.
+        ///   </para>
+        ///   <para>
+        ///     This method allows replacing existing array elements or appending new elements
+        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be serialized as a JSON string with proper escaping.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, ReadOnlySpan<char> value)
         {
             CheckValidInstance();
@@ -4778,6 +7216,34 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The string value to set as a UTF-8 encoded byte span.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 string data, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     This method allows replacing existing array elements or appending new elements
+        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be serialized as a JSON string with proper escaping.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, ReadOnlySpan<byte> value)
         {
             CheckValidInstance();
@@ -4797,6 +7263,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON object.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The object is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON objects.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
@@ -4816,6 +7307,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON array.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
+        /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The array is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON arrays.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
@@ -4835,6 +7351,23 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to null.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </remarks>
         public void SetItemNull(int itemIndex)
         {
             CheckValidInstance();
@@ -4854,6 +7387,24 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a boolean value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The boolean value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </remarks>
         public void SetItem(int itemIndex, bool value)
         {
             CheckValidInstance();
@@ -4873,6 +7424,31 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON element value.
+        /// </summary>
+        /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The JSON element value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This generic overload accepts any type implementing <see cref="IJsonElement{T}"/>,
+        ///     enabling type-safe JSON element assignment with compile-time type checking.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetItem<T>(int itemIndex, T value)
             where T : struct, IJsonElement<T>
@@ -4894,6 +7470,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a GUID value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The GUID value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The GUID will be serialized as a JSON string in standard format (e.g., "550e8400-e29b-41d4-a716-446655440000").
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, Guid value)
         {
             CheckValidInstance();
@@ -4913,6 +7512,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a DateTime value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The DateTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, in DateTime value)
         {
             CheckValidInstance();
@@ -4932,6 +7554,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a DateTimeOffset value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The DateTimeOffset value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, in DateTimeOffset value)
         {
             CheckValidInstance();
@@ -4951,6 +7596,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an OffsetDateTime value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The OffsetDateTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///     This provides more precise timezone handling than standard .NET DateTime types.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, in OffsetDateTime value)
         {
             CheckValidInstance();
@@ -4970,6 +7639,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an OffsetDate value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The OffsetDate value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string representing a date with timezone offset.
+        ///     This provides timezone-aware date handling.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, in OffsetDate value)
         {
             CheckValidInstance();
@@ -4989,6 +7682,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an OffsetTime value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The OffsetTime value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string representing a time with timezone offset.
+        ///     This provides timezone-aware time handling.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, in OffsetTime value)
         {
             CheckValidInstance();
@@ -5008,6 +7725,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a LocalDate value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The LocalDate value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The LocalDate (from NodaTime) will be serialized as a JSON string representing a local date without timezone information.
+        ///     This provides calendar date handling without timezone concerns.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, in LocalDate value)
         {
             CheckValidInstance();
@@ -5027,6 +7768,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a Period value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The Period value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 duration format.
+        ///     This represents a period of time such as "P1Y2M3DT4H5M6S".
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, in Period value)
         {
             CheckValidInstance();
@@ -5046,6 +7811,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an sbyte value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The sbyte value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The sbyte value will be serialized as a JSON number.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetItem(int itemIndex, sbyte value)
         {
@@ -5066,6 +7855,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a byte value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The byte value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The byte value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, byte value)
         {
             CheckValidInstance();
@@ -5085,6 +7897,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an int value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The int value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The int value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, int value)
         {
             CheckValidInstance();
@@ -5104,6 +7939,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a uint value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The uint value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The uint value will be serialized as a JSON number.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetItem(int itemIndex, uint value)
         {
@@ -5124,6 +7983,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a long value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The long value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The long value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, long value)
         {
             CheckValidInstance();
@@ -5143,6 +8025,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a ulong value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The ulong value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The ulong value will be serialized as a JSON number.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetItem(int itemIndex, ulong value)
         {
@@ -5163,6 +8069,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a short value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The short value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The short value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, short value)
         {
             CheckValidInstance();
@@ -5182,6 +8111,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a ushort value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The ushort value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The ushort value will be serialized as a JSON number.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetItem(int itemIndex, ushort value)
         {
@@ -5202,6 +8155,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a float value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The float value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The float value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, float value)
         {
             CheckValidInstance();
@@ -5221,6 +8197,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a double value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The double value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The double value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, double value)
         {
             CheckValidInstance();
@@ -5240,6 +8239,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a decimal value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The decimal value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The decimal value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, decimal value)
         {
             CheckValidInstance();
@@ -5261,6 +8283,29 @@ public readonly partial struct JsonElement
 
 #if NET
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an Int128 value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The Int128 value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     Int128 is a .NET 6+ type providing 128-bit signed integer support.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, Int128 value)
         {
             CheckValidInstance();
@@ -5280,6 +8325,30 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a UInt128 value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The UInt128 value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         [CLSCompliant(false)]
         public void SetItem(int itemIndex, UInt128 value)
         {
@@ -5300,6 +8369,29 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a Half value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The Half value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
         public void SetItem(int itemIndex, Half value)
         {
             CheckValidInstance();
@@ -5320,6 +8412,92 @@ public readonly partial struct JsonElement
         }
 
 #endif
+
+        /// <summary>
+        ///   Removes a range of items from the array starting at the specified index.
+        /// </summary>
+        /// <param name="startIndex">The zero-based index at which to begin removing items.</param>
+        /// <param name="count">The number of items to remove.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="startIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void RemoveRange(int startIndex, int count)
+        {
+            CheckValidInstance();
+            JsonElementHelpers.RemoveRangeUnsafe(this, startIndex, count);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Removes a single item from the array at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the item to remove.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="index"/> is negative or greater than or equal to the current array length.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Remove(int index)
+        {
+            CheckValidInstance();
+            JsonElementHelpers.RemoveRangeUnsafe(this, index, 1);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Applies all properties from another JSON object element to this JSON object element.
+        /// </summary>
+        /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
+        /// <param name="value">The JSON object element whose properties will be copied to this element.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method performs a merge of properties from the source JSON object
+        ///     to this JSON object. Each property from the source object is copied to this object,
+        ///     replacing any existing properties with the same name.
+        ///   </para>
+        ///   <para>
+        ///     The source value must be a JSON object element.
+        ///   </para>
+        ///   <para>
+        ///     This method is not CLS-compliant due to its generic constraint requirements.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public void Apply<T>(in T value)
+            where T : struct, IJsonElement<T>
+        {
+            CheckValidInstance();
+
+            var enumerator = new ObjectEnumerator<JsonElement>(value.ParentDocument, value.ParentDocumentIndex);
+
+            while(enumerator.MoveNext())
+            {
+                JsonElementHelpers.SetPropertyUnsafe(this, enumerator.Current);
+            }
+
+            _documentVersion = _parent.Version;
+        }
 
         private readonly void CheckValidInstance()
         {
