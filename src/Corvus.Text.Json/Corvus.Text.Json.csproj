@@ -81,6 +81,7 @@
     <Compile Include="$(CoreLibSharedDir)System\Range.cs" Link="System\Range.cs" />
     <Compile Include="$(CoreLibSharedDir)System\Numerics\Hashing\HashHelpers.cs" Link="System\Numerics\Hashing\HashHelpers.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\Ascii.cs" />
+    <Compile Include="Corvus\BitConverterPolyfills.cs" />
   </ItemGroup>
   
   <PropertyGroup>
@@ -228,7 +229,6 @@
     <Compile Include="Corvus\Text\Json\JsonHelpers.Date.cs" />
     <Compile Include="Corvus\Text\Json\JsonHelpers.Escaping.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonTokenType.cs" />
-    <Compile Include="Corvus\BitConverterEx.cs" />
     <Compile Include="Corvus\Text\Json\Reader\ConsumeNumberResult.cs" />
     <Compile Include="Corvus\Text\Json\Reader\ConsumeTokenResult.cs" />
     <Compile Include="Corvus\Text\Json\Reader\JsonReaderException.cs" />

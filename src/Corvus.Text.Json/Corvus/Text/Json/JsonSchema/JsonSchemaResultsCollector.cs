@@ -998,51 +998,28 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
 
         int start = _utf8StringBackingLength;
 
-#if NET
         BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), writtenAndMatch);
-#else
-        BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), writtenAndMatch);
-#endif
         _utf8StringBackingLength += written + ResultHeaderSize;
 
         // Finally, write the paths to the results - first the header containing the length,
         // then the rest of the string
-#if NET
         BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentEvaluationPathRange.Length);
-#else
-        BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentEvaluationPathRange.Length);
-#endif
         _evaluationPath.AsSpan(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.Length)
             .CopyTo(_utf8StringBacking.AsSpan(_utf8StringBackingLength + ResultHeaderSize));
         _utf8StringBackingLength += _currentEvaluationPathRange.Length + ResultHeaderSize;
 
-#if NET
         BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentDocumentEvaluationPathRange.Length);
-#else
-        BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentDocumentEvaluationPathRange.Length);
-#endif
         _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.Length)
             .CopyTo(_utf8StringBacking.AsSpan(_utf8StringBackingLength + ResultHeaderSize));
         _utf8StringBackingLength += _currentDocumentEvaluationPathRange.Length + ResultHeaderSize;
 
-#if NET
         BitConverter.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentSchemaEvaluationPathRange.Length);
-#else
-        BitConverterEx.TryWriteBytes(_utf8StringBacking.AsSpan(_utf8StringBackingLength, ResultHeaderSize), _currentSchemaEvaluationPathRange.Length);
-#endif
         _schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.Start, _currentSchemaEvaluationPathRange.Length)
             .CopyTo(_utf8StringBacking.AsSpan(_utf8StringBackingLength + ResultHeaderSize));
         _utf8StringBackingLength += _currentSchemaEvaluationPathRange.Length + ResultHeaderSize;
 
         ValueRangeWithCommitIndexAndSequenceNumber range = _resultStack.Peek();
         _resultStack.Append(new ValueRangeWithCommitIndexAndSequenceNumber(start, _utf8StringBackingLength, range.CommitIndex, _sequenceNumber));
-    }
-
-    private ValueRange ReadResultRange(int index)
-    {
-        Debug.Assert(index >= 0 && index < _committedResultStack.Length);
-
-        return _committedResultStack[index];
     }
 
     internal Result ReadResult(int resultIndex)

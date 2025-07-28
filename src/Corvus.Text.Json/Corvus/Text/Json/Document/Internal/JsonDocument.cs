@@ -470,11 +470,7 @@ public abstract partial class JsonDocument
         int length = valueUtf8.Length;
         Enlarge(length, ref _valueBacking);
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Boolean);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Boolean);
-#endif
 
         valueIndex = offset;
 
@@ -499,11 +495,7 @@ public abstract partial class JsonDocument
         int length = JsonConstants.NullValue.Length;
         Enlarge(length, ref _valueBacking);
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Null);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Null);
-#endif
 
         _nullIndex = offset;
 
@@ -537,11 +529,7 @@ public abstract partial class JsonDocument
 
         length += 2;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -570,11 +558,7 @@ public abstract partial class JsonDocument
 
         length += 2;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -603,11 +587,7 @@ public abstract partial class JsonDocument
 
         length += 2;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -638,11 +618,7 @@ public abstract partial class JsonDocument
 
         length += 2;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -673,11 +649,7 @@ public abstract partial class JsonDocument
 
         length += 2;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -708,11 +680,7 @@ public abstract partial class JsonDocument
 
         length += 2;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -743,11 +711,7 @@ public abstract partial class JsonDocument
 
         length += 2;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -778,11 +742,7 @@ public abstract partial class JsonDocument
 
         length += 2;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.QuotedUtf8String);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -807,11 +767,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -835,11 +791,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -863,11 +815,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -892,11 +840,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -920,11 +864,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -949,11 +889,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -977,11 +913,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -1006,11 +938,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -1034,11 +962,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -1062,11 +986,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -1090,11 +1010,7 @@ public abstract partial class JsonDocument
         Debug.Assert(success);
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -1133,11 +1049,7 @@ public abstract partial class JsonDocument
 
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -1174,11 +1086,7 @@ public abstract partial class JsonDocument
 #endif
         offset += length;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(_valueOffset), (uint)(length << 4) | (uint)DynamicValueType.Number);
-#endif
 
         _valueOffset = offset;
         return result;
@@ -1292,11 +1200,7 @@ public abstract partial class JsonDocument
             ThrowHelper.ThrowArgumentException_ValueTooLarge(length);
         }
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(), (uint)(length << 4) | (uint)DynamicValueType.UnescapedUtf8String);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(), (uint)(length << 4) | (uint)DynamicValueType.UnescapedUtf8String);
-#endif
         _valueOffset += length;
         dynamicValueOffset = offset;
         return _valueBacking.AsSpan(valueOffset, length);
@@ -1355,11 +1259,7 @@ public abstract partial class JsonDocument
         length <<= 4;
         length |= (uint)DynamicValueType.QuotedUtf8String;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#endif
         _valueOffset = index;
         return offset;
     }
@@ -1423,11 +1323,7 @@ public abstract partial class JsonDocument
         length <<= 4;
         length |= (uint)DynamicValueType.QuotedUtf8String;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#endif
         _valueOffset = index;
         return offset;
     }
@@ -1456,11 +1352,7 @@ public abstract partial class JsonDocument
         length <<= 4;
         length |= (uint)DynamicValueType.QuotedUtf8String;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#endif
         int index = offset + 4;
         _valueBacking[index++] = JsonConstants.Quote;
         escapedString.CopyTo(_valueBacking.AsSpan(index));
@@ -1494,11 +1386,7 @@ public abstract partial class JsonDocument
         length <<= 4;
         length |= (uint)DynamicValueType.Number;
 
-#if NET
         BitConverter.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#else
-        BitConverterEx.TryWriteBytes(_valueBacking.AsSpan(offset), length);
-#endif
         unescapedNumberValue.CopyTo(_valueBacking.AsSpan(offset + 4));
 
         return offset;
