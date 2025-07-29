@@ -179,18 +179,6 @@ public sealed partial class Utf8JsonWriter
     public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, int value)
         => WriteNumber(utf8PropertyName, (long)value);
 
-    internal void WritePropertyName(int value)
-        => WritePropertyName((long)value);
-
-    internal void WritePropertyName(long value)
-    {
-        Span<byte> utf8PropertyName = stackalloc byte[JsonConstants.MaximumFormatInt64Length];
-
-        bool result = Utf8Formatter.TryFormat(value, utf8PropertyName, out int bytesWritten);
-        Debug.Assert(result);
-
-        WritePropertyNameUnescaped(utf8PropertyName.Slice(0, bytesWritten));
-    }
 
     private void WriteNumberByOptions(ReadOnlySpan<char> propertyName, long value)
     {

@@ -276,7 +276,6 @@
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteProperties.Decimal.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteProperties.Double.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteProperties.Float.cs" />
-    <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteProperties.FormattedNumber.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteProperties.Guid.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteProperties.Helpers.cs" />
     <Compile Include="Corvus\Text\Json\Writer\Utf8JsonWriter.WriteProperties.Literal.cs" />
