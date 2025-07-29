@@ -219,6 +219,14 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetDbSizeUnsafe(index, includeEndElement);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    int IJsonDocument.GetStartIndex(int endIndex)
+    {
+        CheckNotDisposed();
+
+        return GetStartIndexUnsafe(endIndex);
+    }
+
     /// <summary>
     /// Gets the database size for an element without bounds checking.
     /// </summary>

@@ -206,6 +206,26 @@ public abstract partial class JsonDocument
     }
 
     /// <summary>
+    /// Gets the start index for the specified end index.
+    /// </summary>
+    /// <param name="endIndex">The end index of the element.</param>
+    /// <returns>The start index of the element.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected int GetStartIndexUnsafe(int endIndex)
+    {
+        DbRow row = _parsedData.Get(endIndex);
+
+        if (row.TokenType is JsonTokenType.EndObject or JsonTokenType.EndArray)
+        {
+            return endIndex - (DbRow.Size * row.NumberOfRows);
+        }
+        else
+        {
+            return endIndex;
+        }
+    }
+
+    /// <summary>
     /// Compares the text at the specified index with the provided character span for equality.
     /// </summary>
     /// <param name="index">The index of the element to compare.</param>

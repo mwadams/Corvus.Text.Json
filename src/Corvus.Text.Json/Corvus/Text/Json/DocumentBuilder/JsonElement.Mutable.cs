@@ -8458,6 +8458,23 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [CLSCompliant(false)]
+        public void RemoveWhere<T>(JsonPredicate<T> predicate)
+            where T : struct, IJsonElement<T>
+        {
+            CheckValidInstance();
+            JsonElementHelpers.RemoveWhereUnsafe<Mutable, T>(this, predicate);
+            _documentVersion = _parent.Version;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [CLSCompliant(false)]
+        public void RemoveWhere(JsonPredicate<JsonElement> predicate)
+        {
+            RemoveWhere<JsonElement>(predicate);
+        }
+
         /// <summary>
         ///   Applies all properties from another JSON object element to this JSON object element.
         /// </summary>

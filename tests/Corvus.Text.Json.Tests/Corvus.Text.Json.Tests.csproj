@@ -65,6 +65,7 @@
     <Compile Include="JsonElement.MutableDynamicCloneTests.cs" />
     <Compile Include="JsonElement.MutableDynamicWriteTests.cs" />
     <Compile Include="JsonElement.MutableCloneTests.cs" />
+    <Compile Include="JsonElement.MutableRemoveWhereTests.cs" />
     <Compile Include="JsonElementHelpersDateTimeTests.cs" />
     <Compile Include="JsonElementHelpersParseNumberTests.cs" />
     <Compile Include="JsonElementNumberTest.cs" />

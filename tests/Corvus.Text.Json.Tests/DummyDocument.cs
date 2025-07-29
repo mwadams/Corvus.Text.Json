@@ -15,6 +15,9 @@ internal class DummyDocument : IJsonDocument
     public bool IsDisposable => false;
     public bool IsImmutable => true;
 
+    bool IJsonDocument.IsDisposable { get; }
+    bool IJsonDocument.IsImmutable { get; }
+
     public DummyDocument(JsonTokenType tokenType)
     {
         _tokenType = tokenType;
@@ -207,4 +210,61 @@ internal class DummyDocument : IJsonDocument
     }
 
     public JsonElement GetPropertyName(int index) => default;
+    void IJsonDocument.EnsurePropertyMap(int index) => throw new NotImplementedException();
+    int IJsonDocument.GetHashCode(int index) => throw new NotImplementedException();
+    string IJsonDocument.ToString(int index) => throw new NotImplementedException();
+    JsonTokenType IJsonDocument.GetJsonTokenType(int index) => throw new NotImplementedException();
+    JsonElement IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex) => throw new NotImplementedException();
+    TElement IJsonDocument.GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex) => throw new NotImplementedException();
+    int IJsonDocument.GetArrayLength(int index) => throw new NotImplementedException();
+    int IJsonDocument.GetPropertyCount(int index) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value) => throw new NotImplementedException();
+    string IJsonDocument.GetString(int index, JsonTokenType expectedType) => throw new NotImplementedException();
+    UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out byte[] value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out sbyte value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out byte value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out short value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out ushort value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out int value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out uint value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out long value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out ulong value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out double value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out float value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out decimal value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out BigInteger value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out BigNumber value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out DateTime value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out DateTimeOffset value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out OffsetDateTime value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out OffsetDate value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out OffsetTime value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out LocalDate value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out Period value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out Guid value) => throw new NotImplementedException();
+    string IJsonDocument.GetNameOfPropertyValue(int index) => throw new NotImplementedException();
+    ReadOnlySpan<byte> IJsonDocument.GetPropertyNameRaw(int index) => throw new NotImplementedException();
+    JsonElement IJsonDocument.GetPropertyName(int index) => throw new NotImplementedException();
+    string IJsonDocument.GetRawValueAsString(int index) => throw new NotImplementedException();
+    string IJsonDocument.GetPropertyRawValueAsString(int valueIndex) => throw new NotImplementedException();
+    RawUtf8JsonString IJsonDocument.GetRawValue(int index, bool includeQuotes) => throw new NotImplementedException();
+    ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index, bool includeQuotes) => throw new NotImplementedException();
+    ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index) => throw new NotImplementedException();
+    ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValueUnsafe(int index) => throw new NotImplementedException();
+    bool IJsonDocument.ValueIsEscaped(int index, bool isPropertyName) => throw new NotImplementedException();
+    bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName) => throw new NotImplementedException();
+    bool IJsonDocument.TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape) => throw new NotImplementedException();
+    void IJsonDocument.WriteElementTo(int index, Utf8JsonWriter writer) => throw new NotImplementedException();
+    void IJsonDocument.WritePropertyName(int index, Utf8JsonWriter writer) => throw new NotImplementedException();
+    JsonElement IJsonDocument.CloneElement(int index) => throw new NotImplementedException();
+    TElement IJsonDocument.CloneElement<TElement>(int index) => throw new NotImplementedException();
+    int IJsonDocument.GetDbSize(int index, bool includeEndElement) => throw new NotImplementedException();
+    int IJsonDocument.GetStartIndex(int endIndex) => throw new NotImplementedException();
+    int IJsonDocument.BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking) => throw new NotImplementedException();
+    void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db) => throw new NotImplementedException();
+    void IDisposable.Dispose() => throw new NotImplementedException();
 }

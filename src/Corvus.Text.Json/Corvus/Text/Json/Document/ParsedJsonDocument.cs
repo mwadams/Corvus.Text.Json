@@ -217,6 +217,15 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return GetDbSizeUnsafe(index, includeEndElement);
     }
 
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    int IJsonDocument.GetStartIndex(int endIndex)
+    {
+        CheckNotDisposed();
+        return GetStartIndexUnsafe(endIndex);
+    }
+
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     RawUtf8JsonString IJsonDocument.GetRawValue(int index, bool includeQuotes)

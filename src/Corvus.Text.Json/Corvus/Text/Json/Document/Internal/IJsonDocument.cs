@@ -485,6 +485,13 @@ public interface IJsonDocument : IDisposable
     int GetDbSize(int index, bool includeEndElement);
 
     /// <summary>
+    /// Gets the start index of the element from the end index.
+    /// </summary>
+    /// <param name="endIndex">The end index of the element.</param>
+    /// <returns>The start index of the element.</returns>
+    int GetStartIndex(int endIndex);
+
+    /// <summary>
     /// Builds a rented metadata database for the specified parent document index.
     /// </summary>
     /// <param name="parentDocumentIndex">The index of the parent document.</param>

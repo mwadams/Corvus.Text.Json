@@ -110,6 +110,98 @@ public static partial class JsonElementHelpers
         parentDocument.RemoveRange(arrayElement.ParentDocumentIndex, rangeStartIndex, rangeEndIndex, count);
     }
 
+
+    internal static void RemoveWhereUnsafe<TArray, T>(TArray arrayElement, JsonPredicate<T> predicate)
+        where TArray : struct, IMutableJsonElement<TArray>
+        where T : struct, IJsonElement<T>
+    {
+        if (predicate is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(predicate));
+        }
+
+        IMutableJsonDocument parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
+        int arrayLength = parentDocument.GetArrayLength(arrayElement.ParentDocumentIndex);
+        
+        if (arrayLength == 0)
+        {
+            return; // Nothing to process
+        }
+
+        // Enumerate backwards through the array
+        ArrayReverseEnumerator enumerator = new(parentDocument, arrayElement.ParentDocumentIndex);
+        
+        int consecutiveBlockStartIndex = -1; // Start index of first item in consecutive block
+        int consecutiveBlockEndIndex = -1;   // End index of last item in consecutive block
+        int consecutiveCount = 0;
+        
+        while (enumerator.MoveNext())
+        {
+#if NET
+            T currentElement = T.CreateInstance(parentDocument, enumerator.CurrentIndex);
+#else
+            T currentElement = JsonElementHelpers.CreateInstance<T>(parentDocument, enumerator.CurrentIndex);
+#endif
+            
+            if (predicate(in currentElement))
+            {
+                // This element should be removed
+                int currentStartIndex = enumerator.CurrentIndex;
+                int currentEndIndex;
+                
+                if (consecutiveCount == 0)
+                {
+                    // Start of a new consecutive block
+                    consecutiveBlockStartIndex = currentStartIndex;
+                    // For the end index, we need the end of this element
+                    currentEndIndex = enumerator.CurrentEndIndex + DbRow.Size;
+                    consecutiveBlockEndIndex = currentEndIndex;
+                    consecutiveCount = 1;
+                }
+                else
+                {
+                    // Check if this element is consecutive with the previous block
+                    currentEndIndex = enumerator.CurrentEndIndex + DbRow.Size;
+                    
+                    if (currentEndIndex == consecutiveBlockStartIndex)
+                    {
+                        // This element is consecutive (comes right before the current block)
+                        consecutiveBlockStartIndex = currentStartIndex;
+                        consecutiveCount++;
+                    }
+                    else
+                    {
+                        // Not consecutive, so remove the previous block first
+                        int elementsInBlock = consecutiveCount;
+                        parentDocument.RemoveRange(arrayElement.ParentDocumentIndex, consecutiveBlockStartIndex, consecutiveBlockEndIndex, elementsInBlock);
+                        
+                        // Start a new block with current element
+                        consecutiveBlockStartIndex = currentStartIndex;
+                        consecutiveBlockEndIndex = currentEndIndex;
+                        consecutiveCount = 1;
+                    }
+                }
+            }
+            else
+            {
+                // This element should not be removed
+                if (consecutiveCount > 0)
+                {
+                    // Remove the accumulated consecutive block
+                    int elementsInBlock = consecutiveCount;
+                    parentDocument.RemoveRange(arrayElement.ParentDocumentIndex, consecutiveBlockStartIndex, consecutiveBlockEndIndex, elementsInBlock);
+                    consecutiveCount = 0;
+                }
+            }
+        }
+        
+        // Handle any remaining consecutive block at the end
+        if (consecutiveCount > 0)
+        {
+            int elementsInBlock = consecutiveCount;
+            parentDocument.RemoveRange(arrayElement.ParentDocumentIndex, consecutiveBlockStartIndex, consecutiveBlockEndIndex, elementsInBlock);
+        }
+    }
     /// <summary>
     /// Converts a <see cref="JsonTokenType"/> to its corresponding <see cref="JsonValueKind"/>.
     /// </summary>
