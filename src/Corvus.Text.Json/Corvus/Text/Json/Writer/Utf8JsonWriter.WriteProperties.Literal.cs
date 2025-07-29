@@ -193,29 +193,6 @@ public sealed partial class Utf8JsonWriter
         _tokenType = JsonTokenType.Null;
     }
 
-    internal void WriteNullSection(ReadOnlySpan<byte> escapedPropertyNameSection)
-    {
-        if (_options.Indented)
-        {
-            ReadOnlySpan<byte> escapedName =
-                escapedPropertyNameSection.Slice(1, escapedPropertyNameSection.Length - 3);
-
-            WriteLiteralHelper(escapedName, JsonConstants.NullValue);
-            _tokenType = JsonTokenType.Null;
-        }
-        else
-        {
-            Debug.Assert(escapedPropertyNameSection.Length <= JsonConstants.MaxUnescapedTokenSize - 3);
-
-            ReadOnlySpan<byte> span = JsonConstants.NullValue;
-
-            WriteLiteralSection(escapedPropertyNameSection, span);
-
-            SetFlagToAddListSeparatorBeforeNextItem();
-            _tokenType = JsonTokenType.Null;
-        }
-    }
-
     internal void WritePropertyName(bool value)
     {
         Span<byte> utf8PropertyName = stackalloc byte[JsonConstants.MaximumFormatBooleanLength];
@@ -488,34 +465,6 @@ public sealed partial class Utf8JsonWriter
 
         output[BytesPending++] = JsonConstants.Quote;
         output[BytesPending++] = JsonConstants.KeyValueSeparator;
-
-        value.CopyTo(output.Slice(BytesPending));
-        BytesPending += value.Length;
-    }
-
-    // AggressiveInlining used since this is only called from one location.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void WriteLiteralSection(ReadOnlySpan<byte> escapedPropertyNameSection, ReadOnlySpan<byte> value)
-    {
-        Debug.Assert(value.Length <= JsonConstants.MaxUnescapedTokenSize);
-        Debug.Assert(escapedPropertyNameSection.Length < int.MaxValue - value.Length - 1);
-
-        int minRequired = escapedPropertyNameSection.Length + value.Length;
-        int maxRequired = minRequired + 1; // Optionally, 1 list separator
-
-        if (_memory.Length - BytesPending < maxRequired)
-        {
-            Grow(maxRequired);
-        }
-
-        Span<byte> output = _memory.Span;
-        if (_currentDepth < 0)
-        {
-            output[BytesPending++] = JsonConstants.ListSeparator;
-        }
-
-        escapedPropertyNameSection.CopyTo(output.Slice(BytesPending));
-        BytesPending += escapedPropertyNameSection.Length;
 
         value.CopyTo(output.Slice(BytesPending));
         BytesPending += value.Length;
