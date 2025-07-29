@@ -384,6 +384,354 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
+        #region Nested Array Tests
+
+        [Fact]
+        public static void RemoveWhere_NestedArrayInObject_RemovesCorrectElementsAndPreservesObject()
+        {
+            // Arrange
+            const string json = """
+                {
+                    "items": [1, 2, 3, 4, 5, 6],
+                    "name": "test",
+                    "active": true
+                }
+                """;
+            using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable itemsArray = root.GetProperty("items");
+
+            // Act - Remove even numbers
+            itemsArray.RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Number && element.GetInt32() % 2 == 0);
+
+            // Assert
+            Assert.Equal(3, itemsArray.GetArrayLength());
+            Assert.Equal(1, itemsArray[0].GetInt32());
+            Assert.Equal(3, itemsArray[1].GetInt32());
+            Assert.Equal(5, itemsArray[2].GetInt32());
+
+            // Verify other properties are preserved
+            Assert.Equal("test", builderDoc.RootElement.GetProperty("name").GetString());
+            Assert.True(builderDoc.RootElement.GetProperty("active").GetBoolean());
+            Assert.Equal(3, builderDoc.RootElement.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void RemoveWhere_NestedArrayWithComplexObjects_RemovesCorrectElements()
+        {
+            // Arrange
+            const string json = """
+                {
+                    "users": [
+                        {"id": 1, "name": "Alice", "active": true},
+                        {"id": 2, "name": "Bob", "active": false},
+                        {"id": 3, "name": "Charlie", "active": true},
+                        {"id": 4, "name": "David", "active": false}
+                    ],
+                    "total": 4,
+                    "department": "Engineering"
+                }
+                """;
+            using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            JsonElement.Mutable usersArray = root.GetProperty("users");
+
+            // Act - Remove inactive users
+            usersArray.RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Object &&
+                element.TryGetProperty("active", out JsonElement active) &&
+                !active.GetBoolean());
+
+            // Assert
+            Assert.Equal(2, usersArray.GetArrayLength());
+            Assert.Equal("Alice", usersArray[0].GetProperty("name").GetString());
+            Assert.Equal(1, usersArray[0].GetProperty("id").GetInt32());
+            Assert.True(usersArray[0].GetProperty("active").GetBoolean());
+            Assert.Equal("Charlie", usersArray[1].GetProperty("name").GetString());
+            Assert.Equal(3, usersArray[1].GetProperty("id").GetInt32());
+            Assert.True(usersArray[1].GetProperty("active").GetBoolean());
+
+            // Verify other properties are preserved
+            Assert.Equal(4, builderDoc.RootElement.GetProperty("total").GetInt32());
+            Assert.Equal("Engineering", builderDoc.RootElement.GetProperty("department").GetString());
+            Assert.Equal(3, builderDoc.RootElement.GetPropertyCount());
+        }
+
+        [Fact]
+        public static void RemoveWhere_MultipleNestedArraysInObject_RemovesCorrectElementsFromEach()
+        {
+            // Arrange
+            const string json = """
+                {
+                    "id": 123,
+                    "tags": ["important", "spam", "urgent", "spam", "normal"],
+                    "categories": [
+                        {"name": "cat1", "items": [1, 2, 3, 4, 5]},
+                        {"name": "cat2", "items": [10, 20, 30]}
+                    ],
+                    "metadata": {
+                        "scores": [100, 50, 200, 75, 300],
+                        "flags": [true, false, true, false, true]
+                    }
+                }
+                """;
+            using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act - Multiple RemoveWhere operations on different nested arrays
+            // Remove "spam" tags
+            builderDoc.RootElement.GetProperty("tags").RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.String && element.GetString() == "spam");
+
+            // Remove even numbers from cat1 items
+            builderDoc.RootElement.GetProperty("categories")[0].GetProperty("items").RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Number && element.GetInt32() % 2 == 0);
+
+            // Remove scores below 100
+            builderDoc.RootElement.GetProperty("metadata").GetProperty("scores").RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Number && element.GetInt32() < 100);
+
+            // Remove false flags
+            builderDoc.RootElement.GetProperty("metadata").GetProperty("flags").RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.False);
+
+            // Assert
+            // Verify tags array
+            JsonElement.Mutable tagsArray = builderDoc.RootElement.GetProperty("tags");
+            Assert.Equal(3, tagsArray.GetArrayLength());
+            Assert.Equal("important", tagsArray[0].GetString());
+            Assert.Equal("urgent", tagsArray[1].GetString());
+            Assert.Equal("normal", tagsArray[2].GetString());
+
+            // Verify cat1 items (only odd numbers remain)
+            JsonElement.Mutable cat1Items = builderDoc.RootElement.GetProperty("categories")[0].GetProperty("items");
+            Assert.Equal(3, cat1Items.GetArrayLength());
+            Assert.Equal(1, cat1Items[0].GetInt32());
+            Assert.Equal(3, cat1Items[1].GetInt32());
+            Assert.Equal(5, cat1Items[2].GetInt32());
+
+            // Verify cat2 items unchanged
+            JsonElement.Mutable cat2Items = builderDoc.RootElement.GetProperty("categories")[1].GetProperty("items");
+            Assert.Equal(3, cat2Items.GetArrayLength());
+            Assert.Equal(10, cat2Items[0].GetInt32());
+            Assert.Equal(20, cat2Items[1].GetInt32());
+            Assert.Equal(30, cat2Items[2].GetInt32());
+
+            // Verify scores (only >= 100 remain)
+            JsonElement.Mutable scoresArray = builderDoc.RootElement.GetProperty("metadata").GetProperty("scores");
+            Assert.Equal(3, scoresArray.GetArrayLength());
+            Assert.Equal(100, scoresArray[0].GetInt32());
+            Assert.Equal(200, scoresArray[1].GetInt32());
+            Assert.Equal(300, scoresArray[2].GetInt32());
+
+            // Verify flags (only true values remain)
+            JsonElement.Mutable flagsArray = builderDoc.RootElement.GetProperty("metadata").GetProperty("flags");
+            Assert.Equal(3, flagsArray.GetArrayLength());
+            Assert.True(flagsArray[0].GetBoolean());
+            Assert.True(flagsArray[1].GetBoolean());
+            Assert.True(flagsArray[2].GetBoolean());
+
+            // Verify other properties unchanged
+            Assert.Equal(123, builderDoc.RootElement.GetProperty("id").GetInt32());
+            Assert.Equal("cat1", builderDoc.RootElement.GetProperty("categories")[0].GetProperty("name").GetString());
+            Assert.Equal("cat2", builderDoc.RootElement.GetProperty("categories")[1].GetProperty("name").GetString());
+        }
+
+        [Fact]
+        public static void RemoveWhere_NestedArrayInArray_RemovesCorrectElementsFromInnerArray()
+        {
+            // Arrange
+            const string json = """
+                [
+                    [1, 2, 3, 4, 5, 6],
+                    ["keep", "remove", "keep", "remove"],
+                    [true, false, true, false, true]
+                ]
+                """;
+            using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act - Remove even numbers from first array
+            builderDoc.RootElement[0].RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Number && element.GetInt32() % 2 == 0);
+
+            // Act - Remove "remove" strings from second array
+            builderDoc.RootElement[1].RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.String && element.GetString() == "remove");
+
+            // Act - Remove false values from third array
+            builderDoc.RootElement[2].RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.False);
+
+            // Assert
+            // Verify first inner array (odd numbers remain)
+            Assert.Equal(3, builderDoc.RootElement[0].GetArrayLength());
+            Assert.Equal(1, builderDoc.RootElement[0][0].GetInt32());
+            Assert.Equal(3, builderDoc.RootElement[0][1].GetInt32());
+            Assert.Equal(5, builderDoc.RootElement[0][2].GetInt32());
+
+            // Verify second inner array (only "keep" strings remain)
+            Assert.Equal(2, builderDoc.RootElement[1].GetArrayLength());
+            Assert.Equal("keep", builderDoc.RootElement[1][0].GetString());
+            Assert.Equal("keep", builderDoc.RootElement[1][1].GetString());
+
+            // Verify third inner array (only true values remain)
+            Assert.Equal(3, builderDoc.RootElement[2].GetArrayLength());
+            Assert.True(builderDoc.RootElement[2][0].GetBoolean());
+            Assert.True(builderDoc.RootElement[2][1].GetBoolean());
+            Assert.True(builderDoc.RootElement[2][2].GetBoolean());
+
+            // Verify outer array still has 3 elements
+            Assert.Equal(3, builderDoc.RootElement.GetArrayLength());
+        }
+
+        [Fact]
+        public static void RemoveWhere_ThreeLevelNestedArray_RemovesCorrectElementsFromDeepestLevel()
+        {
+            // Arrange
+            const string json = """
+                [
+                    [
+                        [1, 2, 3, 4],
+                        [5, 6, 7, 8]
+                    ],
+                    [
+                        [9, 10, 11, 12],
+                        [13, 14, 15, 16]
+                    ]
+                ]
+                """;
+            using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act - Remove even numbers from the first deepest array
+            builderDoc.RootElement[0][0].RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Number && element.GetInt32() % 2 == 0);
+
+            // Act - Remove numbers > 10 from the last deepest array
+            builderDoc.RootElement[1][1].RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Number && element.GetInt32() > 10);
+
+            // Assert
+            // Verify first deepest array (odd numbers remain)
+            Assert.Equal(2, builderDoc.RootElement[0][0].GetArrayLength());
+            Assert.Equal(1, builderDoc.RootElement[0][0][0].GetInt32());
+            Assert.Equal(3, builderDoc.RootElement[0][0][1].GetInt32());
+
+            // Verify second array in first group unchanged
+            Assert.Equal(4, builderDoc.RootElement[0][1].GetArrayLength());
+            Assert.Equal(5, builderDoc.RootElement[0][1][0].GetInt32());
+            Assert.Equal(6, builderDoc.RootElement[0][1][1].GetInt32());
+            Assert.Equal(7, builderDoc.RootElement[0][1][2].GetInt32());
+            Assert.Equal(8, builderDoc.RootElement[0][1][3].GetInt32());
+
+            // Verify first array in second group unchanged
+            Assert.Equal(4, builderDoc.RootElement[1][0].GetArrayLength());
+            Assert.Equal(9, builderDoc.RootElement[1][0][0].GetInt32());
+            Assert.Equal(10, builderDoc.RootElement[1][0][1].GetInt32());
+            Assert.Equal(11, builderDoc.RootElement[1][0][2].GetInt32());
+            Assert.Equal(12, builderDoc.RootElement[1][0][3].GetInt32());
+
+            // Verify last deepest array (only numbers <= 10 remain)
+            Assert.Equal(0, builderDoc.RootElement[1][1].GetArrayLength()); // All numbers were > 10
+
+            // Verify overall structure integrity
+            Assert.Equal(2, builderDoc.RootElement.GetArrayLength());
+            Assert.Equal(2, builderDoc.RootElement[0].GetArrayLength());
+            Assert.Equal(2, builderDoc.RootElement[1].GetArrayLength());
+        }
+
+        [Fact]
+        public static void RemoveWhere_ComplexMixedNestedStructure_RemovesCorrectElements()
+        {
+            // Arrange
+            const string json = """
+                {
+                    "data": {
+                        "numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                        "nested": {
+                            "items": ["a", "b", "c", "d", "e"]
+                        }
+                    },
+                    "arrays": [
+                        [100, 200, 300],
+                        {
+                            "values": [true, false, true, false]
+                        }
+                    ],
+                    "status": "active"
+                }
+                """;
+            using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act - Multiple operations on deeply nested arrays
+            // Remove even numbers from data.numbers
+            builderDoc.RootElement.GetProperty("data").GetProperty("numbers").RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Number && element.GetInt32() % 2 == 0);
+
+            // Remove vowels from data.nested.items
+            builderDoc.RootElement.GetProperty("data").GetProperty("nested").GetProperty("items").RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.String && "aeiou".Contains(element.GetString()));
+
+            // Remove numbers < 250 from arrays[0]
+            builderDoc.RootElement.GetProperty("arrays")[0].RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.Number && element.GetInt32() < 250);
+
+            // Remove false values from arrays[1].values
+            builderDoc.RootElement.GetProperty("arrays")[1].GetProperty("values").RemoveWhere((in element) =>
+                element.ValueKind == JsonValueKind.False);
+
+            // Assert
+            // Verify data.numbers (odd numbers remain)
+            JsonElement.Mutable numbersArray = builderDoc.RootElement.GetProperty("data").GetProperty("numbers");
+            Assert.Equal(5, numbersArray.GetArrayLength());
+            Assert.Equal(1, numbersArray[0].GetInt32());
+            Assert.Equal(3, numbersArray[1].GetInt32());
+            Assert.Equal(5, numbersArray[2].GetInt32());
+            Assert.Equal(7, numbersArray[3].GetInt32());
+            Assert.Equal(9, numbersArray[4].GetInt32());
+
+            // Verify data.nested.items (consonants remain)
+            JsonElement.Mutable itemsArray = builderDoc.RootElement.GetProperty("data").GetProperty("nested").GetProperty("items");
+            Assert.Equal(3, itemsArray.GetArrayLength());
+            Assert.Equal("b", itemsArray[0].GetString());
+            Assert.Equal("c", itemsArray[1].GetString());
+            Assert.Equal("d", itemsArray[2].GetString());
+
+            // Verify arrays[0] (numbers >= 250 remain)
+            JsonElement.Mutable firstArray = builderDoc.RootElement.GetProperty("arrays")[0];
+            Assert.Equal(1, firstArray.GetArrayLength());
+            Assert.Equal(300, firstArray[0].GetInt32());
+
+            // Verify arrays[1].values (only true values remain)
+            JsonElement.Mutable valuesArray = builderDoc.RootElement.GetProperty("arrays")[1].GetProperty("values");
+            Assert.Equal(2, valuesArray.GetArrayLength());
+            Assert.True(valuesArray[0].GetBoolean());
+            Assert.True(valuesArray[1].GetBoolean());
+
+            // Verify overall structure and unchanged properties
+            Assert.Equal("active", builderDoc.RootElement.GetProperty("status").GetString());
+            Assert.Equal(3, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal(2, builderDoc.RootElement.GetProperty("data").GetPropertyCount());
+            Assert.Equal(2, builderDoc.RootElement.GetProperty("arrays").GetArrayLength());
+        }
+
+        #endregion
+
         #region Edge Cases
 
         [Fact]

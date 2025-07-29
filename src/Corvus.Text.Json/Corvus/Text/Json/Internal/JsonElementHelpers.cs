@@ -162,24 +162,10 @@ public static partial class JsonElementHelpers
                 {
                     // Check if this element is consecutive with the previous block
                     currentEndIndex = enumerator.CurrentEndIndex + DbRow.Size;
-                    
-                    if (currentEndIndex == consecutiveBlockStartIndex)
-                    {
-                        // This element is consecutive (comes right before the current block)
-                        consecutiveBlockStartIndex = currentStartIndex;
-                        consecutiveCount++;
-                    }
-                    else
-                    {
-                        // Not consecutive, so remove the previous block first
-                        int elementsInBlock = consecutiveCount;
-                        parentDocument.RemoveRange(arrayElement.ParentDocumentIndex, consecutiveBlockStartIndex, consecutiveBlockEndIndex, elementsInBlock);
-                        
-                        // Start a new block with current element
-                        consecutiveBlockStartIndex = currentStartIndex;
-                        consecutiveBlockEndIndex = currentEndIndex;
-                        consecutiveCount = 1;
-                    }
+
+                    Debug.Assert(currentEndIndex == consecutiveBlockStartIndex,"The element must be consecutive with the previous block.");
+                    consecutiveBlockStartIndex = currentStartIndex;
+                    consecutiveCount++;
                 }
             }
             else

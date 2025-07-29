@@ -213,7 +213,7 @@ internal class DummyDocument : IJsonDocument
     void IJsonDocument.EnsurePropertyMap(int index) => throw new NotImplementedException();
     int IJsonDocument.GetHashCode(int index) => throw new NotImplementedException();
     string IJsonDocument.ToString(int index) => throw new NotImplementedException();
-    JsonTokenType IJsonDocument.GetJsonTokenType(int index) => throw new NotImplementedException();
+    JsonTokenType IJsonDocument.GetJsonTokenType(int index) => GetJsonTokenType(index);
     JsonElement IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex) => throw new NotImplementedException();
     TElement IJsonDocument.GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex) => throw new NotImplementedException();
     int IJsonDocument.GetArrayLength(int index) => throw new NotImplementedException();
