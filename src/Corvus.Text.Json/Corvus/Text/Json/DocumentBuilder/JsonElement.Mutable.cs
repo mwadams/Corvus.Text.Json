@@ -8458,6 +8458,38 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Removes all array elements that match the specified predicate.
+        /// </summary>
+        /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
+        /// <param name="predicate">The predicate function that determines which elements to remove.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="predicate"/> is <see langword="null"/>.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method efficiently removes elements in a single pass by iterating backwards
+        ///     through the array and removing consecutive blocks of matching elements.
+        ///   </para>
+        ///   <para>
+        ///     The predicate function is called for each element in the array. If the predicate
+        ///     returns <see langword="true"/>, the element will be removed from the array.
+        ///   </para>
+        ///   <para>
+        ///     This generic overload accepts any type implementing <see cref="IJsonElement{T}"/>,
+        ///     enabling type-safe element processing with compile-time type checking.
+        ///   </para>
+        ///   <para>
+        ///     This method is not CLS-compliant due to its generic constraint requirements.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void RemoveWhere<T>(JsonPredicate<T> predicate)
@@ -8468,6 +8500,37 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Removes all array elements that match the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate function that determines which elements to remove.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="predicate"/> is <see langword="null"/>.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method efficiently removes elements in a single pass by iterating backwards
+        ///     through the array and removing consecutive blocks of matching elements.
+        ///   </para>
+        ///   <para>
+        ///     The predicate function is called for each element in the array. If the predicate
+        ///     returns <see langword="true"/>, the element will be removed from the array.
+        ///   </para>
+        ///   <para>
+        ///     This overload is a convenience method that calls the generic version with
+        ///     <see cref="JsonElement"/> as the type parameter.
+        ///   </para>
+        ///   <para>
+        ///     This method is not CLS-compliant due to its generic constraint requirements.
+        ///   </para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
         public void RemoveWhere(JsonPredicate<JsonElement> predicate)
@@ -8482,6 +8545,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The JSON object element whose properties will be copied to this element.</param>
         /// <exception cref="InvalidOperationException">
         ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   the source <paramref name="value"/>'s <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
         ///   or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
@@ -8494,7 +8558,7 @@ public readonly partial struct JsonElement
         ///     replacing any existing properties with the same name.
         ///   </para>
         ///   <para>
-        ///     The source value must be a JSON object element.
+        ///     Both this element and the source value must be JSON object elements.
         ///   </para>
         ///   <para>
         ///     This method is not CLS-compliant due to its generic constraint requirements.
@@ -8505,14 +8569,7 @@ public readonly partial struct JsonElement
             where T : struct, IJsonElement<T>
         {
             CheckValidInstance();
-
-            var enumerator = new ObjectEnumerator<JsonElement>(value.ParentDocument, value.ParentDocumentIndex);
-
-            while(enumerator.MoveNext())
-            {
-                JsonElementHelpers.SetPropertyUnsafe(this, enumerator.Current);
-            }
-
+            JsonElementHelpers.ApplyUnsafe(this, value);
             _documentVersion = _parent.Version;
         }
 

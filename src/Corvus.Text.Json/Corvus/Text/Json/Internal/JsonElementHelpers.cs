@@ -122,7 +122,7 @@ public static partial class JsonElementHelpers
 
         IMutableJsonDocument parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
         int arrayLength = parentDocument.GetArrayLength(arrayElement.ParentDocumentIndex);
-        
+
         if (arrayLength == 0)
         {
             return; // Nothing to process
@@ -130,11 +130,11 @@ public static partial class JsonElementHelpers
 
         // Enumerate backwards through the array
         ArrayReverseEnumerator enumerator = new(parentDocument, arrayElement.ParentDocumentIndex);
-        
+
         int consecutiveBlockStartIndex = -1; // Start index of first item in consecutive block
         int consecutiveBlockEndIndex = -1;   // End index of last item in consecutive block
         int consecutiveCount = 0;
-        
+
         while (enumerator.MoveNext())
         {
 #if NET
@@ -142,13 +142,13 @@ public static partial class JsonElementHelpers
 #else
             T currentElement = JsonElementHelpers.CreateInstance<T>(parentDocument, enumerator.CurrentIndex);
 #endif
-            
+
             if (predicate(in currentElement))
             {
                 // This element should be removed
                 int currentStartIndex = enumerator.CurrentIndex;
                 int currentEndIndex;
-                
+
                 if (consecutiveCount == 0)
                 {
                     // Start of a new consecutive block
@@ -180,7 +180,7 @@ public static partial class JsonElementHelpers
                 }
             }
         }
-        
+
         // Handle any remaining consecutive block at the end
         if (consecutiveCount > 0)
         {
@@ -188,6 +188,50 @@ public static partial class JsonElementHelpers
             parentDocument.RemoveRange(arrayElement.ParentDocumentIndex, consecutiveBlockStartIndex, consecutiveBlockEndIndex, elementsInBlock);
         }
     }
+
+    /// <summary>
+    /// Applies all properties from a source JSON object element to a target JSON object element.
+    /// </summary>
+    /// <typeparam name="TTarget">The type of the target element implementing <see cref="IMutableJsonElement{TTarget}"/>.</typeparam>
+    /// <typeparam name="TSource">The type of the source element implementing <see cref="IJsonElement{TSource}"/>.</typeparam>
+    /// <param name="targetElement">The target JSON object element to which properties will be applied.</param>
+    /// <param name="sourceElement">The source JSON object element from which properties will be copied.</param>
+    /// <exception cref="InvalidOperationException">
+    ///   The source element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+    /// </exception>
+    /// <remarks>
+    ///   <para>
+    ///     This method performs a merge of properties from the source JSON object
+    ///     to the target JSON object. Each property from the source object is copied to the target object,
+    ///     replacing any existing properties with the same name.
+    ///   </para>
+    ///   <para>
+    ///     The source element must be a JSON object element. The target element is assumed to be valid
+    ///     and is not validated by this method.
+    ///   </para>
+    ///   <para>
+    ///     This method is not CLS-compliant due to its generic constraint requirements.
+    ///   </para>
+    /// </remarks>
+    [CLSCompliant(false)]
+    public static void ApplyUnsafe<TTarget, TSource>(TTarget targetElement, in TSource sourceElement)
+        where TTarget : struct, IMutableJsonElement<TTarget>
+        where TSource : struct, IJsonElement<TSource>
+    {
+        // Validate that the source value is an object
+        if (sourceElement.TokenType != JsonTokenType.StartObject)
+        {
+            throw new InvalidOperationException();
+        }
+
+        var enumerator = new ObjectEnumerator<JsonElement>(sourceElement.ParentDocument, sourceElement.ParentDocumentIndex);
+
+        while(enumerator.MoveNext())
+        {
+            JsonElementHelpers.SetPropertyUnsafe(targetElement, enumerator.Current);
+        }
+    }
+
     /// <summary>
     /// Converts a <see cref="JsonTokenType"/> to its corresponding <see cref="JsonValueKind"/>.
     /// </summary>
