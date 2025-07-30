@@ -683,7 +683,6 @@ public struct JsonSchemaContext
             int intOffset = index >> 5; // divide by 32 ==> shift right 5
             int bitOffset = index & 0b1_1111; // remainder of dividing by 32
             int bit = 1 << bitOffset;
-            Debug.Assert(intOffset < LocalEvaluated.Length);
             return (LocalEvaluated[intOffset] & bit) != 0;
         }
 
@@ -703,7 +702,6 @@ public struct JsonSchemaContext
             int intOffset = index >> 5; // divide by 32 ==> shift right 5
             int bitOffset = index & 0b1_1111; // remainder of dividing by 32
             int bit = 1 << bitOffset;
-            Debug.Assert(intOffset < LocalEvaluated.Length);
             return (LocalEvaluated[intOffset] & bit) != 0;
         }
 
@@ -723,7 +721,6 @@ public struct JsonSchemaContext
             int intOffset = index >> 5; // divide by 32 ==> shift right 5
             int bitOffset = index & 0b1_1111; // remainder of dividing by 32
             int bit = 1 << bitOffset;
-            Debug.Assert(intOffset < LocalEvaluated.Length);
             return (LocalEvaluated[intOffset] & bit) != 0 || (AppliedEvaluated[intOffset] & bit) != 0;
         }
 
@@ -743,7 +740,6 @@ public struct JsonSchemaContext
             int intOffset = index >> 5; // divide by 32 ==> shift right 5
             int bitOffset = index & 0b1_1111; // remainder of dividing by 32
             int bit = 1 << bitOffset;
-            Debug.Assert(intOffset < LocalEvaluated.Length);
             return (LocalEvaluated[intOffset] & bit) != 0 || (AppliedEvaluated[intOffset] & bit) != 0;
         }
 
@@ -824,7 +820,6 @@ public struct JsonSchemaContext
             int intOffset = index >> 5; // divide by 32 ==> shift right 5
             int bitOffset = index & 0b1_1111; // remainder of dividing by 32
             int bit = 1 << bitOffset;
-            Debug.Assert(intOffset < LocalEvaluated.Length);
             LocalEvaluated[intOffset] |= bit;
         }
     }
@@ -841,7 +836,6 @@ public struct JsonSchemaContext
             int intOffset = index >> 5; // divide by 32 ==> shift right 5
             int bitOffset = index & 0b1_1111; // remainder of dividing by 32
             int bit = 1 << bitOffset;
-            Debug.Assert(intOffset < LocalEvaluated.Length);
             LocalEvaluated[intOffset] |= bit;
         }
     }
