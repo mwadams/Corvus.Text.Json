@@ -9,6 +9,7 @@ using System.Buffers;
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using NodaTime;
 
 namespace Corvus.Text.Json.Internal;
 
@@ -163,11 +164,11 @@ internal static class Utf8Uri
         }
 
         // We won't use User factory for these errors
-        if (uriKind != Utf8UriKind.Absolute && err != Utf8UriParsingError.None)
+        if (err != Utf8UriParsingError.None)
         {
-            // If it looks as a relative Uri, custom factory is ignored
-            if (!requireAbsolute && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
+            if (uriKind != Utf8UriKind.Absolute && !requireAbsolute && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
             {
+                // If it looks as a relative Uri, custom factory is ignored
                 resultFlags = flags | Flags.UserEscaped;
                 return GetUriInfoForRelativeReference(uriString, allowIri, out uriInfo);
             }
@@ -244,48 +245,58 @@ internal static class Utf8Uri
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsAbsoluteUri(Utf8UriParser? syntax) => syntax is not null;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsImplicitFile(Flags flags)
     {
         return (flags & Flags.ImplicitFile) != 0;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsDosPath(Flags flags)
     {
         return (flags & Flags.DosPath) != 0;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool UserDrivenParsing(Flags flags)
     {
         return (flags & Flags.UserDrivenParsing) != 0;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static Flags HostType(Flags flags)
     {
         return flags & Flags.HostTypeMask;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsError(Flags flags)
     {
         return (flags & Flags.ErrorOrParsingRecursion) != 0;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool NotAny(Flags allFlags, Flags checkFlags)
     {
         return (allFlags & checkFlags) == 0;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool InFact(Flags allFlags, Flags checkFlags)
     {
         return (allFlags & checkFlags) != 0;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool IriParsing(Utf8UriParser? syntax)
     {
         return syntax is null || syntax.InFact(Utf8UriSyntaxFlags.AllowIriParsing);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsFile(Utf8UriParser syntax)
     {
         return syntax.InFact(Utf8UriSyntaxFlags.FileLikeUri);
@@ -297,15 +308,31 @@ internal static class Utf8Uri
         return ValidateRelativeReference(uriString, iriParsing);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool GetUriInfoForRelativeReference(ReadOnlySpan<byte> uriString, bool iriParsing, out Utf8UriOffset uriInfo)
     {
         Utf8UriOffset info = default;
         int length = uriString.Length;
 
-        info.End = (ushort)length;
+        GetUriInfoForQueryAndFragment(uriString, ref info, out int queryIdx, out int hashIdx);
 
-        int queryIdx = uriString.IndexOf((byte)'?');
+        int idx = 0;
+        if (ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, queryIdx, hashIdx))
+        {
+            uriInfo = info;
+            return true;
+        }
 
+        uriInfo = default;
+        return false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static unsafe void GetUriInfoForQueryAndFragment(ReadOnlySpan<byte> uriString, ref Utf8UriOffset info, out int queryIdx, out int hashIdx)
+    {
+        info.End = (ushort)uriString.Length;
+
+        queryIdx = uriString.IndexOf((byte)'?');
         int hashStart = 0;
 
         if (queryIdx >= 0)
@@ -318,8 +345,7 @@ internal static class Utf8Uri
             info.Query = info.End;
         }
 
-        int hashIdx = uriString.Slice(hashStart).IndexOf((byte)'#');
-
+        hashIdx = uriString.Slice(hashStart).IndexOf((byte)'#');
         if (hashIdx >= 0)
         {
             info.Fragment = (ushort)(hashIdx + hashStart);
@@ -332,16 +358,6 @@ internal static class Utf8Uri
         {
             info.Fragment = info.End;
         }
-
-        int idx = 0;
-        if (ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, hashIdx, queryIdx))
-        {
-            uriInfo = info;
-            return true;
-        }
-
-        uriInfo = default;
-        return false;
     }
 
     private static unsafe bool ValidateRelativeReference(ReadOnlySpan<byte> uriString, bool iriParsing)
@@ -356,7 +372,7 @@ internal static class Utf8Uri
 
         int hashIdx = uriString.Slice(hashStart).IndexOf((byte)'#') + hashStart;
 
-        return ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, hashIdx, queryIdx);
+        return ValidateRelativeReferenceCore(uriString, iriParsing, length, ref idx, queryIdx, hashIdx);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -437,52 +453,61 @@ internal static class Utf8Uri
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool ParseCore(Utf8UriParsingError err, ref Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, bool requireAbsolute, bool allowUNCPath, out Utf8UriOffset uriInfo)
     {
+        Debug.Assert(err == Utf8UriParsingError.None);
+
         Utf8UriOffset info = default;
         info.End = (ushort)uriString.Length;
 
-        if (err == Utf8UriParsingError.None)
+        if (IsImplicitFile(flags))
         {
-            if (IsImplicitFile(flags))
-            {
-                // V1 compat
-                // A relative Uri wins over implicit UNC path unless the UNC path is of the form "\\something" and
-                // uriKind != Absolute
-                // A relative Uri wins over implicit Unix path unless uriKind == Absolute
-                if (NotAny(flags, Flags.DosPath) &&
-                    uriKind != Utf8UriKind.Absolute &&
-                   ((uriKind == Utf8UriKind.Relative || (uriString.Length >= 2 && (uriString[0] != (byte)'\\' || uriString[1] != (byte)'\\')))
+            // V1 compat
+            // A relative Uri wins over implicit UNC path unless the UNC path is of the form "\\something" and
+            // uriKind != Absolute
+            // A relative Uri wins over implicit Unix path unless uriKind == Absolute
+
+            if (NotAny(flags, Flags.DosPath) &&
+                uriKind != Utf8UriKind.Absolute &&
+                ((uriKind == Utf8UriKind.Relative || (uriString.Length >= 2 && (uriString[0] != (byte)'\\' || uriString[1] != (byte)'\\')))
 #if NET
-                || (!OperatingSystem.IsWindows() && InFact(flags, Flags.UnixPath))
+            || (!OperatingSystem.IsWindows() && InFact(flags, Flags.UnixPath))
 #endif
-                ))
-                {
-                    syntax = null!; //make it be relative Uri
-                    flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
-                    uriInfo = info;
-                    return requireAbsolute ? false : true;
-                    // Otherwise an absolute file Uri wins when it's of the form "\\something"
-                }
-                //
-                // V1 compat issue
-                // We should support relative Uris of the form c:\bla or c:/bla
-                //
-                else if (uriKind == Utf8UriKind.Relative && InFact(flags, Flags.DosPath))
-                {
-                    syntax = null!; //make it be relative Uri
-                    flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
-                    uriInfo = info;
-                    return requireAbsolute ? false : true;
-                    // Otherwise an absolute file Uri wins when it's of the form "c:\something"
-                }
+            ))
+            {
+                flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
+                GetUriInfoForQueryAndFragment(uriString, ref info, out _, out _);
+                syntax = null!; //make it be relative Uri
+                uriInfo =
+                    new()
+                    {
+                        Query = info.Query,
+                        Fragment = info.Fragment,
+                        End = info.End
+                    };
+                return requireAbsolute ? false : true;
+                // Otherwise an absolute file Uri wins when it's of the form "\\something"
             }
-        }
-        else if (err > Utf8UriParsingError.LastRelativeUriOkErrIndex)
-        {
-            //This is a fatal error based solely on scheme name parsing
-            uriInfo = default;
-            return false;
+            //
+            // V1 compat issue
+            // We should support relative Uris of the form c:\bla or c:/bla
+            //
+            else if (uriKind != Utf8UriKind.Absolute && InFact(flags, Flags.DosPath))
+            {
+                flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
+                GetUriInfoForQueryAndFragment(uriString, ref info, out _, out _);
+                syntax = null!; //make it be relative Uri
+                uriInfo =
+                    new()
+                    {
+                        Query = info.Query,
+                        Fragment = info.Fragment,
+                        End = info.End
+                    };
+                return requireAbsolute ? false : true;
+                // Otherwise an absolute file Uri wins when it's of the form "c:\something"
+            }
         }
 
         if (IriParsing(syntax) && CheckForUnicodeOrEscapedUnreserved(uriString))
@@ -499,10 +524,25 @@ internal static class Utf8Uri
                 if (uriKind != Utf8UriKind.Absolute && err <= Utf8UriParsingError.LastRelativeUriOkErrIndex)
                 {
                     // RFC 3986 Section 5.4.2 - http:(relativeUri) may be considered a valid relative Uri.
+                    int offset = syntax.SchemeName.Length + 1;
+                    bool result = GetUriInfoForRelativeReference(uriString.Slice(offset), IriParsing(syntax), out info);
+                    uriInfo =
+                        new()
+                        {
+                            Scheme = (ushort)offset,
+                            End = (ushort)(info.End + offset),
+                            User = (ushort)offset,
+                            Host = (ushort)offset,
+                            Port = (ushort)offset,
+                            PortValue = 0,
+                            Path = (ushort)(info.Path + offset),
+                            Query = (ushort)(info.Query + offset),
+                            Fragment = (ushort)(info.Fragment + offset)
+                        };
+
                     syntax = null!; // convert to relative uri
                     flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
-                    uriInfo = info;
-                    return true;
+                    return result;
                 }
                 else
                     success = false;
@@ -581,7 +621,7 @@ internal static class Utf8Uri
                 // V1 compat issue
                 // We should support relative Uris of the form c:\bla or c:/bla
                 //
-                else if (uriKind == Utf8UriKind.Relative && InFact(flags, Flags.DosPath))
+                else if (uriKind != Utf8UriKind.Absolute && InFact(flags, Flags.DosPath))
                 {
                     syntax = null!; //make it be relative Uri
                     flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
@@ -979,7 +1019,13 @@ internal static class Utf8Uri
 
             if (((syntaxFlags & (Utf8UriSyntaxFlags.ConvertPathSlashes)) != 0) && (result & Check.BackslashInPath) != 0)
             {
-                cF |= (Flags.E_PathNotCanonical | Flags.PathNotCanonical);
+                cF |= Flags.PathNotCanonical;
+
+                if (!IsDosPath(flags))
+                {
+                    cF |= Flags.E_PathNotCanonical;
+                }
+
                 nonCanonical = true;
             }
 

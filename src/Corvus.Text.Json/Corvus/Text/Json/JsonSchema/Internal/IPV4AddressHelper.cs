@@ -41,7 +41,7 @@ internal static partial class IPv4AddressHelper
     internal static unsafe bool IsValid(byte* name, int start, ref int end, bool allowIPv6, bool notImplicitFile, bool unknownScheme)
     {
         // IPv6 can only have canonical IPv4 embedded. Unknown schemes will not attempt parsing of non-canonical IPv4 addresses.
-        if (allowIPv6 || unknownScheme)
+        if (allowIPv6 || !unknownScheme)
         {
             return IsValidCanonical(name, start, ref end, allowIPv6, notImplicitFile);
         }

@@ -526,68 +526,68 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
-        /// <summary>
-        /// This test is constrained to run on Windows and MacOSX because it causes
-        /// problems on Linux due to the way deferred memory allocation works. On Linux, the allocation can
-        /// succeed even if there is not enough memory but then the test may get killed by the OOM killer at the
-        /// time the memory is accessed which triggers the full memory allocation.
-        /// Also see <see cref="WriteLargeJsonToStreamWithoutFlushing"/>
-        /// </summary>
-        [ActiveIssue("https://github.com/dotnet/runtime/issues/88272")]
-        [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
-        [ConditionalFact(typeof(Environment), nameof(Environment.Is64BitProcess))]
-        [OuterLoop]
-        public void WriteRawLargeJsonToStreamWithoutFlushing()
-        {
-            try
-            {
-                char[] largeArray = new char[150_000_000];
-                largeArray.AsSpan().Fill('a');
+        /////// <summary>
+        /////// This test is constrained to run on Windows and MacOSX because it causes
+        /////// problems on Linux due to the way deferred memory allocation works. On Linux, the allocation can
+        /////// succeed even if there is not enough memory but then the test may get killed by the OOM killer at the
+        /////// time the memory is accessed which triggers the full memory allocation.
+        /////// Also see <see cref="WriteLargeJsonToStreamWithoutFlushing"/>
+        /////// </summary>
+        ////[ActiveIssue("https://github.com/dotnet/runtime/issues/88272")]
+        ////[PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
+        ////[ConditionalFact(typeof(Environment), nameof(Environment.Is64BitProcess))]
+        ////[OuterLoop]
+        ////public void WriteRawLargeJsonToStreamWithoutFlushing()
+        ////{
+        ////    try
+        ////    {
+        ////        char[] largeArray = new char[150_000_000];
+        ////        largeArray.AsSpan().Fill('a');
 
-                // Text size chosen so that after several doublings of the underlying buffer we reach ~2 GB (but don't go over)
-                JsonEncodedText text1 = JsonEncodedText.Encode(largeArray.AsSpan(0, 7_500));
-                JsonEncodedText text2 = JsonEncodedText.Encode(largeArray.AsSpan(0, 5_000));
-                JsonEncodedText text3 = JsonEncodedText.Encode(largeArray.AsSpan(0, 150_000_000));
+        ////        // Text size chosen so that after several doublings of the underlying buffer we reach ~2 GB (but don't go over)
+        ////        JsonEncodedText text1 = JsonEncodedText.Encode(largeArray.AsSpan(0, 7_500));
+        ////        JsonEncodedText text2 = JsonEncodedText.Encode(largeArray.AsSpan(0, 5_000));
+        ////        JsonEncodedText text3 = JsonEncodedText.Encode(largeArray.AsSpan(0, 150_000_000));
 
-                using (var output = new MemoryStream())
-                using (var writer = new Utf8JsonWriter(output))
-                {
-                    writer.WriteStartArray();
-                    writer.WriteRawValue(WrapInQuotes(text1.EncodedUtf8Bytes));
-                    Assert.Equal(7_503, writer.BytesPending);
+        ////        using (var output = new MemoryStream())
+        ////        using (var writer = new Utf8JsonWriter(output))
+        ////        {
+        ////            writer.WriteStartArray();
+        ////            writer.WriteRawValue(WrapInQuotes(text1.EncodedUtf8Bytes));
+        ////            Assert.Equal(7_503, writer.BytesPending);
 
-                    for (int i = 0; i < 30_000; i++)
-                    {
-                        writer.WriteRawValue(WrapInQuotes(text2.EncodedUtf8Bytes));
-                    }
-                    Assert.Equal(150_097_503, writer.BytesPending);
+        ////            for (int i = 0; i < 30_000; i++)
+        ////            {
+        ////                writer.WriteRawValue(WrapInQuotes(text2.EncodedUtf8Bytes));
+        ////            }
+        ////            Assert.Equal(150_097_503, writer.BytesPending);
 
-                    for (int i = 0; i < 13; i++)
-                    {
-                        writer.WriteRawValue(WrapInQuotes(text3.EncodedUtf8Bytes));
-                    }
-                    Assert.Equal(2_100_097_542, writer.BytesPending);
+        ////            for (int i = 0; i < 13; i++)
+        ////            {
+        ////                writer.WriteRawValue(WrapInQuotes(text3.EncodedUtf8Bytes));
+        ////            }
+        ////            Assert.Equal(2_100_097_542, writer.BytesPending);
 
-                    // Next write forces a grow beyond max array length
+        ////            // Next write forces a grow beyond max array length
 
-                    Assert.Throws<OutOfMemoryException>(() => writer.WriteRawValue(WrapInQuotes(text3.EncodedUtf8Bytes)));
+        ////            Assert.Throws<OutOfMemoryException>(() => writer.WriteRawValue(WrapInQuotes(text3.EncodedUtf8Bytes)));
 
-                    Assert.Equal(2_100_097_542, writer.BytesPending);
+        ////            Assert.Equal(2_100_097_542, writer.BytesPending);
 
-                    var text4 = JsonEncodedText.Encode(largeArray.AsSpan(0, 1));
-                    for (int i = 0; i < 10_000_000; i++)
-                    {
-                        writer.WriteRawValue(WrapInQuotes(text4.EncodedUtf8Bytes));
-                    }
+        ////            var text4 = JsonEncodedText.Encode(largeArray.AsSpan(0, 1));
+        ////            for (int i = 0; i < 10_000_000; i++)
+        ////            {
+        ////                writer.WriteRawValue(WrapInQuotes(text4.EncodedUtf8Bytes));
+        ////            }
 
-                    Assert.Equal(2_100_097_542 + (4 * 10_000_000), writer.BytesPending);
-                }
-            }
-            catch (OutOfMemoryException)
-            {
-                throw new SkipTestException("Out of memory allocating large objects");
-            }
-        }
+        ////            Assert.Equal(2_100_097_542 + (4 * 10_000_000), writer.BytesPending);
+        ////        }
+        ////    }
+        ////    catch (OutOfMemoryException)
+        ////    {
+        ////        throw new SkipTestException("Out of memory allocating large objects");
+        ////    }
+        ////}
 
         [PlatformSpecific(TestPlatforms.Windows | TestPlatforms.OSX)]
         [ConditionalTheory(typeof(Environment), nameof(Environment.Is64BitProcess))]

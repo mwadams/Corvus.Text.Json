@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Text;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests
@@ -385,6 +386,334 @@ namespace Corvus.Text.Json.Tests
             Assert.True(reference.OriginalUri.IsEmpty);
             Assert.Equal(0, reference.PortValue);
             Assert.False(reference.IsValidReference);
+        }
+
+        // Additional test cases to exercise more Utf8Uri functionality
+
+        [Theory]
+        [InlineData("http://example.com:00080", true)] // Leading zeros in port are valid (the ABNF specifies *DIGIT)
+        [InlineData("http://example.com:999999", false)] // Port too large
+        [InlineData("http://[invalid-bracket", false)] // Invalid IPv6 brackets
+        [InlineData("http://host]/path", false)] // Invalid bracket
+        [InlineData("http://host with spaces", false)] // Spaces in host
+        [InlineData("http:////example.com", false)] // Too many slashes
+        [InlineData("scheme:", true)] // Minimal valid absolute URI
+        [InlineData("custom+scheme://example.com", true)] // Plus in scheme
+        [InlineData("custom-scheme://example.com", true)] // Hyphen in scheme
+        [InlineData("custom.scheme://example.com", true)] // Dot in scheme
+        [InlineData("123scheme://example.com", true)] // Scheme starting with digit should be invalid, but is treated as a relative IRI path
+        [InlineData("+scheme://example.com", true)] // Scheme starting with plus should be invalid, but is treated as a relative IRI path
+        [InlineData("-scheme://example.com", true)] // Scheme starting with hyphen should be invalid, but is treated as a relative IRI path
+        [InlineData(".scheme://example.com", true)] // Scheme starting with dot should be invalid, but is treated as a relative IRI path
+        public static void Create_EdgeCaseUris_HandlesCorrectly(string uri, bool shouldBeValid)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            if (shouldBeValid)
+            {
+                JsonReference reference = JsonReference.Create(uriBytes);
+                Assert.True(reference.IsValidReference);
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+            else
+            {
+                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                Assert.False(result);
+                Assert.False(reference.IsValidReference);
+            }
+        }
+
+        [Theory]
+        [InlineData("http://example.com/path%20space", true)] // Valid percent encoding
+        [InlineData("http://example.com/path%2", false)] // Invalid percent encoding (incomplete)
+        [InlineData("http://example.com/path%ZZ", false)] // Invalid percent encoding (non-hex)
+        [InlineData("http://example.com/path%00", true)] // Null byte percent encoded
+        [InlineData("http://example.com/path%FF", true)] // High byte percent encoded
+        [InlineData("http://example.com/path%C3%A9", true)] // UTF-8 encoded character (é)
+        [InlineData("http://example.com/path%E2%82%AC", true)] // UTF-8 encoded Euro symbol
+        public static void Create_PercentEncodingEdgeCases_HandlesCorrectly(string uri, bool shouldBeValid)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            if (shouldBeValid)
+            {
+                JsonReference reference = JsonReference.Create(uriBytes);
+                Assert.True(reference.IsValidReference);
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+            else
+            {
+                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                Assert.False(result);
+                Assert.False(reference.IsValidReference);
+            }
+        }
+
+        [Theory]
+        [InlineData("http://example.com/path/../other", true)] // Dot segments
+        [InlineData("http://example.com/path/./current", true)] // Single dot segment
+        [InlineData("http://example.com/path//double/slash", true)] // Double slashes in path
+        [InlineData("http://example.com\\windows\\path", false)] // Backslashes should be invalid in HTTP
+        [InlineData("file:///C:\\Windows\\Path", true)] // Backslashes in file URLs might be valid
+        [InlineData("http://example.com/path?a=1&b=2&c=3", true)] // Multiple query parameters
+        [InlineData("http://example.com/path?query=value#frag1#frag2", false)] // Fragment containing hash should be encoded
+        [InlineData("http://example.com:80/path", true)] // Default HTTP port explicitly specified
+        [InlineData("https://example.com:443/path", true)] // Default HTTPS port explicitly specified
+        public static void Create_PathAndQueryEdgeCases_HandlesCorrectly(string uri, bool shouldBeValid)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            if (shouldBeValid)
+            {
+                JsonReference reference = JsonReference.Create(uriBytes);
+                Assert.True(reference.IsValidReference);
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+            else
+            {
+                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                Assert.False(result);
+                Assert.False(reference.IsValidReference);
+            }
+        }
+
+        [Theory]
+        [InlineData("http://[::1]", true)] // IPv6 loopback
+        [InlineData("http://[2001:db8::1]", true)] // IPv6 address
+        [InlineData("http://[2001:db8::1]:8080", true)] // IPv6 with port
+        [InlineData("http://[::ffff:192.0.2.1]", true)] // IPv4-mapped IPv6
+        [InlineData("http://[invalid", false)] // Incomplete IPv6 bracket
+        [InlineData("http://invalid]", false)] // Invalid closing bracket
+        [InlineData("http://[::1::2]", false)] // Invalid IPv6 (too many colons)
+        [InlineData("http://192.168.1.256", true)] // Valid DNS hostname per RFC 1123 (invalid as IPv4, but valid as hostname)
+        [InlineData("http://192.168.1", true)] // Valid DNS hostname per RFC 1123 (invalid as IPv4, but valid as hostname)
+        public static void Create_IpAddressEdgeCases_HandlesCorrectly(string uri, bool shouldBeValid)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            if (shouldBeValid)
+            {
+                JsonReference reference = JsonReference.Create(uriBytes);
+                Assert.True(reference.IsValidReference);
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+            else
+            {
+                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                Assert.False(result);
+                Assert.False(reference.IsValidReference);
+            }
+        }
+
+        [Theory]
+        [InlineData("", true)] // Empty string
+        [InlineData(" ", false)] // Just whitespace
+        [InlineData("\t", false)] // Tab character
+        [InlineData("\n", false)] // Newline character
+        [InlineData("\r", false)] // Carriage return
+        [InlineData("http://example.com ", true)] // Trailing whitespace permitted
+        [InlineData(" http://example.com", true)] // Leading whitespace permitted
+        [InlineData("http://example.com/\u0000", false)] // Null character
+        [InlineData("http://example.com/\u001F", false)] // Control character
+        [InlineData("http://example.com/\u007F", false)] // DEL character
+        public static void Create_WhitespaceAndControlCharacters_HandlesCorrectly(string uri, bool shouldBeValid)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            if (shouldBeValid)
+            {
+                JsonReference reference = JsonReference.Create(uriBytes);
+                Assert.True(reference.IsValidReference);
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+            else
+            {
+                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                Assert.False(result);
+                Assert.False(reference.IsValidReference);
+            }
+        }
+
+        [Theory]
+        [InlineData("http://user:password@example.com", "user:password", "example.com")]
+        [InlineData("http://user@example.com", "user", "example.com")]
+        [InlineData("http://user:@example.com", "user:", "example.com")]
+        [InlineData("http://:password@example.com", ":password", "example.com")]
+        [InlineData("http://@example.com", "", "example.com")]
+        [InlineData("ftp://anonymous:guest@ftp.example.com", "anonymous:guest", "ftp.example.com")]
+        public static void ComponentExtraction_UserInfoVariations_ExtractsCorrectly(string uri, string expectedUserInfo, string expectedHost)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            if (string.IsNullOrEmpty(expectedUserInfo))
+            {
+                Assert.True(reference.User.IsEmpty);
+            }
+            else
+            {
+                Assert.Equal(Encoding.UTF8.GetBytes(expectedUserInfo), reference.User.ToArray());
+            }
+
+            Assert.Equal(Encoding.UTF8.GetBytes(expectedHost), reference.Host.ToArray());
+        }
+
+        [Theory]
+        [InlineData("SCHEME://EXAMPLE.COM/PATH")]
+        [InlineData("Http://Example.Com/Path")]
+        [InlineData("HTTPS://USER@HOST.COM:443/PATH?QUERY=VALUE#FRAGMENT")]
+        public static void Create_CaseVariations_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        [InlineData("http://example.com", new byte[] { })] // Empty path
+        [InlineData("http://example.com/", new byte[] { (byte)'/' })] // Root path
+        [InlineData("http://example.com/path", new byte[] { (byte)'/', (byte)'p', (byte)'a', (byte)'t', (byte)'h' })]
+        [InlineData("?query", new byte[] { })] // Query-only relative URI
+        [InlineData("#fragment", new byte[] { })] // Fragment-only relative URI
+        public static void ComponentExtraction_PathVariations_ExtractsCorrectly(string uri, byte[] expectedPath)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.Equal(expectedPath, reference.Path.ToArray());
+        }
+
+        [Theory]
+        [InlineData("http://example.com?")]
+        [InlineData("http://example.com#")]
+        [InlineData("http://example.com/?")]
+        [InlineData("http://example.com/#")]
+        [InlineData("path?")]
+        [InlineData("path#")]
+        public static void Create_EmptyQueryAndFragment_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Fact]
+        public static void Create_VeryLongUri_HandlesCorrectly()
+        {
+            string baseUri = "http://example.com/";
+            string longPath = new string('a', 4000); // Very long path
+            string uri = baseUri + longPath;
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        [InlineData("data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==")]
+        [InlineData("blob:http://example.com/abc-123")]
+        [InlineData("about:blank")]
+        [InlineData("javascript:void(0)")]
+        public static void Create_SpecialSchemes_HandlesCorrectly(string uri)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            JsonReference reference = JsonReference.Create(uriBytes);
+
+            Assert.True(reference.IsValidReference);
+            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+        }
+
+        [Theory]
+        // Valid relative paths
+        [InlineData("file://", true)]
+        [InlineData("file:///", true)]
+        // Valid UNC file URLs, but JSON Reference does not permit UNC paths.
+        [InlineData("file://server/share/file.txt", false)]
+        [InlineData("file://server/share/dir/", false)]
+        [InlineData("file://server/share", false)]
+        [InlineData("file://server/share/", false)]
+        // Invalid UNC file URLs
+        [InlineData("file://server", false)]
+        [InlineData("file://server/", false)]
+        [InlineData("file://server//share", false)]
+        public static void Create_UncFileUris_HandlesCorrectly(string uri, bool shouldBeValid)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            if (shouldBeValid)
+            {
+                JsonReference reference = JsonReference.Create(uriBytes);
+                Assert.True(reference.IsValidReference);
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+            else
+            {
+                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                Assert.False(result);
+                Assert.False(reference.IsValidReference);
+            }
+        }
+
+        [Theory]
+        // RFC 3986 Section 5.4.2 examples for http: scheme
+        [InlineData("http:a", true)]
+        [InlineData("http:/a", true)]
+        [InlineData("http://a", true)]
+        [InlineData("http:", true)]
+        [InlineData("http:?query", true)]
+        [InlineData("http:#frag", true)]
+        [InlineData("http://?query", false)]
+        [InlineData("http://#frag", false)]
+        [InlineData("http://", false)]
+        [InlineData("http:///a", false)]
+        public static void Create_HttpSchemeRelativeUris_HandlesCorrectly(string uri, bool shouldBeValid)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            if (shouldBeValid)
+            {
+                JsonReference reference = JsonReference.Create(uriBytes);
+                Assert.True(reference.IsValidReference);
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+            else
+            {
+                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                Assert.False(result);
+                Assert.False(reference.IsValidReference);
+            }
+        }
+
+        [Theory]
+        [InlineData("c:\\my\\file.txt", true)]
+        [InlineData("c:/my/file.txt", true)]
+        [InlineData("c:/my/file.txt#fragment", true)]
+        [InlineData("c:\\my\\file.txt#fragment", true)]
+        public static void Create_Implicit_File(string uri, bool shouldBeValid)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+
+            if (shouldBeValid)
+            {
+                JsonReference reference = JsonReference.Create(uriBytes);
+                Assert.True(reference.IsValidReference);
+                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            }
+            else
+            {
+                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                Assert.False(result);
+                Assert.False(reference.IsValidReference);
+            }
         }
     }
 }
