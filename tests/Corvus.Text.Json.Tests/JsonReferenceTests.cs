@@ -89,6 +89,9 @@ namespace Corvus.Text.Json.Tests
         [InlineData("ftp://files.example.com:21/public/", "ftp", "files.example.com:21", "", "files.example.com", "21", "/public/", "", "")]
         [InlineData("mailto:user@example.com", "mailto", "user@example.com", "user", "example.com", "", "", "", "")]
         [InlineData("file:///C:/Users/Documents/file.txt", "file", "", "", "", "", "/C:/Users/Documents/file.txt", "", "")]
+        // Edge cases: absolute URIs
+        [InlineData("http://a", "http", "a", "", "a", "", "", "", "")]
+        [InlineData("file:///", "file", "", "", "", "", "/", "", "")]
         public static void ComponentExtraction_AbsoluteUris_ExtractsCorrectly(string uri, string expectedScheme, string expectedAuthority, string expectedUser, string expectedHost, string expectedPort, string expectedPath, string expectedQuery, string expectedFragment)
         {
             byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
@@ -111,6 +114,12 @@ namespace Corvus.Text.Json.Tests
         [InlineData("#fragment-only", "", "", "", "", "", "", "", "fragment-only")]
         [InlineData("/absolute/path", "", "", "", "", "", "/absolute/path", "", "")]
         [InlineData("path?query=value#fragment", "", "", "", "", "", "path", "query=value", "fragment")]
+        // Edge cases: relative URIs and ambiguous forms
+        [InlineData("http:a", "", "", "", "", "", "a", "", "")]
+        [InlineData("http:/a", "", "", "", "", "", "/a", "", "")]
+        [InlineData("http:", "", "", "", "", "", "", "", "")]
+        [InlineData("c:/my/file.txt", "", "", "", "", "", "c:/my/file.txt", "", "")]
+        [InlineData("c:/my/file.txt#fragment", "", "", "", "", "", "c:/my/file.txt", "", "fragment")]
         public static void ComponentExtraction_RelativeUris_ExtractsCorrectly(string uri, string expectedScheme, string expectedAuthority, string expectedUser, string expectedHost, string expectedPort, string expectedPath, string expectedQuery, string expectedFragment)
         {
             byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
@@ -714,6 +723,36 @@ namespace Corvus.Text.Json.Tests
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
+        }
+
+        [Theory]
+        // Absolute URIs
+        [InlineData("http://example.com", false)]
+        [InlineData("https://example.com", false)]
+        [InlineData("ftp://example.com", false)]
+        [InlineData("mailto:user@example.com", false)]
+        [InlineData("file:///C:/Users/Documents/file.txt", false)]
+        // Relative URIs
+        [InlineData("relative/path", true)]
+        [InlineData("../parent/path", true)]
+        [InlineData("?query=only", true)]
+        [InlineData("#fragment-only", true)]
+        [InlineData("/absolute/path", true)]
+        [InlineData("", true)]
+        // Edge cases
+        [InlineData("http:a", true)]
+        [InlineData("http:/a", true)]
+        [InlineData("http://a", false)]
+        [InlineData("http:?query", true)]
+        [InlineData("http:#frag", true)]
+        [InlineData("http:", true)]
+        [InlineData("c:/my/file.txt", true)]
+        [InlineData("c:/my/file.txt#fragment", true)]
+        public static void IsRelative_Validation(string uri, bool expectedIsRelative)
+        {
+            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            JsonReference reference = JsonReference.Create(uriBytes);
+            Assert.Equal(expectedIsRelative, reference.IsRelative);
         }
     }
 }

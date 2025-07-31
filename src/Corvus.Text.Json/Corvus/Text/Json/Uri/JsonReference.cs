@@ -96,7 +96,7 @@ public readonly ref struct JsonReference
     /// <summary>
     /// Gets a value indicating whether this is a relative reference.
     /// </summary>
-    public bool IsRelative => (_flags & Utf8Uri.Flags.UserEscaped) != 0;
+    public bool IsRelative => !HasScheme;
 
     /// <summary>
     /// Gets a value indicating whether this is a valid reference.
