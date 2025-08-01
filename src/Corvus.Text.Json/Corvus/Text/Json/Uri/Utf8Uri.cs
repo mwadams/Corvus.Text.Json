@@ -1199,7 +1199,7 @@ internal static class Utf8Uri
                     }
                 }
 
-                if (!needsEscaping) needsEscaping = true;
+                needsEscaping = true;
             }
             else if (c == delim)
             {
@@ -1255,7 +1255,7 @@ internal static class Utf8Uri
             else if (((c <= (byte)'"' && c != (byte)'!') || (c >= (byte)'[' && c <= (byte)'^') || c == (byte)'>'
                     || c == (byte)'<' || c == (byte)'`'))
             {
-                if (!needsEscaping) needsEscaping = true;
+                needsEscaping = true;
 
                 // The check above validates only that we have valid IRI characters, which is not enough to
                 // conclude that we have a valid canonical IRI.
@@ -1272,7 +1272,7 @@ internal static class Utf8Uri
             }
             else if (c == (byte)'%')
             {
-                if (!foundEscaping) foundEscaping = true;
+                foundEscaping = true;
                 //try unescape a byte hex escaping
                 if (i + 2 < end)
                 {
@@ -1291,10 +1291,7 @@ internal static class Utf8Uri
                 }
 
                 // otherwise we follow to non escaped case
-                if (!needsEscaping)
-                {
-                    needsEscaping = true;
-                }
+                needsEscaping = true;
             }
 
             i += bytesConsumed;
@@ -1309,10 +1306,13 @@ internal static class Utf8Uri
         }
         else
         {
-            res |= Check.DisplayCanonical;
             if (!needsEscaping)
             {
                 res |= Check.EscapedCanonical;
+            }
+            else
+            {
+                res |= Check.DisplayCanonical;
             }
         }
         idx = i;
@@ -1361,7 +1361,7 @@ internal static class Utf8Uri
                     }
                 }
 
-                if (!needsEscaping) needsEscaping = true;
+                needsEscaping = true;
             }
             else if (c == delim)
             {
@@ -1416,7 +1416,7 @@ internal static class Utf8Uri
             else if (((c <= (byte)'"' && c != (byte)'!') || (c >= (byte)'[' && c <= (byte)'^') || c == (byte)'>'
                     || c == (byte)'<' || c == (byte)'`'))
             {
-                if (!needsEscaping) needsEscaping = true;
+                needsEscaping = true;
 
                 // The check above validates only that we have valid IRI characters, which is not enough to
                 // conclude that we have a valid canonical IRI.
@@ -1452,10 +1452,7 @@ internal static class Utf8Uri
                 }
 
                 // otherwise we follow to non escaped case
-                if (!needsEscaping)
-                {
-                    needsEscaping = true;
-                }
+                needsEscaping = true;
             }
 
             i += bytesConsumed;
@@ -1470,10 +1467,13 @@ internal static class Utf8Uri
         }
         else
         {
-            res |= Check.DisplayCanonical;
             if (!needsEscaping)
             {
                 res |= Check.EscapedCanonical;
+            }
+            else
+            {
+                res |= Check.DisplayCanonical;
             }
         }
         idx = i;

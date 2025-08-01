@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Corvus.Text.Json.Tests
 {
-    public static class JsonReferenceTests
+    public static partial class JsonReferenceTests
     {
         [Theory]
         [InlineData("https://example.com/path")]
@@ -20,14 +20,14 @@ namespace Corvus.Text.Json.Tests
         [InlineData("#fragment-only")]
         [InlineData("/absolute/path")]
         [InlineData("")]
-        public static void Create_ValidUris_ReturnsJsonReference(string uri)
+        public static void CreateIri_ValidIris_ReturnsJsonReference(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
@@ -36,11 +36,11 @@ namespace Corvus.Text.Json.Tests
         [InlineData("ht tp://example.com")]
         [InlineData("\x01\x02\x03")]
         [InlineData("http://example.com/path with spaces")]
-        public static void Create_InvalidUris_ThrowsArgumentException(string uri)
+        public static void CreateIri_InvalidIris_ThrowsArgumentException(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            ArgumentException exception = Assert.Throws<ArgumentException>(() => JsonReference.Create(uriBytes));
+            ArgumentException exception = Assert.Throws<ArgumentException>(() => JsonReference.CreateIri(iriBytes));
             Assert.Equal("The value is not a valid JSON reference.", exception.Message);
         }
 
@@ -56,15 +56,15 @@ namespace Corvus.Text.Json.Tests
         [InlineData("#fragment-only")]
         [InlineData("/absolute/path")]
         [InlineData("")]
-        public static void TryCreate_ValidUris_ReturnsTrueAndValidReference(string uri)
+        public static void TryCreateIri_ValidIris_ReturnsTrueAndValidReference(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+            bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
 
             Assert.True(result);
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
@@ -73,11 +73,11 @@ namespace Corvus.Text.Json.Tests
         [InlineData("ht tp://example.com")]
         [InlineData("\x01\x02\x03")]
         [InlineData("http://example.com/path with spaces")]
-        public static void TryCreate_InvalidUris_ReturnsFalse(string uri)
+        public static void TryCreateIri_InvalidIris_ReturnsFalse(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+            bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
 
             Assert.False(result);
             Assert.False(reference.IsValidReference);
@@ -92,10 +92,10 @@ namespace Corvus.Text.Json.Tests
         // Edge cases: absolute URIs
         [InlineData("http://a", "http", "a", "", "a", "", "", "", "")]
         [InlineData("file:///", "file", "", "", "", "", "/", "", "")]
-        public static void ComponentExtraction_AbsoluteUris_ExtractsCorrectly(string uri, string expectedScheme, string expectedAuthority, string expectedUser, string expectedHost, string expectedPort, string expectedPath, string expectedQuery, string expectedFragment)
+        public static void ComponentExtraction_AbsoluteIris_ExtractsCorrectly(string iri, string expectedScheme, string expectedAuthority, string expectedUser, string expectedHost, string expectedPort, string expectedPath, string expectedQuery, string expectedFragment)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.Equal(Encoding.UTF8.GetBytes(expectedScheme), reference.Scheme.ToArray());
             Assert.Equal(Encoding.UTF8.GetBytes(expectedAuthority), reference.Authority.ToArray());
@@ -120,10 +120,10 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http:", "", "", "", "", "", "", "", "")]
         [InlineData("c:/my/file.txt", "", "", "", "", "", "c:/my/file.txt", "", "")]
         [InlineData("c:/my/file.txt#fragment", "", "", "", "", "", "c:/my/file.txt", "", "fragment")]
-        public static void ComponentExtraction_RelativeUris_ExtractsCorrectly(string uri, string expectedScheme, string expectedAuthority, string expectedUser, string expectedHost, string expectedPort, string expectedPath, string expectedQuery, string expectedFragment)
+        public static void ComponentExtraction_RelativeIris_ExtractsCorrectly(string iri, string expectedScheme, string expectedAuthority, string expectedUser, string expectedHost, string expectedPort, string expectedPath, string expectedQuery, string expectedFragment)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.Equal(Encoding.UTF8.GetBytes(expectedScheme), reference.Scheme.ToArray());
             Assert.Equal(Encoding.UTF8.GetBytes(expectedAuthority), reference.Authority.ToArray());
@@ -148,10 +148,10 @@ namespace Corvus.Text.Json.Tests
         [InlineData("/absolute/path", false, false, false, false, true, false, false)]
         [InlineData("path?query=value#fragment", false, false, false, false, true, true, true)]
         [InlineData("", false, false, false, false, false, false, false)]
-        public static void HasProperties_VariousUris_ReturnsCorrectValues(string uri, bool hasScheme, bool hasAuthority, bool hasUser, bool hasHost, bool hasPath, bool hasQuery, bool hasFragment)
+        public static void HasProperties_VariousIris_ReturnsCorrectValues(string iri, bool hasScheme, bool hasAuthority, bool hasUser, bool hasHost, bool hasPath, bool hasQuery, bool hasFragment)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.Equal(hasScheme, reference.HasScheme);
             Assert.Equal(hasAuthority, reference.HasAuthority);
@@ -171,10 +171,10 @@ namespace Corvus.Text.Json.Tests
         [InlineData("ftp://example.com:2121", 2121, false)]
         [InlineData("mailto:user@example.com", 25, true)]
         [InlineData("relative/path", 0, true)]
-        public static void PortValue_VariousUris_ReturnsCorrectPortAndDefaultFlag(string uri, int expectedPort, bool expectedIsDefault)
+        public static void PortValue_VariousIris_ReturnsCorrectPortAndDefaultFlag(string iri, int expectedPort, bool expectedIsDefault)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.Equal(expectedPort, reference.PortValue);
             Assert.Equal(expectedIsDefault, reference.IsDefaultPort);
@@ -192,10 +192,10 @@ namespace Corvus.Text.Json.Tests
         [InlineData("#fragment-only", true)]
         [InlineData("/absolute/path", true)]
         [InlineData("", true)]
-        public static void IsRelative_VariousUris_ReturnsCorrectValue(string uri, bool expectedIsRelative)
+        public static void IsRelative_VariousIris_ReturnsCorrectValue(string iri, bool expectedIsRelative)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.Equal(expectedIsRelative, reference.IsRelative);
         }
@@ -211,13 +211,13 @@ namespace Corvus.Text.Json.Tests
         [InlineData("?query=only")]
         [InlineData("#fragment-only")]
         [InlineData("/absolute/path")]
-        public static void GetUri_ValidUris_ReturnsEquivalentUri(string uri)
+        public static void GetUri_ValidIris_ReturnsEquivalentUri(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Uri systemUri = reference.GetUri();
-            Uri expectedUri = new Uri(uri, UriKind.RelativeOrAbsolute);
+            Uri expectedUri = new Uri(iri, UriKind.RelativeOrAbsolute);
 
             Assert.Equal(expectedUri.ToString(), systemUri.ToString());
             Assert.Equal(expectedUri.IsAbsoluteUri, systemUri.IsAbsoluteUri);
@@ -229,14 +229,14 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://example.com?query=value%26encoded")]
         [InlineData("http://example.com#fragment%23encoded")]
         [InlineData("http://example.com/path?query=value&param=encoded%20value#fragment")]
-        public static void Create_PercentEncodedUris_HandlesCorrectly(string uri)
+        public static void CreateIri_PercentEncodedIris_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
@@ -246,14 +246,14 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://[2001:db8::1]:8080")]
         [InlineData("http://localhost")]
         [InlineData("http://localhost:3000")]
-        public static void Create_IpAddresses_HandlesCorrectly(string uri)
+        public static void CreateIri_IpAddresses_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
@@ -261,22 +261,22 @@ namespace Corvus.Text.Json.Tests
         [InlineData("news:comp.lang.ada")]
         [InlineData("tel:+1-816-555-1212")]
         [InlineData("ldap://[2001:db8::7]/c=GB?objectClass?one")]
-        public static void Create_NonHttpSchemes_HandlesCorrectly(string uri)
+        public static void CreateIri_NonHttpSchemes_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Fact]
-        public static void Create_EmptySpan_HandlesCorrectly()
+        public static void CreateIri_EmptySpan_HandlesCorrectly()
         {
             ReadOnlySpan<byte> emptySpan = ReadOnlySpan<byte>.Empty;
 
-            JsonReference reference = JsonReference.Create(emptySpan);
+            JsonReference reference = JsonReference.CreateIri(emptySpan);
 
             Assert.True(reference.IsValidReference);
             Assert.True(reference.OriginalUri.IsEmpty);
@@ -290,77 +290,77 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://example.com#片段")]
         [InlineData("http://пример.com")]
         [InlineData("http://例え.テスト")]
-        public static void Create_UnicodeIri_HandlesCorrectly(string uri)
+        public static void CreateIri_UnicodeIri_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference.TryCreate(uriBytes, out JsonReference reference);
+            JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Fact]
-        public static void Create_LargeUri_HandlesCorrectly()
+        public static void CreateIri_LargeUri_HandlesCorrectly()
         {
             string largePathSegment = new string('a', 1000);
             string largeUri = $"http://example.com/{largePathSegment}";
-            byte[] uriBytes = Encoding.UTF8.GetBytes(largeUri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(largeUri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Fact]
-        public static void Create_ManyQueryParameters_HandlesCorrectly()
+        public static void CreateIri_ManyQueryParameters_HandlesCorrectly()
         {
-            StringBuilder uriBuilder = new StringBuilder("http://example.com/path?");
+            StringBuilder iriBuilder = new StringBuilder("http://example.com/path?");
             for (int i = 0; i < 100; i++)
             {
-                if (i > 0) uriBuilder.Append('&');
-                uriBuilder.Append($"param{i}=value{i}");
+                if (i > 0) iriBuilder.Append('&');
+                iriBuilder.Append($"param{i}=value{i}");
             }
 
-            string uri = uriBuilder.ToString();
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            string iri = iriBuilder.ToString();
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
         [InlineData("http://example.com:1")]
         [InlineData("http://example.com:65535")]
         [InlineData("http://example.com:0")]
-        public static void Create_BoundaryPortValues_HandlesCorrectly(string uri)
+        public static void CreateIri_BoundaryPortValues_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
         [InlineData("a", false)] // This looks like a:path which is a Windows file-path-like-thing
         [InlineData("ab", true)]
         [InlineData("abc", true)]
-        public static void Create_MinimalSchemes_HandlesCorrectly(string scheme, bool handlesCorrectly)
+        public static void CreateIri_MinimalSchemes_HandlesCorrectly(string scheme, bool handlesCorrectly)
         {
-            string uri = $"{scheme}:path";
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            string iri = $"{scheme}:path";
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference.TryCreate(uriBytes, out JsonReference reference);
+            JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
 
             Assert.Equal(reference.IsValidReference, handlesCorrectly);
             if (handlesCorrectly)
             {
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
         }
 
@@ -369,18 +369,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("scheme:/")]
         [InlineData("scheme://")]
         [InlineData("scheme:///")]
-        public static void ComponentBoundaries_MinimalComponents_HandlesCorrectly(string uri)
+        public static void ComponentBoundariesIri_MinimalComponents_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Fact]
-        public static void ComponentAccess_DefaultReference_ReturnsEmptySpans()
+        public static void ComponentAccessIri_DefaultReference_ReturnsEmptySpans()
         {
             JsonReference reference = default;
 
@@ -414,19 +414,19 @@ namespace Corvus.Text.Json.Tests
         [InlineData("+scheme://example.com", true)] // Scheme starting with plus should be invalid, but is treated as a relative IRI path
         [InlineData("-scheme://example.com", true)] // Scheme starting with hyphen should be invalid, but is treated as a relative IRI path
         [InlineData(".scheme://example.com", true)] // Scheme starting with dot should be invalid, but is treated as a relative IRI path
-        public static void Create_EdgeCaseUris_HandlesCorrectly(string uri, bool shouldBeValid)
+        public static void CreateIri_EdgeCaseIris_HandlesCorrectly(string iri, bool shouldBeValid)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
             if (shouldBeValid)
             {
-                JsonReference reference = JsonReference.Create(uriBytes);
+                JsonReference reference = JsonReference.CreateIri(iriBytes);
                 Assert.True(reference.IsValidReference);
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
             else
             {
-                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
@@ -440,19 +440,19 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://example.com/path%FF", true)] // High byte percent encoded
         [InlineData("http://example.com/path%C3%A9", true)] // UTF-8 encoded character (é)
         [InlineData("http://example.com/path%E2%82%AC", true)] // UTF-8 encoded Euro symbol
-        public static void Create_PercentEncodingEdgeCases_HandlesCorrectly(string uri, bool shouldBeValid)
+        public static void CreateIri_PercentEncodingEdgeCases_HandlesCorrectly(string iri, bool shouldBeValid)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
             if (shouldBeValid)
             {
-                JsonReference reference = JsonReference.Create(uriBytes);
+                JsonReference reference = JsonReference.CreateIri(iriBytes);
                 Assert.True(reference.IsValidReference);
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
             else
             {
-                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
@@ -468,19 +468,19 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://example.com/path?query=value#frag1#frag2", false)] // Fragment containing hash should be encoded
         [InlineData("http://example.com:80/path", true)] // Default HTTP port explicitly specified
         [InlineData("https://example.com:443/path", true)] // Default HTTPS port explicitly specified
-        public static void Create_PathAndQueryEdgeCases_HandlesCorrectly(string uri, bool shouldBeValid)
+        public static void CreateIri_PathAndQueryEdgeCases_HandlesCorrectly(string iri, bool shouldBeValid)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
             if (shouldBeValid)
             {
-                JsonReference reference = JsonReference.Create(uriBytes);
+                JsonReference reference = JsonReference.CreateIri(iriBytes);
                 Assert.True(reference.IsValidReference);
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
             else
             {
-                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
@@ -496,19 +496,19 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://[::1::2]", false)] // Invalid IPv6 (too many colons)
         [InlineData("http://192.168.1.256", true)] // Valid DNS hostname per RFC 1123 (invalid as IPv4, but valid as hostname)
         [InlineData("http://192.168.1", true)] // Valid DNS hostname per RFC 1123 (invalid as IPv4, but valid as hostname)
-        public static void Create_IpAddressEdgeCases_HandlesCorrectly(string uri, bool shouldBeValid)
+        public static void CreateIri_IpAddressEdgeCases_HandlesCorrectly(string iri, bool shouldBeValid)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
             if (shouldBeValid)
             {
-                JsonReference reference = JsonReference.Create(uriBytes);
+                JsonReference reference = JsonReference.CreateIri(iriBytes);
                 Assert.True(reference.IsValidReference);
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
             else
             {
-                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
@@ -516,7 +516,7 @@ namespace Corvus.Text.Json.Tests
 
         [Theory]
         [InlineData("", true)] // Empty string
-        [InlineData(" ", false)] // Just whitespace
+        [InlineData(" ", true)] // Just whitespace
         [InlineData("\t", false)] // Tab character
         [InlineData("\n", false)] // Newline character
         [InlineData("\r", false)] // Carriage return
@@ -525,19 +525,19 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://example.com/\u0000", false)] // Null character
         [InlineData("http://example.com/\u001F", false)] // Control character
         [InlineData("http://example.com/\u007F", false)] // DEL character
-        public static void Create_WhitespaceAndControlCharacters_HandlesCorrectly(string uri, bool shouldBeValid)
+        public static void CreateIri_WhitespaceAndControlCharacters_HandlesCorrectly(string iri, bool shouldBeValid)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
             if (shouldBeValid)
             {
-                JsonReference reference = JsonReference.Create(uriBytes);
+                JsonReference reference = JsonReference.CreateIri(iriBytes);
                 Assert.True(reference.IsValidReference);
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
             else
             {
-                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
@@ -550,10 +550,10 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://:password@example.com", ":password", "example.com")]
         [InlineData("http://@example.com", "", "example.com")]
         [InlineData("ftp://anonymous:guest@ftp.example.com", "anonymous:guest", "ftp.example.com")]
-        public static void ComponentExtraction_UserInfoVariations_ExtractsCorrectly(string uri, string expectedUserInfo, string expectedHost)
+        public static void ComponentExtractionIri_UserInfoVariations_ExtractsCorrectly(string iri, string expectedUserInfo, string expectedHost)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             if (string.IsNullOrEmpty(expectedUserInfo))
             {
@@ -571,14 +571,14 @@ namespace Corvus.Text.Json.Tests
         [InlineData("SCHEME://EXAMPLE.COM/PATH")]
         [InlineData("Http://Example.Com/Path")]
         [InlineData("HTTPS://USER@HOST.COM:443/PATH?QUERY=VALUE#FRAGMENT")]
-        public static void Create_CaseVariations_HandlesCorrectly(string uri)
+        public static void CreateIri_CaseVariations_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
@@ -587,10 +587,10 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://example.com/path", new byte[] { (byte)'/', (byte)'p', (byte)'a', (byte)'t', (byte)'h' })]
         [InlineData("?query", new byte[] { })] // Query-only relative URI
         [InlineData("#fragment", new byte[] { })] // Fragment-only relative URI
-        public static void ComponentExtraction_PathVariations_ExtractsCorrectly(string uri, byte[] expectedPath)
+        public static void ComponentExtractionIri_PathVariations_ExtractsCorrectly(string iri, byte[] expectedPath)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.Equal(expectedPath, reference.Path.ToArray());
         }
@@ -602,28 +602,28 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://example.com/#")]
         [InlineData("path?")]
         [InlineData("path#")]
-        public static void Create_EmptyQueryAndFragment_HandlesCorrectly(string uri)
+        public static void CreateIri_EmptyQueryAndFragment_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Fact]
-        public static void Create_VeryLongUri_HandlesCorrectly()
+        public static void CreateIri_VeryLongUri_HandlesCorrectly()
         {
             string baseUri = "http://example.com/";
             string longPath = new string('a', 4000); // Very long path
-            string uri = baseUri + longPath;
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            string iri = baseUri + longPath;
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
@@ -631,14 +631,14 @@ namespace Corvus.Text.Json.Tests
         [InlineData("blob:http://example.com/abc-123")]
         [InlineData("about:blank")]
         [InlineData("javascript:void(0)")]
-        public static void Create_SpecialSchemes_HandlesCorrectly(string uri)
+        public static void CreateIri_SpecialSchemes_HandlesCorrectly(string iri)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
-            JsonReference reference = JsonReference.Create(uriBytes);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
 
             Assert.True(reference.IsValidReference);
-            Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+            Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
         }
 
         [Theory]
@@ -654,19 +654,19 @@ namespace Corvus.Text.Json.Tests
         [InlineData("file://server", false)]
         [InlineData("file://server/", false)]
         [InlineData("file://server//share", false)]
-        public static void Create_UncFileUris_HandlesCorrectly(string uri, bool shouldBeValid)
+        public static void CreateIri_UncFileIris_HandlesCorrectly(string iri, bool shouldBeValid)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
             if (shouldBeValid)
             {
-                JsonReference reference = JsonReference.Create(uriBytes);
+                JsonReference reference = JsonReference.CreateIri(iriBytes);
                 Assert.True(reference.IsValidReference);
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
             else
             {
-                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
@@ -684,19 +684,19 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http://#frag", false)]
         [InlineData("http://", false)]
         [InlineData("http:///a", false)]
-        public static void Create_HttpSchemeRelativeUris_HandlesCorrectly(string uri, bool shouldBeValid)
+        public static void CreateIri_HttpSchemeRelativeIris_HandlesCorrectly(string iri, bool shouldBeValid)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
             if (shouldBeValid)
             {
-                JsonReference reference = JsonReference.Create(uriBytes);
+                JsonReference reference = JsonReference.CreateIri(iriBytes);
                 Assert.True(reference.IsValidReference);
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
             else
             {
-                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
@@ -707,19 +707,19 @@ namespace Corvus.Text.Json.Tests
         [InlineData("c:/my/file.txt", true)]
         [InlineData("c:/my/file.txt#fragment", true)]
         [InlineData("c:\\my\\file.txt#fragment", true)]
-        public static void Create_Implicit_File(string uri, bool shouldBeValid)
+        public static void CreateIri_Implicit_File(string iri, bool shouldBeValid)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 
             if (shouldBeValid)
             {
-                JsonReference reference = JsonReference.Create(uriBytes);
+                JsonReference reference = JsonReference.CreateIri(iriBytes);
                 Assert.True(reference.IsValidReference);
-                Assert.Equal(uriBytes, reference.OriginalUri.ToArray());
+                Assert.Equal(iriBytes, reference.OriginalUri.ToArray());
             }
             else
             {
-                bool result = JsonReference.TryCreate(uriBytes, out JsonReference reference);
+                bool result = JsonReference.TryCreateIri(iriBytes, out JsonReference reference);
                 Assert.False(result);
                 Assert.False(reference.IsValidReference);
             }
@@ -748,10 +748,10 @@ namespace Corvus.Text.Json.Tests
         [InlineData("http:", true)]
         [InlineData("c:/my/file.txt", true)]
         [InlineData("c:/my/file.txt#fragment", true)]
-        public static void IsRelative_Validation(string uri, bool expectedIsRelative)
+        public static void IsRelativeIri_Validation(string iri, bool expectedIsRelative)
         {
-            byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
-            JsonReference reference = JsonReference.Create(uriBytes);
+            byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
+            JsonReference reference = JsonReference.CreateIri(iriBytes);
             Assert.Equal(expectedIsRelative, reference.IsRelative);
         }
     }

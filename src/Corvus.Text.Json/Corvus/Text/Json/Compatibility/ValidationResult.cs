@@ -87,16 +87,16 @@ public readonly struct ValidationResult
         /// <summary>
         /// Gets the document location as a JSON reference.
         /// </summary>
-        public JsonReference DocumentLocation => JsonReference.Create(_documentLocation);
+        public JsonReference DocumentLocation => JsonReference.CreateIri(_documentLocation);
 
         /// <summary>
         /// Gets the schema location as a JSON reference.
         /// </summary>
-        public JsonReference SchemaLocation => JsonReference.Create(_schemaLocation);
+        public JsonReference SchemaLocation => JsonReference.CreateIri(_schemaLocation);
 
         /// <summary>
         /// Gets the validation location as a JSON reference.
         /// </summary>
-        public JsonReference ValidationLocation => JsonReference.Create(_validationLocation);
+        public JsonReference ValidationLocation => JsonReference.CreateIri(_validationLocation);
     }
 }

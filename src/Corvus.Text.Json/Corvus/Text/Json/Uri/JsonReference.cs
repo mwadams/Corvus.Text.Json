@@ -27,6 +27,12 @@ public readonly ref struct JsonReference
     private readonly Utf8UriOffset _offsets;
     private readonly ReadOnlySpan<byte> _originalUri;
 
+    public JsonReference(ReadOnlySpan<byte> uri, bool allowIri) : this()
+    {
+        _originalUri = uri;
+        IsValidReference = Utf8Uri.ParseUriInfo(_originalUri, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: allowIri, allowUNCPath: false, out _offsets, out _flags);
+    }
+
     private JsonReference(ReadOnlySpan<byte> uri)
     {
         _originalUri = uri;
@@ -156,14 +162,14 @@ public readonly ref struct JsonReference
     public ReadOnlySpan<byte> User => HasUser ? _originalUri.Slice(_offsets.User, _offsets.Host - _offsets.User - 1) : [];
 
     /// <summary>
-    /// Creates a new JSON reference from the specified URI bytes.
+    /// Creates a new JSON reference from the specified IRI bytes.
     /// </summary>
-    /// <param name="uri">The URI bytes to create the reference from.</param>
+    /// <param name="uri">The IRI bytes to create the reference from.</param>
     /// <returns>A new JSON reference.</returns>
     /// <exception cref="ArgumentException">Thrown when the URI is invalid.</exception>
-    public static JsonReference Create(ReadOnlySpan<byte> uri)
+    public static JsonReference CreateIri(ReadOnlySpan<byte> uri)
     {
-        if (!TryCreate(uri, out JsonReference reference))
+        if (!TryCreateIri(uri, out JsonReference reference))
         {
             ThrowHelper.ThrowArgumentException(SR.InvalidJsonReference);
         }
@@ -172,14 +178,42 @@ public readonly ref struct JsonReference
     }
 
     /// <summary>
+    /// Creates a new JSON reference from the specified URI bytes.
+    /// </summary>
+    /// <param name="uri">The URI bytes to create the reference from.</param>
+    /// <returns>A new JSON reference.</returns>
+    /// <exception cref="ArgumentException">Thrown when the URI is invalid.</exception>
+    public static JsonReference CreateUri(ReadOnlySpan<byte> uri)
+    {
+        if (!TryCreateIri(uri, out JsonReference reference))
+        {
+            ThrowHelper.ThrowArgumentException(SR.InvalidJsonReference);
+        }
+
+        return reference;
+    }
+
+    /// <summary>
+    /// Tries to create a new JSON reference from the specified IRI bytes.
+    /// </summary>
+    /// <param name="uri">The IRI bytes to create the reference from.</param>
+    /// <param name="reference">When this method returns, contains the created reference if successful; otherwise, the default value.</param>
+    /// <returns><see langword="true"/> if the reference was created successfully; otherwise, <see langword="false"/>.</returns>
+    public static bool TryCreateIri(ReadOnlySpan<byte> uri, out JsonReference reference)
+    {
+        reference = new(uri);
+        return reference.IsValidReference;
+    }
+
+    /// <summary>
     /// Tries to create a new JSON reference from the specified URI bytes.
     /// </summary>
     /// <param name="uri">The URI bytes to create the reference from.</param>
     /// <param name="reference">When this method returns, contains the created reference if successful; otherwise, the default value.</param>
     /// <returns><see langword="true"/> if the reference was created successfully; otherwise, <see langword="false"/>.</returns>
-    public static bool TryCreate(ReadOnlySpan<byte> uri, out JsonReference reference)
+    public static bool TryCreateUri(ReadOnlySpan<byte> uri, out JsonReference reference)
     {
-        reference = new(uri);
+        reference = new(uri, false);
         return reference.IsValidReference;
     }
 
