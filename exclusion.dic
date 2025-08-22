@@ -61,3 +61,7 @@ Polyfills
 cref
 Unescapes
 timezone
+mailto
+nntp
+uuid
+vsmacros

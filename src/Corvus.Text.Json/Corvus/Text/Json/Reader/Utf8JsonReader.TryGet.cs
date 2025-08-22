@@ -1126,13 +1126,7 @@ public ref partial struct Utf8JsonReader
             span = stackSpan.Slice(0, (int)sequenceLength);
         }
         else
-        {
-            if (ValueSpan.Length > JsonConstants.MaximumEscapedGuidLength)
-            {
-                value = default;
-                return false;
-            }
-
+        {           
             span = ValueSpan;
         }
 
