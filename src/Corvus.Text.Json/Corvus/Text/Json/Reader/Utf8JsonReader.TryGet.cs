@@ -1132,6 +1132,12 @@ public ref partial struct Utf8JsonReader
 
         if (ValueIsEscaped)
         {
+            if (span.Length > JsonConstants.MaximumEscapedGuidLength)
+            {
+                value = default;
+                return false;
+            }
+
             return JsonReaderHelper.TryGetEscapedGuid(span, out value);
         }
 

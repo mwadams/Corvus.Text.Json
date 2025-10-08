@@ -119,10 +119,7 @@ internal static class Utf8Uri
         /// </summary>
         CustomParser_ParseMinimalAlreadyCalled = 0x4000000000000000,
 
-        /// <summary>
-        /// Used for asserting that certain methods are only called from the constructor to validate thread-safety assumptions
-        /// </summary>
-        Debug_LeftConstructor = 0x8000000000000000
+        HasUnescapedUnicode = 0x8000000000000000,
     }
 
     [Flags]
@@ -188,7 +185,7 @@ internal static class Utf8Uri
             return false;
         }
 
-        if ((flags & Flags.HasUnicode) != 0 && !allowIri)
+        if ((flags & Flags.HasUnescapedUnicode) != 0 && !allowIri)
         {
             uriInfo = default;
             resultFlags = flags;
@@ -383,6 +380,11 @@ internal static class Utf8Uri
             // Check the path
             fixed (byte* str = uriString)
             {
+                while (str[idx] == (byte)' ')
+                {
+                    idx++;
+                }
+
                 Check result = CheckCanonical(str, ref idx, length, (queryIdx >= 0) ? (byte)'?' : (hashIdx >= 0) ? (byte)'#' : c_EOL, iriParsing, queryIdx >= 0, hashIdx >= 0);
                 if ((result & (Check.BackslashInPath | Check.ReservedFound | Check.NotIriCanonical)) != 0)
                 {
@@ -510,9 +512,9 @@ internal static class Utf8Uri
             }
         }
 
-        if (IriParsing(syntax) && CheckForUnicodeOrEscapedUnreserved(uriString))
+        if (IriParsing(syntax) && CheckForUnicodeOrEscapedUnreserved(uriString, out Flags localFlags))
         {
-            flags |= Flags.HasUnicode;
+            flags |= localFlags;
         }
 
         bool success = true;
@@ -609,9 +611,9 @@ internal static class Utf8Uri
                     syntax = null!; //make it be relative Uri
                     flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
 
-                    if (CheckForUnicodeOrEscapedUnreserved(uriString))
+                    if (CheckForUnicodeOrEscapedUnreserved(uriString, out Flags localFlags))
                     {
-                        flags |= Flags.HasUnicode;
+                        flags |= localFlags;
                     }
 
                     return requireAbsolute ? false : true;
@@ -636,9 +638,9 @@ internal static class Utf8Uri
             return false;
         }
 
-        if (IriParsing(syntax) && CheckForUnicodeOrEscapedUnreserved(uriString))
+        if (IriParsing(syntax) && CheckForUnicodeOrEscapedUnreserved(uriString, out Flags localFlags2))
         {
-            flags |= Flags.HasUnicode;
+            flags |= localFlags2;
         }
 
         bool success = true;
@@ -1532,8 +1534,9 @@ internal static class Utf8Uri
     /// <summary>
     /// Unescapes entire string and checks if it has unicode chars.Also checks for sequences that are 3986 Unreserved characters as these should be un-escaped
     /// </summary>
-    private static bool CheckForUnicodeOrEscapedUnreserved(ReadOnlySpan<byte> data)
+    private static bool CheckForUnicodeOrEscapedUnreserved(ReadOnlySpan<byte> data, out Flags flags)
     {
+        flags = default;
         int i = IndexOfAnyExcept(data, s_asciiOtherThanPercent);
         if (i >= 0)
         {
@@ -1548,8 +1551,10 @@ internal static class Utf8Uri
                     {
                         char value = Utf8UriHelper.DecodeHexChars(data[i + 1], data[i + 2]);
 
-                        if (!IsAscii(value) || Contains(value, Utf8UriHelper.Unreserved))
+                        bool isAscii = IsAscii(value);
+                        if (!isAscii || Contains(value, Utf8UriHelper.Unreserved))
                         {
+                            flags |= Flags.HasUnicode;
                             return true;
                         }
 
@@ -1559,6 +1564,7 @@ internal static class Utf8Uri
                 }
                 else if (b > 0x7F)
                 {
+                    flags |= Flags.HasUnicode | Flags.HasUnescapedUnicode;
                     return true;
                 }
             }
@@ -1573,8 +1579,6 @@ internal static class Utf8Uri
     //
     private static Utf8UriParsingError ParseScheme(ReadOnlySpan<byte> uriString, ref Flags flags, ref Utf8UriParser? syntax)
     {
-        Debug.Assert((flags & Flags.Debug_LeftConstructor) == 0);
-
         int length = uriString.Length;
         if (length == 0)
             return Utf8UriParsingError.EmptyUriString;
@@ -1615,7 +1619,6 @@ internal static class Utf8Uri
     private static int ParseSchemeCheckImplicitFile(ReadOnlySpan<byte> uriString, ref Utf8UriParsingError err, ref Flags flags, ref Utf8UriParser? syntax)
     {
         Debug.Assert(err == Utf8UriParsingError.None);
-        Debug.Assert((flags & Flags.Debug_LeftConstructor) == 0);
 
         int i = 0;
         int length = uriString.Length;

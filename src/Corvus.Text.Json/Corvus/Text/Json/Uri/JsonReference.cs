@@ -185,7 +185,7 @@ public readonly ref struct JsonReference
     /// <exception cref="ArgumentException">Thrown when the URI is invalid.</exception>
     public static JsonReference CreateUri(ReadOnlySpan<byte> uri)
     {
-        if (!TryCreateIri(uri, out JsonReference reference))
+        if (!TryCreateUri(uri, out JsonReference reference))
         {
             ThrowHelper.ThrowArgumentException(SR.InvalidJsonReference);
         }
