@@ -83,7 +83,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.3.15" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.3.19" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
   </ItemGroup>
 

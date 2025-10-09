@@ -300,15 +300,15 @@ internal static partial class CodeGeneratorExtensions
                 .AppendSeparatorLine()
                 .AppendBlockIndent(
                 """
-            /// <summary>
-            /// Matches the value against the composed values, and returns the result of calling the provided match function for the first match found.
-            /// </summary>
-            """);
+                /// <summary>
+                /// Matches the value against the composed values, and returns the result of calling the provided match function for the first match found.
+                /// </summary>
+                """);
 
             if (includeContext)
             {
                 generator
-                    .AppendLineIndent("/// <typeparam name=\"TContext\">The immutable context to pass in to the match function.</typeparam>");
+                    .AppendLineIndent("/// <typeparam name=\"TContext\">The type of the immutable context to pass in to the match function.</typeparam>");
             }
 
             generator
@@ -404,7 +404,7 @@ internal static partial class CodeGeneratorExtensions
                 string matchTypeName = match.ReducedTypeDeclaration().ReducedType.FullyQualifiedDotnetTypeName();
                 generator
                     .AppendSeparatorLine()
-                    .AppendLineIndent("if (", matchTypeName, ".", generator.JsonSchemaClassName(), ".Evaluate(_parent, _idx))")
+                    .AppendLineIndent("if (", matchTypeName, ".", generator.JsonSchemaClassName(matchTypeName), ".Evaluate(_parent, _idx))")
                     .AppendLineIndent("{")
                     .PushIndent()
                         .AppendLineIndent("return ", parameterNames[i], "(", matchTypeName, ".From(this)", includeContext ? ", context" : string.Empty, ");")
