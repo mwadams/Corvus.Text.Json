@@ -34,11 +34,11 @@ public sealed class JsonSchemaPartial : ICodeFileBuilder
                     new("global::System", addExplicitUsings),
                     new("global::System.Diagnostics", addExplicitUsings),
                     new("global::System.Diagnostics.CodeAnalysis", addExplicitUsings),
-                    "System.Buffers",
-                    "System.Buffers.Text",
-                    "System.Runtime.CompilerServices",
-                    "Corvus.Text.Json",
-                    "Corvus.Text.Json.Internal")
+                    "global::System.Buffers",
+                    "global::System.Buffers.Text",
+                    "global::System.Runtime.CompilerServices",
+                    "global::Corvus.Text.Json",
+                    "global::Corvus.Text.Json.Internal")
                 .AppendLine()
                 .BeginTypeDeclarationNesting(typeDeclaration)
                     .AppendDocumentation(typeDeclaration)
