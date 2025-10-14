@@ -849,8 +849,8 @@ public readonly struct Person : IJsonElement<Person>
 
         private static bool TryGetValidator(ReadOnlySpan<byte> span, [NotNullWhen(true)] out JsonSchemaMatcherWithRequiredBitBuffer? validator)
         {
-            // We only have 1 property, so it is going to be vastly more efficient to do this
-            // with property names
+            // We only have 3 properties, so it is going to be more efficient to do this
+            // with property names rather than build a dictionary
             if (JsonPropertyNamesEscaped.Name.SequenceEqual(span))
             {
                 validator = MatchName;

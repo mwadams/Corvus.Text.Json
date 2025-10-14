@@ -568,9 +568,6 @@ public readonly struct Age : IJsonElement<Age>
 
             JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);
 
-            /* Number matching
-             * This would be if (tokenType != JsonTokenType.Number) for the non-matching case where we have numeric keywords
-             * to match, but no explicit type check */
             if (!JsonSchemaEvaluation.MatchTypeNumber(tokenType, "type"u8, ref context))
             {
                 if (!context.HasCollector)

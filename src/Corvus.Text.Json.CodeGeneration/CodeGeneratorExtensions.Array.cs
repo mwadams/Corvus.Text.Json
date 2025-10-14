@@ -11,7 +11,7 @@ namespace Corvus.Text.Json.CodeGeneration;
 internal static partial class CodeGeneratorExtensions
 {
     /// <summary>
-    /// Append the static property which provides the dimension of the array.
+    /// Append the static property which provides the dimension (fixed length) of the array.
     /// </summary>
     /// <param name="generator">The code generator.</param>
     /// <param name="typeDeclaration">The type declaration for which to emit the property.</param>
@@ -31,7 +31,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendBlockIndent(
                     """
                 /// <summary>
-                /// Gets the dimension of the array.
+                /// Gets the fixed length of the array at its current rank.
                 /// </summary>
                 """)
                 .AppendIndent("public static int Dimension => ")

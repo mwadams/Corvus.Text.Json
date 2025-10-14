@@ -315,7 +315,7 @@ internal static partial class CodeGeneratorExtensions
         generator
             .AppendSeparatorLine()
             .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// Provides encoded UTF8 versions of the JSON property names on the object.")
+            .AppendLineIndent("/// Provides escaped UTF-8 versions of the JSON property names on the object.")
             .AppendLineIndent("/// </summary>")
             .BeginPrivateStaticClassDeclaration(generator.JsonPropertyNamesEscapedClassName());
 

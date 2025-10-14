@@ -29,7 +29,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
         {
             case "date":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchDate(",
+                   "JsonSchemaEvaluation.MatchDate(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -37,7 +37,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "date-time":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchDateTime(",
+                   "JsonSchemaEvaluation.MatchDateTime(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -45,7 +45,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "time":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchTime(",
+                   "JsonSchemaEvaluation.MatchTime(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -53,7 +53,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "duration":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchDuration(",
+                   "JsonSchemaEvaluation.MatchDuration(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -61,7 +61,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "email":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchEmail(",
+                   "JsonSchemaEvaluation.MatchEmail(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -69,7 +69,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "idn-email":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIdnEmail(",
+                   "JsonSchemaEvaluation.MatchIdnEmail(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -77,7 +77,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "hostname":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchHostname(",
+                   "JsonSchemaEvaluation.MatchHostname(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -85,7 +85,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "idn-hostname":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIdnHostname(",
+                   "JsonSchemaEvaluation.MatchIdnHostname(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -93,7 +93,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "ipv4":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIPV4(",
+                   "JsonSchemaEvaluation.MatchIPV4(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -101,7 +101,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "ipv6":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIPV6(",
+                   "JsonSchemaEvaluation.MatchIPV6(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -109,7 +109,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "uuid":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchUuid(",
+                   "JsonSchemaEvaluation.MatchUuid(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -117,7 +117,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "uri":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchUri(",
+                   "JsonSchemaEvaluation.MatchUri(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -125,7 +125,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "uri-template":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchUriTemplate(",
+                   "JsonSchemaEvaluation.MatchUriTemplate(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -133,7 +133,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "uri-reference":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchUriReference(",
+                   "JsonSchemaEvaluation.MatchUriReference(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -141,7 +141,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "iri":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIri(",
+                   "JsonSchemaEvaluation.MatchIri(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -149,7 +149,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "iri-reference":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchIriReference(",
+                   "JsonSchemaEvaluation.MatchIriReference(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -157,7 +157,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "json-pointer":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchJsonPointer(",
+                   "JsonSchemaEvaluation.MatchJsonPointer(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -165,7 +165,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "relative-json-pointer":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchRelativeJsonPointer(",
+                   "JsonSchemaEvaluation.MatchRelativeJsonPointer(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -173,7 +173,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
 
             case "regex":
                 generator.AppendIndent(
-                   "JsonSchemaMatching.MatchRegex(",
+                   "JsonSchemaEvaluation.MatchRegex(",
                    valueIdentifier, ", ",
                    formatKeywordProviderExpression, ", ",
                    "ref ", validationContextIdentifier, ")");
@@ -553,11 +553,11 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
     }
 
     /// <inheritdoc/>
-    public JsonValueKind? GetExpectedValueKind(string format)
+    public JsonTokenType? GetExpectedTokenType(string format)
     {
         if (HandlesFormat(format))
         {
-            return JsonValueKind.String;
+            return JsonTokenType.String;
         }
 
         return null;

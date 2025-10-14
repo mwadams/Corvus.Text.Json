@@ -26,8 +26,13 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
+        List<ComposedBuilder> builders = [];
+
         return generator
-            .AppendSourceRefStruct(typeDeclaration);
+            .AppendSourceRefStruct(typeDeclaration, builders)
+            .AppendBuilderRefStruct(typeDeclaration, builders, forArray: true)
+            .AppendBuilderRefStruct(typeDeclaration, builders, forArray: false)
+            .AppendCommonCreateDocumentBuilders(typeDeclaration, builders);
     }
 
     private static CodeGenerator AppendAddAsItem(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
@@ -754,6 +759,23 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator;
+    }
+
+    private static CodeGenerator AppendSourceRefStruct(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
+    {
+        return generator
+            .AppendSeparatorLine()
+            .BeginRefStruct(GeneratedTypeAccessibility.Public, generator.SourceClassName(), isReadOnly: false)
+                .CollectBuilderSourcesAndAppendSourceKindEnum(typeDeclaration, builders)
+                .AppendSourceFields(typeDeclaration, builders)
+                .AppendSourceConstructors(typeDeclaration, builders)
+                .AppendSourceConversionOperators(typeDeclaration, builders)
+                .AppendSourceFactoryMethods(typeDeclaration, builders)
+                .AppendAddAsProperty(typeDeclaration, builders, "ReadOnlySpan<byte>", "utf8Name", includeEscaping: true)
+                .AppendAddAsProperty(typeDeclaration, builders, "ReadOnlySpan<char>", "name", includeEscaping: false)
+                .AppendAddAsProperty(typeDeclaration, builders, "string", "name", includeEscaping: false)
+                .AppendAddAsItem(typeDeclaration, builders)
+            .EndClassStructOrEnumDeclaration();
     }
 
     private static CodeGenerator AppendBuilderRefStruct(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders, bool forArray)
@@ -2116,34 +2138,6 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator;
-    }
-
-    private static CodeGenerator AppendSourceRefStruct(this CodeGenerator generator, TypeDeclaration typeDeclaration)
-    {
-        if (generator.IsCancellationRequested)
-        {
-            return generator;
-        }
-
-        List<ComposedBuilder> builders = [];
-
-        return generator
-            .AppendSeparatorLine()
-            .BeginRefStruct(GeneratedTypeAccessibility.Public, generator.SourceClassName(), isReadOnly: false)
-                .CollectBuilderSourcesAndAppendSourceKindEnum(typeDeclaration, builders)
-                .AppendSourceFields(typeDeclaration, builders)
-                .AppendSourceConstructors(typeDeclaration, builders)
-                .AppendSourceConversionOperators(typeDeclaration, builders)
-                .AppendSourceFactoryMethods(typeDeclaration, builders)
-                .AppendAddAsProperty(typeDeclaration, builders, "ReadOnlySpan<byte>", "utf8Name", includeEscaping: true)
-                .AppendAddAsProperty(typeDeclaration, builders, "ReadOnlySpan<char>", "name", includeEscaping: false)
-                .AppendAddAsProperty(typeDeclaration, builders, "string", "name", includeEscaping: false)
-                .AppendAddAsItem(typeDeclaration, builders)
-            .EndClassStructOrEnumDeclaration()
-            .AppendBuilderRefStruct(typeDeclaration, builders, forArray: true)
-            .AppendBuilderRefStruct(typeDeclaration, builders, forArray: false)
-            .AppendCommonCreateDocumentBuilders(typeDeclaration, builders);
-        ;
     }
 
     private static MethodParameter[] BuildMethodParameters(CodeGenerator generator, TypeDeclaration typeDeclaration)

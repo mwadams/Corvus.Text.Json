@@ -12,11 +12,11 @@
 using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
-using System.Buffers;
-using System.Buffers.Text;
-using System.Runtime.CompilerServices;
-using Corvus.Text.Json;
-using Corvus.Text.Json.Internal;
+using global::System.Buffers;
+using global::System.Buffers.Text;
+using global::System.Runtime.CompilerServices;
+using global::Corvus.Text.Json;
+using global::Corvus.Text.Json.Internal;
 
 namespace Test;
 

@@ -128,11 +128,11 @@ public interface IFormatHandler
     bool AppendFormatSourceConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators);
 
     /// <summary>
-    /// Gets the expected <see cref="JsonValueKind"/> for instances
+    /// Gets the expected <see cref="JsonTokenType"/> for instances
     /// that support the given format.
     /// </summary>
     /// <param name="format">The format for which to get the value kind.</param>
-    /// <returns>The expected <see cref="JsonValueKind"/>, or <see langword="null"/>
+    /// <returns>The expected <see cref="JsonTokenType"/>, or <see langword="null"/>
     /// if the format was not handled by this instance.</returns>
-    JsonValueKind? GetExpectedValueKind(string format);
+    JsonTokenType? GetExpectedTokenType(string format);
 }

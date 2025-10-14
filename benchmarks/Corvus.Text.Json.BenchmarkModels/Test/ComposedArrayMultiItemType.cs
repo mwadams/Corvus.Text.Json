@@ -12,11 +12,11 @@
 using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
-using System.Buffers;
-using System.Buffers.Text;
-using System.Runtime.CompilerServices;
-using Corvus.Text.Json;
-using Corvus.Text.Json.Internal;
+using global::System.Buffers;
+using global::System.Buffers.Text;
+using global::System.Runtime.CompilerServices;
+using global::Corvus.Text.Json;
+using global::Corvus.Text.Json.Internal;
 
 namespace Test;
 /// <summary>
@@ -46,7 +46,7 @@ public readonly partial struct ComposedArrayMultiItemType
     public static ComposedArrayMultiItemType DefaultInstance { get; }
 
     /// <summary>
-    /// Gets the dimension of the array.
+    /// Gets the fixed length of the array at its current rank.
     /// </summary>
     public static int Dimension => 10;
 
@@ -339,7 +339,7 @@ public readonly partial struct ComposedArrayMultiItemType
     /// <summary>
     /// Matches the value against the composed values, and returns the result of calling the provided match function for the first match found.
     /// </summary>
-    /// <typeparam name="TContext">The immutable context to pass in to the match function.</typeparam>
+    /// <typeparam name="TContext">The type of the immutable context to pass in to the match function.</typeparam>
     /// <typeparam name="TResult">The result of calling the match function.</typeparam>
     /// <param name="context">The context to pass to the match function.</param>
     /// <param name="matchItemsEntityArray">Match a <see cref="Test.ComposedArrayMultiItemType.ItemsEntityArray"/>.</param>
@@ -389,214 +389,5 @@ public readonly partial struct ComposedArrayMultiItemType
         }
 
         return defaultMatch(this);
-    }
-
-    public ref struct Source
-    {
-        private enum Kind
-        {
-            Unknown,
-            JsonElement,
-            ItemsEntityArrayBuilder,
-            DoubleArray,
-            OneOf1EItemArrayBuilder,
-        }
-
-        private readonly Kind _kind;
-        private readonly JsonElement _jsonElement;
-        private readonly Test.ComposedArrayMultiItemType.ItemsEntityArray.Builder.Build? _itemsEntityArrayBuilderInstance;
-        private readonly ReadOnlySpan<double> _doubleArray;
-        private readonly Test.ComposedArrayMultiItemType.OneOf1EItemArray.Builder.Build? _oneOf1EItemArrayBuilderInstance;
-
-        private Source(JsonElement jsonElement)
-        {
-            _jsonElement = jsonElement;
-            _kind = Kind.JsonElement;
-        }
-        private Source(ReadOnlySpan<double> value)
-        {
-            _doubleArray = value;
-            _kind = Kind.DoubleArray;
-        }
-
-        public Source(Test.ComposedArrayMultiItemType.ItemsEntityArray.Builder.Build value) { _itemsEntityArrayBuilderInstance = value; _kind = Kind.ItemsEntityArrayBuilder; }
-
-        public Source(Test.ComposedArrayMultiItemType.OneOf1EItemArray.Builder.Build value) { _oneOf1EItemArrayBuilderInstance = value; _kind = Kind.OneOf1EItemArrayBuilder; }
-
-        public static implicit operator Source(ComposedArrayMultiItemType instance) => new(JsonElement.From(instance));
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Source(Test.ComposedArrayMultiItemType.ItemsEntityArray instance) => new(JsonElement.From(instance));
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Source(Test.ComposedArrayMultiItemType.OneOf1EItemArray instance) => new(JsonElement.From(instance));
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Source FromArray(ReadOnlySpan<double> value) => new(value);
-
-        internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
-        {
-            switch(_kind)
-            {
-                case Kind.Unknown:
-                    break;
-                case Kind.JsonElement:
-                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
-                    break;
-                case Kind.ItemsEntityArrayBuilder:
-                    valueBuilder.AddProperty(utf8Name, _itemsEntityArrayBuilderInstance!, static (b, ref o) => Test.ComposedArrayMultiItemType.ItemsEntityArray.Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
-                    break;
-                case Kind.DoubleArray:
-                    valueBuilder.AddPropertyArrayValue(utf8Name, _doubleArray!, escapeName, nameRequiresUnescaping);
-                    break;
-                case Kind.OneOf1EItemArrayBuilder:
-                    valueBuilder.AddProperty(utf8Name, _oneOf1EItemArrayBuilderInstance!, static (b, ref o) => Test.ComposedArrayMultiItemType.OneOf1EItemArray.Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
-                    break;
-                default:
-                    Debug.Fail("Unexpected Kind");
-                    break;
-            }
-        }
-
-        internal void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
-        {
-            switch(_kind)
-            {
-                case Kind.Unknown:
-                    break;
-                case Kind.JsonElement:
-                    valueBuilder.AddProperty(name, _jsonElement);
-                    break;
-                case Kind.ItemsEntityArrayBuilder:
-                    valueBuilder.AddProperty(name, _itemsEntityArrayBuilderInstance!, static (b, ref o) => Test.ComposedArrayMultiItemType.ItemsEntityArray.Builder.BuildValue(b, ref o));
-                    break;
-                case Kind.DoubleArray:
-                    valueBuilder.AddPropertyArrayValue(name, _doubleArray!);
-                    break;
-                case Kind.OneOf1EItemArrayBuilder:
-                    valueBuilder.AddProperty(name, _oneOf1EItemArrayBuilderInstance!, static (b, ref o) => Test.ComposedArrayMultiItemType.OneOf1EItemArray.Builder.BuildValue(b, ref o));
-                    break;
-                default:
-                    Debug.Fail("Unexpected Kind");
-                    break;
-            }
-        }
-
-        internal void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
-        {
-            switch(_kind)
-            {
-                case Kind.Unknown:
-                    break;
-                case Kind.JsonElement:
-                    valueBuilder.AddProperty(name, _jsonElement);
-                    break;
-                case Kind.ItemsEntityArrayBuilder:
-                    valueBuilder.AddProperty(name, _itemsEntityArrayBuilderInstance!, static (b, ref o) => Test.ComposedArrayMultiItemType.ItemsEntityArray.Builder.BuildValue(b, ref o));
-                    break;
-                case Kind.DoubleArray:
-                    valueBuilder.AddPropertyArrayValue(name, _doubleArray!);
-                    break;
-                case Kind.OneOf1EItemArrayBuilder:
-                    valueBuilder.AddProperty(name, _oneOf1EItemArrayBuilderInstance!, static (b, ref o) => Test.ComposedArrayMultiItemType.OneOf1EItemArray.Builder.BuildValue(b, ref o));
-                    break;
-                default:
-                    Debug.Fail("Unexpected Kind");
-                    break;
-            }
-        }
-
-        internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
-        {
-            switch(_kind)
-            {
-                case Kind.Unknown:
-                    break;
-                case Kind.JsonElement:
-                    valueBuilder.AddItem(_jsonElement);
-                    break;
-                case Kind.ItemsEntityArrayBuilder:
-                    valueBuilder.AddItem(_itemsEntityArrayBuilderInstance!, static (b, ref o) => Test.ComposedArrayMultiItemType.ItemsEntityArray.Builder.BuildValue(b, ref o));
-                    break;
-                case Kind.DoubleArray:
-                    valueBuilder.AddItemArrayValue(_doubleArray!);
-                    break;
-                case Kind.OneOf1EItemArrayBuilder:
-                    valueBuilder.AddItem(_oneOf1EItemArrayBuilderInstance!, static (b, ref o) => Test.ComposedArrayMultiItemType.OneOf1EItemArray.Builder.BuildValue(b, ref o));
-                    break;
-                default:
-                    Debug.Fail("Unexpected Kind");
-                    break;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Creates and initializes a mutable document from a value.
-    /// </summary>
-    /// <param name="workspace">The JSON workspace.</param>
-    /// <param name="value">The value with which to initialize the builder.</param>
-    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
-    /// <returns>An instance of a mutable document initialized with the given value.</returns>
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-        JsonWorkspace workspace, in Source value, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        value.AddAsItem(ref cvb);
-        Debug.Assert(cvb.MemberCount == 1);
-        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
-    /// <summary>
-    /// Creates and initializes a mutable document from a value.
-    /// </summary>
-    /// <param name="workspace">The JSON workspace.</param>
-    /// <param name="value">The value with which to initialize the builder.</param>
-    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
-    /// <returns>An instance of a mutable document initialized with the given value.</returns>
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-        JsonWorkspace workspace, in Test.ComposedArrayMultiItemType.ItemsEntityArray.Builder.Build value, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        var source = new Test.ComposedArrayMultiItemType.ItemsEntityArray.Source(value);
-        source.AddAsItem(ref cvb);
-        Debug.Assert(cvb.MemberCount == 1);
-        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
-    /// <summary>
-    /// Creates and initializes a mutable document from a value.
-    /// </summary>
-    /// <param name="workspace">The JSON workspace.</param>
-    /// <param name="value">The value with which to initialize the builder.</param>
-    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
-    /// <returns>An instance of a mutable document initialized with the given value.</returns>
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-        JsonWorkspace workspace, in Test.ComposedArrayMultiItemType.OneOf1EItemArray.Builder.Build value, int initialCapacity = 30)
-    {
-        // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
-        var source = new Test.ComposedArrayMultiItemType.OneOf1EItemArray.Source(value);
-        source.AddAsItem(ref cvb);
-        Debug.Assert(cvb.MemberCount == 1);
-        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
-        return documentBuilder;
-    }
-
-    /// <summary>
-    /// Creates and initializes a mutable document from this instance.
-    /// </summary>
-    /// <param name="workspace">The JSON workspace.</param>
-    /// <returns>An instance of a mutable document initialized with this instance.</returns>
-    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
-    {
-        return workspace.CreateDocumentBuilder<ComposedArrayMultiItemType, Mutable>(this);
     }
 }

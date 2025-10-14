@@ -12,11 +12,11 @@
 using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
-using System.Buffers;
-using System.Buffers.Text;
-using System.Runtime.CompilerServices;
-using Corvus.Text.Json;
-using Corvus.Text.Json.Internal;
+using global::System.Buffers;
+using global::System.Buffers.Text;
+using global::System.Runtime.CompilerServices;
+using global::Corvus.Text.Json;
+using global::Corvus.Text.Json.Internal;
 
 namespace Test;
 /// <summary>
@@ -474,7 +474,7 @@ public readonly partial struct ComplexComposedObjectWithProperties
         /// <summary>
         /// Matches the value against the composed values, and returns the result of calling the provided match function for the first match found.
         /// </summary>
-        /// <typeparam name="TContext">The immutable context to pass in to the match function.</typeparam>
+        /// <typeparam name="TContext">The type of the immutable context to pass in to the match function.</typeparam>
         /// <typeparam name="TResult">The result of calling the match function.</typeparam>
         /// <param name="context">The context to pass to the match function.</param>
         /// <param name="matchAllOf0Entity">Match a <see cref="Test.ComplexComposedObjectWithProperties.AllOf0Entity"/>.</param>
@@ -529,7 +529,7 @@ public readonly partial struct ComplexComposedObjectWithProperties
         /// <summary>
         /// Matches the value against the composed values, and returns the result of calling the provided match function for the first match found.
         /// </summary>
-        /// <typeparam name="TContext">The immutable context to pass in to the match function.</typeparam>
+        /// <typeparam name="TContext">The type of the immutable context to pass in to the match function.</typeparam>
         /// <typeparam name="TResult">The result of calling the match function.</typeparam>
         /// <param name="context">The context to pass to the match function.</param>
         /// <param name="matchAnyOf0Entity">Match a <see cref="Test.ComplexComposedObjectWithProperties.AnyOf0Entity"/>.</param>
@@ -648,5 +648,264 @@ public readonly partial struct ComplexComposedObjectWithProperties
             result = default;
             return false;
         }
+    }
+
+    public ref struct Source
+    {
+        private enum Kind
+        {
+            Unknown,
+            JsonElement,
+            AnyOf0EntityBuilder,
+            AnyOf1EntityBuilder,
+            Builder,
+        }
+
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly Builder.Build? _objectBuilder;
+
+        private Source(JsonElement jsonElement)
+        {
+            _jsonElement = jsonElement;
+            _kind = Kind.JsonElement;
+        }
+
+        public Source(Test.ComplexComposedObjectWithProperties.Builder.Build value) { _objectBuilder = value; _kind = Kind.Builder; }
+
+        public static implicit operator Source(ComplexComposedObjectWithProperties instance) => new(JsonElement.From(instance));
+
+        internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(name, _jsonElement);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(name, _jsonElement);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+    }
+
+    public ref struct Builder
+    {
+        public delegate void Build(ref Builder builder);
+
+        internal ComplexValueBuilder _builder;
+
+        internal Builder(ComplexValueBuilder builder)
+        {
+            _builder = builder;
+        }
+
+        /// <summary>
+        /// Creates an instance of a <see cref="ComplexComposedObjectWithProperties"/>.
+        /// </summary>
+        internal static void Create(
+            ref ComplexValueBuilder builder,
+            in Test.ComplexComposedObjectWithProperties.AllOf0Entity.NameEntity.Source name = default,
+            in Test.ComplexComposedObjectWithProperties.AllOf1Entity.OtherNameEntity.Source otherName = default)
+        {
+            name.AddAsProperty(JsonPropertyNamesEscaped.Name, ref builder, escapeName: false);
+            otherName.AddAsProperty(JsonPropertyNamesEscaped.OtherName, ref builder, escapeName: false);
+        }
+
+        /// <summary>
+        /// Creates an instance of a <see cref="ComplexComposedObjectWithProperties"/>.
+        /// </summary>
+        public void Create(in Test.ComplexComposedObjectWithProperties.AllOf0Entity.NameEntity.Source name = default, in Test.ComplexComposedObjectWithProperties.AllOf1Entity.OtherNameEntity.Source otherName = default)
+        {
+            Create(ref _builder, name, otherName);
+        }
+
+        /// <summary>
+        /// Add a property to the object.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to add.</param>
+        /// <param name="value">The value of the property to add.</param>
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in JsonElement.Source value)
+        {
+            value.AddAsProperty(propertyName, ref _builder);
+        }
+
+        /// <summary>
+        /// Add a property to the object.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to add.</param>
+        /// <param name="value">The value of the property to add.</param>
+        public void AddProperty(ReadOnlySpan<char> propertyName, in JsonElement.Source value)
+        {
+            value.AddAsProperty(propertyName, ref _builder);
+        }
+
+        /// <summary>
+        /// Add a property to the object.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to add.</param>
+        /// <param name="value">The value of the property to add.</param>
+        public void AddProperty(string propertyName, in JsonElement.Source value)
+        {
+            value.AddAsProperty(propertyName, ref _builder);
+        }
+
+        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
+        {
+            o.StartObject();
+
+            Builder ovb = new(o);
+            value(ref ovb);
+            o = ovb._builder;
+            o.EndObject();
+        }
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from a value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="value">The value with which to initialize the builder.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given value.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+        JsonWorkspace workspace, in Source value, int initialCapacity = 30)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        value.AddAsItem(ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from a value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="value">The value with which to initialize the builder.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given value.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+        JsonWorkspace workspace, in Builder.Build value, int initialCapacity = 30)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        var source = new Source(value);
+        source.AddAsItem(ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from a value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="value">The value with which to initialize the builder.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given value.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+        JsonWorkspace workspace, in Test.ComplexComposedObjectWithProperties.AnyOf0Entity.Builder.Build value, int initialCapacity = 30)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        var source = new Test.ComplexComposedObjectWithProperties.AnyOf0Entity.Source(value);
+        source.AddAsItem(ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from a value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="value">The value with which to initialize the builder.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given value.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+        JsonWorkspace workspace, in Test.ComplexComposedObjectWithProperties.AnyOf1Entity.Builder.Build value, int initialCapacity = 30)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        var source = new Test.ComplexComposedObjectWithProperties.AnyOf1Entity.Source(value);
+        source.AddAsItem(ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from this instance.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <returns>An instance of a mutable document initialized with this instance.</returns>
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocumentBuilder<ComplexComposedObjectWithProperties, Mutable>(this);
     }
 }

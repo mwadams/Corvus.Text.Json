@@ -12,11 +12,11 @@
 using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
-using System.Buffers;
-using System.Buffers.Text;
-using System.Runtime.CompilerServices;
-using Corvus.Text.Json;
-using Corvus.Text.Json.Internal;
+using global::System.Buffers;
+using global::System.Buffers.Text;
+using global::System.Runtime.CompilerServices;
+using global::Corvus.Text.Json;
+using global::Corvus.Text.Json.Internal;
 
 namespace Test;
 /// <summary>
@@ -282,5 +282,261 @@ public readonly partial struct MultiDimensionHigherRankFixedSizeNumericArrayInt1
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         JsonValueKind IJsonElement.ValueKind => ValueKind;
+    }
+
+    public ref struct Source
+    {
+        private enum Kind
+        {
+            Unknown,
+            JsonElement,
+            ShortArray,
+            Builder,
+        }
+
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly Builder.Build? _arrayBuilder;
+        private readonly ReadOnlySpan<short> _shortArray;
+
+        private Source(JsonElement jsonElement)
+        {
+            _jsonElement = jsonElement;
+            _kind = Kind.JsonElement;
+        }
+        private Source(ReadOnlySpan<short> value)
+        {
+            _shortArray = value;
+            _kind = Kind.ShortArray;
+        }
+
+        public Source(Test.MultiDimensionHigherRankFixedSizeNumericArrayInt16.Builder.Build value) { _arrayBuilder = value; _kind = Kind.Builder; }
+
+        public static implicit operator Source(MultiDimensionHigherRankFixedSizeNumericArrayInt16 instance) => new(JsonElement.From(instance));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Source FromArray(ReadOnlySpan<short> value)
+        {
+            if (value.Length != ValueBufferSize)
+            {
+                throw new ArgumentException(nameof(value));
+            }
+
+            return new(value);
+        }
+
+        internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.ShortArray:
+                    valueBuilder.AddPropertyArrayValue(utf8Name, _shortArray!, escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(name, _jsonElement);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                    break;
+                case Kind.ShortArray:
+                    valueBuilder.AddPropertyArrayValue(name, _shortArray!);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(name, _jsonElement);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                    break;
+                case Kind.ShortArray:
+                    valueBuilder.AddPropertyArrayValue(name, _shortArray!);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.Builder:
+                    valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => Builder.BuildValue(b, ref o));
+                    break;
+                case Kind.ShortArray:
+                    valueBuilder.AddItemArrayValue(_shortArray!);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+    }
+
+    public ref struct Builder
+    {
+        public delegate void Build(ref Builder builder);
+
+        internal ComplexValueBuilder _builder;
+
+        internal Builder(ComplexValueBuilder builder)
+        {
+            _builder = builder;
+        }
+        /// <summary>
+        /// Creates a tensor from the given numeric span.
+        /// </summary>
+        /// <param name="tensor">The data from which to create the tensor.</param>
+        /// <returns>The number of items consumed.</returns>
+        /// <exception cref="ArgumentException">The tensor did not contain the correct number of values for the array rank and dimension.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int CreateTensor(ReadOnlySpan<short> tensor)
+        {
+                return CreateTensor(tensor, false);
+        }
+
+        /// <summary>
+        /// Creates a tensor from the given numeric span.
+        /// </summary>
+        /// <param name="tensor">The data from which to create the tensor.</param>
+        /// <param name="createArray">Determines whether to create the wrapping array around the items.</param>
+        /// <returns>The number of items consumed.</returns>
+        /// <exception cref="ArgumentException">The tensor did not contain the correct number of values for the array rank and dimension.</exception>
+        internal int CreateTensor(ReadOnlySpan<short> tensor, bool createArray)
+        {
+            int index = 0;
+            if (tensor.Length != ValueBufferSize)
+            {
+                CodeGenThrowHelper.ThrowArgumentException_ArrayBufferLength(nameof(tensor), ValueBufferSize);
+            }
+
+            if (createArray)
+            {
+                _builder.StartArray();
+            }
+
+            while (index < tensor.Length)
+            {
+                ComplexValueBuilder.ComplexValueHandle handle = default;
+
+                handle = _builder.StartItem();
+                Test.MultiDimensionHigherRankFixedSizeNumericArrayInt16.ItemsArray2Array.Builder inner = new(_builder);
+                index += inner.CreateTensor(tensor.Slice(index, Test.MultiDimensionHigherRankFixedSizeNumericArrayInt16.ItemsArray2Array.ValueBufferSize), createArray: true);
+                _builder = inner._builder;
+
+                _builder.EndItem(handle);
+            }
+
+            if (createArray)
+            {
+                _builder.EndArray();
+            }
+
+            return ValueBufferSize;
+        }
+
+        /// <summary>
+        /// Add an item to the array.
+        /// </summary>
+        public void Add(in Test.MultiDimensionHigherRankFixedSizeNumericArrayInt16.ItemsArray2Array.Source value)
+        {
+            value.AddAsItem(ref _builder);
+        }
+
+        internal static void BuildValue(Build value, ref ComplexValueBuilder o)
+        {
+            o.StartArray();
+
+            Builder ovb = new(o);
+            value(ref ovb);
+            o = ovb._builder;
+            o.EndArray();
+        }
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from a value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="value">The value with which to initialize the builder.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given value.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+        JsonWorkspace workspace, in Source value, int initialCapacity = 36)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        value.AddAsItem(ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from a value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="value">The value with which to initialize the builder.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given value.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+        JsonWorkspace workspace, in Builder.Build value, int initialCapacity = 36)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        var source = new Source(value);
+        source.AddAsItem(ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from this instance.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <returns>An instance of a mutable document initialized with this instance.</returns>
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocumentBuilder<MultiDimensionHigherRankFixedSizeNumericArrayInt16, Mutable>(this);
     }
 }

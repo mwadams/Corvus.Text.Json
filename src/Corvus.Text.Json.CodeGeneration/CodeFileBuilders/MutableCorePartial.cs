@@ -89,6 +89,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendMatchMethods(typeDeclaration, forMutable: true)
                             .AppendTryGetAsCompositionTypeMethods(typeDeclaration)
                         .EndClassStructOrEnumDeclaration()
+                        .AppendSourceAndBuilder(typeDeclaration)
                         .PopSourceClassNameAndScope()
                         .PopBuilderClassNameAndScope()
                         .PopJsonPropertyNamesClassNameAndScope()

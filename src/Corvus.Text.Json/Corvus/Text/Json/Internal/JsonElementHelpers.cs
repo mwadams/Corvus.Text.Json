@@ -111,7 +111,22 @@ public static partial class JsonElementHelpers
     }
 
 
-    internal static void RemoveWhereUnsafe<TArray, T>(TArray arrayElement, JsonPredicate<T> predicate)
+    /// <summary>
+    /// Removes a items from an array element which match a predicate.
+    /// </summary>
+    /// <typeparam name="TArray">The type of the array element.</typeparam>
+    /// <param name="arrayElement">The array element instance.</param>
+    /// <param name="predicate">The predicate to apply to each element to determine if it should be removed.</param>
+    /// <exception cref="InvalidOperationException">
+    ///   The element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+    ///   or the element reference is stale due to document mutations.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///   <paramref name="startIndex"/> is negative or greater than the current array length,
+    ///   or <paramref name="count"/> is negative or causes the operation to exceed the array bounds.
+    /// </exception>
+    [CLSCompliant(false)]
+    public static void RemoveWhereUnsafe<TArray, T>(TArray arrayElement, JsonPredicate<T> predicate)
         where TArray : struct, IMutableJsonElement<TArray>
         where T : struct, IJsonElement<T>
     {

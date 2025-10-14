@@ -12,11 +12,11 @@
 using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
-using System.Buffers;
-using System.Buffers.Text;
-using System.Runtime.CompilerServices;
-using Corvus.Text.Json;
-using Corvus.Text.Json.Internal;
+using global::System.Buffers;
+using global::System.Buffers.Text;
+using global::System.Runtime.CompilerServices;
+using global::Corvus.Text.Json;
+using global::Corvus.Text.Json.Internal;
 
 namespace Test;
 /// <summary>
@@ -286,7 +286,7 @@ public readonly partial struct ComposedNumericFormatWithConstraintNumberInt64Num
         /// <summary>
         /// Matches the value against the composed values, and returns the result of calling the provided match function for the first match found.
         /// </summary>
-        /// <typeparam name="TContext">The immutable context to pass in to the match function.</typeparam>
+        /// <typeparam name="TContext">The type of the immutable context to pass in to the match function.</typeparam>
         /// <typeparam name="TResult">The result of calling the match function.</typeparam>
         /// <param name="context">The context to pass to the match function.</param>
         /// <param name="matchAnyOf0Entity">Match a <see cref="Test.ComposedNumericFormatWithConstraintNumberInt64NumberInt128.AnyOf0Entity"/>.</param>
@@ -371,5 +371,174 @@ public readonly partial struct ComposedNumericFormatWithConstraintNumberInt64Num
             result = default;
             return false;
         }
+    }
+
+    public ref struct Source
+    {
+        private enum Kind
+        {
+            Unknown,
+            JsonElement,
+            NumericSimpleType,
+            FormattedNumber,
+        }
+
+        private readonly Kind _kind;
+        private readonly JsonElement _jsonElement;
+        private readonly ReadOnlySpan<byte> _utf8Backing;
+        private readonly SimpleTypesBacking _simpleTypeBacking;
+
+        private Source(JsonElement jsonElement)
+        {
+            _jsonElement = jsonElement;
+            _kind = Kind.JsonElement;
+        }
+
+        private Source(ReadOnlySpan<byte> value, Kind kind)
+        {
+            Debug.Assert(kind is Kind.FormattedNumber);
+            _utf8Backing = value;
+            _kind = kind;
+        }
+
+        private Source(double value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (isAlsoArray, buffer, out written) => Utf8Formatter.TryFormat(isAlsoArray, buffer, out written)); _kind = Kind.NumericSimpleType; }
+
+        private Source(long value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.NumericSimpleType; }
+
+#if NET
+        private Source(Int128 value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => v.TryFormat(buffer, out written)); _kind = Kind.NumericSimpleType; }
+#endif
+
+        public static implicit operator Source(ComposedNumericFormatWithConstraintNumberInt64NumberInt128 instance) => new(JsonElement.From(instance));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(long value) => new (value);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(Test.ComposedNumericFormatWithConstraintNumberInt64NumberInt128.AnyOf0Entity instance) => new(JsonElement.From(instance));
+
+#if NET
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(Int128 value) => new (value);
+#endif
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(Test.ComposedNumericFormatWithConstraintNumberInt64NumberInt128.AnyOf1Entity instance) => new(JsonElement.From(instance));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Source FormattedNumber(ReadOnlySpan<byte> value) => new(value, Kind.FormattedNumber);
+
+        internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddPropertyFormattedNumber(utf8Name, _simpleTypeBacking.Span(), escapeName, nameRequiresUnescaping);
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddPropertyFormattedNumber(utf8Name, _utf8Backing, escapeName, nameRequiresUnescaping);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(name, _jsonElement);
+                    break;
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddPropertyFormattedNumber(name, _simpleTypeBacking.Span());
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddPropertyFormattedNumber(name, _utf8Backing);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddProperty(name, _jsonElement);
+                    break;
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddPropertyFormattedNumber(name, _simpleTypeBacking.Span());
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddPropertyFormattedNumber(name, _utf8Backing);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+
+        internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch(_kind)
+            {
+                case Kind.Unknown:
+                    break;
+                case Kind.JsonElement:
+                    valueBuilder.AddItem(_jsonElement);
+                    break;
+                case Kind.NumericSimpleType:
+                    valueBuilder.AddItem(_simpleTypeBacking.Span());
+                    break;
+                case Kind.FormattedNumber:
+                    valueBuilder.AddItemFormattedNumber(_utf8Backing);
+                    break;
+                default:
+                    Debug.Fail("Unexpected Kind");
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from a value.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="value">The value with which to initialize the builder.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given value.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+        JsonWorkspace workspace, in Source value, int initialCapacity = 1)
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        value.AddAsItem(ref cvb);
+        Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from this instance.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <returns>An instance of a mutable document initialized with this instance.</returns>
+    public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+    {
+        return workspace.CreateDocumentBuilder<ComposedNumericFormatWithConstraintNumberInt64NumberInt128, Mutable>(this);
     }
 }

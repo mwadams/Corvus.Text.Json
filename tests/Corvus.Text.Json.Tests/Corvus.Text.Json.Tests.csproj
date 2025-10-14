@@ -193,12 +193,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.3.19" />
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25225.104" />
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25225.104" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.15.0-preview-25225-102" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -206,19 +207,19 @@
 
   <!-- Only include System.Text.Json for net481 as it's included in .NET 6+ runtime -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Text.Json" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0-rc.1.25451.107" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Collections.Immutable" Version="10.0.0-preview.5.25277.114" />
-    <PackageReference Include="System.IO.Pipelines" Version="10.0.0-preview.5.25277.114" />
-    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="System.IO.Pipelines" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.0-rc.1.25451.107" />
     <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JsonSchema.Net" Version="7.3.4" />
+    <PackageReference Include="JsonSchema.Net" Version="7.4.0" />
   </ItemGroup>
 
   <ItemGroup>

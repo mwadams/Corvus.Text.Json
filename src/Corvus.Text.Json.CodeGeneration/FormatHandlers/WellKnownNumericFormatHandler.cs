@@ -39,7 +39,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
         {
             case "byte":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchByte(",
+                    "JsonSchemaEvaluation.MatchByte(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -50,7 +50,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "uint16":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchUInt16(",
+                    "JsonSchemaEvaluation.MatchUInt16(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -61,7 +61,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "uint32":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchUInt32(",
+                    "JsonSchemaEvaluation.MatchUInt32(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -72,7 +72,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "uint64":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchUInt64(",
+                    "JsonSchemaEvaluation.MatchUInt64(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -83,7 +83,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "uint128":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchUInt128(",
+                    "JsonSchemaEvaluation.MatchUInt128(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -94,7 +94,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "sbyte":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchSByte(",
+                    "JsonSchemaEvaluation.MatchSByte(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -105,7 +105,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "int16":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchInt16(",
+                    "JsonSchemaEvaluation.MatchInt16(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -116,7 +116,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "int32":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchInt32(",
+                    "JsonSchemaEvaluation.MatchInt32(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -127,7 +127,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "int64":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchUInt64(",
+                    "JsonSchemaEvaluation.MatchUInt64(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -138,7 +138,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "int128":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchUInt128(",
+                    "JsonSchemaEvaluation.MatchUInt128(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -149,7 +149,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "half":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchHalf(",
+                    "JsonSchemaEvaluation.MatchHalf(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -160,7 +160,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "single":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchSingle(",
+                    "JsonSchemaEvaluation.MatchSingle(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -171,7 +171,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "double":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchDouble(",
+                    "JsonSchemaEvaluation.MatchDouble(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -182,7 +182,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
 
             case "decimal":
                 generator.AppendIndent(
-                    "JsonSchemaMatching.MatchDecimal(",
+                    "JsonSchemaEvaluation.MatchDecimal(",
                     isNegativeIdentifier, ", ",
                     integralIdentifier, ", ",
                     fractionalIdentifier, ", ",
@@ -197,11 +197,11 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
     }
 
     /// <inheritdoc/>
-    public JsonValueKind? GetExpectedValueKind(string format)
+    public JsonTokenType? GetExpectedTokenType(string format)
     {
         if (IsIntegerFormat(format) || IsFloatingPointFormat(format))
         {
-            return JsonValueKind.Number;
+            return JsonTokenType.Number;
         }
 
         return null;

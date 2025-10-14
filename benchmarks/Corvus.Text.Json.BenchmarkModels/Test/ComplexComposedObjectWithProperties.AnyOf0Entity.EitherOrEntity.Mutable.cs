@@ -12,11 +12,11 @@
 using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
-using System.Buffers;
-using System.Buffers.Text;
-using System.Runtime.CompilerServices;
-using Corvus.Text.Json;
-using Corvus.Text.Json.Internal;
+using global::System.Buffers;
+using global::System.Buffers.Text;
+using global::System.Runtime.CompilerServices;
+using global::Corvus.Text.Json;
+using global::Corvus.Text.Json.Internal;
 
 namespace Test;
 
@@ -257,6 +257,146 @@ public readonly partial struct ComplexComposedObjectWithProperties
 
                 [DebuggerBrowsable(DebuggerBrowsableState.Never)]
                 JsonValueKind IJsonElement.ValueKind => ValueKind;
+            }
+
+            public ref struct Source
+            {
+                private enum Kind
+                {
+                    Unknown,
+                    JsonElement,
+                    True,
+                    False,
+                }
+
+                private readonly Kind _kind;
+                private readonly JsonElement _jsonElement;
+
+                private Source(JsonElement jsonElement)
+                {
+                    _jsonElement = jsonElement;
+                    _kind = Kind.JsonElement;
+                }
+
+                private Source(bool value) { _kind = value ? Kind.True : Kind.False; }
+
+                public static implicit operator Source(EitherOrEntity instance) => new(JsonElement.From(instance));
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static implicit operator Source(bool value) => new (value);
+
+                internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+                {
+                    switch(_kind)
+                    {
+                        case Kind.Unknown:
+                            break;
+                        case Kind.JsonElement:
+                            valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
+                            break;
+                        case Kind.True:
+                            valueBuilder.AddProperty(utf8Name, true, escapeName, nameRequiresUnescaping);
+                            break;
+                        case Kind.False:
+                            valueBuilder.AddProperty(utf8Name, false, escapeName, nameRequiresUnescaping);
+                            break;
+                        default:
+                            Debug.Fail("Unexpected Kind");
+                            break;
+                    }
+                }
+
+                internal void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
+                {
+                    switch(_kind)
+                    {
+                        case Kind.Unknown:
+                            break;
+                        case Kind.JsonElement:
+                            valueBuilder.AddProperty(name, _jsonElement);
+                            break;
+                        case Kind.True:
+                            valueBuilder.AddProperty(name, true);
+                            break;
+                        case Kind.False:
+                            valueBuilder.AddProperty(name, false);
+                            break;
+                        default:
+                            Debug.Fail("Unexpected Kind");
+                            break;
+                    }
+                }
+
+                internal void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
+                {
+                    switch(_kind)
+                    {
+                        case Kind.Unknown:
+                            break;
+                        case Kind.JsonElement:
+                            valueBuilder.AddProperty(name, _jsonElement);
+                            break;
+                        case Kind.True:
+                            valueBuilder.AddProperty(name, true);
+                            break;
+                        case Kind.False:
+                            valueBuilder.AddProperty(name, false);
+                            break;
+                        default:
+                            Debug.Fail("Unexpected Kind");
+                            break;
+                    }
+                }
+
+                internal void AddAsItem(ref ComplexValueBuilder valueBuilder)
+                {
+                    switch(_kind)
+                    {
+                        case Kind.Unknown:
+                            break;
+                        case Kind.JsonElement:
+                            valueBuilder.AddItem(_jsonElement);
+                            break;
+                        case Kind.True:
+                            valueBuilder.AddItem(true);
+                            break;
+                        case Kind.False:
+                            valueBuilder.AddItem(false);
+                            break;
+                        default:
+                            Debug.Fail("Unexpected Kind");
+                            break;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Creates and initializes a mutable document from a value.
+            /// </summary>
+            /// <param name="workspace">The JSON workspace.</param>
+            /// <param name="value">The value with which to initialize the builder.</param>
+            /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+            /// <returns>An instance of a mutable document initialized with the given value.</returns>
+            public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
+                JsonWorkspace workspace, in Source value, int initialCapacity = 1)
+            {
+                // Create the document builder without a MetadataDb
+                JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+                value.AddAsItem(ref cvb);
+                Debug.Assert(cvb.MemberCount == 1);
+                ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+                return documentBuilder;
+            }
+
+            /// <summary>
+            /// Creates and initializes a mutable document from this instance.
+            /// </summary>
+            /// <param name="workspace">The JSON workspace.</param>
+            /// <returns>An instance of a mutable document initialized with this instance.</returns>
+            public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+            {
+                return workspace.CreateDocumentBuilder<EitherOrEntity, Mutable>(this);
             }
         }
     }
