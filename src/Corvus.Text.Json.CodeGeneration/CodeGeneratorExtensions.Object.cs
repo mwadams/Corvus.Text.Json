@@ -161,7 +161,7 @@ internal static partial class CodeGeneratorExtensions
 
         if (forMutable)
         {
-            fqdtn = fqdtn + ".Mutable";
+            fqdtn += ".Mutable";
         }
 
         return generator
@@ -338,7 +338,7 @@ internal static partial class CodeGeneratorExtensions
 
             generator
                 .AppendLineIndent("/// <summary>")
-                .AppendLineIndent("/// Gets the encoded JSON property name for <see cref=\"", property.DotnetPropertyName(), "\"/>.")
+                .AppendLineIndent("/// Gets the escaped UTF-8 JSON property name for <see cref=\"", property.DotnetPropertyName(), "\"/>.")
                 .AppendLineIndent("/// </summary>")
                 .AppendLineIndent(
                     "public static ReadOnlySpan<byte> ",

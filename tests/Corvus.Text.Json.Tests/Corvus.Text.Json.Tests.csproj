@@ -207,13 +207,13 @@
 
   <!-- Only include System.Text.Json for net481 as it's included in .NET 6+ runtime -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Text.Json" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0-rc.2.25502.107" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Collections.Immutable" Version="10.0.0-rc.1.25451.107" />
-    <PackageReference Include="System.IO.Pipelines" Version="10.0.0-rc.1.25451.107" />
-    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.0-rc.2.25502.107" />
+    <PackageReference Include="System.IO.Pipelines" Version="10.0.0-rc.2.25502.107" />
+    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.0-rc.2.25502.107" />
     <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
