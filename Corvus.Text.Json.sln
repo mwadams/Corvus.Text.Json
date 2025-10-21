@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36017.23
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11111.16 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json", "src\Corvus.Text.Json\Corvus.Text.Json.csproj", "{55D05545-E5C0-48F7-93D2-AC1DB4EEF7EF}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.CodeGeneration", "src\Corvus.Text.Json.CodeGeneration\Corvus.Text.Json.CodeGeneration.csproj", "{EFE31EEA-BCE0-4958-AC55-E4081E763A3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corvus.Text.Json.Compatibility", "src\Corvus.Text.Json.Compatibility\Corvus.Text.Json.Compatibility.csproj", "{8ADB2E4A-1E4E-4B6E-96C3-D51844808D3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchmarkSandbox", "BenchmarkSandbox\BenchmarkSandbox.csproj", "{6900C58C-9F0D-45C5-B46C-85E6EBF21418}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{8ADB2E4A-1E4E-4B6E-96C3-D51844808D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ADB2E4A-1E4E-4B6E-96C3-D51844808D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8ADB2E4A-1E4E-4B6E-96C3-D51844808D3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6900C58C-9F0D-45C5-B46C-85E6EBF21418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6900C58C-9F0D-45C5-B46C-85E6EBF21418}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6900C58C-9F0D-45C5-B46C-85E6EBF21418}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6900C58C-9F0D-45C5-B46C-85E6EBF21418}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

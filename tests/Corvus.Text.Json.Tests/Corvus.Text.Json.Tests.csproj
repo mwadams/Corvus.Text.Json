@@ -57,6 +57,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />
+    <Compile Include="BigNumber\BigNumberArithmeticTests.cs" />
+    <Compile Include="BigNumber\BigNumberComparisonTests.cs" />
+    <Compile Include="BigNumber\BigNumberConversionTests.cs" />
     <Compile Include="DummyDocument.cs" />
     <Compile Include="DummyResultsCollector.cs" />
     <Compile Include="JsonDocumentBuilderComplexObjectTests.cs" />

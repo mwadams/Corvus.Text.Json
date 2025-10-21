@@ -10,7 +10,11 @@ namespace Corvus.Text.Json;
 /// <summary>
 /// An arbitrary precision number represented as a significand and an exponent.
 /// </summary>
-public readonly struct BigNumber : IEquatable<BigNumber>
+#if NET9_0_OR_GREATER
+public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>, IAdditionOperators<BigNumber, BigNumber, BigNumber>, ISubtractionOperators<BigNumber, BigNumber, BigNumber>, IMultiplyOperators<BigNumber, BigNumber, BigNumber>, IDivisionOperators<BigNumber, BigNumber, BigNumber>
+#else
+public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
+#endif
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BigNumber"/> struct.
@@ -348,6 +352,66 @@ public readonly struct BigNumber : IEquatable<BigNumber>
     }
 
     /// <inheritdoc/>
+    public int CompareTo(BigNumber other)
+    {
+        // Normalize to remove trailing zeros for a consistent comparison.
+        BigNumber left = this.Normalize();
+        BigNumber right = other.Normalize();
+
+        if (left.Significand.IsZero)
+        {
+            return right.Significand.IsZero ? 0 : -right.Significand.Sign;
+        }
+
+        if (right.Significand.IsZero)
+        {
+            return left.Significand.Sign;
+        }
+
+        // Different signs are easy
+        if (left.Significand.Sign != right.Significand.Sign)
+        {
+            return left.Significand.Sign > right.Significand.Sign ? 1 : -1;
+        }
+
+        // Same sign, so we can compare absolute values and then apply the sign.
+        int exponentDiff = left.Exponent - right.Exponent;
+        BigInteger s1 = left.Significand;
+        BigInteger s2 = right.Significand;
+
+        // To compare, we need to align the exponents.
+        // Instead of scaling up, which can cause OutOfMemoryException for large exponent differences,
+        // we can approximate by comparing the number of digits.
+#if NET
+        long s1Digits = s1.GetBitLength() * 3L / 10L; // Fast approximation of log10
+        long s2Digits = s2.GetBitLength() * 3L / 10L;
+#else
+        long s1Digits = (long)BigInteger.Log10(BigInteger.Abs(s1));
+        long s2Digits = (long)BigInteger.Log10(BigInteger.Abs(s2));
+#endif
+
+        long effectiveDigits1 = s1Digits + left.Exponent;
+        long effectiveDigits2 = s2Digits + right.Exponent;
+
+        if (effectiveDigits1 != effectiveDigits2)
+        {
+            return effectiveDigits1 > effectiveDigits2 ? left.Significand.Sign : -left.Significand.Sign;
+        }
+
+        // If the number of digits is the same, we have to do the expensive scaling.
+        if (exponentDiff > 0)
+        {
+            s1 *= BigInteger.Pow(10, exponentDiff);
+        }
+        else if (exponentDiff < 0)
+        {
+            s2 *= BigInteger.Pow(10, -exponentDiff);
+        }
+
+        return s1.CompareTo(s2);
+    }
+
+    /// <inheritdoc/>
     public bool Equals(BigNumber other) => Exponent.Equals(other.Exponent) && Significand.Equals(other.Significand);
 
     /// <inheritdoc/>
@@ -358,6 +422,163 @@ public readonly struct BigNumber : IEquatable<BigNumber>
 
     /// <inheritdoc/>
     public override string ToString() => $"{Significand}{(Exponent != 0 ? "E" : "")}{(Exponent != 0 ? Exponent : "")}";
+
+    /// <summary>
+    /// Explicitly converts a <see cref="BigNumber"/> to a <see cref="decimal"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    public static explicit operator decimal(BigNumber value)
+    {
+        BigInteger significand = value.Significand;
+        int exponent = value.Exponent;
+
+        // Fast path for zero
+        if (significand.IsZero)
+        {
+            return decimal.Zero;
+        }
+
+        // Adjust exponent to be within a manageable range for decimal
+        // This might lose precision for very large or small exponents, which is acceptable for an explicit conversion.
+        const int maxDecimalExponent = 28;
+        const int minDecimalExponent = -28;
+
+        if (exponent > maxDecimalExponent)
+        {
+            significand *= BigInteger.Pow(10, exponent - maxDecimalExponent);
+            exponent = maxDecimalExponent;
+        }
+        else if (exponent < minDecimalExponent)
+        {
+            significand /= BigInteger.Pow(10, -exponent + minDecimalExponent);
+            exponent = minDecimalExponent;
+        }
+
+        decimal result = (decimal)significand;
+
+        if (exponent > 0)
+        {
+            result *= (decimal)Math.Pow(10, exponent);
+        }
+        else if (exponent < 0)
+        {
+            result /= (decimal)Math.Pow(10, -exponent);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Explicitly converts a <see cref="BigNumber"/> to a <see cref="double"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    public static explicit operator double(BigNumber value)
+    {
+        // This conversion can lose precision, which is expected for an explicit cast.
+        return (double)value.Significand * Math.Pow(10, value.Exponent);
+    }
+
+    /// <summary>
+    /// Explicitly converts a <see cref="BigNumber"/> to a <see cref="float"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    public static explicit operator float(BigNumber value)
+    {
+        // This conversion can lose precision, which is expected for an explicit cast.
+        return (float)((double)value.Significand * Math.Pow(10, value.Exponent));
+    }
+
+    /// <summary>
+    /// Explicitly converts a <see cref="BigNumber"/> to a <see cref="long"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    public static explicit operator long(BigNumber value)
+    {
+        BigInteger result = value.Significand;
+        if (value.Exponent > 0)
+        {
+            result *= BigInteger.Pow(10, value.Exponent);
+        }
+        else if (value.Exponent < 0)
+        {
+            result /= BigInteger.Pow(10, -value.Exponent);
+        }
+        return (long)result;
+    }
+
+    /// <summary>
+    /// Explicitly converts a <see cref="BigNumber"/> to a <see cref="ulong"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    [CLSCompliant(false)]
+    public static explicit operator ulong(BigNumber value)
+    {
+        BigInteger result = value.Significand;
+        if (value.Exponent > 0)
+        {
+            result *= BigInteger.Pow(10, value.Exponent);
+        }
+        else if (value.Exponent < 0)
+        {
+            result /= BigInteger.Pow(10, -value.Exponent);
+        }
+        return (ulong)result;
+    }
+
+    /// <summary>
+    /// Implicitly converts a <see cref="long"/> to a <see cref="BigNumber"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    public static implicit operator BigNumber(long value) => new(value, 0);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="ulong"/> to a <see cref="BigNumber"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    [CLSCompliant(false)]
+    public static implicit operator BigNumber(ulong value) => new(value, 0);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="double"/> to a <see cref="BigNumber"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    public static implicit operator BigNumber(double value)
+    {
+        Span<byte> valueBytes = stackalloc byte[32]; // Max length for a double is around 24 chars, 32 is safe.
+        if (!System.Buffers.Text.Utf8Formatter.TryFormat(value, valueBytes, out int bytesWritten, new System.Buffers.StandardFormat('G', 17)))
+        {
+            // This should not happen with a buffer of 32 bytes.
+            throw new FormatException($"Unable to format double '{value}' for BigNumber conversion.");
+        }
+
+        if (TryParse(valueBytes.Slice(0, bytesWritten), out BigNumber result))
+        {
+            return result;
+        }
+
+        throw new FormatException($"Unable to convert double '{value}' to BigNumber.");
+    }
+
+    /// <summary>
+    /// Implicitly converts a <see cref="float"/> to a <see cref="BigNumber"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    public static implicit operator BigNumber(float value)
+    {
+        Span<byte> valueBytes = stackalloc byte[32]; // Max length for a float is around 15 chars, 32 is safe.
+        if (!System.Buffers.Text.Utf8Formatter.TryFormat(value, valueBytes, out int bytesWritten, new System.Buffers.StandardFormat('G', 9)))
+        {
+            // This should not happen with a buffer of 32 bytes.
+            throw new FormatException($"Unable to format float '{value}' for BigNumber conversion.");
+        }
+
+        if (TryParse(valueBytes.Slice(0, bytesWritten), out BigNumber result))
+        {
+            return result;
+        }
+
+        throw new FormatException($"Unable to convert float '{value}' to BigNumber.");
+    }
 
     /// <summary>
     /// Determines whether two <see cref="BigNumber"/> instances are equal.
@@ -374,4 +595,140 @@ public readonly struct BigNumber : IEquatable<BigNumber>
     /// <param name="right">The second <see cref="BigNumber"/> to compare.</param>
     /// <returns><c>true</c> if the two instances are not equal; otherwise, <c>false</c>.</returns>
     public static bool operator !=(BigNumber left, BigNumber right) => !(left == right);
+
+    /// <summary>
+    /// The default precision for division operations.
+    /// </summary>
+    public const int DefaultDivisionPrecision = 50;
+
+    /// <summary>
+    /// Adds two <see cref="BigNumber"/> instances.
+    /// </summary>
+    /// <param name="left">The first operand.</param>
+    /// <param name="right">The second operand.</param>
+    /// <returns>The sum of the two numbers.</returns>
+    public static BigNumber operator +(BigNumber left, BigNumber right)
+    {
+        BigInteger s1 = left.Significand;
+        int e1 = left.Exponent;
+        BigInteger s2 = right.Significand;
+        int e2 = right.Exponent;
+
+        if (e1 > e2)
+        {
+            s1 *= BigInteger.Pow(10, e1 - e2);
+        }
+        else if (e2 > e1)
+        {
+            s2 *= BigInteger.Pow(10, e2 - e1);
+        }
+
+        return new BigNumber(s1 + s2, Math.Min(e1, e2)).Normalize();
+    }
+
+    /// <summary>
+    /// Subtracts two <see cref="BigNumber"/> instances.
+    /// </summary>
+    /// <param name="left">The first operand.</param>
+    /// <param name="right">The second operand.</param>
+    /// <returns>The difference of the two numbers.</returns>
+    public static BigNumber operator -(BigNumber left, BigNumber right)
+    {
+        BigInteger s1 = left.Significand;
+        int e1 = left.Exponent;
+        BigInteger s2 = right.Significand;
+        int e2 = right.Exponent;
+
+        if (e1 > e2)
+        {
+            s1 *= BigInteger.Pow(10, e1 - e2);
+        }
+        else if (e2 > e1)
+        {
+            s2 *= BigInteger.Pow(10, e2 - e1);
+        }
+
+        return new BigNumber(s1 - s2, Math.Min(e1, e2)).Normalize();
+    }
+
+    /// <summary>
+    /// Multiplies two <see cref="BigNumber"/> instances.
+    /// </summary>
+    /// <param name="left">The first operand.</param>
+    /// <param name="right">The second operand.</param>
+    /// <returns>The product of the two numbers.</returns>
+    public static BigNumber operator *(BigNumber left, BigNumber right)
+    {
+        return new BigNumber(left.Significand * right.Significand, left.Exponent + right.Exponent).Normalize();
+    }
+
+    /// <summary>
+    /// Divides two <see cref="BigNumber"/> instances.
+    /// </summary>
+    /// <param name="left">The dividend.</param>
+    /// <param name="right">The divisor.</param>
+    /// <returns>The result of the division.</returns>
+    /// <remarks>The division is performed with a default precision of 50 decimal places.</remarks>
+    public static BigNumber operator /(BigNumber left, BigNumber right)
+    {
+        return Divide(left, right, DefaultDivisionPrecision);
+    }
+
+    /// <summary>
+    /// Divides two <see cref="BigNumber"/> instances with a specified precision.
+    /// </summary>
+    /// <param name="left">The dividend.</param>
+    /// <param name="right">The divisor.</param>
+    /// <param name="precision">The number of decimal places in the result.</param>
+    /// <returns>The result of the division.</returns>
+    public static BigNumber Divide(BigNumber left, BigNumber right, int precision)
+    {
+        if (right.Significand.IsZero)
+        {
+            throw new DivideByZeroException();
+        }
+
+        if (left.Significand.IsZero)
+        {
+            return default;
+        }
+
+        BigInteger scaledS1 = left.Significand * BigInteger.Pow(10, precision);
+        BigInteger newSignificand = scaledS1 / right.Significand;
+        int newExponent = left.Exponent - right.Exponent - precision;
+
+        return new BigNumber(newSignificand, newExponent).Normalize();
+    }
+
+    /// <summary>
+    /// Determines whether one <see cref="BigNumber"/> is greater than another.
+    /// </summary>
+    /// <param name="left">The first <see cref="BigNumber"/> to compare.</param>
+    /// <param name="right">The second <see cref="BigNumber"/> to compare.</param>
+    /// <returns><c>true</c> if the first instance is greater than the second; otherwise, <c>false</c>.</returns>
+    public static bool operator >(BigNumber left, BigNumber right) => left.CompareTo(right) > 0;
+
+    /// <summary>
+    /// Determines whether one <see cref="BigNumber"/> is less than another.
+    /// </summary>
+    /// <param name="left">The first <see cref="BigNumber"/> to compare.</param>
+    /// <param name="right">The second <see cref="BigNumber"/> to compare.</param>
+    /// <returns><c>true</c> if the first instance is less than the second; otherwise, <c>false</c>.</returns>
+    public static bool operator <(BigNumber left, BigNumber right) => left.CompareTo(right) < 0;
+
+    /// <summary>
+    /// Determines whether one <see cref="BigNumber"/> is greater than or equal to another.
+    /// </summary>
+    /// <param name="left">The first <see cref="BigNumber"/> to compare.</param>
+    /// <param name="right">The second <see cref="BigNumber"/> to compare.</param>
+    /// <returns><c>true</c> if the first instance is greater than or equal to the second; otherwise, <c>false</c>.</returns>
+    public static bool operator >=(BigNumber left, BigNumber right) => left.CompareTo(right) >= 0;
+
+    /// <summary>
+    /// Determines whether one <see cref="BigNumber"/> is less than or equal to another.
+    /// </summary>
+    /// <param name="left">The first <see cref="BigNumber"/> to compare.</param>
+    /// <param name="right">The second <see cref="BigNumber"/> to compare.</param>
+    /// <returns><c>true</c> if the first instance is less than or equal to the second; otherwise, <c>false</c>.</returns>
+    public static bool operator <=(BigNumber left, BigNumber right) => left.CompareTo(right) <= 0;
 }

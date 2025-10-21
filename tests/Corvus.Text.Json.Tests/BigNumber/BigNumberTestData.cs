@@ -128,6 +128,94 @@ public static class BigNumberTestData
         };
 
     /// <summary>
+    /// Test data for comparison scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int, int> ComparisonData =>
+        new()
+        {
+            // s1, e1, s2, e2, expected sign of CompareTo
+            // Equal
+            { 123, 5, 123, 5, 0 },
+            { -123, -5, -123, -5, 0 },
+            { 0, 0, 0, 0, 0 },
+            { 0, 5, 0, 10, 0 }, // 0 is 0 regardless of exponent
+
+            // Greater
+            { 124, 5, 123, 5, 1 }, // s1 > s2, e1 == e2
+            { 123, 6, 123, 5, 1 }, // s1 == s2, e1 > e2 (1230 > 123)
+            { 123, 5, -123, 5, 1 }, // positive > negative
+            { 1, 0, 9, -1, 1 }, // 1 > 0.9
+            { 1234, -2, 123, -1, 1 }, // 12.34 > 12.3
+            { 999, -11, 1, -10, 1 }, // 9.99E-10 > 1E-10
+
+            // Less
+            { 123, 5, 124, 5, -1 }, // s1 < s2, e1 == e2
+            { 123, 5, 123, 6, -1 }, // s1 == s2, e1 < e2 (123 < 1230)
+            { -123, 5, 123, 5, -1 }, // negative < positive
+            { 9, -1, 1, 0, -1 }, // 0.9 < 1
+            { 123, -1, 1234, -2, -1 }, // 12.3 < 12.34
+            { 1, -10, 999, -11, -1 }, // 1E-10 < 9.99E-10
+        };
+
+    /// <summary>
+    /// Test data for addition scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int, BigInteger, int> AdditionData =>
+        new()
+        {
+            // s1, e1, s2, e2, expectedS, expectedE
+            { 1, 0, 2, 0, 3, 0 }, // 1 + 2 = 3
+            { 123, 2, 45, 1, 1275, 1 }, // 12300 + 450 = 12750 -> 1275 E 1
+            { 1, 0, -2, 0, -1, 0 }, // 1 + (-2) = -1
+            { 1, 2, 1, -2, 10001, -2 }, // 100 + 0.01 = 100.01 -> 10001 E -2
+            { 5, 0, -5, 0, 0, 0 }, // 5 + (-5) = 0
+            { 0, 0, 123, 5, 123, 5 }, // 0 + 123E5 = 123E5
+        };
+
+    /// <summary>
+    /// Test data for subtraction scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int, BigInteger, int> SubtractionData =>
+        new()
+        {
+            // s1, e1, s2, e2, expectedS, expectedE
+            { 3, 0, 2, 0, 1, 0 }, // 3 - 2 = 1
+            { 123, 2, 45, 1, 1185, 1 }, // 12300 - 450 = 11850 -> 1185 E 1
+            { 1, 0, -2, 0, 3, 0 }, // 1 - (-2) = 3
+            { 1, 2, 1, -2, 9999, -2 }, // 100 - 0.01 = 99.99 -> 9999 E -2
+            { 5, 0, 5, 0, 0, 0 }, // 5 - 5 = 0
+            { 123, 5, 0, 0, 123, 5 }, // 123E5 - 0 = 123E5
+        };
+
+    /// <summary>
+    /// Test data for multiplication scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int, BigInteger, int> MultiplicationData =>
+        new()
+        {
+            // s1, e1, s2, e2, expectedS, expectedE
+            { 2, 0, 3, 0, 6, 0 }, // 2 * 3 = 6
+            { 12, 1, 3, 1, 36, 2 }, // 120 * 30 = 3600 -> 36 E 2
+            { 15, 0, -2, 0, -3, 1 }, // 15 * -2 = -30 -> -3 E 1
+            { 1, 2, 1, -2, 1, 0 }, // 100 * 0.01 = 1
+            { 123, 5, 0, 0, 0, 0 }, // 123E5 * 0 = 0
+        };
+
+    /// <summary>
+    /// Test data for division scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int, int, BigInteger, int> DivisionData =>
+        new()
+        {
+            // s1, e1, s2, e2, precision, expectedS, expectedE
+            { 6, 0, 2, 0, 10, 3, 0 }, // 6 / 2 = 3
+            { 1, 0, 3, 0, 10, 3333333333, -10 }, // 1 / 3 = 0.333...
+            { 10, 0, 4, 0, 10, 25, -1 }, // 10 / 4 = 2.5 -> 25 E -1
+            { 1, 2, 2, 0, 10, 5, 1 }, // 100 / 2 = 50 -> 5 E 1
+            { 0, 0, 123, 5, 10, 0, 0 }, // 0 / 123E5 = 0
+        };
+
+    /// <summary>
     /// Test data for extreme values.
     /// </summary>
     public static TheoryData<BigInteger, int> ExtremeValueData =>
