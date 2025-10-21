@@ -117,6 +117,72 @@ public readonly partial struct Person
         }
 
         /// <summary>
+        /// Gets the <c>firstName</c> property.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// If the instance is valid, this property will not be <see cref="JsonValueKind.Undefined"/>.
+        /// </para>
+        /// <para>
+        /// The person&#39;s first name.
+        /// </para>
+        /// </remarks>
+        public Test.Person.NameComponent FirstName
+        {
+            get
+            {
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Test.Person.NameComponent value))
+                {
+                    return value;
+                }
+
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Gets the (optional) <c>lastName</c> property.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The person&#39;s last name.
+        /// </para>
+        /// </remarks>
+        public Test.Person.NameComponent LastName
+        {
+            get
+            {
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out Test.Person.NameComponent value))
+                {
+                    return value;
+                }
+
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Gets the (optional) <c>otherNames</c> property.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Other (middle) names for the person
+        /// </para>
+        /// </remarks>
+        public Test.Person.OtherNames OtherNamesValue
+        {
+            get
+            {
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValue, out Test.Person.OtherNames value))
+                {
+                    return value;
+                }
+
+                return default;
+            }
+        }
+
+        /// <summary>
         /// Gets the number of properties in the object.
         /// </summary>
         /// <exception cref="InvalidOperationException">The value is not an object.</exception>
@@ -348,17 +414,17 @@ public readonly partial struct Person
         private static class JsonPropertyNamesEscaped
         {
             /// <summary>
-            /// Gets the encoded JSON property name for <see cref="FirstName"/>.
+            /// Gets the escaped UTF-8 JSON property name for <see cref="FirstName"/>.
             /// </summary>
             public static ReadOnlySpan<byte> FirstName => "firstName"u8;
 
             /// <summary>
-            /// Gets the encoded JSON property name for <see cref="LastName"/>.
+            /// Gets the escaped UTF-8 JSON property name for <see cref="LastName"/>.
             /// </summary>
             public static ReadOnlySpan<byte> LastName => "lastName"u8;
 
             /// <summary>
-            /// Gets the encoded JSON property name for <see cref="OtherNamesValue"/>.
+            /// Gets the escaped UTF-8 JSON property name for <see cref="OtherNamesValue"/>.
             /// </summary>
             public static ReadOnlySpan<byte> OtherNamesValue => "otherNames"u8;
         }

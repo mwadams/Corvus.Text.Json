@@ -62,6 +62,7 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendArrayValueBufferSizeStaticProperty(typeDeclaration)
                         .AppendArrayIndexerProperties(typeDeclaration)
                         .AppendObjectIndexerProperties(typeDeclaration)
+                        .AppendObjectProperties(typeDeclaration)
                         .AppendGetArrayLength(typeDeclaration)
                         .AppendGetPropertyCount(typeDeclaration)
                         .AppendEnumerateArray(typeDeclaration)

@@ -1398,6 +1398,44 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, [NotNullWhen(true)] out IJsonDocument? elementParent, out int elementIdx)
+    {
+        CheckNotDisposed();
+
+        if (TryGetNamedPropertyValueIndexUnsafe(
+            index,
+            propertyName,
+            out int valueIndex))
+        {
+            elementParent = this;
+            elementIdx = valueIndex;
+            return true;
+        }
+
+        elementIdx = -1;
+        elementParent = null;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, [NotNullWhen(true)] out IJsonDocument? elementParent, out int elementIdx)
+    {
+        CheckNotDisposed();
+
+        if (TryGetNamedPropertyValueIndexUnsafe(
+            index,
+            propertyName,
+            out int valueIndex))
+        {
+            elementParent = this;
+            elementIdx = valueIndex;
+            return true;
+        }
+
+        elementIdx = -1;
+        elementParent = null;
+        return false;
+    }
+
     bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value)
     {
         CheckNotDisposed();

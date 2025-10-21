@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Diagnostics.CodeAnalysis;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json;
@@ -84,6 +85,44 @@ public sealed partial class ParsedJsonDocument<T>
         }
 
         value = default;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, [NotNullWhen(true)] out IJsonDocument? elementParent, out int elementIdx)
+    {
+        CheckNotDisposed();
+
+        if (TryGetNamedPropertyValueIndexUnsafe(
+            index,
+            propertyName,
+            out int valueIndex))
+        {
+            elementParent = this;
+            elementIdx = valueIndex;
+            return true;
+        }
+
+        elementIdx = -1;
+        elementParent = null;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, [NotNullWhen(true)] out IJsonDocument? elementParent, out int elementIdx)
+    {
+        CheckNotDisposed();
+
+        if (TryGetNamedPropertyValueIndexUnsafe(
+            index,
+            propertyName,
+            out int valueIndex))
+        {
+            elementParent = this;
+            elementIdx = valueIndex;
+            return true;
+        }
+
+        elementIdx = -1;
+        elementParent = null;
         return false;
     }
 }

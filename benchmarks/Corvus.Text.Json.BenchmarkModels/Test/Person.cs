@@ -46,6 +46,62 @@ public readonly partial struct Person
     public static Person DefaultInstance { get; }
 
     /// <summary>
+    /// Gets the (optional) <c>age</c> property.
+    /// </summary>
+    public Test.Person.Age AgeValue
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.AgeValue, out Test.Person.Age value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    /// <summary>
+    /// Gets the (optional) <c>competedInYears</c> property.
+    /// </summary>
+    public Test.Person.CompetedInYears CompetedInYearsValue
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYearsValue, out Test.Person.CompetedInYears value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    /// <summary>
+    /// Gets the <c>name</c> property.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If the instance is valid, this property will not be <see cref="JsonValueKind.Undefined"/>.
+    /// </para>
+    /// <para>
+    /// A name of a person.
+    /// </para>
+    /// </remarks>
+    public Test.Person.PersonName Name
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out Test.Person.PersonName value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    /// <summary>
     /// Gets the number of properties in the object.
     /// </summary>
     /// <exception cref="InvalidOperationException">The value is not an object.</exception>
@@ -267,17 +323,17 @@ public readonly partial struct Person
     private static class JsonPropertyNamesEscaped
     {
         /// <summary>
-        /// Gets the encoded JSON property name for <see cref="AgeValue"/>.
+        /// Gets the escaped UTF-8 JSON property name for <see cref="AgeValue"/>.
         /// </summary>
         public static ReadOnlySpan<byte> AgeValue => "age"u8;
 
         /// <summary>
-        /// Gets the encoded JSON property name for <see cref="CompetedInYearsValue"/>.
+        /// Gets the escaped UTF-8 JSON property name for <see cref="CompetedInYearsValue"/>.
         /// </summary>
         public static ReadOnlySpan<byte> CompetedInYearsValue => "competedInYears"u8;
 
         /// <summary>
-        /// Gets the encoded JSON property name for <see cref="Name"/>.
+        /// Gets the escaped UTF-8 JSON property name for <see cref="Name"/>.
         /// </summary>
         public static ReadOnlySpan<byte> Name => "name"u8;
     }

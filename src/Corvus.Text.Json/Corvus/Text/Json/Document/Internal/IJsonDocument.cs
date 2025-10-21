@@ -130,6 +130,26 @@ public interface IJsonDocument : IDisposable
     bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value) where TElement : struct, IJsonElement<TElement>;
 
     /// <summary>
+    /// Tries to get the value of a named property as a mutable JSON element.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <param name="elementParent">The parent document of the retrieved value.</param>
+    /// <param name="elementIndex">The index of the retrieved value in the parent document.</param>
+    /// <returns><c>true</c> if the property value was retrieved; otherwise, <c>false</c>.</returns>
+    bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, [NotNullWhen(true)] out IJsonDocument? elementParent, out int elementIndex);
+
+    /// <summary>
+    /// Tries to get the value of a named property as a mutable JSON element.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <param name="elementParent">The parent document of the retrieved value.</param>
+    /// <param name="elementIndex">The index of the retrieved value in the parent document.</param>
+    /// <returns><c>true</c> if the property value was retrieved; otherwise, <c>false</c>.</returns>
+    bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, [NotNullWhen(true)] out IJsonDocument? elementParent, out int elementIndex);
+
+    /// <summary>
     /// Gets the string value of the element at the specified index.
     /// </summary>
     /// <param name="index">The index of the element.</param>

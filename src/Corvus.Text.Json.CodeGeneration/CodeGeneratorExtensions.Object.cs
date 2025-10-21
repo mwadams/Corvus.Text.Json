@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -442,5 +443,293 @@ internal static partial class CodeGeneratorExtensions
                                 .AppendLineIndent("}")
                             .PopIndent()
                             .AppendLineIndent("}");
+    }
+
+    /// <summary>
+    /// Append object properties.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the indexers.</param>
+    /// <param name="forMutable">Whether to emit the indexers for the mutable element.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendObjectProperties(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable = false)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        foreach (PropertyDeclaration property in typeDeclaration.PropertyDeclarations)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+
+            }
+
+            bool isNullable = typeDeclaration.OptionalAsNullable() && property.RequiredOrOptional == RequiredOrOptional.Optional;
+            string propertyType = $"{property.ReducedPropertyType.FullyQualifiedDotnetTypeName()}{(forMutable ? ".Mutable" : "")}";
+
+            generator
+                .AppendSeparatorLine()
+                .AppendPropertyDocumentation(property)
+                .AppendObsoleteAttribute(property)
+                .BeginPublicReadOnlyPropertyDeclaration(propertyType, property.DotnetPropertyName(), isNullable)
+                    .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), ", out ", propertyType, " value))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("return value;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("return default;")
+                .EndReadOnlyPropertyDeclaration();
+        }
+
+        return generator;
+    }
+
+    public static CodeGenerator AppendObjectPropertySetters(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        foreach (PropertyDeclaration property in typeDeclaration.PropertyDeclarations)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+
+            }
+
+            string propertyTypeName = property.ReducedPropertyType.FullyQualifiedDotnetTypeName();
+            
+            bool requiresEncoding = JavaScriptEncoder.Default.Encode(property.JsonPropertyName) != property.JsonPropertyName;
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Set the ", property.JsonPropertyName, " property.")
+                .AppendLineIndent("/// </summary>")
+                .AppendLineIndent("/// <param name=\"value\">The value of the property to add.</param>")
+                .AppendLineIndent("public void Set", property.DotnetPropertyName(), "(", generator.SourceClassName(propertyTypeName), " value)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("CheckValidInstance();")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);")
+                    .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), ", out IJsonDocument? elementParent, out int elementIdx))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("// We are going to replace just the value")
+                        .AppendLineIndent("value.AddAsItem(ref cvb);")
+                        .AppendLineIndent("_parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendLineIndent("else")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("// We are going to insert the new value")
+                        .AppendLineIndent("value.AddAsProperty(", generator.JsonPropertyNamesEscapedClassName(), ".", property.DotnetPropertyName(), ", ref cvb, escapeName: false, nameRequiresUnescaping: ", requiresEncoding ? "true" : "false", ");")
+                        .AppendLineIndent("int endIndex = _idx + _parent.GetDbSize(_idx, false);")
+                        .AppendLineIndent("_parent.InsertAndDispose(_idx, endIndex, ref cvb);")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("_documentVersion = _parent.Version;")
+                .PopIndent()
+                .AppendLineIndent("}");
+
+
+
+        }
+
+        return generator;
+
+            ////CheckValidInstance();
+
+            ////ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+            ////if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Mutable element))
+            ////{
+            ////    // We are going to replace just the value
+            ////    value.AddAsItem(ref cvb);
+            ////    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            ////}
+            ////else
+            ////{
+            ////    // We are going to insert the new value
+            ////    value.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref cvb, escapeName: false, nameRequiresUnescaping: false);
+            ////    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+            ////    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            ////}
+
+            ////_documentVersion = _parent.Version;
+
+        }
+
+    /// <summary>
+    /// Append the start of a public readonly property declaration.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the property.</param>
+    /// <param name="propertyType">The type of the property.</param>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <param name="nullable">If true, make the property type nullable.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator BeginPublicReadOnlyPropertyDeclaration(this CodeGenerator generator, string propertyType, string propertyName, bool nullable = false)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        return generator
+            .AppendLineIndent("public ", propertyType, nullable ? "? " : " ", propertyName)
+            .AppendLineIndent("{")
+            .PushIndent()
+            .AppendLineIndent("get")
+            .AppendLineIndent("{")
+            .PushIndent();
+    }
+
+    /// <summary>
+    /// Append the start of a public readonly property declaration.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the property.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator EndReadOnlyPropertyDeclaration(this CodeGenerator generator)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        return generator
+            .PopIndent()
+            .AppendLineIndent("}")
+            .PopIndent()
+            .AppendLineIndent("}");
+    }
+
+    private static CodeGenerator AppendPropertyDocumentation(this CodeGenerator generator, PropertyDeclaration property)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        bool optional = property.RequiredOrOptional == RequiredOrOptional.Optional;
+
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent(
+            "/// Gets the ",
+            optional ? "(optional) " : string.Empty,
+            "<c>",
+            SymbolDisplay.FormatLiteral(property.JsonPropertyName, false),
+            "</c> ",
+            "property.");
+
+        // We include documentation attached to the local (unreduced) type; this is usually the means by
+        // which property-specific documentation is attached to a particular instance of a common reference type.
+        if (property.UnreducedPropertyType.ShortDocumentation() is string shortDocumentation)
+        {
+            generator
+                .AppendBlockIndentWithPrefix(shortDocumentation, "/// ");
+        }
+
+        generator
+            .AppendLineIndent("/// </summary>");
+
+        bool usingRemarks = false;
+        if (!optional)
+        {
+            usingRemarks = true;
+
+            generator
+                .AppendLineIndent("/// <remarks>")
+                .AppendLineIndent("/// <para>")
+                .AppendIndent("/// If the instance is valid, this property will not be <see cref=\"JsonValueKind.Undefined\"/>");
+
+            if ((property.ReducedPropertyType.ImpliedCoreTypesOrAny() & CoreTypes.Null) != 0)
+            {
+                generator.Append(", but may be <see cref=\"JsonValueKind.Null\"/>");
+            }
+
+            generator
+                .AppendLine(".")
+                .AppendLineIndent("/// </para>");
+        }
+        else if (property.Owner.OptionalAsNullable())
+        {
+            usingRemarks = true;
+
+            generator
+                .AppendLineIndent("/// <remarks>")
+                .AppendLineIndent("/// <para>")
+                .AppendIndent("/// If this JSON property is <see cref=\"JsonValueKind.Undefined\"/>");
+
+            if ((property.ReducedPropertyType.ImpliedCoreTypesOrAny() & CoreTypes.Null) != 0)
+            {
+                generator.Append(", or <see cref=\"JsonValueKind.Null\"/>");
+            }
+
+            generator
+                .AppendLine(" then the value returned will be <see langword=\"null\" />.")
+                .AppendLineIndent("/// </para>");
+        }
+
+        if (property.UnreducedPropertyType.LongDocumentation() is string longDocumentation)
+        {
+            if (!usingRemarks)
+            {
+                usingRemarks = true;
+                generator
+                    .AppendLineIndent("/// <remarks>");
+            }
+
+            generator
+                .AppendParagraphs(longDocumentation);
+        }
+
+        if (property.ReducedPropertyType != property.UnreducedPropertyType && property.ReducedPropertyType.LongDocumentation() is string longDocumentationReduced)
+        {
+            if (!usingRemarks)
+            {
+                usingRemarks = true;
+                generator
+                    .AppendLineIndent("/// <remarks>");
+            }
+
+            generator
+                .AppendParagraphs(longDocumentationReduced);
+        }
+
+        if (usingRemarks)
+        {
+            generator.AppendLineIndent("/// </remarks>");
+        }
+
+        return generator;
+    }
+
+    private static CodeGenerator AppendObsoleteAttribute(this CodeGenerator generator, PropertyDeclaration property)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (property.UnreducedPropertyType.IsDeprecated(out string? message) ||
+            property.ReducedPropertyType.IsDeprecated(out message))
+        {
+            generator
+                .AppendLineIndent(
+                    "[Obsolete(",
+                    SymbolDisplay.FormatLiteral(message ?? "This property is defined as deprecated in the JSON schema.", true),
+                    ")]");
+        }
+
+        return generator;
     }
 }

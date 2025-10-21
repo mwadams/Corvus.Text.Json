@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Corvus.Json.CodeGeneration;
 
 namespace Corvus.Text.Json.CodeGeneration;
@@ -42,7 +43,8 @@ public static class PropertyDeclarationExtensions
 
         ReadOnlySpan<char> writtenBuffer = currentName;
 
-        if (writtenBuffer.Equals(that.Owner.DotnetTypeName().AsSpan(), StringComparison.Ordinal) || OwnerHasMatchingChild(that.Owner.Children(), writtenBuffer))
+        if (writtenBuffer.Equals(that.Owner.DotnetTypeName().AsSpan(), StringComparison.Ordinal)
+            || OwnerHasMatchingChild(that.Owner.Children(), writtenBuffer, that.Owner.DotnetNamespace()))
         {
             ValueSpan.CopyTo(buffer[written..]);
             written += ValueSpan.Length;
@@ -86,7 +88,7 @@ public static class PropertyDeclarationExtensions
         return false;
     }
 
-    private static bool OwnerHasMatchingChild(IReadOnlyCollection<TypeDeclaration> typeDeclarations, ReadOnlySpan<char> writtenBuffer)
+    private static bool OwnerHasMatchingChild(IReadOnlyCollection<TypeDeclaration> typeDeclarations, ReadOnlySpan<char> writtenBuffer, string currentNamespace)
     {
         foreach (TypeDeclaration typeDeclaration in typeDeclarations)
         {
@@ -97,7 +99,8 @@ public static class PropertyDeclarationExtensions
             }
 
             if (reducedType.TryGetDotnetTypeName(out string? dotnetTypeName) &&
-                writtenBuffer.Equals(dotnetTypeName.AsSpan(), StringComparison.Ordinal))
+                writtenBuffer.Equals(dotnetTypeName.AsSpan(), StringComparison.Ordinal) &&
+                reducedType.DotnetNamespace() == currentNamespace)
             {
                 return true;
             }

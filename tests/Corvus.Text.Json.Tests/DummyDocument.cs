@@ -222,6 +222,8 @@ internal class DummyDocument : IJsonDocument
     bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value) => throw new NotImplementedException();
     bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value) => throw new NotImplementedException();
     bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out IJsonDocument elementParent, out int elementIndex) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out IJsonDocument elementParent, out int elementIndex) => throw new NotImplementedException();
     string IJsonDocument.GetString(int index, JsonTokenType expectedType) => throw new NotImplementedException();
     UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType) => throw new NotImplementedException();
     bool IJsonDocument.TryGetValue(int index, out byte[] value) => throw new NotImplementedException();

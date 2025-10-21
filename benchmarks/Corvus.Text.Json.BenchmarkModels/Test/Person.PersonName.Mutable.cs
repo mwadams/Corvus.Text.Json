@@ -225,6 +225,72 @@ public readonly partial struct Person
             }
 
             /// <summary>
+            /// Gets the <c>firstName</c> property.
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// If the instance is valid, this property will not be <see cref="JsonValueKind.Undefined"/>.
+            /// </para>
+            /// <para>
+            /// The person&#39;s first name.
+            /// </para>
+            /// </remarks>
+            public Test.Person.NameComponent.Mutable FirstName
+            {
+                get
+                {
+                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Test.Person.NameComponent.Mutable value))
+                    {
+                        return value;
+                    }
+
+                    return default;
+                }
+            }
+
+            /// <summary>
+            /// Gets the (optional) <c>lastName</c> property.
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// The person&#39;s last name.
+            /// </para>
+            /// </remarks>
+            public Test.Person.NameComponent.Mutable LastName
+            {
+                get
+                {
+                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out Test.Person.NameComponent.Mutable value))
+                    {
+                        return value;
+                    }
+
+                    return default;
+                }
+            }
+
+            /// <summary>
+            /// Gets the (optional) <c>otherNames</c> property.
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Other (middle) names for the person
+            /// </para>
+            /// </remarks>
+            public Test.Person.OtherNames.Mutable OtherNamesValue
+            {
+                get
+                {
+                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValue, out Test.Person.OtherNames.Mutable value))
+                    {
+                        return value;
+                    }
+
+                    return default;
+                }
+            }
+
+            /// <summary>
             /// Gets the number of properties in the object.
             /// </summary>
             /// <exception cref="InvalidOperationException">The value is not an object.</exception>
@@ -261,6 +327,84 @@ public readonly partial struct Person
                 where T : struct, IJsonElement
             {
                 return JsonElementHelpers.DeepEquals(this, other);
+            }
+
+            /// <summary>
+            /// Set the firstName property.
+            /// </summary>
+            /// <param name="value">The value of the property to add.</param>
+            public void SetFirstName(Source value)
+            {
+                CheckValidInstance();
+
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out IJsonDocument? elementParent, out int elementIdx))
+                {
+                    // We are going to replace just the value
+                    value.AddAsItem(ref cvb);
+                    _parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    value.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref cvb, escapeName: false, nameRequiresUnescaping: false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            /// <summary>
+            /// Set the lastName property.
+            /// </summary>
+            /// <param name="value">The value of the property to add.</param>
+            public void SetLastName(Source value)
+            {
+                CheckValidInstance();
+
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out IJsonDocument? elementParent, out int elementIdx))
+                {
+                    // We are going to replace just the value
+                    value.AddAsItem(ref cvb);
+                    _parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    value.AddAsProperty(JsonPropertyNamesEscaped.LastName, ref cvb, escapeName: false, nameRequiresUnescaping: false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
+            }
+
+            /// <summary>
+            /// Set the otherNames property.
+            /// </summary>
+            /// <param name="value">The value of the property to add.</param>
+            public void SetOtherNamesValue(Source value)
+            {
+                CheckValidInstance();
+
+                ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValue, out IJsonDocument? elementParent, out int elementIdx))
+                {
+                    // We are going to replace just the value
+                    value.AddAsItem(ref cvb);
+                    _parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);
+                }
+                else
+                {
+                    // We are going to insert the new value
+                    value.AddAsProperty(JsonPropertyNamesEscaped.OtherNamesValue, ref cvb, escapeName: false, nameRequiresUnescaping: false);
+                    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+                }
+
+                _documentVersion = _parent.Version;
             }
 
             /// <inheritdoc/>
