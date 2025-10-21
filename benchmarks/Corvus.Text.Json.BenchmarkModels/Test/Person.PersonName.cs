@@ -131,7 +131,7 @@ public readonly partial struct Person
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Test.Person.NameComponent value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstNameUtf8, out Test.Person.NameComponent value))
                 {
                     return value;
                 }
@@ -152,7 +152,7 @@ public readonly partial struct Person
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out Test.Person.NameComponent value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastNameUtf8, out Test.Person.NameComponent value))
                 {
                     return value;
                 }
@@ -173,7 +173,7 @@ public readonly partial struct Person
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValue, out Test.Person.OtherNames value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValueUtf8, out Test.Person.OtherNames value))
                 {
                     return value;
                 }

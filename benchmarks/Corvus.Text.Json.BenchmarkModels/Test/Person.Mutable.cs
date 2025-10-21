@@ -160,7 +160,7 @@ public readonly partial struct Person
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.AgeValue, out Test.Person.Age.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.AgeValueUtf8, out Test.Person.Age.Mutable value))
                 {
                     return value;
                 }
@@ -176,7 +176,7 @@ public readonly partial struct Person
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYearsValue, out Test.Person.CompetedInYears.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYearsValueUtf8, out Test.Person.CompetedInYears.Mutable value))
                 {
                     return value;
                 }
@@ -200,7 +200,7 @@ public readonly partial struct Person
         {
             get
             {
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out Test.Person.PersonName.Mutable value))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.NameUtf8, out Test.Person.PersonName.Mutable value))
                 {
                     return value;
                 }
@@ -247,7 +247,7 @@ public readonly partial struct Person
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.AgeValue, out IJsonDocument? elementParent, out int elementIdx))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.AgeValueUtf8, out IJsonDocument? elementParent, out int elementIdx))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);
@@ -273,7 +273,7 @@ public readonly partial struct Person
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYearsValue, out IJsonDocument? elementParent, out int elementIdx))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYearsValueUtf8, out IJsonDocument? elementParent, out int elementIdx))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);
@@ -299,7 +299,7 @@ public readonly partial struct Person
             CheckValidInstance();
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out IJsonDocument? elementParent, out int elementIdx))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.NameUtf8, out IJsonDocument? elementParent, out int elementIdx))
             {
                 // We are going to replace just the value
                 value.AddAsItem(ref cvb);

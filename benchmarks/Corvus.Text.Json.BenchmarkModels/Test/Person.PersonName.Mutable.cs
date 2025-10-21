@@ -239,7 +239,7 @@ public readonly partial struct Person
             {
                 get
                 {
-                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Test.Person.NameComponent.Mutable value))
+                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstNameUtf8, out Test.Person.NameComponent.Mutable value))
                     {
                         return value;
                     }
@@ -260,7 +260,7 @@ public readonly partial struct Person
             {
                 get
                 {
-                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out Test.Person.NameComponent.Mutable value))
+                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastNameUtf8, out Test.Person.NameComponent.Mutable value))
                     {
                         return value;
                     }
@@ -281,7 +281,7 @@ public readonly partial struct Person
             {
                 get
                 {
-                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValue, out Test.Person.OtherNames.Mutable value))
+                    if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValueUtf8, out Test.Person.OtherNames.Mutable value))
                     {
                         return value;
                     }
@@ -338,7 +338,7 @@ public readonly partial struct Person
                 CheckValidInstance();
 
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out IJsonDocument? elementParent, out int elementIdx))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstNameUtf8, out IJsonDocument? elementParent, out int elementIdx))
                 {
                     // We are going to replace just the value
                     value.AddAsItem(ref cvb);
@@ -364,7 +364,7 @@ public readonly partial struct Person
                 CheckValidInstance();
 
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastName, out IJsonDocument? elementParent, out int elementIdx))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.LastNameUtf8, out IJsonDocument? elementParent, out int elementIdx))
                 {
                     // We are going to replace just the value
                     value.AddAsItem(ref cvb);
@@ -390,7 +390,7 @@ public readonly partial struct Person
                 CheckValidInstance();
 
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValue, out IJsonDocument? elementParent, out int elementIdx))
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNamesValueUtf8, out IJsonDocument? elementParent, out int elementIdx))
                 {
                     // We are going to replace just the value
                     value.AddAsItem(ref cvb);

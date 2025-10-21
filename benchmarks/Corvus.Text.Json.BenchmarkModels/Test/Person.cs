@@ -52,7 +52,7 @@ public readonly partial struct Person
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.AgeValue, out Test.Person.Age value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.AgeValueUtf8, out Test.Person.Age value))
             {
                 return value;
             }
@@ -68,7 +68,7 @@ public readonly partial struct Person
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYearsValue, out Test.Person.CompetedInYears value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYearsValueUtf8, out Test.Person.CompetedInYears value))
             {
                 return value;
             }
@@ -92,7 +92,7 @@ public readonly partial struct Person
     {
         get
         {
-            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.Name, out Test.Person.PersonName value))
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.NameUtf8, out Test.Person.PersonName value))
             {
                 return value;
             }
