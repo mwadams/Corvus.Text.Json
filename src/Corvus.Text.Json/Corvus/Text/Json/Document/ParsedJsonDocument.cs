@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 
@@ -157,6 +158,12 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     {
         CheckNotDisposed();
 
+        return GetArrayLengthUnsafe(index);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private int GetArrayLengthUnsafe(int index)
+    {
         DbRow row = _parsedData.Get(index);
 
         CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
@@ -208,6 +215,21 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         parentDocument = this;
         parentDocumentIndex = GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
     }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    int IJsonDocument.GetArrayInsertionIndex(int currentIndex, int arrayIndex)
+    {
+        CheckNotDisposed();
+
+        if (arrayIndex == GetArrayLengthUnsafe(currentIndex))
+        {
+            return currentIndex + GetDbSizeUnsafe(currentIndex, false);
+        }
+
+        return GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
+    }
+
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

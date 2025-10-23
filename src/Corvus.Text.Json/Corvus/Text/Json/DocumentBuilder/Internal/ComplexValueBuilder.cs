@@ -63,12 +63,12 @@ public ref struct ComplexValueBuilder
         _rowCount = 0;
     }
 
-    internal int Length => _parsedData.Length;
+    internal readonly int Length => _parsedData.Length;
 
     /// <summary>
     /// Gets the number of members (properties or items) added to the current object or array.
     /// </summary>
-    public int MemberCount => _memberCount;
+    public readonly int MemberCount => _memberCount;
 
     /// <summary>
     /// Creates a new <see cref="ComplexValueBuilder"/> for the specified parent document,
@@ -3291,7 +3291,7 @@ public ref struct ComplexValueBuilder
     /// </summary>
     /// <param name="targetData">The target metadata database to receive the data.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void SetAndDispose(ref MetadataDb targetData)
+    public readonly void SetAndDispose(ref MetadataDb targetData)
     {
         // We don't need to initialize the metadata DB if we are creating a whole document
         // This allows us to hand off the parsed data rather than writing it in.

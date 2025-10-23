@@ -10,6 +10,231 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// </summary>
 internal static partial class CodeGeneratorExtensions
 {
+
+    /// <summary>
+    /// Append mutation methods for arrays.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the mutators.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendArrayMutators(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if ((typeDeclaration.ImpliedCoreTypes() & CoreTypes.Array) == 0)
+        {
+            return generator;
+        }
+
+        // Do not add the standard mutators if this is a tuple.
+        if (typeDeclaration.IsTuple())
+        {
+            return generator;
+        }
+
+        // Get the type for the array items.
+        string fqdtn;
+
+        if (typeDeclaration.ArrayItemsType() is ArrayItemsTypeDeclaration itemsType)
+        {
+            if (itemsType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                return generator;
+            }
+
+            fqdtn = itemsType.ReducedType.FullyQualifiedDotnetTypeName();
+        }
+        else if (typeDeclaration.ExplicitUnevaluatedItemsType() is ArrayItemsTypeDeclaration unevaluatedItemsType)
+        {
+            if (unevaluatedItemsType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                return generator;
+            }
+
+            fqdtn = unevaluatedItemsType.ReducedType.FullyQualifiedDotnetTypeName();
+        }
+        else
+        {
+            fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+        }
+
+        // Set an item
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Sets the value of an array element at the specified index.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"itemIndex\">The zero-based index of the array element to set.</param>")
+            .AppendLineIndent("/// <param name=\"value\">The item value to set.</param>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Array\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ArgumentOutOfRangeException\">")
+            .AppendLineIndent("///   <paramref name=\"itemIndex\"/> is negative or greater than the array length.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <remarks>")
+            .AppendLineIndent("///   <para>")
+            .AppendLineIndent("///     This method allows replacing existing array elements or appending new elements")
+            .AppendLineIndent("///     when <paramref name=\"itemIndex\"/> equals the current array length.")
+            .AppendLineIndent("///   </para>")
+            .AppendLineIndent("/// </remarks>")
+            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+            .AppendLineIndent("public void SetItem(int itemIndex, in ", fqdtn, ".", generator.SourceClassName(fqdtn), " value)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);")
+                .AppendLineIndent("value.AddAsItem(ref cvb);")
+                .AppendLineIndent("int arrayLength = GetArrayLength();")
+                .AppendLineIndent("if (itemIndex == arrayLength)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("_parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendLineIndent("else")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("_parent.GetArrayIndexElement(_idx, itemIndex, out IMutableJsonDocument elementParent, out int elementIdx);")
+                    .AppendLineIndent("_parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        // Insert an item
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Inserts an item into the array at the specified index.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"itemIndex\">The zero-based index of the array element at which to insert.</param>")
+            .AppendLineIndent("/// <param name=\"value\">The item value to insert.</param>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Array\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ArgumentOutOfRangeException\">")
+            .AppendLineIndent("///   <paramref name=\"itemIndex\"/> is negative or greater than the array length.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <remarks>")
+            .AppendLineIndent("///   <para>")
+            .AppendLineIndent("///     This method allows inserting array elements or appending new elements")
+            .AppendLineIndent("///     when <paramref name=\"itemIndex\"/> equals the current array length.")
+            .AppendLineIndent("///   </para>")
+            .AppendLineIndent("/// </remarks>")
+            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+            .AppendLineIndent("public void InsertItem(int itemIndex, in ", fqdtn, ".", generator.SourceClassName(fqdtn), " value)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);")
+                .AppendLineIndent("value.AddAsItem(ref cvb);")
+                .AppendLineIndent("_parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);")
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        // Remove items
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Removes a range of items from the array starting at the specified index.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"startIndex\">The zero-based index at which to begin removing items.</param>")
+            .AppendLineIndent("/// <param name=\"count\">The number of items to remove.</param>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Array\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ArgumentOutOfRangeException\">")
+            .AppendLineIndent("///   <paramref name=\"startIndex\"/> is negative or greater than the current array length.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+            .AppendLineIndent("public void RemoveRange(int startIndex, int count)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("JsonElementHelpers.RemoveRangeUnsafe(this, startIndex, count);")
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Removes a single item from the array at the specified index.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"index\">The zero-based index of the item to remove.</param>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Array\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ArgumentOutOfRangeException\">")
+            .AppendLineIndent("///   <paramref name=\"index\"/> is negative or greater than or equal to the current array length.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+            .AppendLineIndent("public void Remove(int index)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("JsonElementHelpers.RemoveRangeUnsafe(this, index, 1);")
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Removes all array elements that match the specified predicate.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"predicate\">The predicate function that determines which elements to remove.</param>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Array\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ArgumentNullException\">")
+            .AppendLineIndent("///   <paramref name=\"predicate\"/> is <see langword=\"null\"/>.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <remarks>")
+            .AppendLineIndent("///   <para>")
+            .AppendLineIndent("///     This method efficiently removes elements in a single pass by iterating backwards")
+            .AppendLineIndent("///     through the array and removing consecutive blocks of matching elements.")
+            .AppendLineIndent("///   </para>")
+            .AppendLineIndent("///   <para>")
+            .AppendLineIndent("///     The predicate function is called for each element in the array. If the predicate")
+            .AppendLineIndent("///     returns <see langword=\"true\"/>, the element will be removed from the array.")
+            .AppendLineIndent("///   </para>")
+            .AppendLineIndent("/// </remarks>")
+            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+            .AppendLineIndent("public void RemoveWhere(JsonPredicate<", fqdtn, "> predicate)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("JsonElementHelpers.RemoveWhereUnsafe<Mutable, ", fqdtn, ">(this, predicate);")
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        return generator;
+    }
+
+
     /// <summary>
     /// Append the static property which provides the dimension (fixed length) of the array.
     /// </summary>
@@ -229,7 +454,7 @@ internal static partial class CodeGeneratorExtensions
 
         if (forMutable)
         {
-            fqdtn = fqdtn + ".Mutable";
+            fqdtn += ".Mutable";
         }
 
         return generator

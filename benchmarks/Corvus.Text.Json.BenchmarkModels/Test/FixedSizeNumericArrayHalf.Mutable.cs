@@ -270,6 +270,153 @@ public readonly partial struct FixedSizeNumericArrayHalf
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => $"FixedSizeNumericArrayHalf.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
+        /// <summary>
+        ///   Sets the value of an array element at the specified index.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="value">The item value to set.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method allows replacing existing array elements or appending new elements
+        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetItem(int itemIndex, in Test.FixedSizeNumericArrayHalf.ItemsEntity.Source value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);
+            value.AddAsItem(ref cvb);
+            int arrayLength = GetArrayLength();
+            if (itemIndex == arrayLength)
+            {
+                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+            }
+            else
+            {
+                _parent.GetArrayIndexElement(_idx, itemIndex, out IMutableJsonDocument elementParent, out int elementIdx);
+                _parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+        /// <summary>
+        ///   Inserts an item into the array at the specified index.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index of the array element at which to insert.</param>
+        /// <param name="value">The item value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method allows inserting array elements or appending new elements
+        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void InsertItem(int itemIndex, in Test.FixedSizeNumericArrayHalf.ItemsEntity.Source value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);
+            value.AddAsItem(ref cvb);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Removes a range of items from the array starting at the specified index.
+        /// </summary>
+        /// <param name="startIndex">The zero-based index at which to begin removing items.</param>
+        /// <param name="count">The number of items to remove.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="startIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void RemoveRange(int startIndex, int count)
+        {
+            CheckValidInstance();
+            JsonElementHelpers.RemoveRangeUnsafe(this, startIndex, count);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Removes a single item from the array at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the item to remove.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="index"/> is negative or greater than or equal to the current array length.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Remove(int index)
+        {
+            CheckValidInstance();
+            JsonElementHelpers.RemoveRangeUnsafe(this, index, 1);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Removes all array elements that match the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate function that determines which elements to remove.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="predicate"/> is <see langword="null"/>.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method efficiently removes elements in a single pass by iterating backwards
+        ///     through the array and removing consecutive blocks of matching elements.
+        ///   </para>
+        ///   <para>
+        ///     The predicate function is called for each element in the array. If the predicate
+        ///     returns <see langword="true"/>, the element will be removed from the array.
+        ///   </para>
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void RemoveWhere(JsonPredicate<Test.FixedSizeNumericArrayHalf.ItemsEntity> predicate)
+        {
+            CheckValidInstance();
+            JsonElementHelpers.RemoveWhereUnsafe<Mutable, Test.FixedSizeNumericArrayHalf.ItemsEntity>(this, predicate);
+            _documentVersion = _parent.Version;
+        }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;

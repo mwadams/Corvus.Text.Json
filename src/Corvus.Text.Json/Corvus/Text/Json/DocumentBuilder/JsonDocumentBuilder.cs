@@ -146,6 +146,11 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     {
         CheckNotDisposed();
 
+        return GetArrayLengthUnsafe(index);
+    }
+
+    private int GetArrayLengthUnsafe(int index)
+    {
         DbRow row = _parsedData.Get(index);
 
         CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
@@ -209,6 +214,20 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         parentDocument = this;
         parentDocumentIndex = GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    int IJsonDocument.GetArrayInsertionIndex(int currentIndex, int arrayIndex)
+    {
+        CheckNotDisposed();
+
+        if (arrayIndex == GetArrayLengthUnsafe(currentIndex))
+        {
+            return currentIndex + GetDbSizeUnsafe(currentIndex, false);
+        }
+
+        return GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

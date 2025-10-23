@@ -112,6 +112,22 @@ public readonly partial struct ComplexComposedObjectWithProperties
         }
 
         /// <summary>
+        /// Gets the (optional) <c>eitherOr</c> property.
+        /// </summary>
+        public Test.ComplexComposedObjectWithProperties.AnyOf0Entity.EitherOrEntity EitherOr
+        {
+            get
+            {
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.EitherOrUtf8, out Test.ComplexComposedObjectWithProperties.AnyOf0Entity.EitherOrEntity value))
+                {
+                    return value;
+                }
+
+                return default;
+            }
+        }
+
+        /// <summary>
         /// Gets the number of properties in the object.
         /// </summary>
         /// <exception cref="InvalidOperationException">The value is not an object.</exception>
@@ -323,7 +339,7 @@ public readonly partial struct ComplexComposedObjectWithProperties
         private static class JsonPropertyNamesEscaped
         {
             /// <summary>
-            /// Gets the encoded JSON property name for <see cref="EitherOr"/>.
+            /// Gets the escaped UTF-8 JSON property name for <see cref="EitherOr"/>.
             /// </summary>
             public static ReadOnlySpan<byte> EitherOr => "eitherOr"u8;
         }

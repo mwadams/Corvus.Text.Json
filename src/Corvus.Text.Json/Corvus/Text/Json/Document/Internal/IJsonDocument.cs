@@ -78,6 +78,15 @@ public interface IJsonDocument : IDisposable
     void GetArrayIndexElement(int currentIndex, int arrayIndex, out IJsonDocument parentDocument, out int parentDocumentIndex);
 
     /// <summary>
+    /// Gets DB index of the item at the array index within the array that starts at <paramref name="currentIndex"/>.
+    /// </summary>
+    /// <param name="currentIndex">The current index.</param>
+    /// <param name="arrayIndex">The array index.</param>
+    /// <remarks>Note that this is the DB index in the current document. Contrast with <see cref="GetArrayIndexElement"/> overloads which
+    /// return the document and index of the actual element value.</remarks>
+    int GetArrayInsertionIndex(int currentIndex, int arrayIndex);
+
+    /// <summary>
     /// Gets the length of the array at the specified index.
     /// </summary>
     /// <param name="index">The index of the array.</param>

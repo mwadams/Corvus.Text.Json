@@ -269,4 +269,5 @@ internal class DummyDocument : IJsonDocument
     int IJsonDocument.BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking) => throw new NotImplementedException();
     void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db) => throw new NotImplementedException();
     void IDisposable.Dispose() => throw new NotImplementedException();
+    int IJsonDocument.GetArrayInsertionIndex(int currentIndex, int arrayIndex) => throw new NotImplementedException();
 }

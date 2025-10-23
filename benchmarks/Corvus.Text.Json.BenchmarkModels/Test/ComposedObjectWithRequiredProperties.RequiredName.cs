@@ -112,6 +112,27 @@ public readonly partial struct ComposedObjectWithRequiredProperties
         }
 
         /// <summary>
+        /// Gets the <c>name</c> property.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// If the instance is valid, this property will not be <see cref="JsonValueKind.Undefined"/>, but may be <see cref="JsonValueKind.Null"/>.
+        /// </para>
+        /// </remarks>
+        public Corvus.Text.Json.JsonElement Name
+        {
+            get
+            {
+                if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.NameUtf8, out Corvus.Text.Json.JsonElement value))
+                {
+                    return value;
+                }
+
+                return default;
+            }
+        }
+
+        /// <summary>
         /// Gets the number of properties in the object.
         /// </summary>
         /// <exception cref="InvalidOperationException">The value is not an object.</exception>
@@ -323,7 +344,7 @@ public readonly partial struct ComposedObjectWithRequiredProperties
         private static class JsonPropertyNamesEscaped
         {
             /// <summary>
-            /// Gets the encoded JSON property name for <see cref="Name"/>.
+            /// Gets the escaped UTF-8 JSON property name for <see cref="Name"/>.
             /// </summary>
             public static ReadOnlySpan<byte> Name => "name"u8;
         }

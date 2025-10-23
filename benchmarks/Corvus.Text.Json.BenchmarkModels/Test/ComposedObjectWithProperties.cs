@@ -106,6 +106,38 @@ public readonly partial struct ComposedObjectWithProperties
     }
 
     /// <summary>
+    /// Gets the (optional) <c>name</c> property.
+    /// </summary>
+    public Test.ComposedObjectWithProperties.AllOf0Entity.NameEntity Name
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.NameUtf8, out Test.ComposedObjectWithProperties.AllOf0Entity.NameEntity value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    /// <summary>
+    /// Gets the (optional) <c>otherName</c> property.
+    /// </summary>
+    public Test.ComposedObjectWithProperties.AllOf1Entity.OtherNameEntity OtherName
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.OtherNameUtf8, out Test.ComposedObjectWithProperties.AllOf1Entity.OtherNameEntity value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    /// <summary>
     /// Gets the number of properties in the object.
     /// </summary>
     /// <exception cref="InvalidOperationException">The value is not an object.</exception>
@@ -452,12 +484,12 @@ public readonly partial struct ComposedObjectWithProperties
     private static class JsonPropertyNamesEscaped
     {
         /// <summary>
-        /// Gets the encoded JSON property name for <see cref="Name"/>.
+        /// Gets the escaped UTF-8 JSON property name for <see cref="Name"/>.
         /// </summary>
         public static ReadOnlySpan<byte> Name => "name"u8;
 
         /// <summary>
-        /// Gets the encoded JSON property name for <see cref="OtherName"/>.
+        /// Gets the escaped UTF-8 JSON property name for <see cref="OtherName"/>.
         /// </summary>
         public static ReadOnlySpan<byte> OtherName => "otherName"u8;
     }

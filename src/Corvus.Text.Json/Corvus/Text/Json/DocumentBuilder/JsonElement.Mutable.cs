@@ -8414,6 +8414,988 @@ public readonly partial struct JsonElement
 #endif
 
         /// <summary>
+        ///   Inserts a value into an array at the specified index.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The string value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method allows inserting between existing elements,  or appending new elements
+        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be serialized as a JSON string with proper escaping.
+        ///   </para>
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void InsertItem(int itemIndex, string value)
+        {
+            InsertItem(itemIndex, value.AsSpan());
+        }
+
+        /// <summary>
+        ///   Inserts a value into an array at the specified index.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The string value to insert as a character span.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span for efficient string handling.
+        ///   </para>
+        ///   <para>
+        ///     This method allows inserting between existing elements,  or appending new elements
+        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be serialized as a JSON string with proper escaping.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, ReadOnlySpan<char> value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Inserts a value into an array at the specified index.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The string value to insert as a UTF-8 encoded byte span.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 string data, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     This method allows inserting between existing elements,  or appending new elements
+        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The string value will be serialized as a JSON string with proper escaping.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, ReadOnlySpan<byte> value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON object.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The object is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON objects.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON array.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
+        /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The array is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON arrays.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to null.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </remarks>
+        public void InsertItemNull(int itemIndex)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItemNull();
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a boolean value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The boolean value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </remarks>
+        public void InsertItem(int itemIndex, bool value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON element value.
+        /// </summary>
+        /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The JSON element value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This generic overload accepts any type implementing <see cref="IJsonElement{T}"/>,
+        ///     enabling type-safe JSON element assignment with compile-time type checking.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public void InsertItem<T>(int itemIndex, T value)
+            where T : struct, IJsonElement<T>
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a GUID value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The GUID value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The GUID will be serialized as a JSON string in standard format (e.g., "550e8400-e29b-41d4-a716-446655440000").
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, Guid value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a DateTime value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The DateTime value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, in DateTime value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a DateTimeOffset value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The DateTimeOffset value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, in DateTimeOffset value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an OffsetDateTime value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The OffsetDateTime value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
+        ///     This provides more precise timezone handling than standard .NET DateTime types.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, in OffsetDateTime value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an OffsetDate value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The OffsetDate value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string representing a date with timezone offset.
+        ///     This provides timezone-aware date handling.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, in OffsetDate value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an OffsetTime value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The OffsetTime value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string representing a time with timezone offset.
+        ///     This provides timezone-aware time handling.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, in OffsetTime value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a LocalDate value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The LocalDate value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The LocalDate (from NodaTime) will be serialized as a JSON string representing a local date without timezone information.
+        ///     This provides calendar date handling without timezone concerns.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, in LocalDate value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a Period value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The Period value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 duration format.
+        ///     This represents a period of time such as "P1Y2M3DT4H5M6S".
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, in Period value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an sbyte value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The sbyte value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The sbyte value will be serialized as a JSON number.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public void InsertItem(int itemIndex, sbyte value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a byte value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The byte value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The byte value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, byte value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an int value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The int value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The int value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, int value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a uint value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The uint value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The uint value will be serialized as a JSON number.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public void InsertItem(int itemIndex, uint value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a long value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The long value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The long value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, long value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a ulong value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The ulong value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The ulong value will be serialized as a JSON number.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public void InsertItem(int itemIndex, ulong value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a short value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The short value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The short value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, short value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a ushort value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The ushort value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The ushort value will be serialized as a JSON number.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public void InsertItem(int itemIndex, ushort value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a float value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The float value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The float value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, float value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a double value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The double value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The double value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, double value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a decimal value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The decimal value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The decimal value will be serialized as a JSON number.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, decimal value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+#if NET
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to an Int128 value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The Int128 value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     Int128 is a .NET 6+ type providing 128-bit signed integer support.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, Int128 value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a UInt128 value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The UInt128 value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
+        ///     This type is not CLS-compliant.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public void InsertItem(int itemIndex, UInt128 value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a Half value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="value">The Half value to insert.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
+        ///   </para>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem(int itemIndex, Half value)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            cvb.AddItem(value);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+#endif
+
+        /// <summary>
         ///   Removes a range of items from the array starting at the specified index.
         /// </summary>
         /// <param name="startIndex">The zero-based index at which to begin removing items.</param>
