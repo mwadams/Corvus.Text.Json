@@ -523,3 +523,16 @@ Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement);
 
 Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement[2][1]);
 Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement[2][1][3]);
+
+
+
+BigNumber.TryParse("340282366920938463463374607431768211455.2"u8, out BigNumber bigNumber);
+
+BigNumber resultBigNumber = bigNumber + (BigNumber)1L;
+
+Console.WriteLine();
+Console.WriteLine("================");
+Console.WriteLine("== BIG NUMBER ==");
+Console.WriteLine("================");
+Console.WriteLine();
+Console.WriteLine($"{bigNumber} + 1 = {resultBigNumber}");

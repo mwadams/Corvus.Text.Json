@@ -10,7 +10,7 @@ namespace Corvus.Text.Json;
 /// <summary>
 /// An arbitrary precision number represented as a significand and an exponent.
 /// </summary>
-#if NET9_0_OR_GREATER
+#if NET
 public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>, IAdditionOperators<BigNumber, BigNumber, BigNumber>, ISubtractionOperators<BigNumber, BigNumber, BigNumber>, IMultiplyOperators<BigNumber, BigNumber, BigNumber>, IDivisionOperators<BigNumber, BigNumber, BigNumber>
 #else
 public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
