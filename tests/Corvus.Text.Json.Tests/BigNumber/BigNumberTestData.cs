@@ -216,6 +216,137 @@ public static class BigNumberTestData
         };
 
     /// <summary>
+    /// Test data for modulo scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int, BigInteger, int> ModuloData =>
+        new()
+        {
+            // s1, e1, s2, e2, expectedS, expectedE
+            { 7, 0, 3, 0, 1, 0 }, // 7 % 3 = 1
+            { 10, 0, 3, 0, 1, 0 }, // 10 % 3 = 1
+            { 15, 0, 4, 0, 3, 0 }, // 15 % 4 = 3
+            { 100, 0, 30, 0, 1, 1 }, // 100 % 30 = 10 -> 1 E 1 (normalized)
+            { 1000, 0, 7, 0, 6, 0 }, // 1000 % 7 = 6
+            { 5, 0, 10, 0, 5, 0 }, // 5 % 10 = 5
+            { 0, 0, 5, 0, 0, 0 }, // 0 % 5 = 0
+            { -7, 0, 3, 0, -1, 0 }, // -7 % 3 = -1 (BigInteger semantics)
+            { 7, 0, -3, 0, 1, 0 }, // 7 % -3 = 1 (BigInteger semantics)
+            { -7, 0, -3, 0, -1, 0 }, // -7 % -3 = -1 (BigInteger semantics)
+
+            // With positive exponents
+            { 123, 2, 45, 1, 15, 1 }, // 12300 % 450 = 150 -> 15 E 1
+            { 1, 3, 3, 2, 1, 2 }, // 1000 % 300 = 100 -> 1 E 2
+            { 5, 1, 2, 1, 1, 1 }, // 50 % 20 = 10 -> 1 E 1
+            { 17, 0, 5, 0, 2, 0 }, // 17 % 5 = 2
+            { 25, 1, 6, 1, 1, 1 }, // 250 % 60 = 10 -> 1 E 1
+
+            // With negative exponents
+            { 17, -1, 5, -1, 2, -1 }, // 1.7 % 0.5 = 0.2 -> 2 E -1
+            { 35, -1, 1, 0, 5, -1 }, // 3.5 % 1 = 0.5 -> 5 E -1
+            { 125, -2, 25, -2, 0, 0 }, // 1.25 % 0.25 = 0 (evenly divides)
+            { 275, -2, 5, -1, 25, -2 }, // 2.75 % 0.5 = 0.25 -> 25 E -2
+            { 1234, -3, 123, -3, 4, -3 }, // 1.234 % 0.123 = 0.004 -> 4 E -3
+            { 999, -2, 1, -1, 9, -2 }, // 9.99 % 0.1 = 0.09 -> 9 E -2
+            { 5, -1, 2, -1, 1, -1 }, // 0.5 % 0.2 = 0.1 -> 1 E -1
+        };
+
+    /// <summary>
+    /// Test data for increment scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int> IncrementData =>
+        new()
+        {
+            // input significand, input exponent, expected significand, expected exponent
+            { 0, 0, 1, 0 }, // 0++ = 1
+            { 1, 0, 2, 0 }, // 1++ = 2
+            { -1, 0, 0, 0 }, // -1++ = 0
+            { 99, 0, 1, 2 }, // 99++ = 100 -> 1 E 2 (normalized)
+            { 999, 0, 1, 3 }, // 999++ = 1000 -> 1 E 3 (normalized)
+            { 123, 2, 12301, 0 }, // 12300++ = 12301
+            { -2, 0, -1, 0 }, // -2++ = -1
+
+            // With negative exponents
+            { 5, -1, 15, -1 }, // 0.5++ = 1.5 -> 15 E -1
+            { 99, -2, 199, -2 }, // 0.99++ = 1.99 -> 199 E -2
+            { -5, -1, 5, -1 }, // -0.5++ = 0.5 -> 5 E -1
+            { 123, -3, 1123, -3 }, // 0.123++ = 1.123 -> 1123 E -3
+            { -15, -1, -5, -1 }, // -1.5++ = -0.5 -> -5 E -1
+            { 9, -1, 19, -1 }, // 0.9++ = 1.9 -> 19 E -1
+            { -1, -2, 99, -2 }, // -0.01++ = 0.99 -> 99 E -2
+        };
+
+    /// <summary>
+    /// Test data for decrement scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int> DecrementData =>
+        new()
+        {
+            // input significand, input exponent, expected significand, expected exponent
+            { 0, 0, -1, 0 }, // 0-- = -1
+            { 1, 0, 0, 0 }, // 1-- = 0
+            { 2, 0, 1, 0 }, // 2-- = 1
+            { -1, 0, -2, 0 }, // -1-- = -2
+            { 100, 0, 99, 0 }, // 100-- = 99
+            { 1000, 0, 999, 0 }, // 1000-- = 999
+            { 123, 2, 12299, 0 }, // 12300-- = 12299
+            { 1, 2, 99, 0 }, // 100-- = 99
+
+            // With negative exponents
+            { 15, -1, 5, -1 }, // 1.5-- = 0.5 -> 5 E -1
+            { 199, -2, 99, -2 }, // 1.99-- = 0.99 -> 99 E -2
+            { 5, -1, -5, -1 }, // 0.5-- = -0.5 -> -5 E -1
+            { 1123, -3, 123, -3 }, // 1.123-- = 0.123 -> 123 E -3
+            { -5, -1, -15, -1 }, // -0.5-- = -1.5 -> -15 E -1
+            { 19, -1, 9, -1 }, // 1.9-- = 0.9 -> 9 E -1
+            { 1, -2, -99, -2 }, // 0.01-- = -0.99 -> -99 E -2
+            { 25, -1, 15, -1 }, // 2.5-- = 1.5 -> 15 E -1
+        };
+
+    /// <summary>
+    /// Test data for unary plus scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int> UnaryPlusData =>
+        new()
+        {
+            // input significand, input exponent, expected significand, expected exponent
+            { 0, 0, 0, 0 }, // +0 = 0
+            { 1, 0, 1, 0 }, // +1 = 1
+            { -1, 0, -1, 0 }, // +(-1) = -1
+            { 123, 5, 123, 5 }, // +(123 E 5) = 123 E 5
+            { -456, -10, -456, -10 }, // +(-456 E -10) = -456 E -10
+
+            // Additional cases with negative exponents
+            { 5, -1, 5, -1 }, // +(0.5) = 0.5
+            { -25, -2, -25, -2 }, // +(-0.25) = -0.25
+            { 999, -3, 999, -3 }, // +(0.999) = 0.999
+            { 1, -5, 1, -5 }, // +(0.00001) = 0.00001
+            { -123456, -4, -123456, -4 }, // +(-12.3456) = -12.3456
+        };
+
+    /// <summary>
+    /// Test data for unary minus scenarios.
+    /// </summary>
+    public static TheoryData<BigInteger, int, BigInteger, int> UnaryMinusData =>
+ new()
+  {
+            // input significand, input exponent, expected significand, expected exponent
+    { 0, 0, 0, 0 }, // -0 = 0
+   { 1, 0, -1, 0 }, // -1 = -1
+            { -1, 0, 1, 0 }, // -(-1) = 1
+    { 123, 5, -123, 5 }, // -(123 E 5) = -123 E 5
+ { -456, -10, 456, -10 }, // -(-456 E -10) = 456 E -10
+  { 999, 3, -999, 3 }, // -(999 E 3) = -999 E 3
+         
+            // Additional cases with negative exponents
+            { 5, -1, -5, -1 }, // -(0.5) = -0.5
+        { -25, -2, 25, -2 }, // -(-0.25) = 0.25
+            { 999, -3, -999, -3 }, // -(0.999) = -0.999
+    { 1, -5, -1, -5 }, // -(0.00001) = -0.00001
+            { -123456, -4, 123456, -4 }, // -(-12.3456) = 12.3456
+            { 12345, -6, -12345, -6 }, // -(0.012345) = -0.012345
+ };
+
+    /// <summary>
     /// Test data for extreme values.
     /// </summary>
     public static TheoryData<BigInteger, int> ExtremeValueData =>

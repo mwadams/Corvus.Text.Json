@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
+using System.Globalization;
 using System.Numerics;
 using Corvus.Text.Json.Internal;
 
@@ -11,7 +12,10 @@ namespace Corvus.Text.Json;
 /// An arbitrary precision number represented as a significand and an exponent.
 /// </summary>
 #if NET
-public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>, IAdditionOperators<BigNumber, BigNumber, BigNumber>, ISubtractionOperators<BigNumber, BigNumber, BigNumber>, IMultiplyOperators<BigNumber, BigNumber, BigNumber>, IDivisionOperators<BigNumber, BigNumber, BigNumber>
+public readonly struct BigNumber
+    : IEquatable<BigNumber>, IComparable<BigNumber>,
+        INumber<BigNumber>,
+        ISignedNumber<BigNumber>
 #else
 public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
 #endif
@@ -36,6 +40,15 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
     /// Gets the exponent of the number.
     /// </summary>
     public int Exponent { get; }
+
+#if NET
+    static BigNumber INumberBase<BigNumber>.One { get; }
+    static int INumberBase<BigNumber>.Radix { get; }
+    static BigNumber INumberBase<BigNumber>.Zero { get; }
+    static BigNumber IAdditiveIdentity<BigNumber, BigNumber>.AdditiveIdentity { get; }
+    static BigNumber IMultiplicativeIdentity<BigNumber, BigNumber>.MultiplicativeIdentity { get; }
+    static BigNumber ISignedNumber<BigNumber>.NegativeOne { get; }
+#endif
 
     /// <summary>
     /// Ensures that the significand is normalized, meaning that it has no trailing zeros.
@@ -700,6 +713,139 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
         return new BigNumber(newSignificand, newExponent).Normalize();
     }
 
+    /// <inheritdoc/>
+    public int CompareTo(object? obj)
+    {
+        if (obj is null)
+        {
+            return 1;
+        }
+
+        if (obj is BigNumber other)
+        {
+            return CompareTo(other);
+        }
+
+        throw new ArgumentException("Object is not a BigNumber.", nameof(obj));
+    }
+
+    /// <inheritdoc/>
+    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out BigNumber result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out BigNumber result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider) => TryFormat(destination, out charsWritten);
+
+    /// <inheritdoc/>
+    public string ToString(string? format, IFormatProvider? formatProvider) => ToString();
+
+    /// <inheritdoc/>
+    public static BigNumber Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out BigNumber result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public static BigNumber Parse(string s, IFormatProvider? provider) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public static bool TryParse(string? s, IFormatProvider? provider, out BigNumber result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public static BigNumber Abs(BigNumber value) => throw new NotImplementedException();
+
+
+#if NET
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsCanonical(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsComplexNumber(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsEvenInteger(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsFinite(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsImaginaryNumber(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsInfinity(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsInteger(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsNaN(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsNegative(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsNegativeInfinity(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsNormal(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsOddInteger(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsPositive(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsPositiveInfinity(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsRealNumber(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsSubnormal(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.IsZero(BigNumber value) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static BigNumber INumberBase<BigNumber>.MaxMagnitude(BigNumber x, BigNumber y) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static BigNumber INumberBase<BigNumber>.MaxMagnitudeNumber(BigNumber x, BigNumber y) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static BigNumber INumberBase<BigNumber>.MinMagnitude(BigNumber x, BigNumber y) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static BigNumber INumberBase<BigNumber>.MinMagnitudeNumber(BigNumber x, BigNumber y) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static BigNumber INumberBase<BigNumber>.Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static BigNumber INumberBase<BigNumber>.Parse(string s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.TryConvertFromChecked<TOther>(TOther value, out BigNumber result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.TryConvertFromSaturating<TOther>(TOther value, out BigNumber result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.TryConvertFromTruncating<TOther>(TOther value, out BigNumber result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.TryConvertToChecked<TOther>(BigNumber value, out TOther result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.TryConvertToSaturating<TOther>(BigNumber value, out TOther result) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    static bool INumberBase<BigNumber>.TryConvertToTruncating<TOther>(BigNumber value, out TOther result) => throw new NotImplementedException();
+#endif
+
     /// <summary>
     /// Determines whether one <see cref="BigNumber"/> is greater than another.
     /// </summary>
@@ -731,4 +877,88 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
     /// <param name="right">The second <see cref="BigNumber"/> to compare.</param>
     /// <returns><c>true</c> if the first instance is less than or equal to the second; otherwise, <c>false</c>.</returns>
     public static bool operator <=(BigNumber left, BigNumber right) => left.CompareTo(right) <= 0;
+
+    /// <inheritdoc/>
+    public static BigNumber operator %(BigNumber left, BigNumber right)
+    {
+        if (right.Significand.IsZero)
+        {
+            throw new DivideByZeroException();
+        }
+
+        if (left.Significand.IsZero)
+        {
+            return default;
+        }
+
+        // Align exponents first
+        BigInteger s1 = left.Significand;
+        int e1 = left.Exponent;
+        BigInteger s2 = right.Significand;
+        int e2 = right.Exponent;
+
+        if (e1 > e2)
+        {
+            s1 *= BigInteger.Pow(10, e1 - e2);
+        }
+        else if (e2 > e1)
+        {
+            s2 *= BigInteger.Pow(10, e2 - e1);
+        }
+
+        // Compute remainder
+        BigInteger remainder = s1 % s2;
+
+        return new BigNumber(remainder, Math.Min(e1, e2)).Normalize();
+    }
+
+    /// <inheritdoc/>
+    public static BigNumber operator --(BigNumber value)
+    {
+        // To properly decrement, we need to subtract 1 from the actual number value
+        // This means we need to align the exponents first
+        BigInteger scaledOne = BigInteger.One;
+
+        BigInteger s1 = value.Significand;
+        int e1 = value.Exponent;
+
+        if (e1 > 0)
+        {
+            s1 *= BigInteger.Pow(10, e1);
+        }
+        else if (0 > e1)
+        {
+            scaledOne *= BigInteger.Pow(10, -e1);
+        }
+
+        return new BigNumber(s1 - scaledOne, Math.Min(e1, 0)).Normalize();
+    }
+
+    /// <inheritdoc/>
+    public static BigNumber operator ++(BigNumber value)
+    {
+        // To properly increment, we need to add 1 to the actual number value
+        // This means we need to align the exponents first
+        BigInteger scaledOne = BigInteger.One;
+
+        BigInteger s1 = value.Significand;
+        int e1 = value.Exponent;
+
+        if (e1 > 0)
+        {
+            s1 *= BigInteger.Pow(10, e1);
+        }
+        else if (0 > e1)
+        {
+            scaledOne *= BigInteger.Pow(10, -e1);
+        }
+
+        return new BigNumber(s1 + scaledOne, Math.Min(e1, 0)).Normalize();
+    }
+
+    /// <inheritdoc/>
+    public static BigNumber operator -(BigNumber value) => new(-value.Significand, value.Exponent);
+
+    /// <inheritdoc/>
+    public static BigNumber operator +(BigNumber value) => new(+value.Significand, value.Exponent);
 }
