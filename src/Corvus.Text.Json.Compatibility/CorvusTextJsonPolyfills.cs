@@ -52,6 +52,17 @@ namespace Corvus.Text.Json.Compatibility
             return System.Text.Json.JsonElement.ParseValue(ref reader);
         }
 
+        extension<T>(ParsedJsonDocument<T> element)
+            where T : struct, IJsonElement<T>
+        {
+            public static ParsedJsonDocument<T> FromSTJsonElement(System.Text.Json.JsonElement jsonElement)
+            {
+                Utf8JsonReader reader = new(System.Runtime.InteropServices.JsonMarshal.GetRawUtf8Value(jsonElement));
+                return ParsedJsonDocument<T>.ParseValue(ref reader);
+            }
+        }
+
+
         extension<T>(T element)
             where T : struct, IJsonElement<T>
         {
@@ -63,11 +74,11 @@ namespace Corvus.Text.Json.Compatibility
             /// <param name="writerOptions">The (optional) <see cref="JsonWriterOptions"/>.</param>
             /// <param name="readerOptions">The (optional) <see cref="JsonReaderOptions"/>.</param>
             /// <returns>A <see cref="JsonAny"/> derived from serializing the object.</returns>
-            public static T CreateFromSerializedInstance(T instance, JsonWriterOptions writerOptions = default, JsonReaderOptions readerOptions = default)
+            public static T CreateFromSerializedInstance<TObject>(TObject instance, JsonWriterOptions writerOptions = default, JsonReaderOptions readerOptions = default)
             {
                 var abw = new ArrayBufferWriter<byte>();
                 using var writer = new System.Text.Json.Utf8JsonWriter(abw, ToSTJ(writerOptions));
-                System.Text.Json.JsonSerializer.Serialize(writer, instance, typeof(T));
+                System.Text.Json.JsonSerializer.Serialize(writer, instance, typeof(TObject));
                 writer.Flush();
 
                 Utf8JsonReader reader = new(abw.WrittenMemory.Span, readerOptions);

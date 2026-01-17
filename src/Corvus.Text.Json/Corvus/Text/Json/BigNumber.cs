@@ -15,7 +15,9 @@ namespace Corvus.Text.Json;
 public readonly struct BigNumber
     : IEquatable<BigNumber>, IComparable<BigNumber>,
         INumber<BigNumber>,
-        ISignedNumber<BigNumber>
+        ISignedNumber<BigNumber>,
+        IUtf8SpanFormattable,
+        IUtf8SpanParsable<BigNumber>
 #else
 public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
 #endif
@@ -68,6 +70,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
         }
 
         int exponent = Exponent;
+
         while (true)
         {
             BigInteger quotient = BigInteger.DivRem(significand, 10, out BigInteger remainder);
@@ -730,28 +733,71 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
     }
 
     /// <inheritdoc/>
-    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out BigNumber result) => throw new NotImplementedException();
+    public static bool TryParse(ReadOnlySpan<char> value, NumberStyles style, IFormatProvider? provider, out BigNumber result)
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc/>
-    public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out BigNumber result) => throw new NotImplementedException();
+    public static bool TryParse(ReadOnlySpan<byte> value, NumberStyles style, IFormatProvider? provider, out BigNumber result)
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc/>
-    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider) => TryFormat(destination, out charsWritten);
+    public static bool TryParse(string? value, NumberStyles style, IFormatProvider? provider, out BigNumber result)
+    {
+        return TryParse(value.AsSpan(), style, NumberFormatInfo.GetInstance(provider), out result);
+    }
 
     /// <inheritdoc/>
-    public string ToString(string? format, IFormatProvider? formatProvider) => ToString();
+    public static bool TryParse(string? value, IFormatProvider? provider, out BigNumber result)
+    {
+        return TryParse(value.AsSpan(), NumberStyles.Any, NumberFormatInfo.GetInstance(provider), out result);
+    }
 
     /// <inheritdoc/>
-    public static BigNumber Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => throw new NotImplementedException();
+    public static bool TryParse(ReadOnlySpan<char> value, IFormatProvider? provider, out BigNumber result)
+    {
+        return TryParse(value, NumberStyles.Any, NumberFormatInfo.GetInstance(provider), out result);
+    }
 
     /// <inheritdoc/>
-    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out BigNumber result) => throw new NotImplementedException();
+    public static BigNumber Parse(ReadOnlySpan<char> value, NumberStyles style, IFormatProvider? provider)
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc/>
-    public static BigNumber Parse(string s, IFormatProvider? provider) => throw new NotImplementedException();
+    public static BigNumber Parse(ReadOnlySpan<byte> value, NumberStyles style, IFormatProvider? provider)
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc/>
-    public static bool TryParse(string? s, IFormatProvider? provider, out BigNumber result) => throw new NotImplementedException();
+    public static BigNumber Parse(string value, NumberStyles style, IFormatProvider? provider)
+    {
+        return Parse(value.AsSpan(), style, provider);
+    }
+
+    /// <inheritdoc/>
+    public static BigNumber Parse(string value, IFormatProvider? provider)
+    {
+        return Parse(value.AsSpan(), NumberStyles.Any, provider);
+    }
+
+    /// <inheritdoc/>
+    public static BigNumber Parse(ReadOnlySpan<char> value, IFormatProvider? provider)
+    {
+        return Parse(value, NumberStyles.Any, provider);
+    }
+
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public string ToString(string? format, IFormatProvider? formatProvider) => throw new NotImplementedException();
 
     /// <inheritdoc/>
     public static BigNumber Abs(BigNumber value) => throw new NotImplementedException();
@@ -820,12 +866,6 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
 
     /// <inheritdoc/>
     static BigNumber INumberBase<BigNumber>.MinMagnitudeNumber(BigNumber x, BigNumber y) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    static BigNumber INumberBase<BigNumber>.Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    static BigNumber INumberBase<BigNumber>.Parse(string s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException();
 
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.TryConvertFromChecked<TOther>(TOther value, out BigNumber result) => throw new NotImplementedException();
@@ -907,7 +947,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
         }
 
         // Compute remainder
-        BigInteger remainder = s1 % s2;
+        BigInteger remainder = BigInteger.Remainder(s1, s2);
 
         return new BigNumber(remainder, Math.Min(e1, e2)).Normalize();
     }

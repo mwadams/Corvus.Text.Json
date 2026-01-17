@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.DiagnosticsHub.UserMarks" Version="18.0.36525.3" />
+    <PackageReference Include="Microsoft.VisualStudio.DiagnosticsHub.UserMarks" Version="18.3.36812.1" />
   </ItemGroup>
 
   <ItemGroup>

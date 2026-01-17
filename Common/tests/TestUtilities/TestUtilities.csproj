@@ -151,18 +151,18 @@
   </ItemGroup>-->
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.201909" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.4" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.6" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.CorvusVocabulary" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.3.19" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.3.19" />
-    <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25225.104" />
-    <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25225.104" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.201909" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.4" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.6" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.CorvusVocabulary" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.4.4" />
+    <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25228.101" />
+    <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25227.101" />
     <PackageReference Include="xunit" Version="2.9.3" ExcludeAssets="build" />
   </ItemGroup>
 

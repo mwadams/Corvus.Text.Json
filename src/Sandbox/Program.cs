@@ -1,5 +1,6 @@
 ﻿using Benchmark.CorvusTextJson2;
 using Corvus.Text.Json;
+using Corvus.Text.Json.Compatibility;
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -421,7 +422,7 @@ string brokenJson =
     """;
 
 using var brokenPersonDoc = ParsedJsonDocument<Person>.Parse(brokenJson);
-var brokenPerson = brokenPersonDoc.RootElement;
+Person brokenPerson = brokenPersonDoc.RootElement;
 
 EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Basic);
 EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Detailed);
@@ -526,9 +527,12 @@ Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement[2][1][3]);
 
 
 
-BigNumber.TryParse("340282366920938463463374607431768211455.2"u8, out BigNumber bigNumber);
+if (!BigNumber.TryParse("340282366920938463463374607431768211455.2"u8, out BigNumber bigNumber))
+{
+    Console.WriteLine("Failed to parse the big number");
+}
 
-BigNumber resultBigNumber = bigNumber + (BigNumber)1L;
+BigNumber resultBigNumber = bigNumber + 1L;
 
 Console.WriteLine();
 Console.WriteLine("================");
@@ -536,3 +540,11 @@ Console.WriteLine("== BIG NUMBER ==");
 Console.WriteLine("================");
 Console.WriteLine();
 Console.WriteLine($"{bigNumber} + 1 = {resultBigNumber}");
+
+
+JsonElement element = testMultiDimensionalHigherRankArray.RootElement[2][1][3];
+element.TryGetBigNumber(out BigNumber extractedBigNumber);
+
+Console.WriteLine($"{extractedBigNumber} + 1 = {extractedBigNumber + 1L}");
+
+ParsedJsonDocument<Person>.FromSTJsonElement(default(System.Text.Json.JsonElement));
