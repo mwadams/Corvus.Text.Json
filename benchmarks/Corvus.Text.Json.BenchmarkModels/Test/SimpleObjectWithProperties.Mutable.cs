@@ -131,10 +131,10 @@ public readonly partial struct SimpleObjectWithProperties
         }
 
         /// <summary>
-        /// Converts the instance to a JsonElement.
+        /// Converts to an immutable instance of the <see cref="Mutable"/> type.
         /// </summary>
-        /// <param name="value">The instance of this type.</param>
-        /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
+        /// <param name="value">The <see cref="Mutable"/> instance.</param>
+        /// <returns>An immutable instance of a <see cref="SimpleObjectWithProperties"/>, initialized from the <see cref="Mutable"/> value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator SimpleObjectWithProperties(Mutable instance)
         {
@@ -288,7 +288,7 @@ public readonly partial struct SimpleObjectWithProperties
         /// Set the name property.
         /// </summary>
         /// <param name="value">The value of the property to add.</param>
-        public void SetName(Source value)
+        public void SetName(in Source value)
         {
             CheckValidInstance();
 
@@ -314,7 +314,7 @@ public readonly partial struct SimpleObjectWithProperties
         /// Set the otherName property.
         /// </summary>
         /// <param name="value">The value of the property to add.</param>
-        public void SetOtherName(Source value)
+        public void SetOtherName(in Source value)
         {
             CheckValidInstance();
 

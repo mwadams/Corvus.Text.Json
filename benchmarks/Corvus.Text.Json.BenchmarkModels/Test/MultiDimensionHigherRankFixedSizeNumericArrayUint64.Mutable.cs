@@ -131,10 +131,10 @@ public readonly partial struct MultiDimensionHigherRankFixedSizeNumericArrayUint
         }
 
         /// <summary>
-        /// Converts the instance to a JsonElement.
+        /// Converts to an immutable instance of the <see cref="Mutable"/> type.
         /// </summary>
-        /// <param name="value">The instance of this type.</param>
-        /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
+        /// <param name="value">The <see cref="Mutable"/> instance.</param>
+        /// <returns>An immutable instance of a <see cref="MultiDimensionHigherRankFixedSizeNumericArrayUint64"/>, initialized from the <see cref="Mutable"/> value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator MultiDimensionHigherRankFixedSizeNumericArrayUint64(Mutable instance)
         {

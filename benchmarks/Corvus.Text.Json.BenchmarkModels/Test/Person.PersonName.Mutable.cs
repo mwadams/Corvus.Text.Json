@@ -142,10 +142,10 @@ public readonly partial struct Person
             }
 
             /// <summary>
-            /// Converts the instance to a JsonElement.
+            /// Converts to an immutable instance of the <see cref="Mutable"/> type.
             /// </summary>
-            /// <param name="value">The instance of this type.</param>
-            /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
+            /// <param name="value">The <see cref="Mutable"/> instance.</param>
+            /// <returns>An immutable instance of a <see cref="PersonName"/>, initialized from the <see cref="Mutable"/> value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator PersonName(Mutable instance)
             {
@@ -333,7 +333,7 @@ public readonly partial struct Person
             /// Set the firstName property.
             /// </summary>
             /// <param name="value">The value of the property to add.</param>
-            public void SetFirstName(Source value)
+            public void SetFirstName(in Source value)
             {
                 CheckValidInstance();
 
@@ -359,7 +359,7 @@ public readonly partial struct Person
             /// Set the lastName property.
             /// </summary>
             /// <param name="value">The value of the property to add.</param>
-            public void SetLastName(Source value)
+            public void SetLastName(in Source value)
             {
                 CheckValidInstance();
 
@@ -385,7 +385,7 @@ public readonly partial struct Person
             /// Set the otherNames property.
             /// </summary>
             /// <param name="value">The value of the property to add.</param>
-            public void SetOtherNamesValue(Source value)
+            public void SetOtherNamesValue(in Source value)
             {
                 CheckValidInstance();
 

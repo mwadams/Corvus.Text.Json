@@ -167,10 +167,10 @@ public readonly partial struct ComposedNumericFormatWithConstraintNumberInt64Str
         }
 
         /// <summary>
-        /// Converts the instance to a JsonElement.
+        /// Converts to an immutable instance of the <see cref="Mutable"/> type.
         /// </summary>
-        /// <param name="value">The instance of this type.</param>
-        /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
+        /// <param name="value">The <see cref="Mutable"/> instance.</param>
+        /// <returns>An immutable instance of a <see cref="ComposedNumericFormatWithConstraintNumberInt64StringDate"/>, initialized from the <see cref="Mutable"/> value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator ComposedNumericFormatWithConstraintNumberInt64StringDate(Mutable instance)
         {
