@@ -1222,15 +1222,12 @@ internal static partial class CodeGeneratorExtensions
             .PopIndent()
             .AppendLineIndent("}")
             .AppendSeparatorLine()
-            .AppendBlockIndent(
-                """
-                /// <summary>
-                /// Converts the instance to a JsonElement.
-                /// </summary>
-                /// <param name="value">The instance of this type.</param>
-                /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                """)
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// Converts to an immutable instance of the <see cref=\"Mutable\"/> type.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"value\">The <see cref=\"Mutable\"/> instance.</param>")
+            .AppendLineIndent("/// <returns>An immutable instance of a <see cref=\"", typeDeclaration.DotnetTypeName(), "\"/>, initialized from the <see cref=\"Mutable\"/> value.</returns>")
+            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
             .AppendLineIndent("public static implicit operator ", typeDeclaration.DotnetTypeName(), "(Mutable instance)")
             .AppendLineIndent("{")
             .PushIndent()
