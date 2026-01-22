@@ -561,7 +561,11 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
     public static implicit operator BigNumber(double value)
     {
         Span<byte> valueBytes = stackalloc byte[32]; // Max length for a double is around 24 chars, 32 is safe.
+#if NET
         if (!System.Buffers.Text.Utf8Formatter.TryFormat(value, valueBytes, out int bytesWritten, new System.Buffers.StandardFormat('G', 17)))
+#else
+        if (!System.Buffers.Text.Utf8Formatter.TryFormat(value, valueBytes, out int bytesWritten, new System.Buffers.StandardFormat('G')))
+#endif
         {
             // This should not happen with a buffer of 32 bytes.
             throw new FormatException($"Unable to format double '{value}' for BigNumber conversion.");
@@ -582,7 +586,11 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
     public static implicit operator BigNumber(float value)
     {
         Span<byte> valueBytes = stackalloc byte[32]; // Max length for a float is around 15 chars, 32 is safe.
+#if NET
         if (!System.Buffers.Text.Utf8Formatter.TryFormat(value, valueBytes, out int bytesWritten, new System.Buffers.StandardFormat('G', 9)))
+#else
+        if (!System.Buffers.Text.Utf8Formatter.TryFormat(value, valueBytes, out int bytesWritten, new System.Buffers.StandardFormat('G')))
+#endif
         {
             // This should not happen with a buffer of 32 bytes.
             throw new FormatException($"Unable to format float '{value}' for BigNumber conversion.");
