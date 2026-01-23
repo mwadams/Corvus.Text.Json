@@ -75,6 +75,7 @@
     <Compile Include="JsonElementHelpersParseNumberTests.cs" />
     <Compile Include="JsonElementNumberTest.cs" />
     <Compile Include="JsonElement.MutableWriteTests.cs" />
+    <Compile Include="JsonElementSourceCoverageTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderDynamicTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderTests.cs" />
     <Compile Include="JsonReferenceTests.Uri.cs" />

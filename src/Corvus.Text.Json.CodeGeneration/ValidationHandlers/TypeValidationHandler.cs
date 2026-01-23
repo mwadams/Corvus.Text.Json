@@ -131,10 +131,10 @@ file static class TypeValidationHandlerExtensions
                 .PushIndent()
                     .ConditionallyAppend(allowedCoreTypeCount == 1, static c => c.AppendNoCollectorShortcutReturn())
                     .AppendIgnoredCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, isInteger ? "JsonSchemaEvaluation.IgnoredNotTypeInteger" : "JsonSchemaEvaluation.IgnoredNotTypeNumber", validationPriority)
-                  .AppendIgnoredCoreTypeNumericFormatKeywords(typeDeclaration, validationPriority, isInteger)
+                ////.AppendIgnoredCoreTypeNumericFormatKeywords(typeDeclaration, validationPriority, isInteger)
                 .PopIndent()
-                .AppendLineIndent("}")
-                .AppendElseEvaluateCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, validationPriority, static (generator, typeDeclaration, createdElseClause) => generator.EvaluateNumberFormatKeywords(typeDeclaration, createdElseClause));
+                .AppendLineIndent("}");
+                ////.AppendElseEvaluateCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, validationPriority, static (generator, typeDeclaration, createdElseClause) => generator.EvaluateNumberFormatKeywords(typeDeclaration, createdElseClause));
         }
 
         if ((allowedTypes & CoreTypes.String) != 0)
@@ -146,10 +146,10 @@ file static class TypeValidationHandlerExtensions
                 .PushIndent()
                     .ConditionallyAppend(allowedCoreTypeCount == 1, static c => c.AppendNoCollectorShortcutReturn())
                     .AppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString", validationPriority)
-                  .AppendIgnoredCoreTypeStringFormatKeywords(typeDeclaration, validationPriority)
+                ////.AppendIgnoredCoreTypeStringFormatKeywords(typeDeclaration, validationPriority)
                 .PopIndent()
-                .AppendLineIndent("}")
-                .AppendElseEvaluateCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, validationPriority, static (generator, typeDeclaration, createdElseClause) => generator.EvaluateStringFormatKeywords(typeDeclaration, createdElseClause));
+                .AppendLineIndent("}");
+                ////.AppendElseEvaluateCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, validationPriority, static (generator, typeDeclaration, createdElseClause) => generator.EvaluateStringFormatKeywords(typeDeclaration, createdElseClause));
         }
 
         if ((allowedTypes & CoreTypes.Boolean) != 0)
@@ -214,18 +214,18 @@ file static class TypeValidationHandlerExtensions
                             && k.ValidationPriority > validationPriority
                             && k.ValidationPriority < keyword.ValidationPriority)))
             {
-                if (typeDeclaration.TryGetKeywordHandlerFor(keyword, out KeywordValidationHandlerBase? keywordHandler) &&
-                     typeDeclaration.AddProcessedCoreTypeDependentKeyword(keywordHandler))
-                {
-                    if (!createdElseClause)
-                    {
-                        generator
-                            .BeginElseClause();
-                        createdElseClause = true;
-                    }
+                ////if (typeDeclaration.TryGetKeywordHandlerFor(keyword, out KeywordValidationHandlerBase? keywordHandler) &&
+                ////     typeDeclaration.AddProcessedCoreTypeDependentKeyword(keywordHandler))
+                ////{
+                ////    if (!createdElseClause)
+                ////    {
+                ////        generator
+                ////            .BeginElseClause();
+                ////        createdElseClause = true;
+                ////    }
 
-                    keywordHandler.AppendValidationCode(generator, typeDeclaration);
-                }
+                ////    keywordHandler.AppendValidationCode(generator, typeDeclaration);
+                ////}
             }
 
             if (additionalWork is not null)
@@ -267,12 +267,12 @@ file static class TypeValidationHandlerExtensions
 
         foreach (T keyword in ignoredKeywords)
         {
-            if (typeDeclaration.AddIgnoredCoreTypeDependentKeyword(keyword))
-            {
-                // We only add the ignore if it wasn't already processed
-                generator
-                    .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
-            }
+            ////if (typeDeclaration.AddIgnoredCoreTypeDependentKeyword(keyword))
+            ////{
+            ////    // We only add the ignore if it wasn't already processed
+            ////    generator
+            ////        .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
+            ////}
         }
 
         return generator;
