@@ -1505,8 +1505,7 @@ internal static partial class CodeGeneratorExtensions
 
         generator
                 .AppendCreateAddProperties(staticMethodParameters, orderedProperties)
-            .PopIndent()
-            .AppendLineIndent("}");
+            .EndMethodDeclaration();
 
         MethodParameter[] nonStaticMethodParameters = [.. staticMethodParameters.Skip(1)];
 
@@ -1522,8 +1521,7 @@ internal static partial class CodeGeneratorExtensions
                 nonStaticMethodParameters
                 )
                 .AppendCallStaticCreateWithBuilder(nonStaticMethodParameters)
-            .PopIndent()
-            .AppendLineIndent("}");
+            .EndMethodDeclaration();
     }
 
     private static int AppendOptionalProperty(CodeGenerator generator, MethodParameter[] parameters, int parameterIndex, PropertyDeclaration property, string builderName)

@@ -15,6 +15,27 @@ namespace Corvus.Text.Json.CodeGeneration;
 internal static partial class CodeGeneratorExtensions
 {
     /// <summary>
+    /// Conditionally appends code using the given function if the condition is true.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the code.</param>
+    /// <param name="condition">If <see langword="true"/>, then the append function is called.</param>
+    /// <param name="appendFunction">The append function.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator ConditionallyAppend(this CodeGenerator generator, bool condition, Func<CodeGenerator, CodeGenerator> appendFunction)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (condition)
+        {
+            return appendFunction(generator);
+        }
+
+        return generator;
+    }
+    /// <summary>
     /// Appends a blank line if the previous line ended with a closing brace.
     /// </summary>
     /// <param name="generator">The generator to which to append the separator line.</param>
@@ -628,6 +649,59 @@ internal static partial class CodeGeneratorExtensions
             .AppendParameterList(parameters)
             .AppendLineIndent("{")
             .PushIndent();
+    }
+
+    /// <summary>
+    /// Begin a method declaration for an explicit name which will be reserved in the scope, if it is not already reserved
+    /// </summary>
+    /// <param name="generator">The generator to which to append the method.</param>
+    /// <param name="visibilityAndModifiers">The visibility and modifiers for the method.</param>
+    /// <param name="returnType">The return type of the method.</param>
+    /// <param name="methodName">The method name, which will be reserved in the scope.</param>
+    /// <param name="parameters">The parameter list.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator BeginMethodDeclaration(
+        this CodeGenerator generator,
+        string visibilityAndModifiers,
+        string returnType,
+        string methodName,
+        params MethodParameter[] parameters)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        return generator
+            .AppendSeparatorLine()
+            .AppendIndent(visibilityAndModifiers)
+            .Append(' ')
+            .Append(returnType)
+            .Append(' ')
+            .Append(methodName)
+            .ReserveNameIfNotReserved(methodName) // Reserve the method name in the parent scope if it is not already reserved
+            .PushMemberScope(methodName, ScopeType.Method) // Then move to the method scope before appending parameters
+            .AppendParameterList(parameters)
+            .AppendLineIndent("{")
+            .PushIndent();
+    }
+
+    /// <summary>
+    /// End a method declaration.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the method.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator EndMethodDeclaration(this CodeGenerator generator)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        return generator
+            .PopMemberScope()
+            .PopIndent()
+            .AppendLineIndent("}");
     }
 
     /// <summary>

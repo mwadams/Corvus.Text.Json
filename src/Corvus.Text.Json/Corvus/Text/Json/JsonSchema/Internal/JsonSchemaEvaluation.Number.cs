@@ -11,6 +11,7 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeNumber = static (buffer, out written) => IgnoredNotType("number"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider IgnoredNotTypeInteger = static (buffer, out written) => IgnoredNotType("integer"u8, buffer, out written);
 
     private const int MaximumByteExponent = 0;
     private const bool MaximumByteIsNegative = false;
@@ -79,6 +80,7 @@ public static partial class JsonSchemaEvaluation
     private static readonly JsonSchemaMessageProvider ExpectedSByte = static (buffer, out written) => ExpectedNumberFormat("sbyte"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedSingle = static (buffer, out written) => ExpectedNumberFormat("single"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedTypeNumber = static (buffer, out written) => ExpectedType("number"u8, buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedTypeInteger = static (buffer, out written) => ExpectedType("integer"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt128 = static (buffer, out written) => ExpectedNumberFormat("uint128"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt16 = static (buffer, out written) => ExpectedNumberFormat("uint16"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt32 = static (buffer, out written) => ExpectedNumberFormat("uint32"u8, buffer, out written);

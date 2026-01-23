@@ -25,6 +25,7 @@
     <Compile Include="CodeFileBuilders\JsonSchemaPartial.cs" />
     <Compile Include="CodeFileBuilders\MutableCorePartial.cs" />
     <Compile Include="CodeFileBuilders\CorePartial.cs" />
+    <Compile Include="CodeGeneratorExtensions.Validation.cs" />
     <Compile Include="CodeGeneratorExtensions.Number.cs" />
     <Compile Include="CodeGeneratorExtensions.JsonSchema.cs" />
     <Compile Include="CodeGeneratorExtensions.Array.cs" />
@@ -77,6 +78,8 @@
   <!-- NumberParsing -->
   <ItemGroup>
     <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.Numeric.Core.cs" />
+    <Compile Include="ValidationHandlers\KeywordValidationHandlerBase.cs" />
+    <Compile Include="ValidationHandlers\TypeValidationHandler.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -84,7 +87,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.4.4" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
   </ItemGroup>
 

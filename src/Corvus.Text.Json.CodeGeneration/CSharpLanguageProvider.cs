@@ -328,27 +328,21 @@ public class CSharpLanguageProvider(CSharpLanguageProvider.Options? options = nu
             CorePartial.Instance,
             MutableCorePartial.Instance,
             JsonSchemaPartial.Instance
-            ////ArrayPartial.Instance,
-            ////ObjectPartial.Instance,
-            ////BooleanPartial.Instance,
-            ////StringPartial.Instance,
-            ////NumberPartial.Instance,
-            ////ValidatePartial.Instance
             );
 
         languageProvider.RegisterValidationHandlers(
-            ////ArrayValidationHandler.Instance,
-            ////CompositionAllOfValidationHandler.Instance,
-            ////CompositionAnyOfValidationHandler.Instance,
-            ////CompositionNotValidationHandler.Instance,
-            ////CompositionOneOfValidationHandler.Instance,
-            ////ConstValidationHandler.Instance,
-            ////FormatValidationHandler.Instance,
-            ////NumberValidationHandler.Instance,
-            ////ObjectValidationHandler.Instance,
-            ////StringValidationHandler.Instance,
-            ////TernaryIfValidationHandler.Instance,
-            ////TypeValidationHandler.Instance
+            //ArrayValidationHandler.Instance,
+            //CompositionAllOfValidationHandler.Instance,
+            //CompositionAnyOfValidationHandler.Instance,
+            //CompositionNotValidationHandler.Instance,
+            //CompositionOneOfValidationHandler.Instance,
+            //ConstValidationHandler.Instance,
+            //FormatValidationHandler.Instance,
+            //NumberValidationHandler.Instance,
+            //ObjectValidationHandler.Instance,
+            //StringValidationHandler.Instance,
+            //TernaryIfValidationHandler.Instance,
+            //TypeValidationHandler.Instance
             );
 
         languageProvider.RegisterNameHeuristics(

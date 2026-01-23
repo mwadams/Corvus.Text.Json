@@ -34,29 +34,40 @@ public readonly partial struct MultiDimensionFixedSizeNumericArrayUint64
         /// <param name="parentDocument">The parent document.</param>
         /// <param name="parentIndex">The parent index.</param>
         /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
-        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        internal static void Evaluate(
+            IJsonDocument parentDocument,
+            int parentIndex,
+            ref JsonSchemaContext context)
         {
-            // NOP AS YET
+            JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex); 
+            // You're not allowed to ask about non-value-like entities
+            Debug.Assert(tokenType is not 
+                JsonTokenType.None or 
+                JsonTokenType.EndObject or 
+                JsonTokenType.EndArray); 
         }
 
-        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
+        internal static bool Evaluate(
+            IJsonDocument parentDocument,
+            int parentIndex,
+            IJsonSchemaResultsCollector? resultsCollector = null)
         {
             JsonSchemaContext context = JsonSchemaContext.BeginContext(
-                parentDocument,
-                parentIndex,
-                usingEvaluatedItems: false,
-                usingEvaluatedProperties: false,
-                resultsCollector: resultsCollector);
+            parentDocument,
+            parentIndex,
+            usingEvaluatedItems: false,
+            usingEvaluatedProperties: false,
+            resultsCollector: resultsCollector);
 
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
                 return context.IsMatch;
-            }
-            finally
-            {
-                context.Dispose();
+                    }
+                    finally
+                    {
+                        context.Dispose();
+                    }
+                }
             }
         }
-    }
-}

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Corvus.Json.CodeGeneration;
+using Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 
 namespace Corvus.Text.Json.CodeGeneration;
 
@@ -56,7 +57,7 @@ internal static partial class CodeGenerationExtensions
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendJsonSchemaEvaluateMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
-        return generator
+        generator
             .ReserveName("Evaluate")
             .AppendSeparatorLine()
             .AppendBlockIndent(
@@ -67,34 +68,75 @@ internal static partial class CodeGenerationExtensions
                 /// <param name="parentDocument">The parent document.</param>
                 /// <param name="parentIndex">The parent index.</param>
                 /// <param name="context">A reference to the validation context, configured with the appropriate values.</param>
-                internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
-                {
-                    // NOP AS YET
-                }
                 """)
-            .AppendSeparatorLine()
-            .AppendBlockIndent(
-                $$"""
-                internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector = null)
-                {
-                    JsonSchemaContext context = JsonSchemaContext.BeginContext(
-                        parentDocument,
-                        parentIndex,
-                        usingEvaluatedItems: {{(typeDeclaration.ExplicitUnevaluatedItemsType() is not null ? "true" : "false")}},
-                        usingEvaluatedProperties: {{(typeDeclaration.LocalEvaluatedPropertyType() is not null || typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is not null ? "true" : "false")}},
-                        resultsCollector: resultsCollector);
+            .BeginReservedMethodDeclaration(
+                visibilityAndModifiers: "internal static",
+                returnType: "void",
+                methodName: "Evaluate",
+                parameters: [
+                    ("IJsonDocument", "parentDocument"),
+                    ("int", "parentIndex"),
+                    ("ref JsonSchemaContext", "context")
+                ])
+                .AppendLineIndent("JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex); ")
+                .AppendSeparatorLine()
+                .AppendLineIndent("// You're not allowed to ask about non-value-like entities")
+                .AppendLineIndent("Debug.Assert(tokenType is not ")
+                .PushIndent()
+                    .AppendLineIndent("JsonTokenType.None or ")
+                    .AppendLineIndent("JsonTokenType.EndObject or ")
+                    .AppendLineIndent("JsonTokenType.EndArray); ")
+                .PopIndent();
 
-                    try
-                    {
-                        Evaluate(parentDocument, parentIndex, ref context);
-                        return context.IsMatch;
-                    }
-                    finally
-                    {
-                        context.Dispose();
-                    }
-                }
-                """);
+        // Append any setup code for each handler at the top of the method
+        foreach (KeywordValidationHandlerBase handler in typeDeclaration.OrderedValidationHandlers<KeywordValidationHandlerBase>(generator.LanguageProvider))
+        {
+            handler.AppendValidationSetup(generator, typeDeclaration);
+        }
+
+        // Then append the actual validation code beneath
+        foreach (KeywordValidationHandlerBase handler in typeDeclaration.OrderedValidationHandlers<KeywordValidationHandlerBase>(generator.LanguageProvider))
+        {
+            handler.AppendValidationCode(generator, typeDeclaration);
+        }
+
+        generator
+            .EndMethodDeclaration()
+            .AppendSeparatorLine();
+
+
+        // Now append the utility wrapper that reutrn the boolean result derived from the context.
+        return generator
+            .BeginMethodDeclaration(
+                visibilityAndModifiers: "internal static",
+                returnType: "bool",
+                methodName: "Evaluate",
+                parameters: [
+                    ("IJsonDocument", "parentDocument"),
+                    ("int", "parentIndex"),
+                    ("IJsonSchemaResultsCollector?", "resultsCollector", "null")
+                ])
+                .AppendLineIndent("JsonSchemaContext context = JsonSchemaContext.BeginContext(")
+                .AppendLineIndent("parentDocument,")
+                .AppendLineIndent("parentIndex,")
+                .AppendLineIndent("usingEvaluatedItems: ", typeDeclaration.ExplicitUnevaluatedItemsType() is not null ? "true" : "false", ",")
+                .AppendLineIndent("usingEvaluatedProperties: ", typeDeclaration.LocalEvaluatedPropertyType() is not null || typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is not null ? "true" : "false", ",")
+                .AppendLineIndent("resultsCollector: resultsCollector);")
+                .AppendSeparatorLine()
+                .AppendLineIndent("try")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("Evaluate(parentDocument, parentIndex, ref context);")
+                    .AppendLineIndent("return context.IsMatch;")
+                .PushIndent()
+                .AppendLineIndent("}")
+                .AppendLineIndent("finally")
+                .AppendLineIndent("{")
+                .PushIndent()
+                .AppendLineIndent("context.Dispose();")
+                .PopIndent()
+                .AppendLineIndent("}")
+            .EndMethodDeclaration();
     }
 
     /// <summary>
