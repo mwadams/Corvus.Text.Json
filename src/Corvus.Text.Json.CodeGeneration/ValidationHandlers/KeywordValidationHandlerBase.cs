@@ -6,7 +6,17 @@ using Corvus.Json.CodeGeneration;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 
-internal abstract class KeywordValidationHandlerBase : IKeywordValidationHandler
+internal abstract class TypeSensitiveKeywordValidationHandlerBase : KeywordValidationHandlerBase, ITypeSensitiveKeywordValidationHandler
+{
+    /// <inheritdoc/>
+    public abstract CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration, bool validateOnly);
+
+    /// <inheritdoc/>
+    public override CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration) => AppendValidationCode(generator, typeDeclaration, validateOnly: false);
+}
+
+
+internal abstract class KeywordValidationHandlerBase : ITypeInsensitiveKeywordValidationHandler
 {
     private readonly ChildValidationHandlerRegistry _childHandlers = new();
 
@@ -24,12 +34,7 @@ internal abstract class KeywordValidationHandlerBase : IKeywordValidationHandler
     /// <inheritdoc/>
     public abstract bool HandlesKeyword(IKeyword keyword);
 
-    /// <summary>
-    /// Append the validation code for the keyword.
-    /// </summary>
-    /// <param name="generator">The code generator.</param>
-    /// <param name="typeDeclaration">The type declaration containing the keyword.</param>
-    /// <returns>The code generator, after the operation has completed.</returns>
+    /// <inheritdoc/>
     public abstract CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration);
 
     /// <summary>

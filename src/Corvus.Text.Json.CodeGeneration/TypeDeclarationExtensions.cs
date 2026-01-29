@@ -63,6 +63,8 @@ public static class TypeDeclarationExtensions
     private const string ParentKey = "CSharp_LanguageProvider_Parent";
     private const string PreferredDotnetNumericTypeNameKey = "CSharp_LanguageProvider_PreferredDotnetNumericTypeName";
     private const string UseImplicitOperatorStringKey = "CSharp_LanguageProvider_UseImplicitOperatorString";
+    private const string ExecutedValidationHandlersKey = "CSharp_LanguageProvider_ExecutedValidationHandlers";
+    private const string IgnoredKeywordsKey = "CSharp_LanguageProvider_IgnoredKeywords";
 
     /// <summary>
     /// Gets a value indicating whether to generate using statements for the standard implicit usings.
@@ -697,6 +699,84 @@ public static class TypeDeclarationExtensions
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Executes a validation handler, if it has not already been executed.
+    /// </summary>
+    /// <typeparam name="T">The type of the <see cref="IKeywordValidationHandler"/>.</typeparam>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="handler">The instance of the <see cref="IKeywordValidationHandler"/></param>
+    /// <param name="execute">The function that executes the handler.</param>
+    public static void ExecuteValidationHandler<T>(this TypeDeclaration typeDeclaration, T handler, Action<T> execute)
+        where T : IKeywordValidationHandler
+    {
+        if (typeDeclaration.AddExecutedHandler(handler))
+        {
+            execute(handler);
+        }
+    }
+
+    /// <summary>
+    /// Determines if the given handler has already been executed.
+    /// </summary>
+    /// <typeparam name="T">The type of the <see cref="IKeywordValidationHandler"/>.</typeparam>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="handler">The instance of the <see cref="IKeywordValidationHandler"/></param>
+    /// <returns><see langword="true"/> if the handler has been executed.</returns>
+    public static bool IsHandled<T>(this TypeDeclaration typeDeclaration, T handler)
+        where T : IKeywordValidationHandler
+    {
+        return typeDeclaration.TryGetMetadata(ExecutedValidationHandlersKey, out HashSet<IKeywordValidationHandler>? executedHandlers) && executedHandlers.Contains(handler);
+    }
+
+    /// <summary>
+    /// Executes a validation handler, if it has not already been executed.
+    /// </summary>
+    /// <typeparam name="T">The type of the <see cref="IKeyword"/>.</typeparam>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="keyword">The instance of the <see cref="IKeyword"/></param>
+    public static bool AddIgnoredKeyword<T>(this TypeDeclaration typeDeclaration, T keyword)
+        where T : IKeyword
+    {
+        if (!typeDeclaration.TryGetMetadata(IgnoredKeywordsKey, out HashSet<IKeyword>? ignoredKeywords))
+        {
+            ignoredKeywords = [];
+            typeDeclaration.SetMetadata(IgnoredKeywordsKey, ignoredKeywords);
+        }
+
+        return ignoredKeywords.Add(keyword);
+    }
+
+    /// <summary>
+    /// Determines if the given keyword has been ignored.
+    /// </summary>
+    /// <typeparam name="T">The type of the <see cref="IKeyword"/>.</typeparam>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="keyword">The instance of the <see cref="IKeyword"/></param>
+    /// <returns><see langword="true"/> if the keyword has been ignored.</returns>
+    public static bool IsIgnored<T>(this TypeDeclaration typeDeclaration, T keyword)
+        where T : IKeyword
+    {
+        return typeDeclaration.TryGetMetadata(IgnoredKeywordsKey, out HashSet<IKeyword>? ignoredKeywords) && ignoredKeywords.Contains(keyword);
+    }
+
+    /// <summary>
+    /// Executes a validation handler, if it has not already been executed.
+    /// </summary>
+    /// <typeparam name="T">The type of the <see cref="IKeywordValidationHandler"/>.</typeparam>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="handler">The instance of the <see cref="IKeywordValidationHandler"/></param>
+    private static bool AddExecutedHandler<T>(this TypeDeclaration typeDeclaration, T handler)
+        where T : IKeywordValidationHandler
+    {
+        if (!typeDeclaration.TryGetMetadata(ExecutedValidationHandlersKey, out HashSet<IKeywordValidationHandler>? executedHandlers))
+        {
+            executedHandlers = [];
+            typeDeclaration.SetMetadata(ExecutedValidationHandlersKey, executedHandlers);
+        }
+
+        return executedHandlers.Add(handler);
     }
 
     private static void AppendCompositionSources(

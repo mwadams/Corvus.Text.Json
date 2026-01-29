@@ -97,7 +97,7 @@ internal static partial class CodeGenerationExtensions
         // Then append the actual validation code beneath
         foreach (KeywordValidationHandlerBase handler in typeDeclaration.OrderedValidationHandlers<KeywordValidationHandlerBase>(generator.LanguageProvider))
         {
-            handler.AppendValidationCode(generator, typeDeclaration);
+            typeDeclaration.ExecuteValidationHandler(handler, k => k.AppendValidationCode(generator, typeDeclaration));
         }
 
         generator

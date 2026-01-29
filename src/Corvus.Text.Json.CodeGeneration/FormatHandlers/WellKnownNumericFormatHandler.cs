@@ -32,8 +32,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
         string integralIdentifier,
         string fractionalIdentifier,
         string exponentIdentifier,
-        string validationContextIdentifier,
-        IKeyword? formatKeyword)
+        string validationContextIdentifier)
     {
         switch (format)
         {

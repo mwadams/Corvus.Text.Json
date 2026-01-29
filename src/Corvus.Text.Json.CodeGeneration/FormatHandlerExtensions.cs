@@ -3,7 +3,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text.Json;
 using Corvus.Json.CodeGeneration;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration;
 

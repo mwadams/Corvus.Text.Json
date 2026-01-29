@@ -22,7 +22,6 @@ public interface INumberFormatHandler : IFormatHandler
     /// <param name="fractionalIdentifier">The identifier that contains the fractional value of the normalized JSON number.</param>
     /// <param name="exponentIdentifier">The identifier that contains the exponent value of the normalized JSON number.</param>
     /// <param name="validationContextIdentifier">The identifier for the validation context to update.</param>
-    /// <param name="formatKeyword">The format keyword, or <see langword="null"/> if no format keyword is applied.</param>
     /// <returns><see langword="true"/> if the instance handled this format.</returns>
     bool AppendFormatAssertion(
         CodeGenerator generator,
@@ -32,8 +31,7 @@ public interface INumberFormatHandler : IFormatHandler
         string integralIdentifier,
         string fractionalIdentifier,
         string exponentIdentifier,
-        string validationContextIdentifier,
-        IKeyword? formatKeyword);
+        string validationContextIdentifier);
 
     /// <summary>
     /// Get the preferred numeric type for a format.

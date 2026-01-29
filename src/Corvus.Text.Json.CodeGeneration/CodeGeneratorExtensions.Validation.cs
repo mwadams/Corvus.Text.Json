@@ -31,6 +31,24 @@ internal static partial class CodeGenerationExtensions
     }
 
     /// <summary>
+    /// Appends the code to shortcut the return from validation if there is no collector.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="contextName">The name to use for the context (defaults to 'context').</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendNoCollectorNoMatchShortcutReturn(this CodeGenerator generator, string contextName = "context")
+    {
+        return generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("if (!", contextName, ".HasCollector && !", contextName, ".IsMatch)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return;")
+            .PopIndent()
+            .AppendLineIndent("}");
+    }
+
+    /// <summary>
     /// Prepend validation setup code for children.
     /// </summary>
     /// <param name="generator">The code generator.</param>
