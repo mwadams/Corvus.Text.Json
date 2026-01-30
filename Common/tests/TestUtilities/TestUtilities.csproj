@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net481</TargetFrameworks>
+    <TargetFrameworks>net10.0;net9.0;net481</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- For some reason, xunit.core.props isn't excluded in VS and sets this to true. -->
     <IsTestProject>false</IsTestProject>
@@ -27,6 +27,7 @@
     <CommonPath>..\..\src\</CommonPath>
     <CoreLibSharedDir>..\..\..\System.Private.CoreLib\src\</CoreLibSharedDir>
     <LibrariesProjectRoot>..\..\..\</LibrariesProjectRoot>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -164,6 +165,8 @@
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25228.101" />
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25227.101" />
     <PackageReference Include="xunit" Version="2.9.3" ExcludeAssets="build" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
@@ -172,6 +175,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Corvus.Text.Json.CodeGeneration\Corvus.Text.Json.CodeGeneration.csproj" />
+    <ProjectReference Include="..\..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
   <ItemGroup>

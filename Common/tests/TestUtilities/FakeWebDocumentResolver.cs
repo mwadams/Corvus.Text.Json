@@ -40,16 +40,16 @@ public class FakeWebDocumentResolver : IDocumentResolver
     /// <remarks>The default base directory is <see cref="Environment.CurrentDirectory"/>.</remarks>
     public FakeWebDocumentResolver()
     {
-        this.baseDirectory = Environment.CurrentDirectory;
+        baseDirectory = Environment.CurrentDirectory;
     }
 
     /// <inheritdoc/>
     public bool AddDocument(string uri, JsonDocument document)
     {
-        this.CheckDisposed();
+        CheckDisposed();
 
 #if NET8_0_OR_GREATER
-        return this.documents.TryAdd(uri, document);
+        return documents.TryAdd(uri, document);
 #else
         if (!this.documents.ContainsKey(uri))
         {
@@ -64,22 +64,22 @@ public class FakeWebDocumentResolver : IDocumentResolver
     /// <inheritdoc/>
     public void Reset()
     {
-        this.CheckDisposed();
-        this.DisposeDocumentsAndClear();
+        CheckDisposed();
+        DisposeDocumentsAndClear();
     }
 
     /// <inheritdoc/>
     public void Dispose()
     {
         // Do not change this code. Put clean-up code in 'Dispose(bool disposing)' method
-        this.Dispose(disposing: true);
+        Dispose(disposing: true);
         System.GC.SuppressFinalize(this);
     }
 
     /// <inheritdoc/>
     public async ValueTask<JsonElement?> TryResolve(JsonReference reference)
     {
-        this.CheckDisposed();
+        CheckDisposed();
 
         if (!IsMatchForFakeUri(reference))
         {
@@ -88,7 +88,7 @@ public class FakeWebDocumentResolver : IDocumentResolver
 
         string path = GetPath(reference);
 
-        if (this.documents.TryGetValue(path, out JsonDocument? result))
+        if (documents.TryGetValue(path, out JsonDocument? result))
         {
             if (JsonPointerUtilities.TryResolvePointer(result, reference.Fragment, out JsonElement? element))
             {
@@ -126,10 +126,10 @@ public class FakeWebDocumentResolver : IDocumentResolver
 
             if (builder.Path[0] == '/')
             {
-                return Path.Combine(this.baseDirectory, builder.Path[1..].ToString());
+                return Path.Combine(baseDirectory, builder.Path[1..].ToString());
             }
 
-            return Path.Combine(this.baseDirectory, builder.Path.ToString());
+            return Path.Combine(baseDirectory, builder.Path.ToString());
         }
     }
 
@@ -139,31 +139,31 @@ public class FakeWebDocumentResolver : IDocumentResolver
     /// <param name="disposing">True if we are disposing.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (!this.disposedValue)
+        if (!disposedValue)
         {
             if (disposing)
             {
-                this.DisposeDocumentsAndClear();
+                DisposeDocumentsAndClear();
             }
 
-            this.disposedValue = true;
+            disposedValue = true;
         }
     }
 
     private void DisposeDocumentsAndClear()
     {
-        foreach (KeyValuePair<string, JsonDocument> document in this.documents)
+        foreach (KeyValuePair<string, JsonDocument> document in documents)
         {
             document.Value.Dispose();
         }
 
-        this.documents.Clear();
+        documents.Clear();
     }
 
     private void CheckDisposed()
     {
 #if NET8_0_OR_GREATER
-        ObjectDisposedException.ThrowIf(this.disposedValue, this);
+        ObjectDisposedException.ThrowIf(disposedValue, this);
 #else
         if (this.disposedValue)
         {

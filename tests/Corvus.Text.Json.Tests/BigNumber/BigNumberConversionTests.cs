@@ -51,8 +51,10 @@ public class BigNumberConversionTests
     [InlineData(-9.8765)]
     [InlineData(1.2345e20)]
     [InlineData(-9.8765e-10)]
+#if NET
     [InlineData(double.MaxValue)]
     [InlineData(double.MinValue)]
+#endif
     [InlineData(double.Epsilon)]
     public void DoubleToBigNumber_ShouldConvertCorrectly(double value)
     {
@@ -76,8 +78,10 @@ public class BigNumberConversionTests
     [InlineData(-9.8765f)]
     [InlineData(1.2345e20f)]
     [InlineData(-9.8765e-10f)]
+#if NET
     [InlineData(float.MaxValue)]
     [InlineData(float.MinValue)]
+#endif
     [InlineData(float.Epsilon)]
     public void FloatToBigNumber_ShouldConvertCorrectly(float value)
     {

@@ -1,7 +1,11 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+using System.Reflection;
 using System.Threading.Tasks;
+using Corvus.Json.CodeGeneration;
+using Json.Schema;
 using TestUtilities;
 using Xunit;
 
@@ -364,8 +368,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("[\"array\", \"null\"]")]
         public static async Task GenerateCode_Emits_ArrayTypes(string type)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"types_{GetNameFor(type)}.json", string.Format(ArrayType, type));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"types_{GetNameFor(type)}.json",
+                string.Format(ArrayType, type),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
 
             static string GetNameFor(string type)
             {
@@ -432,22 +446,52 @@ namespace Corvus.Text.Json.Tests
         [InlineData("unevaluatedItems", "string", "regex")]
         public static async Task GenerateCode_Emits_ArrayTypeWithItemsConstraintAndFormat(string keyword, string type, string format)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"arrayTypeWithItemsAndFormat_{keyword}_{type}_{format}.json", string.Format(ArrayTypeWithItemsConstraintAndFormat, keyword, type, format));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"arrayTypeWithItemsAndFormat_{keyword}_{type}_{format}.json",
+                string.Format(ArrayTypeWithItemsConstraintAndFormat, keyword, type, format),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Fact]
         public static async Task GenerateCode_Emits_ComplexComposedObjectWithProperties()
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"complexComposedObjectWithProperties.json", ComplexComposedObjectWithProperties);
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                "complexComposedObjectWithProperties.json",
+                ComplexComposedObjectWithProperties,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Fact]
         public static async Task GenerateCode_Emits_ComposedArrayMultiItemType()
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"composedArrayMultiItemType.json", ComposedArrayMultiItemType);
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                "composedArrayMultiItemType.json",
+                ComposedArrayMultiItemType,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -458,8 +502,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("number", "int64", "number", "int128")]
         public static async Task GenerateCode_Emits_ComposedFormatTypes(string type1, string format1, string type2, string format2)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"composedFormat_{type1}_{format1}_{type2}_{format2}.json", string.Format(ComposedMultiFormatType, type1, format1, type2, format2));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"composedFormat_{type1}_{format1}_{type2}_{format2}.json",
+                string.Format(ComposedMultiFormatType, type1, format1, type2, format2),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -467,22 +521,52 @@ namespace Corvus.Text.Json.Tests
         [InlineData("number", "int64", "string", "date")]
         public static async Task GenerateCode_Emits_ComposedMultiFormatNumericWithAdditionalConstraint(string type1, string format1, string type2, string format2)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"composedNumericFormatWithConstraint_{type1}_{format1}_{type2}_{format2}.json", string.Format(ComposedMultiFormatNumericWithAdditionalConstraint, type1, format1, type2, format2));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"composedNumericFormatWithConstraint_{type1}_{format1}_{type2}_{format2}.json",
+                string.Format(ComposedMultiFormatNumericWithAdditionalConstraint, type1, format1, type2, format2),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Fact]
         public static async Task GenerateCode_Emits_ComposedObjectWithProperties()
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"composedObjectWithProperties.json", ComposedObjectWithProperties);
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                "composedObjectWithProperties.json",
+                ComposedObjectWithProperties,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Fact]
         public static async Task GenerateCode_Emits_ComposedObjectWithRequiredProperties()
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"composedObjectWithRequiredProperties.json", ComposedObjectWithRequiredProperties);
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                "composedObjectWithRequiredProperties.json",
+                ComposedObjectWithRequiredProperties,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -502,8 +586,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("half")]
         public static async Task GenerateCode_Emits_FixedSizeNumericArrayTypes(string format)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"fixedSizeNumericArray_{format}.json", string.Format(FixedSizeNumericArrayFormat, format));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"fixedSizeNumericArray_{format}.json",
+                string.Format(FixedSizeNumericArrayFormat, format),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -523,8 +617,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("half")]
         public static async Task GenerateCode_Emits_MultiDimensionFixedSizeNumericArrayTypes(string format)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"multiDimensionFixedSizeNumericArray_{format}.json", string.Format(MultiDimensionFixedSizeNumericArrayFormat, format));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"multiDimensionFixedSizeNumericArray_{format}.json",
+                string.Format(MultiDimensionFixedSizeNumericArrayFormat, format),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -544,8 +648,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("half")]
         public static async Task GenerateCode_Emits_MultiDimensionHigherRankFixedSizeNumericArrayTypes(string format)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"multiDimensionHigherRankFixedSizeNumericArray_{format}.json", string.Format(MultiDimensionHigherRankFixedSizeNumericArrayFormat, format));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"multiDimensionHigherRankFixedSizeNumericArray_{format}.json",
+                string.Format(MultiDimensionHigherRankFixedSizeNumericArrayFormat, format),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -565,8 +679,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("half")]
         public static async Task GenerateCode_Emits_NumericArrayTypes(string format)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"numericArray_{format}.json", string.Format(NumericArrayFormat, format));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"numericArray_{format}.json",
+                string.Format(NumericArrayFormat, format),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -586,22 +710,52 @@ namespace Corvus.Text.Json.Tests
         [InlineData("half")]
         public static async Task GenerateCode_Emits_NumericFormatTypes(string format)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"numericFormat_{format}.json", string.Format(NumericFormat, format));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"numericFormat_{format}.json",
+                string.Format(NumericFormat, format),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Fact]
         public static async Task GenerateCode_Emits_Person()
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"person.json", Person);
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                "person.json",
+                Person,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Fact]
         public static async Task GenerateCode_Emits_SimpleObjectWithProperties()
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"simpleObjectWithProperties.json", SimpleObjectWithProperties);
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                "simpleObjectWithProperties.json",
+                SimpleObjectWithProperties,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -613,8 +767,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("null")]
         public static async Task GenerateCode_Emits_SimpleTypes(string type)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"type_{type}.json", string.Format(SimpleType, type));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"type_{type}.json",
+                string.Format(SimpleType, type),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]
@@ -632,8 +796,18 @@ namespace Corvus.Text.Json.Tests
         [InlineData("regex")]
         public static async Task GenerateCode_Emits_StringFormatTypes(string format)
         {
-            TestJsonSchemaCodeGenerator generator = new("./someFakePath");
-            await generator.GenerateCode($"stringFormat_{format}.json", string.Format(StringFormat, format));
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"stringFormat_{format}.json",
+                string.Format(StringFormat, format),
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
     }
 }

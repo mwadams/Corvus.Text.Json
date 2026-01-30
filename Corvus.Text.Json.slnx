@@ -1,0 +1,11 @@
+<Solution>
+  <Project Path="benchmarks/Corvus.Text.Json.BenchmarkModels/Corvus.Text.Json.BenchmarkModels.csproj" />
+  <Project Path="benchmarks/Corvus.Text.Json.Benchmarks/Corvus.Text.Json.Benchmarks.csproj" />
+  <Project Path="BenchmarkSandbox/BenchmarkSandbox.csproj" />
+  <Project Path="Common/tests/TestUtilities/TestUtilities.csproj" />
+  <Project Path="src/Corvus.Text.Json.CodeGeneration/Corvus.Text.Json.CodeGeneration.csproj" />
+  <Project Path="src/Corvus.Text.Json.Compatibility/Corvus.Text.Json.Compatibility.csproj" />
+  <Project Path="src/Corvus.Text.Json/Corvus.Text.Json.csproj" />
+  <Project Path="src/Sandbox/Sandbox.csproj" />
+  <Project Path="tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj" />
+</Solution>
