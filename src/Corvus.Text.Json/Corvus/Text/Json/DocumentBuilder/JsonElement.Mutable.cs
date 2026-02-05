@@ -147,8 +147,8 @@ public readonly partial struct JsonElement
         private readonly SimpleTypesBacking _simpleTypeBacking;
         private readonly ReadOnlySpan<byte> _utf8Backing;
         private readonly ReadOnlySpan<char> _utf16Backing;
-        private readonly JsonArrayBuilder.Build? _arrayBuilder;
-        private readonly JsonObjectBuilder.Build? _objectBuilder;
+        private readonly ArrayBuilder.Build? _arrayBuilder;
+        private readonly ObjectBuilder.Build? _objectBuilder;
 
         private Source(JsonElement jsonElement)
         {
@@ -490,7 +490,7 @@ public readonly partial struct JsonElement
         /// Initializes a new instance of the <see cref="Source"/> struct from a JSON array builder.
         /// </summary>
         /// <param name="value">The array builder delegate to use as the source.</param>
-        public Source(JsonArrayBuilder.Build value)
+        public Source(ArrayBuilder.Build value)
         {
             _arrayBuilder = value;
             _kind = Kind.JsonArrayBuilderInstance;
@@ -500,7 +500,7 @@ public readonly partial struct JsonElement
         /// Initializes a new instance of the <see cref="Source"/> struct from a JSON object builder.
         /// </summary>
         /// <param name="value">The object builder delegate to use as the source.</param>
-        public Source(JsonObjectBuilder.Build value)
+        public Source(ObjectBuilder.Build value)
         {
             _objectBuilder = value;
             _kind = Kind.JsonObjectBuilderInstance;
@@ -1003,11 +1003,11 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.JsonArrayBuilderInstance:
-                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
 
                 case Kind.JsonObjectBuilderInstance:
-                    valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                    valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
 
                 default:
@@ -1080,11 +1080,11 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.JsonArrayBuilderInstance:
-                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o));
+                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o));
                     break;
 
                 case Kind.JsonObjectBuilderInstance:
-                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o));
+                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o));
                     break;
 
                 default:
@@ -1167,11 +1167,11 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.JsonArrayBuilderInstance:
-                    valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => JsonArrayBuilder.BuildValue(b, ref o));
+                    valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o));
                     break;
 
                 case Kind.JsonObjectBuilderInstance:
-                    valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => JsonObjectBuilder.BuildValue(b, ref o));
+                    valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o));
                     break;
 
                 default:
@@ -3789,7 +3789,7 @@ public readonly partial struct JsonElement
         ///   </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+        public void SetProperty(string propertyName, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             SetProperty(propertyName.AsSpan(), objectValue, estimatedMemberCount);
         }
@@ -3821,7 +3821,7 @@ public readonly partial struct JsonElement
         ///     If the property doesn't exist, it will be added to the object.
         ///   </para>
         /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+        public void SetProperty(ReadOnlySpan<char> propertyName, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
 
@@ -3829,13 +3829,13 @@ public readonly partial struct JsonElement
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
-                cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                cvb.AddItem((ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
                 _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
             }
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, (ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                cvb.AddProperty(propertyName, (ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -3870,7 +3870,7 @@ public readonly partial struct JsonElement
         ///     If the property doesn't exist, it will be added to the object.
         ///   </para>
         /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+        public void SetProperty(ReadOnlySpan<byte> propertyName, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
 
@@ -3878,13 +3878,13 @@ public readonly partial struct JsonElement
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
-                cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                cvb.AddItem((ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
                 _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
             }
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, (ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+                cvb.AddProperty(propertyName, (ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -3916,7 +3916,7 @@ public readonly partial struct JsonElement
         ///   </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+        public void SetProperty(string propertyName, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             SetProperty(propertyName.AsSpan(), arrayValue, estimatedMemberCount);
         }
@@ -3948,7 +3948,7 @@ public readonly partial struct JsonElement
         ///     If the property doesn't exist, it will be added to the object.
         ///   </para>
         /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+        public void SetProperty(ReadOnlySpan<char> propertyName, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
 
@@ -3956,13 +3956,13 @@ public readonly partial struct JsonElement
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
-                cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+                cvb.AddItem((ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
                 _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
             }
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, (ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+                cvb.AddProperty(propertyName, (ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -3997,7 +3997,7 @@ public readonly partial struct JsonElement
         ///     If the property doesn't exist, it will be added to the object.
         ///   </para>
         /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+        public void SetProperty(ReadOnlySpan<byte> propertyName, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
 
@@ -4005,13 +4005,13 @@ public readonly partial struct JsonElement
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
-                cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+                cvb.AddItem((ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
                 _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
             }
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, (ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+                cvb.AddProperty(propertyName, (ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -7288,11 +7288,11 @@ public readonly partial struct JsonElement
         ///     for efficiently building nested JSON objects.
         ///   </para>
         /// </remarks>
-        public void SetItem(int itemIndex, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+        public void SetItem(int itemIndex, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
-            cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+            cvb.AddItem((ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
             {
@@ -7332,11 +7332,11 @@ public readonly partial struct JsonElement
         ///     for efficiently building nested JSON arrays.
         ///   </para>
         /// </remarks>
-        public void SetItem(int itemIndex, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+        public void SetItem(int itemIndex, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
-            cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+            cvb.AddItem((ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
             {
@@ -8541,11 +8541,11 @@ public readonly partial struct JsonElement
         ///     for efficiently building nested JSON objects.
         ///   </para>
         /// </remarks>
-        public void InsertItem(int itemIndex, JsonObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+        public void InsertItem(int itemIndex, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
-            cvb.AddItem((ref o) => JsonObjectBuilder.BuildValue(objectValue, ref o));
+            cvb.AddItem((ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
         }
@@ -8575,11 +8575,11 @@ public readonly partial struct JsonElement
         ///     for efficiently building nested JSON arrays.
         ///   </para>
         /// </remarks>
-        public void InsertItem(int itemIndex, JsonArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+        public void InsertItem(int itemIndex, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
-            cvb.AddItem((ref o) => JsonArrayBuilder.BuildValue(arrayValue, ref o));
+            cvb.AddItem((ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
         }

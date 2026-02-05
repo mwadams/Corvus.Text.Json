@@ -150,8 +150,8 @@
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\IMutableJsonElement{T}.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\ComplexValueBuilder.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\Internal\IMutableJsonDocument.cs" />
-    <Compile Include="Corvus\Text\Json\DocumentBuilder\JsonArrayBuilder.cs" />
-    <Compile Include="Corvus\Text\Json\DocumentBuilder\JsonObjectBuilder.cs" />
+    <Compile Include="Corvus\Text\Json\DocumentBuilder\JsonElement.ArrayBuilder.cs" />
+    <Compile Include="Corvus\Text\Json\DocumentBuilder\JsonElement.ObjectBuilder.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\JsonDocumentBuilder.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\JsonElement.Mutable.cs" />
     <Compile Include="Corvus\Text\Json\DocumentBuilder\JsonPredicate.cs" />
@@ -211,6 +211,7 @@
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaEvaluation.Object.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaEvaluation.Number.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaResultsCollectorCache.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\NormalizedJsonNumber.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsCollector.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsLevel.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Matcher.cs" />

@@ -426,7 +426,7 @@ namespace Corvus.Text.Json.Tests
             LocalDate localDateValue = new LocalDate(2023, 7, 15);
             Period periodValue = Period.FromYears(1) + Period.FromMonths(2);
             
-            JsonElement.Source source = new JsonElement.Source(new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
+            JsonElement.Source source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref JsonElement.ObjectBuilder builder) =>
             {
                 builder.Add("byte"u8, (byte)42);
                 builder.Add("sbyte"u8, (sbyte)-42);
@@ -571,7 +571,7 @@ namespace Corvus.Text.Json.Tests
             LocalDate localDateValue = new LocalDate(2023, 7, 15);
             Period periodValue = Period.FromYears(1) + Period.FromMonths(2);
             
-            JsonElement.Source source = new JsonElement.Source(new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
+            JsonElement.Source source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref JsonElement.ObjectBuilder builder) =>
             {
                 builder.Add("byte", (byte)42);
                 builder.Add("sbyte", (sbyte)-42);
@@ -716,7 +716,7 @@ namespace Corvus.Text.Json.Tests
             LocalDate localDateValue = new LocalDate(2023, 7, 15);
             Period periodValue = Period.FromYears(1) + Period.FromMonths(2);
             
-            JsonElement.Source source = new JsonElement.Source(new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
+            JsonElement.Source source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref JsonElement.ObjectBuilder builder) =>
             {
                 builder.Add("byte".AsSpan(), (byte)42);
                 builder.Add("sbyte".AsSpan(), (sbyte)-42);

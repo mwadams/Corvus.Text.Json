@@ -1,6 +1,5 @@
 ﻿using Benchmark.CorvusTextJson2;
 using Corvus.Text.Json;
-using Corvus.Text.Json.Compatibility;
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -546,5 +545,3 @@ JsonElement element = testMultiDimensionalHigherRankArray.RootElement[2][1][3];
 element.TryGetBigNumber(out BigNumber extractedBigNumber);
 
 Console.WriteLine($"{extractedBigNumber} + 1 = {extractedBigNumber + 1L}");
-
-ParsedJsonDocument<Person>.FromSTJsonElement(default(System.Text.Json.JsonElement));

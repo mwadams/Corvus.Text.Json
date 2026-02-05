@@ -22,7 +22,7 @@ namespace Corvus.Text.Json.Tests
         public void GetSByte_OutOfRange_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetSByte());
@@ -37,7 +37,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -53,7 +53,7 @@ namespace Corvus.Text.Json.Tests
         public void GetSByte_InRange_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             sbyte result = element.GetSByte();
@@ -72,7 +72,7 @@ namespace Corvus.Text.Json.Tests
         public void GetByte_OutOfRange_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetByte());
@@ -87,7 +87,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -102,7 +102,7 @@ namespace Corvus.Text.Json.Tests
         public void GetByte_InRange_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             byte result = element.GetByte();
@@ -121,7 +121,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt16_OutOfRange_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetInt16());
@@ -136,7 +136,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -152,7 +152,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt16_InRange_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             short result = element.GetInt16();
@@ -171,7 +171,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt16_OutOfRange_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetUInt16());
@@ -186,7 +186,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -201,7 +201,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt16_InRange_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             ushort result = element.GetUInt16();
@@ -220,7 +220,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt32_OutOfRange_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetInt32());
@@ -235,7 +235,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -251,7 +251,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt32_InRange_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             int result = element.GetInt32();
@@ -270,7 +270,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt32_OutOfRange_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetUInt32());
@@ -285,7 +285,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -300,7 +300,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt32_InRange_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             uint result = element.GetUInt32();
@@ -319,7 +319,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt64_OutOfRange_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetInt64());
@@ -334,7 +334,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -350,7 +350,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt64_InRange_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             long result = element.GetInt64();
@@ -369,7 +369,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt64_OutOfRange_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetUInt64());
@@ -384,7 +384,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -399,7 +399,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt64_InRange_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             ulong result = element.GetUInt64();
@@ -416,7 +416,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDouble_OutOfRange_ReturnsInfinity(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
 #if NET
@@ -435,7 +435,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -455,7 +455,7 @@ namespace Corvus.Text.Json.Tests
         public void GetSingle_OutOfRange_ReturnsInfinity(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
 #if NET
@@ -474,7 +474,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -498,7 +498,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDecimal_OutOfRange_ThrowsOverflowException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.ThrowsAny<FormatException>(() => element.GetDecimal()); // Could be FormatException
@@ -512,7 +512,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -527,7 +527,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDecimal_PrecisionLimits_Success(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             decimal result = element.GetDecimal();
@@ -546,7 +546,7 @@ namespace Corvus.Text.Json.Tests
         public void GetIntegerTypes_FractionalNumber_ThrowsFormatException(string value)
         {
             string json = value;
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetInt32());
@@ -567,7 +567,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);

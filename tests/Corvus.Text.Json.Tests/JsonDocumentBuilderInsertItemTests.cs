@@ -687,7 +687,7 @@ using var workspace = JsonWorkspace.Create();
  using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
 
             // Act
-            builderDoc.RootElement.InsertItem(1, (ref JsonObjectBuilder o) =>
+            builderDoc.RootElement.InsertItem(1, (ref JsonElement.ObjectBuilder o) =>
     {
      o.Add("name", "test");
           o.Add("value", 42);
@@ -712,7 +712,7 @@ using var workspace = JsonWorkspace.Create();
       using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
 
      // Act
-            builderDoc.RootElement.InsertItem(1, (ref JsonArrayBuilder a) =>
+            builderDoc.RootElement.InsertItem(1, (ref JsonElement.ArrayBuilder a) =>
  {
            a.Add(10);
       a.Add(20);

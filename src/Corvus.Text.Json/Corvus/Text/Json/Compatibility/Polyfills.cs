@@ -108,56 +108,8 @@ public static class Polyfills
         /// <returns>An instance of the type.</returns>
         public static T Parse(ReadOnlyMemory<char> value, JsonDocumentOptions options = default)
         {
-            // This is the unrented path/
+            // This is the unrented path
             ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value.Span, options);
-            return document.RootElement;
-        }
-
-        /// <summary>
-        /// Parses a JSON string value and returns an instance of the type.
-        /// </summary>
-        /// <param name="value">The JSON string value to parse.</param>
-        /// <returns>An instance of the type.</returns>
-        public static T ParseValue(string value)
-        {
-            // This is the unrented path/
-            ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value, default);
-            return document.RootElement;
-        }
-
-        /// <summary>
-        /// Parses a JSON character span and returns an instance of the type.
-        /// </summary>
-        /// <param name="value">The JSON character span to parse.</param>
-        /// <returns>An instance of the type.</returns>
-        public static T ParseValue(ReadOnlySpan<char> value)
-        {
-            // This is the unrented path/
-            ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value.ToArray(), default);
-            return document.RootElement;
-        }
-
-        /// <summary>
-        /// Parses a JSON byte span and returns an instance of the type.
-        /// </summary>
-        /// <param name="value">The JSON byte span to parse.</param>
-        /// <returns>An instance of the type.</returns>
-        public static T ParseValue(ReadOnlySpan<byte> value)
-        {
-            // This is the unrented path/
-            ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value, default);
-            return document.RootElement;
-        }
-
-        /// <summary>
-        /// Parses JSON from a <see cref="Utf8JsonReader"/> and returns an instance of the type.
-        /// </summary>
-        /// <param name="value">The JSON reader to parse from.</param>
-        /// <returns>An instance of the type.</returns>
-        public static T ParseValue(ref Utf8JsonReader value)
-        {
-            // This is the unrented path/
-            ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(ref value);
             return document.RootElement;
         }
 

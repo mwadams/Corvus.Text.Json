@@ -51,6 +51,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                         .PushJsonPropertyNamesClassNameAndScope()
                         .PushBuilderClassNameAndScope()
                         .PushSourceClassNameAndScope()
+                        .PushConstantsClassNameAndScope()
                         // Begin the mutable part of the declaration
                         .BeginPartialStructDeclaration(
                             GeneratedTypeAccessibility.Public,
@@ -79,6 +80,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendEnumerateArray(typeDeclaration, forMutable: true)
                             .AppendEnumerateObject(typeDeclaration, forMutable: true)
                             .AppendEqualsOverloads(typeDeclaration)
+                            .AppendValueEqualsOverloads(typeDeclaration)
                             .AppendObjectPropertySetters(typeDeclaration)
                             .AppendApplyObjectCompositionTypes(typeDeclaration)
                             .AppendWriteToMethod()
@@ -91,9 +93,10 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             ////.AppendObjectMutators(typeDeclaration)
                             .AppendIJsonElementExplicitImplementation()
                             .AppendMatchMethods(typeDeclaration, forMutable: true)
-                            .AppendTryGetAsCompositionTypeMethods(typeDeclaration)
+                            .AppendTryGetAsCompositionTypeMethods(typeDeclaration, forMutable: true)
                         .EndClassStructOrEnumDeclaration()
                         .AppendSourceAndBuilder(typeDeclaration)
+                        .PopConstantsClassNameAndScope()
                         .PopSourceClassNameAndScope()
                         .PopBuilderClassNameAndScope()
                         .PopJsonPropertyNamesClassNameAndScope()

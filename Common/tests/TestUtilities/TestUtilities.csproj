@@ -28,7 +28,16 @@
     <CoreLibSharedDir>..\..\..\System.Private.CoreLib\src\</CoreLibSharedDir>
     <LibrariesProjectRoot>..\..\..\</LibrariesProjectRoot>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="JsonSchemaTestSuite\test-schema.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="JsonSchemaTestSuite\test-schema.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <Using Include="System" />
@@ -77,6 +86,8 @@
   <ItemGroup>
     <!--<Compile Include="System\AdminHelpers.cs" />-->
     <Compile Include="FakeWebDocumentResolver.cs" />
+    <Compile Include="JsonSchemaTestSuite\TestFile.cs" />
+    <Compile Include="JsonSchemaTestSuite\TestSpecification.cs" />
     <Compile Include="Metaschema.cs" />
     <Compile Include="System\AssertExtensions.cs" />
     <Compile Include="System\IO\StreamExtensions.cs" />
@@ -162,6 +173,11 @@
     <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.5.1" />
     <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.5.1" />
     <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.5.1" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.1" />
+    <PackageReference Include="Corvus.Json.SourceGenerator" Version="4.5.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25228.101" />
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25227.101" />
     <PackageReference Include="xunit" Version="2.9.3" ExcludeAssets="build" />

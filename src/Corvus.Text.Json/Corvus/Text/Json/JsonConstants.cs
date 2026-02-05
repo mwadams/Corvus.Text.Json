@@ -85,6 +85,15 @@ internal static partial class JsonConstants
     public static ReadOnlySpan<byte> TrueValue => "true"u8;
     public static ReadOnlySpan<byte> FalseValue => "false"u8;
     public static ReadOnlySpan<byte> NullValue => "null"u8;
+    public static ReadOnlySpan<byte> ZeroValue => "0"u8;
+    public static ReadOnlySpan<byte> OneValue => "1"u8;
+
+    public static byte[] TrueValueArray { get; } = TrueValue.ToArray();
+    public static byte[] FalseValueArray { get; } = FalseValue.ToArray();
+    public static byte[] NullValueArray { get; } = NullValue.ToArray();
+    public static byte[] ZeroValueArray { get; } = ZeroValue.ToArray();
+    public static byte[] OneValueArray { get; } = OneValue.ToArray();
+
 
     public static ReadOnlySpan<byte> NaNValue => "NaN"u8;
     public static ReadOnlySpan<byte> PositiveInfinityValue => "Infinity"u8;

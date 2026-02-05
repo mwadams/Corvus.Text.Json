@@ -56,7 +56,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForBoolean))]
         public void GetBoolean_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetBoolean());
@@ -67,7 +67,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBoolean_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -82,7 +82,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForString))]
         public void GetString_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetString());
@@ -93,7 +93,7 @@ namespace Corvus.Text.Json.Tests
         public void GetString_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -108,7 +108,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetInt32_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetInt32());
@@ -119,7 +119,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt32_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -130,7 +130,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetInt64_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetInt64());
@@ -140,7 +140,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetDouble_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetDouble());
@@ -150,7 +150,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetDecimal_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetDecimal());
@@ -160,7 +160,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetSingle_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetSingle());
@@ -170,7 +170,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetByte_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetByte());
@@ -180,7 +180,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetSByte_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetSByte());
@@ -190,7 +190,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetInt16_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetInt16());
@@ -200,7 +200,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetUInt16_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetUInt16());
@@ -210,7 +210,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetUInt32_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetUInt32());
@@ -220,7 +220,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForNumeric))]
         public void GetUInt64_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetUInt64());
@@ -234,7 +234,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForStringParsing))]
         public void GetDateTimeOffset_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetDateTimeOffset());
@@ -245,7 +245,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDateTimeOffset_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -256,7 +256,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForStringParsing))]
         public void GetGuid_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetGuid());
@@ -267,7 +267,7 @@ namespace Corvus.Text.Json.Tests
         public void GetGuid_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -278,7 +278,7 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(InvalidValueKindsForStringParsing))]
         public void GetBytesFromBase64_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(expectedKind, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetBytesFromBase64());
@@ -289,7 +289,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBytesFromBase64_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -307,7 +307,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"hello world\"")]
         public void GetInt32_InvalidFormat_ThrowsInvalidOperationException(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             Assert.Throws<InvalidOperationException>(() => element.GetInt32());
@@ -321,7 +321,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt32_Mutable_InvalidFormat_ThrowsInvalidOperationException(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -336,7 +336,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"12345678-1234-1234-1234-12345678901G\"")]
         public void GetGuid_InvalidFormat_ThrowsFormatException(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetGuid());
@@ -351,7 +351,7 @@ namespace Corvus.Text.Json.Tests
         public void GetGuid_Mutable_InvalidFormat_ThrowsFormatException(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -367,7 +367,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"2024-02-30T10:00:00Z\"")]
         public void GetDateTimeOffset_InvalidFormat_ThrowsFormatException(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetDateTimeOffset());
@@ -383,7 +383,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDateTimeOffset_Mutable_InvalidFormat_ThrowsFormatException(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -397,7 +397,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"Hello@World\"")]
         public void GetBytesFromBase64_InvalidFormat_ThrowsFormatException(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetBytesFromBase64());
@@ -411,7 +411,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBytesFromBase64_Mutable_InvalidFormat_ThrowsFormatException(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);

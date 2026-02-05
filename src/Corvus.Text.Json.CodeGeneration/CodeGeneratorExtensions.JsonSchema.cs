@@ -23,6 +23,8 @@ internal static partial class CodeGenerationExtensions
     private const string ObjectBuilderClassBaseName = "ObjectBuilder";
     private const string SourceClassBaseName = "Source";
     private const string SourceClassNameKey = "CSharp_JsonSchema_SourceClassNameKey";
+    private const string ConstantsClassBaseName = "Constants";
+    private const string ConstantsClassNameKey = "CSharp_JsonSchema_ConstantsClassNameKey";
 
     /// <summary>
     /// Appends an EvaluateSchema method to the generated type.
@@ -128,7 +130,7 @@ internal static partial class CodeGenerationExtensions
                 .PushIndent()
                     .AppendLineIndent("Evaluate(parentDocument, parentIndex, ref context);")
                     .AppendLineIndent("return context.IsMatch;")
-                .PushIndent()
+                .PopIndent()
                 .AppendLineIndent("}")
                 .AppendLineIndent("finally")
                 .AppendLineIndent("{")
@@ -399,6 +401,17 @@ internal static partial class CodeGenerationExtensions
     }
 
     /// <summary>
+    /// Remove the Enumeration class name.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator PopConstantsClassNameAndScope(this CodeGenerator generator)
+    {
+        return generator
+            .PopMetadata(ConstantsClassNameKey);
+    }
+
+    /// <summary>
     /// Make the Builder class name available.
     /// </summary>
     /// <param name="generator">The code generator.</param>
@@ -523,6 +536,31 @@ internal static partial class CodeGenerationExtensions
     }
 
     /// <summary>
+    /// Make the Enumeration class name available.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    /// <remarks>
+    /// This is safe to call multiple times.
+    /// </remarks>
+    public static CodeGenerator PushConstantsClassNameAndScope(this CodeGenerator generator)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (generator.TryPeekMetadata(ConstantsClassNameKey, out (string, string) _))
+        {
+            return generator;
+        }
+
+        string constantsClass = generator.GetTypeNameInScope(ConstantsClassBaseName);
+        return generator
+            .PushMetadata(ConstantsClassNameKey, (constantsClass, generator.GetChildScope(constantsClass, null)));
+    }
+
+    /// <summary>
     /// Gets the Source class name for a particular type name.
     /// </summary>
     /// <param name="generator">The code generator.</param>
@@ -563,5 +601,48 @@ internal static partial class CodeGenerationExtensions
         }
 
         throw new InvalidOperationException("The Source class scope  has not been created.");
+    }
+
+    /// <summary>
+    /// Gets the Constants class name for a particular type name.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="fullyQualifiedTypeName">The fully qualified type name.</param>
+    /// <returns>The class name.</returns>
+    public static string ConstantsClassName(this CodeGenerator generator, string fullyQualifiedTypeName)
+    {
+        return generator.GetTypeNameInScope(ConstantsClassBaseName, rootScope: fullyQualifiedTypeName);
+    }
+
+    /// <summary>
+    /// Gets the ambient Constants class name.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <returns>The class name.</returns>
+    public static string ConstantsClassName(this CodeGenerator generator)
+    {
+        if (generator.TryPeekMetadata(ConstantsClassNameKey, out (string, string)? value) &&
+            value is (string className, string _))
+        {
+            return className;
+        }
+
+        throw new InvalidOperationException("The Constants class name has not been created.");
+    }
+
+    /// <summary>
+    /// Gets the Constants class scope.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <returns>The fully-qualified class scope.</returns>
+    public static string ConstantsScope(this CodeGenerator generator)
+    {
+        if (generator.TryPeekMetadata(ConstantsClassNameKey, out (string, string)? value) &&
+            value is (string _, string scope))
+        {
+            return scope;
+        }
+
+        throw new InvalidOperationException("The Constants class scope  has not been created.");
     }
 }

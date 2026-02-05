@@ -2,9 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Web;
 using Corvus.Json.CodeGeneration;
+using Corvus.Text.Json.CodeGeneration.Internal;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration;
@@ -1049,17 +1054,25 @@ internal static partial class CodeGeneratorExtensions
         {
             JsonValueKind.Undefined => generator.AppendLine(),
             JsonValueKind.Null => generator
-                                    .Append(" = ")
+                                    .Append(" = ParsedJsonDocument<")
                                     .Append(typeDeclaration.DotnetTypeName())
-                                    .AppendLine(".ParseValue(\"null\"u8);"),
+                                    .AppendLine(">.Null;"),
             JsonValueKind.True => generator
-                                    .Append(" = ")
+                                    .Append(" = ParsedJsonDocument<")
                                     .Append(typeDeclaration.DotnetTypeName())
-                                    .AppendLine(".ParseValue(\"true\"u8);"),
+                                    .AppendLine(">.True;"),
             JsonValueKind.False => generator
-                                    .Append(" = ")
+                                    .Append(" = ParsedJsonDocument<")
                                     .Append(typeDeclaration.DotnetTypeName())
-                                    .AppendLine(".ParseValue(\"false\"u8);"),
+                                    .AppendLine(">.False;"),
+            JsonValueKind.Number => generator
+                                    .Append(" = ParsedJsonDocument<")
+                                    .Append(typeDeclaration.DotnetTypeName())
+                                    .AppendLine(">.NumberConstant([..", SymbolDisplay.FormatLiteral(typeDeclaration.DefaultValue().GetRawText(), true), "u8]);"),
+            JsonValueKind.String => generator
+                                    .Append(" = ParsedJsonDocument<")
+                                    .Append(typeDeclaration.DotnetTypeName())
+                                    .AppendLine(">.StringConstant([..", SymbolDisplay.FormatLiteral(typeDeclaration.DefaultValue().GetRawText(), true), "u8]);"),
             _ => generator
                     .Append(" = ")
                     .Append(typeDeclaration.DotnetTypeName())
@@ -1176,7 +1189,7 @@ internal static partial class CodeGeneratorExtensions
                 /// Gets an instance of the JSON value from another element.
                 /// </summary>
                 /// <param name="value">The <see cref="IJsonElement{T}"/> value from which to instantiate the instance.</param>
-                /// <returns>An instance of this type, initialized from the JSON element.</returns>                
+                /// <returns>An instance of this type, initialized from the JSON element.</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 """)
             .AppendLineIndent("public static ", forMutable ? "Mutable" : typeDeclaration.DotnetTypeName(), " From<T>(in T instance)")
@@ -1188,6 +1201,196 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("return new(instance.ParentDocument, instance.ParentDocumentIndex);")
             .PopIndent()
             .AppendLineIndent("}");
+    }
+
+    public static CodeGenerator AppendParseValue(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+
+        return generator
+            .ReserveName("ParseValue")
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                ///   Parses one JSON value (including objects or arrays) from the provided span.
+                /// </summary>
+                /// <param name="utf8Json">The span to read.</param>
+                /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+                /// <returns>
+                ///   An instance representing the value (and nested values) read from the span.
+                /// </returns>
+                /// <remarks>
+                ///   <para>
+                ///     This method makes a copy of the data the reader acted on, so there is no caller
+                ///     requirement to maintain data integrity beyond the return of this method.
+                ///   </para>
+                /// </remarks>
+                /// <exception cref="JsonException">
+                ///   A value could not be read from the span.
+                /// </exception>
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                """)
+            .AppendLineIndent("public static ", typeDeclaration.DotnetTypeName(), " ParseValue(ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options = default)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return JsonElementHelpers.ParseValue<", typeDeclaration.DotnetTypeName(), ">(utf8Json, options);")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                ///   Parses one JSON value (including objects or arrays) from the provided span.
+                /// </summary>
+                /// <param name="json">The span to read.</param>
+                /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+                /// <returns>
+                ///   An instance representing the value (and nested values) read from the span.
+                /// </returns>
+                /// <remarks>
+                ///   <para>
+                ///     This method makes a copy of the data the reader acted on, so there is no caller
+                ///     requirement to maintain data integrity beyond the return of this method.
+                ///   </para>
+                /// </remarks>
+                /// <exception cref="JsonException">
+                ///   A value could not be read from the span.
+                /// </exception>
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                """)
+            .AppendLineIndent("public static ", typeDeclaration.DotnetTypeName(), " ParseValue(ReadOnlySpan<char> json, JsonDocumentOptions options = default)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return JsonElementHelpers.ParseValue<", typeDeclaration.DotnetTypeName(), ">(json, options);")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                ///   Parses one JSON value (including objects or arrays) from the provided text.
+                /// </summary>
+                /// <param name="json">The text to read.</param>
+                /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+                /// <returns>
+                ///   An instance representing the value (and nested values) read from the text.
+                /// </returns>
+                /// <remarks>
+                ///   <para>
+                ///     This method makes a copy of the data the reader acted on, so there is no caller
+                ///     requirement to maintain data integrity beyond the return of this method.
+                ///   </para>
+                /// </remarks>
+                /// <exception cref="JsonException">
+                ///   A value could not be read from the text.
+                /// </exception>
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                """)
+            .AppendLineIndent("public static ", typeDeclaration.DotnetTypeName(), " ParseValue(string json, JsonDocumentOptions options = default)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return JsonElementHelpers.ParseValue<", typeDeclaration.DotnetTypeName(), ">(json, options);")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                ///   Parses one JSON value (including objects or arrays) from the provided reader.
+                /// </summary>
+                /// <param name="reader">The reader to read.</param>
+                /// <returns>
+                ///   An instance representing the value (and nested values) read from the reader.
+                /// </returns>
+                /// <remarks>
+                ///   <para>
+                ///     If the <see cref="Utf8JsonReader.TokenType"/> property of <paramref name="reader"/>
+                ///     is <see cref="JsonTokenType.PropertyName"/> or <see cref="JsonTokenType.None"/>, the
+                ///     reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
+                ///     the start of the value.
+                ///   </para>
+                ///
+                ///   <para>
+                ///     Upon completion of this method, <paramref name="reader"/> will be positioned at the
+                ///     final token in the JSON value. If an exception is thrown, the reader is reset to
+                ///     the state it was in when the method was called.
+                ///   </para>
+                ///
+                ///   <para>
+                ///     This method makes a copy of the data the reader acted on, so there is no caller
+                ///     requirement to maintain data integrity beyond the return of this method.
+                ///   </para>
+                /// </remarks>
+                /// <exception cref="ArgumentException">
+                ///   <paramref name="reader"/> is using unsupported options.
+                /// </exception>
+                /// <exception cref="ArgumentException">
+                ///   The current <paramref name="reader"/> token does not start or represent a value.
+                /// </exception>
+                /// <exception cref="JsonException">
+                ///   A value could not be read from the reader.
+                /// </exception>
+                """)
+            .AppendLineIndent("public static ", typeDeclaration.DotnetTypeName(), " ParseValue(ref Utf8JsonReader reader)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return JsonElementHelpers.ParseValue<", typeDeclaration.DotnetTypeName(), ">(ref reader);")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                ///   Attempts to parse one JSON value (including objects or arrays) from the provided reader.
+                /// </summary>
+                /// <param name="reader">The reader to read.</param>
+                /// <param name="element">Receives the parsed element.</param>
+                /// <returns>
+                ///   <see langword="true"/> if a value was read and parsed into a JsonElement;
+                ///   <see langword="false"/> if the reader ran out of data while parsing.
+                ///   All other situations result in an exception being thrown.
+                /// </returns>
+                /// <remarks>
+                ///   <para>
+                ///     If the <see cref="Utf8JsonReader.TokenType"/> property of <paramref name="reader"/>
+                ///     is <see cref="JsonTokenType.PropertyName"/> or <see cref="JsonTokenType.None"/>, the
+                ///     reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
+                ///     the start of the value.
+                ///   </para>
+                ///
+                ///   <para>
+                ///     Upon completion of this method, <paramref name="reader"/> will be positioned at the
+                ///     final token in the JSON value.  If an exception is thrown, or <see langword="false"/>
+                ///     is returned, the reader is reset to the state it was in when the method was called.
+                ///   </para>
+                ///
+                ///   <para>
+                ///     This method makes a copy of the data the reader acted on, so there is no caller
+                ///     requirement to maintain data integrity beyond the return of this method.
+                ///   </para>
+                /// </remarks>
+                /// <exception cref="ArgumentException">
+                ///   <paramref name="reader"/> is using unsupported options.
+                /// </exception>
+                /// <exception cref="ArgumentException">
+                ///   The current <paramref name="reader"/> token does not start or represent a value.
+                /// </exception>
+                /// <exception cref="JsonException">
+                ///   A value could not be read from the reader.
+                /// </exception>
+                """)
+            .AppendLineIndent("public static bool TryParseValue(ref Utf8JsonReader reader, out ", typeDeclaration.DotnetTypeName(), "? result)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return JsonElementHelpers.TryParseValue<", typeDeclaration.DotnetTypeName(), ">(ref reader, out result);")
+            .PopIndent()
+            .AppendLineIndent("}");
+
     }
 
     /// <summary>
@@ -1244,7 +1447,7 @@ internal static partial class CodeGeneratorExtensions
                 /// Converts the instance to a JsonElement.
                 /// </summary>
                 /// <param name="value">The instance of this type.</param>
-                /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>                
+                /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 """)
             .AppendLineIndent("public static implicit operator JsonElement(", forMutable ? "Mutable" : typeDeclaration.DotnetTypeName(), " instance)")
@@ -1372,6 +1575,127 @@ internal static partial class CodeGeneratorExtensions
         return generator
             .PopIndent()
             .AppendLineIndent("}");
+    }
+
+    /// <summary>
+    /// Append the internal Equals() method overloads.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to produce the methods.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendValueEqualsOverloads(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if ((typeDeclaration.ImpliedCoreTypes() & (CoreTypes.Number | CoreTypes.Integer)) != 0)
+        {
+            generator
+                .ReserveNameIfNotReserved("ValueEquals")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                    /// <summary>
+                    /// Compare with a normalized JSON number.
+                    /// </summary>
+                    /// <param ref="number">The normalized JSON number to compare with.</param>
+                    /// <returns><see langword="true"/> if the values are equal.</returns>
+                    public bool ValueEquals(in NormalizedJsonNumber number)
+                    {
+                        if (TokenType != JsonTokenType.Number)
+                        {
+                            return false;
+                        }
+                    
+                        JsonElementHelpers.ParseNumber(
+                            _parent.GetRawSimpleValueUnsafe(_idx).Span,
+                            out bool leftIsNegative,
+                            out ReadOnlySpan<byte> leftIntegral,
+                            out ReadOnlySpan<byte> leftFractional,
+                            out int leftExponent);
+                    
+                        return JsonElementHelpers.AreEqualNormalizedJsonNumbers(
+                            leftIsNegative,
+                            leftIntegral,
+                            leftFractional,
+                            leftExponent,
+                            number.IsNegative,
+                            number.Integral,
+                            number.Fractional,
+                            number.Exponent);
+                    }
+                    """);
+        }
+
+        if ((typeDeclaration.ImpliedCoreTypes() & CoreTypes.String) != 0)
+        {
+            generator
+                .ReserveNameIfNotReserved("ValueEquals")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                    /// <summary>
+                    /// Compare with a UTF-8 string.
+                    /// </summary>
+                    /// <param ref="utf8Text">The UTF-8 text to compare with.</param>
+                    /// <returns><see langword="true"/> if the values are equal.</returns>
+                    public bool ValueEquals(ReadOnlySpan<byte> utf8Text)
+                    {
+                        CheckValidInstance();
+
+                        if (TokenType != JsonTokenType.String)
+                        {
+                            return false;
+                        }
+
+                        return _parent.TextEquals(_idx, utf8Text, isPropertyName: false, shouldUnescape: true);
+                    }
+                    """)
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                    /// <summary>
+                    /// Compare with a string.
+                    /// </summary>
+                    /// <param ref="utf8Text">The text to compare with.</param>
+                    /// <returns><see langword="true"/> if the values are equal.</returns>
+                    public bool ValueEquals(ReadOnlySpan<char> text)
+                    {
+                        CheckValidInstance();
+
+                        if (TokenType != JsonTokenType.String)
+                        {
+                            return false;
+                        }
+                    
+                        return _parent.TextEquals(_idx, text, isPropertyName: false);
+                    }
+                    """)
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                    /// <summary>
+                    /// Compare with a string.
+                    /// </summary>
+                    /// <param ref="utf8Text">The text to compare with.</param>
+                    /// <returns><see langword="true"/> if the values are equal.</returns>
+                    public bool ValueEquals(string text)
+                    {
+                        CheckValidInstance();
+
+                        if (TokenType != JsonTokenType.String)
+                        {
+                            return false;
+                        }
+                    
+                        return _parent.TextEquals(_idx, text, isPropertyName: false);
+                    }
+                    """);
+        }
+
+        return generator;
     }
 
     /// <summary>
@@ -1555,10 +1879,96 @@ internal static partial class CodeGeneratorExtensions
         };
     }
 
+    /// <summary>
+    /// Append an array serialized as a string literal.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the numeric string.</param>
+    /// <param name="value">The numeric value to append.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendSerializedArrayStringLiteral(this CodeGenerator generator, in JsonElement value)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        Debug.Assert(value.ValueKind == JsonValueKind.Array, "The value must be an array.");
+
+        return generator
+            .Append(SymbolDisplay.FormatLiteral(value.GetRawText(), true));
+    }
+
+    /// <summary>
+    /// Append an array serialized as a string literal.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the numeric string.</param>
+    /// <param name="value">The numeric value to append.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendSerializedObjectStringLiteral(this CodeGenerator generator, in JsonElement value)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        Debug.Assert(value.ValueKind == JsonValueKind.Object, "The value must be an object.");
+
+        return generator
+            .Append(SymbolDisplay.FormatLiteral(value.GetRawText(), true));
+    }
+
     private static string[] NormalizeAndSplitBlockIntoLines(string block, bool removeBlankLines = false)
     {
         string normalizedBlock = block.Replace("\r\n", "\n");
         string[] lines = normalizedBlock.Split(['\n'], removeBlankLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
         return lines;
     }
+
+    /// <summary>
+    /// Append the static property which provides a const instance of the type declaration.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the property.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendConstInstanceStaticProperty(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (typeDeclaration.Keywords().OfType<ISingleConstantValidationKeyword>().FirstOrDefault()
+            is ISingleConstantValidationKeyword keyword)
+        {
+            string constantsclassName = generator.ConstantsClassName();
+
+            generator
+                .ReserveName("ConstInstance")
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                """
+                /// <summary>
+                /// Gets the const instance.
+                /// </summary>
+                """)
+                .AppendIndent("public static ")
+                .Append(typeDeclaration.DotnetTypeName())
+                .Append(" ConstInstance => ");
+
+            if (keyword.TryGetConstantValue(typeDeclaration, out JsonElement constantValue))
+            {
+                string constantFieldName =
+                    generator.GetStaticReadOnlyFieldNameInScope(
+                        keyword.Keyword,
+                        suffix: constantValue.ValueKind == JsonValueKind.Number || constantValue.ValueKind == JsonValueKind.String ? "Json" : null,
+                        rootScope: generator.ConstantsScope());
+
+                generator
+                    .AppendLine(constantsclassName, ".", constantFieldName, ";");
+            }
+        }
+
+        return generator;
+    }
+
 }

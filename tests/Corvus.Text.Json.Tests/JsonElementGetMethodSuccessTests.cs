@@ -21,7 +21,7 @@ namespace Corvus.Text.Json.Tests
         public void GetByte_ValidValues_ReturnsExpected(byte expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             byte result = element.GetByte();
@@ -34,7 +34,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -47,7 +47,7 @@ namespace Corvus.Text.Json.Tests
         public void GetSByte_ValidValues_ReturnsExpected(sbyte expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             sbyte result = element.GetSByte();
@@ -60,7 +60,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -73,7 +73,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt16_ValidValues_ReturnsExpected(short expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             short result = element.GetInt16();
@@ -86,7 +86,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -99,7 +99,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt16_ValidValues_ReturnsExpected(ushort expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             ushort result = element.GetUInt16();
@@ -112,7 +112,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -125,7 +125,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt32_ValidValues_ReturnsExpected(int expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             int result = element.GetInt32();
@@ -138,7 +138,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -151,7 +151,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt32_ValidValues_ReturnsExpected(uint expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             uint result = element.GetUInt32();
@@ -164,7 +164,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -177,7 +177,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt64_ValidValues_ReturnsExpected(long expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             long result = element.GetInt64();
@@ -190,7 +190,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -203,7 +203,7 @@ namespace Corvus.Text.Json.Tests
         public void GetUInt64_ValidValues_ReturnsExpected(ulong expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             ulong result = element.GetUInt64();
@@ -216,7 +216,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -229,7 +229,7 @@ namespace Corvus.Text.Json.Tests
         public void GetSingle_ValidValues_ReturnsExpected(float expected)
         {
             string json = expected.ToString("R");
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             float result = element.GetSingle();
@@ -242,7 +242,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString("R");
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -255,7 +255,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDouble_ValidValues_ReturnsExpected(double expected)
         {
             string json = expected.ToString("R");
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             double result = element.GetDouble();
@@ -268,7 +268,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString("R");
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -281,7 +281,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDecimal_ValidValues_ReturnsExpected(decimal expected)
         {
             string json = expected.ToString();
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             decimal result = element.GetDecimal();
@@ -294,7 +294,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = expected.ToString();
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -311,7 +311,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("false", false)]
         public void GetBoolean_ValidValues_ReturnsExpected(string json, bool expected)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             bool result = element.GetBoolean();
             Assert.Equal(expected, result);
@@ -323,7 +323,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBoolean_Mutable_ValidValues_ReturnsExpected(string json, bool expected)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             bool result = element.GetBoolean();
@@ -345,7 +345,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("null", null)]
         public void GetString_ValidValues_ReturnsExpected(string json, string expected)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             string result = element.GetString();
             Assert.Equal(expected, result);
@@ -363,7 +363,7 @@ namespace Corvus.Text.Json.Tests
         public void GetString_Mutable_ValidValues_ReturnsExpected(string json, string expected)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             string result = element.GetString();
@@ -382,7 +382,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"1997-07-16T19:20:30.4555555Z\"")]
         public void GetDateTimeOffset_ValidValues_ReturnsExpected(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             DateTimeOffset result = element.GetDateTimeOffset();
@@ -402,7 +402,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDateTimeOffset_Mutable_ValidValues_ReturnsExpected(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -425,7 +425,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"550e8400-e29b-41d4-a716-446655440000\"")]
         public void GetGuid_ValidValues_ReturnsExpected(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             Guid result = element.GetGuid();
@@ -444,7 +444,7 @@ namespace Corvus.Text.Json.Tests
         public void GetGuid_Mutable_ValidValues_ReturnsExpected(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -467,7 +467,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"QWxhZGRpbjpvcGVuIHNlc2FtZQ==\"", new byte[] { 65, 108, 97, 100, 100, 105, 110, 58, 111, 112, 101, 110, 32, 115, 101, 115, 97, 109, 101 })] // "Aladdin:open sesame"
         public void GetBytesFromBase64_ValidValues_ReturnsExpected(string json, byte[] expected)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             byte[] result = element.GetBytesFromBase64();
@@ -482,7 +482,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBytesFromBase64_Mutable_ValidValues_ReturnsExpected(string json, byte[] expected)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);

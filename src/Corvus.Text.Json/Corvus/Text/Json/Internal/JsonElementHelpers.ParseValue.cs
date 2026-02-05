@@ -12,6 +12,81 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonElementHelpers
 {
     /// <summary>
+    ///   Parses one JSON value (including objects or arrays) from the provided span.
+    /// </summary>
+    /// <param name="span">The span to read.</param>
+    /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+    /// <returns>
+    ///   A <see cref="IJsonElement{T}"/> representing the value (and nested values) read from the span.
+    /// </returns>
+    /// <remarks>
+    ///   <para>
+    ///     This method makes a copy of the data the reader acted on, so there is no caller
+    ///     requirement to maintain data integrity beyond the return of this method.
+    ///   </para>
+    /// </remarks>
+    /// <exception cref="JsonException">
+    ///   A value could not be read from the span.
+    /// </exception>
+    [CLSCompliant(false)]
+    public static T ParseValue<T>(ReadOnlySpan<byte> span, JsonDocumentOptions options = default)
+        where T : struct, IJsonElement<T>
+    {
+        ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(span, options);
+        return document.RootElement;
+    }
+
+    /// <summary>
+    ///   Parses one JSON value (including objects or arrays) from the provided span.
+    /// </summary>
+    /// <param name="span">The span to read.</param>
+    /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+    /// <returns>
+    ///   A JsonElement representing the value (and nested values) read from the span.
+    /// </returns>
+    /// <remarks>
+    ///   <para>
+    ///     This method makes a copy of the data the reader acted on, so there is no caller
+    ///     requirement to maintain data integrity beyond the return of this method.
+    ///   </para>
+    /// </remarks>
+    /// <exception cref="JsonException">
+    ///   A value could not be read from the reader.
+    /// </exception>
+    [CLSCompliant(false)]
+    public static T ParseValue<T>(ReadOnlySpan<char> span, JsonDocumentOptions options = default)
+        where T : struct, IJsonElement<T>
+    {
+        ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(span, options);
+        return document.RootElement;
+    }
+
+    /// <summary>
+    ///   Parses one JSON value (including objects or arrays) from the provided text.
+    /// </summary>
+    /// <param name="text">The text to read.</param>
+    /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+    /// <returns>
+    ///   A JsonElement representing the value (and nested values) read from the text.
+    /// </returns>
+    /// <remarks>
+    ///   <para>
+    ///     This method makes a copy of the data, so there is no caller
+    ///     requirement to maintain data integrity beyond the return of this method.
+    ///   </para>
+    /// </remarks>
+    /// <exception cref="JsonException">
+    ///   A value could not be read from the text.
+    /// </exception>
+    [CLSCompliant(false)]
+    public static T ParseValue<T>(string text, JsonDocumentOptions options = default)
+        where T : struct, IJsonElement<T>
+    {
+        ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(text, options);
+        return document.RootElement;
+    }
+
+    /// <summary>
     ///   Parses one JSON value (including objects or arrays) from the provided reader.
     /// </summary>
     /// <param name="reader">The reader to read.</param>

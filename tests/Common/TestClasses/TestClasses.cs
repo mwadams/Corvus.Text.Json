@@ -2055,13 +2055,13 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Initialize()
         {
-            Number = JsonElement.Parse(@"1");
-            True = JsonElement.Parse(@"true");
-            False = JsonElement.Parse(@"false");
-            String = JsonElement.Parse(@"""Hello""");
-            Array = JsonElement.Parse(@"[2, false, true, ""Goodbye""]");
-            Object = JsonElement.Parse(@"{}");
-            Null = JsonElement.Parse(@"null");
+            Number = JsonElement.ParseValue(@"1");
+            True = JsonElement.ParseValue(@"true");
+            False = JsonElement.ParseValue(@"false");
+            String = JsonElement.ParseValue(@"""Hello""");
+            Array = JsonElement.ParseValue(@"[2, false, true, ""Goodbye""]");
+            Object = JsonElement.ParseValue(@"{}");
+            Null = JsonElement.ParseValue(@"null");
         }
 
         public void Verify()
@@ -2113,10 +2113,10 @@ namespace Corvus.Text.Json.Serialization.Tests
         {
             Array = new JsonElement[]
             {
-                JsonElement.Parse(@"1"),
-                JsonElement.Parse(@"true"),
-                JsonElement.Parse(@"false"),
-                JsonElement.Parse(@"""Hello""")            };
+                JsonElement.ParseValue(@"1"),
+                JsonElement.ParseValue(@"true"),
+                JsonElement.ParseValue(@"false"),
+                JsonElement.ParseValue(@"""Hello""")            };
         }
 
         public void Verify()
@@ -2165,8 +2165,8 @@ namespace Corvus.Text.Json.Serialization.Tests
 
         public void Initialize()
         {
-            Array = JsonElement.Parse(s_array);
-            Object = JsonElement.Parse(s_object);
+            Array = JsonElement.ParseValue(s_array);
+            Object = JsonElement.ParseValue(s_object);
         }
 
         public void Verify()

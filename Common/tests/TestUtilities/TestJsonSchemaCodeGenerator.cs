@@ -70,6 +70,36 @@ namespace TestUtilities
 
         private TestJsonSchemaCodeGenerator(
             string remotesBaseDirectory,
+            string defaultVocabulary,
+            bool validateFormat = true,
+            bool optionalAsNullable = false,
+            bool useImplicitOperatorString = false,
+            bool addExplicitUsings = true)
+        {
+            _remotesBaseDirectory = remotesBaseDirectory;
+            _documentResolver =
+                new CompoundDocumentResolver(
+                    new FakeWebDocumentResolver(_remotesBaseDirectory!),
+                    new FileSystemDocumentResolver())
+                        .AddMetaschema();
+
+            _vocabularyRegistry = new();
+            RegisterVocabularies();
+
+            _jsonSchemaTypeBuilder = new(_documentResolver, _vocabularyRegistry);
+            _validateFormat = validateFormat;
+            _optionalAsNullable = optionalAsNullable;
+            _useImplicitOperatorString = useImplicitOperatorString;
+            _addExplicitUsings = addExplicitUsings;
+
+            if (!_vocabularyRegistry.TryGetVocabulary(defaultVocabulary, out _defaultVocabulary))
+            {
+                _defaultVocabulary = Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary;
+            }
+        }
+
+        private TestJsonSchemaCodeGenerator(
+            string remotesBaseDirectory,
             IDocumentResolver? resolver,
             IVocabulary? defaultVocabulary = null,
             bool validateFormat = true,
@@ -86,80 +116,33 @@ namespace TestUtilities
                         .AddMetaschema();
 
             _vocabularyRegistry = new();
+            RegisterVocabularies();
+
+            _jsonSchemaTypeBuilder = new(_documentResolver, _vocabularyRegistry);
+            _validateFormat = validateFormat;
+            _optionalAsNullable = optionalAsNullable;
+            _useImplicitOperatorString = useImplicitOperatorString;
+            _addExplicitUsings = addExplicitUsings;
+
+            _defaultVocabulary = defaultVocabulary ?? Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary;
+        }
+
+        private void RegisterVocabularies()
+        {
             Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.RegisterAnalyser(_documentResolver, _vocabularyRegistry);
             Corvus.Json.CodeGeneration.Draft201909.VocabularyAnalyser.RegisterAnalyser(_documentResolver, _vocabularyRegistry);
             Corvus.Json.CodeGeneration.Draft7.VocabularyAnalyser.RegisterAnalyser(_vocabularyRegistry);
             Corvus.Json.CodeGeneration.Draft6.VocabularyAnalyser.RegisterAnalyser(_vocabularyRegistry);
             Corvus.Json.CodeGeneration.Draft4.VocabularyAnalyser.RegisterAnalyser(_vocabularyRegistry);
             Corvus.Json.CodeGeneration.OpenApi30.VocabularyAnalyser.RegisterAnalyser(_vocabularyRegistry);
-
-            _jsonSchemaTypeBuilder = new(_documentResolver, _vocabularyRegistry);
-            _defaultVocabulary = defaultVocabulary ?? Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary;
-            _validateFormat = validateFormat;
-            _optionalAsNullable = optionalAsNullable;
-            _useImplicitOperatorString = useImplicitOperatorString;
-            _addExplicitUsings = addExplicitUsings;
         }
 
         /// <summary>
-        /// Generate the JSON type for the given test suite entry.
-        /// </summary>
-        /// <param name="filename">The name of the test suite defintiion file.</param>
-        /// <param name="schemaPath">The path to the schema in the test suite definition file.</param>
-        /// <param name="testCaseName">The name of the test case.</param>
-        /// <param name="remotesBaseDirectory">The remotes base directory for the test suite.</param>
-        /// <param name="defaultVocabulary">The default vocabulary for the test run.</param>
-        /// <param name="validateFormat">Whether to enforce format validation rather than just evaluation.</param>
-        /// <param name="optionalAsNullable">Whether to treat optional as nullable.</param>
-        /// <param name="useImplicitOperatorString">Whether to generate implicit conversions to string.</param>
-        /// <param name="addExplicitUsings">Whether to add explicit usings for the generated code, or rely on the global usings.</param>
-        /// <param name="hostAssembly">The host assembly with preserved compilation context.</param>
-        /// <returns></returns>
-
-        public static async ValueTask<DynamicJsonType> GenerateTypeForJsonSchemaTestSuite(
-            string filename,
-            string schemaPath,
-            string testCaseName,
-            string remotesBaseDirectory,
-            IVocabulary defaultVocabulary,
-            bool validateFormat,
-            bool optionalAsNullable,
-            bool useImplicitOperatorString,
-            bool addExplicitUsings,
-            Assembly hostAssembly)
-        {
-            string key = filename + schemaPath;
-            if (s_compiledTypesCache.TryGetValue(key, out DynamicJsonType value))
-            {
-                return value;
-            }
-
-            // Potentially execute async operation unnecessarily, but only in the case where we need to add to the cache.
-            var generator = new TestJsonSchemaCodeGenerator(
-                remotesBaseDirectory,
-                defaultVocabulary: defaultVocabulary,
-                validateFormat: validateFormat,
-                optionalAsNullable: optionalAsNullable,
-                useImplicitOperatorString: useImplicitOperatorString,
-                addExplicitUsings: addExplicitUsings);
-
-
-#if NET
-            string text = await File.ReadAllTextAsync(filename);
-#else
-            string text = File.ReadAllText(filename);
-#endif
-            GeneratedCode generatedCode = await generator.GenerateCodeAsync(schemaPath, text, defaultNamespace: ToPascalCase(testCaseName));
-            DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
-            return s_compiledTypesCache.GetOrAdd(key, _ => result);
-        }
-
-        /// <summary>
-        /// Generate the JSON type for the given test suite entry.
+        /// Generate the JSON type for the given virtual file.
         /// </summary>
         /// <param name="virtualFilename">The virtual file name.</param>
         /// <param name="schemaText">The text of the virtual schema file.</param>
-        /// <param name="testCaseName">The name of the test case.</param>
+        /// <param name="defaultNamespace">The default namespace for code generation.</param>
         /// <param name="remotesBaseDirectory">The remotes base directory for the test suite.</param>
         /// <param name="defaultVocabulary">The default vocabulary for the test run.</param>
         /// <param name="validateFormat">Whether to enforce format validation rather than just evaluation.</param>
@@ -167,11 +150,11 @@ namespace TestUtilities
         /// <param name="useImplicitOperatorString">Whether to generate implicit conversions to string.</param>
         /// <param name="addExplicitUsings">Whether to add explicit usings for the generated code, or rely on the global usings.</param>
         /// <param name="hostAssembly">The host assembly with preserved compilation context.</param>
-        /// <returns></returns>
+        /// <returns>A task which, when complete, provides the <see cref="DynamicJsonType/> for the schema.</returns>
         public static async ValueTask<DynamicJsonType> GenerateTypeForVirtualFile(
             string virtualFilename,
             string schemaText,
-            string testCaseName,
+            string defaultNamespace,
             string remotesBaseDirectory,
             IVocabulary defaultVocabulary,
             bool validateFormat,
@@ -196,18 +179,17 @@ namespace TestUtilities
                 addExplicitUsings: addExplicitUsings);
 
 
-            GeneratedCode generatedCode = await generator.GenerateCodeAsync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(testCaseName));
+            GeneratedCode generatedCode = await generator.GenerateCodeAsync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
             DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
         }
 
-
         /// <summary>
-        /// Generate the JSON type for the given test suite entry.
+        /// Generate the JSON type for the given virtual file.
         /// </summary>
-        /// <param name="filename">The name of the test suite defintiion file.</param>
-        /// <param name="schemaPath">The path to the schema in the test suite definition file.</param>
-        /// <param name="testCaseName">The name of the test case.</param>
+        /// <param name="virtualFilename">The virtual file name.</param>
+        /// <param name="schemaText">The text of the virtual schema file.</param>
+        /// <param name="defaultNamespace">The default namespace for code generation.</param>
         /// <param name="remotesBaseDirectory">The remotes base directory for the test suite.</param>
         /// <param name="defaultVocabulary">The default vocabulary for the test run.</param>
         /// <param name="validateFormat">Whether to enforce format validation rather than just evaluation.</param>
@@ -215,20 +197,20 @@ namespace TestUtilities
         /// <param name="useImplicitOperatorString">Whether to generate implicit conversions to string.</param>
         /// <param name="addExplicitUsings">Whether to add explicit usings for the generated code, or rely on the global usings.</param>
         /// <param name="hostAssembly">The host assembly with preserved compilation context.</param>
-        /// <returns></returns>
-        public static DynamicJsonType SynchronoulsyGenerateTypeForJsonSchemaTestSuite(
-            string filename,
-            string schemaPath,
-            string testCaseName,
+        /// <returns>A task which, when complete, provides the <see cref="DynamicJsonType/> for the schema.</returns>
+        public static async ValueTask<DynamicJsonType> GenerateTypeForVirtualFile(
+            string virtualFilename,
+            string schemaText,
+            string defaultNamespace,
             string remotesBaseDirectory,
-            IVocabulary defaultVocabulary,
+            string defaultVocabulary,
             bool validateFormat,
             bool optionalAsNullable,
             bool useImplicitOperatorString,
             bool addExplicitUsings,
             Assembly hostAssembly)
         {
-            string key = filename + schemaPath;
+            string key = schemaText;
             if (s_compiledTypesCache.TryGetValue(key, out DynamicJsonType value))
             {
                 return value;
@@ -244,7 +226,7 @@ namespace TestUtilities
                 addExplicitUsings: addExplicitUsings);
 
 
-            GeneratedCode generatedCode = generator.GenerateCodeSync(schemaPath, File.ReadAllText(filename), defaultNamespace: ToPascalCase(testCaseName));
+            GeneratedCode generatedCode = await generator.GenerateCodeAsync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
             DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
         }
@@ -254,7 +236,7 @@ namespace TestUtilities
         /// </summary>
         /// <param name="virtualFilename">The virtual file name.</param>
         /// <param name="schemaText">The text of the virtual schema file.</param>
-        /// <param name="testCaseName">The name of the test case.</param>
+        /// <param name="defaultNamespace">The default namespace for code generation.</param>
         /// <param name="remotesBaseDirectory">The remotes base directory for the test suite.</param>
         /// <param name="defaultVocabulary">The default vocabulary for the test run.</param>
         /// <param name="validateFormat">Whether to enforce format validation rather than just evaluation.</param>
@@ -262,12 +244,12 @@ namespace TestUtilities
         /// <param name="useImplicitOperatorString">Whether to generate implicit conversions to string.</param>
         /// <param name="addExplicitUsings">Whether to add explicit usings for the generated code, or rely on the global usings.</param>
         /// <param name="hostAssembly">The host assembly with preserved compilation context.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="DynamicJsonType/> for the schema.</returns>
 
         public static DynamicJsonType SynchronouslyGenerateTypeForVirtualFile(
             string virtualFilename,
             string schemaText,
-            string testCaseName,
+            string defaultNamespace,
             string remotesBaseDirectory,
             IVocabulary defaultVocabulary,
             bool validateFormat,
@@ -292,7 +274,56 @@ namespace TestUtilities
                 addExplicitUsings: addExplicitUsings);
 
 
-            GeneratedCode generatedCode = generator.GenerateCodeSync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(testCaseName));
+            GeneratedCode generatedCode = generator.GenerateCodeSync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
+            DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
+            return s_compiledTypesCache.GetOrAdd(key, _ => result);
+        }
+
+
+        /// <summary>
+        /// Generate the JSON type for the given test suite entry.
+        /// </summary>
+        /// <param name="virtualFilename">The virtual file name.</param>
+        /// <param name="schemaText">The text of the virtual schema file.</param>
+        /// <param name="defaultNamespace">The default namespace for code generation.</param>
+        /// <param name="remotesBaseDirectory">The remotes base directory for the test suite.</param>
+        /// <param name="defaultVocabulary">The default vocabulary for the test run.</param>
+        /// <param name="validateFormat">Whether to enforce format validation rather than just evaluation.</param>
+        /// <param name="optionalAsNullable">Whether to treat optional as nullable.</param>
+        /// <param name="useImplicitOperatorString">Whether to generate implicit conversions to string.</param>
+        /// <param name="addExplicitUsings">Whether to add explicit usings for the generated code, or rely on the global usings.</param>
+        /// <param name="hostAssembly">The host assembly with preserved compilation context.</param>
+        /// <returns>The <see cref="DynamicJsonType/> for the schema.</returns>
+
+        public static DynamicJsonType SynchronouslyGenerateTypeForVirtualFile(
+            string virtualFilename,
+            string schemaText,
+            string defaultNamespace,
+            string remotesBaseDirectory,
+            string defaultVocabulary,
+            bool validateFormat,
+            bool optionalAsNullable,
+            bool useImplicitOperatorString,
+            bool addExplicitUsings,
+            Assembly hostAssembly)
+        {
+            string key = schemaText;
+            if (s_compiledTypesCache.TryGetValue(key, out DynamicJsonType value))
+            {
+                return value;
+            }
+
+            // Potentially execute async operation unnecessarily, but only in the case where we need to add to the cache.
+            var generator = new TestJsonSchemaCodeGenerator(
+                remotesBaseDirectory,
+                defaultVocabulary: defaultVocabulary,
+                validateFormat: validateFormat,
+                optionalAsNullable: optionalAsNullable,
+                useImplicitOperatorString: useImplicitOperatorString,
+                addExplicitUsings: addExplicitUsings);
+
+
+            GeneratedCode generatedCode = generator.GenerateCodeSync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
             DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
         }
@@ -323,6 +354,17 @@ namespace TestUtilities
             outputStream.Position = 0;
 
             Assembly generatedAssembly = LoadAssembly(outputStream);
+
+            // Need to establish if the output type is JsonElement
+            if (code.RootType.IsBuiltInJsonAnyType())
+            {
+                return new(typeof(JsonElement));
+            }
+
+            if (code.RootType.IsBuiltInJsonNotAnyType())
+            {
+                return new(typeof(JsonElementForBooleanFalseSchema));
+            }
 
             return new(generatedAssembly.ExportedTypes.Single(t => t.FullName == code.RootType.FullyQualifiedDotnetTypeName()));
 
@@ -439,12 +481,12 @@ namespace TestUtilities
             languageProvider = CSharpLanguageProvider.DefaultWithOptions(options);
         }
 
-        private static string ToPascalCase(string name)
+        public static string ToPascalCase(string name)
         {
             Span<char> buffer = stackalloc char[name.Length];
             name.AsSpan().CopyTo(buffer);
-            Formatting.ToPascalCase(buffer);
-            return buffer.ToString();
+            int length = Formatting.ToPascalCase(buffer);
+            return buffer.Slice(0, length).ToString();
         }
 
 #if NET
@@ -473,9 +515,9 @@ namespace TestUtilities
 
         public void Dispose() => Element.ParentDocument.Dispose();
 
-        public void EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
+        public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
         {
-            Element.EvaluateSchema(resultsCollector);
+            return Element.EvaluateSchema(resultsCollector);
         }
 
         public bool HasDotnetPropertyValue(string propertyName)
@@ -564,24 +606,13 @@ namespace TestUtilities
 
         public DynamicJsonElement ParseInstance(string json, JsonDocumentOptions options = default)
         {
-            Type parsedJsonDocumentType = typeof(ParsedJsonDocument<>).MakeGenericType(Type);
-            object? document = parsedJsonDocumentType
+            object? instance = Type
                 .InvokeMember(
-                    "Parse",
+                    "ParseValue",
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod,
                     null,
                     null,
                     [json, options]);
-
-            Debug.Assert(document is not null && document.GetType() == parsedJsonDocumentType);
-
-            object? instance = parsedJsonDocumentType
-                .InvokeMember(
-                    "RootElement",
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty,
-                    null,
-                    document,
-                    []);
 
             Debug.Assert(instance is IJsonElement);
 

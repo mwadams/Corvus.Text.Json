@@ -4429,7 +4429,7 @@ namespace Corvus.Text.Json.Tests
 
             throw new InvalidOperationException($"Unsupported value kind {source.ValueKind}");
 
-            static void BuildProperty(ReadOnlySpan<byte> propertyName, JsonElement propertyValue, ref JsonObjectBuilder builder, bool nameRequiresUnescaping)
+            static void BuildProperty(ReadOnlySpan<byte> propertyName, JsonElement propertyValue, ref JsonElement.ObjectBuilder builder, bool nameRequiresUnescaping)
             {
                 switch (propertyValue.ValueKind)
                 {
@@ -4482,7 +4482,7 @@ namespace Corvus.Text.Json.Tests
                 }
             }
 
-            static void BuildItem(JsonElement value, ref JsonArrayBuilder builder)
+            static void BuildItem(JsonElement value, ref JsonElement.ArrayBuilder builder)
             {
                 switch (value.ValueKind)
                 {

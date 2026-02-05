@@ -43,7 +43,6 @@
     <IsTestProject>true</IsTestProject>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
   </PropertyGroup>
 
   <ItemGroup>
@@ -58,9 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.2" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.2" />
   </ItemGroup>
   
@@ -100,7 +97,6 @@
     <Compile Include="JsonSchemaMatchingNumberTests.cs" />
     <Compile Include="JsonSchemaMatchingStringTests.cs" />
     <Compile Include="JsonSchemaResultsCollectorTests.cs" />
-    <Compile Include="JsonSchemaTestSuite\Tests.cs" />
     <Compile Include="PeriodTests.cs" />
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="System\SR$(DefaultLanguageSourceExtension)" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
@@ -267,13 +263,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="..\..\Common\tests\xunit.runner.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="$(CommonTestPath)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Compile Include="JsonSchemaTestSuite\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="JsonSchemaTestSuite\" />
   </ItemGroup>
 
 </Project>

@@ -80,7 +80,30 @@ internal static partial class CodeGeneratorExtensions
                 return generator;
             }
 
+            if (typeDeclaration.FallbackObjectPropertyType() is FallbackObjectPropertyType objectPropertyType)
+            {
+                if (objectPropertyType.ReducedType.IsBuiltInJsonNotAnyType())
+                {
+                    return generator;
+                }
+            }
+            else if (typeDeclaration.LocalEvaluatedPropertyType() is FallbackObjectPropertyType localObjectPropertyType)
+            {
+                if (localObjectPropertyType.ReducedType.IsBuiltInJsonNotAnyType())
+                {
+                    return generator;
+                }
+            }
+            else if (typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is FallbackObjectPropertyType localAndAppliedObjectPropertyType)
+            {
+                if (localAndAppliedObjectPropertyType.ReducedType.IsBuiltInJsonNotAnyType())
+                {
+                    return generator;
+                }
+            }
+
             string fqdtn = typeDeclaration.FullyQualifiedDotnetTypeName();
+
             return generator
                 .AppendSeparatorLine()
                 .AppendLineIndent("/// <summary>")
@@ -130,7 +153,7 @@ internal static partial class CodeGeneratorExtensions
 
         if (typeDeclaration.FallbackObjectPropertyType() is FallbackObjectPropertyType objectPropertyType)
         {
-            if (objectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            if (objectPropertyType.ReducedType.IsBuiltInJsonNotAnyType())
             {
                 return generator;
             }
@@ -139,7 +162,7 @@ internal static partial class CodeGeneratorExtensions
         }
         else if (typeDeclaration.LocalEvaluatedPropertyType() is FallbackObjectPropertyType localObjectPropertyType)
         {
-            if (localObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            if (localObjectPropertyType.ReducedType.IsBuiltInJsonNotAnyType())
             {
                 return generator;
             }
@@ -148,7 +171,7 @@ internal static partial class CodeGeneratorExtensions
         }
         else if (typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is FallbackObjectPropertyType localAndAppliedObjectPropertyType)
         {
-            if (localAndAppliedObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            if (localAndAppliedObjectPropertyType.ReducedType.IsBuiltInJsonNotAnyType())
             {
                 return generator;
             }
@@ -505,12 +528,14 @@ internal static partial class CodeGeneratorExtensions
             }
 
             string propertyTypeName = property.ReducedPropertyType.FullyQualifiedDotnetTypeName();
-            
+
+            string name = SymbolDisplay.FormatLiteral(property.JsonPropertyName, true);
+            name = name.Substring(1, name.Length - 2);
             bool requiresEncoding = JavaScriptEncoder.Default.Encode(property.JsonPropertyName) != property.JsonPropertyName;
             generator
                 .AppendSeparatorLine()
                 .AppendLineIndent("/// <summary>")
-                .AppendLineIndent("/// Set the ", property.JsonPropertyName, " property.")
+                .AppendLineIndent("/// Set the <c>", name, "</c> property.")
                 .AppendLineIndent("/// </summary>")
                 .AppendLineIndent("/// <param name=\"value\">The value of the property to add.</param>")
                 .AppendLineIndent("public void Set", property.DotnetPropertyName(), "(in ", generator.SourceClassName(propertyTypeName), " value)")
@@ -547,26 +572,26 @@ internal static partial class CodeGeneratorExtensions
 
         return generator;
 
-            ////CheckValidInstance();
+        ////CheckValidInstance();
 
-            ////ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-            ////if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Mutable element))
-            ////{
-            ////    // We are going to replace just the value
-            ////    value.AddAsItem(ref cvb);
-            ////    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            ////}
-            ////else
-            ////{
-            ////    // We are going to insert the new value
-            ////    value.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref cvb, escapeName: false, nameRequiresUnescaping: false);
-            ////    int endIndex = _idx + _parent.GetDbSize(_idx, false);
-            ////    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            ////}
+        ////ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
+        ////if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Mutable element))
+        ////{
+        ////    // We are going to replace just the value
+        ////    value.AddAsItem(ref cvb);
+        ////    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+        ////}
+        ////else
+        ////{
+        ////    // We are going to insert the new value
+        ////    value.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref cvb, escapeName: false, nameRequiresUnescaping: false);
+        ////    int endIndex = _idx + _parent.GetDbSize(_idx, false);
+        ////    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+        ////}
 
-            ////_documentVersion = _parent.Version;
+        ////_documentVersion = _parent.Version;
 
-        }
+    }
 
     /// <summary>
     /// Append the start of a public readonly property declaration.
@@ -620,13 +645,16 @@ internal static partial class CodeGeneratorExtensions
 
         bool optional = property.RequiredOrOptional == RequiredOrOptional.Optional;
 
+        string name = SymbolDisplay.FormatLiteral(property.JsonPropertyName, true);
+        name = name.Substring(1, name.Length - 2);
+
         generator
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent(
             "/// Gets the ",
             optional ? "(optional) " : string.Empty,
             "<c>",
-            SymbolDisplay.FormatLiteral(property.JsonPropertyName, false),
+            name,
             "</c> ",
             "property.");
 

@@ -161,13 +161,14 @@ internal static partial class CodeGeneratorExtensions
             return string.Empty;
         }
 
-        return generator.GetOrAddMemberName(
-            new CSharpMemberName(
+        var memberName = new CSharpMemberName(
                 generator.GetChildScope(childScope, rootScope),
                 baseName,
                 Casing.PascalCase,
                 prefix,
-                suffix));
+                suffix);
+
+        return generator.GetOrAddMemberName(memberName);
     }
 
     /// <summary>

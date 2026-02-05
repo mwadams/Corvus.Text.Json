@@ -179,15 +179,15 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(ElementParsePartialDataCases))]
         public static void Parse_Invalid(string json)
         {
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(json));
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(json.AsSpan()));
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Encoding.UTF8.GetBytes(json).AsSpan()));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.ParseValue(json));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.ParseValue(json.AsSpan()));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.ParseValue(Encoding.UTF8.GetBytes(json).AsSpan()));
         }
 
         [Fact]
         public static void Parse_NullString_Throws()
         {
-            AssertExtensions.Throws<ArgumentNullException>("json", () => JsonElement.Parse((string)null));
+            AssertExtensions.Throws<ArgumentNullException>("json", () => JsonElement.ParseValue((string)null));
         }
 
         [Fact]
@@ -200,18 +200,18 @@ namespace Corvus.Text.Json.Tests
                 }
                 """;
 
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Json));
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Json.AsSpan()));
-            Assert.ThrowsAny<JsonException>(() => JsonElement.Parse(Encoding.UTF8.GetBytes(Json).AsSpan()));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.ParseValue(Json));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.ParseValue(Json.AsSpan()));
+            Assert.ThrowsAny<JsonException>(() => JsonElement.ParseValue(Encoding.UTF8.GetBytes(Json).AsSpan()));
 
             JsonDocumentOptions options = new()
             {
                 CommentHandling = JsonCommentHandling.Skip,
             };
 
-            Validate(JsonElement.Parse(Json, options));
-            Validate(JsonElement.Parse(Json.AsSpan(), options));
-            Validate(JsonElement.Parse(Encoding.UTF8.GetBytes(Json).AsSpan(), options));
+            Validate(JsonElement.ParseValue(Json, options));
+            Validate(JsonElement.ParseValue(Json.AsSpan(), options));
+            Validate(JsonElement.ParseValue(Encoding.UTF8.GetBytes(Json).AsSpan(), options));
 
             void Validate(JsonElement element)
             {
@@ -224,9 +224,9 @@ namespace Corvus.Text.Json.Tests
         [MemberData(nameof(ElementParseCases))]
         public static void Parse_Valid(string json, JsonValueKind kind)
         {
-            Validate(JsonElement.Parse(json));
-            Validate(JsonElement.Parse(json.AsSpan()));
-            Validate(JsonElement.Parse(Encoding.UTF8.GetBytes(json).AsSpan()));
+            Validate(JsonElement.ParseValue(json));
+            Validate(JsonElement.ParseValue(json.AsSpan()));
+            Validate(JsonElement.ParseValue(Encoding.UTF8.GetBytes(json).AsSpan()));
 
             void Validate(JsonElement element)
             {

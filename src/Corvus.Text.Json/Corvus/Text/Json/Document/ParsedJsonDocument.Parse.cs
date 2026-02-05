@@ -23,6 +23,38 @@ public sealed partial class ParsedJsonDocument<T>
 
     private const int UnseekableStreamInitialRentSize = 4096;
 
+
+    /// <summary>
+    /// Gets the null instance.
+    /// </summary>
+    public static T Null => CreateForLiteral(JsonTokenType.Null).RootElement;
+
+    /// <summary>
+    /// Gets the True instance.
+    /// </summary>
+    public static T True => CreateForLiteral(JsonTokenType.True).RootElement;
+
+    /// <summary>
+    /// Gets the False instance.
+    /// </summary>
+    public static T False => CreateForLiteral(JsonTokenType.False).RootElement;
+
+    /// <summary>
+    /// Creates a constant string instance that does not require disposal.
+    /// </summary>
+    /// <param name="quotedUtf8String">The quoted UTF-8 string constant value.</param>
+    /// <returns>The instance.</returns>
+    /// <remarks>This is used for fast initialization for a static value.</remarks>
+    public static T StringConstant(byte[] quotedUtf8String) => CreateConstant(quotedUtf8String, JsonTokenType.String).RootElement;
+
+    /// <summary>
+    /// Creates a constant number instance that does not require disposal.
+    /// </summary>
+    /// <param name="utf8Number">The UTF-8 number constant value.</param>
+    /// <returns>The instance.</returns>
+    /// <remarks>This is used for fast initialization for a static value.</remarks>
+    public static T NumberConstant(byte[] utf8Number) => CreateConstant(utf8Number, JsonTokenType.Number).RootElement;
+
     /// <summary>
     ///   Parse memory as UTF-8 encoded text representing a single JSON value into a ParsedJsonDocument.
     /// </summary>
@@ -641,25 +673,41 @@ public sealed partial class ParsedJsonDocument<T>
         switch (tokenType)
         {
             case JsonTokenType.False:
-                s_falseLiteral ??= Create(JsonConstants.FalseValue.ToArray());
+                s_falseLiteral ??= new ParsedJsonDocument<T>(JsonConstants.FalseValueArray, MetadataDbConstants.False, isDisposable: false);
                 return s_falseLiteral;
 
             case JsonTokenType.True:
-                s_trueLiteral ??= Create(JsonConstants.TrueValue.ToArray());
+                s_trueLiteral ??= new ParsedJsonDocument<T>(JsonConstants.TrueValueArray, MetadataDbConstants.True, isDisposable: false);
                 return s_trueLiteral;
 
             default:
                 Debug.Assert(tokenType == JsonTokenType.Null);
-                s_nullLiteral ??= Create(JsonConstants.NullValue.ToArray());
+                s_nullLiteral ??= new ParsedJsonDocument<T>(JsonConstants.NullValueArray, MetadataDbConstants.Null, isDisposable: false);
                 return s_nullLiteral;
         }
+    }
 
-        ParsedJsonDocument<T> Create(byte[] utf8Json)
+    private static ParsedJsonDocument<T> CreateConstant(byte[] utf8Json, JsonTokenType tokenType)
+    {
+        Debug.Assert(tokenType is JsonTokenType.String or JsonTokenType.Number);
+
+        MetadataDb database;
+
+        if (tokenType == JsonTokenType.Number && utf8Json.Length == 1 && utf8Json[0] == '0')
         {
-            MetadataDb database = MetadataDb.CreateLocked(utf8Json.Length);
-            database.Append(tokenType, startLocation: 0, utf8Json.Length);
-            return new ParsedJsonDocument<T>(utf8Json, database, isDisposable: false);
+            database = MetadataDbConstants.Zero;
         }
+        else if (tokenType == JsonTokenType.Number && utf8Json.Length == 1 && utf8Json[0] == '1')
+        {
+            database = MetadataDbConstants.One;
+        }
+        else
+        {
+            database = MetadataDb.CreateLocked(utf8Json.Length);
+            database.Append(tokenType, startLocation: 0, utf8Json.Length);
+        }
+
+        return new ParsedJsonDocument<T>(utf8Json, database, isDisposable: false);
     }
 
     private static ParsedJsonDocument<T> Parse(
@@ -881,4 +929,28 @@ public sealed partial class ParsedJsonDocument<T>
             throw;
         }
     }
+
+    internal static class MetadataDbConstants
+    {
+        private static MetadataDb? s_nullLiteral;
+
+        private static MetadataDb? s_trueLiteral;
+        private static MetadataDb? s_falseLiteral;
+        private static MetadataDb? s_zeroLiteral;
+        private static MetadataDb? s_oneLiteral;
+
+        public static MetadataDb Null => s_nullLiteral ??= Create(JsonConstants.NullValue.Length, JsonTokenType.Null);
+        public static MetadataDb True => s_trueLiteral ??= Create(JsonConstants.TrueValue.Length, JsonTokenType.True);
+        public static MetadataDb False => s_falseLiteral ??= Create(JsonConstants.FalseValue.Length, JsonTokenType.False);
+        public static MetadataDb Zero => s_zeroLiteral ??= Create(JsonConstants.ZeroValue.Length, JsonTokenType.Number);
+        public static MetadataDb One => s_oneLiteral ??= Create(JsonConstants.OneValue.Length, JsonTokenType.Number);
+
+        private static MetadataDb Create(int length, JsonTokenType jsonTokenType)
+        {
+            var db = MetadataDb.CreateLocked(length);
+            db.Append(jsonTokenType, startLocation: 0, length);
+            return db;
+        }
+    }
+
 }

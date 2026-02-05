@@ -3799,7 +3799,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder =
                 JsonElement.CreateDocumentBuilder(
                     workspace,
-                    new((ref JsonArrayBuilder arrayBuilder) => arrayBuilder.Add(true)));
+                    new((ref JsonElement.ArrayBuilder arrayBuilder) => arrayBuilder.Add(true)));
             Assert.False(mutableBuilder.IsImmutable);
             mutableBuilder.Freeze();
             Assert.True(mutableBuilder.IsImmutable);
@@ -4528,22 +4528,22 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable root = builderDoc.RootElement;
 
             // Existing UTF-8 property name tests
-            root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("a"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
-            root.SetProperty("a".AsSpan(), (ref JsonObjectBuilder o) => { o.Add("hello"u8, "there"u8); });
+            root.SetProperty("a".AsSpan(), (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "there"u8); });
             Assert.Equal("{\"hello\":\"there\"}", root.GetProperty("a").ToString());
-            root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("héllo"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
-            root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("foo\"bar"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
             // New: string property name
-            root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            root.SetProperty("str", (ref JsonElement.ObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
 
             // New: ReadOnlySpan<char> property name
             ReadOnlySpan<char> spanName = "span";
-            root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            root.SetProperty(spanName, (ref JsonElement.ObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
 
@@ -4556,20 +4556,20 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             // Existing UTF-8 property name tests
-            root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("b"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
-            root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("héllo"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
-            root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("foo\"bar"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
             // New: string property name
-            root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            root.SetProperty("str", (ref JsonElement.ObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
 
             // New: ReadOnlySpan<char> property name
             ReadOnlySpan<char> spanName = "span";
-            root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            root.SetProperty(spanName, (ref JsonElement.ObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
 
@@ -4582,24 +4582,24 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable root = builderDoc.RootElement;
 
             // Existing UTF-8 property name test
-            root.SetProperty("a"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("a"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
 
             // Non-ASCII property name
-            root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("héllo"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
 
             // Encoded UTF-8 property name: "foo\"bar"
-            root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("foo\"bar"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
             // New: string property name
-            root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            root.SetProperty("str", (ref JsonElement.ObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
 
             // New: ReadOnlySpan<char> property name
             ReadOnlySpan<char> spanName = "span";
-            root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            root.SetProperty(spanName, (ref JsonElement.ObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
 
@@ -4612,24 +4612,24 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             // Existing UTF-8 property name test
-            root.SetProperty("b"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("b"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
 
             // Non-ASCII property name
-            root.SetProperty("héllo"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("héllo"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
 
             // Encoded UTF-8 property name: "foo\"bar"
-            root.SetProperty("foo\"bar"u8, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetProperty("foo\"bar"u8, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
             // New: string property name
-            root.SetProperty("str", (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            root.SetProperty("str", (ref JsonElement.ObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
 
             // New: ReadOnlySpan<char> property name
             ReadOnlySpan<char> spanName = "span";
-            root.SetProperty(spanName, (ref JsonObjectBuilder o) => { o.Add("x", "y"); });
+            root.SetProperty(spanName, (ref JsonElement.ObjectBuilder o) => { o.Add("x", "y"); });
             Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
         }
 
@@ -4642,24 +4642,24 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
-            root.SetProperty("a"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("a"u8, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("a").ToString());
 
             // Non-ASCII property name
-            root.SetProperty("héllo"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("héllo"u8, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("héllo").ToString());
 
             // Encoded UTF-8 property name: "foo\"bar"
-            root.SetProperty("foo\"bar"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("foo\"bar"u8, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("foo\"bar").ToString());
 
             // New: string property name
-            root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("str", (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
 
             // New: ReadOnlySpan<char> property name
             ReadOnlySpan<char> spanName = "span";
-            root.SetProperty(spanName, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty(spanName, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
         }
 
@@ -4672,24 +4672,24 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             // ASCII property name
-            root.SetProperty("b"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("b"u8, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("b").ToString());
 
             // Non-ASCII property name
-            root.SetProperty("héllo"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("héllo"u8, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("héllo").ToString());
 
             // Encoded UTF-8 property name: "foo\"bar"
-            root.SetProperty("foo\"bar"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("foo\"bar"u8, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("foo\"bar").ToString());
 
             // New: string property name
-            root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("str", (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
 
             // New: ReadOnlySpan<char> property name
             ReadOnlySpan<char> spanName = "span";
-            root.SetProperty(spanName, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty(spanName, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
         }
 
@@ -4702,16 +4702,16 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable root = builderDoc.RootElement;
 
             // ASCII property name
-            root.SetProperty("a"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("a"u8, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("a").ToString());
 
             // New: string property name
-            root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("str", (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
 
             // New: ReadOnlySpan<char> property name
             ReadOnlySpan<char> spanName = "span";
-            root.SetProperty(spanName, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty(spanName, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
         }
 
@@ -4724,19 +4724,19 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
             // ASCII property name
-            root.SetProperty("b"u8, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("b"u8, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("b").ToString());
 
-            root.SetProperty("b".AsSpan(), (ref JsonArrayBuilder o) => { o.Add("there"u8); });
+            root.SetProperty("b".AsSpan(), (ref JsonElement.ArrayBuilder o) => { o.Add("there"u8); });
             Assert.Equal("[\"there\"]", root.GetProperty("b").ToString());
 
             // New: string property name
-            root.SetProperty("str", (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty("str", (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
 
             // New: ReadOnlySpan<char> property name
             ReadOnlySpan<char> spanName = "span";
-            root.SetProperty(spanName, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetProperty(spanName, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
         }
 
@@ -6026,10 +6026,10 @@ namespace Corvus.Text.Json.Tests
 
             using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
-            // Build an array using every method on JsonArrayBuilder
+            // Build an array using every method on JsonJsonElement.ArrayBuilder
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonArrayBuilder arrayBuilder) =>
+                new((ref JsonElement.ArrayBuilder arrayBuilder) =>
                 {
                     // Add primitive types
                     arrayBuilder.Add(true);
@@ -6069,14 +6069,14 @@ namespace Corvus.Text.Json.Tests
                     arrayBuilder.Add(period);
 
                     // Add nested array
-                    arrayBuilder.Add((ref JsonArrayBuilder ab) =>
+                    arrayBuilder.Add((ref JsonElement.ArrayBuilder ab) =>
                     {
                         ab.Add(1);
                         ab.Add(2);
                     });
 
                     // Add nested object
-                    arrayBuilder.Add((ref JsonObjectBuilder ob) =>
+                    arrayBuilder.Add((ref JsonElement.ObjectBuilder ob) =>
                     {
                         ob.Add("foo"u8, "bar"u8);
                     });
@@ -6326,7 +6326,7 @@ namespace Corvus.Text.Json.Tests
             using var workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
             workspace,
-            new((ref JsonObjectBuilder objBuilder) =>
+            new((ref JsonElement.ObjectBuilder objBuilder) =>
             {
                 // Add some properties
                 objBuilder.Add("name"u8, "John Doe"u8);
@@ -6351,7 +6351,7 @@ namespace Corvus.Text.Json.Tests
             using var workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
             workspace,
-            new((ref JsonObjectBuilder objBuilder) =>
+            new((ref JsonElement.ObjectBuilder objBuilder) =>
             {
                 // Add some properties
                 objBuilder.Add("name"u8, "John Doe"u8);
@@ -6376,7 +6376,7 @@ namespace Corvus.Text.Json.Tests
             using var workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
             workspace,
-            new((ref JsonObjectBuilder objBuilder) =>
+            new((ref JsonElement.ObjectBuilder objBuilder) =>
             {
                 // Add some properties
                 objBuilder.Add("name"u8, "John Doe"u8);
@@ -6401,7 +6401,7 @@ namespace Corvus.Text.Json.Tests
             using var workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
             workspace,
-            new((ref JsonObjectBuilder objBuilder) =>
+            new((ref JsonElement.ObjectBuilder objBuilder) =>
             {
                 // Add some properties
                 objBuilder.Add("name"u8, "John Doe"u8);
@@ -6455,10 +6455,10 @@ namespace Corvus.Text.Json.Tests
 
             using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
-            // Build an object using every method on JsonObjectBuilder
+            // Build an object using every method on JsonJsonElement.ObjectBuilder
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     // Add primitive types
                     objBuilder.Add("boolTrue"u8, true);
@@ -6503,14 +6503,14 @@ namespace Corvus.Text.Json.Tests
                     objBuilder.Add("period"u8, period);
 
                     // Add nested array
-                    objBuilder.Add("array"u8, (ref JsonArrayBuilder ab) =>
+                    objBuilder.Add("array"u8, (ref JsonElement.ArrayBuilder ab) =>
                     {
                         ab.Add(1);
                         ab.Add(2);
                     });
 
                     // Add nested object
-                    objBuilder.Add("object"u8, (ref JsonObjectBuilder ob) =>
+                    objBuilder.Add("object"u8, (ref JsonElement.ObjectBuilder ob) =>
                     {
                         ob.Add("foo"u8, "bar"u8);
                     });
@@ -6716,10 +6716,10 @@ namespace Corvus.Text.Json.Tests
 
             using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
-            // Build an object using every method on JsonObjectBuilder
+            // Build an object using every method on JsonJsonElement.ObjectBuilder
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     // Add primitive types
                     objBuilder.Add("boolTrue", true);
@@ -6763,14 +6763,14 @@ namespace Corvus.Text.Json.Tests
                     objBuilder.Add("period"u8, period);
 
                     // Add nested array
-                    objBuilder.Add("array", (ref JsonArrayBuilder ab) =>
+                    objBuilder.Add("array", (ref JsonElement.ArrayBuilder ab) =>
                     {
                         ab.Add(1);
                         ab.Add(2);
                     });
 
                     // Add nested object
-                    objBuilder.Add("object", (ref JsonObjectBuilder ob) =>
+                    objBuilder.Add("object", (ref JsonElement.ObjectBuilder ob) =>
                     {
                         ob.Add("foo"u8, "bar"u8);
                     });
@@ -6948,10 +6948,10 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
 
-            root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetItem(0, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[0].ToString());
 
-            root.SetItem(1, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetItem(1, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[1].ToString());
         }
 
@@ -6963,10 +6963,10 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
-            root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetItem(0, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[0].ToString());
 
-            root.SetItem(1, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetItem(1, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[1].ToString());
         }
 
@@ -6978,10 +6978,10 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
 
-            root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetItem(0, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[0].ToString());
 
-            root.SetItem(1, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetItem(1, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[1].ToString());
         }
 
@@ -6993,10 +6993,10 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
-            root.SetItem(0, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetItem(0, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[0].ToString());
 
-            root.SetItem(1, (ref JsonArrayBuilder o) => { o.Add("world"u8); });
+            root.SetItem(1, (ref JsonElement.ArrayBuilder o) => { o.Add("world"u8); });
             Assert.Equal("[\"world\"]", root[1].ToString());
         }
 
@@ -7008,9 +7008,9 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
 
-            root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetItem(0, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
-            root.SetItem(1, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetItem(1, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
         }
 
@@ -7022,9 +7022,9 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
-            root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetItem(0, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
-            root.SetItem(1, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetItem(1, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
         }
 
@@ -7036,9 +7036,9 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
 
-            root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetItem(0, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
-            root.SetItem(1, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetItem(1, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
         }
 
@@ -7050,9 +7050,9 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
-            root.SetItem(0, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetItem(0, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
-            root.SetItem(1, (ref JsonObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
+            root.SetItem(1, (ref JsonElement.ObjectBuilder o) => { o.Add("hello"u8, "world"u8); });
             Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
         }
 
@@ -7158,7 +7158,7 @@ namespace Corvus.Text.Json.Tests
             // Create target object with TryApply
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     objBuilder.Add("name"u8, "John"u8);
                     objBuilder.Add("age"u8, 30);
@@ -7183,7 +7183,7 @@ namespace Corvus.Text.Json.Tests
             
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     objBuilder.Add("name"u8, "John"u8);
                     objBuilder.Add("age"u8, 30);
@@ -7220,7 +7220,7 @@ namespace Corvus.Text.Json.Tests
             
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     objBuilder.Add("existing"u8, "value"u8);
                     
@@ -7253,7 +7253,7 @@ namespace Corvus.Text.Json.Tests
             
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     objBuilder.Add("name"u8, "John"u8);
                     objBuilder.Add("age"u8, 30);
@@ -7279,7 +7279,7 @@ namespace Corvus.Text.Json.Tests
             
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     objBuilder.Add("name"u8, "OldName"u8);
                     objBuilder.Add("age"u8, 30);
@@ -7313,7 +7313,7 @@ namespace Corvus.Text.Json.Tests
             
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     objBuilder.Add("existing"u8, "value"u8);
                     
@@ -7340,7 +7340,7 @@ namespace Corvus.Text.Json.Tests
             
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     objBuilder.Add("initial"u8, "value"u8);
                     
@@ -7370,7 +7370,7 @@ namespace Corvus.Text.Json.Tests
             
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     // Initial setup
                     objBuilder.Add("name"u8, "Initial"u8);
@@ -7405,7 +7405,7 @@ namespace Corvus.Text.Json.Tests
             // Create complex source object using document builder
             using JsonDocumentBuilder<JsonElement.Mutable> sourceBuilder = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     objBuilder.Add("string"u8, "test"u8);
                     objBuilder.Add("number"u8, 42);
@@ -7421,7 +7421,7 @@ namespace Corvus.Text.Json.Tests
             
             using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateDocumentBuilder(
                 workspace,
-                new((ref JsonObjectBuilder objBuilder) =>
+                new((ref JsonElement.ObjectBuilder objBuilder) =>
                 {
                     bool result = objBuilder.TryApply(sourceElement);
                     Assert.True(result);

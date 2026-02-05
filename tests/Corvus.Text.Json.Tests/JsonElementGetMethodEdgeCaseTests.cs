@@ -20,7 +20,7 @@ namespace Corvus.Text.Json.Tests
         public void GetString_NullValue_ReturnsNull()
         {
             string json = "null";
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Null, element.ValueKind);
             string result = element.GetString();
@@ -32,7 +32,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = "null";
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Parse(json));
+            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Null, element.ValueKind);
@@ -44,7 +44,7 @@ namespace Corvus.Text.Json.Tests
         public void GetString_EmptyString_ReturnsEmpty()
         {
             string json = "\"\"";
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             string result = element.GetString();
@@ -55,7 +55,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBytesFromBase64_EmptyString_ReturnsEmptyArray()
         {
             string json = "\"\"";
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             byte[] result = element.GetBytesFromBase64();
@@ -78,7 +78,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"\\uD83D\\uDE00\"", "\uD83D\uDE00")] // Grinning face emoji 😀
         public void GetString_UnicodeCharacters_ReturnsExpected(string json, string expected)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             string result = element.GetString();
@@ -89,7 +89,7 @@ namespace Corvus.Text.Json.Tests
         public void GetString_MaxUnicodeCharacter_ReturnsExpected()
         {
             string json = "\"\\uFFFF\"";
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             string result = element.GetString();
@@ -107,7 +107,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("2.2250738585072014E-308")] // Near double.MinValue (positive)
         public void GetDouble_ExtremePrecisionValues_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             double result = element.GetDouble();
@@ -120,7 +120,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("1.401298E-45")] // Near float.Epsilon
         public void GetSingle_ExtremePrecisionValues_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             float result = element.GetSingle();
@@ -133,7 +133,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("0.0000000000000000000000000001")] // Very small decimal
         public void GetDecimal_ExtremePrecisionValues_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             decimal result = element.GetDecimal();
@@ -151,7 +151,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("1e-100")] // Scientific notation small
         public void GetDouble_VeryLargeNumbers_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             double result = element.GetDouble();
@@ -171,7 +171,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"ABC=\"")] // Three characters with padding
         public void GetBytesFromBase64_EdgeCasePadding_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
 
@@ -200,7 +200,7 @@ namespace Corvus.Text.Json.Tests
             string base64 = Convert.ToBase64String(originalBytes);
             string json = $"\"{base64}\"";
 
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             byte[] result = element.GetBytesFromBase64();
@@ -219,7 +219,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"2100-02-28T23:59:59Z\"")] // Non-leap year (2100)
         public void GetDateTimeOffset_EdgeCaseDates_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             DateTimeOffset result = element.GetDateTimeOffset();
@@ -238,7 +238,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"2024-01-01T00:00:00-08:00\"")] // PST
         public void GetDateTimeOffset_TimezoneOffsets_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             DateTimeOffset result = element.GetDateTimeOffset();
@@ -258,7 +258,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("\"12345678-1234-1234-1234-123456789AbC\"")] // Mixed case hex
         public void GetGuid_CaseVariations_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             Guid result = element.GetGuid();
@@ -272,7 +272,7 @@ namespace Corvus.Text.Json.Tests
         public void GetGuid_EmptyGuid_HandlesCorrectly()
         {
             string json = "\"00000000-0000-0000-0000-000000000000\"";
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
             Guid result = element.GetGuid();
@@ -287,7 +287,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt32_FromArrayElement_ReturnsExpected()
         {
             string json = "[42, \"string\", true]";
-            JsonElement arrayElement = JsonElement.Parse(json);
+            JsonElement arrayElement = JsonElement.ParseValue(json);
             JsonElement numberElement = arrayElement[0];
 
             Assert.Equal(JsonValueKind.Number, numberElement.ValueKind);
@@ -299,7 +299,7 @@ namespace Corvus.Text.Json.Tests
         public void GetString_FromObjectProperty_ReturnsExpected()
         {
             string json = "{\"name\": \"John\", \"age\": 30}";
-            JsonElement objectElement = JsonElement.Parse(json);
+            JsonElement objectElement = JsonElement.ParseValue(json);
             JsonElement nameElement = objectElement.GetProperty("name");
 
             Assert.Equal(JsonValueKind.String, nameElement.ValueKind);
@@ -311,7 +311,7 @@ namespace Corvus.Text.Json.Tests
         public void GetByte_FromNestedStructure_ReturnsExpected()
         {
             string json = "{\"data\": {\"values\": [100, 200, 255]}}";
-            JsonElement rootElement = JsonElement.Parse(json);
+            JsonElement rootElement = JsonElement.ParseValue(json);
             JsonElement dataElement = rootElement.GetProperty("data");
             JsonElement valuesElement = dataElement.GetProperty("values");
             JsonElement byteElement = valuesElement[2];
@@ -336,7 +336,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("1.23456789e10", 12345678900)]
         public void GetDouble_ScientificNotation_ReturnsExpected(string json, double expected)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             double result = element.GetDouble();
@@ -350,7 +350,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("1e-30")]
         public void GetDecimal_LargeScientificNotation_HandlesCorrectly(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
 
@@ -380,7 +380,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("0e-10")]
         public void GetDouble_ZeroVariants_ReturnsZero(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             double result = element.GetDouble();
@@ -391,7 +391,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("0")]
         public void GetInt32_ZeroVariants_ReturnsZero(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             int result = element.GetInt32();
@@ -404,7 +404,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("0e0")]
         public void GetInt32_InvalidZeroVariants_FormatException(string json)
         {
-            JsonElement element = JsonElement.Parse(json);
+            JsonElement element = JsonElement.ParseValue(json);
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
             Assert.Throws<FormatException>(() => element.GetInt32());

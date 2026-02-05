@@ -17,10 +17,9 @@ public readonly partial struct JsonElement
     /// <returns>A <see cref="JsonElement"/> representation of the JSON value.</returns>
     /// <exception cref="JsonException"><paramref name="utf8Json"/> does not represent a valid single JSON value.</exception>
     /// <exception cref="ArgumentException"><paramref name="options"/> contains unsupported options.</exception>
-    public static JsonElement Parse([StringSyntax(StringSyntaxAttribute.Json)] ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options = default)
+    public static JsonElement ParseValue([StringSyntax(StringSyntaxAttribute.Json)] ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options = default)
     {
-        ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(utf8Json, options);
-        return document.RootElement;
+        return JsonElementHelpers.ParseValue<JsonElement>(utf8Json);
     }
 
     /// <summary>
@@ -31,10 +30,9 @@ public readonly partial struct JsonElement
     /// <returns>A <see cref="JsonElement"/> representation of the JSON value.</returns>
     /// <exception cref="JsonException"><paramref name="json"/> does not represent a valid single JSON value.</exception>
     /// <exception cref="ArgumentException"><paramref name="options"/> contains unsupported options.</exception>
-    public static JsonElement Parse([StringSyntax(StringSyntaxAttribute.Json)] ReadOnlySpan<char> json, JsonDocumentOptions options = default)
+    public static JsonElement ParseValue([StringSyntax(StringSyntaxAttribute.Json)] ReadOnlySpan<char> json, JsonDocumentOptions options = default)
     {
-        ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(json, options);
-        return document.RootElement;
+        return JsonElementHelpers.ParseValue<JsonElement>(json);
     }
 
     /// <summary>
@@ -46,12 +44,11 @@ public readonly partial struct JsonElement
     /// <exception cref="ArgumentNullException"><paramref name="json"/> is <see langword="null"/>.</exception>
     /// <exception cref="JsonException"><paramref name="json"/> does not represent a valid single JSON value.</exception>
     /// <exception cref="ArgumentException"><paramref name="options"/> contains unsupported options.</exception>
-    public static JsonElement Parse([StringSyntax(StringSyntaxAttribute.Json)] string json, JsonDocumentOptions options = default)
+    public static JsonElement ParseValue([StringSyntax(StringSyntaxAttribute.Json)] string json, JsonDocumentOptions options = default)
     {
         ArgumentNullException.ThrowIfNull(json);
 
-        ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.ParseValue(json, options);
-        return document.RootElement;
+        return JsonElementHelpers.ParseValue<JsonElement>(json);
     }
 
     /// <summary>

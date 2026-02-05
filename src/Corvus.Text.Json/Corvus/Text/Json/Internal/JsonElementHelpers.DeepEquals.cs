@@ -158,12 +158,6 @@ public static partial class JsonElementHelpers
 
             case JsonTokenType.StartObject:
             {
-                ////int count = element1ParentDocument.GetPropertyCount(element1ParentDocumentIndex);
-                ////if (count != element2ParentDocument.GetPropertyCount(element2ParentDocumentIndex))
-                ////{
-                ////    return false;
-                ////}
-
                 ObjectEnumerator<JsonElement> objectEnumerator1 = new(element1ParentDocument, element1ParentDocumentIndex);
                 ObjectEnumerator<JsonElement> objectEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
 

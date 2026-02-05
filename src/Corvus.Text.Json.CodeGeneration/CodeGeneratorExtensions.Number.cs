@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
@@ -14,12 +15,9 @@ namespace Corvus.Text.Json.CodeGeneration;
 internal static partial class CodeGeneratorExtensions
 {
     /// <inheritdoc/>
-    public static bool AppendFormatConstant(this CodeGenerator generator, string baseName, JsonElement constantValue)
+    public static CodeGenerator AppendNumericConstant(this CodeGenerator generator, string baseName, JsonElement constantValue)
     {
-        if (constantValue.ValueKind != JsonValueKind.Number)
-        {
-            return false;
-        }
+        Debug.Assert(constantValue.ValueKind == JsonValueKind.Number);
 
         string isNegativeField = generator.GetUniqueStaticReadOnlyFieldNameInScope(baseName, suffix: "IsNegative");
         string integralProperty = generator.GetUniqueStaticReadOnlyPropertyNameInScope(baseName, suffix: "Integral");
@@ -30,14 +28,15 @@ internal static partial class CodeGeneratorExtensions
         ReadOnlySpan<byte> number = JsonMarshal.GetRawUtf8Value(constantValue);
         JsonElementHelpers.ParseNumber(number, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
+        string normalizedNumberProperty = generator.GetStaticReadOnlyPropertyNameInScope(baseName);
         generator.AppendLineIndent("private const bool ", isNegativeField, " = ", isNegative ? "true" : "false", ";");
         generator.AppendLineIndent("private static ", integralProperty, " => \"", GetTextFromUtf8(integral), "\"u8;");
         generator.AppendLineIndent("private static ", fractionalProperty, " => \"", GetTextFromUtf8(fractional), "\"u8;");
         generator.AppendLineIndent("private const int ", exponentField, " = ", exponent.ToString(), ";");
 
-        return true;
+        generator.AppendLineIndent("private static NormalizedJsonNumber", normalizedNumberProperty, " => new NormalizedJsonNumber(", isNegativeField, ", ", integralProperty, ", ", fractionalProperty, ", ", exponentField, ");");
 
-
+        return generator;
 
         static string GetTextFromUtf8(ReadOnlySpan<byte> utf8Text)
         {
