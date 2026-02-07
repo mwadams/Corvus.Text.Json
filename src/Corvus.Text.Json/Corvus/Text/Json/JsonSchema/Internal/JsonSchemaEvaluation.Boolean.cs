@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Runtime.CompilerServices;
-
 namespace Corvus.Text.Json.Internal;
 
 /// <summary>
@@ -11,7 +9,7 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeBoolean = static (buffer, out written) => IgnoredNotType("boolean"u8, buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedTypeBoolean = static (buffer, out written) => ExpectedType("boolean"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider ExpectedTypeBoolean = static (buffer, out written) => ExpectedType("boolean"u8, buffer, out written);
 
     /// <summary>
     /// Matches a JSON token type against the "boolean" type constraint.

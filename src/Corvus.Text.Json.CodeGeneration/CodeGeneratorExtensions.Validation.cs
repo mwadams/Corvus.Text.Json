@@ -9,7 +9,6 @@ using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.Internal;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.VisualBasic;
 
 namespace Corvus.Text.Json.CodeGeneration;
 
@@ -18,6 +17,72 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// </summary>
 internal static partial class CodeGenerationExtensions
 {
+    private const string NormalizedJsonNumberAppendedKey = "NormalizedJsonNumberAppended";
+    private const string NormalizedJsonNumberAppendedInScopeKey = "NormalizedJsonNumberAppendedInScope";
+    private const string GetRawSimpleValueAppendedKey = "GetRawSimpleValueAppended";
+    private const string GetRawSimpleValueAppendedInScopeKey = "GetRawSimpleValueAppendedInScope";
+
+    public static CodeGenerator AppendNormalizedJsonNumberIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (typeDeclaration.TryGetMetadata(NormalizedJsonNumberAppendedKey, out bool? value))
+        {
+            return generator;
+        }
+
+        typeDeclaration.SetMetadata(NormalizedJsonNumberAppendedKey, true);
+        typeDeclaration.SetMetadata(NormalizedJsonNumberAppendedInScopeKey, generator.FullyQualifiedScope);
+
+        return generator
+            .AppendGetRawSimpleValueIfNotAppended(typeDeclaration)
+            .AppendSeparatorLine()
+            .ReserveName("isNegative")
+            .ReserveName("integral")
+            .ReserveName("fractional")
+            .ReserveName("exponent")
+            .AppendLineIndent("JsonElementHelpers.TryParseNumber(rawSimpleValue.Span, out bool isNegative,out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);");
+    }
+
+    public static CodeGenerator PopNormalizedJsonNumberIfAppendedInScope(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (typeDeclaration.TryGetMetadata(NormalizedJsonNumberAppendedInScopeKey, out string? scope)
+            && scope == generator.FullyQualifiedScope)
+        {
+            typeDeclaration.RemoveMetadata(NormalizedJsonNumberAppendedInScopeKey);
+            typeDeclaration.RemoveMetadata(NormalizedJsonNumberAppendedKey);
+        }
+
+        return generator
+            .PopGetRawSimpleValueIfAppendedInScope(typeDeclaration);
+    }
+
+    public static CodeGenerator AppendGetRawSimpleValueIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (typeDeclaration.TryGetMetadata(GetRawSimpleValueAppendedKey, out bool? value))
+        {
+            return generator;
+        }
+
+        typeDeclaration.SetMetadata(GetRawSimpleValueAppendedKey, true);
+        typeDeclaration.SetMetadata(GetRawSimpleValueAppendedInScopeKey, generator.FullyQualifiedScope);
+
+        return generator
+            .AppendSeparatorLine()
+            .ReserveName("rawSimpleValue")
+            .AppendLineIndent("ReadOnlyMemory<byte> rawSimpleValue = tokenType is JsonTokenType.Number or JsonTokenType.String ? parentDocument.GetRawSimpleValue(parentIndex) : default;");
+    }
+
+    public static CodeGenerator PopGetRawSimpleValueIfAppendedInScope(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (typeDeclaration.TryGetMetadata(GetRawSimpleValueAppendedInScopeKey, out string? scope)
+            && scope == generator.FullyQualifiedScope)
+        {
+            typeDeclaration.RemoveMetadata(GetRawSimpleValueAppendedKey);
+            typeDeclaration.RemoveMetadata(GetRawSimpleValueAppendedInScopeKey);
+        }
+
+        return generator;
+    }
+
     /// <summary>
     /// Appends the code to shortcut the return from validation if there is no collector.
     /// </summary>

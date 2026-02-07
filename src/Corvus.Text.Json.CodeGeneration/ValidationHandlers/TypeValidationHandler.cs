@@ -2,9 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Corvus.Json.CodeGeneration;
+using Corvus.Json.CodeGeneration.Keywords;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
@@ -29,6 +31,7 @@ internal sealed class TypeValidationHandler : KeywordValidationHandlerBase
     /// <inheritdoc/>
     public override CodeGenerator AppendValidationSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
+        // If we require string value validation, then we need to run the type validation after all the string value validation handlers have run, so that we can ignore the type validation if any of those handlers are present.
         return generator
              .PrependChildValidationSetup(typeDeclaration, ChildHandlers, ValidationHandlerPriority)
              .AppendCoreTypeValidationSetup()
@@ -66,10 +69,7 @@ file static class TypeValidationHandlerExtensions
 {
     public static CodeGenerator AppendCoreTypeValidationSetup(this CodeGenerator generator)
     {
-        return generator
-            .AppendSeparatorLine()
-            .ReserveName("typeValidationHandler_tokenType")
-            .AppendLineIndent("JsonTokenType typeValidationHandler_tokenType = parentDocument.GetJsonTokenType(parentIndex);");
+        return generator;
     }
 
     public static CodeGenerator AppendCoreTypeValidation(
@@ -91,113 +91,316 @@ file static class TypeValidationHandlerExtensions
         generator
             .PrependChildValidationCode(typeDeclaration, childHandlers, validationPriority);
 
-        if ((allowedTypes & (CoreTypes.Integer | CoreTypes.Number)) != 0)
+        if (allowedCoreTypeCount == 1)
         {
-            bool isInteger = (allowedTypes & CoreTypes.Integer) != 0;
-            string ignoredMessageProviderName = isInteger ? "JsonSchemaEvaluation.IgnoredNotTypeInteger" : "JsonSchemaEvaluation.IgnoredNotTypeNumber";
+            if ((allowedTypes & (CoreTypes.Integer | CoreTypes.Number)) != 0)
+            {
+                bool isInteger = (allowedTypes & CoreTypes.Integer) != 0;
+                string ignoredMessageProviderName = isInteger ? "JsonSchemaEvaluation.IgnoredNotTypeInteger" : "JsonSchemaEvaluation.IgnoredNotTypeNumber";
+                generator
+                    .AppendSeparatorLine();
+
+                if (isInteger)
+                {
+                    generator
+                        .AppendNormalizedJsonNumberIfNotAppended(typeDeclaration)
+                        .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeInteger(tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, exponent, ref context))");
+                }
+                else
+                {
+                    generator
+                        .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeNumber(tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))");
+                }
+
+
+                generator
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendNoCollectorShortcutReturn()
+                        .AppendIgnoredCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, ignoredMessageProviderName)
+                        .AppendIgnoredCoreTypeNumberFormatKeywords(typeDeclaration, ignoredMessageProviderName)
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendElseEvaluateCoreTypeKeywords<INumberKeywordValidationHandler>(
+                        parentHandler,
+                        typeDeclaration,
+                        isInteger ? CoreTypes.Integer : CoreTypes.Number,
+                        (generator, typeDeclaration, createdElseClause) => generator.AppendElseEvaluateCoreTypeFormatKeywords(parentHandler, typeDeclaration, createdElseClause, isInteger ? CoreTypes.Integer : CoreTypes.Number));
+            }
+            else if ((allowedTypes & CoreTypes.String) != 0)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeString(tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendNoCollectorShortcutReturn()
+                        .AppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString")
+                        .AppendIgnoredCoreTypeStringFormatKeywords(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendElseEvaluateCoreTypeKeywords<IStringKeywordValidationHandler>(
+                        parentHandler,
+                        typeDeclaration,
+                        CoreTypes.String,
+                        (generator, typeDeclaration, createdElseClause) => generator.AppendElseEvaluateCoreTypeFormatKeywords(parentHandler, typeDeclaration, createdElseClause, CoreTypes.String));
+            }
+            else if ((allowedTypes & CoreTypes.Boolean) != 0)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeBoolean(tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendNoCollectorShortcutReturn()
+                        .AppendIgnoredCoreTypeKeywords<IBooleanValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeBoolean")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendElseEvaluateCoreTypeKeywords<IBooleanKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Boolean);
+            }
+            else if ((allowedTypes & CoreTypes.Null) != 0)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeNull(tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendNoCollectorShortcutReturn()
+                        .AppendIgnoredCoreTypeKeywords<INullValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNull")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendElseEvaluateCoreTypeKeywords<INullKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Null);
+            }
+            else if ((allowedTypes & CoreTypes.Object) != 0)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeObject(tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendNoCollectorShortcutReturn()
+                        .AppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeObject")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendElseEvaluateCoreTypeKeywords<IObjectKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Object);
+            }
+            else if ((allowedTypes & CoreTypes.Array) != 0)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeArray(tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendNoCollectorShortcutReturn()
+                        .AppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeArray")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendElseEvaluateCoreTypeKeywords<IArrayKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Array);
+            }
+        }
+        else
+        {
+            StringBuilder allowedTypesBuilder = new();
+
+            // More than one core type
+            generator
+                .ReserveName("typeValidationHandler_foundType)")
+                .AppendLineIndent("bool typeValidationHandler_foundType = false;")
+                .AppendSeparatorLine();
+
+            bool hasTypes = false;
+
+            if ((allowedTypes & CoreTypes.Array) != 0)
+            {
+                allowedTypesBuilder.Append("[\"array\"");
+                generator
+                    .AppendLineIndent("if (tokenType == JsonTokenType.StartArray)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("typeValidationHandler_foundType = true;")
+                        .AppendEvaluateCoreTypeKeywords<IArrayKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Array)
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+                hasTypes = true;
+            }
+
+            if ((allowedTypes & CoreTypes.Object) != 0)
+            {
+                AppendArrayStartOrSeparator(allowedTypesBuilder, hasTypes);
+                allowedTypesBuilder.Append("\"object\"");
+
+                generator
+                    .ConditionallyAppend(hasTypes, g => g.AppendIndent("else "))
+                    .ConditionallyAppend(!hasTypes, g => g.AppendIndent(string.Empty))
+                    .AppendLine("if (tokenType == JsonTokenType.StartObject)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("typeValidationHandler_foundType = true;")
+                        .AppendEvaluateCoreTypeKeywords<IObjectKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Object)
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+                hasTypes = true;
+            }
+
+            if ((allowedTypes & CoreTypes.Null) != 0)
+            {
+                AppendArrayStartOrSeparator(allowedTypesBuilder, hasTypes);
+                allowedTypesBuilder.Append("\"null\"");
+
+                generator
+                    .ConditionallyAppend(hasTypes, g => g.AppendIndent("else "))
+                    .ConditionallyAppend(!hasTypes, g => g.AppendIndent(string.Empty))
+                    .AppendLine("if (tokenType == JsonTokenType.Null)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("typeValidationHandler_foundType = true;")
+                        .AppendEvaluateCoreTypeKeywords<INullKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Null)
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+                hasTypes = true;
+            }
+
+            if ((allowedTypes & CoreTypes.Boolean) != 0)
+            {
+                AppendArrayStartOrSeparator(allowedTypesBuilder, hasTypes);
+                allowedTypesBuilder.Append("\"boolean\"");
+
+                generator
+                    .ConditionallyAppend(hasTypes, g => g.AppendIndent("else "))
+                    .ConditionallyAppend(!hasTypes, g => g.AppendIndent(string.Empty))
+                    .AppendLine("if (tokenType is JsonTokenType.True or JsonTokenType.False)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("typeValidationHandler_foundType = true;")
+                        .AppendEvaluateCoreTypeKeywords<IBooleanKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Boolean)
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+                hasTypes = true;
+            }
+
+            if ((allowedTypes & CoreTypes.Number) != 0)
+            {
+                AppendArrayStartOrSeparator(allowedTypesBuilder, hasTypes);
+                allowedTypesBuilder.Append("\"number\"");
+
+                generator
+                    .ConditionallyAppend(hasTypes, g => g.AppendIndent("else "))
+                    .ConditionallyAppend(!hasTypes, g => g.AppendIndent(string.Empty))
+                    .AppendLine("if (tokenType == JsonTokenType.Number)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("typeValidationHandler_foundType = true;")
+                        .AppendEvaluateCoreTypeKeywords<INumberKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Number,
+                            (generator, typeDeclaration) => generator.AppendEvaluateCoreTypeFormatKeywords(parentHandler, typeDeclaration, CoreTypes.Number))
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+                hasTypes = true;
+            }
+
+            if ((allowedTypes & CoreTypes.Integer) != 0)
+            {
+                AppendArrayStartOrSeparator(allowedTypesBuilder, hasTypes);
+                allowedTypesBuilder.Append("\"integer\"");
+
+                generator
+                    .ConditionallyAppend(hasTypes, g => g.AppendIndent("else "))
+                    .ConditionallyAppend(!hasTypes, g => g.AppendIndent(string.Empty))
+                    .AppendLine("if (tokenType == JsonTokenType.Number)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendNormalizedJsonNumberIfNotAppended(typeDeclaration)
+                        .AppendLineIndent("if (JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("typeValidationHandler_foundType = true;")
+                            .AppendEvaluateCoreTypeKeywords<INumberKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.Integer,
+                            (generator, typeDeclaration) => generator.AppendEvaluateCoreTypeFormatKeywords(parentHandler, typeDeclaration, CoreTypes.Integer))
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                        .PopNormalizedJsonNumberIfAppendedInScope(typeDeclaration)
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+                hasTypes = true;
+            }
+
+            if ((allowedTypes & CoreTypes.String) != 0)
+            {
+                AppendArrayStartOrSeparator(allowedTypesBuilder, hasTypes);
+                allowedTypesBuilder.Append("\"string\"");
+
+                generator
+                    .ConditionallyAppend(hasTypes, g => g.AppendIndent("else "))
+                    .ConditionallyAppend(!hasTypes, g => g.AppendIndent(string.Empty))
+                    .AppendLine("if (tokenType == JsonTokenType.String)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("typeValidationHandler_foundType = true;")
+                        .AppendEvaluateCoreTypeKeywords<IStringKeywordValidationHandler>(parentHandler, typeDeclaration, CoreTypes.String,
+                            (generator, typeDeclaration) => generator.AppendEvaluateCoreTypeFormatKeywords(parentHandler, typeDeclaration, CoreTypes.String))
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+                hasTypes = true;
+            }
+
+            allowedTypesBuilder.Append(']');
+
             generator
                 .AppendSeparatorLine()
-                .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeNumber(typeValidationHandler_tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .ConditionallyAppend(allowedCoreTypeCount == 1, static c => c.AppendNoCollectorShortcutReturn())
-                    .AppendIgnoredCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, ignoredMessageProviderName)
-                    .AppendIgnoredCoreTypeNumberFormatKeywords(typeDeclaration, ignoredMessageProviderName)
-                .PopIndent()
-                .AppendLineIndent("}")
-                .AppendElseEvaluateCoreTypeKeywords<INumberKeywordValidationHandler>(
-                    parentHandler,
-                    typeDeclaration,
-                    (generator, typeDeclaration, createdElseClause) => generator.AppendEvaluateCoreTypeFormatKeywords(parentHandler, typeDeclaration, createdElseClause, CoreTypes.Number));
+                .AppendLineIndent(
+                    "context.EvaluatedKeyword(typeValidationHandler_foundType, static (buffer, out written) => JsonSchemaEvaluation.ExpectedType(",
+                    SymbolDisplay.FormatLiteral(allowedTypesBuilder.ToString(), true),
+                    "u8, buffer, out written), ",
+                    SymbolDisplay.FormatLiteral(keyword.Keyword, true),
+                    "u8);");
         }
 
-        if ((allowedTypes & CoreTypes.String) != 0)
+        if (childHandlers.Count > 0)
         {
-            generator
-                .AppendSeparatorLine()
-                .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeString(typeValidationHandler_tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .ConditionallyAppend(allowedCoreTypeCount == 1, static c => c.AppendNoCollectorShortcutReturn())
-                    .AppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString")
-                    .AppendIgnoredCoreTypeStringFormatKeywords(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString")
-                .PopIndent()
-                .AppendLineIndent("}")
-                .AppendElseEvaluateCoreTypeKeywords<IStringKeywordValidationHandler>(
-                    parentHandler,
-                    typeDeclaration,
-                    (generator, typeDeclaration, createdElseClause) => generator.AppendEvaluateCoreTypeFormatKeywords(parentHandler, typeDeclaration, createdElseClause, CoreTypes.String));
+            return generator
+                .ConditionallyAppend(allowedCoreTypeCount > 1, g => g.AppendNoCollectorNoMatchShortcutReturn())
+                .AppendChildValidationCode(typeDeclaration, childHandlers, validationPriority);
         }
 
-        if ((allowedTypes & CoreTypes.Boolean) != 0)
+        return generator;
+
+        static void AppendArrayStartOrSeparator(StringBuilder allowedTypesBuilder, bool hasTypes)
         {
-            generator
-                .AppendSeparatorLine()
-                .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeBoolean(typeValidationHandler_tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .ConditionallyAppend(allowedCoreTypeCount == 1, static c => c.AppendNoCollectorShortcutReturn())
-                    .AppendIgnoredCoreTypeKeywords<IBooleanValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeBoolean")
-                .PopIndent()
-                .AppendLineIndent("}")
-                .AppendElseEvaluateCoreTypeKeywords<IBooleanKeywordValidationHandler>(parentHandler, typeDeclaration);
-        }
+            if (hasTypes)
+            {
+                allowedTypesBuilder.Append(", ");
+            }
+            else
+            {
+                allowedTypesBuilder.Append('[');
 
-        if ((allowedTypes & CoreTypes.Null) != 0)
-        {
-            generator
-                .AppendSeparatorLine()
-                .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeNull(typeValidationHandler_tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .ConditionallyAppend(allowedCoreTypeCount == 1, static c => c.AppendNoCollectorShortcutReturn())
-                    .AppendIgnoredCoreTypeKeywords<INullValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNull")
-                .PopIndent()
-                .AppendLineIndent("}")
-                .AppendElseEvaluateCoreTypeKeywords<INullKeywordValidationHandler>(parentHandler, typeDeclaration);
+            }
         }
-
-        if ((allowedTypes & CoreTypes.Object) != 0)
-        {
-            generator
-                .AppendSeparatorLine()
-                .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeObject(typeValidationHandler_tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .ConditionallyAppend(allowedCoreTypeCount == 1, static c => c.AppendNoCollectorShortcutReturn())
-                    .AppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeObject")
-                .PopIndent()
-                .AppendLineIndent("}")
-                .AppendElseEvaluateCoreTypeKeywords<IObjectKeywordValidationHandler>(parentHandler, typeDeclaration);
-        }
-
-        if ((allowedTypes & CoreTypes.Array) != 0)
-        {
-            generator
-                .AppendSeparatorLine()
-                .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeArray(typeValidationHandler_tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))")
-                .AppendLineIndent("{")
-                .PushIndent()
-                    .ConditionallyAppend(allowedCoreTypeCount == 1, static c => c.AppendNoCollectorShortcutReturn())
-                    .AppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeArray")
-                .PopIndent()
-                .AppendLineIndent("}")
-                .AppendElseEvaluateCoreTypeKeywords<IArrayKeywordValidationHandler>(parentHandler, typeDeclaration);
-        }
-
-        return generator
-            .ConditionallyAppend(allowedCoreTypeCount > 1, g => g.AppendNoCollectorNoMatchShortcutReturn())
-            .AppendChildValidationCode(typeDeclaration, childHandlers, validationPriority);
     }
 
     public static CodeGenerator AppendElseEvaluateCoreTypeKeywords<T>(
         this CodeGenerator generator,
         IKeywordValidationHandler parentHandler,
         TypeDeclaration typeDeclaration,
+        CoreTypes coreType,
         Func<CodeGenerator, TypeDeclaration, bool, bool>? additionalWork = null)
         where T : ITypeSensitiveKeywordValidationHandler
     {
         bool createdElseClause = false;
+
+        AppendIgnoredTypes(generator, typeDeclaration, coreType, (_, _) =>
+        {
+            generator
+                .BeginElseClause();
+            createdElseClause = true;
+        });
+
 
         foreach (T keywordHandler in
                 typeDeclaration
@@ -207,7 +410,6 @@ file static class TypeValidationHandlerExtensions
                             h.ValidationHandlerPriority >= parentHandler.ValidationHandlerPriority &&
                             !parentHandler.Equals(h)))
         {
-
             // We cannot do this if there are other handlers in between the parent and this one.
             if (typeDeclaration.HasHigherPriorityHandler(generator.LanguageProvider, parentHandler, keywordHandler))
             {
@@ -242,6 +444,119 @@ file static class TypeValidationHandlerExtensions
         return generator;
     }
 
+    public static CodeGenerator AppendEvaluateCoreTypeKeywords<T>(
+    this CodeGenerator generator,
+    IKeywordValidationHandler parentHandler,
+    TypeDeclaration typeDeclaration,
+    CoreTypes coreType,
+    Action<CodeGenerator, TypeDeclaration>? additionalWork = null)
+    where T : ITypeSensitiveKeywordValidationHandler
+    {
+        AppendIgnoredTypes(generator, typeDeclaration, coreType);
+
+        foreach (T keywordHandler in
+                typeDeclaration
+                    .OrderedValidationHandlers<T>(generator.LanguageProvider)
+                    .Where(
+                        h =>
+                            h.ValidationHandlerPriority >= parentHandler.ValidationHandlerPriority &&
+                            !parentHandler.Equals(h)))
+        {
+            // We cannot do this if there are other handlers in between the parent and this one.
+            if (typeDeclaration.HasHigherPriorityHandler(generator.LanguageProvider, parentHandler, keywordHandler))
+            {
+                continue;
+            }
+
+            typeDeclaration.ExecuteValidationHandler(keywordHandler, k =>
+            {
+                k.AppendValidationCode(generator, typeDeclaration, validateOnly: true);
+            });
+        }
+
+        if (additionalWork is not null)
+        {
+            additionalWork(generator, typeDeclaration);
+        }
+
+        return generator;
+    }
+
+    private static bool AppendIgnoredTypes(CodeGenerator generator, TypeDeclaration typeDeclaration, CoreTypes coreType, Action<CodeGenerator, TypeDeclaration>? preAppendAction = null)
+    {
+        bool appended = false;
+        switch (coreType)
+        {
+            case CoreTypes.String:
+                generator
+                    .TryAppendIgnoredCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNumber", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeObject", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IBooleanValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeBoolean", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeArray", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INullValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNull", preAppendAction, ref appended);
+                break;
+
+            case CoreTypes.Number:
+                generator
+                    .TryAppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeObject", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IBooleanValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeBoolean", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeArray", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INullValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNull", preAppendAction, ref appended);
+                break;
+
+            case CoreTypes.Integer:
+                generator
+                    .TryAppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeObject", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IBooleanValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeBoolean", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeArray", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INullValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNull", preAppendAction, ref appended);
+                break;
+
+            case CoreTypes.Boolean:
+                generator
+                    .TryAppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeObject", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNumber", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeArray", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INullValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNull", preAppendAction, ref appended);
+                break;
+
+            case CoreTypes.Null:
+                generator
+                    .TryAppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeObject", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNumber", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeArray", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IBooleanValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeBoolean", preAppendAction, ref appended);
+                break;
+
+            case CoreTypes.Object:
+                generator
+                    .TryAppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INullValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNull", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNumber", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeArray", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IBooleanValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeBoolean", preAppendAction, ref appended);
+                break;
+
+            case CoreTypes.Array:
+                generator
+                    .TryAppendIgnoredCoreTypeKeywords<IStringValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INullValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNull", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<INumberValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNumber", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeObject", preAppendAction, ref appended)
+                    .TryAppendIgnoredCoreTypeKeywords<IBooleanValidationKeyword>(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeBoolean", preAppendAction, ref appended);
+                break;
+
+            default:
+                throw new InvalidOperationException();
+        }
+
+        return appended;
+    }
+
     public static bool HasHigherPriorityHandler<T>(this TypeDeclaration typeDeclaration, ILanguageProvider languageProvider, IKeywordValidationHandler parentHandler, T keywordHandler)
         where T : IKeywordValidationHandler
     {
@@ -262,7 +577,7 @@ file static class TypeValidationHandlerExtensions
         .PushIndent();
     }
 
-    public static bool AppendEvaluateCoreTypeFormatKeywords(this CodeGenerator generator, IKeywordValidationHandler parentHandler, TypeDeclaration typeDeclaration, bool createdElseClause, CoreTypes coreTypes)
+    public static bool AppendElseEvaluateCoreTypeFormatKeywords(this CodeGenerator generator, IKeywordValidationHandler parentHandler, TypeDeclaration typeDeclaration, bool createdElseClause, CoreTypes coreTypes)
     {
         foreach (IFormatKeywordValidationHandler keywordHandler in
                 typeDeclaration
@@ -296,6 +611,35 @@ file static class TypeValidationHandlerExtensions
         }
 
         return createdElseClause;
+    }
+
+    public static CodeGenerator AppendEvaluateCoreTypeFormatKeywords(this CodeGenerator generator, IKeywordValidationHandler parentHandler, TypeDeclaration typeDeclaration, CoreTypes coreTypes)
+    {
+        foreach (IFormatKeywordValidationHandler keywordHandler in
+                typeDeclaration
+                    .OrderedValidationHandlers<IFormatKeywordValidationHandler>(generator.LanguageProvider)
+                    .Where(
+                        h =>
+                            h.ValidationHandlerPriority >= parentHandler.ValidationHandlerPriority &&
+                            !parentHandler.Equals(h)))
+        {
+
+            // We cannot do this if there are other handlers in between the parent and this one.
+            if (typeDeclaration.HasHigherPriorityHandler(generator.LanguageProvider, parentHandler, keywordHandler))
+            {
+                continue;
+            }
+
+            if (keywordHandler.HandlesCoreTypes(typeDeclaration, coreTypes))
+            {
+                typeDeclaration.ExecuteValidationHandler(keywordHandler, k =>
+                {
+                    keywordHandler.AppendValidationCode(generator, typeDeclaration, forCoreTypes: coreTypes, validateOnly: true);
+                });
+            }
+        }
+
+        return generator;
     }
 
     public static CodeGenerator AppendIgnoredCoreTypeStringFormatKeywords(
@@ -352,6 +696,37 @@ file static class TypeValidationHandlerExtensions
             {
                 generator
                     .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
+            }
+        }
+
+        return generator;
+    }
+
+    public static CodeGenerator TryAppendIgnoredCoreTypeKeywords<T>(
+    this CodeGenerator generator,
+    TypeDeclaration typeDeclaration,
+    string ignoredMessageProviderName,
+    Action<CodeGenerator, TypeDeclaration>? preAppendAction,
+    ref bool appended)
+        where T : IValidationKeyword
+    {
+        IEnumerable<T> keywordsToIgnore =
+            typeDeclaration
+                .Keywords()
+                .OfType<T>();
+
+        foreach (T keyword in keywordsToIgnore)
+        {
+            if (typeDeclaration.AddIgnoredKeyword(keyword))
+            {
+                if (!appended)
+                {
+                    preAppendAction?.Invoke(generator, typeDeclaration);
+                }
+
+                generator
+                    .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
+                appended |= true;
             }
         }
 

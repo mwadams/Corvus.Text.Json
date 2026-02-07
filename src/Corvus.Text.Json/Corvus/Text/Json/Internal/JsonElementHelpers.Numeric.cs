@@ -155,13 +155,11 @@ public static partial class JsonElementHelpers
     /// <summary>
     /// Determines if a JSON number is an integer.
     /// </summary>
-    /// <param name="integral">When concatenated with <paramref name="fractional"/> produces the significand of the number without leading or trailing zeros.</param>
-    /// <param name="fractional">When concatenated with <paramref name="integral"/> produces the significand of the number without leading or trailing zeros.</param>
     /// <param name="exponent">The exponent.</param>
+    /// 
+    /// 
     /// <returns>True if the normalized JSON number represents an integer.</returns>
     public static bool IsIntegerNormalizedJsonNumber(
-        ReadOnlySpan<byte> integral,
-        ReadOnlySpan<byte> fractional,
         int exponent)
     {
         return exponent >= 0;

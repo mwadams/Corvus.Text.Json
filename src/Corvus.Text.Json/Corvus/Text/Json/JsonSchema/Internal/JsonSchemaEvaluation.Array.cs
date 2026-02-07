@@ -20,7 +20,11 @@ public static partial class JsonSchemaEvaluation
     /// </summary>
     public static readonly JsonSchemaPathProvider<int> ItemIndex = static (index, buffer, out written) => AppendIndex(index, buffer, out written);
 
-    private static readonly JsonSchemaMessageProvider ExpectedTypeArray = static (buffer, out written) => ExpectedType("array"u8, buffer, out written);
+
+    /// <summary>
+    /// Message provider for expected "array type" validation messages.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider ExpectedTypeArray = static (buffer, out written) => ExpectedType("array"u8, buffer, out written);
 
     /// <summary>
     /// Matches a JSON token type against the "array" type constraint.

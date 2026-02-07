@@ -12,6 +12,8 @@ public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeNumber = static (buffer, out written) => IgnoredNotType("number"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeInteger = static (buffer, out written) => IgnoredNotType("integer"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider ExpectedTypeNumber = static (buffer, out written) => ExpectedType("number"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider ExpectedTypeInteger = static (buffer, out written) => ExpectedType("integer"u8, buffer, out written);
 
     private const int MaximumByteExponent = 0;
     private const bool MaximumByteIsNegative = false;
@@ -79,8 +81,6 @@ public static partial class JsonSchemaEvaluation
     private static readonly JsonSchemaMessageProvider ExpectedInt64 = static (buffer, out written) => ExpectedNumberFormat("int64"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedSByte = static (buffer, out written) => ExpectedNumberFormat("sbyte"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedSingle = static (buffer, out written) => ExpectedNumberFormat("single"u8, buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedTypeNumber = static (buffer, out written) => ExpectedType("number"u8, buffer, out written);
-    private static readonly JsonSchemaMessageProvider ExpectedTypeInteger = static (buffer, out written) => ExpectedType("integer"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt128 = static (buffer, out written) => ExpectedNumberFormat("uint128"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt16 = static (buffer, out written) => ExpectedNumberFormat("uint16"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt32 = static (buffer, out written) => ExpectedNumberFormat("uint32"u8, buffer, out written);
@@ -155,7 +155,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedByte, keyword);
             return false;
@@ -341,7 +341,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedInt128, keyword);
             return false;
@@ -392,7 +392,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedInt16, keyword);
             return false;
@@ -443,7 +443,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedInt32, keyword);
             return false;
@@ -494,7 +494,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedInt64, keyword);
             return false;
@@ -545,7 +545,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchSByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedSByte, keyword);
             return false;
@@ -652,6 +652,37 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
+    /// Matches a JSON token type against the "number" type constraint.
+    /// </summary>
+    /// <param name="tokenType">The JSON token type to validate.</param>
+    /// <param name="typeKeyword">The type keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <param name="exponent">The exponent of the number.</param>
+    /// <returns><see langword="true"/> if the token type is a number; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchTypeInteger(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, int exponent, ref JsonSchemaContext context)
+    {
+        if (tokenType != JsonTokenType.Number)
+        {
+            context.EvaluatedKeyword(false, ExpectedTypeInteger, typeKeyword);
+            return false;
+        }
+        else
+        {
+            if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
+            {
+                context.EvaluatedKeyword(false, ExpectedTypeInteger, typeKeyword);
+            }
+            else
+            {
+                context.EvaluatedKeyword(true, ExpectedTypeInteger, typeKeyword);
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
     /// Matches a JSON number against the UInt128 type constraint, validating it as a 128-bit unsigned integer.
     /// </summary>
     /// <param name="isNegative">Indicates whether the number is negative.</param>
@@ -664,7 +695,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchUInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedUInt128, keyword);
             return false;
@@ -715,7 +746,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchUInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedUInt16, keyword);
             return false;
@@ -766,7 +797,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchUInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedUInt32, keyword);
             return false;
@@ -817,7 +848,7 @@ public static partial class JsonSchemaEvaluation
     [CLSCompliant(false)]
     public static bool MatchUInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
     {
-        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(integral, fractional, exponent))
+        if (!JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))
         {
             context.EvaluatedKeyword(false, ExpectedUInt64, keyword);
             return false;

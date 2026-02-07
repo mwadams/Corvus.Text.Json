@@ -80,6 +80,7 @@ internal static partial class CodeGenerationExtensions
                     ("int", "parentIndex"),
                     ("ref JsonSchemaContext", "context")
                 ])
+                .ReserveName("tokenType")
                 .AppendLineIndent("JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex); ")
                 .AppendSeparatorLine()
                 .AppendLineIndent("// You're not allowed to ask about non-value-like entities")

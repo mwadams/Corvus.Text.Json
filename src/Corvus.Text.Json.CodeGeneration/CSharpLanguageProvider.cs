@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using Corvus.Json;
 using Corvus.Json.CodeGeneration;
+using Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 
 namespace Corvus.Text.Json.CodeGeneration;
 
@@ -342,7 +343,7 @@ public class CSharpLanguageProvider(CSharpLanguageProvider.Options? options = nu
             //ObjectValidationHandler.Instance,
             //StringValidationHandler.Instance,
             //TernaryIfValidationHandler.Instance,
-            //TypeValidationHandler.Instance
+            TypeValidationHandler.Instance
             );
 
         languageProvider.RegisterNameHeuristics(

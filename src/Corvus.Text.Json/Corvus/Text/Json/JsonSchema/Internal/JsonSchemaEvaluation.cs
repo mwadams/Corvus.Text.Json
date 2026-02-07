@@ -111,8 +111,15 @@ public static partial class JsonSchemaEvaluation
         return true;
     }
 
+    /// <summary>
+    /// Tries to write a message indicating the expected type for a value.
+    /// </summary>
+    /// <param name="typeName">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool ExpectedType(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    public static bool ExpectedType(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
     {
         if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedType.AsSpan(), buffer, out written))
         {

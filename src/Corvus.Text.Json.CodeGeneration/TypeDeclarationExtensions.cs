@@ -845,4 +845,21 @@ public static class TypeDeclarationExtensions
         return locatedSchema.Vocabulary.Keywords.Where(k => k is not T && locatedSchema.Schema.HasKeyword(k)).All(
                 k => k.CanReduce(locatedSchema.Schema));
     }
+
+    /// <summary>
+    /// Gets a value indicating whether the type requires number value validation.
+    /// </summary>
+    /// <param name="that">The type declaration to test.</param>
+    /// <returns><see langword="true"/> if the type declaration requires number value validation.</returns>
+    public static bool RequiresNumberValueValidation(this TypeDeclaration that)
+    {
+        if (!that.TryGetMetadata(nameof(RequiresNumberValueValidation), out bool? result))
+        {
+            result = that.Keywords().OfType<INumberValidationKeyword>().Any();
+            result |= that.Keywords().OfType<ICoreTypeValidationKeyword>().Any(t => t.AllowedCoreTypes(that).HasFlag(CoreTypes.Integer));
+            that.SetMetadata(nameof(RequiresNumberValueValidation), result);
+        }
+
+        return result ?? false;
+    }
 }
