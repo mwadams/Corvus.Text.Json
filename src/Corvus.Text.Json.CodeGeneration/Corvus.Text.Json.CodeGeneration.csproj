@@ -39,7 +39,7 @@
     <Compile Include="ConditionalCodeSpecification.cs" />
     <Compile Include="CSharpLanguageProvider.cs" />
     <Compile Include="CSharpMemberName.cs" />
-    <Compile Include="FormatHandlerExtensions.cs" />
+    <Compile Include="FormatHandlers\FormatHandlerExtensions.cs" />
     <Compile Include="FormatHandlers\FormatHandlerRegistry.cs" />
     <Compile Include="FormatHandlers\IFormatHandler.cs" />
     <Compile Include="FormatHandlers\INumberFormatHandler.cs" />
@@ -80,6 +80,7 @@
     <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.Numeric.Core.cs" />
     <Compile Include="ValidationHandlers\ITypeSensitiveKeywordValidationHandler.cs" />
     <Compile Include="ValidationHandlers\KeywordValidationHandlerBase.cs" />
+    <Compile Include="ValidationHandlers\FormatValidationHandler.cs" />
     <Compile Include="ValidationHandlers\TypeValidationHandler.cs" />
   </ItemGroup>
 

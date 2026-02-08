@@ -128,7 +128,7 @@ internal static class TestCaseGenerator
                         .AppendLine($"                \"{namespaceValue}\",")
                         .AppendLine($"                {SymbolDisplay.FormatLiteral(remotesDirectory, true)},")
                         .AppendLine($"                {SymbolDisplay.FormatLiteral(testGroup.DefaultVocabulary, true)},")
-                        .AppendLine("                validateFormat: false,")
+                        .AppendLine($"                validateFormat: {(testSuite.ValidateFormat ? "true" : "false")},")
                         .AppendLine("                optionalAsNullable: false,")
                         .AppendLine("                useImplicitOperatorString: false,")
                         .AppendLine("                addExplicitUsings: false,")
@@ -205,7 +205,8 @@ internal static class TestCaseGenerator
                 string baseRelativePath = file.Substring(offset);
 #endif
 
-                FileExclusions? fileExclusions = collection.Exclusions?.FirstOrDefault(fe => fe.File == relativePath);
+                PathOptions? pathOptions = collection.Options?.FirstOrDefault(fe => IsInPath(currentPath: relativePath, basePath: fe.Path));
+                FileExclusions? fileExclusions = collection.Exclusions?.FirstOrDefault(fe => EqualsPath(fe.File, relativePath));
 
                 var model = ParsedValue<TestFileModel>.Parse(File.ReadAllText(file));
 
@@ -244,10 +245,11 @@ internal static class TestCaseGenerator
                     if (testList.Count > 0)
                     {
                         testSuites.Add(
-                            new(
+                            new TestSuite(
                                 (string)testSuite.Description,
                                 testSuite.Schema,
-                                testList));
+                                testList,
+                                pathOptions?.ValidateFormat ?? false));
                     }
                 }
 
@@ -264,6 +266,23 @@ internal static class TestCaseGenerator
         }
     }
 
+    private static bool IsInPath(string currentPath, string basePath)
+    {
+        return NormalizePath(currentPath).StartsWith(NormalizePath(basePath));
+
+    }
+
+    private static bool EqualsPath(string currentPath, string basePath)
+    {
+        return NormalizePath(currentPath).Equals(NormalizePath(basePath));
+    }
+
+    private static string NormalizePath(string path)
+    {
+        return Path.GetFullPath(new Uri(Path.GetFullPath(path)).LocalPath)
+        .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+    }
+
     public class TestConfiguration
     {
         public string BaseDirectory { get; set; }
@@ -275,7 +294,14 @@ internal static class TestCaseGenerator
         public string Name { get; set; }
         public string DefaultVocabulary { get; set; }
         public string Directory { get; set; }
+        public List<PathOptions>? Options { get; set; }
         public List<FileExclusions>? Exclusions { get; set; }
+    }
+
+    public class PathOptions
+    {
+        public string Path { get; set; }
+        public bool? ValidateFormat { get; set; }
     }
 
     public class FileExclusions

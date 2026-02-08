@@ -175,8 +175,9 @@ public sealed partial class IdnMapping
         int iOutputAfterLastDot = 0;
         while (iNextDot < ascii.Length)
         {
+           
             // Find end of this segment
-            iNextDot = ascii.Slice(iAfterLastDot).IndexOf('.');
+            iNextDot = FindDot(ascii.Slice(iAfterLastDot));
             if (iNextDot < 0 || iNextDot > ascii.Length)
             {
                 iNextDot = ascii.Length;
@@ -189,15 +190,18 @@ public sealed partial class IdnMapping
             // Only allowed to have empty . section at end (www.microsoft.com.)
             if (iNextDot == iAfterLastDot)
             {
-                // Only allowed to have empty sections as trailing .
-                if (iNextDot != ascii.Length)
-                {
-                    written = 0;
-                    return false;
-                }
+                // This form DOES NOT support an FQDN, which supports a trailing dot on the hostname.
+                written = 0;
+                return false;
+                // (unlike this code below)
+                ////if (iNextDot != ascii.Length)
+                ////{
+                ////    written = 0;
+                ////    return false;
+                ////}
 
-                // Last dot, stop
-                break;
+                ////// Last dot, stop
+                ////break;
             }
 
             // In either case it can't be bigger than segment size

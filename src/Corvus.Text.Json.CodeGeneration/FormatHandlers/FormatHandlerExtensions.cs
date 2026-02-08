@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration;
 
@@ -144,5 +143,79 @@ internal static class FormatHandlerExtensions
         isNetOnly = false;
         netStandardFallback = null;
         return false;
+    }
+
+    public static bool AppendFormatAssertion<T>(
+        this IEnumerable<T> handlers,
+        CodeGenerator generator,
+        string format,
+        string formatKeywordProviderExpression,
+        string valueIdentifier,
+        string validationContextIdentifier)
+        where T : notnull, IStringFormatHandler
+    {
+        foreach (T handler in handlers)
+        {
+            if (handler.AppendFormatAssertion(generator, format, formatKeywordProviderExpression, valueIdentifier, validationContextIdentifier))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static bool AppendFormatAssertion<T>(
+        this IEnumerable<T> handlers,
+        CodeGenerator generator,
+        string format,
+        string formatKeywordProviderExpression,
+        string isNegativeIdentifier,
+        string integralIdentifier,
+        string fractionalIdentifier,
+        string exponentIdentifier,
+        string validationContextIdentifier)
+        where T : notnull, INumberFormatHandler
+    {
+        foreach (T handler in handlers)
+        {
+            if (handler.AppendFormatAssertion(
+                    generator,
+                    format,
+                    formatKeywordProviderExpression,
+                    isNegativeIdentifier,
+                    integralIdentifier,
+                    fractionalIdentifier,
+                    exponentIdentifier,
+                    validationContextIdentifier))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Gets the expected <see cref="JsonTokenType"/> for instances
+    /// that support the given format.
+    /// </summary>
+    /// <typeparam name="T">The type of the format handler.</typeparam>
+    /// <param name="handlers">The handlers to test.</param>
+    /// <param name="format">The format for which to get the value kind.</param>
+    /// <returns>The expected <see cref="JsonTokenType"/>, or <see langword="null"/>
+    /// if no value kind is expected for the format.</returns>
+    public static JsonTokenType? GetExpectedTokenType<T>(this IEnumerable<T> handlers, string format)
+        where T : notnull, IFormatHandler
+    {
+        foreach (T handler in handlers)
+        {
+            if (handler.GetExpectedTokenType(format) is JsonTokenType result)
+            {
+                return result;
+            }
+        }
+
+        return null;
     }
 }

@@ -1475,7 +1475,7 @@ internal static class Utf8Uri
             }
             else
             {
-                res |= Check.DisplayCanonical;
+                res |= Check.DisplayCanonical | Check.FoundNonAscii;
             }
         }
         idx = i;

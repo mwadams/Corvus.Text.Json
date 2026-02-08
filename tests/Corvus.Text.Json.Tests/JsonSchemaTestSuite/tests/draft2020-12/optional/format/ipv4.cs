@@ -140,7 +140,7 @@ public class SuiteValidationOfIpAddresses : IClassFixture<SuiteValidationOfIpAdd
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.Ipv4",
                 "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
                 "https://json-schema.org/draft/2020-12/schema",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,

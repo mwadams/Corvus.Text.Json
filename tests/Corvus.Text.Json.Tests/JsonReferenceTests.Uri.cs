@@ -33,7 +33,7 @@ namespace Corvus.Text.Json.Tests
         [Theory]
         [InlineData("http://[invalid-ipv6")]
         [InlineData("http://example.com:99999")]
-        //// [InlineData("ht tp://example.com")] // Falls back to a relative reference
+        [InlineData("ht tp://example.com")] // Falls back to a relative reference
         [InlineData("\x01\x02\x03")]
         [InlineData("http://example.com/path with spaces")]
         public static void CreateUri_InvalidUris_ThrowsArgumentException(string uri)
@@ -56,7 +56,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("#fragment-only")]
         [InlineData("/absolute/path")]
         [InlineData("")]
-        [InlineData("ht tp://example.com")] // Falls back to a relative reference
+        ////[InlineData("ht tp://example.com")] // Falls back to a relative reference
         public static void TryCreateUri_ValidUris_ReturnsTrueAndValidReference(string uri)
         {
             byte[] uriBytes = Encoding.UTF8.GetBytes(uri);

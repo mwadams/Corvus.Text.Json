@@ -129,6 +129,40 @@ public static partial class JsonSchemaEvaluation
         return AppendSingleQuotedValue(typeName, buffer, ref written);
     }
 
+    /// <summary>
+    /// Tries to write a message indicating that the format was not recognized.
+    /// </summary>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IgnoredUnrecognizedFormat(Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_IgnoredUnrecognizedFormat.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating that the format was not asserted.
+    /// </summary>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IgnoredFormatNotAsserted(Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_IgnoredFormatNotAsserted.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IgnoredNotType(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
     {

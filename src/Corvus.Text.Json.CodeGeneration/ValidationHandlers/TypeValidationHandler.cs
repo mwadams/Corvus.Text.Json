@@ -51,9 +51,7 @@ internal sealed class TypeValidationHandler : KeywordValidationHandlerBase
         IReadOnlyCollection<IChildValidationHandler> childHandlers = ChildHandlers;
 
         generator
-            .PrependChildValidationCode(typeDeclaration, childHandlers, ValidationHandlerPriority)
-            .AppendCoreTypeValidation(this, typeDeclaration, childHandlers, ValidationHandlerPriority, keyword, typeDeclaration.AllowedCoreTypes())
-            .AppendChildValidationCode(typeDeclaration, childHandlers, ValidationHandlerPriority);
+            .AppendCoreTypeValidation(this, typeDeclaration, childHandlers, ValidationHandlerPriority, keyword, typeDeclaration.AllowedCoreTypes());
 
         return generator;
     }
@@ -312,6 +310,7 @@ file static class TypeValidationHandlerExtensions
                     .ConditionallyAppend(!hasTypes, g => g.AppendIndent(string.Empty))
                     .AppendLine("if (tokenType == JsonTokenType.Number)")
                     .AppendLineIndent("{")
+                    .PushMemberScope("ifTokenType", ScopeType.Method)
                     .PushIndent()
                         .AppendNormalizedJsonNumberIfNotAppended(typeDeclaration)
                         .AppendLineIndent("if (JsonElementHelpers.IsIntegerNormalizedJsonNumber(exponent))")
@@ -324,6 +323,7 @@ file static class TypeValidationHandlerExtensions
                         .AppendLineIndent("}")
                         .PopNormalizedJsonNumberIfAppendedInScope(typeDeclaration)
                     .PopIndent()
+                    .PopMemberScope()
                     .AppendLineIndent("}");
 
                 hasTypes = true;
@@ -636,97 +636,6 @@ file static class TypeValidationHandlerExtensions
                 {
                     keywordHandler.AppendValidationCode(generator, typeDeclaration, forCoreTypes: coreTypes, validateOnly: true);
                 });
-            }
-        }
-
-        return generator;
-    }
-
-    public static CodeGenerator AppendIgnoredCoreTypeStringFormatKeywords(
-        this CodeGenerator generator,
-        TypeDeclaration typeDeclaration,
-        string ignoredMessageProviderName)
-    {
-        return AppendIgnoredCoreTypeFormatKeywords(generator, typeDeclaration, ignoredMessageProviderName, CoreTypes.String);
-    }
-
-    public static CodeGenerator AppendIgnoredCoreTypeNumberFormatKeywords(
-        this CodeGenerator generator,
-        TypeDeclaration typeDeclaration,
-        string ignoredMessageProviderName)
-    {
-        return generator
-            .AppendIgnoredCoreTypeFormatKeywords(typeDeclaration, ignoredMessageProviderName, CoreTypes.Number | CoreTypes.Integer);
-    }
-
-    public static CodeGenerator AppendIgnoredCoreTypeFormatKeywords(this CodeGenerator generator, TypeDeclaration typeDeclaration, string ignoredMessageProviderName, CoreTypes coreType)
-    {
-        IEnumerable<IFormatProviderKeyword> ignoredKeywords =
-            typeDeclaration
-                .Keywords()
-                .OfType<IFormatProviderKeyword>();
-
-        foreach (IFormatProviderKeyword keyword in ignoredKeywords)
-        {
-            if (((keyword.ImpliesCoreTypes(typeDeclaration) & coreType) != 0) &&
-                typeDeclaration.AddIgnoredKeyword(keyword))
-            {
-                generator
-                    .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
-            }
-        }
-
-        return generator;
-    }
-
-    public static CodeGenerator AppendIgnoredCoreTypeKeywords<T>(
-        this CodeGenerator generator,
-        TypeDeclaration typeDeclaration,
-        string ignoredMessageProviderName)
-            where T : IValidationKeyword
-    {
-        IEnumerable<T> keywordsToIgnore =
-            typeDeclaration
-                .Keywords()
-                .OfType<T>();
-
-        foreach (T keyword in keywordsToIgnore)
-        {
-            if (typeDeclaration.AddIgnoredKeyword(keyword))
-            {
-                generator
-                    .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
-            }
-        }
-
-        return generator;
-    }
-
-    public static CodeGenerator TryAppendIgnoredCoreTypeKeywords<T>(
-    this CodeGenerator generator,
-    TypeDeclaration typeDeclaration,
-    string ignoredMessageProviderName,
-    Action<CodeGenerator, TypeDeclaration>? preAppendAction,
-    ref bool appended)
-        where T : IValidationKeyword
-    {
-        IEnumerable<T> keywordsToIgnore =
-            typeDeclaration
-                .Keywords()
-                .OfType<T>();
-
-        foreach (T keyword in keywordsToIgnore)
-        {
-            if (typeDeclaration.AddIgnoredKeyword(keyword))
-            {
-                if (!appended)
-                {
-                    preAppendAction?.Invoke(generator, typeDeclaration);
-                }
-
-                generator
-                    .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
-                appended |= true;
             }
         }
 

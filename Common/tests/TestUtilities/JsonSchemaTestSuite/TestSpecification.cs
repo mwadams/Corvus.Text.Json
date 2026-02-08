@@ -39,13 +39,16 @@ public class TestFile(string baseDirectory, string relativePath, string namespac
 /// <param name="suiteName">The name of the suite.</param>
 /// <param name="schema">The schema text for the test suite.</param>
 /// <param name="testSpecifications">The test specifications.</param>
+/// <param name="validateFormat">Whether to always assert format.</param>
 public class TestSuite(
     string suiteName,
     JsonAny schema,
-    List<TestSpecification> testSpecifications)
+    List<TestSpecification> testSpecifications,
+    bool validateFormat)
 {
     public string SuiteName { get; } = suiteName;
     public List<TestSpecification> TestSpecifications { get; } = testSpecifications;
+    public bool ValidateFormat { get; } = validateFormat;
     public JsonAny Schema { get; } = schema;
 }
 

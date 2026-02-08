@@ -848,6 +848,12 @@
   <data name="JsonSchema_IgnoredNotType" xml:space="preserve">
     <value>The keyword was ignored because the value was not of type</value>
   </data>
+  <data name="JsonSchema_IgnoredUnrecognizedFormat" xml:space="preserve">
+    <value>The keyword was ignored because the format was not recognized.</value>
+  </data>
+  <data name="JsonSchema_IgnoredFormatNotAsserted" xml:space="preserve">
+    <value>The keyword was ignored because format is not asserted in this schema.</value>
+  </data>
   <data name="JsonSchema_ExpectedType" xml:space="preserve">
     <value>The value was expected to be of type</value>
   </data>

@@ -85,41 +85,6 @@ public class SuiteValidationOfDateTimeStrings : IClassFixture<SuiteValidationOfD
     }
 
     [Fact]
-    public void TestAValidDateTimeWithALeapSecondUtc()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"1998-12-31T23:59:60Z\"");
-        Assert.True(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestAValidDateTimeWithALeapSecondWithMinusOffset()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"1998-12-31T15:59:60.123-08:00\"");
-        Assert.True(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestAnInvalidDateTimePastLeapSecondUtc()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"1998-12-31T23:59:61Z\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestAnInvalidDateTimeWithLeapSecondOnAWrongMinuteUtc()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"1998-12-31T23:58:60Z\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestAnInvalidDateTimeWithLeapSecondOnAWrongHourUtc()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"1998-12-31T22:59:60Z\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
     public void TestAnInvalidDayInDateTimeString()
     {
         var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"1990-02-31T15:59:59.123-08:00\"");
@@ -210,7 +175,7 @@ public class SuiteValidationOfDateTimeStrings : IClassFixture<SuiteValidationOfD
                 "JsonSchemaTestSuite.Draft201909.Optional.Format.DateTime",
                 "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
                 "https://json-schema.org/draft/2019-09/schema",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,

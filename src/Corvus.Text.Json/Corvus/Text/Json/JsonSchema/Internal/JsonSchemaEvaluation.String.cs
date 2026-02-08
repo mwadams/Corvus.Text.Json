@@ -48,6 +48,11 @@ public static partial class JsonSchemaEvaluation
     /// </summary>
     private static ReadOnlySpan<byte> AllowedLocalCharacters => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~"u8;
 
+    /// <summary>
+    /// Gets the allowed characters for the local part of an email address.
+    /// </summary>
+    private static ReadOnlySpan<byte> AllowedLocalCharactersInQuotedString => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~\"@. \r\n\t"u8;
+
     private static ReadOnlySpan<int> DisallowedIdn =>
             [0x0640, 0x07FA, 0x302E, 0x302F,
         0x3031, 0x3032, 0x3033, 0x3034,
@@ -490,9 +495,12 @@ public static partial class JsonSchemaEvaluation
         bool hasKatakankaMiddleDot = false;
         bool hasArabicIndicDigits = false;
         bool hasExtendedArabicIndicDigits = false;
-
+        int runeCount = 0;
         while (i < value.Length)
         {
+            // Increment the rune count to make it 1-based
+            runeCount++;
+
             byte byteValue = value[i];
             Rune.DecodeFromUtf8(value.Slice(i), out Rune rune, out int bytesConsumed);
 
@@ -606,6 +614,12 @@ public static partial class JsonSchemaEvaluation
                         return false;
                     }
 
+                    // Positions 3 and 4 must not be '--'
+                    if (runeCount == 4 && previousRune.Value == 0x002d)
+                    {
+                        return false;
+                    }
+
                     wasLastDot = false;
                     previousRune = rune;
                     continue;
@@ -656,7 +670,7 @@ public static partial class JsonSchemaEvaluation
             return false;
         }
 
-        int atIndex = value.IndexOf((byte)'@');
+        int atIndex = value.LastIndexOf((byte)'@');
         if (atIndex <= 0 || atIndex == value.Length - 1)
         {
             return false;
@@ -758,15 +772,29 @@ public static partial class JsonSchemaEvaluation
             return MatchDecodedHostname(segment);
         }
 
-        if (characterCount > 63)
+        if (characterCount == 0 || characterCount > 63)
         {
             return false;
         }
 
-        if (lastAscii == '-')
+        if (lastAscii == '-' || lastAscii == '.')
         {
             return false;
         }
+
+        if (value[0] == '.')
+        {
+            return false;
+        }
+
+        if (value.Length > 3 &&
+            value[2] == '-' &&
+            value[3] == '-')
+        {
+            return false;
+        }
+
+
 
         return true;
     }
@@ -785,7 +813,12 @@ public static partial class JsonSchemaEvaluation
             return false;
         }
 
-        int atIndex = value.IndexOf((byte)'@');
+        int atIndex = value.LastIndexOf((byte)'@');
+
+        if (atIndex <= 0 || atIndex == value.Length - 1)
+        {
+            return false;
+        }
 
         // Local part
         ReadOnlySpan<byte> segment = value.Slice(0, atIndex);
@@ -1114,9 +1147,33 @@ public static partial class JsonSchemaEvaluation
         }
 
         int lastDot = -1;
+
+        if (segment[0] == '\"')
+        {
+            if (segment[segment.Length - 1] != '\"')
+            {
+                return false;
+            }
+
+            for (int i = 1; i < segment.Length - 1; i++)
+            {
+                byte c = segment[i];
+
+                if (AllowedLocalCharactersInQuotedString.IndexOf(c) < 0)
+                {
+                    // Invalid character in quoted string local part
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         for (int i = 0; i < segment.Length; i++)
         {
             byte c = segment[i];
+
+
             if (c == (byte)'.')
             {
                 if (i == 0 || i == segment.Length - 1 || lastDot == i - 1)

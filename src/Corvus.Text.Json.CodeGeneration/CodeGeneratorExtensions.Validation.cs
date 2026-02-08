@@ -21,8 +21,10 @@ internal static partial class CodeGenerationExtensions
     private const string NormalizedJsonNumberAppendedInScopeKey = "NormalizedJsonNumberAppendedInScope";
     private const string GetRawSimpleValueAppendedKey = "GetRawSimpleValueAppended";
     private const string GetRawSimpleValueAppendedInScopeKey = "GetRawSimpleValueAppendedInScope";
+    private const string UnescapedUtf8JsonStringAppendedKey = "UnescapedUtf8JsonStringAppended";
+    private const string UnescapedUtf8JsonStringAppendedInScopeKey = "UnescapedUtf8JsonStringAppendedInScope";
 
-    public static CodeGenerator AppendNormalizedJsonNumberIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    public static CodeGenerator AppendNormalizedJsonNumberIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
     {
         if (typeDeclaration.TryGetMetadata(NormalizedJsonNumberAppendedKey, out bool? value))
         {
@@ -33,13 +35,53 @@ internal static partial class CodeGenerationExtensions
         typeDeclaration.SetMetadata(NormalizedJsonNumberAppendedInScopeKey, generator.FullyQualifiedScope);
 
         return generator
-            .AppendGetRawSimpleValueIfNotAppended(typeDeclaration)
+            .AppendGetRawSimpleValueIfNotAppended(typeDeclaration, includeTokenTypeCheck)
             .AppendSeparatorLine()
             .ReserveName("isNegative")
             .ReserveName("integral")
             .ReserveName("fractional")
             .ReserveName("exponent")
             .AppendLineIndent("JsonElementHelpers.TryParseNumber(rawSimpleValue.Span, out bool isNegative,out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);");
+    }
+
+    public static CodeGenerator AppendUnescapedUtf8JsonStringIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
+    {
+        if (typeDeclaration.TryGetMetadata(UnescapedUtf8JsonStringAppendedKey, out bool? value))
+        {
+            return generator;
+        }
+
+        typeDeclaration.SetMetadata(UnescapedUtf8JsonStringAppendedKey, true);
+        typeDeclaration.SetMetadata(UnescapedUtf8JsonStringAppendedInScopeKey, generator.FullyQualifiedScope);
+
+        generator
+            .AppendSeparatorLine()
+            .ReserveName("unescapedUtf8JsonString");
+
+        if (includeTokenTypeCheck)
+        {
+            generator
+                .AppendLineIndent("using UnescapedUtf8JsonString unescapedUtf8JsonString = tokenType is JsonTokenType.String ? parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String) : default;");
+        }
+        else
+        {
+            generator
+                .AppendLineIndent("using UnescapedUtf8JsonString unescapedUtf8JsonString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);");
+        }
+
+        return generator;
+    }
+
+    public static CodeGenerator PopUnescapedUtf8JsonStringIfAppendedInScope(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (typeDeclaration.TryGetMetadata(UnescapedUtf8JsonStringAppendedInScopeKey, out string? scope)
+            && scope == generator.FullyQualifiedScope)
+        {
+            typeDeclaration.RemoveMetadata(UnescapedUtf8JsonStringAppendedInScopeKey);
+            typeDeclaration.RemoveMetadata(UnescapedUtf8JsonStringAppendedKey);
+        }
+
+        return generator;
     }
 
     public static CodeGenerator PopNormalizedJsonNumberIfAppendedInScope(this CodeGenerator generator, TypeDeclaration typeDeclaration)
@@ -55,7 +97,7 @@ internal static partial class CodeGenerationExtensions
             .PopGetRawSimpleValueIfAppendedInScope(typeDeclaration);
     }
 
-    public static CodeGenerator AppendGetRawSimpleValueIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    public static CodeGenerator AppendGetRawSimpleValueIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
     {
         if (typeDeclaration.TryGetMetadata(GetRawSimpleValueAppendedKey, out bool? value))
         {
@@ -65,10 +107,22 @@ internal static partial class CodeGenerationExtensions
         typeDeclaration.SetMetadata(GetRawSimpleValueAppendedKey, true);
         typeDeclaration.SetMetadata(GetRawSimpleValueAppendedInScopeKey, generator.FullyQualifiedScope);
 
-        return generator
+        generator
             .AppendSeparatorLine()
-            .ReserveName("rawSimpleValue")
-            .AppendLineIndent("ReadOnlyMemory<byte> rawSimpleValue = tokenType is JsonTokenType.Number or JsonTokenType.String ? parentDocument.GetRawSimpleValue(parentIndex) : default;");
+            .ReserveName("rawSimpleValue");
+
+        if (includeTokenTypeCheck)
+        {
+            generator
+                .AppendLineIndent("ReadOnlyMemory<byte> rawSimpleValue = tokenType is JsonTokenType.Number or JsonTokenType.String ? parentDocument.GetRawSimpleValue(parentIndex) : default;");
+        }
+        else
+        {
+            generator
+                .AppendLineIndent("ReadOnlyMemory<byte> rawSimpleValue = parentDocument.GetRawSimpleValue(parentIndex);");
+        }
+
+        return generator;
     }
 
     public static CodeGenerator PopGetRawSimpleValueIfAppendedInScope(this CodeGenerator generator, TypeDeclaration typeDeclaration)
@@ -117,6 +171,28 @@ internal static partial class CodeGenerationExtensions
                 .AppendLineIndent("return;")
             .PopIndent()
             .AppendLineIndent("}");
+    }
+
+    /// <summary>
+    /// Appends the code to shortcut the return from validation if there is no collector.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="contextName">The name to use for the context (defaults to 'context').</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendConditionalNoCollectorNoMatchShortcutReturn(this CodeGenerator generator, TypeDeclaration typeDeclaration, IKeywordValidationHandler handler, string contextName = "context")
+    {
+        bool hasMoreHandlers = typeDeclaration
+            .OrderedValidationHandlers(generator.LanguageProvider)
+            .TakeWhile(h => h != handler)
+            .Skip(1)
+            .Any();
+
+        if (hasMoreHandlers)
+        {
+            return AppendNoCollectorNoMatchShortcutReturn(generator, contextName);
+        }
+
+        return generator;
     }
 
     /// <summary>
@@ -345,6 +421,96 @@ internal static partial class CodeGenerationExtensions
             .EndClassStructOrEnumDeclaration();
     }
 
+    public static CodeGenerator AppendIgnoredCoreTypeStringFormatKeywords(
+    this CodeGenerator generator,
+    TypeDeclaration typeDeclaration,
+    string ignoredMessageProviderName)
+    {
+        return AppendIgnoredCoreTypeFormatKeywords(generator, typeDeclaration, ignoredMessageProviderName, CoreTypes.String);
+    }
+
+    public static CodeGenerator AppendIgnoredCoreTypeNumberFormatKeywords(
+        this CodeGenerator generator,
+        TypeDeclaration typeDeclaration,
+        string ignoredMessageProviderName)
+    {
+        return generator
+            .AppendIgnoredCoreTypeFormatKeywords(typeDeclaration, ignoredMessageProviderName, CoreTypes.Number | CoreTypes.Integer);
+    }
+
+    public static CodeGenerator AppendIgnoredCoreTypeFormatKeywords(this CodeGenerator generator, TypeDeclaration typeDeclaration, string ignoredMessageProviderName, CoreTypes coreType)
+    {
+        IEnumerable<IFormatProviderKeyword> ignoredKeywords =
+            typeDeclaration
+                .Keywords()
+                .OfType<IFormatProviderKeyword>();
+
+        foreach (IFormatProviderKeyword keyword in ignoredKeywords)
+        {
+            if (((keyword.ImpliesCoreTypes(typeDeclaration) & coreType) != 0) &&
+                typeDeclaration.AddIgnoredKeyword(keyword))
+            {
+                generator
+                    .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
+            }
+        }
+
+        return generator;
+    }
+
+    public static CodeGenerator AppendIgnoredCoreTypeKeywords<T>(
+        this CodeGenerator generator,
+        TypeDeclaration typeDeclaration,
+        string ignoredMessageProviderName)
+            where T : IValidationKeyword
+    {
+        IEnumerable<T> keywordsToIgnore =
+            typeDeclaration
+                .Keywords()
+                .OfType<T>();
+
+        foreach (T keyword in keywordsToIgnore)
+        {
+            if (typeDeclaration.AddIgnoredKeyword(keyword))
+            {
+                generator
+                    .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
+            }
+        }
+
+        return generator;
+    }
+
+    public static CodeGenerator TryAppendIgnoredCoreTypeKeywords<T>(
+        this CodeGenerator generator,
+        TypeDeclaration typeDeclaration,
+        string ignoredMessageProviderName,
+        Action<CodeGenerator, TypeDeclaration>? preAppendAction,
+        ref bool appended)
+        where T : IValidationKeyword
+    {
+        IEnumerable<T> keywordsToIgnore =
+            typeDeclaration
+                .Keywords()
+                .OfType<T>();
+
+        foreach (T keyword in keywordsToIgnore)
+        {
+            if (typeDeclaration.AddIgnoredKeyword(keyword))
+            {
+                if (!appended)
+                {
+                    preAppendAction?.Invoke(generator, typeDeclaration);
+                }
+
+                generator
+                    .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
+                appended |= true;
+            }
+        }
+
+        return generator;
+    }
     private static CodeGenerator AppendArrayValidationConstantField(this CodeGenerator generator, TypeDeclaration typeDeclaration, IKeyword keyword, int? index, in JsonElement value)
     {
         if (generator.IsCancellationRequested)

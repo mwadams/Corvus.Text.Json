@@ -23,6 +23,7 @@
 //  RFC 3491 - Nameprep: A Stringprep Profile for Internationalized Domain Names (IDN)
 //  RFC 3492 - Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)
 
+using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -220,6 +221,67 @@ public sealed partial class IdnMapping
         return false;
     }
 
+    // Is it a dot?
+    // are we U+002E (., full stop), U+3002 (ideographic full stop), U+FF0E (fullwidth full stop), or
+    // U+FF61 (halfwidth ideographic full stop).
+    // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
+    private static (int Index, int RuneCount, int dotLength) FindDot(ReadOnlySpan<byte> utf8)
+    {
+        int runeCount = 0;
+        for (int i = 0; i < utf8.Length; i++)
+        {
+            if (utf8[i] == (byte)'.')
+            {
+                return (i, runeCount, 1);
+            }
+
+            if (i < utf8.Length - 1)
+            {
+                if (Rune.DecodeFromUtf8(utf8.Slice(i), out Rune rune, out int read) == System.Buffers.OperationStatus.Done)
+                {
+                    if (rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61)
+                    {
+                        return (i, runeCount, read);
+                    }
+
+                    i += read - 1;
+                }
+            }
+
+            runeCount++;
+        }
+
+        return (-1, runeCount, 1);
+    }
+
+    /// <summary>
+    /// Gets the length of a UTF-8 encoded string in characters (not bytes).
+    /// </summary>
+    /// <param name="span">The UTF-8 encoded byte span.</param>
+    /// <returns>The number of Unicode characters in the string.</returns>
+    /// <exception cref="ArgumentException">Thrown when the span contains invalid UTF-8 sequences.</exception>
+    private static int GetUtf8StringLength(ReadOnlySpan<byte> span)
+    {
+        if (span.Length == 0)
+        {
+            return 0;
+        }
+
+        int length = 0;
+        ReadOnlySpan<byte> currentSpan = span;
+        do
+        {
+            OperationStatus status = Rune.DecodeFromUtf8(currentSpan, out _, out int bytesConsumed);
+            Debug.Assert(status != OperationStatus.Done);
+
+            currentSpan = currentSpan.Slice(bytesConsumed);
+            length++;
+        }
+        while (currentSpan.Length > 0);
+
+        return length;
+    }
+
     private static bool PunycodeDecode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, out int written)
     {
         written = 0;
@@ -245,7 +307,7 @@ public sealed partial class IdnMapping
         while (iNextDot < ascii.Length)
         {
             // Find end of this segment
-            iNextDot = ascii.Slice(iAfterLastDot).IndexOf((byte)'.');
+            (iNextDot, int runeCount, int dotLength) = FindDot(ascii.Slice(iAfterLastDot));
             if (iNextDot < 0 || iNextDot > ascii.Length)
             {
                 iNextDot = ascii.Length;
@@ -258,19 +320,22 @@ public sealed partial class IdnMapping
             // Only allowed to have empty . section at end (www.microsoft.com.)
             if (iNextDot == iAfterLastDot)
             {
-                // Only allowed to have empty sections as trailing .
-                if (iNextDot != ascii.Length)
-                {
-                    written = 0;
-                    return false;
-                }
+                // This form DOES NOT support an FQDN, which supports a trailing dot on the hostname.
+                written = 0;
+                return false;
+                // (unlike this code below)
+                ////if (iNextDot != ascii.Length)
+                ////{
+                ////    written = 0;
+                ////    return false;
+                ////}
 
-                // Last dot, stop
-                break;
+                ////// Last dot, stop
+                ////break;
             }
 
             // In either case it can't be bigger than segment size
-            if (iNextDot - iAfterLastDot > c_labelLimit)
+            if (runeCount > c_labelLimit)
             {
                 written = 0;
                 return false;
@@ -291,15 +356,16 @@ public sealed partial class IdnMapping
 
                 ascii.Slice(iAfterLastDot, length).CopyTo(outputBuffer.Slice(written));
                 written += length;
-            }
+             }
             else
             {
                 // Not ASCII, bump up iAfterLastDot to be after ACE Prefix
                 iAfterLastDot += c_strAcePrefixUtf8.Length;
+                runeCount -= c_strAcePrefixUtf8.Length;
 
                 // Get number of basic code points (where delimiter is)
                 // numBasicCodePoints < 0 if there're no basic code points
-                int iTemp = ascii.Slice(iNextDot - 1).LastIndexOf((byte)'-');
+                int iTemp = ascii.Slice(0, iNextDot - 1).LastIndexOf((byte)'-');
 
                 // Trailing - not allowed
                 if (iTemp == iNextDot - 1)
@@ -342,6 +408,8 @@ public sealed partial class IdnMapping
                 // basic code points, otherwise start after the -.
                 // asciiIndex will be next character to read from ascii
                 int asciiIndex = iAfterLastDot + (numBasicCodePoints > 0 ? numBasicCodePoints + 1 : 0);
+
+                runeCount = numBasicCodePoints;
 
                 // initialize our state
                 int n = c_initialN;
@@ -456,6 +524,7 @@ public sealed partial class IdnMapping
 
                     // Index gets updated
                     i++;
+                    runeCount++;
                 }
 
                 // Do BIDI testing
@@ -495,7 +564,7 @@ public sealed partial class IdnMapping
             }
 
             // See if this label was too long
-            if (iNextDot - iAfterLastDot > c_labelLimit)
+            if (runeCount > c_labelLimit)
             {
                 written = 0;
                 return false;
@@ -505,7 +574,7 @@ public sealed partial class IdnMapping
             if (iNextDot != ascii.Length)
                 outputBuffer[written++] = (byte)'.';
 
-            iAfterLastDot = iNextDot + 1;
+            iAfterLastDot = iNextDot + dotLength;
             iOutputAfterLastDot = written;
         }
 

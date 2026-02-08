@@ -77,7 +77,7 @@ public class SuiteUnknownFormat : IClassFixture<SuiteUnknownFormat.Fixture>
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.Unknown",
                 "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
                 "https://json-schema.org/draft/2020-12/schema",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,

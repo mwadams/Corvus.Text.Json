@@ -1174,8 +1174,13 @@ internal ref struct JsonRegexValidator
                 return false;
 
             case 'a':
-                result = '\u0007';
-                return true;
+                if ((_options & JsonRegexOptions.ECMAScript) == 0)
+                {
+                    result = '\u0007';
+                    return true;
+                }
+                result = default;
+                return false;
 
             case 'b':
                 result = '\b';
@@ -1205,11 +1210,21 @@ internal ref struct JsonRegexValidator
                 result = '\u000B';
                 return true;
 
+            case '\\':
+                result = '\\';
+                return true;
+
             case 'c':
                 return ScanControl(out result);
 
             default:
                 if ((_options & JsonRegexOptions.ECMAScript) == 0 && JsonRegexCharClass.IsBoundaryWordChar(ch))
+                {
+                    result = default;
+                    return false;
+                }
+
+                if ((_options & JsonRegexOptions.ECMAScript) != 0)
                 {
                     result = default;
                     return false;

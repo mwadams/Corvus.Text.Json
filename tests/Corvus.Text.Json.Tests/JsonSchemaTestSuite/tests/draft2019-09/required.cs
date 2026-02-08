@@ -49,6 +49,20 @@ public class SuiteRequiredValidation : IClassFixture<SuiteRequiredValidation.Fix
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
+    [Fact]
+    public void TestIgnoresNull()
+    {
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        Assert.True(dynamicInstance.EvaluateSchema());
+    }
+
+    [Fact]
+    public void TestIgnoresBoolean()
+    {
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("true");
+        Assert.True(dynamicInstance.EvaluateSchema());
+    }
+
     public class Fixture : IAsyncLifetime
     {
         public DynamicJsonType DynamicJsonType { get; private set; }

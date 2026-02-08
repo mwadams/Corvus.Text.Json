@@ -300,15 +300,18 @@ public sealed partial class IdnMapping
             // Only allowed to have empty . section at end (www.microsoft.com.)
             if (iNextDot == iAfterLastDot)
             {
-                // Only allowed to have empty sections as trailing .
-                if (iNextDot != unicode.Length)
-                {
-                    written = 0;
-                    return false;
-                }
+                // This form DOES NOT support an FQDN, which supports a trailing dot on the hostname.
+                written = 0;
+                return false;
+                // (unlike this code below)
+                ////if (iNextDot != ascii.Length)
+                ////{
+                ////    written = 0;
+                ////    return false;
+                ////}
 
-                // Last dot, stop
-                break;
+                ////// Last dot, stop
+                ////break;
             }
 
             // We'll need an Ace prefix
@@ -604,6 +607,11 @@ public sealed partial class IdnMapping
     // Note: IDNA Normalization gets rid of dots now, but testing for last dot is before normalization
     internal static bool IsDot(char c) =>
         c == '.' || c == '\u3002' || c == '\uFF0E' || c == '\uFF61';
+
+    internal static int FindDot(ReadOnlySpan<char> value)
+    {
+        return value.IndexOfAny(".\u3002\uFF0E\uFF61".AsSpan());
+    }
 
     private static bool IsSupplementary(int cTest) =>
         cTest >= 0x10000;
