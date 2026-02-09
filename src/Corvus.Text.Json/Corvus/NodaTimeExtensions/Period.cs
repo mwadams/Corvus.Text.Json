@@ -514,12 +514,18 @@ public readonly struct Period : IEquatable<Period>
 
         bool inDate = true;
         PeriodUnits unitsSoFar = 0;
+        bool waitingforTime = false;
         while (valueCursor.MoveNext())
         {
             if (inDate && (valueCursor.Current == (byte)'T' || valueCursor.Current == (byte)'t'))
             {
+                waitingforTime = true;
                 inDate = false;
                 continue;
+            }
+            else
+            {
+                waitingforTime = false;
             }
 
             bool negative = valueCursor.Current == (byte)'-';
@@ -555,6 +561,12 @@ public readonly struct Period : IEquatable<Period>
             }
 
             if ((unit & unitsSoFar) != 0)
+            {
+                return false;
+            }
+
+            // You cannot have weeks and any other higher-level unit
+            if (unit == PeriodUnits.Weeks && unitsSoFar != 0)
             {
                 return false;
             }
@@ -621,6 +633,11 @@ public readonly struct Period : IEquatable<Period>
 
             builder[unit] = unitValue;
             unitsSoFar |= unit;
+        }
+
+        if (waitingforTime)
+        {
+            return false;
         }
 
         return unitsSoFar != 0;

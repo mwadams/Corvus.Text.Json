@@ -687,6 +687,23 @@ public static partial class JsonSchemaEvaluation
         // Domain part
         segment = value.Slice(atIndex + 1);
 
+        if (segment.Length > 2)
+        {
+            if (segment[0] == (byte)'[' && segment[segment.Length - 1] == (byte)']')
+            {
+                // This is an address literal, so we need to validate the inside of the brackets as an IP address
+                ReadOnlySpan<byte> addressLiteral = segment.Slice(1, segment.Length - 2);
+                if (addressLiteral.StartsWith("IPv6:"u8))
+                {
+                    return MatchIPV6(addressLiteral.Slice(5));
+                }
+                else
+                {
+                    return MatchIPV4(addressLiteral);
+                }
+            }
+        }
+
         if (!MatchHostname(segment))
         {
             return false;
