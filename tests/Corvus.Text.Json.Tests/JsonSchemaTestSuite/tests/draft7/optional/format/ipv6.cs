@@ -306,7 +306,7 @@ public class SuiteValidationOfIPv6Addresses : IClassFixture<SuiteValidationOfIPv
                 "tests\\draft7\\optional\\format\\ipv6.json",
                 "{ \"format\": \"ipv6\" }",
                 "JsonSchemaTestSuite.Draft7.Optional.Format.Ipv6",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

@@ -33,7 +33,7 @@ public class SuiteAllIntegersAreMultiplesOf05IfOverflowIsHandled : IClassFixture
                 "tests\\draft7\\optional\\float-overflow.json",
                 "{\"type\": \"integer\", \"multipleOf\": 0.5}",
                 "JsonSchemaTestSuite.Draft7.Optional.FloatOverflow",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

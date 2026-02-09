@@ -47,7 +47,7 @@ public class SuiteValidationWithoutSchema : IClassFixture<SuiteValidationWithout
                 "tests\\draft2020-12\\optional\\no-schema.json",
                 "{\r\n            \"minLength\": 2\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.Optional.NoSchema",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 optionalAsNullable: false,

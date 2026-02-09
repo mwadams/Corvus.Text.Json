@@ -278,7 +278,7 @@ public class SuiteValidationOfUrIs : IClassFixture<SuiteValidationOfUrIs.Fixture
                 "tests\\draft2020-12\\optional\\format\\uri.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"uri\"\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.Uri",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 optionalAsNullable: false,

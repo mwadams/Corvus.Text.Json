@@ -80,6 +80,7 @@ internal static class TestCaseGenerator
                     .AppendLine()
                     .AppendLine($"namespace {namespaceValue};");
 
+                string current = Path.GetFullPath(".");
                 string remotesDirectory = Path.Combine(testFile.BaseDirectory, "remotes");
 
                 foreach (TestSuite testSuite in testFile.TestSuites)
@@ -169,7 +170,6 @@ internal static class TestCaseGenerator
 
         // Always work with the full path
         string baseDirectory = Path.GetFullPath(jsonSchemaTestSuite.BaseDirectory);
-
         foreach (TestCollection collection in jsonSchemaTestSuite.Collections)
         {
             // Compbine the base directory with the current directory
@@ -255,7 +255,7 @@ internal static class TestCaseGenerator
 
                 if (testSuites.Count > 0)
                 {
-                    testFiles.Add(new TestFile(baseDirectory, baseRelativePath, relativePath, testSuites));
+                    testFiles.Add(new TestFile(jsonSchemaTestSuite.BaseDirectory, baseRelativePath, relativePath, testSuites));
                 }
             }
 

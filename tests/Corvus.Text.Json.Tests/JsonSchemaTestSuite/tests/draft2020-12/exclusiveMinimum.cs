@@ -54,7 +54,7 @@ public class SuiteExclusiveMinimumValidation : IClassFixture<SuiteExclusiveMinim
                 "tests\\draft2020-12\\exclusiveMinimum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"exclusiveMinimum\": 1.1\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.ExclusiveMinimum",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 optionalAsNullable: false,

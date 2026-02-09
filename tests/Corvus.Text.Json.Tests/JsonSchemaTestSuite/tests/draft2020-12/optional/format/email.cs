@@ -194,7 +194,7 @@ public class SuiteValidationOfEMailAddresses : IClassFixture<SuiteValidationOfEM
                 "tests\\draft2020-12\\optional\\format\\email.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"email\"\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.Email",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 optionalAsNullable: false,

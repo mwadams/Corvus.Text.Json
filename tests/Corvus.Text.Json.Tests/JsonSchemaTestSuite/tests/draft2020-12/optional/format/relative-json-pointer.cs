@@ -152,7 +152,7 @@ public class SuiteValidationOfRelativeJsonPointersRjp : IClassFixture<SuiteValid
                 "tests\\draft2020-12\\optional\\format\\relative-json-pointer.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"relative-json-pointer\"\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.RelativeJsonPointer",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 optionalAsNullable: false,

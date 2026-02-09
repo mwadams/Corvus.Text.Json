@@ -75,7 +75,7 @@ public class SuiteUnknownFormat : IClassFixture<SuiteUnknownFormat.Fixture>
                 "tests\\draft2019-09\\optional\\format\\unknown.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"format\": \"unknown\"\r\n        }",
                 "JsonSchemaTestSuite.Draft201909.Optional.Format.Unknown",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: true,
                 optionalAsNullable: false,

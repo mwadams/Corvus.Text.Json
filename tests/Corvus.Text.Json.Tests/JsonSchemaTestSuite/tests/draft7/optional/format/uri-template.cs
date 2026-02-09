@@ -96,7 +96,7 @@ public class SuiteFormatUriTemplate : IClassFixture<SuiteFormatUriTemplate.Fixtu
                 "tests\\draft7\\optional\\format\\uri-template.json",
                 "{ \"format\": \"uri-template\" }",
                 "JsonSchemaTestSuite.Draft7.Optional.Format.UriTemplate",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

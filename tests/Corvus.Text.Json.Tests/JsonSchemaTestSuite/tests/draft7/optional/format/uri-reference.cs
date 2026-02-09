@@ -131,7 +131,7 @@ public class SuiteValidationOfUriReferences : IClassFixture<SuiteValidationOfUri
                 "tests\\draft7\\optional\\format\\uri-reference.json",
                 "{ \"format\": \"uri-reference\" }",
                 "JsonSchemaTestSuite.Draft7.Optional.Format.UriReference",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

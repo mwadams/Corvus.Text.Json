@@ -96,7 +96,7 @@ public class SuiteValidationOfAnInternationalizedEMailAddresses : IClassFixture<
                 "tests\\draft2020-12\\optional\\format\\idn-email.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"idn-email\"\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.IdnEmail",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 optionalAsNullable: false,

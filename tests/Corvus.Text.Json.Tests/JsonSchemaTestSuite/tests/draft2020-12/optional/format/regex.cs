@@ -82,7 +82,7 @@ public class SuiteValidationOfRegularExpressions : IClassFixture<SuiteValidation
                 "tests\\draft2020-12\\optional\\format\\regex.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"regex\"\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.Regex",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 optionalAsNullable: false,

@@ -54,7 +54,7 @@ public class SuiteExclusiveMaximumValidation : IClassFixture<SuiteExclusiveMaxim
                 "tests\\draft7\\exclusiveMaximum.json",
                 "{\r\n            \"exclusiveMaximum\": 3.0\r\n        }",
                 "JsonSchemaTestSuite.Draft7.ExclusiveMaximum",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

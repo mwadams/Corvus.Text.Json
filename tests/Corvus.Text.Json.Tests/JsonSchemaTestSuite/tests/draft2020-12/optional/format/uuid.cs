@@ -180,7 +180,7 @@ public class SuiteUuidFormat : IClassFixture<SuiteUuidFormat.Fixture>
                 "tests\\draft2020-12\\optional\\format\\uuid.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"uuid\"\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.Uuid",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 optionalAsNullable: false,

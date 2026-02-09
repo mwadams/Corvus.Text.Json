@@ -348,7 +348,7 @@ public class SuiteValidationOfTimeStrings : IClassFixture<SuiteValidationOfTimeS
                 "tests\\draft7\\optional\\format\\time.json",
                 "{ \"format\": \"time\" }",
                 "JsonSchemaTestSuite.Draft7.Optional.Format.Time",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

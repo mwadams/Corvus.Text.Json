@@ -138,7 +138,7 @@ public class SuiteValidationOfIpAddresses : IClassFixture<SuiteValidationOfIpAdd
                 "tests\\draft7\\optional\\format\\ipv4.json",
                 "{ \"format\": \"ipv4\" }",
                 "JsonSchemaTestSuite.Draft7.Optional.Format.Ipv4",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

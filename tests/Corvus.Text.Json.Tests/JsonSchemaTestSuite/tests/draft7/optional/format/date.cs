@@ -362,7 +362,7 @@ public class SuiteValidationOfDateStrings : IClassFixture<SuiteValidationOfDateS
                 "tests\\draft7\\optional\\format\\date.json",
                 "{ \"format\": \"date\" }",
                 "JsonSchemaTestSuite.Draft7.Optional.Format.Date",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

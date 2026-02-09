@@ -292,7 +292,7 @@ public class SuiteValidationOfJsonPointersJsonStringRepresentation : IClassFixtu
                 "tests\\draft7\\optional\\format\\json-pointer.json",
                 "{ \"format\": \"json-pointer\" }",
                 "JsonSchemaTestSuite.Draft7.Optional.Format.JsonPointer",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 optionalAsNullable: false,

@@ -208,7 +208,7 @@ public class SuiteValidationOfDurationStrings : IClassFixture<SuiteValidationOfD
                 "tests\\draft2020-12\\optional\\format\\duration.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"duration\"\r\n        }",
                 "JsonSchemaTestSuite.Draft202012.Optional.Format.Duration",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 optionalAsNullable: false,

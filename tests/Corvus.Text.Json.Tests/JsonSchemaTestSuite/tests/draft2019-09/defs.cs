@@ -40,7 +40,7 @@ public class SuiteValidateDefinitionAgainstMetaschema : IClassFixture<SuiteValid
                 "tests\\draft2019-09\\defs.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$ref\": \"https://json-schema.org/draft/2019-09/schema\"\r\n        }",
                 "JsonSchemaTestSuite.Draft201909.Defs",
-                "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite\\remotes",
+                "../../../../../JSON-Schema-Test-Suite/remotes",
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 optionalAsNullable: false,
