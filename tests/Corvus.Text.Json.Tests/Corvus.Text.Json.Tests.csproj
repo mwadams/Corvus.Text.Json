@@ -91,6 +91,8 @@
     <Compile Include="JsonPropertyDocumentBuilderTests.cs" />
     <Compile Include="JsonReferenceTests.Uri.cs" />
     <Compile Include="JsonReferenceTests.Iri.cs" />
+    <Compile Include="JsonSchemaAdditionalTests\draft2019-09\typeAndFormat.cs" />
+    <Compile Include="JsonSchemaAdditionalTests\draft2020-12\typeAndFormat.cs" />
     <Compile Include="JsonSchemaCodeGeneratorTests.cs" />
     <Compile Include="JsonRegexValidatorTests.cs" />
     <Compile Include="JsonSchemaContextTests.cs" />

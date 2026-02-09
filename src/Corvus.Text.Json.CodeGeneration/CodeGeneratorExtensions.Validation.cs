@@ -438,21 +438,59 @@ internal static partial class CodeGenerationExtensions
             .AppendIgnoredCoreTypeFormatKeywords(typeDeclaration, ignoredMessageProviderName, CoreTypes.Number | CoreTypes.Integer);
     }
 
-    public static CodeGenerator AppendIgnoredCoreTypeFormatKeywords(this CodeGenerator generator, TypeDeclaration typeDeclaration, string ignoredMessageProviderName, CoreTypes coreType)
+    public static CodeGenerator ElseAppendIgnoredCoreTypeStringFormatKeywords(
+        this CodeGenerator generator,
+        TypeDeclaration typeDeclaration,
+        string ignoredMessageProviderName)
+    {
+
+        return AppendIgnoredCoreTypeFormatKeywords(generator, typeDeclaration, ignoredMessageProviderName, CoreTypes.String, includeElse: true);
+    }
+
+    public static CodeGenerator ElseAppendIgnoredCoreTypeNumberFormatKeywords(
+        this CodeGenerator generator,
+        TypeDeclaration typeDeclaration,
+        string ignoredMessageProviderName)
+    {
+        return generator
+            .AppendIgnoredCoreTypeFormatKeywords(typeDeclaration, ignoredMessageProviderName, CoreTypes.Number | CoreTypes.Integer, includeElse: true);
+    }
+
+    public static CodeGenerator AppendIgnoredCoreTypeFormatKeywords(this CodeGenerator generator, TypeDeclaration typeDeclaration, string ignoredMessageProviderName, CoreTypes coreType, bool includeElse = false)
     {
         IEnumerable<IFormatProviderKeyword> ignoredKeywords =
             typeDeclaration
                 .Keywords()
                 .OfType<IFormatProviderKeyword>();
 
+        bool hasElse = false;
+
         foreach (IFormatProviderKeyword keyword in ignoredKeywords)
         {
-            if (((keyword.ImpliesCoreTypes(typeDeclaration) & coreType) != 0) &&
-                typeDeclaration.AddIgnoredKeyword(keyword))
+            if (((keyword.ImpliesCoreTypes(typeDeclaration) & coreType) != 0)
+                )
             {
+                typeDeclaration.AddIgnoredKeyword(keyword);
+
+                if (includeElse && !hasElse)
+                {
+                    hasElse = true;
+                    generator
+                        .AppendLineIndent("else")
+                        .AppendLineIndent("{")
+                        .PushIndent();
+                }
+
                 generator
                     .AppendLineIndent("context.IgnoredKeyword(", ignoredMessageProviderName, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
             }
+        }
+
+        if (hasElse)
+        {
+            generator
+                .PopIndent()
+                .AppendLineIndent("}");
         }
 
         return generator;
@@ -479,6 +517,17 @@ internal static partial class CodeGenerationExtensions
         }
 
         return generator;
+    }
+
+    public static bool HasIgnoredCoreTypeKeywords<T>(
+        this CodeGenerator generator,
+        TypeDeclaration typeDeclaration)
+    {
+        return typeDeclaration
+        .Keywords()
+        .OfType<T>()
+        .Any();
+
     }
 
     public static CodeGenerator TryAppendIgnoredCoreTypeKeywords<T>(

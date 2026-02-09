@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration.Keywords;
@@ -16,7 +17,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 /// <summary>
 /// A validation handler for <see cref="IFormatValidationKeyword"/> capability.
 /// </summary>
-internal sealed class FormatValidationHandler : TypeSensitiveKeywordValidationHandlerBase
+internal sealed class FormatValidationHandler : TypeSensitiveKeywordValidationHandlerBase, IFormatKeywordValidationHandler
 {
     private FormatValidationHandler()
     {
@@ -64,6 +65,25 @@ internal sealed class FormatValidationHandler : TypeSensitiveKeywordValidationHa
         // This covers both FormatProvider and FormatValidation
         return keyword is IFormatProviderKeyword;
     }
+
+    /// <inheritdoc/>
+    public bool HandlesCoreTypes(TypeDeclaration typeDeclaration, CoreTypes coreTypes)
+    {
+
+        if (typeDeclaration.ExplicitFormat() is not string explicitFormat)
+        {
+            return false;
+        }
+
+        if (FormatHandlerRegistry.Instance.FormatHandlers.GetExpectedTokenType(explicitFormat) is not JsonTokenType expectedTokenType)
+        {
+            return false;
+        }
+
+        return
+            (expectedTokenType == JsonTokenType.Number && ((coreTypes & CoreTypes.Number | CoreTypes.Integer) != 0)) ||
+            (expectedTokenType == JsonTokenType.String && ((coreTypes & CoreTypes.String) != 0));
+    }
 }
 
 file static class FormatValidationHandlerExtensions
@@ -95,7 +115,8 @@ file static class FormatValidationHandlerExtensions
 
         if (FormatHandlerRegistry.Instance.FormatHandlers.GetExpectedTokenType(explicitFormat) is not JsonTokenType expectedTokenType)
         {
-            generator                
+            generator
+                .AppendSeparatorLine()
                 .AppendLineIndent("context.IgnoredKeyword(", "JsonSchemaEvaluation.IgnoredUnrecognizedFormat", ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
             return generator;
         }
@@ -105,6 +126,7 @@ file static class FormatValidationHandlerExtensions
         if (!validateOnly)
         {
             generator
+                .AppendSeparatorLine()
                 .AppendStartTokenTypeCheck(typeDeclaration, explicitFormat, expectedTokenType)
                 .PushMemberScope("tokenTypeCheck", ScopeType.Method);
 
@@ -118,15 +140,17 @@ file static class FormatValidationHandlerExtensions
         {
             if (expectedTokenType is JsonTokenType.String)
             {
-                generator.
-                    AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, includeTokenTypeCheck: false);
+                generator
+                    .AppendSeparatorLine()
+                    .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, includeTokenTypeCheck: false);
                 FormatHandlerRegistry.Instance.StringFormatHandlers.AppendFormatAssertion(generator, explicitFormat, $"{SymbolDisplay.FormatLiteral(keyword.Keyword, true)}u8", "unescapedUtf8JsonString.Span", "context");
                 generator.AppendLine(";");
             }
             else
             {
-                generator.
-                    AppendNormalizedJsonNumberIfNotAppended(typeDeclaration, includeTokenTypeCheck: false);
+                generator
+                    .AppendSeparatorLine()
+                    .AppendNormalizedJsonNumberIfNotAppended(typeDeclaration, includeTokenTypeCheck: false);
                 FormatHandlerRegistry.Instance.NumberFormatHandlers.AppendFormatAssertion(generator, explicitFormat, $"{SymbolDisplay.FormatLiteral(keyword.Keyword, true)}u8", "isNegative", "integral", "fractional", "exponent", "context");
                 generator.AppendLine(";");
             }
@@ -137,6 +161,7 @@ file static class FormatValidationHandlerExtensions
         else
         {
             generator
+                .AppendSeparatorLine()
                 .AppendLineIndent("context.IgnoredKeyword(", "JsonSchemaEvaluation.IgnoredFormatNotAsserted", ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
         }
 
@@ -170,24 +195,19 @@ file static class FormatValidationHandlerExtensions
     {
         generator
             .PopIndent()
-            .AppendLineIndent("}")
-            .AppendLineIndent("else")
-            .AppendLineIndent("{")
-            .PushIndent();
+            .AppendLineIndent("}");
 
         if (expectedTokenType == JsonTokenType.String)
         {            
             generator
-                .AppendIgnoredCoreTypeStringFormatKeywords(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString");
+                .ElseAppendIgnoredCoreTypeStringFormatKeywords(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeString");
         }
         else
         {
             generator
-                .AppendIgnoredCoreTypeNumberFormatKeywords(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNumber");
+                .ElseAppendIgnoredCoreTypeNumberFormatKeywords(typeDeclaration, "JsonSchemaEvaluation.IgnoredNotTypeNumber");
         }
 
-        return generator
-                .PopIndent()
-                .AppendLineIndent("}");
+        return generator;
     }
 }

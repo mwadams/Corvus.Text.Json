@@ -81,14 +81,14 @@ internal static partial class CodeGenerationExtensions
                     ("ref JsonSchemaContext", "context")
                 ])
                 .ReserveName("tokenType")
-                .AppendLineIndent("JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex); ")
+                .AppendLineIndent("JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);")
                 .AppendSeparatorLine()
                 .AppendLineIndent("// You're not allowed to ask about non-value-like entities")
-                .AppendLineIndent("Debug.Assert(tokenType is not ")
+                .AppendLineIndent("Debug.Assert(tokenType is not")
                 .PushIndent()
-                    .AppendLineIndent("JsonTokenType.None or ")
-                    .AppendLineIndent("JsonTokenType.EndObject or ")
-                    .AppendLineIndent("JsonTokenType.EndArray); ")
+                    .AppendLineIndent("JsonTokenType.None or")
+                    .AppendLineIndent("JsonTokenType.EndObject or")
+                    .AppendLineIndent("JsonTokenType.EndArray);")
                 .PopIndent();
 
         // Append any setup code for each handler at the top of the method
@@ -98,9 +98,30 @@ internal static partial class CodeGenerationExtensions
         }
 
         // Then append the actual validation code beneath
+
+        bool needsShortcut = false;
         foreach (KeywordValidationHandlerBase handler in typeDeclaration.OrderedValidationHandlers<KeywordValidationHandlerBase>(generator.LanguageProvider))
         {
+            int originalLength = generator.Length;
+
+            if (needsShortcut)
+            {
+                generator.AppendNoCollectorNoMatchShortcutReturn();
+            }
+
+            int length = generator.Length;
+
             typeDeclaration.ExecuteValidationHandler(handler, k => k.AppendValidationCode(generator, typeDeclaration));
+
+            if (length != generator.Length)
+            {
+                needsShortcut = true;
+            }
+            else
+            {
+                // Revert anything we added as a result of applying a shortcut.
+                generator.Length = originalLength;
+            }
         }
 
         generator

@@ -104,8 +104,7 @@ internal interface IFormatKeywordValidationHandler : IKeywordValidationHandler
     /// </summary>
     /// <param name="generator">The code generator.</param>
     /// <param name="typeDeclaration">The type declaration containing the keyword.</param>
-    /// <param name="forCoreTypes">Specifies the core types for which this validation code is to be appended.</param>
     /// <param name="validateOnly">If <see langword="true"/>, then only the validation code should be emitted. Otherwise
     /// the wrapper to check the type of the outer element, the validation code, and the ignore code should be emitted.</param>
-    CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration, CoreTypes forCoreTypes = CoreTypes.String | CoreTypes.Number, bool validateOnly = false);
+    CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration, bool validateOnly = false);
 }
