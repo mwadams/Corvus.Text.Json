@@ -1,6 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Buffers;
+using System.Buffers.Text;
+using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal;
@@ -14,6 +18,8 @@ public static partial class JsonSchemaEvaluation
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeInteger = static (buffer, out written) => IgnoredNotType("integer"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider ExpectedTypeNumber = static (buffer, out written) => ExpectedType("number"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider ExpectedTypeInteger = static (buffer, out written) => ExpectedType("integer"u8, buffer, out written);
+
+    public static readonly JsonSchemaMessageProvider<string> ExpectedMultipleOf = static (divisor, buffer, out written) => ExpectedMultipleOfDivisor(divisor, buffer, out written);
 
     private const int MaximumByteExponent = 0;
     private const bool MaximumByteIsNegative = false;
@@ -85,6 +91,14 @@ public static partial class JsonSchemaEvaluation
     private static readonly JsonSchemaMessageProvider ExpectedUInt16 = static (buffer, out written) => ExpectedNumberFormat("uint16"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt32 = static (buffer, out written) => ExpectedNumberFormat("uint32"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt64 = static (buffer, out written) => ExpectedNumberFormat("uint64"u8, buffer, out written);
+
+    private static readonly JsonSchemaMessageProvider<string> ExpectedEquals = static (value, buffer, out written) => ExpectedEqualsValue(value, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<string> ExpectedNotEquals = static (value, buffer, out written) => ExpectedNotEqualsValue(value, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<string> ExpectedLessThanOrEquals = static (value, buffer, out written) => ExpectedLessThanOrEqualsValue(value, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<string> ExpectedLessThan = static (value, buffer, out written) => ExpectedLessThanValue(value, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<string> ExpectedGreaterThanOrEquals = static (value, buffer, out written) => ExpectedGreaterThanOrEqualsValue(value, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<string> ExpectedGreaterThan = static (value, buffer, out written) => ExpectedGreaterThanValue(value, buffer, out written);
+
     private static ReadOnlySpan<byte> MaximumByteFractional => ""u8;
     private static ReadOnlySpan<byte> MaximumByteIntegral => "255"u8;
     private static ReadOnlySpan<byte> MaximumDecimalFractional => ""u8;
@@ -141,6 +155,288 @@ public static partial class JsonSchemaEvaluation
     private static ReadOnlySpan<byte> MinimumUInt32Integral => ""u8;
     private static ReadOnlySpan<byte> MinimumUInt64Fractional => ""u8;
     private static ReadOnlySpan<byte> MinimumUInt64Integral => ""u8;
+
+
+    /// <summary>
+    /// Matches a JSON number as a multiple of the given divisor.
+    /// </summary>
+    /// <param name="integral">The integral part of the number.</param>
+    /// <param name="fractional">The fractional part of the number.</param>
+    /// <param name="exponent">The exponent of the number.</param>
+    /// <param name="divisor">The significand of the divisor represented as a <see cref="UInt64"/>.</param>
+    /// <param name="divisorExponent">The exponent of the divisor. This will be non-zero if the divisor had a fractional component.</param>
+    /// <param name="divisorValue">The string representation of the divisor.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <returns>True if the normalized JSON number is a multiple of the divisor (i.e. <c>n mod D == 0</c>).</returns>
+    /// <remarks>
+    /// <para>
+    /// We do not need to pass the sign of the JSON number as it is irrelevant to the calculation.
+    /// </para>
+    /// <para>
+    /// The divisor is normalized so it provides the integral form of the divisor, with an appropriate exponent. Normalization means
+    /// the the exponent is the minmax value for the divisor, and the divisor will not be divisible by 10.
+    /// </para>
+    /// </remarks>
+    [CLSCompliant(false)]
+    public static bool MatchMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ulong divisor, int divisorExponent, string divisorValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        Debug.Assert(divisor % 10 != 0);
+
+        if (!JsonElementHelpers.IsMultipleOf(integral, fractional, exponent, divisor, divisorExponent))
+        {
+            context.EvaluatedKeyword(false, divisorValue, ExpectedMultipleOf, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, divisorValue, ExpectedMultipleOf, keyword);
+
+        return true;
+    }
+
+
+    /// <summary>
+    /// Matches a JSON number equals.
+    /// </summary>
+    /// <param name="leftIsNegative">Indicates whether the left hand side is negative.</param>
+    /// <param name="leftIntegral">The integral part of the left hand side.</param>
+    /// <param name="leftFractional">The fractional part of the left hand side.</param>
+    /// <param name="leftExponent">The exponent of the left hand side.</param>
+    /// <param name="rightIsNegative">Indicates whether the right hand side is negative.</param>
+    /// <param name="rightIntegral">The integral part of the right hand side.</param>
+    /// <param name="rightFractional">The fractional part of the right hand side.</param>
+    /// <param name="rightExponent">The exponent of the right hand side.</param>
+    /// <param name="rightValue">The string representation of the right hand side.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <returns>True if the left hand side equals the right hand side.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchEquals(
+        bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent,
+        bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent,
+        string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+            leftIsNegative, leftIntegral, leftFractional, leftExponent,
+            rightIsNegative, rightIntegral, rightFractional, rightExponent) != 0)
+        {            
+            context.EvaluatedKeyword(false, rightValue, ExpectedEquals, keyword);
+
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, rightValue, ExpectedEquals, keyword);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Matches a JSON number not equals.
+    /// </summary>
+    /// <param name="leftIsNegative">Indicates whether the left hand side is negative.</param>
+    /// <param name="leftIntegral">The integral part of the left hand side.</param>
+    /// <param name="leftFractional">The fractional part of the left hand side.</param>
+    /// <param name="leftExponent">The exponent of the left hand side.</param>
+    /// <param name="rightIsNegative">Indicates whether the right hand side is negative.</param>
+    /// <param name="rightIntegral">The integral part of the right hand side.</param>
+    /// <param name="rightFractional">The fractional part of the right hand side.</param>
+    /// <param name="rightExponent">The exponent of the right hand side.</param>
+    /// <param name="rightValue">The string representation of the right hand side.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <returns>True if the left hand side does not equal the right hand side.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchNotEquals(
+        bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent,
+        bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent,
+        string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+            leftIsNegative, leftIntegral, leftFractional, leftExponent,
+            rightIsNegative, rightIntegral, rightFractional, rightExponent) == 0)
+        {
+            context.EvaluatedKeyword(false, rightValue, ExpectedNotEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, rightValue, ExpectedNotEquals, keyword);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Matches a JSON number less than.
+    /// </summary>
+    /// <param name="leftIsNegative">Indicates whether the left hand side is negative.</param>
+    /// <param name="leftIntegral">The integral part of the left hand side.</param>
+    /// <param name="leftFractional">The fractional part of the left hand side.</param>
+    /// <param name="leftExponent">The exponent of the left hand side.</param>
+    /// <param name="rightIsNegative">Indicates whether the right hand side is negative.</param>
+    /// <param name="rightIntegral">The integral part of the right hand side.</param>
+    /// <param name="rightFractional">The fractional part of the right hand side.</param>
+    /// <param name="rightExponent">The exponent of the right hand side.</param>
+    /// <param name="rightValue">The string representation of the right hand side.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <returns>True if the left hand side is less than the right hand side.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLessThan(
+        bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent,
+        bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent,
+        string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+            leftIsNegative, leftIntegral, leftFractional, leftExponent,
+            rightIsNegative, rightIntegral, rightFractional, rightExponent) >= 0)
+        {
+            context.EvaluatedKeyword(false, rightValue, ExpectedLessThan, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, rightValue, ExpectedLessThan, keyword);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Matches a JSON number less than or equals.
+    /// </summary>
+    /// <param name="leftIsNegative">Indicates whether the left hand side is negative.</param>
+    /// <param name="leftIntegral">The integral part of the left hand side.</param>
+    /// <param name="leftFractional">The fractional part of the left hand side.</param>
+    /// <param name="leftExponent">The exponent of the left hand side.</param>
+    /// <param name="rightIsNegative">Indicates whether the right hand side is negative.</param>
+    /// <param name="rightIntegral">The integral part of the right hand side.</param>
+    /// <param name="rightFractional">The fractional part of the right hand side.</param>
+    /// <param name="rightExponent">The exponent of the right hand side.</param>
+    /// <param name="rightValue">The string representation of the right hand side.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <returns>True if the left hand side is less than or equal to the right hand side.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLessThanOrEquals(
+        bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent,
+        bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent,
+        string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+            leftIsNegative, leftIntegral, leftFractional, leftExponent,
+            rightIsNegative, rightIntegral, rightFractional, rightExponent) > 0)
+        {
+            context.EvaluatedKeyword(false, rightValue, ExpectedLessThanOrEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, rightValue, ExpectedLessThanOrEquals, keyword);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Matches a JSON number greater than.
+    /// </summary>
+    /// <param name="leftIsNegative">Indicates whether the left hand side is negative.</param>
+    /// <param name="leftIntegral">The integral part of the left hand side.</param>
+    /// <param name="leftFractional">The fractional part of the left hand side.</param>
+    /// <param name="leftExponent">The exponent of the left hand side.</param>
+    /// <param name="rightIsNegative">Indicates whether the right hand side is negative.</param>
+    /// <param name="rightIntegral">The integral part of the right hand side.</param>
+    /// <param name="rightFractional">The fractional part of the right hand side.</param>
+    /// <param name="rightExponent">The exponent of the right hand side.</param>
+    /// <param name="rightValue">The string representation of the right hand side.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <returns>True if the left hand side is less than the right hand side.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchGreaterThan(
+        bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent,
+        bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent,
+        string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+            leftIsNegative, leftIntegral, leftFractional, leftExponent,
+            rightIsNegative, rightIntegral, rightFractional, rightExponent) <= 0)
+        {
+            context.EvaluatedKeyword(false, rightValue, ExpectedGreaterThan, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, rightValue, ExpectedGreaterThan, keyword);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Matches a JSON number greater than or equals.
+    /// </summary>
+    /// <param name="leftIsNegative">Indicates whether the left hand side is negative.</param>
+    /// <param name="leftIntegral">The integral part of the left hand side.</param>
+    /// <param name="leftFractional">The fractional part of the left hand side.</param>
+    /// <param name="leftExponent">The exponent of the left hand side.</param>
+    /// <param name="rightIsNegative">Indicates whether the right hand side is negative.</param>
+    /// <param name="rightIntegral">The integral part of the right hand side.</param>
+    /// <param name="rightFractional">The fractional part of the right hand side.</param>
+    /// <param name="rightExponent">The exponent of the right hand side.</param>
+    /// <param name="rightValue">The string representation of the right hand side.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <returns>True if the left hand side is less than or equal to the right hand side.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchGreaterThanOrEquals(
+        bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent,
+        bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent,
+        string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (JsonElementHelpers.CompareNormalizedJsonNumbers(
+            leftIsNegative, leftIntegral, leftFractional, leftExponent,
+            rightIsNegative, rightIntegral, rightFractional, rightExponent) < 0)
+        {
+            context.EvaluatedKeyword(false, rightValue, ExpectedGreaterThanOrEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, rightValue, ExpectedGreaterThanOrEquals, keyword);
+
+        return true;
+    }
+
+
+    /// <summary>
+    /// Matches a JSON number as a multiple of the given divisor.
+    /// </summary>
+    /// <param name="integral">The integral part of the number.</param>
+    /// <param name="fractional">The fractional part of the number.</param>
+    /// <param name="exponent">The exponent of the number.</param>
+    /// <param name="divisor">The significand of the divisor represented as a <see cref="UInt64"/>.</param>
+    /// <param name="divisorExponent">The exponent of the divisor. This will be non-zero if the divisor had a fractional component.</param>
+    /// <param name="divisorValue">The string representation of the divisor.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The schema validation context.</param>
+    /// <returns>True if the normalized JSON number is a multiple of the divisor (i.e. <c>n mod D == 0</c>).</returns>
+    /// <remarks>
+    /// <para>
+    /// We do not need to pass the sign of the JSON number as it is irrelevant to the calculation.
+    /// </para>
+    /// <para>
+    /// The divisor is normalized so it provides the integral form of the divisor, with an appropriate exponent. Normalization means
+    /// the the exponent is the minmax value for the divisor, and the divisor will not be divisible by 10.
+    /// </para>
+    /// </remarks>
+    [CLSCompliant(false)]
+    public static bool MatchMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, BigInteger divisor, int divisorExponent, string divisorValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        Debug.Assert(divisor % 10 != 0);
+
+        if (!JsonElementHelpers.IsMultipleOf(integral, fractional, exponent, divisor, divisorExponent))
+        {
+            context.EvaluatedKeyword(false, divisorValue, ExpectedMultipleOf, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, divisorValue, ExpectedMultipleOf, keyword);
+
+        return true;
+    }
 
     /// <summary>
     /// Matches a JSON number against the Byte type constraint, validating it as an 8-bit unsigned integer.
@@ -895,5 +1191,71 @@ public static partial class JsonSchemaEvaluation
         }
 
         return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedEqualsValue(string value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedNotEqualsValue(string value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedNotEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedGreaterThanValue(string value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedGreaterThan.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedGreaterThanOrEqualsValue(string value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedGreaterThanOrEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedLessThanValue(string value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLessThan.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedLessThanOrEqualsValue(string value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLessThanOrEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(value, buffer, ref written);
     }
 }

@@ -1,8 +1,9 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation unde7r one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal;
@@ -97,6 +98,11 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool AppendSingleQuotedValue(ReadOnlySpan<byte> value, Span<byte> buffer, ref int written)
     {
+        if (value.Length == 0)
+        {
+            return true;
+        }
+
         if (buffer.Length < written + value.Length + 4)
         {
             written = 0;
@@ -107,6 +113,125 @@ public static partial class JsonSchemaEvaluation
         buffer[written++] = (byte)'\'';
         value.CopyTo(buffer[written..]);
         written += value.Length;
+        buffer[written++] = (byte)'\'';
+        return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool AppendSingleQuotedValue(string value, Span<byte> buffer, ref int written)
+    {
+        if (value.Length == 0)
+        {
+            return true;
+        }
+
+        if (buffer.Length < written + value.Length + 4)
+        {
+            written = 0;
+            return false;
+        }
+
+        buffer[written++] = (byte)' ';
+        buffer[written++] = (byte)'\'';
+        int writtenBytes = JsonReaderHelper.TranscodeHelper(value.AsSpan(), buffer.Slice(written));
+        if (writtenBytes == 0)
+        {
+            return false;
+        }
+
+        written += writtenBytes;
+        buffer[written++] = (byte)'\'';
+        return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool AppendValueAndExponent(ulong value, int exponent, Span<byte> buffer, ref int written)
+    {
+        if (buffer.Length < written + 3)
+        {
+            written = 0;
+            return false;
+        }
+
+        buffer[written++] = (byte)' ';
+        buffer[written++] = (byte)'\'';
+
+        if (!Utf8Formatter.TryFormat(value, buffer[written..], out int bytesWritten))
+        {
+            written = 0;
+            return false;
+        }    
+
+        written += bytesWritten;
+
+        if (buffer.Length < written + 3)
+        {
+            written = 0;
+            return false;
+        }
+
+        buffer[written++] = (byte)'E';
+
+        if (!Utf8Formatter.TryFormat(exponent, buffer[written..], out bytesWritten))
+        {
+            written = 0;
+            return false;
+        }
+
+        written += bytesWritten;
+
+        if (buffer.Length < written + 1)
+        {
+            written = 0;
+            return false;
+        }
+
+        buffer[written++] = (byte)'\'';
+        return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool AppendValueAndExponent(BigInteger value, int exponent, Span<byte> buffer, ref int written)
+    {
+        if (buffer.Length < written + 3)
+        {
+            written = 0;
+            return false;
+        }
+
+        buffer[written++] = (byte)' ';
+        buffer[written++] = (byte)'\'';
+
+        if (!value.TryFormat(buffer[written..], out int bytesWritten))
+        {
+            written = 0;
+            return false;
+        }
+
+        written += bytesWritten;
+
+        if (buffer.Length < written + 3)
+        {
+            written = 0;
+            return false;
+        }
+
+        buffer[written++] = (byte)'E';
+
+        if (!Utf8Formatter.TryFormat(exponent, buffer[written..], out bytesWritten))
+        {
+            written = 0;
+            return false;
+        }
+
+        written += bytesWritten;
+
+        if (buffer.Length < written + 1)
+        {
+            written = 0;
+            return false;
+        }
+
         buffer[written++] = (byte)'\'';
         return true;
     }
@@ -127,6 +252,26 @@ public static partial class JsonSchemaEvaluation
         }
 
         return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected type for a value.
+    /// </summary>
+    /// <param name="divisor">The integral part of the divisor.</param>
+    /// <param name="divisor">The exponent of the divisor.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [CLSCompliant(false)]
+    public static bool ExpectedMultipleOfDivisor(string divisor, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedMultipleOf.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(divisor, buffer, ref written);
     }
 
     /// <summary>

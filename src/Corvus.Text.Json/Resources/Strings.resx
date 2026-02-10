@@ -845,6 +845,27 @@
   <data name="JsonSchema_ExpectedNumberFormat" xml:space="preserve">
     <value>The value was expected to be in a supported format, and within bounds for</value>
   </data>
+  <data name="JsonSchema_ExpectedMultipleOf" xml:space="preserve">
+    <value>The value was expected to be a multiple of</value>
+  </data>
+  <data name="JsonSchema_ExpectedEquals" xml:space="preserve">
+    <value>The value was expected to be equal to</value>
+  </data>
+  <data name="JsonSchema_ExpectedNotEquals" xml:space="preserve">
+    <value>The value was expected to be not equal to</value>
+  </data>
+  <data name="JsonSchema_ExpectedGreaterThan" xml:space="preserve">
+    <value>The value was expected to be greater than</value>
+  </data>
+  <data name="JsonSchema_ExpectedGreaterThanOrEquals" xml:space="preserve">
+    <value>The value was expected to be greater than or equal to</value>
+  </data>
+  <data name="JsonSchema_ExpectedLessThan" xml:space="preserve">
+    <value>The value was expected to be greater than</value>
+  </data>
+  <data name="JsonSchema_ExpectedLessThanOrEquals" xml:space="preserve">
+    <value>The value was expected to be less than or equal to</value>
+  </data>
   <data name="JsonSchema_IgnoredNotType" xml:space="preserve">
     <value>The keyword was ignored because the value was not of type</value>
   </data>

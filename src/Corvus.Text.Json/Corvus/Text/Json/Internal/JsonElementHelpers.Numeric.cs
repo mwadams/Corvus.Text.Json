@@ -165,82 +165,7 @@ public static partial class JsonElementHelpers
         return exponent >= 0;
     }
 
-    /// <summary>
-    /// Compares two normalized JSON numbers for equality.
-    /// </summary>
-    /// <param name="leftIsNegative">True if the LHS is negative.</param>
-    /// <param name="leftIntegral">When concatenated with <paramref name="leftFractional"/> produces the significand of the LHS number without leading or trailing zeros.</param>
-    /// <param name="leftFractional">When concatenated with <paramref name="leftIntegral"/> produces the significand of the LHS number without leading or trailing zeros.</param>
-    /// <param name="leftExponent">The LHS exponent.</param>
-    /// <param name="rightIsNegative">True if the RHS is negative.</param>
-    /// <param name="rightIntegral">When concatenated with <paramref name="rightFractional"/> produces the significand of the RHS number without leading or trailing zeros.</param>
-    /// <param name="rightFractional">When concatenated with <paramref name="rightIntegral"/> produces the significand of the RHS number without leading or trailing zeros.</param>
-    /// <param name="rightExponent">The RHS exponent.</param>
-    /// <returns>-1 if the LHS is less than the RHS, 0 if the are equal, and 1 if the LHS is greater than the RHS.</returns>
-    public static int CompareNormalizedJsonNumbers(
-        bool leftIsNegative,
-        ReadOnlySpan<byte> leftIntegral,
-        ReadOnlySpan<byte> leftFractional,
-        int leftExponent,
-        bool rightIsNegative,
-        ReadOnlySpan<byte> rightIntegral,
-        ReadOnlySpan<byte> rightFractional,
-        int rightExponent)
-    {
-        // Step 1: Compare signs
-        if (leftIsNegative != rightIsNegative)
-        {
-            return leftIsNegative ? -1 : 1;
-        }
 
-        int signMultiplier = leftIsNegative ? -1 : 1;
-
-        int leftTotalLength = leftIntegral.Length + leftFractional.Length;
-        int rightTotalLength = rightIntegral.Length + rightFractional.Length;
-
-        // Step 2: Compare effective magnitudes of the numbers
-        int leftEffectiveLength = leftTotalLength + leftExponent;
-        int rightEffectiveLength = rightTotalLength + rightExponent;
-
-        if (leftEffectiveLength != rightEffectiveLength)
-        {
-            return (leftEffectiveLength > rightEffectiveLength ? 1 : -1) * signMultiplier;
-        }
-
-        // Step 3: Compare digits, accounting for exponent difference
-        int leftLeadingZeros = leftExponent < 0 ? Math.Max(0, -(leftTotalLength + leftExponent)) : 0;
-        int rightLeadingZeros = rightExponent < 0 ? Math.Max(0, -(rightTotalLength + rightExponent)) : 0;
-
-        int maxDigitLength = Math.Max(leftTotalLength, rightTotalLength);
-
-        // Adjust so we don't bother with matching leading zeros
-        if (leftLeadingZeros > rightLeadingZeros)
-        {
-            leftLeadingZeros -= rightLeadingZeros;
-            maxDigitLength -= rightLeadingZeros;
-            rightLeadingZeros = 0;
-        }
-        else
-        {
-            rightLeadingZeros -= leftLeadingZeros;
-            maxDigitLength -= leftLeadingZeros;
-            leftLeadingZeros = 0;
-        }
-
-        for (int i = 0; i < maxDigitLength; i++)
-        {
-            byte leftDigit = GetDigitAtPosition(leftIntegral, leftFractional, i - leftLeadingZeros);
-            byte rightDigit = GetDigitAtPosition(rightIntegral, rightFractional, i - rightLeadingZeros);
-
-            if (leftDigit != rightDigit)
-            {
-                return (leftDigit > rightDigit ? 1 : -1) * signMultiplier;
-            }
-        }
-
-        // Step 4: Numbers are equal
-        return 0;
-    }
 
     /// <summary>
     /// Determines whether the normalized JSON number is an exact multiple of the given integer divisor.
@@ -619,24 +544,5 @@ public static partial class JsonElementHelpers
     private static byte GetValueAtPosition(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int maxSignificandIndex)
     {
         return (byte)(GetDigitAtPosition(integral, fractional, maxSignificandIndex) - (byte)'0');
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static byte GetDigitAtPosition(
-        ReadOnlySpan<byte> integral,
-        ReadOnlySpan<byte> fractional,
-        int integralIndex)
-    {
-        if (integralIndex < integral.Length)
-        {
-            // Position is in the integral part
-            return integralIndex >= 0 ? integral[integralIndex] : (byte)'0';
-        }
-        else
-        {
-            // Position is in the fractional part
-            int fractionalIndex = integralIndex - integral.Length;
-            return fractionalIndex >= 0 && fractionalIndex < fractional.Length ? fractional[fractionalIndex] : (byte)'0';
-        }
     }
 }

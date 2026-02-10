@@ -29,7 +29,7 @@ internal sealed class FormatValidationHandler : TypeSensitiveKeywordValidationHa
     public static FormatValidationHandler Instance { get; } = new();
 
     /// <inheritdoc/>
-    public override uint ValidationHandlerPriority => ValidationPriorities.Default / 2;
+    public override uint ValidationHandlerPriority => ValidationPriorities.Default;
 
     /// <inheritdoc/>
     public override CodeGenerator AppendValidationSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)

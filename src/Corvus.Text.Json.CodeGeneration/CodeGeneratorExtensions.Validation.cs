@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
+using Corvus.Json.CodeGeneration.Keywords;
 using Corvus.Text.Json.CodeGeneration.Internal;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -282,6 +283,8 @@ internal static partial class CodeGenerationExtensions
             return generator;
         }
 
+        bool appendShortcut = false;
+
         foreach (IChildValidationHandler child in children
             .Where(c => c.ValidationHandlerPriority <= parentHandlerPriority)
             .OrderBy(c => c.ValidationHandlerPriority))
@@ -291,7 +294,27 @@ internal static partial class CodeGenerationExtensions
                 return generator;
             }
 
+            int initialLength = generator.Length;
+
+            if (appendShortcut)
+            {
+                generator.AppendNoCollectorNoMatchShortcutReturn();
+            }
+
+            int length = generator.Length;
+
             child.AppendValidationCode(generator, typeDeclaration);
+
+            if (length != generator.Length)
+            {
+                appendShortcut = true;
+            }
+            else
+            {
+                // Trim off the shortcut we appended
+                // if we didn't append any validation code
+                generator.Length = initialLength;
+            }
         }
 
         return generator;
@@ -316,6 +339,8 @@ internal static partial class CodeGenerationExtensions
             return generator;
         }
 
+        bool appendShortcut = false;
+
         foreach (IChildValidationHandler child in children
             .Where(c => c.ValidationHandlerPriority > parentHandlerPriority)
             .OrderBy(c => c.ValidationHandlerPriority))
@@ -325,7 +350,27 @@ internal static partial class CodeGenerationExtensions
                 return generator;
             }
 
+            int initialLength = generator.Length;
+
+            if (appendShortcut)
+            {
+                generator.AppendNoCollectorNoMatchShortcutReturn();
+            }
+
+            int length = generator.Length;
+
             child.AppendValidationCode(generator, typeDeclaration);
+
+            if (length != generator.Length)
+            {
+                appendShortcut = true;
+            }
+            else
+            {
+                // Trim off the shortcut we appended
+                // if we didn't append any validation code
+                generator.Length = initialLength;
+            }
         }
 
         return generator;
@@ -350,6 +395,13 @@ internal static partial class CodeGenerationExtensions
             return generator;
         }
 
+        Dictionary<IValidationConstantProviderKeyword, JsonElement[]> requiredConstants = constants.Where(k => !IsNotRequiredInConstantsClass(k.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        if (requiredConstants.Count == 0)
+        {
+            return generator;
+        }
+
         generator
             .AppendSeparatorLine()
             .AppendLineIndent("/// <summary>")
@@ -357,7 +409,7 @@ internal static partial class CodeGenerationExtensions
             .AppendLineIndent("/// </summary>")
             .BeginPrivateStaticClassDeclaration(generator.ConstantsClassName());
 
-        foreach (KeyValuePair<IValidationConstantProviderKeyword, JsonElement[]> constant in constants.OrderBy(k => k.Key.Keyword))
+        foreach (KeyValuePair<IValidationConstantProviderKeyword, JsonElement[]> constant in requiredConstants.OrderBy(k => k.Key.Keyword))
         {
             if (generator.IsCancellationRequested)
             {
@@ -419,6 +471,16 @@ internal static partial class CodeGenerationExtensions
 
         return generator
             .EndClassStructOrEnumDeclaration();
+    }
+
+    private static bool IsNotRequiredInConstantsClass(IValidationConstantProviderKeyword key)
+    {
+        // We do not require the various numeric constants for validation.
+        return key is
+            INumberConstantValidationKeyword or IIntegerConstantValidationKeyword or
+            IStringLengthConstantValidationKeyword or
+            IPropertyCountConstantValidationKeyword or
+            IArrayLengthConstantValidationKeyword or IArrayContainsCountConstantValidationKeyword;
     }
 
     public static CodeGenerator AppendIgnoredCoreTypeStringFormatKeywords(

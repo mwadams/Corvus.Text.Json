@@ -78,6 +78,8 @@
   <!-- NumberParsing -->
   <ItemGroup>
     <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.Numeric.Core.cs" />
+    <Compile Include="ValidationHandlers\NumberChildHandlers\NumberRangeValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\NumberValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ITypeSensitiveKeywordValidationHandler.cs" />
     <Compile Include="ValidationHandlers\KeywordValidationHandlerBase.cs" />
     <Compile Include="ValidationHandlers\FormatValidationHandler.cs" />

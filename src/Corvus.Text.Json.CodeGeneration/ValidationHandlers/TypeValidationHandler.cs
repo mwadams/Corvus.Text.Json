@@ -406,7 +406,7 @@ file static class TypeValidationHandlerExtensions
     {
         bool createdElseClause = false;
 
-        AppendIgnoredTypes(generator, typeDeclaration, coreType, (_, _) =>
+        AppendIgnoredTypesSensitiveKeywords(generator, typeDeclaration, coreType, (_, _) =>
         {
             generator
                 .BeginElseClause();
@@ -479,7 +479,7 @@ file static class TypeValidationHandlerExtensions
             appendShortcut = true;
         }
 
-        if (HasIgnoredCoreTypes(generator, typeDeclaration, coreType))
+        if (HasIgnoredTypeSensitiveKeywords(generator, typeDeclaration, coreType))
         {
             if (appendShortcut)
             {
@@ -490,7 +490,7 @@ file static class TypeValidationHandlerExtensions
 
             appendShortcut = true;
             generator
-                .AppendIgnoredTypes(typeDeclaration, coreType);
+                .AppendIgnoredTypesSensitiveKeywords(typeDeclaration, coreType);
         }
 
         foreach (T keywordHandler in
@@ -529,7 +529,7 @@ file static class TypeValidationHandlerExtensions
         return generator;
     }
 
-    private static bool HasIgnoredCoreTypes(CodeGenerator generator, TypeDeclaration typeDeclaration, CoreTypes coreType)
+    public static bool HasIgnoredTypeSensitiveKeywords(this CodeGenerator generator, TypeDeclaration typeDeclaration, CoreTypes coreType)
     {
         return coreType switch
         {
@@ -614,7 +614,7 @@ file static class TypeValidationHandlerExtensions
         };
     }
 
-    private static bool AppendIgnoredTypes(this CodeGenerator generator, TypeDeclaration typeDeclaration, CoreTypes coreType, Action<CodeGenerator, TypeDeclaration>? preAppendAction = null)
+    public static bool AppendIgnoredTypesSensitiveKeywords(this CodeGenerator generator, TypeDeclaration typeDeclaration, CoreTypes coreType, Action<CodeGenerator, TypeDeclaration>? preAppendAction = null)
     {
         bool appended = false;
         switch (coreType)

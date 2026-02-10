@@ -58,4 +58,37 @@ internal static partial class CodeGeneratorExtensions
 #endif
         }
     }
+
+    /// <summary>
+    /// Appends the relevant operator.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the operator.</param>
+    /// <param name="op">The operator to append.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendOperator(this CodeGenerator generator, Operator op)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        switch (op)
+        {
+            case Operator.Equals:
+                return generator.Append("==");
+            case Operator.NotEquals:
+                return generator.Append("!=");
+            case Operator.LessThan:
+                return generator.Append("<");
+            case Operator.LessThanOrEquals:
+                return generator.Append("<=");
+            case Operator.GreaterThan:
+                return generator.Append(">");
+            case Operator.GreaterThanOrEquals:
+                return generator.Append(">=");
+            default:
+                Debug.Fail($"Unexpected operator {op}");
+                return generator;
+        }
+    }
 }
