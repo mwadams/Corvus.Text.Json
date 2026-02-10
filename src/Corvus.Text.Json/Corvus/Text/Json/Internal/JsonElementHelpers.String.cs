@@ -1,0 +1,27 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+namespace Corvus.Text.Json.Internal;
+
+/// <summary>
+/// Helper methods for JSON numeric operations including equality comparisons, divisibility checks, and arithmetic operations.
+/// </summary>
+public static partial class JsonElementHelpers
+{
+    /// <summary>
+    /// Count the runes in a UTF-8 string.
+    /// </summary>
+    /// <param name="utf8String">The UTF-8 string for which to count the runes.</param>
+    /// <returns>The number of runes in the UTF-8 string.</returns>
+    public static int CountRunes(ReadOnlySpan<byte> utf8String)
+    {
+        int count = 0;
+        while(Rune.DecodeFromUtf8(utf8String, out _, out int bytesConsumed) == System.Buffers.OperationStatus.Done)
+        {
+            count++;
+            utf8String = utf8String.Slice(bytesConsumed);
+        }
+
+        return count;
+    }
+}

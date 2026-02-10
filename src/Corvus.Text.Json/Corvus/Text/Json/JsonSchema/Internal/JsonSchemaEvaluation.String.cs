@@ -4,6 +4,7 @@
 using System.Buffers;
 using System.Buffers.Text;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using Corvus.Globalization;
 
 namespace Corvus.Text.Json.Internal;
@@ -43,6 +44,14 @@ public static partial class JsonSchemaEvaluation
     private static readonly JsonSchemaMessageProvider ExpectedUriTemplate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriTemplate.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUuid = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUuid.AsSpan(), buffer, out written);
 
+    private static readonly JsonSchemaMessageProvider<string> ExpectedStringMatchesRegularExpression = static (expression, buffer, out written) => ExpectedMatchRegularExpression(expression, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthEquals = static (length, buffer, out written) => ExpectedLengthEquals(length, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthNotEquals = static (length, buffer, out written) => ExpectedLengthNotEquals(length, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthLessThan = static (length, buffer, out written) => ExpectedLengthLessThan(length, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthLessThanOrEquals = static (length, buffer, out written) => ExpectedLengthLessThanOrEquals(length, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthGreaterThan = static (length, buffer, out written) => ExpectedLengthGreaterThan(length, buffer, out written);
+    private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthGreaterThanOrEquals = static (length, buffer, out written) => ExpectedLengthGreaterThanOrEquals(length, buffer, out written);
+
     /// <summary>
     /// Gets the allowed characters for the local part of an email address.
     /// </summary>
@@ -75,6 +84,177 @@ public static partial class JsonSchemaEvaluation
         0x11839, 0x1193D, 0x1193E, 0x119E0,
         0x11A34, 0x11A47, 0x11A99, 0x11C3F,
         0x11D44, 0x11D45, 0x11D97];
+
+    /// <summary>
+    /// Validates that a string length equals the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression, string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+#if NET
+        int desiredLength = Encoding.UTF8.GetMaxCharCount(value.Length);
+        char[]? rentedChars = null;
+        Span<char> transcodedValue = desiredLength < JsonConstants.StackallocCharThreshold ?
+            stackalloc char[desiredLength] :
+            (rentedChars = ArrayPool<char>.Shared.Rent(desiredLength));
+
+        try
+        {
+            JsonReaderHelper.TryGetTextFromUtf8(value, transcodedValue, out int written);
+
+            if (!regularExpression.IsMatch(transcodedValue.Slice(0, written)))
+            {
+                context.EvaluatedKeyword(false, originalExpressionString, messageProvider: ExpectedStringMatchesRegularExpression, keyword);
+                return false;
+            }
+
+            context.EvaluatedKeyword(true, originalExpressionString, ExpectedStringMatchesRegularExpression, keyword);
+            return true;
+        }
+        finally
+        {
+            if (rentedChars is char[] c)
+            {
+                ArrayPool<char>.Shared.Return(c);
+            }
+        }
+#else
+        // We pay for a conversion to string because netstandard does not support regular expressions
+        // from Span<char>
+        if (!regularExpression.IsMatch(JsonReaderHelper.GetTextFromUtf8(value)))
+        {
+            context.EvaluatedKeyword(false, originalExpressionString, messageProvider: ExpectedStringMatchesRegularExpression, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, originalExpressionString, ExpectedStringMatchesRegularExpression, keyword);
+        return true;
+#endif
+        }
+
+    /// <summary>
+    /// Validates that a string length equals the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLengthEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual != expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedStringLengthEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedStringLengthEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string length does not equal the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is not equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLengthNotEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual == expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedStringLengthNotEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedStringLengthNotEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string length is greater than the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is greater than the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLengthGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual <= expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedStringLengthGreaterThan, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedStringLengthGreaterThan, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string length is greater than or equal to the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is greater than or equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLengthGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual < expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedStringLengthGreaterThanOrEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedStringLengthGreaterThanOrEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string length is less than the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is less than the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLengthLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual >= expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedStringLengthLessThan, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedStringLengthLessThan, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string length is less than or equal to the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is less than or equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLengthLessThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual > expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedStringLengthLessThanOrEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedStringLengthLessThanOrEquals, keyword);
+        return true;
+    }
 
     /// <summary>
     /// Validates that a string value conforms to the ISO 8601 date format.

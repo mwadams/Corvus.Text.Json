@@ -144,6 +144,34 @@ public static partial class JsonSchemaEvaluation
         return true;
     }
 
+    private static bool AppendQuotedInteger(int value, Span<byte> buffer, ref int written)
+    {
+        if (buffer.Length < 3)
+        {
+            written = 0;
+            return false;
+        }
+
+        buffer[written++] = (byte)'\'';
+        if (!Utf8Formatter.TryFormat(value, buffer.Slice(written), out int bytesWritten))
+        {
+            written = 0;
+            return false;
+        }
+
+        written += bytesWritten;
+
+        if (written == buffer.Length)
+        {
+            written = 0;
+            return false;
+        }
+
+        buffer[written++] = (byte)'\'';
+        return true;
+    }
+
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool AppendValueAndExponent(ulong value, int exponent, Span<byte> buffer, ref int written)
     {
@@ -317,5 +345,82 @@ public static partial class JsonSchemaEvaluation
         }
 
         return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedMatchRegularExpression(string regularExpression, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedMatchRegularExpression.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(regularExpression, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedLengthEquals(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLengthEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedLengthNotEquals(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLengthNotEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedLengthGreaterThan(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLengthGreaterThan.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedLengthGreaterThanOrEquals(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLengthGreaterThanOrEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedLengthLessThan(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLengthLessThan.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedLengthLessThanOrEquals(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLengthLessThanOrEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
     }
 }

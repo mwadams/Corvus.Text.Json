@@ -974,6 +974,27 @@
   <data name="JsonSchema_ExpectedRegex" xml:space="preserve">
     <value>Expected a regular expression specification.</value>
   </data>
+  <data name="JsonSchema_ExpectedMatchRegularExpression" xml:space="preserve">
+    <value>Expected the value to match the regular expression</value>
+  </data>
+  <data name="JsonSchema_ExpectedLengthEquals" xml:space="preserve">
+    <value>Expected the length of the value to equal</value>
+  </data>
+  <data name="JsonSchema_ExpectedLengthNotEquals" xml:space="preserve">
+    <value>Expected the length of the value not to equal</value>
+  </data>
+  <data name="JsonSchema_ExpectedLengthGreaterThan" xml:space="preserve">
+    <value>Expected the length of the value to be greater than</value>
+  </data>
+  <data name="JsonSchema_ExpectedLengthGreaterThanOrEquals" xml:space="preserve">
+    <value>Expected the length of the value to be greater than or equal to</value>
+  </data>
+  <data name="JsonSchema_ExpectedLengthLessThan" xml:space="preserve">
+    <value>Expected the length of the value to be less than</value>
+  </data>
+  <data name="JsonSchema_ExpectedLengthLessThanOrEquals" xml:space="preserve">
+    <value>Expected the length of the value to be less than or equal to</value>
+  </data>
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>

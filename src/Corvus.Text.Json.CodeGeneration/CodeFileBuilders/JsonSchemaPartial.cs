@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Generic;
 using Corvus.Json.CodeGeneration;
 
 namespace Corvus.Text.Json.CodeGeneration;
@@ -37,6 +38,7 @@ public sealed class JsonSchemaPartial : ICodeFileBuilder
                     "global::System.Buffers",
                     "global::System.Buffers.Text",
                     "global::System.Runtime.CompilerServices",
+                    RequiresRegularExpressions(typeDeclaration) ? "global::System.Text.RegularExpressions" : ConditionalCodeSpecification.DoNotEmit,
                     "global::Corvus.Text.Json",
                     "global::Corvus.Text.Json.Internal")
                 .AppendLine()
@@ -58,7 +60,9 @@ public sealed class JsonSchemaPartial : ICodeFileBuilder
                         .AppendConstantsClass(typeDeclaration)
                         .AppendSeparatorLine()
                         .BeginPublicStaticClassDeclaration(generator.JsonSchemaClassName())
+                            .AppendRegexValidationFields(typeDeclaration)
                             .AppendJsonSchemaEvaluateMethod(typeDeclaration)
+                            .AppendRegexValidationFactoryMethods(typeDeclaration)
                         .EndClassStructOrEnumDeclaration()
                         .PopConstantsClassNameAndScope()
                         .PopSourceClassNameAndScope()
@@ -70,5 +74,10 @@ public sealed class JsonSchemaPartial : ICodeFileBuilder
                 .EndTypeDeclarationNesting(typeDeclaration)
                 .EndNamespace()
             .EndFile(typeDeclaration, string.Empty);
+    }
+
+    private static bool RequiresRegularExpressions(TypeDeclaration typeDeclaration)
+    {
+        return typeDeclaration.ValidationRegularExpressions() is IReadOnlyDictionary<IValidationRegexProviderKeyword, IReadOnlyList<string>> regexes && regexes.Count != 0;
     }
 }

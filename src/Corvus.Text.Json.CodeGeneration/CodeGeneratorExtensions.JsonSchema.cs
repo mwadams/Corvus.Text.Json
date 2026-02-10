@@ -1,8 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Generic;
+using System.Linq;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.ValidationHandlers;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration;
 
@@ -25,6 +28,147 @@ internal static partial class CodeGenerationExtensions
     private const string SourceClassNameKey = "CSharp_JsonSchema_SourceClassNameKey";
     private const string ConstantsClassBaseName = "Constants";
     private const string ConstantsClassNameKey = "CSharp_JsonSchema_ConstantsClassNameKey";
+
+    public static CodeGenerator AppendRegexValidationFields(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (typeDeclaration.ValidationRegularExpressions() is IReadOnlyDictionary<IValidationRegexProviderKeyword, IReadOnlyList<string>> regexes)
+        {
+            // Ensure we have a got a stable ordering of the keywords.
+            foreach (KeyValuePair<IValidationRegexProviderKeyword, IReadOnlyList<string>> constant in regexes.OrderBy(k => k.Key.Keyword))
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                if (constant.Value.Count > 0)
+                {
+                    generator.AppendSeparatorLine();
+                    if (constant.Value.Count == 1)
+                    {
+                        generator.AppendRegexValidationField(constant.Key, null);
+                    }
+                    else
+                    {
+                        int i = 1;
+                        foreach (string value in constant.Value)
+                        {
+                            generator.AppendRegexValidationField(constant.Key, i);
+                            i++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return generator;
+    }
+
+    public static CodeGenerator AppendRegexValidationFactoryMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (typeDeclaration.ValidationRegularExpressions() is IReadOnlyDictionary<IValidationRegexProviderKeyword, IReadOnlyList<string>> regexes)
+        {
+            // Ensure we have a got a stable ordering of the keywords.
+            foreach (KeyValuePair<IValidationRegexProviderKeyword, IReadOnlyList<string>> constant in regexes.OrderBy(k => k.Key.Keyword))
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                if (constant.Value.Count == 1)
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendRegexValidationFactoryMethod(constant.Key, null, constant.Value[0]);
+                }
+                else
+                {
+                    int i = 1;
+                    foreach (string value in constant.Value)
+                    {
+                        if (i == 1)
+                        {
+                            generator.AppendSeparatorLine();
+                        }
+
+                        generator.AppendRegexValidationFactoryMethod(constant.Key, i, value);
+                        i++;
+                    }
+                }
+            }
+        }
+
+        return generator;
+    }
+
+    private static CodeGenerator AppendRegexValidationField(this CodeGenerator generator, IKeyword keyword, int? index)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        string? suffix = index?.ToString();
+        string memberName = generator.GetStaticReadOnlyFieldNameInScope(keyword.Keyword, suffix: suffix);
+        string methodName = generator.GetMethodNameInScope(keyword.Keyword, prefix: "Create", suffix: suffix);
+
+        generator
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// A regular expression for the <c>", keyword.Keyword, "</c> keyword.")
+            .AppendLineIndent("/// </summary>")
+            .AppendIndent("public static readonly Regex ")
+            .Append(memberName)
+            .Append(" = ")
+            .Append(methodName)
+            .AppendLine("();");
+
+        return generator;
+    }
+
+    private static CodeGenerator AppendRegexValidationFactoryMethod(this CodeGenerator generator, IKeyword keyword, int? index, string value)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        string memberName = generator.GetMethodNameInScope(keyword.Keyword, prefix: "Create", suffix: index?.ToString());
+
+        return generator
+#if BUILDING_SOURCE_GENERATOR
+                .AppendIndent("private static Regex ")
+                .Append(memberName)
+                .Append("() => new(")
+                .Append(SymbolDisplay.FormatLiteral(value, true))
+                .AppendLine(", RegexOptions.Compiled);");
+#else
+                .AppendLine("#if NET8_0_OR_GREATER && !DYNAMIC_BUILD")
+                .AppendIndent("[GeneratedRegex(")
+                .Append(SymbolDisplay.FormatLiteral(value, true))
+                .AppendLine(")]")
+                .AppendIndent("private static partial Regex ")
+                .Append(memberName)
+                .AppendLine("();")
+            .AppendLine("#else")
+            .AppendIndent("private static Regex ")
+            .Append(memberName)
+            .Append("() => new(")
+            .Append(SymbolDisplay.FormatLiteral(value, true))
+            .AppendLine(", RegexOptions.Compiled);")
+            .AppendLine("#endif");
+#endif
+    }
 
     /// <summary>
     /// Appends an EvaluateSchema method to the generated type.

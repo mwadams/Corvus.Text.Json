@@ -334,7 +334,8 @@ public class CSharpLanguageProvider(CSharpLanguageProvider.Options? options = nu
         languageProvider.RegisterValidationHandlers(
             TypeValidationHandler.Instance,
             FormatValidationHandler.Instance,
-            NumberValidationHandler.Instance
+            NumberValidationHandler.Instance,
+            StringValidationHandler.Instance
             //ArrayValidationHandler.Instance,
             //CompositionAllOfValidationHandler.Instance,
             //CompositionAnyOfValidationHandler.Instance,
@@ -342,7 +343,6 @@ public class CSharpLanguageProvider(CSharpLanguageProvider.Options? options = nu
             //CompositionOneOfValidationHandler.Instance,
             //ConstValidationHandler.Instance,
             //ObjectValidationHandler.Instance,
-            //StringValidationHandler.Instance,
             //TernaryIfValidationHandler.Instance,
             );
 

@@ -24,6 +24,8 @@ internal static partial class CodeGenerationExtensions
     private const string GetRawSimpleValueAppendedInScopeKey = "GetRawSimpleValueAppendedInScope";
     private const string UnescapedUtf8JsonStringAppendedKey = "UnescapedUtf8JsonStringAppended";
     private const string UnescapedUtf8JsonStringAppendedInScopeKey = "UnescapedUtf8JsonStringAppendedInScope";
+    private const string StringLengthAppendedKey = "StringLengthAppended";
+    private const string StringLengthAppendedInScopeKey = "StringLengthAppendedInScope";
 
     public static CodeGenerator AppendNormalizedJsonNumberIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
     {
@@ -43,6 +45,36 @@ internal static partial class CodeGenerationExtensions
             .ReserveName("fractional")
             .ReserveName("exponent")
             .AppendLineIndent("JsonElementHelpers.TryParseNumber(rawSimpleValue.Span, out bool isNegative,out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);");
+    }
+
+    public static CodeGenerator AppendStringLengthIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
+    {
+        if (typeDeclaration.TryGetMetadata(StringLengthAppendedKey, out bool? value))
+        {
+            return generator;
+        }
+
+        typeDeclaration.SetMetadata(StringLengthAppendedKey, true);
+        typeDeclaration.SetMetadata(StringLengthAppendedInScopeKey, generator.FullyQualifiedScope);
+
+        return generator
+            .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, includeTokenTypeCheck)
+            .AppendSeparatorLine()
+            .ReserveName("stringLength")
+            .AppendLineIndent("int stringLength = JsonElementHelpers.CountRunes(unescapedUtf8JsonString.Span);");
+    }
+
+    public static CodeGenerator PopStringLengthIfAppendedInScope(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (typeDeclaration.TryGetMetadata(StringLengthAppendedInScopeKey, out string? scope)
+            && scope == generator.FullyQualifiedScope)
+        {
+            typeDeclaration.RemoveMetadata(StringLengthAppendedInScopeKey);
+            typeDeclaration.RemoveMetadata(StringLengthAppendedKey);
+        }
+
+        return generator
+            .PopUnescapedUtf8JsonStringIfAppendedInScope(typeDeclaration);
     }
 
     public static CodeGenerator AppendUnescapedUtf8JsonStringIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)

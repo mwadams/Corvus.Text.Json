@@ -1,15 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
+#if !NET
 using System.Collections.Generic;
+#endif
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.Internal;
 using Microsoft.CodeAnalysis.CSharp;
@@ -17,7 +15,7 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.NumberChildHandlers;
 
 /// <summary>
-/// A string length validation handler.
+/// A number range validation handler.
 /// </summary>
 public class NumberRangeValidationHandler : IChildValidationHandler
 {
@@ -71,8 +69,8 @@ public class NumberRangeValidationHandler : IChildValidationHandler
             }
             else
             {
-                generator.
-                    AppendStandardOperator(typeDeclaration, keyword, op);
+                generator
+                    .AppendStandardOperator(typeDeclaration, keyword, op);
             }
 
             requiresShortCut = true;
