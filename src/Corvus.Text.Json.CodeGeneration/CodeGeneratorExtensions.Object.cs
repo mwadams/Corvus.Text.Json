@@ -190,6 +190,7 @@ internal static partial class CodeGeneratorExtensions
 
         return generator
             .AppendSeparatorLine()
+            .ReserveName("EnumerateObject")
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("/// Enumerates the object.")
             .AppendLineIndent("/// </summary>")
@@ -223,6 +224,7 @@ internal static partial class CodeGeneratorExtensions
 
         return generator
             .AppendSeparatorLine()
+            .ReserveName("GetPropertyCount")
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("/// Gets the number of properties in the object.")
             .AppendLineIndent("/// </summary>")

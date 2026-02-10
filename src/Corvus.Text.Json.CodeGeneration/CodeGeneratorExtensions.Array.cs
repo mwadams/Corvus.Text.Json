@@ -63,6 +63,7 @@ internal static partial class CodeGeneratorExtensions
 
         // Set an item
         generator
+            .ReserveNameIfNotReserved("SetItem")
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("///   Sets the value of an array element at the specified index.")
             .AppendLineIndent("/// </summary>")
@@ -112,6 +113,7 @@ internal static partial class CodeGeneratorExtensions
 
         // Insert an item
         generator
+            .ReserveNameIfNotReserved("InsertItem")
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("///   Inserts an item into the array at the specified index.")
             .AppendLineIndent("/// </summary>")
@@ -148,6 +150,9 @@ internal static partial class CodeGeneratorExtensions
         // Remove items
         generator
             .AppendSeparatorLine()
+            .ReserveNameIfNotReserved("RemoveRange")
+            .ReserveNameIfNotReserved("Remove")
+            .ReserveNameIfNotReserved("RemoveWhere")
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("///   Removes a range of items from the array starting at the specified index.")
             .AppendLineIndent("/// </summary>")
@@ -459,6 +464,7 @@ internal static partial class CodeGeneratorExtensions
 
         return generator
             .AppendSeparatorLine()
+            .ReserveName("EnumerateArray")
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("/// Enumerates the array.")
             .AppendLineIndent("/// </summary>")
@@ -492,6 +498,7 @@ internal static partial class CodeGeneratorExtensions
 
         return generator
             .AppendSeparatorLine()
+            .ReserveName("GetArrayLength")
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("/// Gets the array length.")
             .AppendLineIndent("/// </summary>")

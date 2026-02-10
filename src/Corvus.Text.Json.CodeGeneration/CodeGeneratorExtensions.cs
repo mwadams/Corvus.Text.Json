@@ -1011,17 +1011,40 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator
+            .ReserveName("SchemaLocationProvider")
             .ReserveName("SchemaLocation")
+            .ReserveName("SchemaLocationUtf8")
             .AppendSeparatorLine()
             .AppendBlockIndent(
             """
-        /// <summary>
-        /// Gets the schema location from which this type was generated.
-        /// </summary>
-        """)
-            .AppendIndent("public static string SchemaLocation { get; } = ")
-            .Append(SymbolDisplay.FormatLiteral(typeDeclaration.RelativeSchemaLocation, true))
-            .AppendLine(";");
+            /// <summary>
+            /// Gets a provider for the schema location from which this type was generated.
+            /// </summary>
+            """)
+            .AppendLineIndent(
+                "public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                SymbolDisplay.FormatLiteral(typeDeclaration.RelativeSchemaLocation, true), "u8, buffer, out written);")
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+            """
+            /// <summary>
+            /// Gets the schema location from which this type was generated.
+            /// </summary>
+            """)
+            .AppendLineIndent(
+                "public const string SchemaLocation = ", SymbolDisplay.FormatLiteral(typeDeclaration.RelativeSchemaLocation, true), ";")
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+            """
+            /// <summary>
+            /// Gets the schema location from which this type was generated as a UTF-8 string.
+            /// </summary>
+            """)
+            .AppendLineIndent(
+                "public static ReadOnlySpan<byte> SchemaLocationUtf8 => ",
+                SymbolDisplay.FormatLiteral(typeDeclaration.RelativeSchemaLocation, true), "u8;");
+
+
     }
 
     /// <summary>

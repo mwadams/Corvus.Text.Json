@@ -44,7 +44,37 @@ public static class Formatting
 
     private static readonly string[] ReservedNames =
     [
-        // TODO: Apply the list of reserved names
+        "_parent",
+        "_idx",
+        "_documentVersion",
+        "AsJsonElement",
+        "CheckValidInstance",
+        "ConstInstance",
+        "CreateInstance",
+        "DebuggerDisplay",
+        "DefaultInstance",
+        "Dimension",
+        "EvaluateSchema",
+        "From",
+        "FromJson",
+        "GetArrayLength",
+        "GetPropertyCount",
+        "InsertItem",
+        "SetItem",
+        "Match",
+        "ParentDocument",
+        "ParentDocumentIndex",
+        "ParseValue",
+        "Rank",
+        "Remove",
+        "RemoveRange",
+        "RemoveWhere",
+        "Source",
+        "ValueBufferSize",
+        "ValueEquals",
+        "ValueKind",
+        "TokenType",
+        "WriteTo",
     ];
 
     private static ReadOnlySpan<char> EntitySuffix => "Entity".AsSpan();
