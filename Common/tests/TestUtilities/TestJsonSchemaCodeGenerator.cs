@@ -210,7 +210,7 @@ namespace TestUtilities
             bool addExplicitUsings,
             Assembly hostAssembly)
         {
-            string key = schemaText;
+            string key = $"{schemaText}_{defaultVocabulary}_{validateFormat}_{optionalAsNullable}_{useImplicitOperatorString}_{addExplicitUsings}";
             if (s_compiledTypesCache.TryGetValue(key, out DynamicJsonType value))
             {
                 return value;
