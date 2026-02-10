@@ -995,6 +995,21 @@
   <data name="JsonSchema_ExpectedLengthLessThanOrEquals" xml:space="preserve">
     <value>Expected the length of the value to be less than or equal to</value>
   </data>
+  <data name="JsonSchema_ExpectedStringEquals" xml:space="preserve">
+    <value>Expected the value to be the string</value>
+  </data>
+  <data name="JsonSchema_ExpectedConstantValue" xml:space="preserve">
+    <value>Expected the value to be</value>
+  </data>
+  <data name="JsonSchema_ExpectedNullValue" xml:space="preserve">
+    <value>Expected the value to be 'null'</value>
+  </data>
+  <data name="JsonSchema_ExpectedBooleanTrueValue" xml:space="preserve">
+    <value>Expected the value to be 'true'</value>
+  </data>
+  <data name="JsonSchema_ExpectedBooleanFalseValue" xml:space="preserve">
+    <value>Expected the value to be 'false'</value>
+  </data>
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>

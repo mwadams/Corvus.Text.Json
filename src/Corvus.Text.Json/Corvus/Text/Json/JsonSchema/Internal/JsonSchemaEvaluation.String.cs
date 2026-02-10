@@ -24,6 +24,11 @@ public static partial class JsonSchemaEvaluation
     /// </summary>
     public static readonly JsonSchemaMessageProvider ExpectedTypeString = static (buffer, out written) => ExpectedType("string"u8, buffer, out written);
 
+    /// <summary>
+    /// A message provider for expected string constant validation.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider<string> ExpectedStringEquals = static (constantValue, buffer, out written) => ExpectedStringEqualsValue(constantValue, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedDate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601Date.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedDateTime = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601OffsetDateTime.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedDuration = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601Duration.AsSpan(), buffer, out written);
@@ -51,6 +56,7 @@ public static partial class JsonSchemaEvaluation
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthLessThanOrEquals = static (length, buffer, out written) => ExpectedLengthLessThanOrEquals(length, buffer, out written);
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthGreaterThan = static (length, buffer, out written) => ExpectedLengthGreaterThan(length, buffer, out written);
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthGreaterThanOrEquals = static (length, buffer, out written) => ExpectedLengthGreaterThanOrEquals(length, buffer, out written);
+
 
     /// <summary>
     /// Gets the allowed characters for the local part of an email address.
@@ -153,6 +159,27 @@ public static partial class JsonSchemaEvaluation
         }
 
         context.EvaluatedKeyword(true, expected, ExpectedStringLengthEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string equals the given value.
+    /// </summary>
+    /// <param name="actual">The UTF-8 encoded string value to validate.</param>
+    /// <param name="expected">The UTF-8 encoded string value expected.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchStringConstantValue(ReadOnlySpan<byte> actual, ReadOnlySpan<byte> expected, string expectedString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!actual.SequenceEqual(expected))
+        {
+            context.EvaluatedKeyword(false, expectedString, messageProvider: ExpectedStringEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expectedString, ExpectedStringEquals, keyword);
         return true;
     }
 

@@ -10,6 +10,7 @@ public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeNull = static (buffer, out written) => IgnoredNotType("null"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider ExpectedTypeNull = static (buffer, out written) => ExpectedType("null"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider ExpectedNull = static (buffer, out written) => ExpectedNullValue(buffer, out written);
 
     /// <summary>
     /// Matches a JSON token type against the "null" type constraint.

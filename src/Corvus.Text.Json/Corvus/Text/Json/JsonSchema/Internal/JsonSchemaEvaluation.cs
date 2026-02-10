@@ -13,6 +13,8 @@ namespace Corvus.Text.Json.Internal;
 /// </summary>
 public static partial class JsonSchemaEvaluation
 {
+    public static readonly JsonSchemaMessageProvider<string> ExpectedConstant = static (expectedValue, buffer, out written) => ExpectedConstantValue(expectedValue, buffer, out written);
+
     /// <summary>
     /// Creates a schema location for an indexed keyword by appending the index to the base location.
     /// </summary>
@@ -359,6 +361,17 @@ public static partial class JsonSchemaEvaluation
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedStringEqualsValue(string expected, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedStringEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(expected, buffer, ref written);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool ExpectedLengthEquals(int value, Span<byte> buffer, out int written)
     {
         if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedLengthEquals.AsSpan(), buffer, out written))
@@ -422,5 +435,63 @@ public static partial class JsonSchemaEvaluation
         }
 
         return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected constant value.
+    /// </summary>
+    /// <param name="expectedValue">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedConstantValue(string expectedValue, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedConstantValue.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(expectedValue, buffer, ref written);
+    }
+
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value was null.
+    /// </summary>
+    /// <param name="expectedValue">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedNullValue(Span<byte> buffer, out int written)
+    {
+        return JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedNullValue.AsSpan(), buffer, out written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value was boolean true.
+    /// </summary>
+    /// <param name="expectedValue">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedBooleanTrueValue(Span<byte> buffer, out int written)
+    {
+        return JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedBooleanTrueValue.AsSpan(), buffer, out written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value was boolean false.
+    /// </summary>
+    /// <param name="expectedValue">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ExpectedBooleanFalseValue(Span<byte> buffer, out int written)
+    {
+        return JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedBooleanFalseValue.AsSpan(), buffer, out written);
     }
 }

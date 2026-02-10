@@ -18,8 +18,8 @@ public static partial class JsonSchemaEvaluation
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeInteger = static (buffer, out written) => IgnoredNotType("integer"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider ExpectedTypeNumber = static (buffer, out written) => ExpectedType("number"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider ExpectedTypeInteger = static (buffer, out written) => ExpectedType("integer"u8, buffer, out written);
-
     public static readonly JsonSchemaMessageProvider<string> ExpectedMultipleOf = static (divisor, buffer, out written) => ExpectedMultipleOfDivisor(divisor, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<string> ExpectedEquals = static (value, buffer, out written) => ExpectedEqualsValue(value, buffer, out written);
 
     private const int MaximumByteExponent = 0;
     private const bool MaximumByteIsNegative = false;
@@ -92,7 +92,6 @@ public static partial class JsonSchemaEvaluation
     private static readonly JsonSchemaMessageProvider ExpectedUInt32 = static (buffer, out written) => ExpectedNumberFormat("uint32"u8, buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUInt64 = static (buffer, out written) => ExpectedNumberFormat("uint64"u8, buffer, out written);
 
-    private static readonly JsonSchemaMessageProvider<string> ExpectedEquals = static (value, buffer, out written) => ExpectedEqualsValue(value, buffer, out written);
     private static readonly JsonSchemaMessageProvider<string> ExpectedNotEquals = static (value, buffer, out written) => ExpectedNotEqualsValue(value, buffer, out written);
     private static readonly JsonSchemaMessageProvider<string> ExpectedLessThanOrEquals = static (value, buffer, out written) => ExpectedLessThanOrEqualsValue(value, buffer, out written);
     private static readonly JsonSchemaMessageProvider<string> ExpectedLessThan = static (value, buffer, out written) => ExpectedLessThanValue(value, buffer, out written);

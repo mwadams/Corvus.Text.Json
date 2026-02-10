@@ -107,10 +107,10 @@ public static class NumberValidationExtensions
         JsonElementHelpers.ParseNumber(rawValue, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
         string isNegativeString = isNegative ? "true" : "false";
-        string integralString = SymbolDisplay.FormatLiteral(GetTextFromUtf8(integral), true);
-        string fractionalString = SymbolDisplay.FormatLiteral(GetTextFromUtf8(fractional), true);
+        string integralString = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(integral), true);
+        string fractionalString = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(fractional), true);
         string exponentString = exponent.ToString();
-        string rawValueString = SymbolDisplay.FormatLiteral(GetTextFromUtf8(rawValue), true);
+        string rawValueString = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(rawValue), true);
         string operatorFunction = op switch
         {
             Operator.Equals => "JsonSchemaEvaluation.MatchEquals",
@@ -155,8 +155,8 @@ public static class NumberValidationExtensions
 
         JsonElementHelpers.ParseNumber(rawValue, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
-        string divisor = $"{GetTextFromUtf8(integral)}{GetTextFromUtf8(fractional)}";
-        string divisorValue = SymbolDisplay.FormatLiteral(GetTextFromUtf8(rawValue), true);
+        string divisor = $"{Formatting.GetTextFromUtf8(integral)}{Formatting.GetTextFromUtf8(fractional)}";
+        string divisorValue = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(rawValue), true);
         // Does the integral/fractional part represent a value that can be validated as a UInt64 without loss of precision?
         if (IsUInt64(isNegative, integral, fractional, 0))
         {
@@ -173,26 +173,6 @@ public static class NumberValidationExtensions
                 .AppendNormalizedJsonNumberIfNotAppended(typeDeclaration, false)
                 .AppendLineIndent("JsonSchemaEvaluation.MatchMultipleOf(integral, fractional, exponent, BigInteger.Parse(\"", divisor, "\"), ", exponent.ToString(), ", ", divisorValue, ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context);");
         }
-    }
-
-    private static string GetTextFromUtf8(ReadOnlySpan<byte> utf8Text)
-    {
-#if NET
-        return Encoding.UTF8.GetString(utf8Text);
-#else
-            if (utf8Text.IsEmpty)
-            {
-                return string.Empty;
-            }
-
-            unsafe
-            {
-                fixed (byte* bytePtr = utf8Text)
-                {
-                    return Encoding.UTF8.GetString(bytePtr, utf8Text.Length);
-                }
-            }
-#endif
     }
 
     /// <summary>

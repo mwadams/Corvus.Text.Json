@@ -30,33 +30,13 @@ internal static partial class CodeGeneratorExtensions
 
         string normalizedNumberProperty = generator.GetStaticReadOnlyPropertyNameInScope(baseName);
         generator.AppendLineIndent("private const bool ", isNegativeField, " = ", isNegative ? "true" : "false", ";");
-        generator.AppendLineIndent("private static ", integralProperty, " => \"", GetTextFromUtf8(integral), "\"u8;");
-        generator.AppendLineIndent("private static ", fractionalProperty, " => \"", GetTextFromUtf8(fractional), "\"u8;");
+        generator.AppendLineIndent("private static ", integralProperty, " => \"", Formatting.GetTextFromUtf8(integral), "\"u8;");
+        generator.AppendLineIndent("private static ", fractionalProperty, " => \"", Formatting.GetTextFromUtf8(fractional), "\"u8;");
         generator.AppendLineIndent("private const int ", exponentField, " = ", exponent.ToString(), ";");
 
         generator.AppendLineIndent("private static NormalizedJsonNumber", normalizedNumberProperty, " => new NormalizedJsonNumber(", isNegativeField, ", ", integralProperty, ", ", fractionalProperty, ", ", exponentField, ");");
 
         return generator;
-
-        static string GetTextFromUtf8(ReadOnlySpan<byte> utf8Text)
-        {
-#if NET
-            return Encoding.UTF8.GetString(utf8Text);
-#else
-            if (utf8Text.IsEmpty)
-            {
-                return string.Empty;
-            }
-
-            unsafe
-            {
-                fixed (byte* bytePtr = utf8Text)
-                {
-                    return Encoding.UTF8.GetString(bytePtr, utf8Text.Length);
-                }
-            }
-#endif
-        }
     }
 
     /// <summary>

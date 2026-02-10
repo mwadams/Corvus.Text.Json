@@ -81,6 +81,7 @@
     <Compile Include="ValidationHandlers\NumberChildHandlers\NumberRangeValidationHandler.cs" />
     <Compile Include="ValidationHandlers\StringChildHandlers\StringRegularExpressionValidationHandler.cs" />
     <Compile Include="ValidationHandlers\StringChildHandlers\StringLengthValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\ConstValidationHandler.cs" />
     <Compile Include="ValidationHandlers\StringValidationHandler.cs" />
     <Compile Include="ValidationHandlers\NumberValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ITypeSensitiveKeywordValidationHandler.cs" />

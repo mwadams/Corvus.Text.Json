@@ -414,31 +414,11 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
         JsonElementHelpers.ParseNumber(number, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
         generator.AppendLineIndent("private const bool ", isNegativeField, " = ", isNegative ? "true" : "false", ";");
-        generator.AppendLineIndent("private static ", integralProperty, " => \"", GetTextFromUtf8(integral), "\"u8;");
-        generator.AppendLineIndent("private static ", fractionalProperty, " => \"", GetTextFromUtf8(fractional), "\"u8;");
+        generator.AppendLineIndent("private static ", integralProperty, " => \"", Formatting.GetTextFromUtf8(integral), "\"u8;");
+        generator.AppendLineIndent("private static ", fractionalProperty, " => \"", Formatting.GetTextFromUtf8(fractional), "\"u8;");
         generator.AppendLineIndent("private const int ", exponentField, " = ", exponent.ToString(), ";");
 
         return true;
-    }
-
-    private static string GetTextFromUtf8(ReadOnlySpan<byte> utf8Text)
-    {
-#if NET
-        return Encoding.UTF8.GetString(utf8Text);
-#else
-        if (utf8Text.IsEmpty)
-        {
-            return string.Empty;
-        }
-
-        unsafe
-        {
-            fixed (byte* bytePtr = utf8Text)
-            {
-                return Encoding.UTF8.GetString(bytePtr, utf8Text.Length);
-            }
-        }
-#endif
     }
 
     /// <inheritdoc/>

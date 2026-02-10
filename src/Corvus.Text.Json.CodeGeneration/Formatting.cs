@@ -106,6 +106,31 @@ public static class Formatting
     }
 
     /// <summary>
+    /// Get a string from UTF-8 text.
+    /// </summary>
+    /// <param name="utf8Text">The UTF-8 text from which to retrieve the string.</param>
+    /// <returns>The string created from the UTF-8 text.</returns>
+    public static string GetTextFromUtf8(ReadOnlySpan<byte> utf8Text)
+    {
+#if NET
+        return Encoding.UTF8.GetString(utf8Text);
+#else
+            if (utf8Text.IsEmpty)
+            {
+                return string.Empty;
+            }
+
+            unsafe
+            {
+                fixed (byte* bytePtr = utf8Text)
+                {
+                    return Encoding.UTF8.GetString(bytePtr, utf8Text.Length);
+                }
+            }
+#endif
+    }
+
+    /// <summary>
     /// Format a name for a type declaration.
     /// </summary>
     /// <param name="typeDeclaration">The type declaration for which to format the name.</param>
