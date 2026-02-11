@@ -1031,6 +1031,12 @@
   <data name="JsonSchema_DidNotMatchAtLeastOneConstantValue" xml:space="preserve">
     <value>The value did not match at least one subschema.</value>
   </data>
+  <data name="JsonSchema_DidNotMatchNotSchema" xml:space="preserve">
+    <value>The value did not match the subschema in a not composition, which means the evaluation was a match.</value>
+  </data>
+  <data name="JsonSchema_MatchedNotSchema" xml:space="preserve">
+    <value>The value matched the subschema in a not composition, which means the evaluation was not a match.</value>
+  </data>
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>

@@ -53,4 +53,14 @@ public static partial class JsonSchemaEvaluation
     /// Message provider for validation errors when no constant values matched in a composition constraint.
     /// </summary>
     public static readonly JsonSchemaMessageProvider DidNotMatchAtLeastOneConstantValue = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_DidNotMatchAtLeastOneConstantValue.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when a value (correctly) did not match a not schema in a composition constraint.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider DidNotMatchNotSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_DidNotMatchNotSchema.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when a value (incorrectly) matched a not schema in a composition constraint.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider MatchedNotSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedNotSchema.AsSpan(), buffer, out written);
 }

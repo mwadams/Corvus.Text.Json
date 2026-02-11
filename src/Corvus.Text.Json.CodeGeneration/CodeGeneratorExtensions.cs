@@ -1101,6 +1101,29 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
+        foreach (INotValidationKeyword keyword in typeDeclaration.Keywords().OfType<INotValidationKeyword>())
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+
+            if (!keyword.TryGetNotType(typeDeclaration, out ReducedTypeDeclaration? reducedType) || reducedType is not ReducedTypeDeclaration rdt)
+            {
+                continue;
+            }
+
+            string evaluationPathProperty = generator.GetPropertyNameInScope($"{keyword.Keyword}SchemaEvaluationPath");
+            string evaluationPath = SymbolDisplay.FormatLiteral(keyword.GetPathModifier(rdt), true);
+            generator
+                .AppendLineIndent(
+                    "private static readonly JsonSchemaPathProvider ",
+                    evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                    evaluationPath,
+                    "u8, buffer, out written);");
+        }
+
         return generator;
     }
 
