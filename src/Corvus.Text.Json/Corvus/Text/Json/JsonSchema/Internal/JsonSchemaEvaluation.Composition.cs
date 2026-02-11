@@ -63,4 +63,34 @@ public static partial class JsonSchemaEvaluation
     /// Message provider for validation errors when a value (incorrectly) matched a not schema in a composition constraint.
     /// </summary>
     public static readonly JsonSchemaMessageProvider MatchedNotSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedNotSchema.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when a value matches a binary or ternary if to go on to match a then clause.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider MatchedIfForThen = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedIfForThen.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when a value did not match the then clause for a binary or ternary if.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider DidNotMatchThen = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_DidNotMatchThen.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when a value matches the corresponding then clause for a binary or ternary if.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider MatchedThen = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedThen.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when a value does not match a ternary if and so goes on to match an else clause.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider MatchedIfForElse = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedIfForElse.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when a value does not match a ternary if and then did not match the corresponding else clause.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider DidNotMatchElse = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_DidNotMatchElse.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when a value matches the corresponding then clause for a binary or ternary if.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider MatchedElse = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedElse.AsSpan(), buffer, out written);
 }

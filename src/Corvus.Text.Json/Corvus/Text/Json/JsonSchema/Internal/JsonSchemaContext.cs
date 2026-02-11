@@ -128,6 +128,11 @@ public struct JsonSchemaContext
     /// </summary>
     public readonly bool HasCollector => _resultsCollector is not null;
 
+    /// <summary>
+    /// Gets a value indicating whether this context requires evaluation tracking.
+    /// </summary>
+    public readonly bool RequiresEvaluationTracking => (_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedPropertiesOrItems) != 0;
+
     // The length is the _lengthAndUsingFeatures union with the top nybble masked
     private readonly int Length => unchecked((int)(_lengthAndUsingFeatures & 0x0FFF_FFFFU));
 

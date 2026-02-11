@@ -1037,6 +1037,24 @@
   <data name="JsonSchema_MatchedNotSchema" xml:space="preserve">
     <value>The value matched the subschema in a not composition, which means the evaluation was not a match.</value>
   </data>
+  <data name="JsonSchema_MatchedIfForThen" xml:space="preserve">
+    <value>The value matched the subschema in a binary or ternay if, which means the evaluation will go on to match the then subschema.</value>
+  </data>
+  <data name="JsonSchema_MatchedThen" xml:space="preserve">
+    <value>The value matched the then subschema corresponding to a binary or ternary if.</value>
+  </data>
+  <data name="JsonSchema_DidNotMatchThen" xml:space="preserve">
+    <value>The value did not match the then subschema corresponding to a binary or ternary if.</value>
+  </data>
+  <data name="JsonSchema_MatchedIfForElse" xml:space="preserve">
+    <value>The value did not match the subschema in a ternary if, which means the evaluation will go on to match the else subschema.</value>
+  </data>
+  <data name="JsonSchema_MatchedElse" xml:space="preserve">
+    <value>The value matched the else subschema corresponding to a ternary if.</value>
+  </data>
+  <data name="JsonSchema_DidNotMatchElse" xml:space="preserve">
+    <value>The value did not match the else subschema corresponding to a ternay if.</value>
+  </data>
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>

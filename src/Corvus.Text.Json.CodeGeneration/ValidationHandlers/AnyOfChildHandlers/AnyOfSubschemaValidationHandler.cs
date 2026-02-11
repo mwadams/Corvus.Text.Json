@@ -92,21 +92,17 @@ public class AnyOfSubschemaValidationHandler : IChildValidationHandler
                         .AppendLineIndent("{")
                         .PushIndent();
 
-                    if (!typeDeclaration.RequiresItemsEvaluationTracking() &&
-                        !typeDeclaration.RequiresPropertyEvaluationTracking())
-                    {
-                        generator
-                            .AppendLineIndent("if (!", localContextName, ".HasCollector)")
-                            .AppendLineIndent("{")
-                            .PushIndent()
-                                .AppendLineIndent("goto ", shortCircuitSuccessLabel, ";")
-                            .PopIndent()
-                            .AppendLineIndent("}");
-                    }
+                    generator
+                        .AppendLineIndent("if (!", localContextName, ".RequiresEvaluationTracking && !", localContextName, ".HasCollector)")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("goto ", shortCircuitSuccessLabel, ";")
+                        .PopIndent()
+                        .AppendLineIndent("}");
 
                     generator
-                            .AppendSeparatorLine()
-                            .AppendLineIndent("context.ApplyEvaluated(ref ", localContextName, ");")
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("context.ApplyEvaluated(ref ", localContextName, ");")
                         .PopIndent()
                         .AppendLineIndent("}")
                         .AppendSeparatorLine()

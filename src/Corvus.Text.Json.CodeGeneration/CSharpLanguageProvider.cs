@@ -340,10 +340,10 @@ public class CSharpLanguageProvider(CSharpLanguageProvider.Options? options = nu
             CompositionAllOfValidationHandler.Instance,
             CompositionAnyOfValidationHandler.Instance,
             CompositionOneOfValidationHandler.Instance,
-            CompositionNotValidationHandler.Instance
+            CompositionNotValidationHandler.Instance,
+            TernaryIfValidationHandler.Instance
             //ArrayValidationHandler.Instance,
             //ObjectValidationHandler.Instance,
-            //TernaryIfValidationHandler.Instance,
             );
 
         languageProvider.RegisterNameHeuristics(

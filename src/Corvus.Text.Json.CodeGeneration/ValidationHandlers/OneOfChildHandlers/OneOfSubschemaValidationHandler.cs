@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -55,6 +56,8 @@ public class OneOfSubschemaValidationHandler : IChildValidationHandler
 
                 IReadOnlyCollection<TypeDeclaration> subschemaTypes = subschemaDictionary[keyword];
                 int i = 0;
+                List<string> contexts = [];
+
                 foreach (TypeDeclaration subschemaType in subschemaTypes)
                 {
                     if (generator.IsCancellationRequested)
@@ -72,7 +75,7 @@ public class OneOfSubschemaValidationHandler : IChildValidationHandler
 
                     ReducedTypeDeclaration reducedType = subschemaType.ReducedTypeDeclaration();
                     string localContextName = generator.GetUniqueVariableNameInScope("Context", prefix: keyword.Keyword, suffix: i.ToString());
-
+                    contexts.Insert(0, localContextName);
                     string evaluationPathProperty = generator.GetPropertyNameInScope($"{keyword.Keyword}{i}SchemaEvaluationPath");
                     string targetTypeName = reducedType.ReducedType.FullyQualifiedDotnetTypeName();
                     string jsonSchemaClassName = generator.JsonSchemaClassName(targetTypeName);
@@ -100,31 +103,18 @@ public class OneOfSubschemaValidationHandler : IChildValidationHandler
                         .PopIndent()
                         .AppendLineIndent("}")
                         .AppendSeparatorLine()
-                        .AppendLineIndent("context.CommitChildContext(true, ref ", localContextName, ");");
+                        .AppendLineIndent();
 
                     i++;
                 }
 
                 generator
                     .AppendSeparatorLine()
-                    .AppendLineIndent("if (", matchedCount, " == 1)")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedExactlyOneSchema, ", formattedKeyword, "u8);")
-                    .PopIndent()
-                    .AppendLineIndent("}")
-                    .AppendLineIndent("else if (", matchedCount, " == 0)")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedNoSchema, ", formattedKeyword, "u8);")
-                    .PopIndent()
-                    .AppendLineIndent("}")
-                    .AppendLineIndent("else")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedMoreThanOneSchema, ", formattedKeyword, "u8);")
-                    .PopIndent()
-                    .AppendLineIndent("}");
+                    .CommitChildContexts(contexts, keyword, matchedCount)
+                    .AppendLineIndent(
+                        "context.EvaluatedKeyword(", matchedCount, " == 1, ",
+                        matchedCount, " == 0 ? JsonSchemaEvaluation.MatchedNoSchema : ", matchedCount, " == 1 ? JsonSchemaEvaluation.MatchedExactlyOneSchema : JsonSchemaEvaluation.MatchedMoreThanOneSchema, ",
+                        formattedKeyword, "u8);");
             }
         }
 
@@ -135,5 +125,19 @@ public class OneOfSubschemaValidationHandler : IChildValidationHandler
     {
         // Not expected to be called
         throw new InvalidOperationException();
+    }
+}
+
+file static class OneOfSubschemaHandlerExtensions
+{
+    public static CodeGenerator CommitChildContexts(this CodeGenerator generator, List<string> childContexts, IOneOfSubschemaValidationKeyword keyword, string matchedCount)
+    {
+        foreach (string childContextName in childContexts)
+        {
+            generator
+                .AppendLineIndent("context.CommitChildContext(", matchedCount, " == 1, ref ", childContextName, ");");
+        }
+
+        return generator;
     }
 }
