@@ -36,7 +36,8 @@ public readonly partial struct JsonElement
         /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
         /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
         /// <returns>The child context.</returns>
-        internal static JsonSchemaContext PushChildContext(
+        [CLSCompliant(false)]
+        public static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
@@ -64,7 +65,8 @@ public readonly partial struct JsonElement
         /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
         /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
         /// <returns>The child context.</returns>
-        internal static JsonSchemaContext PushChildContext<TContext>(
+        [CLSCompliant(false)]
+        public static JsonSchemaContext PushChildContext<TContext>(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             TContext providerContext,
@@ -83,7 +85,8 @@ public readonly partial struct JsonElement
                     providerContext: providerContext);
         }
 
-        internal static JsonSchemaContext PushChildContext(
+        [CLSCompliant(false)]
+        public static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
@@ -101,7 +104,8 @@ public readonly partial struct JsonElement
                     schemaEvaluationPath: SchemaLocationProvider);
         }
 
-        internal static JsonSchemaContext PushChildContextUnescaped(
+        [CLSCompliant(false)]
+        public static JsonSchemaContext PushChildContextUnescaped(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
             ref JsonSchemaContext context,
@@ -119,7 +123,8 @@ public readonly partial struct JsonElement
                     schemaEvaluationPath: SchemaLocationProvider);
         }
 
-        internal static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+        [CLSCompliant(false)]
+        public static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
         {
             // You're not allowed to ask about non-value-like entities
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
@@ -131,7 +136,8 @@ public readonly partial struct JsonElement
             context.EvaluatedBooleanSchema(true);
         }
 
-        internal static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
+        [CLSCompliant(false)]
+        public static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
         {
             return true;
         }

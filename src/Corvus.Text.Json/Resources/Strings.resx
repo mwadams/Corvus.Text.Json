@@ -1019,6 +1019,9 @@
   <data name="JsonSchema_MatchedAtLeastOneSchema" xml:space="preserve">
     <value>The value matched at least one subschema.</value>
   </data>
+  <data name="JsonSchema_MatchedExactlyOneSchema" xml:space="preserve">
+    <value>The value matched exactly one subschema.</value>
+  </data>
   <data name="JsonSchema_DidNotMatchAtLeastOneSchema" xml:space="preserve">
     <value>The value did not match at least one subschema.</value>
   </data>

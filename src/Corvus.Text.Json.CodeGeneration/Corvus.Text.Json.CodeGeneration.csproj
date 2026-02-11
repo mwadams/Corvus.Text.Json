@@ -81,9 +81,11 @@
     <Compile Include="ValidationHandlers\AllOfChildHandlers\AllOfSubschemaValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfConstValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfSubschemaValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\CompositionOneOfValidationHandler.cs" />
     <Compile Include="ValidationHandlers\CompositionAnyOfValidationHandler.cs" />
     <Compile Include="ValidationHandlers\CompositionAllOfValidationHandler.cs" />
     <Compile Include="ValidationHandlers\NumberChildHandlers\NumberRangeValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\OneOfChildHandlers\OneOfSubschemaValidationHandler.cs" />
     <Compile Include="ValidationHandlers\StringChildHandlers\StringRegularExpressionValidationHandler.cs" />
     <Compile Include="ValidationHandlers\StringChildHandlers\StringLengthValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ConstValidationHandler.cs" />

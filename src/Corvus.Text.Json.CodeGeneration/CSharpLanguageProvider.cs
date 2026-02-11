@@ -338,11 +338,10 @@ public class CSharpLanguageProvider(CSharpLanguageProvider.Options? options = nu
             StringValidationHandler.Instance,
             ConstValidationHandler.Instance,
             CompositionAllOfValidationHandler.Instance,
-            CompositionAnyOfValidationHandler.Instance
+            CompositionAnyOfValidationHandler.Instance,
+            CompositionOneOfValidationHandler.Instance
             //ArrayValidationHandler.Instance,
-            //CompositionAnyOfValidationHandler.Instance,
             //CompositionNotValidationHandler.Instance,
-            //CompositionOneOfValidationHandler.Instance,
             //ObjectValidationHandler.Instance,
             //TernaryIfValidationHandler.Instance,
             );

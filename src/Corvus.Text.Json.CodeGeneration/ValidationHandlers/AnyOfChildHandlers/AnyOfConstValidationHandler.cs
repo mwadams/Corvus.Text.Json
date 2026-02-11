@@ -42,12 +42,22 @@ public class AnyOfConstValidationHandler : IChildValidationHandler
 
         if (typeDeclaration.AnyOfConstantValues() is IReadOnlyDictionary<IAnyOfConstantValidationKeyword, JsonElement[]> constDictionary)
         {
+            bool requiresShortCut = false;
+
             foreach (IAnyOfConstantValidationKeyword keyword in constDictionary.Keys)
             {
                 if (generator.IsCancellationRequested)
                 {
                     return generator;
                 }
+
+                if (requiresShortCut)
+                {
+                    generator
+                        .AppendNoCollectorNoMatchShortcutReturn();
+                }
+
+                requiresShortCut = true;
 
                 string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true); 
 

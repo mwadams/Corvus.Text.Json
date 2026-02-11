@@ -35,6 +35,11 @@ public static partial class JsonSchemaEvaluation
     public static readonly JsonSchemaMessageProvider MatchedAtLeastOneSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedAtLeastOneSchema.AsSpan(), buffer, out written);
 
     /// <summary>
+    /// Message provider for validation errors when at least one schema matches in a composition constraint.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider MatchedExactlyOneSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedExactlyOneSchema.AsSpan(), buffer, out written);
+
+    /// <summary>
     /// Message provider for validation errors when no schemas matched in a composition constraint.
     /// </summary>
     public static readonly JsonSchemaMessageProvider DidNotMatchAtLeastOneSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_DidNotMatchAtLeastOneSchema.AsSpan(), buffer, out written);

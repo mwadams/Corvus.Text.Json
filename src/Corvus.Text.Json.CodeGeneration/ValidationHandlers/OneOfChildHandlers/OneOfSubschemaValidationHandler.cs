@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.AnyOfChildHandlers;
+namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.OneOfChildHandlers;
 
 /// <summary>
-/// A validation handler for any-of subschema semantics.
+/// A validation handler for one-of subschema semantics.
 /// </summary>
-public class AnyOfSubschemaValidationHandler : IChildValidationHandler
+public class OneOfSubschemaValidationHandler : IChildValidationHandler
 {
     /// <summary>
-    /// Gets the singleton instance of the <see cref="AnyOfSubschemaValidationHandler"/>.
+    /// Gets the singleton instance of the <see cref="OneOfSubschemaValidationHandler"/>.
     /// </summary>
-    public static AnyOfSubschemaValidationHandler Instance { get; } = new();
+    public static OneOfSubschemaValidationHandler Instance { get; } = new();
 
     /// <inheritdoc/>
     public uint ValidationHandlerPriority { get; } = ValidationPriorities.Default;
@@ -36,9 +36,9 @@ public class AnyOfSubschemaValidationHandler : IChildValidationHandler
 
         bool requiresShortCut = false;
 
-        if (typeDeclaration.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> subschemaDictionary)
+        if (typeDeclaration.OneOfCompositionTypes() is IReadOnlyDictionary<IOneOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> subschemaDictionary)
         {
-            foreach (IAnyOfSubschemaValidationKeyword keyword in subschemaDictionary.Keys)
+            foreach (IOneOfSubschemaValidationKeyword keyword in subschemaDictionary.Keys)
             {
                 if (generator.IsCancellationRequested)
                 {
@@ -53,13 +53,13 @@ public class AnyOfSubschemaValidationHandler : IChildValidationHandler
 
                 requiresShortCut = true;
 
-                string composedIsMatchName = generator.GetUniqueVariableNameInScope("ComposedIsMatch", prefix: keyword.Keyword);
-                string shortCircuitSuccessLabel = generator.GetUniqueVariableNameInScope("ShortCircuitSuccess", prefix: keyword.Keyword);
+                string matchedCount = generator.GetUniqueVariableNameInScope("MatchedCount", prefix: keyword.Keyword);
 
                 generator
                     .AppendSeparatorLine()
-                    .AppendLineIndent("bool ", composedIsMatchName, " = false;");
+                    .AppendLineIndent("int ", matchedCount, " = 0;");
 
+                string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
 
                 IReadOnlyCollection<TypeDeclaration> subschemaTypes = subschemaDictionary[keyword];
                 int i = 0;
@@ -89,27 +89,18 @@ public class AnyOfSubschemaValidationHandler : IChildValidationHandler
                         .AppendLineIndent(targetTypeName, ".", jsonSchemaClassName, ".PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: ", evaluationPathProperty, ");")
                         .PopIndent()
                         .AppendLineIndent(targetTypeName, ".", jsonSchemaClassName, ".Evaluate(parentDocument, parentIndex, ref ", localContextName, ");")
-                        .AppendLineIndent(composedIsMatchName, " = ", composedIsMatchName, " || ", localContextName, ".IsMatch;");
-
-                    generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("if (", localContextName, ".IsMatch)")
                         .AppendLineIndent("{")
-                        .PushIndent();
-
-                    if (!typeDeclaration.RequiresItemsEvaluationTracking() &&
-                        !typeDeclaration.RequiresPropertyEvaluationTracking())
-                    {
-                        generator
-                            .AppendLineIndent("if (!", localContextName, ".HasCollector)")
+                        .PushIndent()
+                            .AppendLineIndent(matchedCount, "++;")
+                            .AppendLineIndent("if (", matchedCount, " > 1 && !context.HasCollector)")
                             .AppendLineIndent("{")
                             .PushIndent()
-                                .AppendLineIndent("goto ", shortCircuitSuccessLabel, ";")
+                                .AppendLineIndent("context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedMoreThanOneSchema, ", formattedKeyword, "u8);")
+                                .AppendLineIndent("return;")
                             .PopIndent()
-                            .AppendLineIndent("}");
-                    }
-
-                    generator
+                            .AppendLineIndent("}")
                             .AppendSeparatorLine()
                             .AppendLineIndent("context.ApplyEvaluated(ref ", localContextName, ");")
                         .PopIndent()
@@ -120,13 +111,26 @@ public class AnyOfSubschemaValidationHandler : IChildValidationHandler
                     i++;
                 }
 
-                string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
                 generator
                     .AppendSeparatorLine()
-                    .PopIndent()
-                    .AppendLineIndent(shortCircuitSuccessLabel, ":")
+                    .AppendLineIndent("if (", matchedCount, " == 1)")
+                    .AppendLineIndent("{")
                     .PushIndent()
-                    .AppendLineIndent("context.EvaluatedKeyword(", composedIsMatchName, ", ", composedIsMatchName, "  ? JsonSchemaEvaluation.MatchedAtLeastOneSchema : JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, ", formattedKeyword, "u8);");
+                        .AppendLineIndent("context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedExactlyOneSchema, ", formattedKeyword, "u8);")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendLineIndent("else if (", matchedCount, " == 0)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedNoSchema, ", formattedKeyword, "u8);")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendLineIndent("else")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedMoreThanOneSchema, ", formattedKeyword, "u8);")
+                    .PopIndent()
+                    .AppendLineIndent("}");
             }
         }
 
