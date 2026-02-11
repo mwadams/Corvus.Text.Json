@@ -996,6 +996,7 @@ internal static partial class CodeGeneratorExtensions
             .PopIndent()
             .AppendLineIndent("}");
     }
+
     /// <summary>
     /// Append the schema subschema evalation path provider static properties for the type declaration.
     /// </summary>
@@ -1004,16 +1005,16 @@ internal static partial class CodeGeneratorExtensions
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendSubschemaEvaluationPathStaticProperties(this CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
-        if (typeDeclaration.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> subschemaDictionary)
+        if (typeDeclaration.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> allOfDictionary)
         {
-            foreach (IAllOfSubschemaValidationKeyword keyword in subschemaDictionary.Keys)
+            foreach (IAllOfSubschemaValidationKeyword keyword in allOfDictionary.Keys)
             {
                 if (generator.IsCancellationRequested)
                 {
                     return generator;
                 }
 
-                IReadOnlyCollection<TypeDeclaration> subschemaTypes = subschemaDictionary[keyword];
+                IReadOnlyCollection<TypeDeclaration> subschemaTypes = allOfDictionary[keyword];
                 int i = 0;
                 foreach (TypeDeclaration subschemaType in subschemaTypes)
                 {
@@ -1031,6 +1032,71 @@ internal static partial class CodeGeneratorExtensions
                             evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
                             evaluationPath,
                             "u8, buffer, out written);");
+                    i++;
+                }
+            }
+        }
+
+        if (typeDeclaration.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> anyOfDictionary)
+        {
+            foreach (IAnyOfSubschemaValidationKeyword keyword in anyOfDictionary.Keys)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                IReadOnlyCollection<TypeDeclaration> subschemaTypes = anyOfDictionary[keyword];
+                int i = 0;
+                foreach (TypeDeclaration subschemaType in subschemaTypes)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return generator;
+                    }
+
+                    ReducedTypeDeclaration reducedType = subschemaType.ReducedTypeDeclaration();
+                    string evaluationPathProperty = generator.GetPropertyNameInScope($"{keyword.Keyword}{i}SchemaEvaluationPath");
+                    string evaluationPath = SymbolDisplay.FormatLiteral(keyword.GetPathModifier(reducedType, i), true);
+                    generator
+                        .AppendLineIndent(
+                            "private static readonly JsonSchemaPathProvider ",
+                            evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                            evaluationPath,
+                            "u8, buffer, out written);");
+                    i++;
+                }
+            }
+        }
+
+        if (typeDeclaration.OneOfCompositionTypes() is IReadOnlyDictionary<IOneOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> oneOfDictionary)
+        {
+            foreach (IOneOfSubschemaValidationKeyword keyword in oneOfDictionary.Keys)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                IReadOnlyCollection<TypeDeclaration> subschemaTypes = oneOfDictionary[keyword];
+                int i = 0;
+                foreach (TypeDeclaration subschemaType in subschemaTypes)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return generator;
+                    }
+
+                    ReducedTypeDeclaration reducedType = subschemaType.ReducedTypeDeclaration();
+                    string evaluationPathProperty = generator.GetPropertyNameInScope($"{keyword.Keyword}{i}SchemaEvaluationPath");
+                    string evaluationPath = SymbolDisplay.FormatLiteral(keyword.GetPathModifier(reducedType, i), true);
+                    generator
+                        .AppendLineIndent(
+                            "private static readonly JsonSchemaPathProvider ",
+                            evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                            evaluationPath,
+                            "u8, buffer, out written);");
+                    i++;
                 }
             }
         }

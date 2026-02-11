@@ -1016,6 +1016,18 @@
   <data name="JsonSchema_DidNotMatchAllSchema" xml:space="preserve">
     <value>The value did not match all subschema.</value>
   </data>
+  <data name="JsonSchema_MatchedAtLeastOneSchema" xml:space="preserve">
+    <value>The value matched at least one subschema.</value>
+  </data>
+  <data name="JsonSchema_DidNotMatchAtLeastOneSchema" xml:space="preserve">
+    <value>The value did not match at least one subschema.</value>
+  </data>
+  <data name="JsonSchema_MatchedAtLeastOneConstantValue" xml:space="preserve">
+    <value>The value matched at least one subschema.</value>
+  </data>
+  <data name="JsonSchema_DidNotMatchAtLeastOneConstantValue" xml:space="preserve">
+    <value>The value did not match at least one subschema.</value>
+  </data>
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>

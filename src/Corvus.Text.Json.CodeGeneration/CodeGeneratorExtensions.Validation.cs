@@ -776,7 +776,7 @@ internal static partial class CodeGenerationExtensions
             .AppendLineIndent("/// </summary>")
             .AppendIndent("public static readonly ", typeDeclaration.DotnetTypeName(), " ")
             .Append(jsonMemberName)
-            .AppendLine(" = ParsedJsonDocument<", typeDeclaration.DotnetTypeName(), ">.StringConstant([..", SymbolDisplay.FormatLiteral(value.GetString()!, true), "u8]);");
+            .AppendLine(" = ParsedJsonDocument<", typeDeclaration.DotnetTypeName(), ">.StringConstant(", memberName, ");");
 
         return generator;
     }

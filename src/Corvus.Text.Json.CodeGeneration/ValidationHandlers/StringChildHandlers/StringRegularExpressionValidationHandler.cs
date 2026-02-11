@@ -8,7 +8,7 @@ using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.NumberChildHandlers;
+namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.StringChildHandlers;
 
 /// <summary>
 /// A string regular expression validation handler.

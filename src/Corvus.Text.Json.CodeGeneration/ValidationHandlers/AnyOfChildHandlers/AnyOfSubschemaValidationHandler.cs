@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.AllOfChildHandlers;
+namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.AnyOfChildHandlers;
 
 /// <summary>
-/// A validation handler for all-of subschema semantics.
+/// A validation handler for any-of subschema semantics.
 /// </summary>
-public class AllOfSubschemaValidationHandler : IChildValidationHandler
+public class AnyOfSubschemaValidationHandler : IChildValidationHandler
 {
     /// <summary>
-    /// Gets the singleton instance of the <see cref="AllOfSubschemaValidationHandler"/>.
+    /// Gets the singleton instance of the <see cref="AnyOfSubschemaValidationHandler"/>.
     /// </summary>
-    public static AllOfSubschemaValidationHandler Instance { get; } = new();
+    public static AnyOfSubschemaValidationHandler Instance { get; } = new();
 
     /// <inheritdoc/>
     public uint ValidationHandlerPriority { get; } = ValidationPriorities.Default;
@@ -36,9 +36,9 @@ public class AllOfSubschemaValidationHandler : IChildValidationHandler
 
         bool requiresShortCut = false;
 
-        if (typeDeclaration.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> subschemaDictionary)
+        if (typeDeclaration.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> subschemaDictionary)
         {
-            foreach (IAllOfSubschemaValidationKeyword keyword in subschemaDictionary.Keys)
+            foreach (IAnyOfSubschemaValidationKeyword keyword in subschemaDictionary.Keys)
             {
                 if (generator.IsCancellationRequested)
                 {
@@ -46,10 +46,11 @@ public class AllOfSubschemaValidationHandler : IChildValidationHandler
                 }
 
                 string composedIsMatchName = generator.GetUniqueVariableNameInScope("ComposedIsMatch", prefix: keyword.Keyword);
+                string shortCircuitSuccessLabel = generator.GetUniqueVariableNameInScope("ShortCircuitSuccess", prefix: keyword.Keyword);
 
                 generator
                     .AppendSeparatorLine()
-                    .AppendLineIndent("bool ", composedIsMatchName, " = true;");
+                    .AppendLineIndent("bool ", composedIsMatchName, " = false;");
 
 
                 IReadOnlyCollection<TypeDeclaration> subschemaTypes = subschemaDictionary[keyword];
@@ -80,17 +81,41 @@ public class AllOfSubschemaValidationHandler : IChildValidationHandler
                         .AppendLineIndent(targetTypeName, ".", jsonSchemaClassName, ".PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: ", evaluationPathProperty, ");")
                         .PopIndent()
                         .AppendLineIndent(targetTypeName, ".", jsonSchemaClassName, ".Evaluate(parentDocument, parentIndex, ref ", localContextName, ");")
-                        .AppendLineIndent(composedIsMatchName, " = ", composedIsMatchName, " && ", localContextName, ".IsMatch;")
-                        .AppendLineIndent("context.ApplyEvaluated(ref ", localContextName, ");")
-                        .AppendLineIndent("context.CommitChildContext(", localContextName, ".IsMatch, ref ", localContextName, ");");
+                        .AppendLineIndent(composedIsMatchName, " = ", composedIsMatchName, " || ", localContextName, ".IsMatch;");
 
-                    requiresShortCut = true;
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("if (", localContextName, ".IsMatch)")
+                        .AppendLineIndent("{")
+                        .PushIndent();
+
+                    if (!typeDeclaration.RequiresItemsEvaluationTracking() &&
+                        !typeDeclaration.RequiresPropertyEvaluationTracking())
+                    {
+                        generator
+                            .AppendLineIndent("if (!", localContextName, ".HasCollector)")
+                            .AppendLineIndent("{")
+                            .PushIndent()
+                                .AppendLineIndent("goto ", shortCircuitSuccessLabel, ";")
+                            .PopIndent()
+                            .AppendLineIndent("}");
+                    }
+
+                    generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("context.ApplyEvaluated(ref ", localContextName, ");")
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("context.CommitChildContext(true, ref ", localContextName, ");");
+
                     i++;
                 }
 
                 string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
                 generator
-                    .AppendLineIndent("context.EvaluatedKeyword(", composedIsMatchName, ", ", composedIsMatchName, "  ? JsonSchemaEvaluation.MatchedAllSchema : JsonSchemaEvaluation.DidNotMatchAllSchema, ", formattedKeyword, "u8);");
+                    .AppendLine(shortCircuitSuccessLabel, ":")
+                    .AppendLineIndent("context.EvaluatedKeyword(", composedIsMatchName, ", ", composedIsMatchName, "  ? JsonSchemaEvaluation.MatchedAtLeastOneSchema : JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, ", formattedKeyword, "u8);");
             }
         }
 

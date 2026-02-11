@@ -28,4 +28,24 @@ public static partial class JsonSchemaEvaluation
     /// Message provider for validation errors when all schemas do not match in a composition constraint.
     /// </summary>
     public static readonly JsonSchemaMessageProvider DidNotMatchAllSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_DidNotMatchAllSchema.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when at least one schema matches in a composition constraint.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider MatchedAtLeastOneSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedAtLeastOneSchema.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when no schemas matched in a composition constraint.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider DidNotMatchAtLeastOneSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_DidNotMatchAtLeastOneSchema.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when at least one constant value matches in a composition constraint.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider MatchedAtLeastOneConstantValue = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedAtLeastOneConstantValue.AsSpan(), buffer, out written);
+
+    /// <summary>
+    /// Message provider for validation errors when no constant values matched in a composition constraint.
+    /// </summary>
+    public static readonly JsonSchemaMessageProvider DidNotMatchAtLeastOneConstantValue = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_DidNotMatchAtLeastOneConstantValue.AsSpan(), buffer, out written);
 }
