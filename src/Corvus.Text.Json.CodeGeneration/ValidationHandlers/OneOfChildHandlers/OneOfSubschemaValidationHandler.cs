@@ -45,14 +45,6 @@ public class OneOfSubschemaValidationHandler : IChildValidationHandler
                     return generator;
                 }
 
-                if (requiresShortCut)
-                {
-                    generator
-                        .AppendNoCollectorNoMatchShortcutReturn();
-                }
-
-                requiresShortCut = true;
-
                 string matchedCount = generator.GetUniqueVariableNameInScope("MatchedCount", prefix: keyword.Keyword);
 
                 generator
@@ -75,6 +67,8 @@ public class OneOfSubschemaValidationHandler : IChildValidationHandler
                         generator
                             .AppendNoCollectorNoMatchShortcutReturn();
                     }
+
+                    requiresShortCut = true;
 
                     ReducedTypeDeclaration reducedType = subschemaType.ReducedTypeDeclaration();
                     string localContextName = generator.GetUniqueVariableNameInScope("Context", prefix: keyword.Keyword, suffix: i.ToString());

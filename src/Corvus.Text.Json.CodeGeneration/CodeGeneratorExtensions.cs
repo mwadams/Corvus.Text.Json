@@ -3,13 +3,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Web;
 using Corvus.Json.CodeGeneration;
-using Corvus.Text.Json.CodeGeneration.Internal;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration;
@@ -1116,6 +1113,42 @@ internal static partial class CodeGeneratorExtensions
 
             string evaluationPathProperty = generator.GetPropertyNameInScope($"{keyword.Keyword}SchemaEvaluationPath");
             string evaluationPath = SymbolDisplay.FormatLiteral(keyword.GetPathModifier(rdt), true);
+            generator
+                .AppendLineIndent(
+                    "private static readonly JsonSchemaPathProvider ",
+                    evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                    evaluationPath,
+                    "u8, buffer, out written);");
+        }
+
+        if (typeDeclaration.IfSubschemaType() is SingleSubschemaKeywordTypeDeclaration ifType)
+        {
+            string evaluationPathProperty = generator.GetPropertyNameInScope($"{ifType.Keyword.Keyword}SchemaEvaluationPath");
+            string evaluationPath = SymbolDisplay.FormatLiteral(ifType.KeywordPathModifier, true);
+            generator
+                .AppendLineIndent(
+                    "private static readonly JsonSchemaPathProvider ",
+                    evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                    evaluationPath,
+                    "u8, buffer, out written);");
+        }
+
+        if (typeDeclaration.ThenSubschemaType() is SingleSubschemaKeywordTypeDeclaration thenType)
+        {
+            string evaluationPathProperty = generator.GetPropertyNameInScope($"{thenType.Keyword.Keyword}SchemaEvaluationPath");
+            string evaluationPath = SymbolDisplay.FormatLiteral(thenType.KeywordPathModifier, true);
+            generator
+                .AppendLineIndent(
+                    "private static readonly JsonSchemaPathProvider ",
+                    evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                    evaluationPath,
+                    "u8, buffer, out written);");
+        }
+
+        if (typeDeclaration.ElseSubschemaType() is SingleSubschemaKeywordTypeDeclaration elseType)
+        {
+            string evaluationPathProperty = generator.GetPropertyNameInScope($"{elseType.Keyword.Keyword}SchemaEvaluationPath");
+            string evaluationPath = SymbolDisplay.FormatLiteral(elseType.KeywordPathModifier, true);
             generator
                 .AppendLineIndent(
                     "private static readonly JsonSchemaPathProvider ",

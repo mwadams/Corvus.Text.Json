@@ -45,13 +45,6 @@ public class AnyOfSubschemaValidationHandler : IChildValidationHandler
                     return generator;
                 }
 
-                if (requiresShortCut)
-                {
-                    generator
-                        .AppendNoCollectorNoMatchShortcutReturn();
-                }
-
-                requiresShortCut = true;
 
                 string composedIsMatchName = generator.GetUniqueVariableNameInScope("ComposedIsMatch", prefix: keyword.Keyword);
                 string shortCircuitSuccessLabel = generator.GetUniqueVariableNameInScope("ShortCircuitSuccess", prefix: keyword.Keyword);
@@ -75,6 +68,8 @@ public class AnyOfSubschemaValidationHandler : IChildValidationHandler
                         generator
                             .AppendNoCollectorNoMatchShortcutReturn();
                     }
+
+                    requiresShortCut = true;
 
                     ReducedTypeDeclaration reducedType = subschemaType.ReducedTypeDeclaration();
                     string localContextName = generator.GetUniqueVariableNameInScope("Context", prefix: keyword.Keyword, suffix: i.ToString());
