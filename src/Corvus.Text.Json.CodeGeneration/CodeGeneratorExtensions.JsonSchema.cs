@@ -29,6 +29,183 @@ internal static partial class CodeGenerationExtensions
     private const string ConstantsClassBaseName = "Constants";
     private const string ConstantsClassNameKey = "CSharp_JsonSchema_ConstantsClassNameKey";
 
+    public static CodeGenerator AppendPushChildContextMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        string useEvaluatedItems = typeDeclaration.RequiresItemsEvaluationTracking() ? "true" : "false";
+        string useEvaluatedProperties = typeDeclaration.RequiresPropertyEvaluationTracking() ? "true" : "false";
+
+        generator
+            .ReserveName("PushChildContext")
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                /// Push the current context as a child context for schema evaluation.
+                /// </summary>
+                /// <typeparam name="TContext">The type of the context to be passed to the path providers.</typeparam>
+                /// <param name="parentDocument">The parent document of the instance for which to push the child context.</param>
+                /// <param name="parentDocumentIndex">The index in the parent document of the instance for which to push the child context.</param>
+                /// <param name="context">The current evaluation context.</param>
+                /// <param name="providerContext">The context to be passed to the path providers.</param>
+                /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
+                /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
+                /// <returns>The child context.</returns>
+                """)
+            .AppendLineIndent("internal static JsonSchemaContext PushChildContext<TContext>(")
+            .PushIndent()
+                .AppendLineIndent("IJsonDocument parentDocument,")
+                .AppendLineIndent("int parentDocumentIndex,")
+                .AppendLineIndent("ref JsonSchemaContext context,")
+                .AppendLineIndent("TContext providerContext,")
+                .AppendLineIndent("JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,")
+                .AppendLineIndent("JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)")
+            .PopIndent()
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return")
+                .PushIndent()
+                    .AppendLineIndent("context.PushChildContext(")
+                    .PushIndent()
+                        .AppendLineIndent("parentDocument,")
+                        .AppendLineIndent("parentDocumentIndex,")
+                        .AppendLineIndent("useEvaluatedItems: ", useEvaluatedItems, ",")
+                        .AppendLineIndent("useEvaluatedProperties: ", useEvaluatedProperties, ",")
+                        .AppendLineIndent("evaluationPath: schemaEvaluationPath,")
+                        .AppendLineIndent("documentEvaluationPath: documentEvaluationPath,")
+                        .AppendLineIndent("providerContext: providerContext);")
+                    .PopIndent()
+                .PopIndent()
+            .PopIndent()
+            .AppendLineIndent("}");
+
+
+        generator
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                /// Push the current context as a child context for schema evaluation.
+                /// </summary>
+                /// <param name="parentDocument">The parent document of the instance for which to push the child context.</param>
+                /// <param name="parentDocumentIndex">The index in the parent document of the instance for which to push the child context.</param>
+                /// <param name="context">The current evaluation context.</param>
+                /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
+                /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
+                /// <returns>The child context.</returns>
+                """)
+            .AppendLineIndent("internal static JsonSchemaContext PushChildContext(")
+            .PushIndent()
+                .AppendLineIndent("IJsonDocument parentDocument,")
+                .AppendLineIndent("int parentDocumentIndex,")
+                .AppendLineIndent("ref JsonSchemaContext context,")
+                .AppendLineIndent("JsonSchemaPathProvider? schemaEvaluationPath = null,")
+                .AppendLineIndent("JsonSchemaPathProvider? documentEvaluationPath = null)")
+            .PopIndent()
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return")
+                .PushIndent()
+                    .AppendLineIndent("context.PushChildContext(")
+                    .PushIndent()
+                        .AppendLineIndent("parentDocument,")
+                        .AppendLineIndent("parentDocumentIndex,")
+                        .AppendLineIndent("useEvaluatedItems: ", useEvaluatedItems, ",")
+                        .AppendLineIndent("useEvaluatedProperties: ", useEvaluatedProperties, ",")
+                        .AppendLineIndent("evaluationPath: schemaEvaluationPath,")
+                        .AppendLineIndent("documentEvaluationPath: documentEvaluationPath);")
+                    .PopIndent()
+                .PopIndent()
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        generator
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                /// Push the current context as a child context for schema evaluation of a property.
+                /// </summary>
+                /// <param name="parentDocument">The parent document of the instance for which to push the child context.</param>
+                /// <param name="parentDocumentIndex">The index in the parent document of the instance for which to push the child context.</param>
+                /// <param name="context">The current evaluation context.</param>
+                /// <param name="propertyName">The name of the property </param>
+                /// <param name="evaluationPath">The (optional) reduced evaluation path in the child context.</param>
+                /// <returns>The child context.</returns>
+                """)
+            .AppendLineIndent("internal static JsonSchemaContext PushChildContext(")
+            .PushIndent()
+                .AppendLineIndent("IJsonDocument parentDocument,")
+                .AppendLineIndent("int parentDocumentIndex,")
+                .AppendLineIndent("ref JsonSchemaContext context,")
+                .AppendLineIndent("ReadOnlySpan<byte> propertyName,")
+                .AppendLineIndent("JsonSchemaPathProvider? evaluationPath = null)")
+            .PopIndent()
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return")
+                .PushIndent()
+                    .AppendLineIndent("context.PushChildContext(")
+                    .PushIndent()
+                        .AppendLineIndent("parentDocument,")
+                        .AppendLineIndent("parentDocumentIndex,")
+                        .AppendLineIndent("useEvaluatedItems: ", useEvaluatedItems, ",")
+                        .AppendLineIndent("useEvaluatedProperties: ", useEvaluatedProperties, ",")
+                        .AppendLineIndent("propertyName,")
+                        .AppendLineIndent("evaluationPath: evaluationPath,")
+                        .AppendLineIndent("schemaEvaluationPath: SchemaLocationProvider);")
+                    .PopIndent()
+                .PopIndent()
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        generator
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                /// Push the current context as a child context for schema evaluation of a property where the property name is known to be unescaped.
+                /// </summary>
+                /// <param name="parentDocument">The parent document of the instance for which to push the child context.</param>
+                /// <param name="parentDocumentIndex">The index in the parent document of the instance for which to push the child context.</param>
+                /// <param name="context">The current evaluation context.</param>
+                /// <param name="propertyName">The name of the property </param>
+                /// <param name="evaluationPath">The (optional) reduced evaluation path in the child context.</param>
+                /// <returns>The child context.</returns>
+                """)
+            .AppendLineIndent("internal static JsonSchemaContext PushChildContextUnescaped(")
+            .PushIndent()
+                .AppendLineIndent("IJsonDocument parentDocument,")
+                .AppendLineIndent("int parentDocumentIndex,")
+                .AppendLineIndent("ref JsonSchemaContext context,")
+                .AppendLineIndent("ReadOnlySpan<byte> propertyName,")
+                .AppendLineIndent("JsonSchemaPathProvider? evaluationPath = null)")
+            .PopIndent()
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return")
+                .PushIndent()
+                    .AppendLineIndent("context.PushChildContext(")
+                    .PushIndent()
+                        .AppendLineIndent("parentDocument,")
+                        .AppendLineIndent("parentDocumentIndex,")
+                        .AppendLineIndent("useEvaluatedItems: ", useEvaluatedItems, ",")
+                        .AppendLineIndent("useEvaluatedProperties: ", useEvaluatedProperties, ",")
+                        .AppendLineIndent("propertyName,")
+                        .AppendLineIndent("evaluationPath: evaluationPath,")
+                        .AppendLineIndent("schemaEvaluationPath: SchemaLocationProvider);")
+                    .PopIndent()
+                .PopIndent()
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        return generator;
+    }
+
     public static CodeGenerator AppendRegexValidationFields(this CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
         if (generator.IsCancellationRequested)
@@ -223,12 +400,14 @@ internal static partial class CodeGenerationExtensions
                     ("IJsonDocument", "parentDocument"),
                     ("int", "parentIndex"),
                     ("ref JsonSchemaContext", "context")
-                ])
-                .ReserveName("tokenType")
-                .AppendLineIndent("JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);")
+                ])                
+                .ConditionallyAppend(typeDeclaration.RequiresJsonTokenType(),
+                g => g
+                    .ReserveName("tokenType")
+                    .AppendLineIndent("JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);"))                
                 .AppendSeparatorLine()
                 .AppendLineIndent("// You're not allowed to ask about non-value-like entities")
-                .AppendLineIndent("Debug.Assert(tokenType is not")
+                .AppendLineIndent("Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not")
                 .PushIndent()
                     .AppendLineIndent("JsonTokenType.None or")
                     .AppendLineIndent("JsonTokenType.EndObject or")

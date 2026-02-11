@@ -1010,6 +1010,12 @@
   <data name="JsonSchema_ExpectedBooleanFalseValue" xml:space="preserve">
     <value>Expected the value to be 'false'</value>
   </data>
+  <data name="JsonSchema_MatchedAllSchema" xml:space="preserve">
+    <value>The value matched all subschema.</value>
+  </data>
+  <data name="JsonSchema_DidNotMatchAllSchema" xml:space="preserve">
+    <value>The value did not match all subschema.</value>
+  </data>
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>

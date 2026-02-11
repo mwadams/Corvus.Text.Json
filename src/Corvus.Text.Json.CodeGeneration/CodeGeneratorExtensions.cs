@@ -996,6 +996,47 @@ internal static partial class CodeGeneratorExtensions
             .PopIndent()
             .AppendLineIndent("}");
     }
+    /// <summary>
+    /// Append the schema subschema evalation path provider static properties for the type declaration.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the properties.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendSubschemaEvaluationPathStaticProperties(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (typeDeclaration.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> subschemaDictionary)
+        {
+            foreach (IAllOfSubschemaValidationKeyword keyword in subschemaDictionary.Keys)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                IReadOnlyCollection<TypeDeclaration> subschemaTypes = subschemaDictionary[keyword];
+                int i = 0;
+                foreach (TypeDeclaration subschemaType in subschemaTypes)
+                {
+                    if (generator.IsCancellationRequested)
+                    {
+                        return generator;
+                    }
+
+                    ReducedTypeDeclaration reducedType = subschemaType.ReducedTypeDeclaration();
+                    string evaluationPathProperty = generator.GetPropertyNameInScope($"{keyword.Keyword}{i}SchemaEvaluationPath");
+                    string evaluationPath = SymbolDisplay.FormatLiteral(keyword.GetPathModifier(reducedType, i), true);
+                    generator
+                        .AppendLineIndent(
+                            "private static readonly JsonSchemaPathProvider ",
+                            evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                            evaluationPath,
+                            "u8, buffer, out written);");
+                }
+            }
+        }
+
+        return generator;
+    }
 
     /// <summary>
     /// Append the schema location static property for the type declaration.

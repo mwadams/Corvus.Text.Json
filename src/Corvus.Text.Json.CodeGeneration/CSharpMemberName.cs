@@ -90,7 +90,8 @@ public class CSharpMemberName(
             if (suffix.Length > 0)
             {
                 suffix.AsSpan().CopyTo(buffer[totalLength..]);
-                totalLength += Formatting.ToPascalCase(buffer[(prefix.Length + baseName.Length)..]);
+                int written = Formatting.ToPascalCase(buffer.Slice(prefix.Length + baseName.Length, suffix.Length));
+                totalLength += written;
             }
 
             totalLength = Formatting.FixReservedWords(buffer, totalLength, leadingDigitPrefix, FallbackName);

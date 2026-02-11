@@ -862,4 +862,39 @@ public static class TypeDeclarationExtensions
 
         return result ?? false;
     }
+
+    /// <summary>
+    /// Gets a value indicating whether the type declaration requires the value kind.
+    /// </summary>
+    /// <param name="that">The type declaration.</param>
+    /// <returns><see langword="true"/> if the type requires the value kind.</returns>
+    public static bool RequiresJsonTokenType(this TypeDeclaration that)
+    {
+        if (!that.BuildComplete)
+        {
+            throw new InvalidOperationException("You cannot use RequiresValueKind during the type build process.");
+        }
+
+        if (!that.TryGetMetadata(nameof(RequiresJsonTokenType), out bool requiresJsonTokenType))
+        {
+            requiresJsonTokenType = GetRequiresJsonTokenType(that);
+            that.SetMetadata(nameof(RequiresJsonTokenType), requiresJsonTokenType);
+        }
+
+        return requiresJsonTokenType;
+
+        static bool GetRequiresJsonTokenType(TypeDeclaration typeDeclaration)
+        {
+            if (typeDeclaration.HasSiblingHidingKeyword())
+            {
+                return false;
+            }
+
+            return
+                typeDeclaration.RequiresJsonValueKind() ||
+                typeDeclaration.Keywords()
+                    .OfType<IValidationConstantProviderKeyword>()
+                    .Any();
+        }
+    }
 }
