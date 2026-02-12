@@ -405,6 +405,13 @@ public interface IJsonDocument : IDisposable
     JsonElement GetPropertyName(int index);
 
     /// <summary>
+    /// Gets the property name as a JSON element.
+    /// </summary>
+    /// <param name="index">The index of the property.</param>
+    /// <returns>The unescaped property name.</returns>
+    UnescapedUtf8JsonString GetPropertyNameUnescaped(int index);
+
+    /// <summary>
     /// Gets the raw value of the element at the specified index as a string.
     /// </summary>
     /// <param name="index">The index of the element.</param>

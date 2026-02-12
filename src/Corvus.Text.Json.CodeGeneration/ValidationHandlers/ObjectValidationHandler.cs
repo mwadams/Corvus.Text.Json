@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers;
-using Corvus.Text.Json.CodeGeneration.ValidationHandlers.StringChildHandlers;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
@@ -14,7 +13,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 /// <summary>
 /// A validation handler for <see cref="IObjectValidationKeyword"/> capability.
 /// </summary>
-internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHandlerBase, IObjectKeywordValidationHandler
+internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHandlerBase, IObjectKeywordValidationHandler, IJsonSchemaClassSetup
 {
     private ObjectValidationHandler()
     {
@@ -32,9 +31,7 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
     public override CodeGenerator AppendValidationSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
         return generator
-             .PrependChildValidationSetup(typeDeclaration, ChildHandlers, ValidationHandlerPriority)
-             .AppendObjectValidationSetup()
-             .AppendChildValidationSetup(typeDeclaration, ChildHandlers, ValidationHandlerPriority);
+             .AppendObjectValidationSetup();
     }
 
     /// <inheritdoc/>
@@ -54,6 +51,20 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
     }
 
     /// <inheritdoc/>
+    public CodeGenerator AppendJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        foreach (IChildValidationHandler childHandler in ChildHandlers)
+        {
+            if (childHandler is IJsonSchemaClassSetup classSetup)
+            {
+                classSetup.AppendJsonSchemaClassSetup(generator, typeDeclaration);
+            }
+        }
+
+        return generator;
+    }
+
+    /// <inheritdoc/>
     public override bool HandlesKeyword(IKeyword keyword)
     {
         return keyword is IObjectValidationKeyword;
@@ -64,12 +75,12 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
         var result = new ObjectValidationHandler();
         result
             .RegisterChildHandlers(
-                PropertyCountValidationHandler.Instance
+                PropertyCountValidationHandler.Instance,
+                PropertyValidationHandler.Instance
                 ////DependentRequiredValidationHandler.Instance,
                 ////DependentSchemasValidationHandler.Instance,
                 ////PropertyNamesValidationHandler.Instance,
                 ////PatternPropertiesValidationHandler.Instance,
-                ////PropertiesValidationHandler.Instance,
                 ////RequiredValidationHandler.Instance
                 );
         return result;
@@ -108,25 +119,13 @@ file static class ObjectValidationHandlerExtensions
         generator
             .AppendSeparatorLine();
 
+        foreach(IChildValidationHandler child in childHandlers)
+        {
+            child.AppendValidationSetup(generator, typeDeclaration);
+        }
+
         generator
             .PrependChildValidationCode(typeDeclaration, childHandlers, validationPriority);
-
-        int requiredPropertyCount = typeDeclaration.ExplicitRequiredProperties().Count;
-
-        int requiredPropertyIntCount = (int)Math.Ceiling(requiredPropertyCount / 32.0);
-        bool rentedRequiredPropertyCountArray = requiredPropertyIntCount >= 256;
-        if (requiredPropertyIntCount > 0)
-        {
-            generator
-                .ReserveName("objectValidation_seenItems")
-                .ReserveName("objectValidation_seenItemsByteArray")
-                .ConditionallyAppend(!rentedRequiredPropertyCountArray, g => g.AppendLineIndent("Span<int> objectValidation_seenItems = stackalloc int[", requiredPropertyCount.ToString(), "];")
-                .ConditionallyAppend(rentedRequiredPropertyCountArray, g => {
-                    return g
-                        .AppendLineIndent("int[]? objectValidation_seenItemsByteArray = ArrayPool<int>.Shared.Rent(", requiredPropertyCount.ToString(), ");")
-                        .AppendLineIndent("Span<int> objectValidation_seenItems = objectValidation_seenItemsByteArray.Slice(0, requiredPropertyCount);");
-                }));
-        }
 
         if (typeDeclaration.RequiresObjectEnumeration() ||
             typeDeclaration.RequiresPropertyCount())
@@ -149,7 +148,7 @@ file static class ObjectValidationHandlerExtensions
                 .AppendSeparatorLine()
                 .ReserveName("objectValidation_enumerator")
                 .AppendLineIndent("var objectValidation_enumerator = new ObjectEnumerator(parentDocument, parentIndex);")
-                .AppendLineIndent("while (enumerator.MoveNext())")
+                .AppendLineIndent("while (objectValidation_enumerator.MoveNext())")
                 .AppendLineIndent("{")
                 .PushIndent();
 
@@ -159,13 +158,19 @@ file static class ObjectValidationHandlerExtensions
             {
                 generator
                     .ReserveName("objectValidation_currentIndex")
-                    .ReserveName("objectValidation_rawPropertyName")
+                    .ReserveName("objectValidation_unescapedPropertyName")
                     .AppendLineIndent("int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;")
-                    .AppendLineIndent("ReadOnlySpan<byte> propertyName = parentDocument.GetPropertyNameRaw(objectValidation_rawPropertyName);");
+                    .AppendLineIndent("using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);");
+            }
+
+            foreach (IChildObjectPropertyValidationHandler child in childHandlers.OfType<IChildObjectPropertyValidationHandler>())
+            {
+                child.AppendObjectPropertyValidationCode(generator, typeDeclaration);
             }
 
             generator
-                .AppendLineIndent("objectValidation_propertyCount++;")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("objectValidation_propertyCount++;")
                 .PopIndent()
                 .AppendLineIndent("}");
         }

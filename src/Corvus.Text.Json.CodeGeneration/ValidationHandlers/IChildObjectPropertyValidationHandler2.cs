@@ -30,5 +30,4 @@ internal interface IChildObjectPropertyValidationHandler2 : IChildValidationHand
     /// <param name="typeDeclaration">The type declaration for which to append the validation code.</param>
     /// <returns>A reference to the generator after the operation has completed.</returns>
     CodeGenerator AppendObjectPropertyValidationSetup(CodeGenerator generator, TypeDeclaration typeDeclaration);
-
 }

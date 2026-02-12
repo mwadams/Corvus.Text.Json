@@ -554,6 +554,16 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return new JsonElement(this, index - DbRow.Size);
     }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    UnescapedUtf8JsonString IJsonDocument.GetPropertyNameUnescaped(int index)
+    {
+        CheckNotDisposed();
+        Debug.Assert(_parsedData.Get(index - DbRow.Size).TokenType is JsonTokenType.PropertyName);
+
+        return GetUtf8JsonStringUnsafe(index - DbRow.Size, JsonTokenType.PropertyName);
+    }
+
     bool IJsonDocument.TryGetValue(int index, [NotNullWhen(true)] out byte[]? value)
     {
         CheckNotDisposed();

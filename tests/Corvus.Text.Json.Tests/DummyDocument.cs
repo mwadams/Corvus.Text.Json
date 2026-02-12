@@ -270,4 +270,5 @@ internal class DummyDocument : IJsonDocument
     void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db) => throw new NotImplementedException();
     void IDisposable.Dispose() => throw new NotImplementedException();
     int IJsonDocument.GetArrayInsertionIndex(int currentIndex, int arrayIndex) => throw new NotImplementedException();
+    public UnescapedUtf8JsonString GetPropertyNameUnescaped(int index) => throw new NotImplementedException();
 }

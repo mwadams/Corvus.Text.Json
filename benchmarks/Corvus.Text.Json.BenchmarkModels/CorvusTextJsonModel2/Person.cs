@@ -751,7 +751,7 @@ public readonly struct Person : IJsonElement<Person>
 
 
         private const int NameRequiredOffset = 0;
-        private const int NameRequiredBitMask = 0b0000_0000_0000_0000_0000_0000_0000_0001;
+        private const int NameRequiredBitMask = 0b0000_0000_0000_0001;
         private const int BitMaskOffset0 = NameRequiredBitMask;
 
         /// <summary>
@@ -787,7 +787,6 @@ public readonly struct Person : IJsonElement<Person>
 
                 int propertyCount = 0;
 
-                
                 var enumerator = new ObjectEnumerator(parentDocument, parentIndex);
                 while (enumerator.MoveNext())
                 {
