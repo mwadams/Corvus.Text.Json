@@ -12,6 +12,12 @@ public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeObject = static (buffer, out written) => IgnoredNotType("object"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider ExpectedTypeObject = static (buffer, out written) => ExpectedType("object"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountEquals = static (value, buffer, out written) => ExpectedPropertyCountEqualsValue("object"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountNotEquals = static (value, buffer, out written) => ExpectedPropertyCountNotEqualsValue("object"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountGreaterThan = static (value, buffer, out written) => ExpectedPropertyCountGreaterThanValue("object"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountGreaterThanOrEquals = static (value, buffer, out written) => ExpectedPropertyCountGreaterThanOrEqualsValue("object"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountLessThan = static (value, buffer, out written) => ExpectedPropertyCountLessThanValue("object"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountLessThanOrEquals = static (value, buffer, out written) => ExpectedPropertyCountLessThanOrEqualsValue("object"u8, buffer, out written);
 
     /// <summary>
     /// Matches a JSON token type against the "object" type constraint.
@@ -33,6 +39,126 @@ public static partial class JsonSchemaEvaluation
             context.EvaluatedKeyword(true, ExpectedTypeObject, typeKeyword);
         }
 
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a property count equals the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchPropertyCountEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual != expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedPropertyCountEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedPropertyCountEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a property count does not equal the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is not equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchPropertyCountNotEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual == expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedPropertyCountNotEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedPropertyCountNotEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a property count is greater than the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is greater than the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchPropertyCountGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual <= expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedPropertyCountGreaterThan, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedPropertyCountGreaterThan, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a property count is greater than or equal to the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is greater than or equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchPropertyCountGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual < expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedPropertyCountGreaterThanOrEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedPropertyCountGreaterThanOrEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a property count is less than the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is less than the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchPropertyCountLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual >= expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedPropertyCountLessThan, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedPropertyCountLessThan, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a property count is less than or equal to the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is less than or equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchPropertyCountLessThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual > expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedPropertyCountLessThanOrEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedPropertyCountLessThanOrEquals, keyword);
         return true;
     }
 

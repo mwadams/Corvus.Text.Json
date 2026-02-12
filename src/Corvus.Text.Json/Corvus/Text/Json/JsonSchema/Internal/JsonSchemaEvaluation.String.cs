@@ -140,27 +140,8 @@ public static partial class JsonSchemaEvaluation
         context.EvaluatedKeyword(true, originalExpressionString, ExpectedStringMatchesRegularExpression, keyword);
         return true;
 #endif
-        }
-
-    /// <summary>
-    /// Validates that a string length equals the given value.
-    /// </summary>
-    /// <param name="value">The UTF-8 encoded string value to validate.</param>
-    /// <param name="keyword">The keyword being evaluated.</param>
-    /// <param name="context">The JSON schema validation context.</param>
-    /// <returns><see langword="true"/> if the value is equal to the given value; otherwise, <see langword="false"/>.</returns>
-    [CLSCompliant(false)]
-    public static bool MatchLengthEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
-    {
-        if (actual != expected)
-        {
-            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedStringLengthEquals, keyword);
-            return false;
-        }
-
-        context.EvaluatedKeyword(true, expected, ExpectedStringLengthEquals, keyword);
-        return true;
     }
+
 
     /// <summary>
     /// Validates that a string equals the given value.
@@ -180,6 +161,26 @@ public static partial class JsonSchemaEvaluation
         }
 
         context.EvaluatedKeyword(true, expectedString, ExpectedStringEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string length equals the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchLengthEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual != expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedStringLengthEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedStringLengthEquals, keyword);
         return true;
     }
 

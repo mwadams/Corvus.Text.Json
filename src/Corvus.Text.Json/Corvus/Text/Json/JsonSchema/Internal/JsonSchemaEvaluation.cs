@@ -285,6 +285,114 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
+    /// Tries to write a message indicating the expected value for a property count.
+    /// </summary>
+    /// <param name="typeName">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedPropertyCountEqualsValue(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyCountEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a property count.
+    /// </summary>
+    /// <param name="typeName">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedPropertyCountNotEqualsValue(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyCountNotEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a property count.
+    /// </summary>
+    /// <param name="typeName">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedPropertyCountGreaterThanValue(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyCountGreaterThan.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a property count.
+    /// </summary>
+    /// <param name="typeName">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedPropertyCountGreaterThanOrEqualsValue(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyCountGreaterThanOrEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a property count.
+    /// </summary>
+    /// <param name="typeName">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedPropertyCountLessThanValue(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyCountLessThan.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a property count.
+    /// </summary>
+    /// <param name="typeName">The name of the expected type.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedPropertyCountLessThanOrEqualsValue(ReadOnlySpan<byte> typeName, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyCountLessThanOrEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(typeName, buffer, ref written);
+    }
+
+    /// <summary>
     /// Tries to write a message indicating the expected type for a value.
     /// </summary>
     /// <param name="divisor">The integral part of the divisor.</param>
