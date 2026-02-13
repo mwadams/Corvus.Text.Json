@@ -544,6 +544,15 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetRawSimpleValueUnsafe(index - DbRow.Size, false).Span;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    ReadOnlyMemory<byte> IJsonDocument.GetPropertyNameRaw(int index, bool includeQuotes)
+    {
+        CheckNotDisposed();
+        Debug.Assert(_parsedData.Get(index - DbRow.Size).TokenType is JsonTokenType.PropertyName);
+
+        return GetRawSimpleValueUnsafe(index - DbRow.Size, includeQuotes);
+    }
+
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     JsonElement IJsonDocument.GetPropertyName(int index)

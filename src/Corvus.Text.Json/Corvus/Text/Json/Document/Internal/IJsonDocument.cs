@@ -398,6 +398,14 @@ public interface IJsonDocument : IDisposable
     ReadOnlySpan<byte> GetPropertyNameRaw(int index);
 
     /// <summary>
+    /// Gets the raw property name as a byte span for the specified index.
+    /// </summary>
+    /// <param name="index">The index of the property.</param>
+    /// <param name="includeQuotes">Whether to include quotes in the raw property name.</param>
+    /// <returns>The raw property name as a byte span.</returns>
+    ReadOnlyMemory<byte> GetPropertyNameRaw(int index, bool includeQuotes);
+
+    /// <summary>
     /// Gets the property name as a JSON element.
     /// </summary>
     /// <param name="index">The index of the property.</param>

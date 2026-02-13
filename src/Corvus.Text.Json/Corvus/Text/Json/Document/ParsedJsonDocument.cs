@@ -465,6 +465,15 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return GetRawSimpleValueUnsafe(index - DbRow.Size, false).Span;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    ReadOnlyMemory<byte> IJsonDocument.GetPropertyNameRaw(int index, bool includeQuotes)
+    {
+        CheckNotDisposed();
+        Debug.Assert(_parsedData.Get(index - DbRow.Size).TokenType is JsonTokenType.PropertyName);
+
+        return GetRawSimpleValueUnsafe(index - DbRow.Size, includeQuotes);
+    }
+
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     JsonElement IJsonDocument.GetPropertyName(int index)
@@ -975,29 +984,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         ReadOnlySpan<byte> data = _utf8Json.Span;
         ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
 
-        if ((uint)segment.Length > (uint)JsonConstants.MaximumEscapedGuidLength)
-        {
-            value = default;
-            return false;
-        }
-
-        // Segment needs to be unescaped
-        if (row.HasComplexChildren)
-        {
-            return JsonReaderHelper.TryGetEscapedGuid(segment, out value);
-        }
-
-        Debug.Assert(segment.IndexOf(JsonConstants.BackSlash) == -1);
-
-        if (segment.Length == JsonConstants.MaximumFormatGuidLength
-            && Utf8Parser.TryParse(segment, out Guid tmp, out _, 'D'))
-        {
-            value = tmp;
-            return true;
-        }
-
-        value = default;
-        return false;
+        return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
     /// <inheritdoc />

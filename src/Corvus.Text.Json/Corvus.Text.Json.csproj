@@ -168,6 +168,7 @@
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.ParseValue.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.String.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\FixedStringJsonDocument.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\PropertySchemaMatchers.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonElementForBooleanFalseSchema.Mutable.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonElementForBooleanFalseSchema.JsonSchema.cs" />

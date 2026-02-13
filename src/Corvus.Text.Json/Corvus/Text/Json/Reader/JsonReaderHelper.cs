@@ -277,6 +277,33 @@ internal static partial class JsonReaderHelper
         return Period.TryParse(segment, out value);
     }
 
+    public static bool TryGetValue(ReadOnlySpan<byte> segment, bool hasComplexChildren, out Guid value)
+    {
+        if ((uint)segment.Length > (uint)JsonConstants.MaximumEscapedGuidLength)
+        {
+            value = default;
+            return false;
+        }
+
+        // Segment needs to be unescaped
+        if (hasComplexChildren)
+        {
+            return JsonReaderHelper.TryGetEscapedGuid(segment, out value);
+        }
+
+        Debug.Assert(segment.IndexOf(JsonConstants.BackSlash) == -1);
+
+        if (segment.Length == JsonConstants.MaximumFormatGuidLength
+            && Utf8Parser.TryParse(segment, out Guid tmp, out _, 'D'))
+        {
+            value = tmp;
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+
     public static bool TryGetEscapedGuid(ReadOnlySpan<byte> source, out Guid value)
     {
         Debug.Assert(source.Length <= JsonConstants.MaximumEscapedGuidLength);

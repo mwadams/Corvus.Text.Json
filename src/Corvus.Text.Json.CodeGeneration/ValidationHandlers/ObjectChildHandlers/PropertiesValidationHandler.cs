@@ -12,18 +12,18 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers;
 
 /// <summary>
-/// A property validation handler.
+/// A properties validation handler.
 /// </summary>
-public class PropertyValidationHandler : IChildObjectPropertyValidationHandler, IJsonSchemaClassSetup
+public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler, IJsonSchemaClassSetup
 {
     private const string RentedRequiredPropertyCountArrayKey = "PropertyValidationHandler_RentedRequiredPropertyCountArray";
     private const string BitMaskListKey = "PropertyValidationHandler_BitMaskOffsetList";
     private const string PropertyOffsetListKey = "PropertyValidationHandler_PropertyOffsetList";
 
     /// <summary>
-    /// Gets the singleton instance of the <see cref="PropertyValidationHandler"/>.
+    /// Gets the singleton instance of the <see cref="PropertiesValidationHandler"/>.
     /// </summary>
-    public static PropertyValidationHandler Instance { get; } = new();
+    public static PropertiesValidationHandler Instance { get; } = new();
 
     /// <inheritdoc/>
     public uint ValidationHandlerPriority { get; } = ValidationPriorities.AfterComposition + 1;
@@ -31,18 +31,23 @@ public class PropertyValidationHandler : IChildObjectPropertyValidationHandler, 
 
     public CodeGenerator AppendObjectPropertyValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
-        bool hasSeenItems = typeDeclaration.TryGetMetadata(BitMaskListKey, out List<string>? _);
+        if (typeDeclaration.ExplicitProperties() is IReadOnlyCollection<PropertyDeclaration> p && p.Any(pd => pd.LocalOrComposed == LocalOrComposed.Local))
+        {
+            bool hasSeenItems = typeDeclaration.TryGetMetadata(BitMaskListKey, out List<string>? _);
 
-        return generator
-            .AppendSeparatorLine()
-            .AppendLineIndent("if (TryGetNamedMatcher(objectValidation_unescapedPropertyName.Span, out ", hasSeenItems ? "JsonSchemaMatcherWithRequiredBitBuffer" : "JsonSchemaMatcher", "? validator))")
-            .AppendLineIndent("{")
-            .PushIndent()
-            .AppendLineIndent("context.AddLocalEvaluatedProperty(objectValidation_propertyCount);")
-            .AppendLineIndent("validator(parentDocument, objectValidation_currentIndex, ref context", hasSeenItems ? ", objectValidation_seenItems" : "", ");")
-            .AppendNoCollectorNoMatchShortcutReturn()
-            .PopIndent()
-            .AppendLineIndent("}");
+            return generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("if (TryGetNamedMatcher(objectValidation_unescapedPropertyName.Span, out ", hasSeenItems ? "JsonSchemaMatcherWithRequiredBitBuffer" : "JsonSchemaMatcher", "? validator))")
+                .AppendLineIndent("{")
+                .PushIndent()
+                .AppendLineIndent("context.AddLocalEvaluatedProperty(objectValidation_propertyCount);")
+                .AppendLineIndent("validator(parentDocument, objectValidation_currentIndex, ref context", hasSeenItems ? ", objectValidation_seenItems" : "", ");")
+                .AppendNoCollectorNoMatchShortcutReturn()
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
+
+        return generator;
     }
 
     public CodeGenerator AppendValidateMethodSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
@@ -196,9 +201,7 @@ public class PropertyValidationHandler : IChildObjectPropertyValidationHandler, 
         return generator;
     }
 
-
-    public bool RequiresPropertyNameAsString(TypeDeclaration typeDeclaration) => true;
-
+    public bool RequiresPropertyNameAsString(TypeDeclaration typeDeclaration) => typeDeclaration.ExplicitProperties() is IReadOnlyCollection<PropertyDeclaration> p && p.Any(pd => pd.LocalOrComposed == LocalOrComposed.Local);
 
     public CodeGenerator AppendJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
@@ -371,7 +374,7 @@ public class PropertyValidationHandler : IChildObjectPropertyValidationHandler, 
                 .PopIndent()
                 .AppendLineIndent("}");
         }
-        else
+        else if (propertyAndMethodNames.Count > 0)
         {
             generator
                 .AppendSeparatorLine()
@@ -453,8 +456,4 @@ public class PropertyValidationHandler : IChildObjectPropertyValidationHandler, 
 
         generator.AppendLine(";");
     }
-}
-
-public static class PropertyValidationExtensions
-{
 }

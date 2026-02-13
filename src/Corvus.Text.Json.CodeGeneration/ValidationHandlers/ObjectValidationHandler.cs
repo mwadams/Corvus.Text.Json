@@ -76,10 +76,10 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
         result
             .RegisterChildHandlers(
                 PropertyCountValidationHandler.Instance,
-                PropertyValidationHandler.Instance
+                PropertiesValidationHandler.Instance,
+                PropertyNamesValidationHandler.Instance
                 ////DependentRequiredValidationHandler.Instance,
                 ////DependentSchemasValidationHandler.Instance,
-                ////PropertyNamesValidationHandler.Instance,
                 ////PatternPropertiesValidationHandler.Instance,
                 ////RequiredValidationHandler.Instance
                 );
@@ -150,16 +150,16 @@ file static class ObjectValidationHandlerExtensions
                 .AppendLineIndent("var objectValidation_enumerator = new ObjectEnumerator(parentDocument, parentIndex);")
                 .AppendLineIndent("while (objectValidation_enumerator.MoveNext())")
                 .AppendLineIndent("{")
-                .PushIndent();
+                .PushIndent()
+                    .ReserveName("objectValidation_currentIndex")
+                    .AppendLineIndent("int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;");
 
             if (childHandlers
                     .OfType<IChildObjectPropertyValidationHandler>()
                     .Any(child => child.RequiresPropertyNameAsString(typeDeclaration)))
             {
                 generator
-                    .ReserveName("objectValidation_currentIndex")
                     .ReserveName("objectValidation_unescapedPropertyName")
-                    .AppendLineIndent("int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;")
                     .AppendLineIndent("using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);");
             }
 

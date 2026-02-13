@@ -1751,6 +1751,17 @@ public abstract partial class JsonDocument
     private int GetHashCodeForString(int index)
     {
         ReadOnlySpan<byte> value = GetRawSimpleValueUnsafe(index, false).Span;
+        return GetHashCodeForString(value);
+    }
+
+
+    /// <summary>
+    /// Gets the HashCode for a string value.
+    /// </summary>
+    /// <param name="value">The value for which to get the HashCode.</param>
+    /// <returns>The HashCode for the specified value.</returns>
+    internal static int GetHashCodeForString(ReadOnlySpan<byte> value)
+    {
         // We need to unescape and convert to char, in order to get the same
         // hash code as the equivalent string.
         char[]? charBuffer = null;
