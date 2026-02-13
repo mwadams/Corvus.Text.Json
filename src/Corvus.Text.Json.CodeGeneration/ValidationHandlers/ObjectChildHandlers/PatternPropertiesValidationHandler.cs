@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using Corvus.Json;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -78,6 +79,7 @@ public class PatternPropertiesValidationHandler : IChildObjectPropertyValidation
                 int count = patternPropertyForKeyword.Value.Count;
                 foreach (PatternPropertyDeclaration value in patternPropertyForKeyword.Value)
                 {
+                    string schemaPath = JsonReference.FromUriAndUnencodedPropertyName(value.KeywordPathModifier, value.Pattern);
                     string evaluationPathProperty = generator.GetPropertyNameInScope($"{value.Keyword.Keyword}{(count > 1 ? index.ToString() : "")}SchemaEvaluationPath");
                     index++;
                     AddEvaluationPathProperty(evaluationPathProperties, value.Keyword.Keyword, evaluationPathProperty);
@@ -129,6 +131,7 @@ file static class PatternPropertiesValidationExtensions
         string jsonSchemaClassName = generator.JsonSchemaClassName(propertyClassName);
         string childContextName = generator.GetUniqueVariableNameInScope("childContext");
         string pattern = SymbolDisplay.FormatLiteral(property.Pattern, true);
+
         string evaluationPathProperty = evaluationPathProperties[property.Keyword.Keyword][index.HasValue ? index.Value - 1 : 0];
 
         return generator
@@ -140,12 +143,13 @@ file static class PatternPropertiesValidationExtensions
                 .AppendLineIndent("context.AddLocalEvaluatedProperty(objectValidation_propertyCount);")
                 .AppendLineIndent("JsonSchemaContext ", childContextName, " =")
                 .PushIndent()
-                    .AppendLineIndent("PushChildContext(")
+                    .AppendLineIndent("PushChildContextUnescaped(")
                     .PushIndent()
                         .AppendLineIndent("parentDocument,")
                         .AppendLineIndent("objectValidation_currentIndex,")
                         .AppendLineIndent("ref context,")
-                        .AppendLineIndent("schemaEvaluationPath: ", evaluationPathProperty, ");")
+                        .AppendLineIndent("objectValidation_unescapedPropertyName.Span,")
+                        .AppendLineIndent("evaluationPath: ", evaluationPathProperty, ");")
                     .PopIndent()
                 .PopIndent()
                 .AppendSeparatorLine()
