@@ -18,6 +18,8 @@ public static partial class JsonSchemaEvaluation
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountGreaterThanOrEquals = static (value, buffer, out written) => ExpectedPropertyCountGreaterThanOrEqualsValue("object"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountLessThan = static (value, buffer, out written) => ExpectedPropertyCountLessThanValue("object"u8, buffer, out written);
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountLessThanOrEquals = static (value, buffer, out written) => ExpectedPropertyCountLessThanOrEqualsValue("object"u8, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<string> ExpectedMatchPatternPropertySchema = static (value, buffer, out written) => ExpectedMatchPatternPropertySchemaValue(value, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<string> ExpectedPropertyNameMatchesRegularExpression = static (value, buffer, out written) => ExpectedPropertyNameMatchesRegularExpressionValue(value, buffer, out written);
 
     /// <summary>
     /// Matches a JSON token type against the "object" type constraint.

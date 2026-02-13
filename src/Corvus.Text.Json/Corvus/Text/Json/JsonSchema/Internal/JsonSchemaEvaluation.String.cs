@@ -142,6 +142,40 @@ public static partial class JsonSchemaEvaluation
 #endif
     }
 
+    /// <summary>
+    /// Validates that a string length equals the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression)
+    {
+#if NET
+        int desiredLength = Encoding.UTF8.GetMaxCharCount(value.Length);
+        char[]? rentedChars = null;
+        Span<char> transcodedValue = desiredLength < JsonConstants.StackallocCharThreshold ?
+            stackalloc char[desiredLength] :
+            (rentedChars = ArrayPool<char>.Shared.Rent(desiredLength));
+
+        try
+        {
+            JsonReaderHelper.TryGetTextFromUtf8(value, transcodedValue, out int written);
+
+            return regularExpression.IsMatch(transcodedValue.Slice(0, written));
+        }
+        finally
+        {
+            if (rentedChars is char[] c)
+            {
+                ArrayPool<char>.Shared.Return(c);
+            }
+        }
+#else
+        // We pay for a conversion to string because netstandard does not support regular expressions
+        // from Span<char>
+        return regularExpression.IsMatch(JsonReaderHelper.GetTextFromUtf8(value));
+#endif
+    }
 
     /// <summary>
     /// Validates that a string equals the given value.

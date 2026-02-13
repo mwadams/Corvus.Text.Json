@@ -375,6 +375,42 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
+    /// Tries to write a message indicating that a property name was intended to match a regular expression.
+    /// </summary>
+    /// <param name="expression">The regular expression that should be matched.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedMatchPatternPropertySchemaValue(string expression, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedMatchPatternPropertySchema.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(expression, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating that a property name was intended to match a regular expression.
+    /// </summary>
+    /// <param name="expression">The regular expression that should be matched.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedPropertyNameMatchesRegularExpressionValue(string expression, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyNameMatchesRegularExpression.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendSingleQuotedValue(expression, buffer, ref written);
+    }
+
+    /// <summary>
     /// Tries to write a message indicating the expected value for a property count.
     /// </summary>
     /// <param name="typeName">The name of the expected type.</param>

@@ -46,6 +46,7 @@ public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHand
             evaluationPathProperty is not null &&
             typeDeclaration.PropertyNamesSubschemaType() is SingleSubschemaKeywordTypeDeclaration propertyNameType)
         {
+            string keywordString = SymbolDisplay.FormatLiteral(propertyNameType.Keyword.Keyword, true);
             string propertyClassName = propertyNameType.ReducedType.FullyQualifiedDotnetTypeName();
             string jsonSchemaClassName = generator.JsonSchemaClassName(propertyClassName);
             string childContextName = generator.GetUniqueVariableNameInScope("childContext");
@@ -71,6 +72,8 @@ public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHand
                     .AppendSeparatorLine()
                     .AppendLineIndent(propertyClassName, ".", jsonSchemaClassName, ".Evaluate(", fixedJsonStringName, ", 0, ref ", childContextName, ");")
                     .AppendLineIndent("context.CommitChildContext(", childContextName, ".IsMatch, ref ", childContextName, ");")
+                    .AppendNoCollectorNoMatchShortcutReturn()
+                    .AppendLineIndent("context.EvaluatedKeyword(context.IsMatch, messageProvider: JsonSchemaEvaluation.ExpectedPropertyNameMatchesRegularExpression, " , keywordString, "u8);")
                 .PopIndent()
                 .AppendLineIndent("}");
         }

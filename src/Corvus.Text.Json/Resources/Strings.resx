@@ -1073,6 +1073,12 @@
   <data name="JsonSchema_DidNotMatchElse" xml:space="preserve">
     <value>The value did not match the else subschema corresponding to a ternay if.</value>
   </data>
+  <data name="JsonSchema_ExpectedMatchPatternPropertySchema" xml:space="preserve">
+    <value>The value of the property did not match the corresponding subschema when its name matched the regular expression</value>
+  </data>
+  <data name="JsonSchema_ExpectedPropertyNameMatchesRegularExpression" xml:space="preserve">
+    <value>The property name did not match the regular expression</value>
+  </data>
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>
@@ -1082,4 +1088,5 @@
   <data name="IncorrectArrayBufferLength" xml:space="preserve">
     <value>Expected an array buffer length of '{0}'.</value>
   </data>
+  
 </root>

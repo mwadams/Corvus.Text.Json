@@ -77,10 +77,10 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
             .RegisterChildHandlers(
                 PropertyCountValidationHandler.Instance,
                 PropertiesValidationHandler.Instance,
-                PropertyNamesValidationHandler.Instance
+                PropertyNamesValidationHandler.Instance,
+                PatternPropertiesValidationHandler.Instance
                 ////DependentRequiredValidationHandler.Instance,
                 ////DependentSchemasValidationHandler.Instance,
-                ////PatternPropertiesValidationHandler.Instance,
                 ////RequiredValidationHandler.Instance
                 );
         return result;
