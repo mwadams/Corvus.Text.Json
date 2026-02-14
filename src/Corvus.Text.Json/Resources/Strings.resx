@@ -1079,7 +1079,16 @@
   <data name="JsonSchema_ExpectedPropertyNameMatchesRegularExpression" xml:space="preserve">
     <value>The property name did not match the regular expression</value>
   </data>
-  <data name="InvalidJsonReference" xml:space="preserve">
+  <data name="JsonSchema_ExpectedPropertyNameMatchesSchema" xml:space="preserve">
+    <value>The property name did not match the schema.</value>
+  </data>
+  <data name="JsonSchema_ExpectedPropertyMatchesFallbackSchema" xml:space="preserve">
+    <value>The value of the property did not match the fallback schema.</value>
+  </data>
+  <data name="JsonSchema_ExpectedMatchesDependentSchema" xml:space="preserve">
+    <value>The value did match the schema applied because it contained the property</value>
+  </data>
+ <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>
   <data name="PrefixTupleMustBeCreatedFirst" xml:space="preserve">

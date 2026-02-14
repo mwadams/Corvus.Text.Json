@@ -85,6 +85,8 @@
     <Compile Include="ValidationHandlers\IChildObjectPropertyValidationHandler2.cs" />
     <Compile Include="ValidationHandlers\IJsonSchemaClassSetup.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PatternPropertiesValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\ObjectChildHandlers\DependentSchemasValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\ObjectChildHandlers\UnevaluatedPropertyValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PropertyNamesValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PropertiesValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PropertyCountValidationHandler.cs" />

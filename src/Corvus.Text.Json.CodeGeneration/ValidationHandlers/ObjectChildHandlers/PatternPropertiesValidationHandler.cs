@@ -79,7 +79,7 @@ public class PatternPropertiesValidationHandler : IChildObjectPropertyValidation
                 int count = patternPropertyForKeyword.Value.Count;
                 foreach (PatternPropertyDeclaration value in patternPropertyForKeyword.Value)
                 {
-                    string schemaPath = JsonReference.FromUriAndUnencodedPropertyName(value.KeywordPathModifier, value.Pattern);
+                    string schemaPath = value.KeywordPathModifier;
                     string evaluationPathProperty = generator.GetPropertyNameInScope($"{value.Keyword.Keyword}{(count > 1 ? index.ToString() : "")}SchemaEvaluationPath");
                     index++;
                     AddEvaluationPathProperty(evaluationPathProperties, value.Keyword.Keyword, evaluationPathProperty);
