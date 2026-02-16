@@ -644,32 +644,39 @@ public static partial class JsonElementHelpers
         int localWritten;
 
         destination[index++] = (byte)'P';
-        if (!Utf8Formatter.TryFormat(period.Years, destination.Slice(index), out localWritten))
+
+        if (period.Weeks == 0)
         {
-            bytesWritten = 0;
-            return false;
+            if (!Utf8Formatter.TryFormat(period.Years, destination.Slice(index), out localWritten))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            index += localWritten;
+            destination[index++] = (byte)'Y';
+
+            if (!Utf8Formatter.TryFormat(period.Months, destination.Slice(index), out localWritten))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            index += localWritten;
+            destination[index++] = (byte)'M';
         }
 
-        index += localWritten;
-        destination[index++] = (byte)'Y';
-
-        if (!Utf8Formatter.TryFormat(period.Months, destination.Slice(index), out localWritten))
+        if (period.Weeks != 0)
         {
-            bytesWritten = 0;
-            return false;
+            if (!Utf8Formatter.TryFormat(period.Weeks, destination.Slice(index), out localWritten))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            index += localWritten;
+            destination[index++] = (byte)'W';
         }
-
-        index += localWritten;
-        destination[index++] = (byte)'M';
-
-        if (!Utf8Formatter.TryFormat(period.Weeks, destination.Slice(index), out localWritten))
-        {
-            bytesWritten = 0;
-            return false;
-        }
-
-        index += localWritten;
-        destination[index++] = (byte)'W';
 
         if (!Utf8Formatter.TryFormat(period.Days, destination.Slice(index), out localWritten))
         {

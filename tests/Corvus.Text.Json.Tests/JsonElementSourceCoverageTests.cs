@@ -364,7 +364,7 @@ namespace Corvus.Text.Json.Tests
             
             string json = doc.RootElement.GetString();
             Assert.False(string.IsNullOrEmpty(json));
-            Assert.Equal("P1Y2M0W3D", json);
+            Assert.Equal("P1Y2M3D", json);
         }
 
 #if NET
@@ -557,7 +557,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(Offset.FromHours(2), parsedOffsetDateTime.Offset);
             
             Assert.True(doc.RootElement.TryGetProperty("period"u8, out var periodProp));
-            Assert.Equal("P1Y2M0W0D", periodProp.GetString());
+            Assert.Equal("P1Y2M0D", periodProp.GetString());
         }
 
         [Fact]
@@ -702,7 +702,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(Offset.FromHours(2), parsedOffsetDateTime.Offset);
             
             Assert.True(doc.RootElement.TryGetProperty("period", out var periodProp));
-            Assert.Equal("P1Y2M0W0D", periodProp.GetString());
+            Assert.Equal("P1Y2M0D", periodProp.GetString());
         }
 
         [Fact]
@@ -846,7 +846,7 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(Offset.FromHours(2), parsedOffsetDateTime.Offset);
             
             Assert.True(doc.RootElement.TryGetProperty("period", out var periodProp));
-            Assert.Equal("P1Y2M0W0D", periodProp.GetString());
+            Assert.Equal("P1Y2M0D", periodProp.GetString());
         }
     }
 }
