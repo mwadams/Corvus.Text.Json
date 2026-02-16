@@ -19,7 +19,7 @@ public readonly partial struct JsonElement
     /// <exception cref="ArgumentException"><paramref name="options"/> contains unsupported options.</exception>
     public static JsonElement ParseValue([StringSyntax(StringSyntaxAttribute.Json)] ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options = default)
     {
-        return JsonElementHelpers.ParseValue<JsonElement>(utf8Json);
+        return JsonElementHelpers.ParseValue<JsonElement>(utf8Json, options);
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public readonly partial struct JsonElement
     /// <exception cref="ArgumentException"><paramref name="options"/> contains unsupported options.</exception>
     public static JsonElement ParseValue([StringSyntax(StringSyntaxAttribute.Json)] ReadOnlySpan<char> json, JsonDocumentOptions options = default)
     {
-        return JsonElementHelpers.ParseValue<JsonElement>(json);
+        return JsonElementHelpers.ParseValue<JsonElement>(json, options);
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public readonly partial struct JsonElement
     {
         ArgumentNullException.ThrowIfNull(json);
 
-        return JsonElementHelpers.ParseValue<JsonElement>(json);
+        return JsonElementHelpers.ParseValue<JsonElement>(json, options);
     }
 
     /// <summary>
