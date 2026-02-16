@@ -639,6 +639,7 @@ public readonly struct PersonName : IJsonElement<PersonName>
             switch (_kind)
             {
                 case Kind.JsonElement:
+                    Debug.Assert(_jsonElement.ValueKind != JsonValueKind.Undefined);
                     valueBuilder.AddProperty(utf8Name, _jsonElement, escapeName, nameRequiresUnescaping);
                     break;
                 case Kind.PersonBuilderInstance:

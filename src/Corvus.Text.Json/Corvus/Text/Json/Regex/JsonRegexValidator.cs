@@ -308,13 +308,13 @@ internal ref struct JsonRegexValidator
     {
         for (int i = 0; i < _capNames.Length; i++)
         {
-            while (IsCaptureSlot(_autocap))
+            while (IsCaptureSlot(_autocap, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0))
             {
                 _autocap++;
             }
 
             CapNameToCapNumberRow row = _capNames[i];
-            NoteCaptureSlot(_autocap, row.CapNum);
+            NoteCaptureSlot(_autocap, row.CapNum, true);
 
             _autocap++;
         }
@@ -325,7 +325,7 @@ internal ref struct JsonRegexValidator
     /// </summary>
     private bool CountCaptures(out JsonRegexOptions optionsFoundInPattern)
     {
-        NoteCaptureSlot(0, 0);
+        NoteCaptureSlot(0, 0, false);
         optionsFoundInPattern = JsonRegexOptions.None;
         _autocap = 1;
 
@@ -404,7 +404,7 @@ internal ref struct JsonRegexValidator
                                             return false;
                                         }
 
-                                        NoteCaptureSlot(dec, pos);
+                                        NoteCaptureSlot(dec, pos, true);
                                     }
                                     else
                                     {
@@ -452,7 +452,7 @@ internal ref struct JsonRegexValidator
                             // and the next parentheses is not ignored.
                             if ((_options & JsonRegexOptions.ExplicitCapture) == 0 && !_ignoreNextParen)
                             {
-                                NoteCaptureSlot(_autocap++, pos);
+                                NoteCaptureSlot(_autocap++, pos, true);
                             }
                         }
                     }
@@ -468,10 +468,11 @@ internal ref struct JsonRegexValidator
     }
 
     /// <summary>True if the capture slot was noted</summary>
-    private readonly bool IsCaptureSlot(int i)
+    private readonly bool IsCaptureSlot(int i, bool requireExplicit)
     {
-        return TryGetCapturePos(i, out _);
+        return TryGetCapturePos(i, requireExplicit, out int pos);
     }
+
 
     private readonly bool IsTrueQuantifier()
     {
@@ -518,11 +519,11 @@ internal ref struct JsonRegexValidator
     }
 
     /// <summary>Notes a used capture slot</summary>
-    private void NoteCaptureSlot(int i, int pos)
+    private void NoteCaptureSlot(int i, int pos, bool isExplicit)
     {
-        if (!TryGetCapturePos(i, out _))
+        if (!TryGetCapturePos(i, requireExplicit: false, out _))
         {
-            _caps.Append(new CapToPos(i, pos));
+            _caps.Append(new CapToPos(i, pos, isExplicit));
             _capcount++;
 
             if (_captop <= i)
@@ -757,10 +758,10 @@ internal ref struct JsonRegexValidator
                     return true;
                 }
 
-                if (IsCaptureSlot(capnum))
+                if (IsCaptureSlot(capnum, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0))
                 {
-                    node = CreateNode(JsonRegexNodeKind.Backreference);
-                    return true;
+                        node = CreateNode(JsonRegexNodeKind.Backreference);
+                        return true;
                 }
 
                 node = JsonRegexNode.Null;
@@ -778,11 +779,11 @@ internal ref struct JsonRegexValidator
                 int pos = _pos - 1;
                 while (newcapnum <= _captop)
                 {
-                    if (IsCaptureSlot(newcapnum))
+                    if (IsCaptureSlot(newcapnum, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0))
                     {
                         // If we have a capture pos and it greater than or equal to the current position
                         // then this is a forward reference not a backwards reference
-                        bool isForwardReference = TryGetCapturePos(newcapnum, out int capturePos) && capturePos >= pos;
+                        bool isForwardReference = TryGetCapturePos(newcapnum, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0, out int capturePos) && capturePos >= pos;
                         if (!isForwardReference)
                         {
                             capnum = newcapnum;
@@ -818,7 +819,7 @@ internal ref struct JsonRegexValidator
                     return true;
                 }
 
-                if (IsCaptureSlot(capnum))
+                if (IsCaptureSlot(capnum, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0))
                 {
                     node = CreateNode(JsonRegexNodeKind.Backreference);
                     return true;
@@ -1398,7 +1399,7 @@ internal ref struct JsonRegexValidator
                                     return false;
                                 }
 
-                                if (!IsCaptureSlot(capnum))
+                                if (!IsCaptureSlot(capnum, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0))
                                 {
                                     capnum = -1;
                                 }
@@ -1462,7 +1463,7 @@ internal ref struct JsonRegexValidator
                                         return false;
                                     }
 
-                                    if (!IsCaptureSlot(uncapnum))
+                                    if (!IsCaptureSlot(uncapnum, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0))
                                     {
                                         node = JsonRegexNode.Null;
                                         return false;
@@ -1538,7 +1539,7 @@ internal ref struct JsonRegexValidator
 
                             if (_pos < _pattern.Length && _pattern[_pos++] == ')')
                             {
-                                if (IsCaptureSlot(capnum))
+                                if (IsCaptureSlot(capnum, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0))
                                 {
                                     node = CreateNode(JsonRegexNodeKind.BackreferenceConditional);
                                     return true;
@@ -2062,12 +2063,12 @@ internal ref struct JsonRegexValidator
         return false;
     }
 
-    private readonly bool TryGetCapturePos(int capnum, out int capturePos)
+    private readonly bool TryGetCapturePos(int capnum, bool requireExplicit, out int capturePos)
     {
         for (int i = 0; i < _caps.Length; i++)
         {
             CapToPos row = _caps[i];
-            if (row.CapNum == capnum)
+            if (row.CapNum == capnum && (row.IsExplicit || !requireExplicit))
             {
                 capturePos = row.Pos;
                 return true;
@@ -2143,6 +2144,7 @@ internal ref struct JsonRegexValidator
     {
         private readonly int _capNum;
         private readonly int _pos;
+        private readonly bool _isExplicit;
 
         /// <summary>
         /// The size of this structure in bytes.
@@ -2159,12 +2161,15 @@ internal ref struct JsonRegexValidator
         /// </summary>
         public int Pos => _pos;
 
+        public bool IsExplicit => _isExplicit;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CapToPos"/> struct.
         /// </summary>
         /// <param name="capNum">The capture number.</param>
         /// <param name="pos">The position.</param>
-        public CapToPos(int capNum, int pos)
+        /// <param name="isExplicit">True if the capture is explicit.</param>
+        public CapToPos(int capNum, int pos, bool isExplicit)
         {
             _capNum = capNum;
             _pos = pos;

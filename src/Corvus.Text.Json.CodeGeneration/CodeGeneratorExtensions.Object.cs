@@ -573,26 +573,6 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator;
-
-        ////CheckValidInstance();
-
-        ////ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);
-        ////if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.FirstName, out Mutable element))
-        ////{
-        ////    // We are going to replace just the value
-        ////    value.AddAsItem(ref cvb);
-        ////    _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-        ////}
-        ////else
-        ////{
-        ////    // We are going to insert the new value
-        ////    value.AddAsProperty(JsonPropertyNamesEscaped.FirstName, ref cvb, escapeName: false, nameRequiresUnescaping: false);
-        ////    int endIndex = _idx + _parent.GetDbSize(_idx, false);
-        ////    _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-        ////}
-
-        ////_documentVersion = _parent.Version;
-
     }
 
     /// <summary>
