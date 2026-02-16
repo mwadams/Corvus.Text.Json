@@ -308,7 +308,7 @@ public class SuiteValidationOfIPv6Addresses : IClassFixture<SuiteValidationOfIPv
                 "JsonSchemaTestSuite.Draft7.Optional.Format.Ipv6",
                 "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,

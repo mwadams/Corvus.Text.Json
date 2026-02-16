@@ -280,7 +280,7 @@ public class SuiteValidationOfUrIs : IClassFixture<SuiteValidationOfUrIs.Fixture
                 "JsonSchemaTestSuite.Draft7.Optional.Format.Uri",
                 "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,

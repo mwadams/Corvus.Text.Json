@@ -350,7 +350,7 @@ public class SuiteValidationOfTimeStrings : IClassFixture<SuiteValidationOfTimeS
                 "JsonSchemaTestSuite.Draft7.Optional.Format.Time",
                 "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,

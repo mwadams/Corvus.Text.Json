@@ -210,7 +210,7 @@ public class SuiteValidationOfDateTimeStrings : IClassFixture<SuiteValidationOfD
                 "JsonSchemaTestSuite.Draft7.Optional.Format.DateTime",
                 "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,

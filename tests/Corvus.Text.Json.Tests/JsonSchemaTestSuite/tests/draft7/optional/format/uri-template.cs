@@ -98,7 +98,7 @@ public class SuiteFormatUriTemplate : IClassFixture<SuiteFormatUriTemplate.Fixtu
                 "JsonSchemaTestSuite.Draft7.Optional.Format.UriTemplate",
                 "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,

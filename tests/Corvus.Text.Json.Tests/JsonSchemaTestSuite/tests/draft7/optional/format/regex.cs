@@ -84,7 +84,7 @@ public class SuiteValidationOfRegularExpressions : IClassFixture<SuiteValidation
                 "JsonSchemaTestSuite.Draft7.Optional.Format.Regex",
                 "../../../../../JSON-Schema-Test-Suite/remotes",
                 "http://json-schema.org/draft-07/schema#",
-                validateFormat: false,
+                validateFormat: true,
                 optionalAsNullable: false,
                 useImplicitOperatorString: false,
                 addExplicitUsings: false,
