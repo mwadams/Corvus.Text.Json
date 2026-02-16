@@ -10,7 +10,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers
 /// Implemented by types that will handle validation for JSON properties.
 /// </summary>
 /// <remarks>
-/// This is used by <see cref="PropertiesValidationHandler2"/> to emit the code
+/// This is used by <see cref="PropertiesValidationHandler"/> to emit the code
 /// to validate a named property.
 /// </remarks>
 public interface INamedPropertyChildHandler
@@ -98,4 +98,17 @@ public interface INamedPropertyChildHandler
     /// <param name="typeDeclaration">The type declaration to test.</param>
     /// <returns><see langword="true"/> if code will be emitted for the property, otherwise <see langword="false"/>.</returns>
     bool WillEmitCodeFor(TypeDeclaration typeDeclaration);
+
+    /// <summary>
+    /// Gets a value indicating whether the validation handler evaluates the property if code is emitted for the property.
+    /// </summary>
+    /// <param name="property">The property to test.</param>
+    /// <remarks>
+    /// <para>
+    /// Some validators (e.g. Dependent Schemas) do not actually validate the property for which their validation code is emitted, but instead use the presence of the property
+    /// to trigger other validation. In such cases, this property should return <see langword="false"/> to indicate that the property is not actually evaluated by the validation
+    /// handler, even though code is emitted for it.
+    /// </para>
+    /// </remarks>
+    bool EvaluatesProperty(PropertyDeclaration property);
 }

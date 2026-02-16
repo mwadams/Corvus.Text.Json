@@ -20,7 +20,8 @@ namespace Corvus.Text.Json.Internal;
 /// <remarks>
 /// This class uses a hash-based approach to enable O(1) average-case lookups of property matchers based on property names, while minimizing memory usage through array pooling and efficient data layout. The implementation includes a custom hash function, separate chaining for collision resolution, and optimized key comparison strategies to ensure fast lookups even in the presence of hash collisions.
 /// </remarks>
-public class PropertySchemaMatchers
+public class PropertySchemaMatchers<T>
+    where T : class
 {
     /// <summary>
     /// Represents a property map structure for efficient property lookup in JSON objects.
@@ -200,8 +201,7 @@ public class PropertySchemaMatchers
     private byte[]? _entriesBacking;
 
     private List<UnescapedNameProvider> _nameProviders;
-    private List<JsonSchemaMatcherWithRequiredBitBuffer>? _matchersWithBitBuffer;
-    private List<JsonSchemaMatcher>? _matchersWithoutBitBuffer;
+    private List<T>? _matchers;
 
     /// <summary>
     /// A delegate that provides the unescaped name for a property.
@@ -214,21 +214,9 @@ public class PropertySchemaMatchers
     /// </summary>
     /// <param name="matchers">The matchers for the named values.</param>
     [CLSCompliant(false)]
-    public PropertySchemaMatchers(List<(UnescapedNameProvider, JsonSchemaMatcherWithRequiredBitBuffer)> matchers)
+    public PropertySchemaMatchers(List<(UnescapedNameProvider, T)> matchers)
     {
-        _matchersWithBitBuffer = [.. matchers.Select(m => m.Item2)];
-        _nameProviders = [.. matchers.Select(m => m.Item1)];
-        CreateMap();
-    }
-
-    /// <summary>
-    /// Creates a validator map for efficient property lookup based on the provided matchers.
-    /// </summary>
-    /// <param name="matchers">The matchers for the named values.</param>
-    [CLSCompliant(false)]
-    public PropertySchemaMatchers(List<(UnescapedNameProvider, JsonSchemaMatcher)> matchers)
-    {
-        _matchersWithoutBitBuffer = [.. matchers.Select(m => m.Item2)];
+        _matchers = [.. matchers.Select(m => m.Item2)];
         _nameProviders = [.. matchers.Select(m => m.Item1)];
         CreateMap();
     }
@@ -340,7 +328,7 @@ public class PropertySchemaMatchers
     /// cache misses through efficient data layout.
     /// </remarks>
     [CLSCompliant(false)]
-    public bool TryGetNamedMatcher(ReadOnlySpan<byte> unescapedUtf8Name, [NotNullWhen(true)] out JsonSchemaMatcherWithRequiredBitBuffer? matcher)
+    public bool TryGetNamedMatcher(ReadOnlySpan<byte> unescapedUtf8Name, [NotNullWhen(true)] out T? matcher)
     {
         Span<int> buckets = _bucketsBacking.AsSpan(0, _propertyMap.BucketCount);
         Span<byte> entries = _entriesBacking.AsSpan(0, _propertyMap.Count * PropertyMap.Entry.Size);
@@ -379,97 +367,8 @@ public class PropertySchemaMatchers
         Debug.Fail("Possible infinite loop in PropertyMap.FindValue.");
 
     ReturnFound:
-        Debug.Assert(_matchersWithBitBuffer is not null);
-        matcher = _matchersWithBitBuffer[entry.ValueIndex];
-        return true;
-    ReturnNotFound:
-        matcher = null;
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup.
-    /// </summary>
-    /// <param name="unescapedUtf8Name">The unescaped UTF-8 property name to search for.</param>
-    /// <param name="matcher">When this method returns, contains the matcher, otherwise null.</param>
-    /// <returns><see langword="true"/> if the property was found; otherwise, <see langword="false"/>.</returns>
-    /// <remarks>
-    /// This method implements an efficient hash table lookup algorithm for property names in JSON objects.
-    /// The lookup process follows these steps:
-    ///
-    /// 1. **Property Map Loading**: Reads the PropertyMap structure from the backing buffer to get metadata
-    ///    including bucket and entry offsets, counts, and sizes.
-    ///
-    /// 2. **Hash Calculation**: Computes a hash code for the target property name using an optimized
-    ///    algorithm that varies based on the property name length for maximum distribution.
-    ///
-    /// 3. **Bucket Selection**: Uses modulo operation to map the hash code to a specific bucket
-    ///    in the hash table, providing O(1) initial access.
-    ///
-    /// 4. **Chain Traversal**: Follows the linked chain of entries in the selected bucket:
-    ///    - Bucket values are 1-based, so the initial index is decremented
-    ///    - Each entry contains a Next field pointing to the next entry in the collision chain
-    ///    - Bounds checking prevents array access violations
-    ///
-    /// 5. **Hash and Key Comparison**: For each entry in the chain:
-    ///    - First compares hash codes for fast rejection of non-matches
-    ///    - For hash matches, performs optimized key comparison:
-    ///      * Short keys (< HashLength) with no hash collision bits can skip full comparison
-    ///      * Otherwise, retrieves the actual property name and performs byte-wise comparison
-    ///
-    /// 6. **Key Retrieval**: Property names are retrieved differently based on storage:
-    ///    - Simple properties: Read directly from the original JSON data
-    ///    - Escaped properties: Read from the dynamic value buffer after unescaping
-    ///
-    /// 7. **Collision Handling**: The algorithm includes safeguards against infinite loops
-    ///    by tracking collision count and ensuring it doesn't exceed the total entry count.
-    ///
-    /// This implementation provides O(1) average-case lookup performance with graceful handling
-    /// of hash collisions through separate chaining, while minimizing memory allocations and
-    /// cache misses through efficient data layout.
-    /// </remarks>
-    [CLSCompliant(false)]
-    public bool TryGetNamedMatcher(ReadOnlySpan<byte> unescapedUtf8Name, [NotNullWhen(true)] out JsonSchemaMatcher? matcher)
-    {
-        Span<int> buckets = _bucketsBacking.AsSpan(0, _propertyMap.BucketCount);
-        Span<byte> entries = _entriesBacking.AsSpan(0, _propertyMap.Count * PropertyMap.Entry.Size);
-
-        ulong hashCode = PropertyMap.GetHashCode(unescapedUtf8Name);
-        int i = PropertyMap.GetBucket(buckets, hashCode, _propertyMap.BucketCount);
-        uint collisionCount = 0;
-        PropertyMap.Entry entry;
-
-        i--; // Value in _buckets is 1-based; subtract 1 from i. We do it here so it fuses with the following conditional.
-        do
-        {
-            int offset = i * PropertyMap.Entry.Size;
-
-            // Test in if to drop range check for following array access
-            if ((uint)offset >= (uint)entries.Length)
-            {
-                goto ReturnNotFound;
-            }
-
-            entry = MemoryMarshal.Read<PropertyMap.Entry>(entries.Slice(offset));
-            if (entry.HashCode == hashCode &&
-                    (((unescapedUtf8Name.Length < HashLength) &&
-                        ((hashCode & HashMask) == 0)) ||
-                    GetKey(ref entry).SequenceEqual(unescapedUtf8Name)))
-            {
-                goto ReturnFound;
-            }
-
-            i = entry.Next;
-
-            collisionCount++;
-        }
-        while (collisionCount <= _propertyMap.Count);
-
-        Debug.Fail("Possible infinite loop in PropertyMap.FindValue.");
-
-    ReturnFound:
-        Debug.Assert(_matchersWithoutBitBuffer is not null);
-        matcher = _matchersWithoutBitBuffer[entry.ValueIndex];
+        Debug.Assert(_matchers is not null);
+        matcher = _matchers[entry.ValueIndex];
         return true;
     ReturnNotFound:
         matcher = null;

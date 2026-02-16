@@ -2201,4 +2201,21 @@ internal static partial class CodeGeneratorExtensions
         return generator;
     }
 
+    /// <summary>
+    /// Emits a type into the root namespace if it has not already
+    /// been emitted, and returns a reference to the unique name. This allows us to share
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="name">The name of the type to emit in the root namespace.</param>
+    /// <param name="emitter">A function which emits the code for the delegate.</param>
+    /// <returns>The fully qualified unqiue type name in the root scope.</returns>
+    public static string GetOrEmitNamedTypeInRootNamespace(this CodeGenerator generator, string name, string key, NamedTypeEmitter emitter)
+    {        
+        if (generator.LanguageProvider is CSharpLanguageProvider provider)
+        {
+            return provider.GetOrEmitNamedTypeInRootNamespace(name, key, emitter);
+        }
+
+        throw new InvalidOperationException("Expected a CSharpLanguageProvider.");
+    }
 }

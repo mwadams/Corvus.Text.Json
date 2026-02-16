@@ -28,6 +28,10 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
     /// <inheritdoc/>
     public uint ValidationHandlerPriority => ValidationPriorities.AfterComposition + 1000; // We are comparatively expensive, so we should go later
 
+
+    /// <inheritdoc/>
+    public bool EvaluatesProperty(PropertyDeclaration property) => false;
+
     /// <inheritdoc/>
     public bool AppendJsonSchemaClassSetupForProperty(CodeGenerator generator, TypeDeclaration typeDeclaration, PropertyDeclaration property)
     {
@@ -46,14 +50,14 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         if (requiredPropertyIntCount > 0)
         {
             generator
-                .ReserveName("objectValidation_seenItems")
-                .ReserveName("objectValidation_seenItemsByteArray")
-                .ConditionallyAppend(!rentedRequiredPropertyCountArray, g => g.AppendLineIndent("Span<int> objectValidation_seenItems = stackalloc int[", requiredPropertyCount.ToString(), "];")
+                .ReserveName("requiredPropertyChildHandler_seenItems")
+                .ReserveName("requiredPropertyChildHandler_seenItemsByteArray")
+                .ConditionallyAppend(!rentedRequiredPropertyCountArray, g => g.AppendLineIndent("Span<int> requiredPropertyChildHandler_seenItems = stackalloc int[", requiredPropertyCount.ToString(), "];")
                 .ConditionallyAppend(rentedRequiredPropertyCountArray, g =>
                 {
                     return g
-                        .AppendLineIndent("int[]? objectValidation_seenItemsByteArray = ArrayPool<int>.Shared.Rent(", requiredPropertyCount.ToString(), ");")
-                        .AppendLineIndent("Span<int> objectValidation_seenItems = objectValidation_seenItemsByteArray.Slice(0, requiredPropertyCount);");
+                        .AppendLineIndent("int[]? requiredPropertyChildHandler_seenItemsByteArray = ArrayPool<int>.Shared.Rent(", requiredPropertyCount.ToString(), ");")
+                        .AppendLineIndent("Span<int> requiredPropertyChildHandler_seenItems = requiredPropertyChildHandler_seenItemsByteArray.Slice(0, requiredPropertyCount);");
                 }));
         }
 
@@ -98,9 +102,8 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         foreach (string bitmaskOffset in bitmaskOffsetList)
         {
             generator
-                .AppendIndent("((objectValidation_seenItems[", i.ToString(), "] ^ ", bitmaskOffset, ") == 0)")
-                .ConditionallyAppend(i > 0 && i < (bitmaskOffsetList.Count - 1), g => g.AppendLine(" &&"))
-                .ConditionallyAppend(i == 0 && i < (bitmaskOffsetList.Count - 1), g => g.AppendLine())
+                .AppendIndent("((requiredPropertyChildHandler_seenItems[", i.ToString(), "] ^ ", bitmaskOffset, ") == 0)")
+                .ConditionallyAppend(i < (bitmaskOffsetList.Count - 1), g => g.AppendLine(" &&"))
                 .ConditionallyAppend(i == (bitmaskOffsetList.Count - 1), g => g.AppendLine(")"));
             i++;
         }
@@ -143,7 +146,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                     // We don't need to do this test again if we have only 1 item in the array => < 32 required properties.
                     // (Which is typical for most JSON object schema)
                     generator
-                        .AppendLineIndent("if ((objectValidation_seenItems[", bitmaskOffsetIndex.ToString(), "] ^ ", bitmaskOffset, ") != 0)")
+                        .AppendLineIndent("if ((requiredPropertyChildHandler_seenItems[", bitmaskOffsetIndex.ToString(), "] ^ ", bitmaskOffset, ") != 0)")
                         .AppendLineIndent("{")
                         .PushIndent();
                 }
@@ -153,7 +156,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                     var propertyOffset = propertyOffsetList[j];
                     generator
                         .AppendSeparatorLine()
-                        .AppendLineIndent("if ((objectValidation_seenItems[", bitmaskOffsetIndex.ToString(), "] & ", propertyOffset.OffsetName, ") == 0)")
+                        .AppendLineIndent("if ((requiredPropertyChildHandler_seenItems[", bitmaskOffsetIndex.ToString(), "] & ", propertyOffset.OffsetName, ") == 0)")
                         .AppendLineIndent("{")
                         .PushIndent()
                             .AppendLineIndent("context.EvaluatedKeywordPath(false, ", j.ToString(), ", ", propertyOffset.RequiredPropertyNotPresent, ", ", propertyOffset.RequiredSchemaEvaluationPathName, ");")
@@ -189,13 +192,22 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             if (rentedRequiredPropertyCountArray.HasValue && rentedRequiredPropertyCountArray.Value)
             {
                 generator
-                    .AppendLineIndent("ArrayPool<int>.Shared.Return(objectValidation_seenItemsByteArray);");
+                    .AppendLineIndent("ArrayPool<int>.Shared.Return(requiredPropertyChildHandler_seenItemsByteArray);");
             }
         }
     }
 
     /// <inheritdoc/>
-    public void AppendValidatorArguments(CodeGenerator generator, TypeDeclaration typeDeclaration) {}
+    public void AppendValidatorArguments(CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (!typeDeclaration.TryGetMetadata(BitMaskListKey, out List<string>? _))
+        {
+            return;
+        }
+
+        generator
+            .Append(", requiredPropertyChildHandler_seenItems");
+    }
 
     /// <inheritdoc/>
     public void BeginJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
@@ -207,8 +219,8 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             return;
         }
 
-        Dictionary<PropertyDeclaration, (string OffsetName, string BitMaskName)> bitmasksByProperty = [];
-
+        Dictionary<PropertyDeclaration, (string OffsetName, string BitMaskName)> bitMasksByProperty = [];
+        List<string> bitMaskList = [];
         List<(string OffsetName, string RequiredPropertyPresent, string RequiredPropertyNotPresent, string RequiredSchemaEvaluationPathName)> propertyOffsetList = [];
 
         int requiredOffset = 0;
@@ -217,6 +229,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         Dictionary<string, string> seenKeywords = [];
 
         string currentBitMaskOffsetName = generator.GetStaticReadOnlyFieldNameInScope($"BitMaskOffset{requiredOffset}");
+        bitMaskList.Add(currentBitMaskOffsetName);
 
         foreach (PropertyDeclaration property in properties)
         {           
@@ -227,7 +240,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             offsetName = generator.GetStaticReadOnlyFieldNameInScope("RequiredOffset", prefix: propertyName);
             bitMask = generator.GetStaticReadOnlyFieldNameInScope("RequiredBitMask", prefix: propertyName);
 
-            bitmasksByProperty.Add(property, (offsetName, bitMask));
+            bitMasksByProperty.Add(property, (offsetName, bitMask));
 
             string keyword = property.RequiredKeyword.Keyword;
             string keywordPathModifier = property.KeywordPathModifier;
@@ -279,6 +292,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                 requiredOffset++;
                 requiredBit = 0b0000_0000_0000_0001;
                 currentBitMaskOffsetName = generator.GetStaticReadOnlyFieldNameInScope($"BitMaskOffset{requiredOffset}");
+                bitMaskList.Add(currentBitMaskOffsetName);
             }
             else
             {
@@ -292,9 +306,10 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         }
 
 
-        if (bitmasksByProperty.Count > 0)
+        if (bitMasksByProperty.Count > 0)
         {
-            typeDeclaration.SetMetadata(BitMaskListKey, bitmasksByProperty);
+            typeDeclaration.SetMetadata(BitMaskByPropertyKey, bitMasksByProperty);
+            typeDeclaration.SetMetadata(BitMaskListKey, bitMaskList);
             typeDeclaration.SetMetadata(PropertyOffsetListKey, propertyOffsetList);
         }
     }
@@ -340,14 +355,26 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             count++;
         }
 
-        generator.AppendLine(";");
+        generator
+            .AppendLine(";")
+            .PopIndent();
     }
 
     /// <inheritdoc/>
     public void EndJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration) {}
 
     /// <inheritdoc/>
-    public IEnumerable<ObjectPropertyValidatorParameter> GetNamedPropertyValidatorParameters(TypeDeclaration typeDeclaration) => [];
+    public IEnumerable<ObjectPropertyValidatorParameter> GetNamedPropertyValidatorParameters(TypeDeclaration typeDeclaration)
+    {
+        if (!typeDeclaration.TryGetMetadata(BitMaskListKey, out List<string>? bitmaskOffsetList))
+        {
+            return [];
+        }
+
+        return [
+            new ObjectPropertyValidatorParameter("Span<int>", "requiredBitBuffer")
+        ];
+    }
 
     /// <inheritdoc/>
     public bool WillEmitCodeFor(TypeDeclaration typeDeclaration) => typeDeclaration.ExplicitProperties()?.Any(p => p.LocalOrComposed == LocalOrComposed.Local && p.RequiredOrOptional == RequiredOrOptional.Required) ?? false;

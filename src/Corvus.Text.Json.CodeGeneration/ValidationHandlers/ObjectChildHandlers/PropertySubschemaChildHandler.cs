@@ -10,7 +10,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers
 internal class PropertySubschemaChildHandler : INamedPropertyChildHandler
 {
     /// <summary>
-    /// Gets the singleton instance of the <see cref="PropertiesValidationHandler2"/>.
+    /// Gets the singleton instance of the <see cref="PropertiesValidationHandler"/>.
     /// </summary>
     public static PropertySubschemaChildHandler Instance { get; } = CreateDefaultInstance();
 
@@ -23,6 +23,9 @@ internal class PropertySubschemaChildHandler : INamedPropertyChildHandler
     public uint ValidationHandlerPriority => ValidationPriorities.AfterComposition + 1000; // We are comparatively expensive, so we should go later
 
     /// <inheritdoc/>
+    public bool EvaluatesProperty(PropertyDeclaration property) => property.LocalOrComposed == LocalOrComposed.Local;
+
+    /// <inheritdoc/>
     public bool AppendJsonSchemaClassSetupForProperty(CodeGenerator generator, TypeDeclaration typeDeclaration, PropertyDeclaration property)
     {
         return property.LocalOrComposed == LocalOrComposed.Local;
@@ -32,6 +35,11 @@ internal class PropertySubschemaChildHandler : INamedPropertyChildHandler
     /// <inheritdoc/>
     public void AppendObjectPropertyValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration, PropertyDeclaration property)
     {
+        if (property.LocalOrComposed != LocalOrComposed.Local)
+        {
+            return;
+        }
+
         string propertyName = property.DotnetPropertyName();
         string propertyClassName = property.ReducedPropertyType.FullyQualifiedDotnetTypeName();
         string jsonSchemaClassName = generator.JsonSchemaClassName(propertyClassName);
@@ -74,5 +82,6 @@ internal class PropertySubschemaChildHandler : INamedPropertyChildHandler
 
     /// <inheritdoc/>
     public bool WillEmitCodeFor(TypeDeclaration typeDeclaration) => typeDeclaration.ExplicitProperties()?.Any(p => p.LocalOrComposed == LocalOrComposed.Local) ?? false;
+
     public void AppendValidationSetup(CodeGenerator generator, TypeDeclaration typeDeclaration) { }
 }
