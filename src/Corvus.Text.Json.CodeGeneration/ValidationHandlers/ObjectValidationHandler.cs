@@ -80,7 +80,6 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
                 PropertyNamesValidationHandler.Instance,
                 PatternPropertiesValidationHandler.Instance,
                 UnevaluatedPropertyValidationHandler.Instance
-                ////DependentRequiredValidationHandler.Instance,
                 );
         return result;
     }

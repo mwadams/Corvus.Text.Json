@@ -37,7 +37,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
     /// <inheritdoc/>
     public bool AppendJsonSchemaClassSetupForProperty(CodeGenerator generator, TypeDeclaration typeDeclaration, PropertyDeclaration property)
     {
-        return (typeDeclaration.DependentRequired()?.Any(dr => dr.Value.Any(d => d.JsonPropertyName == property.JsonPropertyName)) ?? false) || GetRequiredProperties(typeDeclaration).Any(p => p == property);
+        return (typeDeclaration.DependentRequired()?.Any(dr => dr.Value.Any(d => d.JsonPropertyName == property.JsonPropertyName || d.Dependencies.Any(d => d == property.JsonPropertyName))) ?? false) || GetRequiredProperties(typeDeclaration).Any(p => p == property);
     }
 
     public void AppendValidationSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
@@ -59,12 +59,12 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         generator
             .ReserveName("requiredPropertyChildHandler_seenItems")
             .ReserveName("requiredPropertyChildHandler_seenItemsByteArray")
-            .ConditionallyAppend(!rentedRequiredPropertyCountArray, g => g.AppendLineIndent("Span<int> requiredPropertyChildHandler_seenItems = stackalloc int[", requiredPropertyIntCountAsString, "];")
+            .ConditionallyAppend(!rentedRequiredPropertyCountArray, g => g.AppendLineIndent("Span<uint> requiredPropertyChildHandler_seenItems = stackalloc uint[", requiredPropertyIntCountAsString, "];")
             .ConditionallyAppend(rentedRequiredPropertyCountArray, g =>
             {
                 return g
-                    .AppendLineIndent("int[]? requiredPropertyChildHandler_seenItemsByteArray = ArrayPool<int>.Shared.Rent(", requiredPropertyIntCountAsString, ");")
-                    .AppendLineIndent("Span<int> requiredPropertyChildHandler_seenItems = requiredPropertyChildHandler_seenItemsByteArray.Slice(0, requiredPropertyCount);");
+                    .AppendLineIndent("uint[]? requiredPropertyChildHandler_seenItemsByteArray = ArrayPool<uint>.Shared.Rent(", requiredPropertyIntCountAsString, ");")
+                    .AppendLineIndent("Span<uint> requiredPropertyChildHandler_seenItems = requiredPropertyChildHandler_seenItemsByteArray.Slice(0, requiredPropertyCount);");
             }));
     }
 
@@ -134,15 +134,30 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                 .AppendLineIndent("{")
                 .PushIndent();
 
+            if (propertyDependency.Requirements.Count > 2)
+            {
+                generator
+                    .AppendLineIndent("if (context.HasCollector)")
+                    .AppendLineIndent("{")
+                    .PushIndent();
+            }
+
             foreach (Requirement requirement in propertyDependency.Requirements)
             {
-                Debug.Assert(requirement.RequiredSchemaEvaluationPathName is not null);
                 Debug.Assert(requirement.IndexForEvaluationProvider is not null);
                 Debug.Assert(requirement.RequiredPropertyMessageProviderNames is not null);
 
                 generator
-                    .AppendLineIndent("context.EvaluatedKeywordPath(true, ", requirement.IndexForEvaluationProvider!.Value.ToString(), ", ", requirement.RequiredPropertyMessageProviderNames.RequiredPropertyPresent, ", ", requirement.RequiredSchemaEvaluationPathName!, ");");
+                        .AppendLineIndent("context.EvaluatedKeywordForProperty(true, ", requirement.IndexForEvaluationProvider!.Value.ToString(), ", ", requirement.RequiredPropertyMessageProviderNames.RequiredPropertyPresent, ", ", SymbolDisplay.FormatLiteral(propertyDependencies.PropertyName ?? requirement.PropertyName, true), "u8, ", SymbolDisplay.FormatLiteral(propertyDependencies.Keyword.Keyword, true), "u8);");
             }
+
+            if (propertyDependency.Requirements.Count > 2)
+            {
+                generator
+                    .PopIndent()
+                    .AppendLineIndent("}");
+            }
+
 
             generator
                 .PopIndent()
@@ -158,9 +173,8 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                 .AppendLineIndent("{")
                 .PushIndent();
 
-            foreach(Requirement requirement in propertyDependency.Requirements)
+            foreach (Requirement requirement in propertyDependency.Requirements)
             {
-                Debug.Assert(requirement.RequiredSchemaEvaluationPathName is not null);
                 Debug.Assert(requirement.IndexForEvaluationProvider is not null);
                 Debug.Assert(requirement.RequiredPropertyMessageProviderNames is not null);
 
@@ -169,13 +183,13 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                     .AppendLineIndent("if ((requiredPropertyChildHandler_seenItems[", requirement.OffsetForPropertyName, "] & ", requirement.BitForPropertyName, ") == 0)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("context.EvaluatedKeywordPath(false, ", requirement.IndexForEvaluationProvider!.Value.ToString(), ", ", requirement.RequiredPropertyMessageProviderNames.RequiredPropertyNotPresent, ", ", requirement.RequiredSchemaEvaluationPathName!, ");")
+                        .AppendLineIndent("context.EvaluatedKeywordForProperty(false, ", requirement.IndexForEvaluationProvider!.Value.ToString(), ", ", requirement.RequiredPropertyMessageProviderNames.RequiredPropertyNotPresent, ", ", SymbolDisplay.FormatLiteral(propertyDependencies.PropertyName ?? requirement.PropertyName, true), "u8, ", SymbolDisplay.FormatLiteral(propertyDependencies.Keyword.Keyword, true), "u8);")
                     .PopIndent()
                     .AppendLineIndent("}")
                     .AppendLineIndent("else")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("context.EvaluatedKeywordPath(true, ", requirement.IndexForEvaluationProvider!.Value.ToString(), ", ", requirement.RequiredPropertyMessageProviderNames.RequiredPropertyPresent, ", ", requirement.RequiredSchemaEvaluationPathName!, ");")
+                        .AppendLineIndent("context.EvaluatedKeywordForProperty(true, ", requirement.IndexForEvaluationProvider!.Value.ToString(), ", ", requirement.RequiredPropertyMessageProviderNames.RequiredPropertyPresent, ", ", SymbolDisplay.FormatLiteral(propertyDependencies.PropertyName ?? requirement.PropertyName, true), "u8, ", SymbolDisplay.FormatLiteral(propertyDependencies.Keyword.Keyword, true), "u8);")
                     .PopIndent()
                     .AppendLineIndent("}");
             }
@@ -230,7 +244,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         }
 
         return [
-            new ObjectPropertyValidatorParameter("Span<int>", "requiredBitBuffer")
+            new ObjectPropertyValidatorParameter("Span<uint>", "requiredBitBuffer")
         ];
     }
 
@@ -246,7 +260,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
     {
         Dictionary<string, Requirement> requirementsByRequirementPropertyName = [];
         List<PropertyDependencies> dependenciesForProperties = [];
-        Dictionary<(IKeyword, string?), string> keywordsToSchemaEvaluationPath = [];
 
         int currentOffset = 0;
         int currentBitLeftShift = 0;
@@ -256,7 +269,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             requiredByKeyword,
             requirementsByRequirementPropertyName,
             dependenciesForProperties,
-            keywordsToSchemaEvaluationPath,
             ref currentOffset,
             ref currentBitLeftShift);
 
@@ -265,7 +277,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             requiredPropertyDeclarations,
             requirementsByRequirementPropertyName,
             dependenciesForProperties,
-            keywordsToSchemaEvaluationPath,
             ref currentOffset,
             ref currentBitLeftShift);
 
@@ -284,7 +295,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         List<PropertyDeclaration> requiredPropertyDeclarations,
         Dictionary<string, Requirement> requirementsByRequirementPropertyName,
         List<PropertyDependencies> dependenciesForProperties,
-        Dictionary<(IKeyword, string?), string> keywordsToSchemaEvaluationPath,
         ref int currentOffset,
         ref int currentBitLeftShift)
     {
@@ -301,23 +311,17 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             {
                 if (!requirementsByRequirementPropertyName.TryGetValue(requirementName, out Requirement? requirement))
                 {
-                    if (!keywordsToSchemaEvaluationPath.TryGetValue((keyword, null), out string? requiredSchemaEvaluationPathName))
-                    {
-                        requiredSchemaEvaluationPathName = AppendSchemaEvaluationPathForKeyword(generator, keyword, null);
-
-                        keywordsToSchemaEvaluationPath.Add((keyword, null), requiredSchemaEvaluationPathName);
-                    }
-
                     string requiredPropertyPresent = generator.GetStaticReadOnlyFieldNameInScope(requirementName, prefix: "RequiredProperty", suffix: "Present");
                     string requiredPropertyNotPresent = generator.GetStaticReadOnlyFieldNameInScope(requirementName, prefix: "RequiredProperty", suffix: "NotPresent");
 
-                    requirement = CreateRequirement(generator, requirementsByRequirementPropertyName, currentOffset, currentBitLeftShift, requirementName, requiredSchemaEvaluationPathName, index, new(requiredPropertyPresent, requiredPropertyNotPresent));
+                    requirement = CreateRequirement(generator, requirementsByRequirementPropertyName, currentOffset, currentBitLeftShift, requirementName, index, new(requiredPropertyPresent, requiredPropertyNotPresent));
 
                     currentBitLeftShift++;
-                    if (currentBitLeftShift == 32)
+                    if (currentBitLeftShift == 33)
                     {
                         currentBitLeftShift = 0;
                         currentOffset++;
+                        currentDependency.AppendSchemaContent(generator);
                         currentDependency = propertyDependencies.AddDependency(generator, currentOffset);
                     }
 
@@ -338,7 +342,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         IReadOnlyDictionary<IObjectDependentRequiredValidationKeyword, IReadOnlyCollection<DependentRequiredDeclaration>>? requiredByKeyword,
         Dictionary<string, Requirement> requirementsByRequirementPropertyName,
         List<PropertyDependencies> dependenciesForProperties,
-        Dictionary<(IKeyword, string?), string> keywordsToSchemaEvaluationPath,
         ref int currentOffset,
         ref int currentBitLeftShift)
     {
@@ -359,23 +362,17 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                     {
                         if (!requirementsByRequirementPropertyName.TryGetValue(requirementName, out Requirement? requirement))
                         {
-                            if (!keywordsToSchemaEvaluationPath.TryGetValue((keyword, declaration.JsonPropertyName), out string? requiredSchemaEvaluationPathName))
-                            {
-                                requiredSchemaEvaluationPathName = AppendSchemaEvaluationPathForKeyword(generator, keyword, declaration.JsonPropertyName);
-
-                                keywordsToSchemaEvaluationPath.Add((keyword, declaration.JsonPropertyName), requiredSchemaEvaluationPathName);
-                            }
-
                             string requiredPropertyPresent = generator.GetStaticReadOnlyFieldNameInScope(requirementName, prefix: "RequiredProperty", suffix: "Present");
                             string requiredPropertyNotPresent = generator.GetStaticReadOnlyFieldNameInScope(requirementName, prefix: "RequiredProperty", suffix: "NotPresent");
 
-                            requirement = CreateRequirement(generator, requirementsByRequirementPropertyName, currentOffset, currentBitLeftShift, requirementName, requiredSchemaEvaluationPathName, index, new(requiredPropertyPresent, requiredPropertyNotPresent));
+                            requirement = CreateRequirement(generator, requirementsByRequirementPropertyName, currentOffset, currentBitLeftShift, requirementName, index, new(requiredPropertyPresent, requiredPropertyNotPresent));
 
                             currentBitLeftShift++;
-                            if (currentBitLeftShift == 32)
+                            if (currentBitLeftShift == 33)
                             {
                                 currentBitLeftShift = 0;
                                 currentOffset++;
+                                currentDependency.AppendSchemaContent(generator);
                                 currentDependency = propertyDependencies.AddDependency(generator, currentOffset);
                             }
                             index++;
@@ -392,34 +389,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         }
     }
 
-    private static string AppendSchemaEvaluationPathForKeyword(CodeGenerator generator, IKeyword keyword, string? propertyName)
-    {
-        string requiredSchemaEvaluationPathName;
-        if (propertyName is string pn)
-        {
-            requiredSchemaEvaluationPathName = generator.GetStaticReadOnlyFieldNameInScope("SchemaEvaluationPathFor", prefix: keyword.Keyword, suffix: propertyName);
-            generator
-                .AppendSeparatorLine()
-                .AppendLineIndent(
-                    "private static readonly JsonSchemaPathProvider<int> ",
-                    requiredSchemaEvaluationPathName,
-                    " = static (evaluationPathIndex, buffer, out written) => JsonSchemaEvaluation.SchemaLocationForIndexedKeywordWithDependency(", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ", SymbolDisplay.FormatLiteral(pn, true), "u8, evaluationPathIndex, buffer, out written);");
-       }
-        else
-        {
-            requiredSchemaEvaluationPathName = generator.GetStaticReadOnlyFieldNameInScope("SchemaEvaluationPath", prefix: keyword.Keyword);
-            generator
-                .AppendSeparatorLine()
-                .AppendLineIndent(
-                    "private static readonly JsonSchemaPathProvider<int> ",
-                    requiredSchemaEvaluationPathName,
-                    " = static (evaluationPathIndex, buffer, out written) => JsonSchemaEvaluation.SchemaLocationForIndexedKeyword(", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, evaluationPathIndex, buffer, out written);");
-        }
-
-        return requiredSchemaEvaluationPathName;
-    }
-
-    private static Requirement CreateRequirement(CodeGenerator generator, Dictionary<string, Requirement> requirementsByRequirementPropertyName, int currentOffset, int currentBitLeftShift, string propertyName, string? requiredSchemaEvaluationPathName = null, int? evaluationPathIndex = null, RequiredPropertyMessageProviderNames? requiredPropertyMessageProviderNames = null)
+    private static Requirement CreateRequirement(CodeGenerator generator, Dictionary<string, Requirement> requirementsByRequirementPropertyName, int currentOffset, int currentBitLeftShift, string propertyName, int? evaluationPathIndex = null, RequiredPropertyMessageProviderNames? requiredPropertyMessageProviderNames = null)
     {
         Requirement requirement;
         string offsetForPropertyName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("RequiredOffsetFor", suffix: propertyName, rootScope: generator.JsonSchemaClassScope());
@@ -428,10 +398,9 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         requirement = new Requirement(
             propertyName,
             currentOffset,
-            1 << currentBitLeftShift,
+            1U << currentBitLeftShift,
             offsetForPropertyName,
             bitForPropertyName,
-            requiredSchemaEvaluationPathName,
             evaluationPathIndex,
             requiredPropertyMessageProviderNames);
 
@@ -504,12 +473,12 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         /// <remarks>
         /// If this is null, it implies that we are tracking the required properties for the entire object, rather than for a specific property.
         /// </remarks>
-        public string? PropertyName { get; }        
+        public string? PropertyName { get; }
 
         public IKeyword Keyword { get; }
 
         public int OffsetForProperty => _requirement?.OffsetForProperty ?? -1;
-        public int BitForProperty => _requirement?.BitForProperty ?? -1;
+        public uint BitForProperty => _requirement?.BitForProperty ?? 0;
         public string? BitForPropertyName => _requirement?.BitForPropertyName;
         public string? OffsetForPropertyName => _requirement?.OffsetForPropertyName;
 
@@ -520,7 +489,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
 
         public Dependency AddDependency(CodeGenerator generator, int currentOffset)
         {
-            
+
             string currentBitmaskName =
                 PropertyName is string p
                     ? generator.GetUniqueStaticReadOnlyPropertyNameInScope($"RequiredBitMask{currentOffset}For", suffix: p, rootScope: generator.JsonSchemaClassScope())
@@ -580,7 +549,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
 
             generator
                 .AppendSeparatorLine()
-                .AppendLineIndent("private const int ", BitmaskMaskName, " =")
+                .AppendLineIndent("private const uint ", BitmaskMaskName, " =")
                 .PushIndent();
 
             int count = 0;
@@ -639,7 +608,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
     {
         public string PropertyName { get; }
         public int OffsetForProperty { get; }
-        public int BitForProperty { get; }
+        public uint BitForProperty { get; }
         public string BitForPropertyName { get; }
         public string OffsetForPropertyName { get; }
 
@@ -647,10 +616,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
 
         public RequiredPropertyMessageProviderNames? RequiredPropertyMessageProviderNames { get; }
 
-        public string? RequiredSchemaEvaluationPathName { get; }
-
-
-        public Requirement(string propertyName, int offsetForProperty, int bitForProperty, string offsetForPropertyName, string bitForPropertyName, string? requiredSchemaEvaluationPathName, int? indexForEvaluationProvider, RequiredPropertyMessageProviderNames? requiredPropertyMessageProviderNames)
+        public Requirement(string propertyName, int offsetForProperty, uint bitForProperty, string offsetForPropertyName, string bitForPropertyName, int? indexForEvaluationProvider, RequiredPropertyMessageProviderNames? requiredPropertyMessageProviderNames)
         {
             PropertyName = propertyName;
             OffsetForProperty = offsetForProperty;
@@ -658,14 +624,13 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             OffsetForPropertyName = offsetForPropertyName;
             BitForPropertyName = bitForPropertyName;
             IndexForEvaluationProvider = indexForEvaluationProvider;
-            RequiredSchemaEvaluationPathName = requiredSchemaEvaluationPathName;
             RequiredPropertyMessageProviderNames = requiredPropertyMessageProviderNames;
         }
 
         public void AppendSchemaContent(CodeGenerator generator) =>
             generator
                 .AppendSeparatorLine()
-                .ConditionallyAppend(RequiredPropertyMessageProviderNames is not null, g=> g.AppendLineIndent(
+                .ConditionallyAppend(RequiredPropertyMessageProviderNames is not null, g => g.AppendLineIndent(
                     "private static readonly JsonSchemaMessageProvider<int> ",
                     RequiredPropertyMessageProviderNames.RequiredPropertyPresent,
                     " = static (_, buffer, out written) => JsonSchemaEvaluation.RequiredPropertyPresent(",
@@ -679,7 +644,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                     "u8, buffer, out written);"))
                 .AppendSeparatorLine()
                 .AppendLineIndent("private const int ", OffsetForPropertyName, " = ", OffsetForProperty.ToString(), ";")
-                .AppendLineIndent("private const int ", BitForPropertyName, " = 0b", BitForProperty.ToString("b32"), ";");
+                .AppendLineIndent("private const uint ", BitForPropertyName, " = 0b", BitForProperty.ToString("b32"), ";");
     }
 
     private class RequirementsAndDependencies

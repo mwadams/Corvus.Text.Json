@@ -996,33 +996,6 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
-    /// Append the property evalation path provider static properties for the type declaration.
-    /// </summary>
-    /// <param name="generator">The code generator.</param>
-    /// <param name="typeDeclaration">The type declaration for which to emit the properties.</param>
-    /// <returns>A reference to the generator having completed the operation.</returns>
-    public static CodeGenerator AppendPropertyEvaluationPathStaticProperties(this CodeGenerator generator, TypeDeclaration typeDeclaration)
-    {
-        foreach (PropertyDeclaration property in typeDeclaration.ExplicitProperties())
-        {
-            if (generator.IsCancellationRequested)
-            {
-                return generator;
-            }
-            string evaluationPathProperty = generator.GetPropertyNameInScope($"{property.DotnetPropertyName()}SchemaEvaluationPath");
-            string evaluationPath = SymbolDisplay.FormatLiteral(property.KeywordPathModifier, true);
-            generator
-                .AppendLineIndent(
-                    "private static readonly JsonSchemaPathProvider ",
-                    evaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
-                    evaluationPath,
-                    "u8, buffer, out written);");
-        }
-
-        return generator;
-    }
-
-    /// <summary>
     /// Append code from validation handlers that require their own members in the JSON Schema class.
     /// </summary>
     /// <param name="generator">The code generator.</param>

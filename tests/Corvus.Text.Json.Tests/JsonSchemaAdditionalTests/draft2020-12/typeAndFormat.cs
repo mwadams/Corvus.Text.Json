@@ -5,7 +5,7 @@ using Xunit;
 
 namespace JsonSchemaAdditionalTests.Draft202012;
 
-[Trait("JsonSchemaTestSuite", "Draft202012")]
+[Trait("Additional-JsonSchemaTests", "Draft202012")]
 public class TypeAndFormat : IClassFixture<TypeAndFormat.Fixture>
 {
     private readonly Fixture _fixture;

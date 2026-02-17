@@ -30,7 +30,6 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
         instance.children.AddRange(
             [
                 PropertySubschemaChildHandler.Instance,
-                ////RequiredPropertyChildHandler.Instance,
                 DependentSchemasChildHandler.Instance,
                 RequiredPropertyChildHandler.Instance
             ]);

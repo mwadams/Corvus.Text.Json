@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
 using Corvus.Text.Json.Internal;
@@ -802,7 +803,10 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
 
 
     /// <inheritdoc/>
-    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider) => throw new NotImplementedException();
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        charsWritten = 0; return false;
+    }
 
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider) => throw new NotImplementedException();

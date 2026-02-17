@@ -64,7 +64,6 @@ public sealed class JsonSchemaPartial : ICodeFileBuilder
                             .AppendRegexValidationFields(typeDeclaration)
                             .AppendSchemaLocationStaticProperty(typeDeclaration)
                             .AppendSubschemaEvaluationPathStaticProperties(typeDeclaration)
-                            .AppendPropertyEvaluationPathStaticProperties(typeDeclaration)
                             .AppendJsonSchemaEvaluateMethod(typeDeclaration)
                             .AppendRegexValidationFactoryMethods(typeDeclaration)
                             .AppendPushChildContextMethods(typeDeclaration)
