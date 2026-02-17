@@ -14,7 +14,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers
 /// <summary>
 /// A property name validation handler.
 /// </summary>
-public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHandler, IJsonSchemaClassSetup
+public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHandler2, IJsonSchemaClassSetup
 {
     private const string EvaluationPathPropertyKey = "PropertyNameValidationHandler_EvaluationPathProperty";
 
@@ -85,6 +85,10 @@ public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHand
     }
 
     public bool RequiresPropertyNameAsString(TypeDeclaration typeDeclaration) => false;
+
+    /// <inheritdoc/>
+    public bool WillEmitCodeFor(TypeDeclaration typeDeclaration) => typeDeclaration.PropertyNamesSubschemaType() is not null;
+
 
     public CodeGenerator AppendJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {

@@ -126,7 +126,11 @@ file static class ObjectValidationHandlerExtensions
         generator
             .PrependChildValidationCode(typeDeclaration, childHandlers, validationPriority);
 
-        if (typeDeclaration.RequiresObjectEnumeration() ||
+        bool requiresObjectEnumeration = childHandlers
+                    .OfType<IChildObjectPropertyValidationHandler2>()
+                    .Any(child => child.WillEmitCodeFor(typeDeclaration));
+
+        if (requiresObjectEnumeration ||
             typeDeclaration.RequiresPropertyCount())
         {
             generator.ReserveName("objectValidation_propertyCount");
@@ -141,7 +145,7 @@ file static class ObjectValidationHandlerExtensions
             }
         }
 
-        if (typeDeclaration.RequiresObjectEnumeration())
+        if (requiresObjectEnumeration)
         {
             generator
                 .AppendSeparatorLine()

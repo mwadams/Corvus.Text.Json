@@ -55,6 +55,66 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
+    /// Creates a schema location for an indexed keyword by appending the index to the base location and dependency.
+    /// </summary>
+    /// <param name="keywordSchemaLocation">The base schema location for the keyword.</param>
+    /// <param name="dependencyName">The name of the dependency.</param>
+    /// <param name="index">The index to append to the location.</param>
+    /// <param name="buffer">The buffer to write the resulting location to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    public static bool SchemaLocationForIndexedKeywordWithDependency(ReadOnlySpan<byte> keywordSchemaLocation, ReadOnlySpan<byte> dependencyName, int index, Span<byte> buffer, out int written)
+    {
+        if (!TryCopyPath(keywordSchemaLocation, buffer, out written))
+        {
+            written = 0;
+            return false;
+        }
+
+        if (buffer[written - 1] != (byte)'/')
+        {
+            if (buffer.Length <= written)
+            {
+                written = 0;
+                return false;
+            }
+
+            buffer[written++] = (byte)'/';
+        }
+
+        if (TryCopyPath(dependencyName, buffer, out int bytesWritten))
+        {
+            written += bytesWritten;
+        }
+        else
+        {
+            written = 0;
+            return false;
+        }
+
+
+        if (buffer[written - 1] != (byte)'/')
+        {
+            if (buffer.Length <= written)
+            {
+                written = 0;
+                return false;
+            }
+
+            buffer[written++] = (byte)'/';
+        }
+
+        if (!Utf8Formatter.TryFormat(index, buffer[written..], out int bytesWritten2))
+        {
+            written = 0;
+            return false;
+        }
+
+        written += bytesWritten2;
+        return true;
+    }
+
+    /// <summary>
     /// Tries to copy a message to the specified buffer.
     /// </summary>
     /// <param name="readOnlySpan">The message to copy.</param>

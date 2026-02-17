@@ -15,7 +15,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers
 /// <summary>
 /// An unevaluated property validation handler.
 /// </summary>
-public class UnevaluatedPropertyValidationHandler : IChildObjectPropertyValidationHandler, IJsonSchemaClassSetup
+public class UnevaluatedPropertyValidationHandler : IChildObjectPropertyValidationHandler2, IJsonSchemaClassSetup
 {
     private const string LocalEvaluatedSchemaEvaluationPathKey = "UnevaluatedPropertyValidationHandler_LocalEvaluatedSchemaEvaluationPath";
     private const string LocalAndAppliedEvaluatedSchemaEvaluationPathKey = "UnevaluatedPropertyValidationHandler_LocalAndAppliedEvaluatedSchemaEvaluationPath";
@@ -143,6 +143,9 @@ public class UnevaluatedPropertyValidationHandler : IChildObjectPropertyValidati
 
         return generator;
     }
+
+    /// <inheritdoc/>
+    public bool WillEmitCodeFor(TypeDeclaration typeDeclaration) => typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is not null || typeDeclaration.LocalEvaluatedPropertyType() is not null;
 }
 
 file static class UnevaluatedPropertyValidationExtensions

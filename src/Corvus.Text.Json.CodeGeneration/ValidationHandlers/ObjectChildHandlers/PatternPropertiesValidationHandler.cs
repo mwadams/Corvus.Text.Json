@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
-using Corvus.Json;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -11,7 +10,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers
 /// <summary>
 /// A pattern-properties validation handler.
 /// </summary>
-public class PatternPropertiesValidationHandler : IChildObjectPropertyValidationHandler, IJsonSchemaClassSetup
+public class PatternPropertiesValidationHandler : IChildObjectPropertyValidationHandler2, IJsonSchemaClassSetup
 {
     private const string EvaluationPathPropertiesKey = "PatternPropertiesValidationHandler_EvaluationPathProperties";
 
@@ -108,6 +107,9 @@ public class PatternPropertiesValidationHandler : IChildObjectPropertyValidation
             propertiesForKeyword.Add(evaluationPathProperty);
         }
     }
+
+    /// <inheritdoc/>
+    public bool WillEmitCodeFor(TypeDeclaration typeDeclaration) => typeDeclaration.PatternProperties() is not null;
 }
 
 file static class PatternPropertiesValidationExtensions

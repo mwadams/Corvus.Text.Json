@@ -63,7 +63,7 @@ public class CSharpMemberName(
                 }
 
                 baseName.AsSpan().CopyTo(buffer[totalLength..]);
-                written = Formatting.ToPascalCase(buffer.Slice(written, baseName.Length));
+                written = Formatting.ToPascalCase(buffer.Slice(totalLength, baseName.Length));
                 totalLength += written;
             }
             else if (this.Casing == Casing.CamelCase)
@@ -76,13 +76,13 @@ public class CSharpMemberName(
                     totalLength += written;
 
                     baseName.AsSpan().CopyTo(buffer[totalLength..]);
-                    written = Formatting.ToPascalCase(buffer.Slice(written, baseName.Length));
+                    written = Formatting.ToPascalCase(buffer.Slice(totalLength, baseName.Length));
                     totalLength += written;
                 }
                 else
                 {
                     baseName.AsSpan().CopyTo(buffer[totalLength..]);
-                    written = Formatting.ToCamelCase(buffer.Slice(written, baseName.Length));
+                    written = Formatting.ToCamelCase(buffer.Slice(totalLength, baseName.Length));
                     totalLength += written;
                 }
             }
@@ -90,7 +90,7 @@ public class CSharpMemberName(
             if (suffix.Length > 0)
             {
                 suffix.AsSpan().CopyTo(buffer[totalLength..]);
-                int written = Formatting.ToPascalCase(buffer.Slice(prefix.Length + baseName.Length, suffix.Length));
+                int written = Formatting.ToPascalCase(buffer.Slice(totalLength, suffix.Length));
                 totalLength += written;
             }
 

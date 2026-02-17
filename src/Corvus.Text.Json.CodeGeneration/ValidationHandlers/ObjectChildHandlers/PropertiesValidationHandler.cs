@@ -11,7 +11,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers
 /// <summary>
 /// A properties validation handler.
 /// </summary>
-public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler, IJsonSchemaClassSetup
+public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler2, IJsonSchemaClassSetup
 {
     private const string PropertyValidatorDelegateNameKey = "PropertiesValidationHandler.PropertyValidatorDelegateName";
     
@@ -30,8 +30,9 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
         instance.children.AddRange(
             [
                 PropertySubschemaChildHandler.Instance,
-                RequiredPropertyChildHandler.Instance,
-                DependentSchemasChildHandler.Instance
+                ////RequiredPropertyChildHandler.Instance,
+                DependentSchemasChildHandler.Instance,
+                RequiredPropertyChildHandler.Instance
             ]);
 
         return instance;
@@ -176,6 +177,8 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
 
         return builder.ToString();
     }
+
+    public bool WillEmitCodeFor(TypeDeclaration typeDeclaration) => children.Any(c => c.WillEmitCodeFor(typeDeclaration));
 }
 
 file static class PropertiesValidationHandlerExtensions
