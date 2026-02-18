@@ -86,7 +86,7 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
 
             propertyAndMethodNames.Add((propertyName, methodName));
 
-            bool requiresAddLocalEvalatedProperty = children.Any(c => c.WillEmitCodeFor(typeDeclaration) && c.EvaluatesProperty(property));           
+            bool requiresAddLocalEvaluatedProperty = children.Any(c => c.WillEmitCodeFor(typeDeclaration) && c.EvaluatesProperty(property));           
 
             generator
                 .AppendSeparatorLine()
@@ -95,7 +95,7 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
                 .AppendLine(")")
                 .AppendLineIndent("{")
                 .PushIndent()
-                    .ConditionallyAppend(requiresAddLocalEvalatedProperty, g => g.AppendLineIndent("context.AddLocalEvaluatedProperty(propertyCount);"))
+                    .ConditionallyAppend(requiresAddLocalEvaluatedProperty, g => g.AppendLineIndent("context.AddLocalEvaluatedProperty(propertyCount);"))
                     .AppendChildObjectPropertyValidationCode(typeDeclaration, children, property)
                 .PopIndent()
                 .AppendLineIndent("}");
