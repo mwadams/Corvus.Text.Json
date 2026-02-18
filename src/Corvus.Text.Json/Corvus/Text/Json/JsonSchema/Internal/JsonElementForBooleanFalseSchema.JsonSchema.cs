@@ -65,8 +65,8 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         /// <typeparam name="TContext">The type of the context to be passed to the path providers.</typeparam>
         /// <param name="parentDocument">The parent document for the instance.</param>
         /// <param name="parentDocumentIndex">The index in the parent document for the instance.</param>
-        /// <param name="providerContext">The context to be passed to the path providers.</param>
         /// <param name="context">The current evaluation context.</param>
+        /// <param name="providerContext">The context to be passed to the path providers.</param>
         /// <param name="schemaEvaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
         /// <param name="documentEvaluationPath">The (optional) path in the document being evaluated in the child context.</param>
         /// <returns>The child context.</returns>
@@ -74,8 +74,8 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         public static JsonSchemaContext PushChildContext<TContext>(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
-            TContext providerContext,
             ref JsonSchemaContext context,
+            TContext providerContext,
             JsonSchemaPathProvider<TContext>? schemaEvaluationPath = null,
             JsonSchemaPathProvider<TContext>? documentEvaluationPath = null)
         {
