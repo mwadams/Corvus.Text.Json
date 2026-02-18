@@ -34,6 +34,13 @@ public static partial class JsonSchemaEvaluation
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountLessThan = static (value, buffer, out written) => ExpectedItemCountLessThanValue(value, buffer, out written);
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountLessThanOrEquals = static (value, buffer, out written) => ExpectedItemCountLessThanOrEqualsValue(value, buffer, out written);
 
+    public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountEquals = static (value, buffer, out written) => ExpectedContainsCountEqualsValue(value, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountNotEquals = static (value, buffer, out written) => ExpectedContainsCountNotEqualsValue(value, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountGreaterThan = static (value, buffer, out written) => ExpectedContainsCountGreaterThanValue(value, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountGreaterThanOrEquals = static (value, buffer, out written) => ExpectedContainsCountGreaterThanOrEqualsValue(value, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountLessThan = static (value, buffer, out written) => ExpectedContainsCountLessThanValue(value, buffer, out written);
+    public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountLessThanOrEquals = static (value, buffer, out written) => ExpectedContainsCountLessThanOrEqualsValue(value, buffer, out written);
+
     /// <summary>
     /// Matches a JSON token type against the "array" type constraint.
     /// </summary>
@@ -322,6 +329,236 @@ public static partial class JsonSchemaEvaluation
         }
 
         context.EvaluatedKeyword(true, expected, ExpectedItemCountLessThanOrEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a contains count.
+    /// </summary>
+    /// <param name"value">The expected contains count.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedContainsCountEqualsValue(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedContainsCountEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a contains count.
+    /// </summary>
+    /// <param name"value">The expected contains count.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedContainsCountNotEqualsValue(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedContainsCountNotEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a contains count.
+    /// </summary>
+    /// <param name"value">The expected contains count.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedContainsCountGreaterThanValue(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedContainsCountGreaterThan.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a contains count.
+    /// </summary>
+    /// <param name"value">The expected contains count.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedContainsCountGreaterThanOrEqualsValue(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedContainsCountGreaterThanOrEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a contains count.
+    /// </summary>
+    /// <param name"value">The expected contains count.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedContainsCountLessThanValue(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedContainsCountLessThan.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+    /// <summary>
+    /// Tries to write a message indicating the expected value for a contains count.
+    /// </summary>
+    /// <param name"value">The expected contains count.</param>
+    /// <param name="buffer">The buffer to write the message to.</param>
+    /// <param name="written">The number of bytes written to the buffer.</param>
+    /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ExpectedContainsCountLessThanOrEqualsValue(int value, Span<byte> buffer, out int written)
+    {
+        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedContainsCountLessThanOrEquals.AsSpan(), buffer, out written))
+        {
+            return false;
+        }
+
+        return AppendQuotedInteger(value, buffer, ref written);
+    }
+
+
+
+    /// <summary>
+    /// Validates that a contains count equals the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchContainsCountEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual != expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedContainsCountEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedContainsCountEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a contains count does not equal the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is not equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchContainsCountNotEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual == expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedContainsCountNotEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedContainsCountNotEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a contains count is greater than the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is greater than the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchContainsCountGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual <= expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedContainsCountGreaterThan, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedContainsCountGreaterThan, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a contains count is greater than or equal to the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is greater than or equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchContainsCountGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual < expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedContainsCountGreaterThanOrEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedContainsCountGreaterThanOrEquals, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a contains count is less than the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is less than the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchContainsCountLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual >= expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedContainsCountLessThan, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedContainsCountLessThan, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a contains count is less than or equal to the given value.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is less than or equal to the given value; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchContainsCountLessThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (actual > expected)
+        {
+            context.EvaluatedKeyword(false, expected, messageProvider: ExpectedContainsCountLessThanOrEquals, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, expected, ExpectedContainsCountLessThanOrEquals, keyword);
         return true;
     }
 

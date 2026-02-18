@@ -82,6 +82,7 @@
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfConstValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfSubschemaValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ArrayChildHandlers\ItemCountValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\ArrayChildHandlers\ContainsValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ArrayChildHandlers\ItemsValidationHandler.cs" />
     <Compile Include="ValidationHandlers\CompositionNotValidationHandler.cs" />
     <Compile Include="ValidationHandlers\IJsonSchemaClassSetup.cs" />

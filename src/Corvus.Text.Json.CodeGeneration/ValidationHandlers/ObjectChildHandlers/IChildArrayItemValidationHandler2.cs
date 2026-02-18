@@ -13,4 +13,10 @@ internal interface IChildArrayItemValidationHandler2 : IChildArrayItemValidation
     /// <param name="typeDeclaration"></param>
     /// <returns></returns>
     bool WillEmitCodeFor(TypeDeclaration typeDeclaration);
+
+    /// <summary>
+    /// Gets the priority for the item handler, as opposed to the outer
+    /// validation handler.
+    /// </summary>
+    uint ItemHandlerPriority { get; }
 }

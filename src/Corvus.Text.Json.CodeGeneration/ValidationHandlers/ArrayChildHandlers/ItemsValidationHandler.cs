@@ -29,7 +29,7 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
 
     /// <inheritdoc/>
     public uint ValidationHandlerPriority { get; } = ValidationPriorities.AfterComposition + 1;
-
+    public uint ItemHandlerPriority => ValidationHandlerPriority;
 
     private class ValidationConfiguration
     {
@@ -119,6 +119,7 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
         {
             hasTupleType = true;
             generator
+                .AppendSeparatorLine()
                 .AppendLineIndent("switch (arrayValidation_itemCount)")
                 .AppendLineIndent("{")
                 .PushIndent();

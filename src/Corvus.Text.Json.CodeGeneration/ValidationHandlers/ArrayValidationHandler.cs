@@ -77,7 +77,8 @@ internal sealed class ArrayValidationHandler : TypeSensitiveKeywordValidationHan
         result
             .RegisterChildHandlers(
                 ItemCountValidationHandler.Instance,
-                ItemsValidationHandler.Instance
+                ItemsValidationHandler.Instance,
+                ContainsValidationHandler.Instance
                 );
         return result;
     }
@@ -154,7 +155,7 @@ file static class ArrayValidationHandlerExtensions
                     .ReserveName("arrayValidation_currentIndex")
                     .AppendLineIndent("int arrayValidation_currentIndex = arrayValidation_enumerator.CurrentIndex;");
 
-            foreach (IChildArrayItemValidationHandler child in childHandlers.OfType<IChildArrayItemValidationHandler>())
+            foreach (IChildArrayItemValidationHandler child in childHandlers.OfType<IChildArrayItemValidationHandler>().OrderBy(c => c is IChildArrayItemValidationHandler2 c2 ? c2.ItemHandlerPriority : c.ValidationHandlerPriority))
             {
                 child.AppendArrayItemValidationCode(generator, typeDeclaration);
             }

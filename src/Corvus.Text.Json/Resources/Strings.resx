@@ -1031,6 +1031,24 @@
   <data name="JsonSchema_ExpectedItemCountLessThanOrEquals" xml:space="preserve">
     <value>Expected the item count to be less than or equal to</value>
   </data>
+  <data name="JsonSchema_ExpectedContainsCountEquals" xml:space="preserve">
+    <value>Expected the contains count to equal</value>
+  </data>
+  <data name="JsonSchema_ExpectedContainsCountNotEquals" xml:space="preserve">
+    <value>Expected the contains count not to equal</value>
+  </data>
+  <data name="JsonSchema_ExpectedContainsCountGreaterThan" xml:space="preserve">
+    <value>Expected the contains count to be greater than</value>
+  </data>
+  <data name="JsonSchema_ExpectedContainsCountGreaterThanOrEquals" xml:space="preserve">
+    <value>Expected the contains count to be greater than or equal to</value>
+  </data>
+  <data name="JsonSchema_ExpectedContainsCountLessThan" xml:space="preserve">
+    <value>Expected the contains count to be less than</value>
+  </data>
+  <data name="JsonSchema_ExpectedContainsCountLessThanOrEquals" xml:space="preserve">
+    <value>Expected the contains count to be less than or equal to</value>
+  </data>
   <data name="JsonSchema_ExpectedStringEquals" xml:space="preserve">
     <value>Expected the value to be the string</value>
   </data>
