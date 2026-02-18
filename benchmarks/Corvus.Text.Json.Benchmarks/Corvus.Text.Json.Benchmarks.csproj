@@ -19,7 +19,7 @@
 
   <!-- Only include System.Text.Json for net481 as it's included in .NET 6+ runtime -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Text.Json" Version="10.0.2" />
+    <PackageReference Include="System.Text.Json" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>

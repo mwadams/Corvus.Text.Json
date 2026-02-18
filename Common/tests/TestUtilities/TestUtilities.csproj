@@ -163,18 +163,18 @@
   </ItemGroup>-->
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.201909" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.4" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.6" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.CorvusVocabulary" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.1" />
-    <PackageReference Include="Corvus.Json.SourceGenerator" Version="4.5.1">
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.201909" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.4" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.6" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.CorvusVocabulary" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.SourceGenerator" Version="4.5.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -182,7 +182,7 @@
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25227.101" />
     <PackageReference Include="xunit" Version="2.9.3" ExcludeAssets="build" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">

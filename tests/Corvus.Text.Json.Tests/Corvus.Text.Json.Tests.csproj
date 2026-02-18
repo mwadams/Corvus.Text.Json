@@ -57,8 +57,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.2" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.3" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
@@ -212,7 +212,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.1" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.6" />
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25228.101" />
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25227.101" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
@@ -226,13 +226,13 @@
 
   <!-- Only include System.Text.Json for net481 as it's included in .NET 6+ runtime -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Text.Json" Version="10.0.2" />
+    <PackageReference Include="System.Text.Json" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Collections.Immutable" Version="10.0.2" />
-    <PackageReference Include="System.IO.Pipelines" Version="10.0.2" />
-    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.2" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.3" />
+    <PackageReference Include="System.IO.Pipelines" Version="10.0.3" />
+    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.3" />
     <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
