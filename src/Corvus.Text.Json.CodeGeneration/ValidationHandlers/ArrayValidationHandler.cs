@@ -5,24 +5,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using Corvus.Json.CodeGeneration;
-using Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers;
+using Corvus.Text.Json.CodeGeneration.ValidationHandlers.ArrayChildHandlers;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 
 /// <summary>
-/// A validation handler for <see cref="IObjectValidationKeyword"/> capability.
+/// A validation handler for <see cref="IArrayValidationKeyword"/> capability.
 /// </summary>
-internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHandlerBase, IObjectKeywordValidationHandler, IJsonSchemaClassSetup
+internal sealed class ArrayValidationHandler : TypeSensitiveKeywordValidationHandlerBase, IArrayKeywordValidationHandler, IJsonSchemaClassSetup
 {
-    private ObjectValidationHandler()
+    private ArrayValidationHandler()
     {
     }
 
     /// <summary>
-    /// Gets a singleton instance of the <see cref="ObjectValidationHandler"/>.
+    /// Gets a singleton instance of the <see cref="ArrayValidationHandler"/>.
     /// </summary>
-    public static ObjectValidationHandler Instance { get; } = CreateDefault();
+    public static ArrayValidationHandler Instance { get; } = CreateDefault();
 
     /// <inheritdoc/>
     public override uint ValidationHandlerPriority => ValidationPriorities.AfterComposition;
@@ -31,7 +31,7 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
     public override CodeGenerator AppendValidationSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
         return generator
-             .AppendObjectValidationSetup();
+             .AppendArrayValidationSetup();
     }
 
     /// <inheritdoc/>
@@ -45,7 +45,7 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
         IReadOnlyCollection<IChildValidationHandler> childHandlers = ChildHandlers;
 
         generator
-            .AppendObjectValidation(this, typeDeclaration, childHandlers, ValidationHandlerPriority, validateOnly);
+            .AppendArrayValidation(this, typeDeclaration, childHandlers, ValidationHandlerPriority, validateOnly);
 
         return generator;
     }
@@ -67,32 +67,28 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
     /// <inheritdoc/>
     public override bool HandlesKeyword(IKeyword keyword)
     {
-        return keyword is IObjectValidationKeyword;
+        return keyword is IArrayValidationKeyword;
     }
 
-    private static ObjectValidationHandler CreateDefault()
+    private static ArrayValidationHandler CreateDefault()
     {
-        var result = new ObjectValidationHandler();
+        var result = new ArrayValidationHandler();
         result
             .RegisterChildHandlers(
-                PropertyCountValidationHandler.Instance,
-                PropertiesValidationHandler.Instance,
-                PropertyNamesValidationHandler.Instance,
-                PatternPropertiesValidationHandler.Instance,
-                UnevaluatedPropertyValidationHandler.Instance
+                ItemCountValidationHandler.Instance
                 );
         return result;
     }
 }
 
-file static class ObjectValidationHandlerExtensions
+file static class ArrayValidationHandlerExtensions
 {
-    public static CodeGenerator AppendObjectValidationSetup(this CodeGenerator generator)
+    public static CodeGenerator AppendArrayValidationSetup(this CodeGenerator generator)
     {
         return generator;
     }
 
-    public static CodeGenerator AppendObjectValidation(
+    public static CodeGenerator AppendArrayValidation(
         this CodeGenerator generator,
         IKeywordValidationHandler parentHandler,
         TypeDeclaration typeDeclaration,
@@ -125,54 +121,45 @@ file static class ObjectValidationHandlerExtensions
         generator
             .PrependChildValidationCode(typeDeclaration, childHandlers, validationPriority);
 
-        bool requiresObjectEnumeration = childHandlers
-                    .OfType<IChildObjectPropertyValidationHandler2>()
+        bool requiresArrayEnumeration = childHandlers
+                    .OfType<IChildArrayItemValidationHandler2>()
                     .Any(child => child.WillEmitCodeFor(typeDeclaration));
 
-        if (requiresObjectEnumeration ||
-            typeDeclaration.RequiresPropertyCount())
+        if (requiresArrayEnumeration ||
+            typeDeclaration.RequiresArrayLength())
         {
-            generator.ReserveName("objectValidation_propertyCount");
+            generator.ReserveName("arrayValidation_itemCount");
 
-            if (requiresObjectEnumeration)
+            if (requiresArrayEnumeration)
             {
-                generator.AppendLineIndent("int objectValidation_propertyCount = 0;");
+                generator.AppendLineIndent("int arrayValidation_itemCount = 0;");
             }
             else
             {
-                generator.AppendLineIndent("int objectValidation_propertyCount = parentDocument.GetPropertyCount(parentIndex);");
+                generator.AppendLineIndent("int arrayValidation_itemCount = parentDocument.GetArrayLength(parentIndex);");
             }
         }
 
-        if (requiresObjectEnumeration)
+        if (requiresArrayEnumeration)
         {
             generator
                 .AppendSeparatorLine()
-                .ReserveName("objectValidation_enumerator")
-                .AppendLineIndent("var objectValidation_enumerator = new ObjectEnumerator(parentDocument, parentIndex);")
-                .AppendLineIndent("while (objectValidation_enumerator.MoveNext())")
+                .ReserveName("arrayValidation_enumerator")
+                .AppendLineIndent("var arrayValidation_enumerator = new ArrayEnumerator(parentDocument, parentIndex);")
+                .AppendLineIndent("while (arrayValidation_enumerator.MoveNext())")
                 .AppendLineIndent("{")
                 .PushIndent()
-                    .ReserveName("objectValidation_currentIndex")
-                    .AppendLineIndent("int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;");
+                    .ReserveName("arrayValidation_currentIndex")
+                    .AppendLineIndent("int arrayValidation_currentIndex = arrayValidation_enumerator.CurrentIndex;");
 
-            if (childHandlers
-                    .OfType<IChildObjectPropertyValidationHandler>()
-                    .Any(child => child.RequiresPropertyNameAsString(typeDeclaration)))
+            foreach (IChildArrayItemValidationHandler child in childHandlers.OfType<IChildArrayItemValidationHandler>())
             {
-                generator
-                    .ReserveName("objectValidation_unescapedPropertyName")
-                    .AppendLineIndent("using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);");
-            }
-
-            foreach (IChildObjectPropertyValidationHandler child in childHandlers.OfType<IChildObjectPropertyValidationHandler>())
-            {
-                child.AppendObjectPropertyValidationCode(generator, typeDeclaration);
+                child.AppendArrayItemValidationCode(generator, typeDeclaration);
             }
 
             generator
                     .AppendSeparatorLine()
-                    .AppendLineIndent("objectValidation_propertyCount++;")
+                    .AppendLineIndent("arrayValidation_itemCount++;")
                 .PopIndent()
                 .AppendLineIndent("}");
         }
@@ -195,7 +182,7 @@ file static class ObjectValidationHandlerExtensions
     {
         return generator
             .AppendSeparatorLine()
-            .AppendLineIndent("if (tokenType == JsonTokenType.StartObject)")
+            .AppendLineIndent("if (tokenType == JsonTokenType.StartArray)")
             .AppendLineIndent("{")
             .PushIndent();
     }
@@ -209,9 +196,9 @@ file static class ObjectValidationHandlerExtensions
         bool appended = false;
 
         generator
-            .TryAppendIgnoredCoreTypeKeywords<IObjectValidationKeyword>(
+            .TryAppendIgnoredCoreTypeKeywords<IArrayValidationKeyword>(
                 typeDeclaration,
-                "JsonSchemaEvaluation.IgnoredNotTypeObject",
+                "JsonSchemaEvaluation.IgnoredNotTypeArray",
                 static (g, _) =>
                 {
                     g

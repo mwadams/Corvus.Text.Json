@@ -434,8 +434,8 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             CompositionOneOfValidationHandler.Instance,
             CompositionNotValidationHandler.Instance,
             TernaryIfValidationHandler.Instance,
-            ObjectValidationHandler.Instance
-            //ArrayValidationHandler.Instance,
+            ObjectValidationHandler.Instance,
+            ArrayValidationHandler.Instance
             );
 
         languageProvider.RegisterNameHeuristics(

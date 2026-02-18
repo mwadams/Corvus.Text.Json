@@ -81,8 +81,10 @@
     <Compile Include="ValidationHandlers\AllOfChildHandlers\AllOfSubschemaValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfConstValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfSubschemaValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\ArrayChildHandlers\ItemCountValidationHandler.cs" />
     <Compile Include="ValidationHandlers\CompositionNotValidationHandler.cs" />
     <Compile Include="ValidationHandlers\IJsonSchemaClassSetup.cs" />
+    <Compile Include="ValidationHandlers\ObjectChildHandlers\IChildArrayItemValidationHandler2.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\IChildObjectPropertyValidationHandler2.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\NamedPropertyChildHandlers\INamedPropertyChildHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PatternPropertiesValidationHandler.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PropertyNamesValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PropertyCountValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\NamedPropertyChildHandlers\ObjectPropertyValidatorParameter.cs" />
+    <Compile Include="ValidationHandlers\ArrayValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectValidationHandler.cs" />
     <Compile Include="ValidationHandlers\TernaryIfValidationHandler.cs" />
     <Compile Include="ValidationHandlers\CompositionOneOfValidationHandler.cs" />
