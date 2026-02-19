@@ -254,7 +254,7 @@ public static partial class JsonElementHelpers
                     if (!NameEquals(prop1, prop2))
                     {
                         // We have our first mismatch, fall back to unordered comparison.
-                        return UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentIndex, ref objectEnumerator2);
+                        return element1ParentDocument.GetPropertyCount(element1ParentDocumentIndex) == element2ParentDocument.GetPropertyCount(element2ParentDocumentIndex) && UnorderedObjectDeepEquals(element1ParentDocument, element1ParentDocumentIndex, ref objectEnumerator2);
                     }
 
                     if (!DeepEqualsNoParentDocumentCheck(prop1.Value, prop2.Value))
