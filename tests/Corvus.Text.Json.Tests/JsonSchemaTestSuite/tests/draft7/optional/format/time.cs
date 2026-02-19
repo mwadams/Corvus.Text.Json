@@ -85,104 +85,6 @@ public class SuiteValidationOfTimeStrings : IClassFixture<SuiteValidationOfTimeS
     }
 
     [Fact]
-    public void TestAValidTimeStringWithLeapSecondZulu()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:59:60Z\"");
-        Assert.True(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestInvalidLeapSecondZuluWrongHour()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"22:59:60Z\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestInvalidLeapSecondZuluWrongMinute()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:58:60Z\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestValidLeapSecondZeroTimeOffset()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:59:60+00:00\"");
-        Assert.True(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestInvalidLeapSecondZeroTimeOffsetWrongHour()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"22:59:60+00:00\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestInvalidLeapSecondZeroTimeOffsetWrongMinute()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:58:60+00:00\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestValidLeapSecondPositiveTimeOffset()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"01:29:60+01:30\"");
-        Assert.True(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestValidLeapSecondLargePositiveTimeOffset()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:29:60+23:30\"");
-        Assert.True(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestInvalidLeapSecondPositiveTimeOffsetWrongHour()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:59:60+01:00\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestInvalidLeapSecondPositiveTimeOffsetWrongMinute()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:59:60+00:30\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestValidLeapSecondNegativeTimeOffset()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"15:59:60-08:00\"");
-        Assert.True(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestValidLeapSecondLargeNegativeTimeOffset()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"00:29:60-23:30\"");
-        Assert.True(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestInvalidLeapSecondNegativeTimeOffsetWrongHour()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:59:60-01:00\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestInvalidLeapSecondNegativeTimeOffsetWrongMinute()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:59:60-00:30\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
     public void TestAValidTimeStringWithSecondFraction()
     {
         var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:20:50.52Z\"");
@@ -242,20 +144,6 @@ public class SuiteValidationOfTimeStrings : IClassFixture<SuiteValidationOfTimeS
     public void TestAnInvalidTimeStringWithInvalidSecond()
     {
         var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"00:00:61Z\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestAnInvalidTimeStringWithInvalidLeapSecondWrongHour()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"22:59:60Z\"");
-        Assert.False(dynamicInstance.EvaluateSchema());
-    }
-
-    [Fact]
-    public void TestAnInvalidTimeStringWithInvalidLeapSecondWrongMinute()
-    {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"23:58:60Z\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

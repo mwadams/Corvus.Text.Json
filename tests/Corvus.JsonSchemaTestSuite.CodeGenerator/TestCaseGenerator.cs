@@ -208,6 +208,12 @@ internal static class TestCaseGenerator
                 PathOptions? pathOptions = collection.Options?.FirstOrDefault(fe => IsInPath(currentPath: relativePath, basePath: fe.Path));
                 FileExclusions? fileExclusions = collection.Exclusions?.FirstOrDefault(fe => EqualsPath(fe.File, relativePath));
 
+                if (fileExclusions is FileExclusions f && f.Suites is null)
+                {
+                    // We have exclusions for the file, but have not set suites at all, which means we should exclude the file.
+                    continue;
+                }
+
                 var model = ParsedValue<TestFileModel>.Parse(File.ReadAllText(file));
 
                 foreach (TestFileModel.ItemsEntity testSuite in model.Instance.EnumerateArray())

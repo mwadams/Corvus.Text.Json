@@ -115,7 +115,7 @@ public class TypeAndFormat : IClassFixture<TypeAndFormat.Fixture>
     }
 }
 
-[Trait("JsonSchemaTestSuite", "Draft201909")]
+[Trait("Additional-JsonSchemaTests", "Draft201909")]
 public class MultiTypeAndFormat : IClassFixture<MultiTypeAndFormat.Fixture>
 {
     private readonly Fixture _fixture;
