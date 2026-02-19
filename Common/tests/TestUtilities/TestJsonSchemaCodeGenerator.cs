@@ -92,7 +92,7 @@ namespace TestUtilities
             _useImplicitOperatorString = useImplicitOperatorString;
             _addExplicitUsings = addExplicitUsings;
 
-            if (!_vocabularyRegistry.TryGetVocabulary(defaultVocabulary, out _defaultVocabulary))
+            if (!_vocabularyRegistry.TryGetSchemaDialect(defaultVocabulary, out _defaultVocabulary))
             {
                 _defaultVocabulary = Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary;
             }

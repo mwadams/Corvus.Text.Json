@@ -81,6 +81,7 @@
     <Compile Include="ValidationHandlers\AllOfChildHandlers\AllOfSubschemaValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfConstValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfSubschemaValidationHandler.cs" />
+    <Compile Include="ValidationHandlers\ArrayChildHandlers\UniqueItemsValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ArrayChildHandlers\ItemCountValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ArrayChildHandlers\ContainsValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ArrayChildHandlers\ItemsValidationHandler.cs" />
@@ -122,7 +123,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.6" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.7" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
   </ItemGroup>
 

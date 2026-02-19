@@ -96,6 +96,43 @@ public static partial class JsonElementHelpers
             element2ParentDocumentIndex);
     }
 
+    /// <summary>
+    /// Compares the values of two JSON values for equality, including the values of all descendant elements.
+    /// </summary>
+    /// <param name="element1ParentDocument">The parent document containing the first JSON element.</param>
+    /// <param name="element1ParentDocumentIndex">The index of the first JSON element within its parent document.</param>
+    /// <param name="element2ParentDocument">The parent document containing the second JSON element.</param>
+    /// <param name="element2ParentDocumentIndex">The index of the second JSON element within its parent document.</param>
+    /// <returns><see langword="true"/> if the two values are equal; otherwise, <see langword="false"/>.</returns>
+    /// <remarks>
+    /// Deep equality of two JSON values is defined as follows:
+    /// <list type="bullet">
+    /// <item>JSON values of different kinds are not equal.</item>
+    /// <item>JSON constants <see langword="null"/>, <see langword="false"/>, and <see langword="true"/> only equal themselves.</item>
+    /// <item>JSON numbers are equal if and only if they have they have equivalent decimal representations, with no rounding being used.</item>
+    /// <item>JSON strings are equal if and only if they are equal using ordinal string comparison.</item>
+    /// <item>JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal.</item>
+    /// <item>
+    ///     JSON objects are equal if and only if they have the same number of properties and each property in the first object
+    ///     has a corresponding property in the second object with the same name and equal value. The order of properties is not
+    ///     significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
+    ///     last value in the first instance.
+    /// </item>
+    /// </list>
+    /// </remarks>
+    [CLSCompliant(false)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool DeepEqualsNoParentDocumentCheck(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)
+    {
+        return DeepEquals(
+            element1ParentDocument.GetJsonTokenType(element1ParentDocumentIndex),
+            element2ParentDocument.GetJsonTokenType(element2ParentDocumentIndex),
+            element1ParentDocument,
+            element2ParentDocument,
+            element1ParentDocumentIndex,
+            element2ParentDocumentIndex);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool DeepEqualsNoParentDocumentCheck<TLeft, TRight>(in TLeft element1, in TRight element2)
         where TLeft : struct, IJsonElement

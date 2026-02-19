@@ -1124,7 +1124,10 @@
   <data name="JsonSchema_ExpectedMatchesDependentSchema" xml:space="preserve">
     <value>The value did match the schema applied because it contained the property</value>
   </data>
- <data name="InvalidJsonReference" xml:space="preserve">
+  <data name="JsonSchema_ExpectedUniqueItems" xml:space="preserve">
+    <value>The array was expected to contain unique items.</value>
+  </data>
+  <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>
   <data name="PrefixTupleMustBeCreatedFirst" xml:space="preserve">

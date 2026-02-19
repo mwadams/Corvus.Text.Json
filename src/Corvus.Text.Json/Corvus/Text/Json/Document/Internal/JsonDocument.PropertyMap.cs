@@ -490,7 +490,7 @@ public abstract partial class JsonDocument
         }
         while (collisionCount <= propertyMap.Count);
 
-        Debug.Fail("Possible infinite loop in PropertyMap.FindValue.");
+        Debug.Fail("Possible infinite loop in JsonItemIndexHashSet.FindValue.");
 
     ReturnFound:
         valueIndex = entry.ValueIndex;

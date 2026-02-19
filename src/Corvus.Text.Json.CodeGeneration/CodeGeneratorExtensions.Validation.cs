@@ -194,6 +194,25 @@ internal static partial class CodeGenerationExtensions
     /// <param name="generator">The code generator.</param>
     /// <param name="contextName">The name to use for the context (defaults to 'context').</param>
     /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendNoCollectorBooleanFalseShortcutReturn(this CodeGenerator generator, string contextName = "context")
+    {
+        return generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("if (!", contextName, ".HasCollector)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent(contextName, ".EvaluatedBooleanSchema(false);")
+                .AppendLineIndent("return;")
+            .PopIndent()
+            .AppendLineIndent("}");
+    }
+
+    /// <summary>
+    /// Appends the code to shortcut the return from validation if there is no collector.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="contextName">The name to use for the context (defaults to 'context').</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendNoCollectorNoMatchShortcutReturn(this CodeGenerator generator, string contextName = "context")
     {
         return generator

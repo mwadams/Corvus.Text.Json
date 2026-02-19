@@ -26,7 +26,7 @@ public static partial class JsonSchemaEvaluation
     /// Message provider for expected "array type" validation messages.
     /// </summary>
     public static readonly JsonSchemaMessageProvider ExpectedTypeArray = static (buffer, out written) => ExpectedType("array"u8, buffer, out written);
-
+    public static readonly JsonSchemaMessageProvider ExpectedUniqueItems = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUniqueItems.AsSpan(), buffer, out written);
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountEquals = static (value, buffer, out written) => ExpectedItemCountEqualsValue(value, buffer, out written);
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountNotEquals = static (value, buffer, out written) => ExpectedItemCountNotEqualsValue(value, buffer, out written);
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountGreaterThan = static (value, buffer, out written) => ExpectedItemCountGreaterThanValue(value, buffer, out written);

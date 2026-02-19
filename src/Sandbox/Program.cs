@@ -1,5 +1,6 @@
 ﻿using Benchmark.CorvusTextJson2;
 using Corvus.Text.Json;
+using Corvus.Text.Json.Internal;
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -525,61 +526,20 @@ Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement[2][1]);
 Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement[2][1][3]);
 
 
+ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+    """
+    {
+        "name": "John",
+        "age": 30,
+        "city": "New York",
+        "slightlyLonger": true,
+        "1": 1,
+        "2": 1
+    }
+    """);
 
-if (!BigNumber.TryParse("340282366920938463463374607431768211455.2"u8, out BigNumber bigNumber))
-{
-    Console.WriteLine("Failed to parse the big number");
-}
-
-
-JsonElement element = testMultiDimensionalHigherRankArray.RootElement[2][1][3];
-element.TryGetBigNumber(out BigNumber extractedBigNumber);
-
-var requiredValue = JsonSchemaTestSuiteDraft202012LargeNumbersOfRequiredProperties.Required.ParseValue(
-            """
-            {
-                "foo": 1,
-                "foo1": 1,
-                "foo2": 1,
-                "foo3": 1,
-                "foo4": 1,
-                "foo5": 1,
-                "foo6": 1,
-                "foo7": 1,
-                "foo8": 1,
-                "foo9": 1,
-                "foo10": 1,
-                "foo11": 1,
-                "foo12": 1,
-                "foo13": 1,
-                "foo14": 1,
-                "foo15": 1,
-                "foo16": 1,
-                "foo17": 1,
-                "foo18": 1,
-                "foo19": 1,
-                "foo20": 1,
-                "foo21": 1,
-                "foo22": 1,
-                "foo23": 1,
-                "foo24": 1,
-                "foo25": 1,
-                "foo26": 1,
-                "foo27": 1,
-                "foo28": 1,
-                "foo29": 1,
-                "foo30": 1,
-                "foo31": 1,
-                "foo32": 1,
-                "foo33": 1,
-                "foo34": 1,
-                "foo35": 1,
-                "foo36": 1,
-                "foo37": 1,
-                "foo38": 1,
-                "foo39": 1,
-                "foo40": 1
-            }
-            """);
-
-bool resultForRequired = requiredValue.EvaluateSchema();
+using UniqueItemsHashSet hashSet = new UniqueItemsHashSet(doc, 2, stackalloc int[UniqueItemsHashSet.StackAllocBucketSize], stackalloc byte[UniqueItemsHashSet.StackAllocEntrySize]);
+bool addedFirst = hashSet.AddItemIfNotExists(((IJsonElement)doc.RootElement.GetProperty("1")).ParentDocumentIndex);
+Console.WriteLine($"Added first: {addedFirst}");
+bool addedSecond = hashSet.AddItemIfNotExists(((IJsonElement)doc.RootElement.GetProperty("2")).ParentDocumentIndex);
+Console.WriteLine($"Added second: {addedSecond}");

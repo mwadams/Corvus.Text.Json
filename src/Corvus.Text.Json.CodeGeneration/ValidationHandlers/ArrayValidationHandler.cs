@@ -78,7 +78,8 @@ internal sealed class ArrayValidationHandler : TypeSensitiveKeywordValidationHan
             .RegisterChildHandlers(
                 ItemCountValidationHandler.Instance,
                 ItemsValidationHandler.Instance,
-                ContainsValidationHandler.Instance
+                ContainsValidationHandler.Instance,
+                UniqueItemsValidationHandler.Instance
                 );
         return result;
     }

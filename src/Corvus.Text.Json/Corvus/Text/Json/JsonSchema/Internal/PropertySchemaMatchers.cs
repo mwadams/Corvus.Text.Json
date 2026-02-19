@@ -268,8 +268,6 @@ public class PropertySchemaMatchers<T>
         buckets.Clear();
         entries.Clear();
 
-        Span<byte> buffer = stackalloc byte[JsonConstants.StackallocByteThreshold];
-
         int propertyIndex = 0;
 
         foreach (var nameProvider in _nameProviders)
@@ -364,7 +362,7 @@ public class PropertySchemaMatchers<T>
         }
         while (collisionCount <= _propertyMap.Count);
 
-        Debug.Fail("Possible infinite loop in PropertyMap.FindValue.");
+        Debug.Fail("Possible infinite loop in JsonItemIndexHashSet.FindValue.");
 
     ReturnFound:
         Debug.Assert(_matchers is not null);
