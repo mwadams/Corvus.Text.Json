@@ -68,16 +68,6 @@
     <Compile Include="SimpleTypeAndFormatterAndKind.cs" />
     <Compile Include="ThrowHelper.cs" />
     <Compile Include="TypeDeclarationExtensions.cs" />
-  </ItemGroup>
-
-  <!-- DateTimeParsing -->
-  <ItemGroup>
-    <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.DateTime.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.DateTime.Core.cs" />
-  </ItemGroup>
-
-  <!-- NumberParsing -->
-  <ItemGroup>
-    <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.Numeric.Core.cs" />
     <Compile Include="ValidationHandlers\AllOfChildHandlers\AllOfSubschemaValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfConstValidationHandler.cs" />
     <Compile Include="ValidationHandlers\AnyOfChildHandlers\AnyOfSubschemaValidationHandler.cs" />
@@ -116,6 +106,13 @@
     <Compile Include="ValidationHandlers\KeywordValidationHandlerBase.cs" />
     <Compile Include="ValidationHandlers\FormatValidationHandler.cs" />
     <Compile Include="ValidationHandlers\TypeValidationHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- DateTimeParsing -->
+    <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.DateTime.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.DateTime.Core.cs" />
+    <!-- NumberParsing -->
+    <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.Numeric.Core.cs" />
   </ItemGroup>
 
   <ItemGroup>
