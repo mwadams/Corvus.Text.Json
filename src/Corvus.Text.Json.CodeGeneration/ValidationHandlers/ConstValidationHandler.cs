@@ -166,7 +166,11 @@ file static class ConstValidationHandlerExtensions
 
     private static CodeGenerator AppendNumberConstantValidation(this CodeGenerator generator, TypeDeclaration typeDeclaration, ISingleConstantValidationKeyword keyword, JsonElement constantValue)
     {
+#if BUILDING_SOURCE_GENERATOR
+        ReadOnlySpan<byte> rawValue = Encoding.UTF8.GetBytes(constantValue.GetRawText());
+#else
         ReadOnlySpan<byte> rawValue = JsonMarshal.GetRawUtf8Value(constantValue);
+#endif
 
         JsonElementHelpers.ParseNumber(rawValue, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 

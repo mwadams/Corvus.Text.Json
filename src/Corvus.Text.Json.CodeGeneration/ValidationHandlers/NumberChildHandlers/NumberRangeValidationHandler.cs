@@ -102,7 +102,11 @@ public static class NumberValidationExtensions
 
         Debug.Assert(constants.Length == 1, "Expected exactly one validation constant for keyword.");
 
+#if BUILDING_SOURCE_GENERATOR
+        ReadOnlySpan<byte> rawValue = Encoding.UTF8.GetBytes(constants[0].GetRawText());
+#else
         ReadOnlySpan<byte> rawValue = JsonMarshal.GetRawUtf8Value(constants[0]);
+#endif
 
         JsonElementHelpers.ParseNumber(rawValue, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
@@ -150,9 +154,11 @@ public static class NumberValidationExtensions
 
         Debug.Assert(constants.Length == 1, "Expected exactly one validation constant for multipleOf-type keyword.");
 
-
+#if BUILDING_SOURCE_GENERATOR
+        ReadOnlySpan<byte> rawValue = Encoding.UTF8.GetBytes(constants[0].GetRawText());
+#else
         ReadOnlySpan<byte> rawValue = JsonMarshal.GetRawUtf8Value(constants[0]);
-
+#endif
         JsonElementHelpers.ParseNumber(rawValue, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
         string divisor = $"{Formatting.GetTextFromUtf8(integral)}{Formatting.GetTextFromUtf8(fractional)}";

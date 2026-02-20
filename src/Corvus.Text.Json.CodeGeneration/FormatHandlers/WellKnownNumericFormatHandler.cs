@@ -410,7 +410,12 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
         string exponentField = generator.GetUniqueStaticReadOnlyFieldNameInScope(baseName, suffix: "Exponent");
 
         // Get the normalized JSON number for the constant
+#if BUILDING_SOURCE_GENERATOR
+        ReadOnlySpan<byte> number = Encoding.UTF8.GetBytes(constantValue.GetRawText());
+#else
         ReadOnlySpan<byte> number = JsonMarshal.GetRawUtf8Value(constantValue);
+#endif
+
         JsonElementHelpers.ParseNumber(number, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
         generator.AppendLineIndent("private const bool ", isNegativeField, " = ", isNegative ? "true" : "false", ";");

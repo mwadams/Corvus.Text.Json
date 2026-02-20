@@ -540,7 +540,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("/// Set the <c>", name, "</c> property.")
                 .AppendLineIndent("/// </summary>")
                 .AppendLineIndent("/// <param name=\"value\">The value of the property to add.</param>")
-                .AppendLineIndent("public void Set", property.DotnetPropertyName(), "(in ", generator.SourceClassName(propertyTypeName), " value)")
+                .AppendLineIndent("public void Set", property.DotnetPropertyName(), "(in ", propertyTypeName, ".", generator.SourceClassName(propertyTypeName), " value)")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("CheckValidInstance();")

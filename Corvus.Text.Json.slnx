@@ -14,5 +14,6 @@
   </Folder>
   <Project Path="src/Corvus.Text.Json.CodeGeneration/Corvus.Text.Json.CodeGeneration.csproj" />
   <Project Path="src/Corvus.Text.Json.Compatibility/Corvus.Text.Json.Compatibility.csproj" />
+  <Project Path="src/Corvus.Text.Json.SourceGenerator/Corvus.Text.Json.SourceGenerator.csproj" />
   <Project Path="src/Corvus.Text.Json/Corvus.Text.Json.csproj" />
 </Solution>

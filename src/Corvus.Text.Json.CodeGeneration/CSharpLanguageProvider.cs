@@ -60,9 +60,9 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     /// </summary>
     /// <param name="generatedCodeFile">The generated code file.</param>
     /// <returns>The fully qualified .NET type name.</returns>
-    public static string GetFullyQualifiedDotnetTypeName(GeneratedCodeFile generatedCodeFile)
+    public static string? GetFullyQualifiedDotnetTypeName(GeneratedCodeFile generatedCodeFile)
     {
-        return GetFullyQualifiedDotnetTypeName(generatedCodeFile.TypeDeclaration);
+        return generatedCodeFile.TypeDeclaration is TypeDeclaration t ? GetFullyQualifiedDotnetTypeName(t) : null;
     }
 
     /// <summary>
@@ -70,9 +70,9 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     /// </summary>
     /// <param name="generatedCodeFile">The generated code file.</param>
     /// <returns>The .NET type name.</returns>
-    public static string GetDotnetTypeName(GeneratedCodeFile generatedCodeFile)
+    public static string? GetDotnetTypeName(GeneratedCodeFile generatedCodeFile)
     {
-        return GetDotnetTypeName(generatedCodeFile.TypeDeclaration);
+        return generatedCodeFile.TypeDeclaration is TypeDeclaration t ? GetDotnetTypeName(generatedCodeFile.TypeDeclaration) : null;
     }
 
     /// <summary>
@@ -192,16 +192,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             }
         }
 
-        return generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), this.options.FileExtension));
-    }
-
-    /// <summary>
-    /// Gets the additional code generated for shared types.
-    /// </summary>
-    /// <returns></returns>
-    public string? GenerateSharedTypeCode()
-    {
-        return rootNamespaceGenerator?.ToString();
+        return rootNamespaceGenerator is not null
+            ? [
+                .. generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), this.options.FileExtension)),
+                new GeneratedCodeFile($"GlobalDeclarations_{Guid.NewGuid()}{this.options.FileExtension}", rootNamespaceGenerator.ToString())
+              ]
+            : generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), this.options.FileExtension));
     }
 
     /// <inheritdoc/>

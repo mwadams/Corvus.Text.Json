@@ -281,27 +281,28 @@ int[] years = [2012, 2016, 2024];
 
 using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocumentBuilder(
     workspace,
-    age: 51,
-    name: new(static (ref personName) =>
-    {
-        personName.Create(
-            firstName: "Michael"u8,
-            lastName: "Adams"u8,
-            otherNames: new(static (ref otherNames) =>
-            {
-                otherNames.Add("Francis"u8);
-                otherNames.Add("James"u8);
-            }));
-    }),
-    competedInYears: new((ref competedInYears) =>
-    {
-        foreach (int year in years)
+    new((ref b) => b.Create(
+        age: 51,
+        name: new(static (ref personName) =>
         {
-            competedInYears.Add(year);
-        }
-    }));
+            personName.Create(
+                firstName: "Michael"u8,
+                lastName: "Adams"u8,
+                otherNames: new(static (ref otherNames) =>
+                {
+                    otherNames.Add("Francis"u8);
+                    otherNames.Add("James"u8);
+                }));
+        }),
+        competedInYears: new((ref competedInYears) =>
+        {
+            foreach (int year in years)
+            {
+                competedInYears.Add(year);
+            }
+        }))));
 
-docBuilder.RootElement.Name.SetOtherNames(new((ref o) => o.Add("Leo"u8)));
+docBuilder.RootElement.Name.SetOtherNames(new((ref b) => b.Add("Leo"u8)));
 docBuilder.RootElement.Name.SetOtherNames("William"u8);
 
 Console.WriteLine();
@@ -312,20 +313,21 @@ Console.WriteLine(docBuilder.RootElement.ToString());
 
 using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocumentBuilder(
     workspace,
-    age: 51,
+    new ((ref b) => b.Create(
+        age: 51,
     name: new((ref personName) =>
-    {
-        personName.Create(
-            firstName: "Michael"u8,
-            lastName: "Adams"u8,
-            otherNames: "Francis James"u8);
-    }),
-    competedInYears: new((ref competedInYears) =>
-    {
-        competedInYears.Add(2012);
-        competedInYears.Add(2016);
-        competedInYears.Add(2024);
-    }));
+        {
+            personName.Create(
+                firstName: "Michael"u8,
+                lastName: "Adams"u8,
+                otherNames: "Francis James"u8);
+        }),
+        competedInYears: new((ref competedInYears) =>
+        {
+            competedInYears.Add(2012);
+            competedInYears.Add(2016);
+            competedInYears.Add(2024);
+        }))));
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -345,12 +347,13 @@ Person.Mutable isItOK = (Person.Mutable)person; // This will throw if `person` w
 
 using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocumentBuilder(
     workspace,
-    age: person.Age, // Happily assign an existing instance, will not copy
-    name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
-    competedInYears: new((ref competedInYears) =>
-    {
-        competedInYears.Add(2012);
-    }));
+    new((ref b) => b.Create(
+        age: person.Age, // Happily assign an existing instance, will not copy
+        name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
+        competedInYears: new((ref competedInYears) =>
+        {
+            competedInYears.Add(2012);
+        }))));
 
 Console.WriteLine(docBuilder3.RootElement.ToString());
 

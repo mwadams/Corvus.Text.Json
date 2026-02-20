@@ -995,40 +995,40 @@ internal static partial class CodeGeneratorExtensions
             }
             """);
 
-        CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
+        ////CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
 
-        bool isArray = (core & CoreTypes.Array) != 0;
-        bool isObject = (core & CoreTypes.Object) != 0;
+        ////bool isArray = (core & CoreTypes.Array) != 0;
+        ////bool isObject = (core & CoreTypes.Object) != 0;
 
-        bool hasFallbackArrayType =
-            typeDeclaration.ExplicitArrayItemsType() is not null;
+        ////bool hasFallbackArrayType =
+        ////    typeDeclaration.ExplicitArrayItemsType() is not null;
 
-        bool hasFallbackObjectType =
-            typeDeclaration.LocalEvaluatedPropertyType() is not null ||
-            typeDeclaration.HasPropertyDeclarations;
+        ////bool hasFallbackObjectType =
+        ////    typeDeclaration.LocalEvaluatedPropertyType() is not null ||
+        ////    typeDeclaration.HasPropertyDeclarations;
 
-        string sourceClassName = generator.SourceClassName();
+        ////string sourceClassName = generator.SourceClassName();
 
-        if (isArray && isObject)
-        {
-            if (hasFallbackArrayType && generator.ArrayBuilderClassName() is string arrayBuilderClassName)
-            {
-                AppendCreateDocumentBuilderForBuilder(generator, initialCapacity, sourceClassName, arrayBuilderClassName);
-            }
+        ////if (isArray && isObject)
+        ////{
+        ////    if (hasFallbackArrayType && generator.ArrayBuilderClassName() is string arrayBuilderClassName)
+        ////    {
+        ////        AppendCreateDocumentBuilderForBuilder(generator, initialCapacity, sourceClassName, arrayBuilderClassName);
+        ////    }
 
-            if (hasFallbackObjectType && generator.ObjectBuilderClassName() is string objectBuilderClassName)
-            {
-                AppendCreateDocumentBuilderForBuilder(generator, initialCapacity, sourceClassName, objectBuilderClassName);
-            }
-        }
-        else
-        {
-            if (((isObject && hasFallbackObjectType) || (isArray && hasFallbackArrayType)) &&
-                generator.BuilderClassName() is string builderClassName)
-            {
-                AppendCreateDocumentBuilderForBuilder(generator, initialCapacity, sourceClassName, builderClassName);
-            }
-        }
+        ////    if (hasFallbackObjectType && generator.ObjectBuilderClassName() is string objectBuilderClassName)
+        ////    {
+        ////        AppendCreateDocumentBuilderForBuilder(generator, initialCapacity, sourceClassName, objectBuilderClassName);
+        ////    }
+        ////}
+        ////else
+        ////{
+        ////    if (((isObject && hasFallbackObjectType) || (isArray && hasFallbackArrayType)) &&
+        ////        generator.BuilderClassName() is string builderClassName)
+        ////    {
+        ////        AppendCreateDocumentBuilderForBuilder(generator, initialCapacity, sourceClassName, builderClassName);
+        ////    }
+        ////}
 
         foreach (ComposedBuilder builder in builders)
         {

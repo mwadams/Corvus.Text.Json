@@ -338,7 +338,7 @@ namespace TestUtilities
         {
             (IEnumerable<MetadataReference> references, IEnumerable<string?> defines) = BuildMetadataReferencesAndDefines(hostAssembly);
 
-            IEnumerable<SyntaxTree> syntaxTrees = ParseSyntaxTrees(code.GeneratedFiles, defines, code.SharedTypeCode);
+            IEnumerable<SyntaxTree> syntaxTrees = ParseSyntaxTrees(code.GeneratedFiles, defines);
 
             // We are happy with the defaults (debug etc.)
             CSharpCompilationOptions options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithAssemblyIdentityComparer(DesktopAssemblyIdentityComparer.Default);
@@ -381,7 +381,7 @@ namespace TestUtilities
                         ctx.CompilationOptions.Defines.AsEnumerable().Union(["DYNAMIC_BUILD"]));
             }
 
-            static IEnumerable<SyntaxTree> ParseSyntaxTrees(IReadOnlyCollection<GeneratedCodeFile> generatedTypes, IEnumerable<string?> defines, string? sharedTypeCode)
+            static IEnumerable<SyntaxTree> ParseSyntaxTrees(IReadOnlyCollection<GeneratedCodeFile> generatedTypes, IEnumerable<string?> defines)
             {
                 CSharpParseOptions parseOptions = CSharpParseOptions.Default
                     .WithLanguageVersion(LanguageVersion.Preview)
@@ -391,11 +391,6 @@ namespace TestUtilities
                 foreach (GeneratedCodeFile type in generatedTypes)
                 {
                     yield return CSharpSyntaxTree.ParseText(type.FileContent, options: parseOptions, path: type.FileName);
-                }
-
-                if (sharedTypeCode is string stc)
-                {
-                    yield return CSharpSyntaxTree.ParseText(stc, options: parseOptions, path: $"sharedTypes_{Guid.NewGuid()}.cs");
                 }
             }
 
@@ -464,7 +459,7 @@ namespace TestUtilities
                             rootType);
 
             // Return the fully reduced type declaration
-            return new(rootType.ReducedTypeDeclaration().ReducedType, generatedCode, languageProvider.GenerateSharedTypeCode());
+            return new(rootType.ReducedTypeDeclaration().ReducedType, generatedCode);
         }
 
         private void ConfigureGeneration(string virtualFileName, string jsonSchema, string defaultNamespace, out string path, out CSharpLanguageProvider languageProvider)
@@ -631,11 +626,10 @@ namespace TestUtilities
     /// </summary>
     /// <param name="rootType">The root type.</param>
     /// <param name="generatedFiles">The generated files.</param>
-    public readonly struct GeneratedCode(TypeDeclaration rootType, IReadOnlyCollection<GeneratedCodeFile> generatedFiles, string? sharedTypeCode)
+    public readonly struct GeneratedCode(TypeDeclaration rootType, IReadOnlyCollection<GeneratedCodeFile> generatedFiles)
     {
         public TypeDeclaration RootType { get; } = rootType;
 
         public IReadOnlyCollection<GeneratedCodeFile> GeneratedFiles { get; } = generatedFiles;
-        public string? SharedTypeCode { get; } = sharedTypeCode;
     }
 }

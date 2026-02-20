@@ -32,8 +32,8 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                 .AppendLine()
                 .AppendUsings(
                     new("global::System", addExplicitUsings),
-                    new("global::System.Diagnostics", addExplicitUsings),
-                    new("global::System.Diagnostics.CodeAnalysis", addExplicitUsings),
+                    new("global::System.Diagnostics"),
+                    new("global::System.Diagnostics.CodeAnalysis"),
                     "global::System.Buffers",
                     "global::System.Buffers.Text",
                     "global::System.Runtime.CompilerServices",

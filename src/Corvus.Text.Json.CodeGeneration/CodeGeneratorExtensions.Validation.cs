@@ -812,8 +812,11 @@ internal static partial class CodeGenerationExtensions
         string memberName = generator.GetStaticReadOnlyFieldNameInScope(keyword.Keyword, suffix: index?.ToString());
         string jsonMemberName = generator.GetStaticReadOnlyFieldNameInScope(keyword.Keyword, suffix: $"Json{index?.ToString()}");
 
+#if BUILDING_SOURCE_GENERATOR
+        JsonElementHelpers.ParseNumber(Encoding.UTF8.GetBytes(value.GetRawText()), out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
+#else
         JsonElementHelpers.ParseNumber(JsonMarshal.GetRawUtf8Value(value), out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
-
+#endif
         generator
             .AppendLineIndent("/// <summary>")
             .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")

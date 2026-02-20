@@ -6,13 +6,25 @@
     <Nullable>enable</Nullable>
     <LangVersion>Preview</LangVersion>
     <NoWarn>$(NoWarn);CS8500;CS8969;CS8618;IDE0065;IDE0290;IDE0079;IDE0130;IDE1006;IDE0130</NoWarn>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.7" />
+    <None Remove="person-schema.json" />
+    <None Remove="person-with-unevaluated-props.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="person-schema.json" />
+    <AdditionalFiles Include="person-with-unevaluated-props.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
