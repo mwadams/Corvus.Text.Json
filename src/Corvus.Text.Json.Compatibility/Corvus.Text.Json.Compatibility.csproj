@@ -26,6 +26,9 @@
   <ItemGroup>
     <Using Include="System" />
     <Using Include="System.Text" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Using Include="SR = Corvus.Text.Json.Compatibility.Resources.Strings" />
   </ItemGroup>
   
@@ -52,13 +55,13 @@
   </ItemGroup>
 
   <!-- Include files under StringResourcesPath by convention unless OmitResources is set. -->
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <EmbeddedResource Include="Resources\Strings.resx" Visible="true" IncludeDefaultValues="true" EmitFormatMethods="false" GenerateSource="true" OmitGetResourceString="true" />
     <!-- Include common SR helper when resources are included. -->
     <Compile Include="SR.cs" Visible="true" Link="Resources/Common/SR$(DefaultLanguageSourceExtension)" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="5.0.0-1.25277.114">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
