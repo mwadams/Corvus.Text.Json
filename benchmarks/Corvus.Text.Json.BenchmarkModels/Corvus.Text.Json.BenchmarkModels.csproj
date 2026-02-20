@@ -10,13 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="kraken.json" />
     <None Remove="person-schema.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="kraken.json" />
     <AdditionalFiles Include="person-schema.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="../gen/**/*.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.8" />
   </ItemGroup>
