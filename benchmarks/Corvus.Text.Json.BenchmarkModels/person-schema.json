@@ -6,7 +6,8 @@
     "$defs": {
         "PersonArray": {
             "type": "array",
-            "items": {
+            "prefixItems": [ { "type": "number" } ],
+            "unevaluatedItems": {
                 "$ref": "#/$defs/Person"
             }
         },
@@ -18,7 +19,8 @@
                 "name": { "$ref": "#/$defs/PersonName" },
                 "age": { "$ref": "#/$defs/Age" },
                 "competedInYears": { "$ref": "#/$defs/CompetedInYears" }
-            }
+            },
+            "unevaluatedProperties": false
         },
         "HeightRangeDouble": {
             "type": "number",

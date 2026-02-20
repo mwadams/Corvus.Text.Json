@@ -10,11 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="person-schema.json" />
+    <None Remove="person-array-schema.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="person-schema.json" />
+    <AdditionalFiles Include="person-array-schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AdditionalFiles>
   </ItemGroup>
 
   <ItemGroup>
@@ -24,12 +26,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CorvusJsonSchemaModel2\" />
-    <Folder Include="CorvusJsonSchemaModel\" />
-    <Folder Include="Test\" />
   </ItemGroup>
 
 </Project>

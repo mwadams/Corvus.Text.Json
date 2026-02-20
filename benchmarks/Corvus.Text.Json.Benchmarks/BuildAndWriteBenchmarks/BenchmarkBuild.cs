@@ -33,19 +33,20 @@ public class BenchmarkBuild
 
         using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateDocumentBuilder(
             workspace,
-            age: 51,
-            name: new(static (ref personName) =>
-            {
-                personName.Create(
-                    firstName: "Michael"u8,
-                    lastName: "Adams"u8,
-                    otherNames: new(static (ref otherNames) =>
-                    {
-                        otherNames.Add("Francis"u8);
-                        otherNames.Add("James"u8);
-                    }));
-            }),
-            competedInYears: Benchmark.CorvusTextJson.CompetedInYears.Source.FromArray([2012,2106,2024]));
+            new((ref b) => b.Create(
+                age: 51,
+                name: new(static (ref personName) =>
+                {
+                    personName.Create(
+                        firstName: "Michael"u8,
+                        lastName: "Adams"u8,
+                        otherNames: new(static (ref otherNames) =>
+                        {
+                            otherNames.Add("Francis"u8);
+                            otherNames.Add("James"u8);
+                        }));
+                }),
+                competedInYears: Benchmark.CorvusTextJson.CompetedInYears.Source.FromArray([2012,2106,2024]))));
 
         return person.RootElement;
     }

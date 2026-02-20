@@ -3,7 +3,7 @@
 
 using Corvus.Text.Json;
 
-namespace Benchmark.CorvusTextJson2;
+namespace Corvus.ClassicBenchmarkModels;
 
-[JsonSchemaTypeGenerator("../person-schema.json#/$defs/PersonArray")]
+[JsonSchemaTypeGenerator("../person-array-schema.json#/$defs/PersonArray")]
 public readonly partial struct PersonArray;

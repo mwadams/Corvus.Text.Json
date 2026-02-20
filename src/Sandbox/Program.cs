@@ -1,4 +1,4 @@
-﻿using Benchmark.CorvusTextJson2;
+﻿using Benchmark.CorvusTextJson;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
@@ -348,7 +348,7 @@ Person.Mutable isItOK = (Person.Mutable)person; // This will throw if `person` w
 using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocumentBuilder(
     workspace,
     new((ref b) => b.Create(
-        age: person.Age, // Happily assign an existing instance, will not copy
+        age: person.Age ?? default, // Happily assign an existing instance, will not copy
         name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
         competedInYears: new((ref competedInYears) =>
         {

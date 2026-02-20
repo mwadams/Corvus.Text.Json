@@ -13,8 +13,8 @@ namespace ValidationBenchmarks;
 public class BenchmarkLargeArrayWithUnevaluatedItems
 {
     private System.Text.Json.JsonDocument? documentA1;
-    private Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.PersonArray>? documentB1;
-    private Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson2.PersonArray.Mutable>? documentB2;
+    private Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson.PersonArray>? documentB1;
+    private Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.PersonArray.Mutable>? documentB2;
     private Corvus.Text.Json.JsonWorkspace? workspace;
 
     [GlobalCleanup]
@@ -42,7 +42,7 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
             "[33.4," + string.Join(",", Enumerable.Range(0, 10000).Select(i => personJson)) + "]";
 
         documentA1 = System.Text.Json.JsonDocument.Parse(json);
-        documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.PersonArray>.Parse(json);
+        documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson.PersonArray>.Parse(json);
         workspace = Corvus.Text.Json.JsonWorkspace.Create();
         documentB2 = documentB1.RootElement.CreateDocumentBuilder(workspace);
     }
@@ -50,18 +50,36 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
     [Benchmark(Baseline = true)]
     public bool ValidateCorvusJsonSchema()
     {
-        return Benchmark.CorvusJsonSchema2.PersonArray.FromJson(documentA1!.RootElement).IsValid();
+        bool result = Benchmark.CorvusJsonSchema2.PersonArray.FromJson(documentA1!.RootElement).IsValid();
+        if (!result)
+        {
+            throw new InvalidOperationException();
+        }
+
+        return result;
     }
 
     [Benchmark]
     public bool ValidateCorvusTextJson()
     {
-        return documentB1!.RootElement.EvaluateSchema();
+        bool result = documentB1!.RootElement.EvaluateSchema();
+        if (!result)
+        {
+            throw new InvalidOperationException();
+        }
+
+        return result;
     }
 
     [Benchmark]
     public bool ValidateCorvusTextJsonDynamic()
     {
-        return documentB2!.RootElement.EvaluateSchema();
+        bool result = documentB2!.RootElement.EvaluateSchema();
+        if (!result)
+        {
+            throw new InvalidOperationException();
+        }
+
+        return result;
     }
 }

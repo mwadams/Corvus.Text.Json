@@ -2,6 +2,7 @@
   <Folder Name="/.benchmarks/">
     <Project Path="benchmarks/Corvus.Text.Json.BenchmarkModels/Corvus.Text.Json.BenchmarkModels.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.Benchmarks/Corvus.Text.Json.Benchmarks.csproj" />
+    <Project Path="benchmarks/Corvus.Text.Json.ClassicBenchmarkModels/Corvus.Text.Json.ClassicBenchmarkModels.csproj" />
     <Project Path="BenchmarkSandbox/BenchmarkSandbox.csproj" />
   </Folder>
   <Folder Name="/.sandbox/">

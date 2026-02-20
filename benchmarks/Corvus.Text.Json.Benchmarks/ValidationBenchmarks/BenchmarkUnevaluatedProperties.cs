@@ -13,7 +13,7 @@ namespace ValidationBenchmarks;
 public class BenchmarkUnevaluatedProperties
 {
     private System.Text.Json.JsonDocument? documentA1;
-    private Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.Person>? documentB1;
+    private Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson.Person>? documentB1;
 
     [GlobalCleanup]
     public void CleanUp()
@@ -34,7 +34,7 @@ public class BenchmarkUnevaluatedProperties
         """;
 
         this.documentA1 = System.Text.Json.JsonDocument.Parse(json);
-        this.documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson2.Person>.Parse(json);
+        this.documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson.Person>.Parse(json);
     }
 
     [Benchmark(Baseline = true)]
