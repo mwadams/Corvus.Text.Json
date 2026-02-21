@@ -454,9 +454,9 @@ static void EvaluateAndWriteResults(Person person, JsonSchemaResultsLevel level)
     Console.WriteLine("************");
 }
 
-using JsonDocumentBuilder<Test.Person.Mutable> testPersonDocBuilder = Test.Person.CreateDocumentBuilder(
+using JsonDocumentBuilder<Person.Mutable> testPersonDocBuilder = Person.CreateDocumentBuilder(
         workspace,
-        static (ref b) => b.Create(
+        new(static (ref b) => b.Create(
             age: 51,
             name: new(static (ref personName) =>
             {
@@ -465,69 +465,9 @@ using JsonDocumentBuilder<Test.Person.Mutable> testPersonDocBuilder = Test.Perso
                     lastName: "Adams"u8,
                     otherNames: "Francis James"u8);
             }),
-            competedInYears: Test.Person.CompetedInYears.Source.FromArray([2012, 2020, 2024])));
+            competedInYears: CompetedInYears.Source.FromArray([2012, 2020, 2024]))));
 
 Console.WriteLine(testPersonDocBuilder.RootElement);
-
-using JsonDocumentBuilder<Test.ComposedFormatNumberInt64NumberInt128.Mutable> testComposedDocBuilder =
-    Test.ComposedFormatNumberInt64NumberInt128.CreateDocumentBuilder(
-        workspace,
-        128);
-
-Console.WriteLine(testComposedDocBuilder.RootElement);
-
-using JsonDocumentBuilder<Test.MultiDimensionFixedSizeNumericArrayInt32.Mutable> testMultiDimensionalArray =
-    Test.MultiDimensionFixedSizeNumericArrayInt32.CreateDocumentBuilder(
-workspace,
-        static (ref b) =>
-        {
-            b.CreateTensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-        });
-
-Console.WriteLine(testMultiDimensionalArray.RootElement);
-
-Console.WriteLine(testMultiDimensionalArray.RootElement[1][3]);
-
-using JsonDocumentBuilder<Test.MultiDimensionFixedSizeNumericArrayInt32.Mutable> testMultiDimensionalArray2 =
-    Test.MultiDimensionFixedSizeNumericArrayInt32.CreateDocumentBuilder(
-        workspace,
-        static (ref b) =>
-        {
-            b.Add(new(static (ref c) =>
-            {
-                c.CreateTensor([1, 2, 3, 4, 5]);
-            }));
-            b.Add(new(static (ref c) =>
-            {
-                c.CreateTensor([6, 7, 8, 9, 10]);
-            }));
-        });
-
-Console.WriteLine(testMultiDimensionalArray2.RootElement);
-
-Console.WriteLine(testMultiDimensionalArray2.RootElement[1][3]);
-
-using JsonDocumentBuilder<Test.ComposedArrayMultiItemType.Mutable> testComposedArrayMultiItemType =
-    Test.ComposedArrayMultiItemType.CreateDocumentBuilder(
-        workspace,
-        static (ref b) =>
-        {
-            b.Add("hello");
-        });
-
-using JsonDocumentBuilder<Test.MultiDimensionHigherRankFixedSizeNumericArrayInt32.Mutable> testMultiDimensionalHigherRankArray =
-    Test.MultiDimensionHigherRankFixedSizeNumericArrayInt32.CreateDocumentBuilder(
-workspace,
-        static (ref b) =>
-        {
-            b.CreateTensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]);
-        });
-
-Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement);
-
-Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement[2][1]);
-Console.WriteLine(testMultiDimensionalHigherRankArray.RootElement[2][1][3]);
-
 
 ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
     """

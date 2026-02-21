@@ -59,7 +59,7 @@ public sealed class JsonSchemaPartial : ICodeFileBuilder
                         .PushConstantsClassNameAndScope()
                         .AppendConstantsClass(typeDeclaration)
                         .AppendSeparatorLine()
-                        .BeginPublicStaticClassDeclaration(generator.JsonSchemaClassName())
+                        .BeginPublicStaticPartialClassDeclaration(generator.JsonSchemaClassName())
                             .AppendJsonSchemaClassSetup(typeDeclaration)
                             .AppendRegexValidationFields(typeDeclaration)
                             .AppendSchemaLocationStaticProperty(typeDeclaration)

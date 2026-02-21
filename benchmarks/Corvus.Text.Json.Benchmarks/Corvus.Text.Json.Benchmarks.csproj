@@ -31,10 +31,4 @@
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
     <ProjectReference Include="..\Corvus.Text.Json.ClassicBenchmarkModels\Corvus.Text.Json.ClassicBenchmarkModels.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="ValidationBenchmarks\SourceMeta\instances.jsonl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>

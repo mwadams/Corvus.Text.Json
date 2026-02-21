@@ -10,18 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="kraken.json" />
-    <None Remove="person-schema.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="kraken.json" />
     <AdditionalFiles Include="person-schema.json" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="../gen/**/*.cs" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.8" />
   </ItemGroup>
@@ -29,12 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CorvusJsonSchemaModel2\" />
-    <Folder Include="CorvusJsonSchemaModel\" />
-    <Folder Include="Test\" />
   </ItemGroup>
 
 </Project>
