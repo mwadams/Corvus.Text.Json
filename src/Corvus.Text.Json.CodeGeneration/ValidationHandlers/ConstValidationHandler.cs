@@ -263,6 +263,7 @@ file static class ConstValidationHandlerExtensions
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("context.EvaluatedKeyword(true, ", quotedConstantValue, ", messageProvider: JsonSchemaEvaluation.ExpectedConstant, ", formattedKeyword, "u8);")
+            .PopIndent()
             .AppendLineIndent("}")
             .AppendLineIndent("else")
             .AppendLineIndent("{")

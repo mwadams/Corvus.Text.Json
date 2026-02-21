@@ -529,6 +529,12 @@ internal static partial class CodeGeneratorExtensions
 
             }
 
+            // Don't emit a setter for boolean false properties, as they cannot be set!
+            if (property.ReducedPropertyType.IsBuiltInJsonNotAnyType())
+            {
+                continue;
+            }
+
             string propertyTypeName = property.ReducedPropertyType.FullyQualifiedDotnetTypeName();
 
             string name = SymbolDisplay.FormatLiteral(property.JsonPropertyName, true);
