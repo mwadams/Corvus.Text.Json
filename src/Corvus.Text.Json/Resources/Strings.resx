@@ -1127,6 +1127,9 @@
   <data name="JsonSchema_ExpectedUniqueItems" xml:space="preserve">
     <value>The array was expected to contain unique items.</value>
   </data>
+  <data name="JsonSchema_EvaluatedSubschema" xml:space="preserve">
+    <value>The value was expected to match the subschema.</value>
+  </data>
   <data name="InvalidJsonReference" xml:space="preserve">
     <value>The value is not a valid JSON reference.</value>
   </data>

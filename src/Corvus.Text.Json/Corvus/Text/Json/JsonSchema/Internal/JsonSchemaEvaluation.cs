@@ -14,7 +14,7 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider<string> ExpectedConstant = static (expectedValue, buffer, out written) => ExpectedConstantValue(expectedValue, buffer, out written);
-
+    public static readonly JsonSchemaMessageProvider EvaluatedSubschema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_EvaluatedSubschema.AsSpan(), buffer, out written);
     /// <summary>
     /// Creates a schema location for an indexed keyword by appending the index to the base location.
     /// </summary>

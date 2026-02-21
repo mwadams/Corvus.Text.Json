@@ -68,7 +68,7 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
                 .AppendLineIndent(
                     "private static readonly JsonSchemaPathProvider<int> ",
                     unevaluatedItemsEvaluationPathProperty, " = static (_, buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
-                    SymbolDisplay.FormatLiteral(aitd.ReducedPathModifier, true),
+                    SymbolDisplay.FormatLiteral(aitd.Keyword.GetPathModifier(aitd), true),
                     "u8, buffer, out written);");
         }
 
@@ -79,7 +79,7 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
                 .AppendLineIndent(
                     "private static readonly JsonSchemaPathProvider<int> ",
                     nonTupleEvaluationPathProperty, " = static (_, buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
-                    SymbolDisplay.FormatLiteral(nonTupleItemsTypeDeclaration.ReducedPathModifier, true),
+                    SymbolDisplay.FormatLiteral(nonTupleItemsTypeDeclaration.Keyword.GetPathModifier(nonTupleItemsTypeDeclaration), true),
                     "u8, buffer, out written);");
         }
 

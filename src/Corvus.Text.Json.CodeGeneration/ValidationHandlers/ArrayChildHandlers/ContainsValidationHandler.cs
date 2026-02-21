@@ -72,7 +72,7 @@ public class ContainsValidationHandler : IChildArrayItemValidationHandler2, IJso
                     .AppendLineIndent(
                         "private static readonly JsonSchemaPathProvider<int> ",
                         containsEvaluationPathProperty, " = static (_, buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
-                        SymbolDisplay.FormatLiteral(containsItemsTypeDeclaration.ReducedPathModifier, true),
+                        SymbolDisplay.FormatLiteral(containsItemsTypeDeclaration.Keyword.GetPathModifier(containsItemsTypeDeclaration), true),
                         "u8, buffer, out written);");
 
 

@@ -452,7 +452,7 @@ public struct JsonSchemaContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CommitChildContext<TProviderContext>(bool isMatch, ref readonly JsonSchemaContext childContext, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext>? messageProvider = null)
     {
-        _resultsCollector?.CommitChildContext(childContext._sequenceNumber, parentIsMatch: isMatch, childIsMatch: childContext.IsMatch, providerContext, messageProvider);
+        _resultsCollector?.CommitChildContext(childContext._sequenceNumber, parentIsMatch: isMatch, childIsMatch: childContext.IsMatch, providerContext, messageProvider ?? (static (_, buffer, out written) => JsonSchemaEvaluation.EvaluatedSubschema(buffer, out written)));
         _rentedBuffer = childContext._rentedBuffer;
         if (!isMatch)
         {
@@ -487,7 +487,7 @@ public struct JsonSchemaContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CommitChildContext(bool isMatch, ref readonly JsonSchemaContext childContext, JsonSchemaMessageProvider? messageProvider = null)
     {
-        _resultsCollector?.CommitChildContext(childContext._sequenceNumber, parentIsMatch: isMatch, childIsMatch: childContext.IsMatch, messageProvider);
+        _resultsCollector?.CommitChildContext(childContext._sequenceNumber, parentIsMatch: isMatch, childIsMatch: childContext.IsMatch, messageProvider ?? JsonSchemaEvaluation.EvaluatedSubschema);
         _rentedBuffer = childContext._rentedBuffer;
         if (!isMatch)
         {
