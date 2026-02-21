@@ -146,14 +146,32 @@ public static partial class JsonSchemaEvaluation
     {
         Debug.Assert(Utf8Uri.Validate(readOnlySpan, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false));
 
+        if (readOnlySpan.Length == 0)
+        {
+            written = 0;
+            return true;
+        }
+
         if (readOnlySpan[0] == (byte)'#')
         {
             readOnlySpan = readOnlySpan[1..];
         }
 
+        if (readOnlySpan.Length == 0)
+        {
+            written = 0;
+            return true;
+        }
+
         if (readOnlySpan[0] == (byte)'/')
         {
             readOnlySpan = readOnlySpan[1..];
+        }
+
+        if (readOnlySpan.Length == 0)
+        {
+            written = 0;
+            return true;
         }
 
         if (readOnlySpan.Length > buffer.Length)
