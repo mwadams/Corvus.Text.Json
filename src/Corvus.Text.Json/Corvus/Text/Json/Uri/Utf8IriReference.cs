@@ -6,7 +6,7 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json;
 
 /// <summary>
-/// A UTF-8 URI.
+/// A UTF-8 IRI Reference.
 /// </summary>
 /// <remarks>
 /// <code>
@@ -21,27 +21,27 @@ namespace Corvus.Text.Json;
 /// ]]>
 /// </code>
 /// </remarks>
-public readonly ref struct Utf8Uri
+public readonly ref struct Utf8IriReference
 {
     private readonly Utf8UriTools.Flags _flags;
     private readonly Utf8UriOffset _offsets;
-    private readonly ReadOnlySpan<byte> _originalUri;
+    private readonly ReadOnlySpan<byte> _originalIriReference;
 
-    private Utf8Uri(ReadOnlySpan<byte> uri)
+    private Utf8IriReference(ReadOnlySpan<byte> uri)
     {
-        _originalUri = uri;
-        IsValidReference = Utf8UriTools.ParseUriInfo(_originalUri, Utf8UriKind.Absolute, requireAbsolute: true, allowIri: false, allowUNCPath: false, out _offsets, out _flags);
+        _originalIriReference = uri;
+        IsValidReference = Utf8UriTools.ParseUriInfo(_originalIriReference, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false, out _offsets, out _flags);
     }
 
     /// <summary>
     /// Gets the authority component of the reference.
     /// </summary>
-    public ReadOnlySpan<byte> Authority => _originalUri.Slice(_offsets.User, _offsets.Path - _offsets.User);
+    public ReadOnlySpan<byte> Authority => _originalIriReference.Slice(_offsets.User, _offsets.Path - _offsets.User);
 
     /// <summary>
     /// Gets the fragment component of the reference.
     /// </summary>
-    public ReadOnlySpan<byte> Fragment => HasFragment ? _originalUri.Slice(_offsets.Fragment + 1, _offsets.End - _offsets.Fragment - 1) : [];
+    public ReadOnlySpan<byte> Fragment => HasFragment ? _originalIriReference.Slice(_offsets.Fragment + 1, _offsets.End - _offsets.Fragment - 1) : [];
 
     /// <summary>
     /// Gets a value indicating whether this reference has an authority.
@@ -86,7 +86,7 @@ public readonly ref struct Utf8Uri
     /// <summary>
     /// Gets the host component of the reference (includes both host and port).
     /// </summary>
-    public ReadOnlySpan<byte> Host => HasPort ? _originalUri.Slice(_offsets.Host, _offsets.Port - _offsets.Host) : _originalUri.Slice(_offsets.Host, _offsets.Path - _offsets.Host);
+    public ReadOnlySpan<byte> Host => HasPort ? _originalIriReference.Slice(_offsets.Host, _offsets.Port - _offsets.Host) : _originalIriReference.Slice(_offsets.Host, _offsets.Path - _offsets.Host);
 
     /// <summary>
     /// Gets a value indicating whether this is the default port for the scheme.
@@ -94,29 +94,29 @@ public readonly ref struct Utf8Uri
     public bool IsDefaultPort => (_flags & Utf8UriTools.Flags.NotDefaultPort) == 0;
 
     /// <summary>
-    /// Gets a value indicating whether this is a relative URI.
+    /// Gets a value indicating whether this is a relative reference.
     /// </summary>
     public bool IsRelative => !HasScheme;
 
     /// <summary>
-    /// Gets a value indicating whether this is a valid URI.
+    /// Gets a value indicating whether this is a valid reference.
     /// </summary>
     public bool IsValidReference { get; }
 
     /// <summary>
     /// Gets the original (fully encoded) string.
     /// </summary>
-    public ReadOnlySpan<byte> OriginalUri => _originalUri;
+    public ReadOnlySpan<byte> OriginalUri => _originalIriReference;
 
     /// <summary>
-    /// Gets the path component of the URI.
+    /// Gets the path component of the reference.
     /// </summary>
-    public ReadOnlySpan<byte> Path => HasPath ? _originalUri.Slice(_offsets.Path, _offsets.Query - _offsets.Path) : [];
+    public ReadOnlySpan<byte> Path => HasPath ? _originalIriReference.Slice(_offsets.Path, _offsets.Query - _offsets.Path) : [];
 
     /// <summary>
-    /// Gets the port component of the URI as a byte span.
+    /// Gets the port component of the reference as a byte span.
     /// </summary>
-    public ReadOnlySpan<byte> Port => HasPort ? _originalUri.Slice(_offsets.Port + 1, _offsets.Path - _offsets.Port - 1) : [];
+    public ReadOnlySpan<byte> Port => HasPort ? _originalIriReference.Slice(_offsets.Port + 1, _offsets.Path - _offsets.Port - 1) : [];
 
     /// <summary>
     /// Gets the port value as an integer.
@@ -124,12 +124,12 @@ public readonly ref struct Utf8Uri
     public int PortValue => _offsets.PortValue;
 
     /// <summary>
-    /// Gets the query component of the URI.
+    /// Gets the query component of the reference.
     /// </summary>
-    public ReadOnlySpan<byte> Query => HasQuery ? _originalUri.Slice(_offsets.Query + 1, _offsets.Fragment - _offsets.Query - 1) : [];
+    public ReadOnlySpan<byte> Query => HasQuery ? _originalIriReference.Slice(_offsets.Query + 1, _offsets.Fragment - _offsets.Query - 1) : [];
 
     /// <summary>
-    /// Gets the scheme component of the URI.
+    /// Gets the scheme component of the reference.
     /// </summary>
     public ReadOnlySpan<byte> Scheme
     {
@@ -141,29 +141,29 @@ public readonly ref struct Utf8Uri
             }
 
             // Distinguish between ':' and '://'
-            if (_originalUri[_offsets.User - 1] == '/')
+            if (_originalIriReference[_offsets.User - 1] == '/')
             {
-                return _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 3);
+                return _originalIriReference.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 3);
             }
 
-            return _originalUri.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 1);
+            return _originalIriReference.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 1);
         }
     }
 
     /// <summary>
-    /// Gets the user component of the URI.
+    /// Gets the user component of the reference.
     /// </summary>
-    public ReadOnlySpan<byte> User => HasUser ? _originalUri.Slice(_offsets.User, _offsets.Host - _offsets.User - 1) : [];
+    public ReadOnlySpan<byte> User => HasUser ? _originalIriReference.Slice(_offsets.User, _offsets.Host - _offsets.User - 1) : [];
 
     /// <summary>
-    /// Creates a new UTF-8 URI from the specified URI bytes.
+    /// Creates a new UTF-8 IRI Reference from the specified IRI bytes.
     /// </summary>
-    /// <param name="uri">The URI bytes from which to create the UTF-8 URI.</param>
-    /// <returns>A new UTF-8 URI.</returns>
-    /// <exception cref="ArgumentException">Thrown when the URI is invalid.</exception>
-    public static Utf8Uri CreateUri(ReadOnlySpan<byte> uri)
+    /// <param name="iri">The IRI bytes to create the reference from.</param>
+    /// <returns>A new UTF-8 IRI Reference.</returns>
+    /// <exception cref="ArgumentException">Thrown when the IRI is invalid.</exception>
+    public static Utf8IriReference CreateIriReference(ReadOnlySpan<byte> iri)
     {
-        if (!TryCreateUri(uri, out Utf8Uri reference))
+        if (!TryCreateIriReference(iri, out Utf8IriReference reference))
         {
             ThrowHelper.ThrowArgumentException(SR.InvalidJsonReference);
         }
@@ -172,45 +172,45 @@ public readonly ref struct Utf8Uri
     }
 
     /// <summary>
-    /// Tries to create a new UTF-8 URI from the specified URI bytes.
+    /// Tries to create a new UTF-8 IRI Reference from the specified IRI bytes.
     /// </summary>
-    /// <param name="uri">The URI bytes from which to create the UTF-8 URI.</param>
-    /// <param name="utf8Uri">When this method returns, contains the created UTF-8 URI if successful; otherwise, the default value.</param>
-    /// <returns><see langword="true"/> if the UTF-8 URI was created successfully; otherwise, <see langword="false"/>.</returns>
-    public static bool TryCreateUri(ReadOnlySpan<byte> uri, out Utf8Uri utf8Uri)
+    /// <param name="iri">The IRI bytes from which to create the UTF-8 IRI from.</param>
+    /// <param name="utf8Iri">When this method returns, contains the created UTF-8 IRI reference if successful; otherwise, the default value.</param>
+    /// <returns><see langword="true"/> if the UTF-8 IRI Reference was created successfully; otherwise, <see langword="false"/>.</returns>
+    public static bool TryCreateIriReference(ReadOnlySpan<byte> iri, out Utf8IriReference utf8Iri)
     {
-        utf8Uri = new(uri);
-        return utf8Uri.IsValidReference;
+        utf8Iri = new(iri);
+        return utf8Iri.IsValidReference;
     }
 
     /// <summary>
     /// Gets the value as a <see cref="Uri"/>.
     /// </summary>
-    /// <returns>The URI representation of the UTF-8 URI.</returns>
+    /// <returns>The URI representation of the reference.</returns>
     public Uri GetUri()
     {
-        return new Uri(JsonReaderHelper.TranscodeHelper(_originalUri), UriKind.Absolute);
+        return new Uri(JsonReaderHelper.TranscodeHelper(_originalIriReference), UriKind.RelativeOrAbsolute);
     }
 
     /// <summary>
-    /// Gets the URI in canonical form for display.
+    /// Gets the IRI reference in canonical form for display.
     /// </summary>
     /// <param name="buffer">The buffer into which to write the result in canonical form with the encoded characters decoded for display.</param>
     /// <param name="writtenBytes">The number of bytes written.</param>
     /// <returns><see langword="true"/> if the result was successfully written to the buffer; otherwise, <see langword="false"/>.</returns>
     public bool TryFormatDisplay(Span<byte> buffer, out int writtenBytes)
     {
-        return Utf8UriTools.TryFormatDisplay(_originalUri, _offsets, _flags, buffer, out writtenBytes);
+        return Utf8UriTools.TryFormatDisplay(_originalIriReference, _offsets, _flags, buffer, out writtenBytes);
     }
 
     /// <summary>
-    /// Gets the URI in canonical form.
+    /// Gets the IRI reference in canonical form.
     /// </summary>
     /// <param name="buffer">The buffer into which to write the result in canonical form with reserved characters encoded.</param>
     /// <param name="writtenBytes">The number of bytes written.</param>
     /// <returns><see langword="true"/> if the result was successfully written to the buffer; otherwise, <see langword="false"/>.</returns>
     public bool TryFormatCanonical(Span<byte> buffer, out int writtenBytes)
     {
-        return Utf8UriTools.TryFormatCanonical(_originalUri, _offsets, _flags, allowIri: false, buffer, out writtenBytes);
+        return Utf8UriTools.TryFormatCanonical(_originalIriReference, _offsets, _flags, allowIri: true, buffer, out writtenBytes);
     }
 }

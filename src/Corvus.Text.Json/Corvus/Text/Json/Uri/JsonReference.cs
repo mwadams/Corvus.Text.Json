@@ -6,7 +6,7 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json;
 
 /// <summary>
-/// A JSON IRI Reference.
+/// A JSON IRI / Uri Reference.
 /// </summary>
 /// <remarks>
 /// <code>
@@ -23,20 +23,20 @@ namespace Corvus.Text.Json;
 /// </remarks>
 public readonly ref struct JsonReference
 {
-    private readonly Utf8Uri.Flags _flags;
+    private readonly Utf8UriTools.Flags _flags;
     private readonly Utf8UriOffset _offsets;
     private readonly ReadOnlySpan<byte> _originalUri;
 
     public JsonReference(ReadOnlySpan<byte> uri, bool allowIri) : this()
     {
         _originalUri = uri;
-        IsValidReference = Utf8Uri.ParseUriInfo(_originalUri, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: allowIri, allowUNCPath: false, out _offsets, out _flags);
+        IsValidReference = Utf8UriTools.ParseUriInfo(_originalUri, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: allowIri, allowUNCPath: false, out _offsets, out _flags);
     }
 
     private JsonReference(ReadOnlySpan<byte> uri)
     {
         _originalUri = uri;
-        IsValidReference = Utf8Uri.ParseUriInfo(_originalUri, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false, out _offsets, out _flags);
+        IsValidReference = Utf8UriTools.ParseUriInfo(_originalUri, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false, out _offsets, out _flags);
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public readonly ref struct JsonReference
     /// <summary>
     /// Gets a value indicating whether this is the default port for the scheme.
     /// </summary>
-    public bool IsDefaultPort => (_flags & Utf8Uri.Flags.NotDefaultPort) == 0;
+    public bool IsDefaultPort => (_flags & Utf8UriTools.Flags.NotDefaultPort) == 0;
 
     /// <summary>
     /// Gets a value indicating whether this is a relative reference.

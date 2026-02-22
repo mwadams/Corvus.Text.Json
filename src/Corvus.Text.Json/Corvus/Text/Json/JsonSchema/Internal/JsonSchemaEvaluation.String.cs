@@ -1178,7 +1178,7 @@ public static partial class JsonSchemaEvaluation
         // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
         // "abc".
 
-        if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: true, allowUNCPath: false))
+        if (!Utf8UriTools.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: true, allowUNCPath: false))
         {
             // We may need the extra tests here
             return false;
@@ -1195,7 +1195,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchIriReference(ReadOnlySpan<byte> value)
     {
-        if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false))
+        if (!Utf8UriTools.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false))
         {
             return false;
         }
@@ -1300,7 +1300,7 @@ public static partial class JsonSchemaEvaluation
         // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
         // "abc".
 
-        if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: false, allowUNCPath: false))
+        if (!Utf8UriTools.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: false, allowUNCPath: false))
         {
             // We may need the extra tests here
             return false;
@@ -1317,7 +1317,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchUriReference(ReadOnlySpan<byte> value)
     {
-        if (!Utf8Uri.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: false, allowUNCPath: false))
+        if (!Utf8UriTools.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: false, allowUNCPath: false))
         {
             // We may need the extra tests for empty fragment etc.
             return false;

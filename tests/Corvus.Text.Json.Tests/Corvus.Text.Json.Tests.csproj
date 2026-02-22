@@ -200,6 +200,7 @@
     <Compile Include="Utf8JsonWriterTests.cs" />
     <Compile Include="Utf8JsonWriterTests.WriteRaw.cs" />
     <Compile Include="Utf8UriTemplateTests.cs" />
+    <Compile Include="Utf8UriFormatTests.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">

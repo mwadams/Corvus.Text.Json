@@ -1753,7 +1753,7 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
-        generator
+        return generator
             .ReserveNameIfNotReserved("Equals")
             .AppendSeparatorLine()
             .AppendBlockIndent(
@@ -1772,35 +1772,7 @@ internal static partial class CodeGeneratorExtensions
                 """
                         (obj is null && this.IsNull());
                 }
-
-                /// <summary>
-                /// Equality comparison.
-                /// </summary>
-                /// <param name="other">The other item with which to compare.</param>
-                /// <returns><see langword="true"/> if the values were equal.</returns>
-                """)
-            .AppendLineIndent("public bool Equals<T>(in T other)")
-            .PushIndent()
-                .AppendLineIndent("where T : struct, IJsonElement")
-            .PopIndent()
-            .AppendLineIndent("{")
-            .PushIndent();
-
-        bool appendDefault = true;
-        if (typeDeclaration.Format() is string format)
-        {
-            appendDefault = !FormatHandlerRegistry.Instance.FormatHandlers.AppendFormatEqualsTBody(generator, typeDeclaration, format);
-        }
-
-        if (appendDefault)
-        {
-            generator
-                .AppendLineIndent("return JsonElementHelpers.DeepEquals(this, other);");
-        }
-
-        return generator
-            .PopIndent()
-            .AppendLineIndent("}");
+                """);
     }
 
     /// <summary>

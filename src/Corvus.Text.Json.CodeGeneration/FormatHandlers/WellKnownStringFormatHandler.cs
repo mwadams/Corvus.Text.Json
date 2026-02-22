@@ -209,124 +209,112 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
     }
 
     /// <inheritdoc/>
-    public bool AppendFormatConstant(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string format, string staticFieldName, JsonElement constantValue)
+    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
     {
-        if (constantValue.ValueKind != JsonValueKind.String)
+        switch (format)
         {
-            return false;
+            case "date":
+                if (seenConversionOperators.Add("LocalDate"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator NodaTime.LocalDate(NodaTime.LocalDate value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "date-time":
+                if (seenConversionOperators.Add("OffsetDateTime"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator NodaTime.OffsetDateTime(NodaTime.OffsetDateTime value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "time":
+                if (seenConversionOperators.Add("OffsetTime"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator NodaTime.OffsetTime(NodaTime.OffsetTime value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "duration":
+                if (seenConversionOperators.Add("Period"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator NodaTime.Period(NodaTime.Period value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "ipv4":
+                return true;
+
+            case "ipv6":
+                return true;
+
+            case "uuid":
+                if (seenConversionOperators.Add("Guid"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator Guid(Guid value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "uri":
+                if (seenConversionOperators.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator Uri(Uri value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "uri-reference":
+                if (seenConversionOperators.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static explicit operator Uri(Uri value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "iri":
+                if (seenConversionOperators.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static explicit operator Uri(Uri value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "iri-reference":
+                if (seenConversionOperators.Add("Uri"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator Uri(Uri value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "regex":
+                return true;
+
+            default:
+                return false;
         }
-
-        return format switch
-        {
-            "date" => AppendDate(generator, keyword, staticFieldName, constantValue),
-            "date-time" => AppendDateTime(generator, keyword, staticFieldName, constantValue),
-            "time" => AppendTime(generator, keyword, staticFieldName, constantValue),
-            "duration" => AppendDuration(generator, keyword, staticFieldName, constantValue),
-            "ipv4" => AppendIpV4(generator, keyword, staticFieldName, constantValue),
-            "ipv6" => AppendIpV6(generator, keyword, staticFieldName, constantValue),
-            "uuid" => AppendUuid(generator, keyword, staticFieldName, constantValue),
-            "uri" => AppendUri(generator, keyword, staticFieldName, constantValue),
-            "uri-reference" => AppendUriReference(generator, keyword, staticFieldName, constantValue),
-            "iri" => AppendIri(generator, keyword, staticFieldName, constantValue),
-            "iri-reference" => AppendIriReference(generator, keyword, staticFieldName, constantValue),
-            //// "regex" => We don't support regex here; there is a custom regex support with IValidationRegexProviderKeyword,
-            _ => false,
-        };
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return format switch
-        {
-            ////"date" => generator.AppendDateFormatConversionOperators(typeDeclaration),
-            ////"date-time" => generator.AppendDateTimeFormatConversionOperators(typeDeclaration),
-            ////"time" => generator.AppendTimeFormatConversionOperators(typeDeclaration),
-            ////"duration" => generator.AppendDurationFormatConversionOperators(typeDeclaration),
-            ////"ipv4" => generator.AppendIpV4FormatConversionOperators(typeDeclaration),
-            ////"ipv6" => generator.AppendIpV6FormatConversionOperators(typeDeclaration),
-            ////"uuid" => generator.AppendUuidFormatConversionOperators(typeDeclaration),
-            ////"uri" => generator.AppendUriFormatConversionOperators(typeDeclaration),
-            ////"uri-reference" => generator.AppendUriReferenceFormatConversionOperators(typeDeclaration),
-            ////"iri" => generator.AppendIriFormatConversionOperators(typeDeclaration),
-            ////"iri-reference" => generator.AppendIriReferenceFormatConversionOperators(typeDeclaration),
-            ////"regex" => generator.AppendRegexFormatConversionOperators(typeDeclaration),
-            _ => false,
-        };
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatEqualsTBody(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return format switch
-        {
-            ////"date" => generator.AppendDateFormatEqualsTBody(typeDeclaration),
-            ////"date-time" => generator.AppendDateTimeFormatEqualsTBody(typeDeclaration),
-            ////"time" => generator.AppendTimeFormatEqualsTBody(typeDeclaration),
-            ////"duration" => generator.AppendDurationFormatEqualsTBody(typeDeclaration),
-            ////"uuid" => generator.AppendUuidFormatEqualsTBody(typeDeclaration),
-            ////"corvus-json-content" => generator.AppendJsonContentFormatEqualsTBody(typeDeclaration),
-            ////"corvus-json-content-pre201909" => generator.AppendJsonContentFormatEqualsTBody(typeDeclaration),
-            _ => false,
-        };
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPrivateMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPrivateStaticMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return format switch
-        {
-            ////"date" => generator.AppendDateFormatPublicMethods(typeDeclaration),
-            ////"date-time" => generator.AppendDateTimeFormatPublicMethods(typeDeclaration),
-            ////"time" => generator.AppendTimeFormatPublicMethods(typeDeclaration),
-            ////"duration" => generator.AppendDurationFormatPublicMethods(typeDeclaration),
-            ////"ipv4" => generator.AppendIpV4FormatPublicMethods(typeDeclaration),
-            ////"ipv6" => generator.AppendIpV6FormatPublicMethods(typeDeclaration),
-            ////"uuid" => generator.AppendUuidFormatPublicMethods(typeDeclaration),
-            ////"uri" => generator.AppendUriFormatPublicMethods(typeDeclaration),
-            ////"uri-reference" => generator.AppendUriReferenceFormatPublicMethods(typeDeclaration),
-            ////"iri" => generator.AppendIriFormatPublicMethods(typeDeclaration),
-            ////"iri-reference" => generator.AppendIriReferenceFormatPublicMethods(typeDeclaration),
-            ////"uri-template" => generator.AppendUriTemplateFormatPublicMethods(typeDeclaration),
-            ////"regex" => generator.AppendRegexFormatPublicMethods(typeDeclaration),
-            ////"corvus-base64-string" => generator.AppendBase64StringFormatPublicMethods(typeDeclaration),
-            ////"corvus-base64-string-pre201909" => generator.AppendBase64StringFormatPublicMethods(typeDeclaration),
-            ////"corvus-json-content" => generator.AppendJsonContentFormatPublicMethods(typeDeclaration),
-            ////"corvus-json-content-pre201909" => generator.AppendJsonContentFormatPublicMethods(typeDeclaration),
-            ////"corvus-base64-content" => generator.AppendBase64ContentFormatPublicMethods(typeDeclaration),
-            ////"corvus-base64-content-pre201909" => generator.AppendBase64ContentFormatPublicMethods(typeDeclaration),
-            _ => false,
-        };
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicStaticMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicStaticProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
     }
 
     /// <inheritdoc/>
@@ -625,272 +613,6 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 requiresSimpleType = false;
                 return false;
         }
-    }
-
-    private static bool AppendDate(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        ReadOnlySpan<byte> utf8Bytes = Encoding.UTF8.GetBytes(constantValue.GetString()!).AsSpan();
-
-        if (!JsonElementHelpers.ParseDateCore(
-            utf8Bytes,
-            out int year,
-            out int month,
-            out int day))
-        {
-            return false;
-        }
-
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly NodaTime.LocalDate ",
-                staticFieldName,
-                " = new(",
-                year.ToString(),
-                ", ",
-                month.ToString(),
-                ", ",
-                day.ToString(),
-                ");");
-
-        return true;
-    }
-
-    private static bool AppendDateTime(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        ReadOnlySpan<byte> utf8Bytes = Encoding.UTF8.GetBytes(constantValue.GetString()!).AsSpan();
-
-        if (!JsonElementHelpers.ParseDateCore(
-            utf8Bytes,
-            out int year,
-            out int month,
-            out int day))
-        {
-            return false;
-        }
-
-        if (!JsonElementHelpers.ParseOffsetTimeCore(
-            utf8Bytes,
-            out int hours,
-            out int minutes,
-            out int seconds,
-            out int milliseconds,
-            out int microseconds,
-            out int nanoseconds,
-            out int offSetSeconds))
-        {
-            return false;
-        }
-
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendIndent(
-                "public static readonly NodaTime.OffsetDateTime ",
-                staticFieldName,
-                " = JsonElementHelpers.CreateOffsetDateTimeCore(",
-                year.ToString(),
-                ", ",
-                month.ToString(),
-                ", ",
-                day.ToString(),
-                ", ",
-                hours.ToString(),
-                ", ",
-                minutes.ToString(),
-                ", ",
-                seconds.ToString(),
-                ", ",
-                milliseconds.ToString(),
-                ", ");
-
-        if (microseconds != 0 || nanoseconds != 0)
-        {
-            generator
-                .AppendIndent(microseconds.ToString(), ", ", nanoseconds.ToString(), ", ");
-        }
-
-        generator.AppendLineIndent(
-                offSetSeconds.ToString(),
-                ");");
-
-        return true;
-    }
-
-    private static bool AppendDuration(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Period ",
-                staticFieldName,
-                " = Period.Parse(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ");");
-
-        return true;
-    }
-
-    private static bool AppendIpV4(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-            "public static readonly System.Net.IPAddress ",
-            staticFieldName,
-            " = IPAddress.TryParse(",
-            SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-            ");");
-
-        return true;
-    }
-
-    private static bool AppendIpV6(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly System.Net.IPAddress ",
-                staticFieldName,
-                " = IPAddress.TryParse(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ");");
-
-        return true;
-    }
-
-    private static bool AppendIri(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Uri ",
-                staticFieldName,
-                " = new Uri(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ", UriKind.RelativeOrAbsolute).GetUri();");
-
-        return true;
-    }
-
-    private static bool AppendIriReference(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Uri ",
-                staticFieldName,
-                " = new Uri(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ", UriKind.RelativeOrAbsolute).GetUri();");
-
-        return true;
-    }
-
-    private static bool AppendTime(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        if (!JsonElementHelpers.ParseOffsetTimeCore(
-            Encoding.UTF8.GetBytes(constantValue.GetString()!).AsSpan(),
-            out int hours,
-            out int minutes,
-            out int seconds,
-            out int milliseconds,
-            out int microseconds,
-            out int nanoseconds,
-            out int offSetSeconds))
-        {
-            return false;
-        }
-
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendIndent(
-                "public static readonly NodaTime.OffsetTime ",
-                staticFieldName,
-                " = JsonElementHelpers.CreateOffsetTimeCore(",
-                hours.ToString(),
-                ", ",
-                minutes.ToString(),
-                ", ",
-                seconds.ToString(),
-                ", ",
-                milliseconds.ToString(),
-                ", ");
-
-        if (microseconds != 0 || nanoseconds != 0)
-        {
-            generator
-                .AppendIndent(microseconds.ToString(), ", ", nanoseconds.ToString(), ", ");
-        }
-
-        generator.AppendLineIndent(
-                offSetSeconds.ToString(),
-                ");");
-
-        return true;
-    }
-
-    private static bool AppendUri(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Uri ",
-                staticFieldName,
-                " = new Uri(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ", UriKind.RelativeOrAbsolute).GetUri();");
-
-        return true;
-    }
-
-    private static bool AppendUriReference(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Uri ",
-                staticFieldName,
-                " = new Uri(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ", UriKind.RelativeOrAbsolute).GetUri();");
-
-        return true;
-    }
-
-    private static bool AppendUuid(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string staticFieldName, JsonElement constantValue)
-    {
-        generator
-            .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// A constant for the <c>", keyword.Keyword, "</c> keyword.")
-            .AppendLineIndent("/// </summary>")
-            .AppendLineIndent(
-                "public static readonly Guid ",
-                staticFieldName,
-                " = new Guid(",
-                SymbolDisplay.FormatLiteral(constantValue.GetString()!, true),
-                ");");
-
-        return true;
     }
 
     private static bool HandlesFormat(string format)

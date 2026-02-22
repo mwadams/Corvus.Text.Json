@@ -780,6 +780,13 @@ internal static partial class ThrowHelper
         throw GetArgumentException(SR.Format(SR.PropertyNameTooLarge, length));
     }
 
+    [DoesNotReturn]
+    public static void ThrowInvalidOperationException_JsonElementWrongType(
+        JsonValueKind expectedType, JsonValueKind actualType)
+    {
+        throw GetJsonElementWrongTypeException(expectedType, actualType);
+    }
+
     /// <summary>
     /// Gets an <see cref="InvalidOperationException"/> for incorrect <see cref="JsonElement"/> type access.
     /// </summary>

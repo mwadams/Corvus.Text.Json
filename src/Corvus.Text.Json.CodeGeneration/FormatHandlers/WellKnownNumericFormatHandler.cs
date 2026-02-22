@@ -349,84 +349,6 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
     }
 
     /// <inheritdoc/>
-    public bool AppendFormatPublicStaticProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicStaticMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPublicMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPrivateStaticMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatPrivateMethods(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatEqualsTBody(CodeGenerator generator, TypeDeclaration typeDeclaration, string format)
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
-    public bool AppendFormatConstant(CodeGenerator generator, ITypedValidationConstantProviderKeyword keyword, string format, string baseName, JsonElement constantValue)
-    {
-        if (constantValue.ValueKind != JsonValueKind.Number)
-        {
-            return false;
-        }
-
-        string isNegativeField = generator.GetUniqueStaticReadOnlyFieldNameInScope(baseName, suffix: "IsNegative");
-        string integralProperty = generator.GetUniqueStaticReadOnlyPropertyNameInScope(baseName, suffix: "Integral");
-        string fractionalProperty = generator.GetUniqueStaticReadOnlyPropertyNameInScope(baseName, suffix: "Fractional");
-        string exponentField = generator.GetUniqueStaticReadOnlyFieldNameInScope(baseName, suffix: "Exponent");
-
-        // Get the normalized JSON number for the constant
-#if BUILDING_SOURCE_GENERATOR
-        ReadOnlySpan<byte> number = Encoding.UTF8.GetBytes(constantValue.GetRawText());
-#else
-        ReadOnlySpan<byte> number = JsonMarshal.GetRawUtf8Value(constantValue);
-#endif
-
-        JsonElementHelpers.ParseNumber(number, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
-
-        generator.AppendLineIndent("private const bool ", isNegativeField, " = ", isNegative ? "true" : "false", ";");
-        generator.AppendLineIndent("private static ", integralProperty, " => \"", Formatting.GetTextFromUtf8(integral), "\"u8;");
-        generator.AppendLineIndent("private static ", fractionalProperty, " => \"", Formatting.GetTextFromUtf8(fractional), "\"u8;");
-        generator.AppendLineIndent("private const int ", exponentField, " = ", exponent.ToString(), ";");
-
-        return true;
-    }
-
-    /// <inheritdoc/>
     private static bool IsIntegerFormat(string format)
     {
         return format switch
@@ -711,6 +633,163 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static implicit operator Source(decimal value) => new (value);");
+                }
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
+    {
+        string typeName = typeDeclaration.DotnetTypeName();
+
+        switch (format)
+        {
+            case "byte":
+                if (seenConversionOperators.Add("byte"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator byte(", typeName, " value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "uint16":
+                if (seenConversionOperators.Add("ushort"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator ushort(", typeName, " value) => _parentDocument.TryGetValue(_idx, out ushort result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "uint32":
+                if (seenConversionOperators.Add("uint"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator uint(", typeName, " value) => _parentDocument.TryGetValue(_idx, out uint result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "uint64":
+                if (seenConversionOperators.Add("ulong"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator ulong(", typeName, " value) => _parentDocument.TryGetValue(_idx, out ulong result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "uint128":
+                if (seenConversionOperators.Add("UInt128"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator UInt128(", typeName, " value) => _parentDocument.TryGetValue(_idx, out UInt128 result) ? result : throw new FormatException();")
+                        .AppendLine("#endif");
+                }
+                return true;
+
+            case "sbyte":
+                if (seenConversionOperators.Add("sbyte"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator sbyte(", typeName, " value) => _parentDocument.TryGetValue(_idx, out sbyte result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "int16":
+                if (seenConversionOperators.Add("short"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator short(", typeName, "short value) => _parentDocument.TryGetValue(_idx, out short result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "int32":
+                if (seenConversionOperators.Add("int"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator int(", typeName, " value) => _parentDocument.TryGetValue(_idx, out int result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "int64":
+                if (seenConversionOperators.Add("long"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator long(", typeName, " value) => _parentDocument.TryGetValue(_idx, out long result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "int128":
+                if (seenConversionOperators.Add("Int128"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Int128(", typeName, " value) => _parentDocument.TryGetValue(_idx, out Int128 result) ? result : throw new FormatException();")
+                        .AppendLine("#endif");
+                }
+                return true;
+
+            case "half":
+                if (seenConversionOperators.Add("Half"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLine("#if NET")
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Half(", typeName, " value) => _parentDocument.TryGetValue(_idx, out Half result) ? result : throw new FormatException();")
+                        .AppendLine("#endif");
+                }
+                return true;
+
+            case "single":
+                if (seenConversionOperators.Add("float"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator float(", typeName, " value) => _parentDocument.TryGetValue(_idx, out float result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "double":
+                if (seenConversionOperators.Add("double"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator double(", typeName, " value) => _parentDocument.TryGetValue(_idx, out double result) ? result : throw new FormatException();");
+                }
+                return true;
+
+            case "decimal":
+                if (seenConversionOperators.Add("decimal"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator decimal(", typeName, " value) => _parentDocument.TryGetValue(_idx, out decimal result) ? result : throw new FormatException();");
                 }
                 return true;
 

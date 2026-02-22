@@ -58,7 +58,7 @@ internal class Utf8UriDomainNameHelper
     {
         int invalidCharOrDelimiterIndex = iri
             ? IndexOfAny(hostname, s_iriInvalidChars)
-            : Utf8Uri.IndexOfAnyExcept(hostname, s_validChars);
+            : Utf8UriTools.IndexOfAnyExcept(hostname, s_validChars);
 
         if (invalidCharOrDelimiterIndex >= 0)
         {
@@ -93,7 +93,7 @@ internal class Utf8UriDomainNameHelper
         while (true)
         {
             byte firstChar = hostname[0];
-            if ((!iri || firstChar < 0xA0) && !Utf8Uri.IsAsciiLetterOrDigit(firstChar))
+            if ((!iri || firstChar < 0xA0) && !Utf8UriTools.IsAsciiLetterOrDigit(firstChar))
             {
                 return false;
             }
@@ -189,7 +189,7 @@ internal class Utf8UriDomainNameHelper
                 return i;
             }
 
-            if (Utf8Uri.IsAscii((char)hostname[i]))
+            if (Utf8UriTools.IsAscii((char)hostname[i]))
             {
                 i++;
                 continue;

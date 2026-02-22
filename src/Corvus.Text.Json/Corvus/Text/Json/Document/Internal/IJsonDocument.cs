@@ -355,6 +355,14 @@ public interface IJsonDocument : IDisposable
     /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
     bool TryGetValue(int index, out Guid value);
 
+    /////// <summary>
+    /////// Tries to get the value of the element at the specified index as a <see cref="Guid"/>.
+    /////// </summary>
+    /////// <param name="index">The index of the element.</param>
+    /////// <param name="value">The <see cref="JsonReference"/> value.</param>
+    /////// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
+    ////bool TryGetValue(int index, out Utf8UriTools value);
+
 #if NET
 
     /// <summary>

@@ -80,7 +80,7 @@ internal static class Utf8UriUncNameHelper
             {
                 validShortName = true;
             }
-            else if (!Utf8Uri.IsAsciiDigit(name[i]))
+            else if (!Utf8UriTools.IsAsciiDigit(name[i]))
             {
                 return false;
             }
@@ -120,7 +120,7 @@ internal static class Utf8UriUncNameHelper
                 if (!validShortName)
                     return false;
             }
-            else if (Rune.IsLetter(currentRune) || Utf8Uri.IsAsciiDigit(name[i]))
+            else if (Rune.IsLetter(currentRune) || Utf8UriTools.IsAsciiDigit(name[i]))
             {
                 if (!validShortName)
                     validShortName = true;

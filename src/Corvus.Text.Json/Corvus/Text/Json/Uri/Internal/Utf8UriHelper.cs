@@ -54,7 +54,7 @@ internal static class Utf8UriHelper
     /// <returns>A lowercase invariant string representation of the scheme.</returns>
     internal static string AsciiSchemeToLowerInvariantString(ReadOnlySpan<byte> asciiSpan)
     {
-        Debug.Assert(asciiSpan.Length < Utf8Uri.c_MaxUriSchemeName);
+        Debug.Assert(asciiSpan.Length < Utf8UriTools.c_MaxUriSchemeName);
 
         Span<char> buffer = stackalloc char[asciiSpan.Length];
         Span<char> buffer2 = stackalloc char[asciiSpan.Length];
@@ -77,7 +77,7 @@ internal static class Utf8UriHelper
         if ((a | b) == 0xFF)
         {
             // either a or b is 0xFF (invalid)
-            return Utf8Uri.c_DummyChar;
+            return Utf8UriTools.c_DummyChar;
         }
 
         return (char)((a << 4) | b);

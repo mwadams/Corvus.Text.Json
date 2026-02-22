@@ -6,7 +6,7 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json;
 
 /// <summary>
-/// A UTF-8 URI.
+/// A UTF-8 URI Reference.
 /// </summary>
 /// <remarks>
 /// <code>
@@ -21,16 +21,16 @@ namespace Corvus.Text.Json;
 /// ]]>
 /// </code>
 /// </remarks>
-public readonly ref struct Utf8Uri
+public readonly ref struct Utf8UriReference
 {
     private readonly Utf8UriTools.Flags _flags;
     private readonly Utf8UriOffset _offsets;
     private readonly ReadOnlySpan<byte> _originalUri;
 
-    private Utf8Uri(ReadOnlySpan<byte> uri)
+    private Utf8UriReference(ReadOnlySpan<byte> uri)
     {
         _originalUri = uri;
-        IsValidReference = Utf8UriTools.ParseUriInfo(_originalUri, Utf8UriKind.Absolute, requireAbsolute: true, allowIri: false, allowUNCPath: false, out _offsets, out _flags);
+        IsValidReference = Utf8UriTools.ParseUriInfo(_originalUri, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: false, allowUNCPath: false, out _offsets, out _flags);
     }
 
     /// <summary>
@@ -94,12 +94,12 @@ public readonly ref struct Utf8Uri
     public bool IsDefaultPort => (_flags & Utf8UriTools.Flags.NotDefaultPort) == 0;
 
     /// <summary>
-    /// Gets a value indicating whether this is a relative URI.
+    /// Gets a value indicating whether this is a relative reference.
     /// </summary>
     public bool IsRelative => !HasScheme;
 
     /// <summary>
-    /// Gets a value indicating whether this is a valid URI.
+    /// Gets a value indicating whether this is a valid reference.
     /// </summary>
     public bool IsValidReference { get; }
 
@@ -109,12 +109,12 @@ public readonly ref struct Utf8Uri
     public ReadOnlySpan<byte> OriginalUri => _originalUri;
 
     /// <summary>
-    /// Gets the path component of the URI.
+    /// Gets the path component of the reference.
     /// </summary>
     public ReadOnlySpan<byte> Path => HasPath ? _originalUri.Slice(_offsets.Path, _offsets.Query - _offsets.Path) : [];
 
     /// <summary>
-    /// Gets the port component of the URI as a byte span.
+    /// Gets the port component of the reference as a byte span.
     /// </summary>
     public ReadOnlySpan<byte> Port => HasPort ? _originalUri.Slice(_offsets.Port + 1, _offsets.Path - _offsets.Port - 1) : [];
 
@@ -124,12 +124,12 @@ public readonly ref struct Utf8Uri
     public int PortValue => _offsets.PortValue;
 
     /// <summary>
-    /// Gets the query component of the URI.
+    /// Gets the query component of the reference.
     /// </summary>
     public ReadOnlySpan<byte> Query => HasQuery ? _originalUri.Slice(_offsets.Query + 1, _offsets.Fragment - _offsets.Query - 1) : [];
 
     /// <summary>
-    /// Gets the scheme component of the URI.
+    /// Gets the scheme component of the reference.
     /// </summary>
     public ReadOnlySpan<byte> Scheme
     {
@@ -151,19 +151,19 @@ public readonly ref struct Utf8Uri
     }
 
     /// <summary>
-    /// Gets the user component of the URI.
+    /// Gets the user component of the reference.
     /// </summary>
     public ReadOnlySpan<byte> User => HasUser ? _originalUri.Slice(_offsets.User, _offsets.Host - _offsets.User - 1) : [];
 
     /// <summary>
-    /// Creates a new UTF-8 URI from the specified URI bytes.
+    /// Creates a new UTF-8 URI Reference from the specified URI bytes.
     /// </summary>
-    /// <param name="uri">The URI bytes from which to create the UTF-8 URI.</param>
-    /// <returns>A new UTF-8 URI.</returns>
+    /// <param name="uri">The URI bytes to create the reference from.</param>
+    /// <returns>A new UTF-8 URI Reference.</returns>
     /// <exception cref="ArgumentException">Thrown when the URI is invalid.</exception>
-    public static Utf8Uri CreateUri(ReadOnlySpan<byte> uri)
+    public static Utf8UriReference CreateUriReference(ReadOnlySpan<byte> uri)
     {
-        if (!TryCreateUri(uri, out Utf8Uri reference))
+        if (!TryCreateUriReference(uri, out Utf8UriReference reference))
         {
             ThrowHelper.ThrowArgumentException(SR.InvalidJsonReference);
         }
@@ -172,28 +172,28 @@ public readonly ref struct Utf8Uri
     }
 
     /// <summary>
-    /// Tries to create a new UTF-8 URI from the specified URI bytes.
+    /// Tries to create a new UTF-8 URI Reference from the specified URI bytes.
     /// </summary>
-    /// <param name="uri">The URI bytes from which to create the UTF-8 URI.</param>
-    /// <param name="utf8Uri">When this method returns, contains the created UTF-8 URI if successful; otherwise, the default value.</param>
-    /// <returns><see langword="true"/> if the UTF-8 URI was created successfully; otherwise, <see langword="false"/>.</returns>
-    public static bool TryCreateUri(ReadOnlySpan<byte> uri, out Utf8Uri utf8Uri)
+    /// <param name="uri">The URI bytes from which to create the UTF-8 URI from.</param>
+    /// <param name="utf8UriReference">When this method returns, contains the created UTF-8 URI reference if successful; otherwise, the default value.</param>
+    /// <returns><see langword="true"/> if the UTF-8 URI Reference was created successfully; otherwise, <see langword="false"/>.</returns>
+    public static bool TryCreateUriReference(ReadOnlySpan<byte> uri, out Utf8UriReference utf8UriReference)
     {
-        utf8Uri = new(uri);
-        return utf8Uri.IsValidReference;
+        utf8UriReference = new(uri);
+        return utf8UriReference.IsValidReference;
     }
 
     /// <summary>
     /// Gets the value as a <see cref="Uri"/>.
     /// </summary>
-    /// <returns>The URI representation of the UTF-8 URI.</returns>
+    /// <returns>The URI representation of the reference.</returns>
     public Uri GetUri()
     {
-        return new Uri(JsonReaderHelper.TranscodeHelper(_originalUri), UriKind.Absolute);
+        return new Uri(JsonReaderHelper.TranscodeHelper(_originalUri), UriKind.RelativeOrAbsolute);
     }
 
     /// <summary>
-    /// Gets the URI in canonical form for display.
+    /// Gets the URI reference in canonical form for display.
     /// </summary>
     /// <param name="buffer">The buffer into which to write the result in canonical form with the encoded characters decoded for display.</param>
     /// <param name="writtenBytes">The number of bytes written.</param>
@@ -204,7 +204,7 @@ public readonly ref struct Utf8Uri
     }
 
     /// <summary>
-    /// Gets the URI in canonical form.
+    /// Gets the URI reference in canonical form.
     /// </summary>
     /// <param name="buffer">The buffer into which to write the result in canonical form with reserved characters encoded.</param>
     /// <param name="writtenBytes">The number of bytes written.</param>
