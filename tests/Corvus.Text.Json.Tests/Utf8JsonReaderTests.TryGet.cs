@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using Corvus.Text.Json.Internal;
 using Newtonsoft.Json;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Corvus.Text.Json.Tests
 {

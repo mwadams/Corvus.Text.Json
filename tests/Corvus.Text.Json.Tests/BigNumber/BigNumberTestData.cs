@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
-using System.Text;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests.BigNumberTests;

@@ -4,8 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------
 
-using System;
-using Corvus.Text.Json;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests;

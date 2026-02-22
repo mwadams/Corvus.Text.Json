@@ -6,7 +6,6 @@ namespace Corvus.Text.Json.Tests
 {
     using System;
     using Corvus.Text.Json;
-    using Corvus.Text.Json.Internal;
     using Xunit;
 
     /// <summary>
