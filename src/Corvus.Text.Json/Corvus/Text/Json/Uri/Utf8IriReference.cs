@@ -23,14 +23,14 @@ namespace Corvus.Text.Json;
 /// </remarks>
 public readonly ref struct Utf8IriReference
 {
-    private readonly Utf8UriTools.Flags _flags;
-    private readonly Utf8UriOffset _offsets;
-    private readonly ReadOnlySpan<byte> _originalIriReference;
+    internal readonly Utf8UriTools.Flags _flags;
+    internal readonly Utf8UriOffset _offsets;
+    internal readonly ReadOnlySpan<byte> _originalIriReference;
 
     private Utf8IriReference(ReadOnlySpan<byte> uri)
     {
         _originalIriReference = uri;
-        IsValidReference = Utf8UriTools.ParseUriInfo(_originalIriReference, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false, out _offsets, out _flags);
+        IsValid = Utf8UriTools.ParseUriInfo(_originalIriReference, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, out _offsets, out _flags);
     }
 
     /// <summary>
@@ -101,12 +101,12 @@ public readonly ref struct Utf8IriReference
     /// <summary>
     /// Gets a value indicating whether this is a valid reference.
     /// </summary>
-    public bool IsValidReference { get; }
+    public bool IsValid { get; }
 
     /// <summary>
-    /// Gets the original (fully encoded) string.
+    /// Gets the original string.
     /// </summary>
-    public ReadOnlySpan<byte> OriginalUri => _originalIriReference;
+    public ReadOnlySpan<byte> OriginalIriReference => _originalIriReference;
 
     /// <summary>
     /// Gets the path component of the reference.
@@ -180,7 +180,7 @@ public readonly ref struct Utf8IriReference
     public static bool TryCreateIriReference(ReadOnlySpan<byte> iri, out Utf8IriReference utf8Iri)
     {
         utf8Iri = new(iri);
-        return utf8Iri.IsValidReference;
+        return utf8Iri.IsValid;
     }
 
     /// <summary>
@@ -212,5 +212,104 @@ public readonly ref struct Utf8IriReference
     public bool TryFormatCanonical(Span<byte> buffer, out int writtenBytes)
     {
         return Utf8UriTools.TryFormatCanonical(_originalIriReference, _offsets, _flags, allowIri: true, buffer, out writtenBytes);
+    }
+
+    /// <summary>
+    /// Applies the given IRI to the current (base) IRI and writes the result to the provided buffer.
+    /// It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling
+    /// of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
+    /// </summary>
+    /// <param name="iri">The IRI to apply.</param>
+    /// <param name="buffer">The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that
+    /// of the resulting reference.</param>
+    /// <param name="result">The resulting IRI.</param>
+    /// <returns><see langword="true"/> if the result was successfully written and produced a valid IRI; otherwise, <see langword="false"/>.</returns>
+    public bool TryApply(in Utf8Iri iri, Span<byte> buffer, out Utf8Iri result)
+    {
+        if (!IsRelative && Utf8UriTools.TryApply(_originalIriReference, _offsets, _flags, iri._originalIri, iri._offsets, iri._flags, buffer, out int writtenBytes))
+        {
+            return Utf8Iri.TryCreateIri(buffer.Slice(0, writtenBytes), out result);
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Applies the given IRI reference to the current (base) IRI and writes the result to the provided buffer.
+    /// It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling
+    /// of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
+    /// </summary>
+    /// <param name="iriReference">The IRI reference to apply.</param>
+    /// <param name="buffer">The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that
+    /// of the resulting reference.</param>
+    /// <param name="result">The resulting IRI.</param>
+    /// <returns><see langword="true"/> if the result was successfully written and produced a valid IRI; otherwise, <see langword="false"/>.</returns>
+    public bool TryApply(in Utf8IriReference iriReference, Span<byte> buffer, out Utf8Iri result)
+    {
+        if (!IsRelative && Utf8UriTools.TryApply(_originalIriReference, _offsets, _flags, iriReference._originalIriReference, iriReference._offsets, iriReference._flags, buffer, out int writtenBytes))
+        {
+            return Utf8Iri.TryCreateIri(buffer.Slice(0, writtenBytes), out result);
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer.
+    /// It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling
+    /// of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
+    /// </summary>
+    /// <param name="uriReference">The IRI to apply.</param>
+    /// <param name="buffer">The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that
+    /// of the resulting reference.</param>
+    /// <param name="result">The resulting IRI.</param>
+    /// <returns><see langword="true"/> if the result was successfully written and produced a valid IRI; otherwise, <see langword="false"/>.</returns>
+    public bool TryApply(in Utf8UriReference uriReference, Span<byte> buffer, out Utf8Iri result)
+    {
+        if (!IsRelative && Utf8UriTools.TryApply(_originalIriReference, _offsets, _flags, uriReference._originalUriReference, uriReference._offsets, uriReference._flags, buffer, out int writtenBytes))
+        {
+            return Utf8Iri.TryCreateIri(buffer.Slice(0, writtenBytes), out result);
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer.
+    /// It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling
+    /// of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
+    /// </summary>
+    /// <param name="uri">The IRI to apply.</param>
+    /// <param name="buffer">The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that
+    /// of the resulting reference.</param>
+    /// <param name="result">The resulting IRI.</param>
+    /// <returns><see langword="true"/> if the result was successfully written and produced a valid IRI; otherwise, <see langword="false"/>.</returns>
+    public bool TryApply(in Utf8Uri uri, Span<byte> buffer, out Utf8Iri result)
+    {
+        if (Utf8UriTools.TryApply(_originalIriReference, _offsets, _flags, uri._originalUri, uri._offsets, uri._flags, buffer, out int writtenBytes))
+        {
+            return Utf8Iri.TryCreateIri(buffer.Slice(0, writtenBytes), out result);
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Returns a string representation of the IRI reference in display format.
+    /// </summary>
+    /// <returns>A string representation of the IRI reference.</returns>
+    public override string ToString()
+    {
+        Span<byte> buffer = stackalloc byte[2048];
+        if (TryFormatDisplay(buffer, out int written))
+        {
+            return JsonReaderHelper.GetTextFromUtf8(buffer.Slice(0, written));
+        }
+
+        return string.Empty;
     }
 }

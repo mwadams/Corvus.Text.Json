@@ -138,6 +138,261 @@ internal static class Utf8UriTools
         FoundNonAscii = 0x8
     }
 
+    internal static bool TryApply(ReadOnlySpan<byte> baseUri, in Utf8UriOffset baseUriOffsets, Flags baseUriFlags, ReadOnlySpan<byte> targetUri, in Utf8UriOffset targetUriOffsets, Flags targetUriFlags, Span<byte> destination, out int written, bool strict = true)
+    {
+        written = 0;
+
+        // Check for authority-only reference (starts with "//")
+        bool targetIsAuthorityOnly = targetUri.Length >= 2 && 
+                                      targetUri[0] == (byte)'/' && 
+                                      targetUri[1] == (byte)'/';
+
+        // Extract target (reference) URI components
+        int targetSchemeLen = targetUriOffsets.User - targetUriOffsets.Scheme;
+        ReadOnlySpan<byte> targetScheme = targetSchemeLen > 0 ? targetUri.Slice(targetUriOffsets.Scheme, targetSchemeLen) : ReadOnlySpan<byte>.Empty;
+        
+        int targetAuthorityLen = targetUriOffsets.Path - targetUriOffsets.User;
+        ReadOnlySpan<byte> targetAuthority;
+        ReadOnlySpan<byte> targetPath;
+        
+        if (targetIsAuthorityOnly && targetAuthorityLen == 0)
+        {
+            // Authority-only reference but parser didn't recognize it
+            // Extract authority manually (skip "//" and take until path delimiter)
+            int authEnd = 2;
+            while (authEnd < targetUri.Length && 
+                   targetUri[authEnd] != (byte)'/' && 
+                   targetUri[authEnd] != (byte)'?' && 
+                   targetUri[authEnd] != (byte)'#')
+            {
+                authEnd++;
+            }
+            targetAuthority = targetUri.Slice(2, authEnd - 2);
+            targetAuthorityLen = targetAuthority.Length;
+            
+            // Path starts after authority (if any)
+            int targetPathLen = targetUriOffsets.Query - authEnd;
+            targetPath = targetPathLen > 0 ? targetUri.Slice(authEnd, targetPathLen) : ReadOnlySpan<byte>.Empty;
+        }
+        else
+        {
+            targetAuthority = targetAuthorityLen > 0 ? targetUri.Slice(targetUriOffsets.User, targetAuthorityLen) : ReadOnlySpan<byte>.Empty;
+            
+            int targetPathLen = targetUriOffsets.Query - targetUriOffsets.Path;
+            targetPath = targetPathLen > 0 ? targetUri.Slice(targetUriOffsets.Path, targetPathLen) : ReadOnlySpan<byte>.Empty;
+        }
+        
+        int targetQueryLen = targetUriOffsets.Fragment - targetUriOffsets.Query;
+        ReadOnlySpan<byte> targetQuery = targetQueryLen > 0 ? targetUri.Slice(targetUriOffsets.Query, targetQueryLen) : ReadOnlySpan<byte>.Empty;
+        
+        int targetFragmentLen = targetUriOffsets.End - targetUriOffsets.Fragment;
+        ReadOnlySpan<byte> targetFragment = targetFragmentLen > 0 ? targetUri.Slice(targetUriOffsets.Fragment, targetFragmentLen) : ReadOnlySpan<byte>.Empty;
+
+        // Extract base URI components
+        int baseSchemeLen = baseUriOffsets.User - baseUriOffsets.Scheme;
+        ReadOnlySpan<byte> baseScheme = baseSchemeLen > 0 ? baseUri.Slice(baseUriOffsets.Scheme, baseSchemeLen) : ReadOnlySpan<byte>.Empty;
+        
+        int baseAuthorityLen = baseUriOffsets.Path - baseUriOffsets.User;
+        ReadOnlySpan<byte> baseAuthority = baseAuthorityLen > 0 ? baseUri.Slice(baseUriOffsets.User, baseAuthorityLen) : ReadOnlySpan<byte>.Empty;
+        
+        int basePathLen = baseUriOffsets.Query - baseUriOffsets.Path;
+        ReadOnlySpan<byte> basePath = basePathLen > 0 ? baseUri.Slice(baseUriOffsets.Path, basePathLen) : ReadOnlySpan<byte>.Empty;
+        
+        int baseQueryLen = baseUriOffsets.Fragment - baseUriOffsets.Query;
+        ReadOnlySpan<byte> baseQuery = baseQueryLen > 0 ? baseUri.Slice(baseUriOffsets.Query, baseQueryLen) : ReadOnlySpan<byte>.Empty;
+
+        // Result components (will reference either base or target components)
+        ReadOnlySpan<byte> resultScheme;
+        ReadOnlySpan<byte> resultAuthority;
+        ReadOnlySpan<byte> resultPath;
+        ReadOnlySpan<byte> resultQuery;
+        ReadOnlySpan<byte> resultFragment = targetFragment;
+
+        // Rent buffer for path merge/normalization operations
+        int bufferSize = basePath.Length + targetPath.Length + 1;
+        byte[] pathBuffer = ArrayPool<byte>.Shared.Rent(Math.Max(bufferSize, 256));
+
+        try
+        {
+            // Non-strict mode: if schemes match, treat target as if it has no scheme
+            if (!strict && targetScheme.Length > 0 && targetScheme.SequenceEqual(baseScheme))
+            {
+                targetScheme = ReadOnlySpan<byte>.Empty;
+            }
+
+            // RFC 3986 Section 5.2.2 - Transform References
+            if (targetScheme.Length > 0)
+            {
+                // Target has scheme - use target scheme/authority/query and normalize path
+                resultScheme = targetScheme;
+                resultAuthority = targetAuthority;
+                
+                // Copy target path to buffer and normalize
+                targetPath.CopyTo(pathBuffer);
+                int normalizedLen = RemoveDotSegments(pathBuffer, targetPath.Length);
+                resultPath = pathBuffer.AsSpan(0, normalizedLen);
+                resultQuery = targetQuery;
+            }
+            else
+            {
+                // No scheme - use base scheme
+                if (targetAuthority.Length > 0)
+                {
+                    // Target has authority - use target authority/query and normalize path
+                    resultAuthority = targetAuthority;
+                    
+                    // Copy target path to buffer and normalize
+                    targetPath.CopyTo(pathBuffer);
+                    int normalizedLen = RemoveDotSegments(pathBuffer, targetPath.Length);
+                    resultPath = pathBuffer.AsSpan(0, normalizedLen);
+                    resultQuery = targetQuery;
+                }
+                else
+                {
+                    // No authority
+                    if (targetPath.Length == 0)
+                    {
+                        // Empty path - use base path
+                        resultPath = basePath;
+                        resultQuery = targetQuery.Length > 0 ? targetQuery : baseQuery;
+                    }
+                    else
+                    {
+                        // Has path
+                        if (targetPath.Length > 0 && targetPath[0] == (byte)'/')
+                        {
+                            // Absolute path - normalize it
+                            targetPath.CopyTo(pathBuffer);
+                            int normalizedLen = RemoveDotSegments(pathBuffer, targetPath.Length);
+                            resultPath = pathBuffer.AsSpan(0, normalizedLen);
+                        }
+                        else
+                        {
+                            // Relative path - merge with base path then normalize
+                            int mergedLen = MergePaths(basePath, targetPath, baseAuthority.Length > 0, pathBuffer);
+                            int normalizedLen = RemoveDotSegments(pathBuffer, mergedLen);
+                            resultPath = pathBuffer.AsSpan(0, normalizedLen);
+                        }
+
+                        resultQuery = targetQuery;
+                    }
+
+                    resultAuthority = baseAuthority;
+                }
+
+                resultScheme = baseScheme;
+            }
+
+            // Assemble the result URI into destination
+            int pos = 0;
+
+            // Write scheme (includes ":")
+            if (resultScheme.Length > 0)
+            {
+                if (pos + resultScheme.Length > destination.Length)
+                {
+                    return false;
+                }
+                resultScheme.CopyTo(destination[pos..]);
+                pos += resultScheme.Length;
+            }
+
+            // Write authority
+            if (resultAuthority.Length > 0)
+            {
+                // Check if authority already includes "//" prefix and scheme ends with "://"
+                int authorityStart = 0;
+                if (resultScheme.Length >= 3 && 
+                    resultScheme[resultScheme.Length - 3] == (byte)':' &&
+                    resultScheme[resultScheme.Length - 2] == (byte)'/' &&
+                    resultScheme[resultScheme.Length - 1] == (byte)'/' &&
+                    resultAuthority.Length >= 2 &&
+                    resultAuthority[0] == (byte)'/' &&
+                    resultAuthority[1] == (byte)'/')
+                {
+                    // Skip the "//" prefix from authority since scheme already has it
+                    authorityStart = 2;
+                }
+                
+                int authorityLen = resultAuthority.Length - authorityStart;
+                if (pos + authorityLen > destination.Length)
+                {
+                    return false;
+                }
+                resultAuthority.Slice(authorityStart).CopyTo(destination[pos..]);
+                pos += authorityLen;
+            }
+
+            // Write path
+            if (resultPath.Length > 0)
+            {
+                if (pos + resultPath.Length > destination.Length)
+                {
+                    return false;
+                }
+                resultPath.CopyTo(destination[pos..]);
+                pos += resultPath.Length;
+            }
+
+            // Write query (includes "?")
+            if (resultQuery.Length > 0)
+            {
+                if (pos + resultQuery.Length > destination.Length)
+                {
+                    return false;
+                }
+                resultQuery.CopyTo(destination[pos..]);
+                pos += resultQuery.Length;
+            }
+
+            // Write fragment (includes "#")
+            if (resultFragment.Length > 0)
+            {
+                if (pos + resultFragment.Length > destination.Length)
+                {
+                    return false;
+                }
+                resultFragment.CopyTo(destination[pos..]);
+                pos += resultFragment.Length;
+            }
+
+            written = pos;
+            return true;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(pathBuffer);
+        }
+    }
+
+    /// <summary>
+    /// Merges a base path with a reference path according to RFC 3986 Section 5.2.3.
+    /// </summary>
+    private static int MergePaths(ReadOnlySpan<byte> basePath, ReadOnlySpan<byte> referencePath, bool baseHasAuthority, Span<byte> destination)
+    {
+        // RFC 3986: if base has authority and empty path, prepend "/" to reference
+        if (baseHasAuthority && basePath.Length == 0)
+        {
+            destination[0] = (byte)'/';
+            referencePath.CopyTo(destination[1..]);
+            return 1 + referencePath.Length;
+        }
+
+        // Find last "/" in base path
+        int lastSlash = basePath.LastIndexOf((byte)'/');
+        if (lastSlash >= 0)
+        {
+            // Copy base up to and including the last "/"
+            basePath[..(lastSlash + 1)].CopyTo(destination);
+            referencePath.CopyTo(destination[(lastSlash + 1)..]);
+            return lastSlash + 1 + referencePath.Length;
+        }
+
+        // No "/" found - just return reference path
+        referencePath.CopyTo(destination);
+        return referencePath.Length;
+    }
+
     internal static bool TryFormatDisplay(ReadOnlySpan<byte> originalUri, in Utf8UriOffset offsets, Flags resultFlags, Span<byte> destination, out int written)
     {
         written = 0;
@@ -1161,7 +1416,7 @@ internal static class Utf8UriTools
     /// <param name="uriInfo">When this method returns, contains the parsed URI offset information.</param>
     /// <param name="resultFlags">When this method returns, contains the parsing result flags.</param>
     /// <returns><see langword="true"/> if the URI was parsed successfully; otherwise, <see langword="false"/>.</returns>
-    internal static bool ParseUriInfo(ReadOnlySpan<byte> uriString, Utf8UriKind uriKind, bool requireAbsolute, bool allowIri, bool allowUNCPath, out Utf8UriOffset uriInfo, out Flags resultFlags)
+    internal static bool ParseUriInfo(ReadOnlySpan<byte> uriString, Utf8UriKind uriKind, bool requireAbsolute, bool allowIri, out Utf8UriOffset uriInfo, out Flags resultFlags)
     {
         Utf8UriParser? syntax = null;
         Flags flags = Flags.Zero;
@@ -1191,7 +1446,7 @@ internal static class Utf8UriTools
 
         // Cannot be relative Uri if came here
         Debug.Assert(syntax != null);
-        bool result = ParseCore(err, ref flags, ref syntax, uriKind, uriString, requireAbsolute, allowUNCPath, out uriInfo);
+        bool result = ParseCore(err, ref flags, ref syntax, uriKind, uriString, requireAbsolute, out uriInfo);
         if (!result)
         {
             uriInfo = default;
@@ -1470,7 +1725,7 @@ internal static class Utf8UriTools
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool ParseCore(Utf8UriParsingError err, ref Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, bool requireAbsolute, bool allowUNCPath, out Utf8UriOffset uriInfo)
+    private static bool ParseCore(Utf8UriParsingError err, ref Flags flags, ref Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, bool requireAbsolute, out Utf8UriOffset uriInfo)
     {
         Debug.Assert(err == Utf8UriParsingError.None);
 
@@ -1594,7 +1849,7 @@ internal static class Utf8UriTools
             success = false;
         }
 
-        if (!allowUNCPath && (flags & Flags.UncPath) != 0)
+        if ((flags & Flags.UncPath) != 0)
         {
             uriInfo = default;
             return false;
@@ -2673,48 +2928,48 @@ internal static class Utf8UriTools
             return 0;
         }
 
-        // Check for supported special cases like a DOS file path OR a UNC share path
-        // NB: A string may not have ':' if this is a UNC path
-        if (uriString[i + 1] is (byte)':' or (byte)'|')
-        {
-            // DOS-like path?
-            if (IsAsciiLetter(uriString[i]))
-            {
-                if (uriString[i + 2] is (byte)'\\' or (byte)'/')
-                {
-                    flags |= (Flags.DosPath | Flags.ImplicitFile | Flags.AuthorityFound);
-                    syntax = Utf8UriParser.FileUri;
-                    return i;
-                }
+        ////// Check for supported special cases like a DOS file path OR a UNC share path
+        ////// NB: A string may not have ':' if this is a UNC path
+        ////if (uriString[i + 1] is (byte)':' or (byte)'|')
+        ////{
+        ////    // DOS-like path?
+        ////    if (IsAsciiLetter(uriString[i]))
+        ////    {
+        ////        if (uriString[i + 2] is (byte)'\\' or (byte)'/')
+        ////        {
+        ////            flags |= (Flags.DosPath | Flags.ImplicitFile | Flags.AuthorityFound);
+        ////            syntax = Utf8UriParser.FileUri;
+        ////            return i;
+        ////        }
 
-                err = Utf8UriParsingError.MustRootedPath;
-                return 0;
-            }
+        ////        err = Utf8UriParsingError.MustRootedPath;
+        ////        return 0;
+        ////    }
 
-            err = uriString[i + 1] == (byte)':' ? Utf8UriParsingError.BadScheme : Utf8UriParsingError.BadFormat;
-            return 0;
-        }
-        else if (uriString[i] is (byte)'/' or (byte)'\\')
-        {
-            // UNC share?
-            if (uriString[i + 1] is (byte)'\\' or (byte)'/')
-            {
-                flags |= (Flags.UncPath | Flags.ImplicitFile | Flags.AuthorityFound);
-                syntax = Utf8UriParser.FileUri;
-                i += 2;
+        ////    err = uriString[i + 1] == (byte)':' ? Utf8UriParsingError.BadScheme : Utf8UriParsingError.BadFormat;
+        ////    return 0;
+        ////}
+        ////else if (uriString[i] is (byte)'/' or (byte)'\\')
+        ////{
+        ////    // UNC share?
+        ////    if (uriString[i + 1] is (byte)'\\' or (byte)'/')
+        ////    {
+        ////        flags |= (Flags.UncPath | Flags.ImplicitFile | Flags.AuthorityFound);
+        ////        syntax = Utf8UriParser.FileUri;
+        ////        i += 2;
 
-                // V1.1 compat this will simply eat any slashes prepended to a UNC path
-                while ((uint)i < (uint)uriString.Length && uriString[i] is (byte)'/' or (byte)'\\')
-                {
-                    i++;
-                }
+        ////        // V1.1 compat this will simply eat any slashes prepended to a UNC path
+        ////        while ((uint)i < (uint)uriString.Length && uriString[i] is (byte)'/' or (byte)'\\')
+        ////        {
+        ////            i++;
+        ////        }
 
-                return i;
-            }
+        ////        return i;
+        ////    }
 
-            err = Utf8UriParsingError.BadFormat;
-            return 0;
-        }
+        ////    err = Utf8UriParsingError.BadFormat;
+        ////    return 0;
+        ////}
 
         if (colonOffset < 0)
         {

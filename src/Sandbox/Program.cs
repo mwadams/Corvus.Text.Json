@@ -6,7 +6,7 @@ Console.WriteLine();
 Console.WriteLine("************");
 Console.WriteLine();
 
-JsonReference reference = JsonReference.CreateIri("note:example%20Schemas/Person.json?foo=bar#/$defs/Person"u8);
+Utf8IriReference reference = Utf8IriReference.CreateIriReference("note:example%20Schemas/Person.json?foo=bar#/$defs/Person"u8);
 
 // Parse a document in the usual way
 using ParsedJsonDocument<JsonElement> documentB1 = ParsedJsonDocument<JsonElement>.Parse(

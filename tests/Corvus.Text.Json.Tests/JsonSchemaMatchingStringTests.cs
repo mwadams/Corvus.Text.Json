@@ -442,7 +442,7 @@ public class JsonSchemaMatchingStringTests
     [InlineData("https://example.com", true)]
     [InlineData("ftp://example.com", true)]
     [InlineData("file:///C:/path", true)]
-    [InlineData("h://example.com", false)] // Single char scheme is actually invalid by most parsers
+    [InlineData("h://example.com", true)]
     [InlineData("httpsx://example.com", true)] // Extended scheme
     // Authority parsing edge cases
     [InlineData("http://[::1]:8080/path", true)]
@@ -517,15 +517,15 @@ public class JsonSchemaMatchingStringTests
     // Unicode and IRI test cases (IRI parsing optimization)
     [InlineData("/пуṫḩ/ẅἰṫḩ/υηἰċøժε", false)] // Unicode paths fail in strict URI reference mode
     [InlineData("//хост.example.com/пуṫḩ", false)]
-    // IPv6 address test cases (specialized parsing)
-    [InlineData("//[2001:db8::1]/path", true)]
-    [InlineData("//[::1]:8080/path", true)]
-    [InlineData("//[2001:db8::1", true)] // Missing closing bracket - parser is permissive
+    // IPv6 address test cases (UNC paths not permitted)
+    [InlineData("//[2001:db8::1]/path", false)]
+    [InlineData("//[::1]:8080/path", false)]
+    [InlineData("//[2001:db8::1", false)]
     // Authority parsing edge cases
-    [InlineData("//user:pass@host.com:8080/path", true)]
-    [InlineData("//user@host.com/path", true)]
-    [InlineData("//host.com:8080/path", true)]
-    [InlineData("//[v1.1]:8080/", true)] // Parser allows IPv6 future format
+    [InlineData("//user:pass@host.com:8080/path", true)] // These are valid relative reference
+    [InlineData("//user@host.com/path", true)] // These are valid relative reference
+    [InlineData("//host.com:8080/path", true)] // These are valid relative reference
+    [InlineData("//[v1.1]:8080/", false)] // But this one isn't
     // Scheme validation edge cases
     [InlineData("custom-scheme://example.com", true)]
     [InlineData("x-custom+scheme://example.com", true)]

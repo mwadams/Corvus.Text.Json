@@ -89,8 +89,6 @@
     <Compile Include="JsonElementSourceCoverageTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderDynamicTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderTests.cs" />
-    <Compile Include="JsonReferenceTests.Uri.cs" />
-    <Compile Include="JsonReferenceTests.Iri.cs" />
     <Compile Include="JsonSchemaAdditionalTests\draft2019-09\typeAndFormat.cs" />
     <Compile Include="JsonSchemaAdditionalTests\draft2020-12\benchmarkRepro.cs" />
     <Compile Include="JsonSchemaAdditionalTests\draft2020-12\largeNumbersOfRequiredProperties.cs" />
@@ -201,6 +199,11 @@
     <Compile Include="Utf8JsonWriterTests.WriteRaw.cs" />
     <Compile Include="Utf8UriTemplateTests.cs" />
     <Compile Include="Utf8UriFormatTests.cs" />
+    <Compile Include="Utf8UriApplyTests.cs" />
+    <Compile Include="Utf8UriReferenceTests.cs" />
+    <Compile Include="Utf8UriTests.cs" />
+    <Compile Include="Utf8IriReferenceTests.cs" />
+    <Compile Include="Utf8IriTests.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">

@@ -23,14 +23,14 @@ namespace Corvus.Text.Json;
 /// </remarks>
 public readonly ref struct Utf8Uri
 {
-    private readonly Utf8UriTools.Flags _flags;
-    private readonly Utf8UriOffset _offsets;
-    private readonly ReadOnlySpan<byte> _originalUri;
+    internal readonly Utf8UriTools.Flags _flags;
+    internal readonly Utf8UriOffset _offsets;
+    internal readonly ReadOnlySpan<byte> _originalUri;
 
     private Utf8Uri(ReadOnlySpan<byte> uri)
     {
         _originalUri = uri;
-        IsValidReference = Utf8UriTools.ParseUriInfo(_originalUri, Utf8UriKind.Absolute, requireAbsolute: true, allowIri: false, allowUNCPath: false, out _offsets, out _flags);
+        IsValid = Utf8UriTools.ParseUriInfo(_originalUri, Utf8UriKind.Absolute, requireAbsolute: true, allowIri: false, out _offsets, out _flags);
     }
 
     /// <summary>
@@ -101,7 +101,7 @@ public readonly ref struct Utf8Uri
     /// <summary>
     /// Gets a value indicating whether this is a valid URI.
     /// </summary>
-    public bool IsValidReference { get; }
+    public bool IsValid { get; }
 
     /// <summary>
     /// Gets the original (fully encoded) string.
@@ -180,7 +180,7 @@ public readonly ref struct Utf8Uri
     public static bool TryCreateUri(ReadOnlySpan<byte> uri, out Utf8Uri utf8Uri)
     {
         utf8Uri = new(uri);
-        return utf8Uri.IsValidReference;
+        return utf8Uri.IsValid;
     }
 
     /// <summary>
@@ -212,5 +212,62 @@ public readonly ref struct Utf8Uri
     public bool TryFormatCanonical(Span<byte> buffer, out int writtenBytes)
     {
         return Utf8UriTools.TryFormatCanonical(_originalUri, _offsets, _flags, allowIri: false, buffer, out writtenBytes);
+    }
+
+    /// <summary>
+    /// Applies the given URI reference to the current (base) URI and writes the result to the provided buffer.
+    /// It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, including handling
+    /// of relative references and merging of paths as needed.
+    /// </summary>
+    /// <param name="uriReference">The URI reference to apply.</param>
+    /// <param name="buffer">The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that
+    /// of the resulting reference.</param>
+    /// <param name="result">The resulting URI.</param>
+    /// <returns><see langword="true"/> if the result was successfully written and produced a valid URI; otherwise, <see langword="false"/>.</returns>
+    public bool TryApply(in Utf8UriReference uriReference, Span<byte> buffer, out Utf8Uri result)
+    {
+        if (Utf8UriTools.TryApply(_originalUri, _offsets, _flags, uriReference._originalUriReference, uriReference._offsets, uriReference._flags, buffer, out int writtenBytes))
+        {
+            return TryCreateUri(buffer.Slice(0, writtenBytes), out result);
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Applies the given URI reference to the current (base) URI and writes the result to the provided buffer.
+    /// It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, including handling
+    /// of relative references and merging of paths as needed.
+    /// </summary>
+    /// <param name="uri">The URI to apply.</param>
+    /// <param name="buffer">The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that
+    /// of the resulting reference.</param>
+    /// <param name="result">The resulting URI.</param>
+    /// <returns><see langword="true"/> if the result was successfully written and produced a valid URI; otherwise, <see langword="false"/>.</returns>
+    public bool TryApply(in Utf8Uri uri, Span<byte> buffer, out Utf8Uri result)
+    {
+        if (Utf8UriTools.TryApply(_originalUri, _offsets, _flags, uri._originalUri, uri._offsets, uri._flags, buffer, out int writtenBytes))
+        {
+            return TryCreateUri(buffer.Slice(0, writtenBytes), out result);
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Returns a string representation of the URI in display format.
+    /// </summary>
+    /// <returns>A string representation of the URI.</returns>
+    public override string ToString()
+    {
+        Span<byte> buffer = stackalloc byte[2048];
+        if (TryFormatDisplay(buffer, out int written))
+        {
+            return JsonReaderHelper.GetTextFromUtf8(buffer.Slice(0, written));
+        }
+
+        return string.Empty;
     }
 }

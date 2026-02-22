@@ -10,22 +10,22 @@ namespace Corvus.Text.Json.Tests
     {
         private static readonly ExpectedResult[] s_expectedForPushAndPopNestedSchemaLocation_WithResults =
             [
-            new ("", "#/$defs/Name", "/someProperty/nextProperty", "Committed the third and fourth properties.", true),
-            new ("", "#/$defs/Name", "/someProperty/nextProperty", "Evaluated a fourth property.", false),
-            new ("", "#/$defs/Name", "/someProperty/nextProperty", "Evaluated a third property.", true),
-            new ("", "#/$defs/Name", "/someProperty", "Committed the first and second properties.", true),
-            new ("", "#/$defs/Name", "/someProperty", "Evaluated a second property.", false),
-            new ("", "#/$defs/Name", "/someProperty", "Evaluated a first property.", true),
+            new ("", "$defs/Name", "/someProperty/nextProperty", "Committed the third and fourth properties.", true),
+            new ("", "$defs/Name", "/someProperty/nextProperty", "Evaluated a fourth property.", false),
+            new ("", "$defs/Name", "/someProperty/nextProperty", "Evaluated a third property.", true),
+            new ("", "$defs/Name", "/someProperty", "Committed the first and second properties.", true),
+            new ("", "$defs/Name", "/someProperty", "Evaluated a second property.", false),
+            new ("", "$defs/Name", "/someProperty", "Evaluated a first property.", true),
             ];
 
         private static readonly ExpectedResult[] s_expectedForPushAndPopNestedSchemaLocationReverseCommit_WithResults =
             [
-            new ("", "#/$defs/Name", "/someProperty/anotherProperty", "Committed the fifth and sixth properties.", true),
-            new ("", "#/$defs/Name", "/someProperty/anotherProperty", "Evaluated a sixth property.", false),
-            new ("", "#/$defs/Name", "/someProperty/anotherProperty", "Evaluated a fifth property.", true),
-            new ("", "#/$defs/Name", "/someProperty", "Committed the first and second properties.", true),
-            new ("", "#/$defs/Name", "/someProperty", "Evaluated a second property.", false),
-            new ("", "#/$defs/Name", "/someProperty", "Evaluated a first property.", true),
+            new ("", "$defs/Name", "/someProperty/anotherProperty", "Committed the fifth and sixth properties.", true),
+            new ("", "$defs/Name", "/someProperty/anotherProperty", "Evaluated a sixth property.", false),
+            new ("", "$defs/Name", "/someProperty/anotherProperty", "Evaluated a fifth property.", true),
+            new ("", "$defs/Name", "/someProperty", "Committed the first and second properties.", true),
+            new ("", "$defs/Name", "/someProperty", "Evaluated a second property.", false),
+            new ("", "$defs/Name", "/someProperty", "Evaluated a first property.", true),
             ];
 
         [Fact]
