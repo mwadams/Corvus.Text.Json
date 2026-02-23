@@ -138,6 +138,374 @@ internal static class Utf8UriTools
         FoundNonAscii = 0x8
     }
 
+    internal static bool MakeRelative(ReadOnlySpan<byte> baseUri, in Utf8UriOffset baseUriOffsets, Flags baseUriFlags, ReadOnlySpan<byte> uriToMakeRelative, in Utf8UriOffset uriToMakeRelativeOffsets, Flags uriToMakeRelativeFlags, Span<byte> destination, out int written, bool allowIri = false)
+    {
+        written = 0;
+
+        // Extract base URI components
+        int baseSchemeLen = baseUriOffsets.User - baseUriOffsets.Scheme;
+        ReadOnlySpan<byte> baseScheme = baseSchemeLen > 0 ? baseUri.Slice(baseUriOffsets.Scheme, baseSchemeLen) : ReadOnlySpan<byte>.Empty;
+
+        int baseHostLen = baseUriOffsets.Port > 0 ? baseUriOffsets.Port - baseUriOffsets.Host : baseUriOffsets.Path - baseUriOffsets.Host;
+        ReadOnlySpan<byte> baseHost = baseHostLen > 0 ? baseUri.Slice(baseUriOffsets.Host, baseHostLen) : ReadOnlySpan<byte>.Empty;
+
+        ReadOnlySpan<byte> basePort = ReadOnlySpan<byte>.Empty;
+        if (baseUriOffsets.Port > 0 && baseUriOffsets.Path > baseUriOffsets.Port)
+        {
+            basePort = baseUri.Slice(baseUriOffsets.Port, baseUriOffsets.Path - baseUriOffsets.Port);
+        }
+
+        int basePathLen = baseUriOffsets.Query - baseUriOffsets.Path;
+        ReadOnlySpan<byte> basePath = basePathLen > 0 ? baseUri.Slice(baseUriOffsets.Path, basePathLen) : ReadOnlySpan<byte>.Empty;
+
+        // Extract target URI components
+        int targetSchemeLen = uriToMakeRelativeOffsets.User - uriToMakeRelativeOffsets.Scheme;
+        ReadOnlySpan<byte> targetScheme = targetSchemeLen > 0 ? uriToMakeRelative.Slice(uriToMakeRelativeOffsets.Scheme, targetSchemeLen) : ReadOnlySpan<byte>.Empty;
+
+        int targetHostLen = uriToMakeRelativeOffsets.Port > 0 ? uriToMakeRelativeOffsets.Port - uriToMakeRelativeOffsets.Host : uriToMakeRelativeOffsets.Path - uriToMakeRelativeOffsets.Host;
+        ReadOnlySpan<byte> targetHost = targetHostLen > 0 ? uriToMakeRelative.Slice(uriToMakeRelativeOffsets.Host, targetHostLen) : ReadOnlySpan<byte>.Empty;
+
+        ReadOnlySpan<byte> targetPort = ReadOnlySpan<byte>.Empty;
+        if (uriToMakeRelativeOffsets.Port > 0 && uriToMakeRelativeOffsets.Path > uriToMakeRelativeOffsets.Port)
+        {
+            targetPort = uriToMakeRelative.Slice(uriToMakeRelativeOffsets.Port, uriToMakeRelativeOffsets.Path - uriToMakeRelativeOffsets.Port);
+        }
+
+        int targetPathLen = uriToMakeRelativeOffsets.Query - uriToMakeRelativeOffsets.Path;
+        ReadOnlySpan<byte> targetPath = targetPathLen > 0 ? uriToMakeRelative.Slice(uriToMakeRelativeOffsets.Path, targetPathLen) : ReadOnlySpan<byte>.Empty;
+
+        int targetQueryLen = uriToMakeRelativeOffsets.Fragment - uriToMakeRelativeOffsets.Query;
+        ReadOnlySpan<byte> targetQuery = targetQueryLen > 0 ? uriToMakeRelative.Slice(uriToMakeRelativeOffsets.Query, targetQueryLen) : ReadOnlySpan<byte>.Empty;
+
+        int targetFragmentLen = uriToMakeRelativeOffsets.End - uriToMakeRelativeOffsets.Fragment;
+        ReadOnlySpan<byte> targetFragment = targetFragmentLen > 0 ? uriToMakeRelative.Slice(uriToMakeRelativeOffsets.Fragment, targetFragmentLen) : ReadOnlySpan<byte>.Empty;
+
+        // Check if scheme, host, and port match
+        if (SchemeEquals(baseScheme, targetScheme) &&
+            HostEquals(baseHost, targetHost) &&
+            PortEquals(basePort, targetPort))
+        {
+            // Normalize paths before comparison using the canonical path writer
+            byte[] normalizedBaseBuffer = null!;
+            byte[] normalizedTargetBuffer = null!;
+
+            try
+            {
+                // Normalize base path
+                if (basePath.Length > 0)
+                {
+                    normalizedBaseBuffer = ArrayPool<byte>.Shared.Rent(basePath.Length * 3); // 3x for worst-case percent-encoding
+                    int basePos = 0;
+                    // Always compress to remove dot segments
+                    if (!TryWriteCanonicalPath(basePath, compress: true, allowIri, normalizedBaseBuffer, ref basePos))
+                    {
+                        return false;
+                    }
+                    basePath = normalizedBaseBuffer.AsSpan(0, basePos);
+                }
+
+                // Normalize target path
+                if (targetPath.Length > 0)
+                {
+                    normalizedTargetBuffer = ArrayPool<byte>.Shared.Rent(targetPath.Length * 3); // 3x for worst-case percent-encoding
+                    int targetPos = 0;
+                    // Always compress to remove dot segments
+                    if (!TryWriteCanonicalPath(targetPath, compress: true, allowIri, normalizedTargetBuffer, ref targetPos))
+                    {
+                        return false;
+                    }
+                    targetPath = normalizedTargetBuffer.AsSpan(0, targetPos);
+                }
+
+                // Calculate the path difference using normalized paths
+                if (!TryCalculatePathDifference(basePath, targetPath, destination, out int pathWritten))
+                {
+                    return false;
+                }
+
+                // Check for colon in first path segment (RFC 3986, Section 4.2)
+                if (pathWritten > 0 && CheckForColonInFirstPathSegment(destination.Slice(0, pathWritten)) &&
+                    !targetPath.SequenceEqual(destination.Slice(0, pathWritten)))
+                {
+                    // Prepend "./" to relative path
+                    if (destination.Length < 2 + pathWritten)
+                    {
+                        return false;
+                    }
+
+                    // Shift existing content
+                    destination.Slice(0, pathWritten).CopyTo(destination.Slice(2));
+                    destination[0] = (byte)'.';
+                    destination[1] = (byte)'/';
+                    pathWritten += 2;
+                }
+
+                // Write query if present
+                if (targetQuery.Length > 0)
+                {
+                    if (pathWritten + targetQuery.Length > destination.Length)
+                    {
+                        return false;
+                    }
+
+                    targetQuery.CopyTo(destination.Slice(pathWritten));
+                    pathWritten += targetQuery.Length;
+                }
+
+                // Write fragment if present
+                if (targetFragment.Length > 0)
+                {
+                    if (pathWritten + targetFragment.Length > destination.Length)
+                    {
+                        return false;
+                    }
+
+                    targetFragment.CopyTo(destination.Slice(pathWritten));
+                    pathWritten += targetFragment.Length;
+                }
+
+                written = pathWritten;
+                return true;
+            }
+            finally
+            {
+                if (normalizedBaseBuffer != null)
+                {
+                    ArrayPool<byte>.Shared.Return(normalizedBaseBuffer);
+                }
+
+                if (normalizedTargetBuffer != null)
+                {
+                    ArrayPool<byte>.Shared.Return(normalizedTargetBuffer);
+                }
+            }
+        }
+
+        // Scheme/host/port don't match, return the full target URI
+        if (uriToMakeRelative.Length > destination.Length)
+        {
+            return false;
+        }
+
+        uriToMakeRelative.CopyTo(destination);
+        written = uriToMakeRelative.Length;
+        return true;
+    }
+
+    private static bool SchemeEquals(ReadOnlySpan<byte> scheme1, ReadOnlySpan<byte> scheme2)
+    {
+        if (scheme1.Length != scheme2.Length)
+        {
+            return false;
+        }
+
+        // Schemes are case-insensitive, but we need to compare up to the colon (excluding it)
+        int len = scheme1.Length;
+        if (len > 0 && scheme1[len - 1] == (byte)':')
+        {
+            len--;
+        }
+
+        int len2 = scheme2.Length;
+        if (len2 > 0 && scheme2[len2 - 1] == (byte)':')
+        {
+            len2--;
+        }
+
+        if (len != len2)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < len; i++)
+        {
+            byte b1 = scheme1[i];
+            byte b2 = scheme2[i];
+
+            // Convert to lowercase for comparison
+            if (b1 >= (byte)'A' && b1 <= (byte)'Z')
+            {
+                b1 = (byte)(b1 | 0x20);
+            }
+
+            if (b2 >= (byte)'A' && b2 <= (byte)'Z')
+            {
+                b2 = (byte)(b2 | 0x20);
+            }
+
+            if (b1 != b2)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool HostEquals(ReadOnlySpan<byte> host1, ReadOnlySpan<byte> host2)
+    {
+        if (host1.Length != host2.Length)
+        {
+            return false;
+        }
+
+        // Hosts are case-insensitive
+        for (int i = 0; i < host1.Length; i++)
+        {
+            byte b1 = host1[i];
+            byte b2 = host2[i];
+
+            // Convert to lowercase for comparison
+            if (b1 >= (byte)'A' && b1 <= (byte)'Z')
+            {
+                b1 = (byte)(b1 | 0x20);
+            }
+
+            if (b2 >= (byte)'A' && b2 <= (byte)'Z')
+            {
+                b2 = (byte)(b2 | 0x20);
+            }
+
+            if (b1 != b2)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool PortEquals(ReadOnlySpan<byte> port1, ReadOnlySpan<byte> port2)
+    {
+        return port1.SequenceEqual(port2);
+    }
+
+    private static bool TryCalculatePathDifference(ReadOnlySpan<byte> basePath, ReadOnlySpan<byte> targetPath, Span<byte> destination, out int written)
+    {
+        written = 0;
+
+        int i;
+        int lastSlashIndex = -1;
+
+        // Find the common prefix up to the last common directory separator
+        for (i = 0; i < basePath.Length && i < targetPath.Length; i++)
+        {
+            if (basePath[i] != targetPath[i])
+            {
+                break;
+            }
+
+            if (basePath[i] == (byte)'/')
+            {
+                lastSlashIndex = i;
+            }
+        }
+
+        // If no common prefix at all
+        if (i == 0)
+        {
+            if (targetPath.Length > destination.Length)
+            {
+                return false;
+            }
+
+            targetPath.CopyTo(destination);
+            written = targetPath.Length;
+            return true;
+        }
+
+        // If paths are identical
+        if (i == basePath.Length && i == targetPath.Length)
+        {
+            written = 0;
+            return true;
+        }
+
+        // Build the relative path using a stack-allocated buffer
+        Span<byte> relPathBuffer = stackalloc byte[4096];
+        if (relPathBuffer.Length < destination.Length)
+        {
+            relPathBuffer = destination;
+        }
+
+        int relPathPos = 0;
+
+        // Count remaining slashes in base path and add "../" for each
+        for (int j = i; j < basePath.Length; j++)
+        {
+            if (basePath[j] == (byte)'/')
+            {
+                if (relPathPos + 3 > relPathBuffer.Length)
+                {
+                    return false;
+                }
+
+                relPathBuffer[relPathPos++] = (byte)'.';
+                relPathBuffer[relPathPos++] = (byte)'.';
+                relPathBuffer[relPathPos++] = (byte)'/';
+            }
+        }
+
+        // If no "../" segments and target ended with file after common directory
+        if (relPathPos == 0 && targetPath.Length - 1 == lastSlashIndex)
+        {
+            if (destination.Length < 2)
+            {
+                return false;
+            }
+
+            destination[0] = (byte)'.';
+            destination[1] = (byte)'/';
+            written = 2;
+            return true;
+        }
+
+        // Append the remaining part of target path after the last common slash
+        ReadOnlySpan<byte> remainingTarget = targetPath.Slice(lastSlashIndex + 1);
+        if (relPathPos + remainingTarget.Length > relPathBuffer.Length)
+        {
+            return false;
+        }
+
+        remainingTarget.CopyTo(relPathBuffer.Slice(relPathPos));
+        relPathPos += remainingTarget.Length;
+
+        // Copy to destination if we used a different buffer
+        if (!relPathBuffer.Overlaps(destination))
+        {
+            if (relPathPos > destination.Length)
+            {
+                return false;
+            }
+
+            relPathBuffer.Slice(0, relPathPos).CopyTo(destination);
+        }
+
+        written = relPathPos;
+        return true;
+    }
+
+    private static bool CheckForColonInFirstPathSegment(ReadOnlySpan<byte> pathString)
+    {
+        // Check for anything that may terminate the first regular path segment or an illegal colon
+        for (int i = 0; i < pathString.Length; i++)
+        {
+            byte b = pathString[i];
+            if (b == (byte)'/' || b == (byte)'?' || b == (byte)'#')
+            {
+                // Reached end of first segment without finding colon
+                return false;
+            }
+
+            if (b == (byte)':')
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     internal static bool TryApply(ReadOnlySpan<byte> baseUri, in Utf8UriOffset baseUriOffsets, Flags baseUriFlags, ReadOnlySpan<byte> targetUri, in Utf8UriOffset targetUriOffsets, Flags targetUriFlags, Span<byte> destination, out int written, bool strict = true)
     {
         written = 0;

@@ -313,6 +313,48 @@ public readonly ref struct Utf8Iri
     }
 
     /// <summary>
+    /// Makes a relative IRI reference from the current (base) IRI to the target IRI.
+    /// If the scheme, host, and port match, a relative reference is created; otherwise,
+    /// the full target IRI is returned.
+    /// </summary>
+    /// <param name="targetIri">The target IRI to make relative.</param>
+    /// <param name="buffer">The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that
+    /// of the resulting reference.</param>
+    /// <param name="result">The resulting IRI reference (relative or absolute).</param>
+    /// <returns><see langword="true"/> if the result was successfully written; otherwise, <see langword="false"/>.</returns>
+    public bool TryMakeRelative(in Utf8Iri targetIri, Span<byte> buffer, out Utf8IriReference result)
+    {
+        if (Utf8UriTools.MakeRelative(_originalIri, _offsets, _flags, targetIri._originalIri, targetIri._offsets, targetIri._flags, buffer, out int writtenBytes, allowIri: true))
+        {
+            return Utf8IriReference.TryCreateIriReference(buffer.Slice(0, writtenBytes), out result);
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Makes a relative IRI reference from the current (base) IRI to the target URI.
+    /// If the scheme, host, and port match, a relative reference is created; otherwise,
+    /// the full target URI is returned.
+    /// </summary>
+    /// <param name="targetUri">The target URI to make relative.</param>
+    /// <param name="buffer">The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that
+    /// of the resulting reference.</param>
+    /// <param name="result">The resulting IRI reference (relative or absolute).</param>
+    /// <returns><see langword="true"/> if the result was successfully written; otherwise, <see langword="false"/>.</returns>
+    public bool TryMakeRelative(in Utf8Uri targetUri, Span<byte> buffer, out Utf8IriReference result)
+    {
+        if (Utf8UriTools.MakeRelative(_originalIri, _offsets, _flags, targetUri._originalUri, targetUri._offsets, targetUri._flags, buffer, out int writtenBytes, allowIri: true))
+        {
+            return Utf8IriReference.TryCreateIriReference(buffer.Slice(0, writtenBytes), out result);
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
     /// Returns a string representation of the IRI in display format.
     /// </summary>
     /// <returns>A string representation of the IRI.</returns>
