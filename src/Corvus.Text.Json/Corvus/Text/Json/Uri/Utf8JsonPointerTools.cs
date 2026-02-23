@@ -6,7 +6,7 @@ namespace Corvus.Text.Json.Internal;
 /// <summary>
 /// Provides methods for validating JSON Pointer strings.
 /// </summary>
-internal static class Utf8JsonPointer
+internal static class Utf8JsonPointerTools
 {
     /// <summary>
     /// Validates whether the specified byte span represents a valid JSON Pointer.
@@ -145,7 +145,7 @@ internal static class Utf8JsonPointer
         {
             // json-pointer: *( "/" reference-token )
             // Use Utf8JsonPointer.Validate for the remainder
-            return Utf8JsonPointer.Validate(span.Slice(i));
+            return Utf8JsonPointerTools.Validate(span.Slice(i));
         }
         else if (i == length)
         {

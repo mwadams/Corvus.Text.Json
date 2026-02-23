@@ -1211,7 +1211,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchJsonPointer(ReadOnlySpan<byte> value)
     {
-        if (!Utf8JsonPointer.Validate(value))
+        if (!Utf8JsonPointerTools.Validate(value))
         {
             return false;
         }
@@ -1269,7 +1269,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value)
     {
-        if (!Utf8JsonPointer.ValidateRelative(value))
+        if (!Utf8JsonPointerTools.ValidateRelative(value))
         {
             return false;
         }
