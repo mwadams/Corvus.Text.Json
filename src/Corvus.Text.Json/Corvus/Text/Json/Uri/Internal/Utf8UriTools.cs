@@ -186,35 +186,43 @@ internal static class Utf8UriTools
             PortEquals(basePort, targetPort))
         {
             // Normalize paths before comparison using the canonical path writer
-            byte[] normalizedBaseBuffer = null!;
-            byte[] normalizedTargetBuffer = null!;
+            byte[]? normalizedBaseBuffer = null;
+            byte[]? normalizedTargetBuffer = null;
 
             try
             {
                 // Normalize base path
                 if (basePath.Length > 0)
                 {
-                    normalizedBaseBuffer = ArrayPool<byte>.Shared.Rent(basePath.Length * 3); // 3x for worst-case percent-encoding
+                    int baseBufferSize = basePath.Length * 3; // 3x for worst-case percent-encoding
+                    Span<byte> baseBuffer = baseBufferSize <= JsonConstants.StackallocByteThreshold ?
+                        stackalloc byte[JsonConstants.StackallocByteThreshold] :
+                        (normalizedBaseBuffer = ArrayPool<byte>.Shared.Rent(baseBufferSize));
+                    
                     int basePos = 0;
                     // Always compress to remove dot segments
-                    if (!TryWriteCanonicalPath(basePath, compress: true, allowIri, normalizedBaseBuffer, ref basePos))
+                    if (!TryWriteCanonicalPath(basePath, compress: true, allowIri, baseBuffer, ref basePos))
                     {
                         return false;
                     }
-                    basePath = normalizedBaseBuffer.AsSpan(0, basePos);
+                    basePath = baseBuffer.Slice(0, basePos);
                 }
 
                 // Normalize target path
                 if (targetPath.Length > 0)
                 {
-                    normalizedTargetBuffer = ArrayPool<byte>.Shared.Rent(targetPath.Length * 3); // 3x for worst-case percent-encoding
+                    int targetBufferSize = targetPath.Length * 3; // 3x for worst-case percent-encoding
+                    Span<byte> targetBuffer = targetBufferSize <= JsonConstants.StackallocByteThreshold ?
+                        stackalloc byte[JsonConstants.StackallocByteThreshold] :
+                        (normalizedTargetBuffer = ArrayPool<byte>.Shared.Rent(targetBufferSize));
+                    
                     int targetPos = 0;
                     // Always compress to remove dot segments
-                    if (!TryWriteCanonicalPath(targetPath, compress: true, allowIri, normalizedTargetBuffer, ref targetPos))
+                    if (!TryWriteCanonicalPath(targetPath, compress: true, allowIri, targetBuffer, ref targetPos))
                     {
                         return false;
                     }
-                    targetPath = normalizedTargetBuffer.AsSpan(0, targetPos);
+                    targetPath = targetBuffer.Slice(0, targetPos);
                 }
 
                 // Calculate the path difference using normalized paths
@@ -269,12 +277,12 @@ internal static class Utf8UriTools
             }
             finally
             {
-                if (normalizedBaseBuffer != null)
+                if (normalizedBaseBuffer is not null)
                 {
                     ArrayPool<byte>.Shared.Return(normalizedBaseBuffer);
                 }
 
-                if (normalizedTargetBuffer != null)
+                if (normalizedTargetBuffer is not null)
                 {
                     ArrayPool<byte>.Shared.Return(normalizedTargetBuffer);
                 }
