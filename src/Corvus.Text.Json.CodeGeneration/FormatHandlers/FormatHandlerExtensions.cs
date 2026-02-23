@@ -68,6 +68,35 @@ internal static class FormatHandlerExtensions
     }
 
     /// <summary>
+    /// Append format-specific conversion operators for the <c>Source</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of the format handler.</typeparam>
+    /// <param name="handlers">The handlers which may append expressions.</param>
+    /// <param name="generator">The generator to which to append the format expressions.</param>
+    /// <param name="typeDeclaration">The type declaration for which to append expressions.</param>
+    /// <param name="format">The format for which to append expressions.</param>
+    /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
+    /// <returns><see langword="true"/> if the instance handled this format.</returns>
+    public static bool AppendFormatConversionOperators<T>(this IEnumerable<T> handlers, CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable)
+        where T : notnull, IFormatHandler
+    {
+        foreach (T handler in handlers)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return false;
+            }
+
+            if (handler.AppendFormatConversionOperators(generator, typeDeclaration, format, seenConversionOperators, forMutable))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Determines whether the format requires a simple types backing
     /// </summary>
     /// <typeparam name="T">The type of the format handler.</typeparam>

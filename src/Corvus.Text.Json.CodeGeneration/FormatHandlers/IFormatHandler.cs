@@ -27,8 +27,9 @@ public interface IFormatHandler
     /// <param name="typeDeclaration">The type declaration for which to append conversion operators.</param>
     /// <param name="format">The format for which to append conversion operators.</param>
     /// <param name="seenConversionOperators">Conversion operators that have already been generated, identified by a unique string.</param>
+    /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
     /// <returns><see langword="true"/> if the instance handled this format.</returns>
-    bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators);
+    bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable);
 
     /// <summary>
     /// Append format-specific constructors for the <c>Source</c> to the generator.

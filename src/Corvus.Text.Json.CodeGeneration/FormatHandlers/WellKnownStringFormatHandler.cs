@@ -209,8 +209,10 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
     }
 
     /// <inheritdoc/>
-    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
+    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable)
     {
+        string typeName = forMutable ? "Mutable" : typeDeclaration.DotnetTypeName();
+
         switch (format)
         {
             case "date":
@@ -219,7 +221,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator NodaTime.LocalDate(NodaTime.LocalDate value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator NodaTime.LocalDate(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.LocalDate result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -229,7 +231,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static implicit operator NodaTime.OffsetDateTime(NodaTime.OffsetDateTime value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                    .AppendLineIndent("public static implicit operator NodaTime.OffsetDateTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetDateTime result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -239,7 +241,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator NodaTime.OffsetTime(NodaTime.OffsetTime value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator NodaTime.OffsetTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetTime result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -249,15 +251,15 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static implicit operator NodaTime.Period(NodaTime.Period value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                    .AppendLineIndent("public static implicit operator NodaTime.Period(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.Period result) ? result : throw new FormatException();");
                 }
                 return true;
 
             case "ipv4":
-                return true;
+                return false;
 
             case "ipv6":
-                return true;
+                return false;
 
             case "uuid":
                 if (seenConversionOperators.Add("Guid"))
@@ -265,52 +267,52 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static implicit operator Guid(Guid value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                    .AppendLineIndent("public static implicit operator Guid(", typeName, " value) => value._parent.TryGetValue(value._idx, out Guid result) ? result : throw new FormatException();");
                 }
                 return true;
 
             case "uri":
-                if (seenConversionOperators.Add("Uri"))
+                if (seenConversionOperators.Add("Utf8UriValue"))
                 {
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static explicit operator Uri(Uri value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static explicit operator Utf8UriValue(", typeName, " value) => Utf8UriValue.TryGetValue(value._parent, value._idx, out Utf8UriValue result) ? result : throw new FormatException();");
                 }
                 return true;
 
             case "uri-reference":
-                if (seenConversionOperators.Add("Uri"))
+                if (seenConversionOperators.Add("Utf8UriReferenceValue"))
                 {
                     generator
                         .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static explicit operator Uri(Uri value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                    .AppendLineIndent("public static explicit operator Utf8UriReferenceValue(", typeName, " value) => Utf8UriReferenceValue.TryGetValue(value._parent, value._idx, out Utf8UriReferenceValue result) ? result : throw new FormatException();");
                 }
                 return true;
 
             case "iri":
-                if (seenConversionOperators.Add("Uri"))
+                if (seenConversionOperators.Add("Utf8IriValue"))
                 {
                     generator
                         .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static explicit operator Uri(Uri value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                    .AppendLineIndent("public static explicit operator Utf8IriValue(", typeName, " value) => Utf8IriValue.TryGetValue(value._parent, value._idx, out Utf8IriValue result) ? result : throw new FormatException();");
                 }
                 return true;
 
             case "iri-reference":
-                if (seenConversionOperators.Add("Uri"))
+                if (seenConversionOperators.Add("Utf8IriReferenceValue"))
                 {
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static explicit operator Uri(Uri value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static explicit operator Utf8IriReferenceValue(", typeName, " value) => Utf8IriReferenceValue.TryGetValue(value._parent, value._idx, out Utf8IriReferenceValue result) ? result : throw new FormatException();");
                 }
                 return true;
 
             case "regex":
-                return true;
+                return false;
 
             default:
                 return false;

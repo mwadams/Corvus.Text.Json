@@ -641,9 +641,9 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
         }
     }
 
-    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
+    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable)
     {
-        string typeName = typeDeclaration.DotnetTypeName();
+        string typeName = forMutable ? "Mutable" : typeDeclaration.DotnetTypeName();
 
         switch (format)
         {
@@ -653,7 +653,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator byte(", typeName, " value) => _parentDocument.TryGetValue(_idx, out byte result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator byte(", typeName, " value) => value._parent.TryGetValue(value._idx, out byte result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -663,7 +663,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator ushort(", typeName, " value) => _parentDocument.TryGetValue(_idx, out ushort result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator ushort(", typeName, " value) => value._parent.TryGetValue(value._idx, out ushort result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -673,7 +673,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator uint(", typeName, " value) => _parentDocument.TryGetValue(_idx, out uint result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator uint(", typeName, " value) => value._parent.TryGetValue(value._idx, out uint result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -683,7 +683,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator ulong(", typeName, " value) => _parentDocument.TryGetValue(_idx, out ulong result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator ulong(", typeName, " value) => value._parent.TryGetValue(value._idx, out ulong result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -694,7 +694,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator UInt128(", typeName, " value) => _parentDocument.TryGetValue(_idx, out UInt128 result) ? result : throw new FormatException();")
+                        .AppendLineIndent("public static implicit operator UInt128(", typeName, " value) => value._parent.TryGetValue(value._idx, out UInt128 result) ? result : throw new FormatException();")
                         .AppendLine("#endif");
                 }
                 return true;
@@ -705,7 +705,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator sbyte(", typeName, " value) => _parentDocument.TryGetValue(_idx, out sbyte result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator sbyte(", typeName, " value) => value._parent.TryGetValue(value._idx, out sbyte result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -715,7 +715,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator short(", typeName, "short value) => _parentDocument.TryGetValue(_idx, out short result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator short(", typeName, "short value) => value._parent.TryGetValue(value._idx, out short result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -725,7 +725,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator int(", typeName, " value) => _parentDocument.TryGetValue(_idx, out int result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator int(", typeName, " value) => value._parent.TryGetValue(value._idx, out int result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -735,7 +735,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator long(", typeName, " value) => _parentDocument.TryGetValue(_idx, out long result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator long(", typeName, " value) => value._parent.TryGetValue(value._idx, out long result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -746,7 +746,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator Int128(", typeName, " value) => _parentDocument.TryGetValue(_idx, out Int128 result) ? result : throw new FormatException();")
+                        .AppendLineIndent("public static implicit operator Int128(", typeName, " value) => value._parent.TryGetValue(value._idx, out Int128 result) ? result : throw new FormatException();")
                         .AppendLine("#endif");
                 }
                 return true;
@@ -758,7 +758,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator Half(", typeName, " value) => _parentDocument.TryGetValue(_idx, out Half result) ? result : throw new FormatException();")
+                        .AppendLineIndent("public static implicit operator Half(", typeName, " value) => value._parent.TryGetValue(value._idx, out Half result) ? result : throw new FormatException();")
                         .AppendLine("#endif");
                 }
                 return true;
@@ -769,7 +769,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator float(", typeName, " value) => _parentDocument.TryGetValue(_idx, out float result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator float(", typeName, " value) => value._parent.TryGetValue(value._idx, out float result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -779,7 +779,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator double(", typeName, " value) => _parentDocument.TryGetValue(_idx, out double result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator double(", typeName, " value) => value._parent.TryGetValue(value._idx, out double result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -789,7 +789,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator decimal(", typeName, " value) => _parentDocument.TryGetValue(_idx, out decimal result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator decimal(", typeName, " value) => value._parent.TryGetValue(value._idx, out decimal result) ? result : throw new FormatException();");
                 }
                 return true;
 

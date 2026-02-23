@@ -72,7 +72,7 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendValueKindProperty()
                         .AppendTokenTypeProperty()
                         .AppendConversionToCompositionTypes(typeDeclaration)
-                        ////.AppendCoreTypeAndFormatConversionOperators(typeDeclaration)
+                        .AppendCoreTypeAndFormatConversionOperators(typeDeclaration, forMutable: false)
                         .AppendBinaryOperator(typeDeclaration, "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")
                         .AppendBinaryOperator(typeDeclaration, "bool", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
                         .AppendBinaryOperator(typeDeclaration, "JsonElement", "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")

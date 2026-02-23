@@ -1772,7 +1772,22 @@ internal static partial class CodeGeneratorExtensions
                 """
                         (obj is null && this.IsNull());
                 }
-                """);
+
+                /// <summary>
+                /// Equality comparison.
+                /// </summary>
+                /// <param name="other">The other item with which to compare.</param>
+                /// <returns><see langword="true"/> if the values were equal.</returns>
+                """)
+            .AppendLineIndent("public bool Equals<T>(in T other)")
+            .PushIndent()
+                .AppendLineIndent("where T : struct, IJsonElement")
+            .PopIndent()
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return JsonElementHelpers.DeepEquals(this, other);")
+            .PopIndent()
+            .AppendLineIndent("}");
     }
 
     /// <summary>

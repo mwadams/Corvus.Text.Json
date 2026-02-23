@@ -65,6 +65,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendValueKindProperty()
                             .AppendTokenTypeProperty()
                             .AppendConversionToCompositionTypes(typeDeclaration, forMutable: true)
+                            .AppendCoreTypeAndFormatConversionOperators(typeDeclaration, forMutable: true)
                             .AppendBinaryOperator("Mutable", "Mutable", "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")
                             .AppendBinaryOperator("Mutable", "Mutable", "bool", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
                             .AppendBinaryOperator("Mutable", "JsonElement", "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")

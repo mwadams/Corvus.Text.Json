@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 
@@ -14,6 +16,108 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// </summary>
 internal static partial class CodeGeneratorExtensions
 {
+    /// <summary>
+    /// Appends conversions from dotnet type of the <paramref name="typeDeclaration"/>
+    /// to the core type and format types..
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name"typeDeclaration">The type declaration which is the basis of the conversions.</param>
+    /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendCoreTypeAndFormatConversionOperators(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable)
+    {
+        HashSet<string> seenConversionOperators = [];
+        bool handledNumber = false;
+        if (typeDeclaration.Format() is string format)
+        {
+            handledNumber = FormatHandlerRegistry.Instance.StringFormatHandlers.AppendFormatConversionOperators(generator, typeDeclaration, format, seenConversionOperators, forMutable);
+            FormatHandlerRegistry.Instance.NumberFormatHandlers.AppendFormatConversionOperators(generator, typeDeclaration, format, seenConversionOperators, forMutable);
+        }
+
+        string typeName = forMutable ? "Mutable" : typeDeclaration.DotnetTypeName();
+
+        if (typeDeclaration.ImpliedCoreTypes().CountTypes() == 1)
+        {
+            switch (typeDeclaration.ImpliedCoreTypes())
+            {
+                case CoreTypes.String:
+                    // We always add the string conversion to string handlers.
+                    if (seenConversionOperators.Add("string"))
+                    {
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                            .AppendLineIndent("public static ", typeDeclaration.UseImplicitOperatorString() ? "implicit" : "explicit", " operator string(", typeName, " value) => value._parent.GetString(value._idx, JsonTokenType.String) ?? throw new FormatException();");
+                    }
+                    break;
+
+                case CoreTypes.Number:
+                case CoreTypes.Integer:
+                    if (handledNumber)
+                    {
+                        // Don't add any more numeric conversion operators if we handled it.
+                        break;
+                    }
+
+                    if (seenConversionOperators.Add("long"))
+                    {
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                            .AppendLineIndent("public static implicit operator long(", typeName, " value) => value._parent.TryGetValue(value._idx, out long result) ? result : throw new FormatException();");
+                    }
+
+                    if (seenConversionOperators.Add("double"))
+                    {
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                            .AppendLineIndent("public static implicit operator double(", typeName, " value) => value._parent.TryGetValue(value._idx, out double result) ? result : throw new FormatException();");
+                    }
+
+                    if (seenConversionOperators.Add("BigNumber"))
+                    {
+                        // This is explicit because it allocates
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                            .AppendLineIndent("public static explicit operator BigNumber(", typeName, " value) => value._parent.TryGetValue(value._idx, out BigNumber result) ? result : throw new FormatException();");
+                    }
+
+                    if (seenConversionOperators.Add("BigInteger"))
+                    {
+                        // This is explicit because it allocates
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                            .AppendLineIndent("public static explicit operator System.Numerics.BigInteger(", typeName, " value) => value._parent.TryGetValue(value._idx, out System.Numerics.BigInteger result) ? result : throw new FormatException();");
+                    }
+
+                    if (seenConversionOperators.Add("decimal"))
+                    {
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                            .AppendLineIndent("public static explicit operator decimal(", typeName, " value) => value._parent.TryGetValue(value._idx, out decimal result) ? result : throw new FormatException();");
+                    }
+                    break;
+                case CoreTypes.Boolean:
+                    if (seenConversionOperators.Add("bool"))
+                    {
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                            .AppendLineIndent("public static implicit operator bool(", typeName, " value) => value._parent.TryGetValue(value._idx, out bool result) ? result : throw new FormatException();");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return generator;
+    }
+
     /// <summary>
     /// Appends conversions from dotnet type of the <paramref name="rootDeclaration"/>
     /// to the composition types.
@@ -412,7 +516,7 @@ internal static partial class CodeGeneratorExtensions
                 .PopIndent()
                 .AppendLineIndent("{")
                 .PushIndent();
-            
+
             i = 0;
             foreach (TypeDeclaration match in subschema)
             {
@@ -674,7 +778,7 @@ internal static partial class CodeGeneratorExtensions
                 // Only ever need to evaluate the else clause and there isn't one.
                 return;
             }
-   
+
             string scopeName = $"Match{matchOverloadIndex}";
 
             generator
@@ -840,12 +944,12 @@ internal static partial class CodeGeneratorExtensions
 
                 generator
                     .AppendSeparatorLine();
-                
+
                 string ifSubschemaTypeName = ifSubschema.ReducedType.FullyQualifiedDotnetTypeName();
                 if (thenDeclaration is not null)
                 {
                     generator
-                        .AppendLineIndent("if (", ifSubschemaTypeName, ".", generator.JsonSchemaClassName(ifSubschemaTypeName) , ".Evaluate(_parent, _idx))");
+                        .AppendLineIndent("if (", ifSubschemaTypeName, ".", generator.JsonSchemaClassName(ifSubschemaTypeName), ".Evaluate(_parent, _idx))");
                 }
                 else
                 {
