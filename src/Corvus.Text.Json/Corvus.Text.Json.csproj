@@ -164,6 +164,9 @@
     <Compile Include="Corvus\Text\Json\Document\Internal\JsonDocument.PropertyMap.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\IJsonDocument.cs" />
     <Compile Include="Corvus\Text\Json\Document\ArrayEnumerator{T}.cs" />
+    <Compile Include="Corvus\Text\Json\Document\Utf8IriReferenceValue.cs" />
+    <Compile Include="Corvus\Text\Json\Document\Utf8UriReferenceValue.cs" />
+    <Compile Include="Corvus\Text\Json\Document\Utf8IriValue.cs" />
     <Compile Include="Corvus\Text\Json\Document\Utf8UriValue.cs" />
     <Compile Include="Corvus\Text\Json\Internal\BigIntegerPolyfills.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" />
