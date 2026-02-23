@@ -186,6 +186,7 @@ internal static class Utf8UriTools
             PortEquals(basePort, targetPort))
         {
             // Normalize paths before comparison using the canonical path writer
+            // We must use ArrayPool for these because we need to reference them later
             byte[]? normalizedBaseBuffer = null;
             byte[]? normalizedTargetBuffer = null;
 
@@ -195,34 +196,28 @@ internal static class Utf8UriTools
                 if (basePath.Length > 0)
                 {
                     int baseBufferSize = basePath.Length * 3; // 3x for worst-case percent-encoding
-                    Span<byte> baseBuffer = baseBufferSize <= JsonConstants.StackallocByteThreshold ?
-                        stackalloc byte[JsonConstants.StackallocByteThreshold] :
-                        (normalizedBaseBuffer = ArrayPool<byte>.Shared.Rent(baseBufferSize));
-                    
+                    normalizedBaseBuffer = ArrayPool<byte>.Shared.Rent(baseBufferSize);
                     int basePos = 0;
                     // Always compress to remove dot segments
-                    if (!TryWriteCanonicalPath(basePath, compress: true, allowIri, baseBuffer, ref basePos))
+                    if (!TryWriteCanonicalPath(basePath, compress: true, allowIri, normalizedBaseBuffer, ref basePos))
                     {
                         return false;
                     }
-                    basePath = baseBuffer.Slice(0, basePos);
+                    basePath = normalizedBaseBuffer.AsSpan(0, basePos);
                 }
 
                 // Normalize target path
                 if (targetPath.Length > 0)
                 {
                     int targetBufferSize = targetPath.Length * 3; // 3x for worst-case percent-encoding
-                    Span<byte> targetBuffer = targetBufferSize <= JsonConstants.StackallocByteThreshold ?
-                        stackalloc byte[JsonConstants.StackallocByteThreshold] :
-                        (normalizedTargetBuffer = ArrayPool<byte>.Shared.Rent(targetBufferSize));
-                    
+                    normalizedTargetBuffer = ArrayPool<byte>.Shared.Rent(targetBufferSize);
                     int targetPos = 0;
                     // Always compress to remove dot segments
-                    if (!TryWriteCanonicalPath(targetPath, compress: true, allowIri, targetBuffer, ref targetPos))
+                    if (!TryWriteCanonicalPath(targetPath, compress: true, allowIri, normalizedTargetBuffer, ref targetPos))
                     {
                         return false;
                     }
-                    targetPath = targetBuffer.Slice(0, targetPos);
+                    targetPath = normalizedTargetBuffer.AsSpan(0, targetPos);
                 }
 
                 // Calculate the path difference using normalized paths
