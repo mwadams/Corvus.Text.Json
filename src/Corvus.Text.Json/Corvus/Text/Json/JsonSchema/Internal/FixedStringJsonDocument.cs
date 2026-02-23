@@ -1,16 +1,12 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using NodaTime;
 
 namespace Corvus.Text.Json.Internal;
@@ -221,6 +217,15 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
     {
         Debug.Assert(index == 0 && expectedType == JsonTokenType.String);
         return JsonReaderHelper.TranscodeHelper(_rawJsonStringValue.Span[1..^1]);
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    bool IJsonDocument.TryGetString(int index, JsonTokenType expectedType, [NotNullWhen(true)] out string? result)
+    {
+        Debug.Assert(index == 0 && expectedType == JsonTokenType.String);
+        result = JsonReaderHelper.TranscodeHelper(_rawJsonStringValue.Span[1..^1]);
+        return true;
     }
 
     UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType)

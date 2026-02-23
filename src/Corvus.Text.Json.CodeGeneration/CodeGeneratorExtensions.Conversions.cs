@@ -17,8 +17,8 @@ namespace Corvus.Text.Json.CodeGeneration;
 internal static partial class CodeGeneratorExtensions
 {
     /// <summary>
-    /// Appends conversions from dotnet type of the <paramref name="typeDeclaration"/>
-    /// to the core type and format types..
+    /// Appends conversions from the .NET types supported by the <paramref name="typeDeclaration"/>
+    /// based on the core type and format.
     /// </summary>
     /// <param name="generator">The code generator.</param>
     /// <param name"typeDeclaration">The type declaration which is the basis of the conversions.</param>
@@ -112,6 +112,195 @@ internal static partial class CodeGeneratorExtensions
                     break;
                 default:
                     break;
+            }
+        }
+
+        return generator;
+    }
+
+    /// <summary>
+    /// Appends value getters for the .NET types supported by the <paramref name="typeDeclaration"/>
+    /// based on the core type and format.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name"typeDeclaration">The type declaration which is the basis of the conversions.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendCoreTypeAndFormatValueGetters(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        HashSet<string> seenConversionOperators = [];
+        bool handledNumber = false;
+        if (typeDeclaration.Format() is string format)
+        {
+            handledNumber = FormatHandlerRegistry.Instance.NumberFormatHandlers.AppendFormatValueGetters(generator, typeDeclaration, format, seenConversionOperators);
+            FormatHandlerRegistry.Instance.StringFormatHandlers.AppendFormatValueGetters(generator, typeDeclaration, format, seenConversionOperators);
+        }
+
+        string typeName = typeDeclaration.DotnetTypeName();
+
+        CoreTypes coreTypes = typeDeclaration.ImpliedCoreTypesOrAny();
+
+        if ((coreTypes & CoreTypes.String) != 0)
+        {
+            // We always add the string conversion to string handlers.
+            if (seenConversionOperators.Add("string"))
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out string? value) => _parent.TryGetString(_idx, JsonTokenType.String, out value);")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public UnescapedUtf8JsonString GetUtf8String() => _parent.GetUtf8JsonString(_idx, JsonTokenType.String);")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public string? GetString() => _parent.GetString(_idx, JsonTokenType.String);");
+            }
+        }
+
+        if ((coreTypes & (CoreTypes.Number | CoreTypes.Integer)) != 0)
+        {
+            if (!handledNumber)
+            {
+                if (seenConversionOperators.Add("long"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out long value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("int"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out int value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("short"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out short value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("sbyte"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out sbyte value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("ulong"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out ulong value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("uint"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out uint value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+
+                if (seenConversionOperators.Add("ushort"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out ushort value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("byte"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out byte value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+#if NET
+                if (seenConversionOperators.Add("Int128"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Int128 value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("UInt128"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out UInt128 value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("Half"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Half value) => _parent.TryGetValue(_idx, out value);");
+                }
+#endif
+
+                if (seenConversionOperators.Add("double"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out double value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("float"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out float value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("BigNumber"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out BigNumber value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("BigInteger"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out System.Numerics.BigInteger value) => _parent.TryGetValue(_idx, out value);");
+                }
+
+                if (seenConversionOperators.Add("decimal"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out decimal value) => _parent.TryGetValue(_idx, out value);");
+                }
+            }
+        }
+        if ((coreTypes & CoreTypes.Boolean) != 0)
+        {
+            if (seenConversionOperators.Add("bool"))
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out bool value) => _parent.TryGetValue(_idx, out value);");
             }
         }
 

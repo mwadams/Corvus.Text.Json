@@ -76,6 +76,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendArrayIndexerProperties(typeDeclaration, forMutable: true)
                             .AppendObjectIndexerProperties(typeDeclaration, forMutable: true)
                             .AppendObjectProperties(typeDeclaration, forMutable:true)
+                            .AppendCoreTypeAndFormatValueGetters(typeDeclaration)
                             .AppendGetArrayLength(typeDeclaration)
                             .AppendGetPropertyCount(typeDeclaration)
                             .AppendEnumerateArray(typeDeclaration, forMutable: true)

@@ -365,6 +365,32 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    bool IJsonDocument.TryGetString(int index, JsonTokenType expectedType, [NotNullWhen(true)] out string? result)
+    {
+        CheckNotDisposed();
+
+        DbRow row = _parsedData.Get(index);
+
+        JsonTokenType tokenType = row.TokenType;
+
+
+        if (expectedType != tokenType)
+        {
+            result = null;
+            return false;
+        }
+
+        ReadOnlySpan<byte> data = _utf8Json.Span;
+        ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+        result = row.HasComplexChildren
+            ? JsonReaderHelper.GetUnescapedString(segment)
+            : JsonReaderHelper.TranscodeHelper(segment);
+        return true;
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType)
     {
         CheckNotDisposed();

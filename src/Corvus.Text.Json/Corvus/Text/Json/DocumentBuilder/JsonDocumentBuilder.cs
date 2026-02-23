@@ -449,6 +449,31 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetStringUnsafe(index, expectedType);
     }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    bool IJsonDocument.TryGetString(int index, JsonTokenType expectedType, [NotNullWhen(true)] out string? result)
+    {
+        CheckNotDisposed();
+
+        DbRow row = _parsedData.Get(index);
+
+        JsonTokenType tokenType = row.TokenType;
+
+
+        if (expectedType != tokenType)
+        {
+            result = null;
+            return false;
+        }
+
+        ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+
+        result = row.HasComplexChildren
+            ? JsonReaderHelper.GetUnescapedString(segment)
+            : JsonReaderHelper.TranscodeHelper(segment);
+        return true;
+    }
+
     private string? GetStringUnsafe(int index, JsonTokenType expectedType)
     {
         DbRow row = _parsedData.Get(index);

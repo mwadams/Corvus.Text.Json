@@ -230,8 +230,8 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static implicit operator NodaTime.OffsetDateTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetDateTime result) ? result : throw new FormatException();");
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator NodaTime.OffsetDateTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetDateTime result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -250,8 +250,8 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static implicit operator NodaTime.Period(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.Period result) ? result : throw new FormatException();");
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator NodaTime.Period(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.Period result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -266,8 +266,8 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static implicit operator Guid(", typeName, " value) => value._parent.TryGetValue(value._idx, out Guid result) ? result : throw new FormatException();");
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static implicit operator Guid(", typeName, " value) => value._parent.TryGetValue(value._idx, out Guid result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -286,8 +286,8 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static explicit operator Utf8UriReferenceValue(", typeName, " value) => Utf8UriReferenceValue.TryGetValue(value._parent, value._idx, out Utf8UriReferenceValue result) ? result : throw new FormatException();");
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator Utf8UriReferenceValue(", typeName, " value) => Utf8UriReferenceValue.TryGetValue(value._parent, value._idx, out Utf8UriReferenceValue result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -296,8 +296,8 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 {
                     generator
                         .AppendSeparatorLine()
-                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public static explicit operator Utf8IriValue(", typeName, " value) => Utf8IriValue.TryGetValue(value._parent, value._idx, out Utf8IriValue result) ? result : throw new FormatException();");
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator Utf8IriValue(", typeName, " value) => Utf8IriValue.TryGetValue(value._parent, value._idx, out Utf8IriValue result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -318,6 +318,116 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 return false;
         }
     }
+
+    /// <inheritdoc/>
+    public bool AppendFormatValueGetters(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators)
+    {
+        switch (format)
+        {
+            case "date":
+                if (seenConversionOperators.Add("LocalDate"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out NodaTime.LocalDate value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "date-time":
+                if (seenConversionOperators.Add("OffsetDateTime"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out NodaTime.OffsetDateTime value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "time":
+                if (seenConversionOperators.Add("OffsetTime"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out NodaTime.OffsetTime value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "duration":
+                if (seenConversionOperators.Add("Period"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out NodaTime.Period value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "ipv4":
+                return false;
+
+            case "ipv6":
+                return false;
+
+            case "uuid":
+                if (seenConversionOperators.Add("Guid"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Guid value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "uri":
+                if (seenConversionOperators.Add("Utf8UriValue"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Utf8UriValue value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "uri-reference":
+                if (seenConversionOperators.Add("Utf8UriReferenceValue"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Utf8UriReferenceValue value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "iri":
+                if (seenConversionOperators.Add("Utf8IriValue"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Utf8IriValue value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "iri-reference":
+                if (seenConversionOperators.Add("Utf8IriReferenceValue"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Utf8IriReferenceValue value) => _parent.TryGetValue(_idx, out value);");
+                }
+                return true;
+
+            case "regex":
+                return false;
+
+            default:
+                return false;
+        }
+    }
+
 
     /// <inheritdoc/>
     public bool AppendFormatSourceConstructors(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConstructorParameters)

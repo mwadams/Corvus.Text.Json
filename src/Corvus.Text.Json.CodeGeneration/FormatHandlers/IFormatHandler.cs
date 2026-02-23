@@ -21,12 +21,22 @@ public interface IFormatHandler
     uint Priority { get; }
 
     /// <summary>
+    /// Append format-specific value getters to the generator.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the value getters.</param>
+    /// <param name="typeDeclaration">The type declaration for which to append the value getters.</param>
+    /// <param name="format">The format for which to append the value getters.</param>
+    /// <param name="seenValueGetters">Value getters that have already been generated, identified by a unique string.</param>
+    /// <returns><see langword="true"/> if the instance handled this format.</returns>
+    bool AppendFormatValueGetters(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenValueGetters);
+
+    /// <summary>
     /// Append format-specific conversion operators to the generator.
     /// </summary>
     /// <param name="generator">The generator to which to append the conversion operators.</param>
     /// <param name="typeDeclaration">The type declaration for which to append conversion operators.</param>
     /// <param name="format">The format for which to append conversion operators.</param>
-    /// <param name="seenConversionOperators">Conversion operators that have already been generated, identified by a unique string.</param>
+    /// <param name="seenValueGetters">Conversion operators that have already been generated, identified by a unique string.</param>
     /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
     /// <returns><see langword="true"/> if the instance handled this format.</returns>
     bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable);

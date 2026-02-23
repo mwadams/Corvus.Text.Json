@@ -13,18 +13,6 @@ namespace Corvus.Text.Json;
 public static class JsonElementExtensions
 {
     /// <summary>
-    /// Gets a nullable instance of the value.
-    /// </summary>
-    /// <typeparam name="T">The type of the value for wich to get a nullable instance.</typeparam>
-    /// <param name="value">The value to check.</param>
-    /// <returns><c>null</c> if the value is null, or undefined. Otherwise an instance of the value.</returns>
-    public static T? AsOptional<T>(this T value)
-        where T : struct, IJsonElement<T>
-    {
-        return value.IsNullOrUndefined() ? null : value;
-    }
-
-    /// <summary>
     /// Gets a value indicating whether this value is not null.
     /// </summary>
     /// <typeparam name="T">The type of the value to check.</typeparam>

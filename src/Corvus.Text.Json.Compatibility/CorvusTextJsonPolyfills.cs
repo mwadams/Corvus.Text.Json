@@ -9,6 +9,18 @@ namespace Corvus.Text.Json.Compatibility
     public static class CorvusTextJsonPolyfills
     {
         /// <summary>
+        /// Gets a nullable instance of the value.
+        /// </summary>
+        /// <typeparam name="T">The type of the value for wich to get a nullable instance.</typeparam>
+        /// <param name="value">The value to check.</param>
+        /// <returns><c>null</c> if the value is null, or undefined. Otherwise an instance of the value.</returns>
+        public static T? AsOptional<T>(this T value)
+            where T : struct, IJsonElement<T>
+        {
+            return value.IsNullOrUndefined() ? null : value;
+        }
+
+        /// <summary>
         /// Gets the JSON element as a <see cref="Corvus.Json.JsonAny"/>.
         /// </summary>
         /// <typeparam name="T">The type of the instance for which to get the <see cref="Corvus.Json.JsonAny"/>.</typeparam>

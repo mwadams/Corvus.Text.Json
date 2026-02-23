@@ -167,6 +167,15 @@ public interface IJsonDocument : IDisposable
     string? GetString(int index, JsonTokenType expectedType);
 
     /// <summary>
+    /// Tries to get the string value of the element at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="expectedType">The expected JSON token type.</param>
+    /// <param name="result">The string value, or <see langword="null"/> if the value was not retrieved.</param>
+    /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
+    bool TryGetString(int index, JsonTokenType expectedType, [NotNullWhen(true)] out string? result);
+
+    /// <summary>
     /// Gets the UTF-8 JSON string value of the element at the specified index.
     /// </summary>
     /// <param name="index">The index of the element.</param>
@@ -354,7 +363,6 @@ public interface IJsonDocument : IDisposable
     /// <param name="value">The <see cref="Guid"/> value.</param>
     /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
     bool TryGetValue(int index, out Guid value);
-
 #if NET
 
     /// <summary>
