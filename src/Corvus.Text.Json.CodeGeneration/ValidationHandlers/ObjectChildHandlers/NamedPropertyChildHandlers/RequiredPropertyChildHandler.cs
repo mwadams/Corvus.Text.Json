@@ -644,7 +644,11 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                     "u8, buffer, out written);"))
                 .AppendSeparatorLine()
                 .AppendLineIndent("private const int ", OffsetForPropertyName, " = ", OffsetForProperty.ToString(), ";")
+#if NET
                 .AppendLineIndent("private const uint ", BitForPropertyName, " = 0b", BitForProperty.ToString("b32"), ";");
+#else
+                .AppendLineIndent("private const uint ", BitForPropertyName, " = ", BitForProperty.ToString(), ";");
+#endif
     }
 
     private class RequirementsAndDependencies

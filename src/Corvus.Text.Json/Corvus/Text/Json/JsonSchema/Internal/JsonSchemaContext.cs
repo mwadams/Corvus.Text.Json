@@ -898,7 +898,7 @@ public struct JsonSchemaContext
                     sequenceNumber,
                     _rentedBuffer,
                     _lengthAndUsingFeatures | usingFeatures & ~(uint)UsingFeatures.IsDisposable,
-                    offset: Length,
+                    offset: _offset + Length,
                     evaluatedCount: parentDocument.GetPropertyCount(parentDocumentIndex),
                     resultsCollector: _resultsCollector);
             }
@@ -909,7 +909,7 @@ public struct JsonSchemaContext
                     sequenceNumber,
                     _rentedBuffer,
                     _lengthAndUsingFeatures | usingFeatures & ~(uint)UsingFeatures.IsDisposable,
-                    offset: Length,
+                    offset: _offset + Length,
                     evaluatedCount: parentDocument.GetArrayLength(parentDocumentIndex),
                     resultsCollector: _resultsCollector);
             }
@@ -919,7 +919,7 @@ public struct JsonSchemaContext
             sequenceNumber,
             _rentedBuffer,
             _lengthAndUsingFeatures & ~(uint)UsingFeatures.IsDisposable,
-            offset: Length,
+            offset: _offset + Length,
             evaluatedCount: -1,
             resultsCollector: _resultsCollector);
     }

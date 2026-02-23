@@ -64,6 +64,17 @@ public static partial class CodeGenThrowHelper
     public const string ExceptionSourceValueToRethrowAsJsonException = "Corvus.Text.Json.Rethrowable";
 
     /// <summary>
+    /// Throws an <see cref="ArgumentException"/> when an array buffer has an incorrect length.
+    /// </summary>
+    /// <param name="paramName">The name of the parameter that caused the exception.</param>
+    /// <param name="expectedLength">The expected length of the array buffer.</param>
+    /// <exception cref="ArgumentException">Always thrown.</exception>
+    public static void ThrowArgumentException_ArrayBufferLength(string paramName, int expectedLength)
+    {
+        throw new ArgumentException(SR.Format(SR.IncorrectArrayBufferLength, expectedLength), paramName);
+    }
+
+    /// <summary>
     /// Throws a generic <see cref="FormatException"/> for format-related errors.
     /// </summary>
     /// <exception cref="FormatException">Always thrown.</exception>

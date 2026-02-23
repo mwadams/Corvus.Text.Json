@@ -68,7 +68,7 @@ internal class DependentSchemasChildHandler : INamedPropertyChildHandler
             .AppendLineIndent("JsonSchemaContext ", childContextName, " = ", propertyClassName, ".", jsonSchemaClassName, ".PushChildContext(")
             .PushIndent()
                 .AppendLineIndent("parentDocument,")
-                .AppendLineIndent("parentDocumentIndex,")
+                .AppendLineIndent("depdendentSchemasChildHandler_propertyParentDocumentIndex,")
                 .AppendLineIndent("ref context,")
                 .AppendLineIndent("schemaEvaluationPath: ", schemaEvaluationPathProviderName, ");")
             .PopIndent()
