@@ -1,5 +1,5 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
+﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code to you under the MIT license.
 
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -354,14 +354,6 @@ public interface IJsonDocument : IDisposable
     /// <param name="value">The <see cref="Guid"/> value.</param>
     /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
     bool TryGetValue(int index, out Guid value);
-
-    /////// <summary>
-    /////// Tries to get the value of the element at the specified index as a <see cref="Guid"/>.
-    /////// </summary>
-    /////// <param name="index">The index of the element.</param>
-    /////// <param name="value">The <see cref="JsonReference"/> value.</param>
-    /////// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
-    ////bool TryGetValue(int index, out Utf8UriTools value);
 
 #if NET
 
