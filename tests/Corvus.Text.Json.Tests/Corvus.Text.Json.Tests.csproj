@@ -249,6 +249,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\tests\TestUtilities\TestUtilities.csproj" />
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
+    <ProjectReference Include="..\Corvus.Text.Json.Tests.GeneratedModels\Corvus.Text.Json.Tests.GeneratedModels.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">

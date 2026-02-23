@@ -185,7 +185,7 @@ file static class PropertiesValidationHandlerExtensions
     public static CodeGenerator AppendValidatorCall(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<INamedPropertyChildHandler> children)
     {
         generator
-            .AppendIndent("validator(parentDocument, objectValidation_currentIndex, objectValidation_propertyCount, ref context");
+            .AppendIndent("validator!(parentDocument, objectValidation_currentIndex, objectValidation_propertyCount, ref context");
 
         foreach (INamedPropertyChildHandler child in children)
         {
@@ -278,7 +278,11 @@ file static class PropertiesValidationHandlerExtensions
                 .AppendLineIndent("private static PropertySchemaMatchers<", propertyValidatorDelegateName, "> ", mapName, " { get; } = ", builderName, "();")
                 .AppendSeparatorLine()
                 .ReserveName("TryGetNamedMatcher")
-                .AppendLineIndent("private static bool TryGetNamedMatcher(ReadOnlySpan<byte> span, [NotNullWhen(true)] out ", propertyValidatorDelegateName, "? matcher)")
+                .AppendLineIndent("private static bool TryGetNamedMatcher(ReadOnlySpan<byte> span,")
+                .AppendLine("#if NET")
+                .AppendLineIndent("[NotNullWhen(true)]")
+                .AppendLine("#endif")
+                .AppendLineIndent("out ", propertyValidatorDelegateName, "? matcher)")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("return ", mapName, ".TryGetNamedMatcher(span, out matcher);")
@@ -290,7 +294,11 @@ file static class PropertiesValidationHandlerExtensions
             generator
                 .AppendSeparatorLine()
                 .ReserveName("TryGetNamedMatcher")
-                .AppendLineIndent("private static bool TryGetNamedMatcher(ReadOnlySpan<byte> span, [NotNullWhen(true)] out ", propertyValidatorDelegateName, "? matcher)")
+                .AppendLineIndent("private static bool TryGetNamedMatcher(ReadOnlySpan<byte> span,")
+                .AppendLine("#if NET")
+                .AppendLineIndent("[NotNullWhen(true)]")
+                .AppendLine("#endif")
+                .AppendLineIndent("out ", propertyValidatorDelegateName, "? matcher)")
                 .AppendLineIndent("{")
                 .PushIndent();
 

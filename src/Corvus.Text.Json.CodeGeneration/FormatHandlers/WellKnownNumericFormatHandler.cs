@@ -715,7 +715,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator short(", typeName, "short value) => value._parent.TryGetValue(value._idx, out short result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static implicit operator short(", typeName, " value) => value._parent.TryGetValue(value._idx, out short result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -808,7 +808,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out byte value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out byte value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -818,7 +818,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out ushort value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out ushort value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -828,7 +828,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out uint value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out uint value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -838,7 +838,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out ulong value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out ulong value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -849,7 +849,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out UInt128 value) => _parent.TryGetValue(_idx, out value);")
+                        .AppendLineIndent("public bool TryGetValue(out UInt128 value) => _parent.TryGetValue(_idx, out value);")
                         .AppendLine("#endif");
                 }
                 return true;
@@ -860,7 +860,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out sbyte value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out sbyte value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -870,7 +870,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out short value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out short value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -880,7 +880,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out int value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out int value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -890,7 +890,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out long value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out long value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -901,7 +901,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Int128 value) => _parent.TryGetValue(_idx, out value);")
+                        .AppendLineIndent("public bool TryGetValue(out Int128 value) => _parent.TryGetValue(_idx, out value);")
                         .AppendLine("#endif");
                 }
                 return true;
@@ -913,7 +913,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                         .AppendSeparatorLine()
                         .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out Half value) => _parent.TryGetValue(_idx, out value);")
+                        .AppendLineIndent("public bool TryGetValue(out Half value) => _parent.TryGetValue(_idx, out value);")
                         .AppendLine("#endif");
                 }
                 return true;
@@ -924,7 +924,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out float value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out float value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -934,7 +934,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out double value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out double value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 
@@ -944,7 +944,7 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue([NotNullWhen(true)] out decimal value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out decimal value) => _parent.TryGetValue(_idx, out value);");
                 }
                 return true;
 

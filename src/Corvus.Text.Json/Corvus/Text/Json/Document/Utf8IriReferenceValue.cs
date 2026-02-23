@@ -1,6 +1,7 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
+using System.Buffers;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json;
@@ -11,54 +12,54 @@ namespace Corvus.Text.Json;
 /// <remarks>
 /// This type should be used in a using declaration to ensure that the underlying memory is released when it is no longer needed.
 /// </remarks>
-public readonly ref struct Utf8IriReferenceReferenceValue
-#if NET
+public readonly struct Utf8IriReferenceValue
     : IDisposable
-#endif
 {
-    private readonly UnescapedUtf8JsonString _stringBacking;
-    private readonly Utf8IriReference _iriReference;
+    private readonly Utf8UriOffset _offsets;
+    private readonly Utf8UriTools.Flags _flags;
+    private readonly ReadOnlyMemory<byte> _bytes;
+    private readonly byte[]? _extraRentedArrayPoolBytes;
 
-    private Utf8IriReferenceReferenceValue(UnescapedUtf8JsonString stringBacking, Utf8IriReference iriReference)
+    private Utf8IriReferenceValue(ReadOnlyMemory<byte> bytes, byte[]? extraRentedArrayPoolBytes, Utf8UriOffset offsets, Utf8UriTools.Flags flags)
     {
-        _stringBacking = stringBacking;
-        _iriReference = iriReference;
+        _bytes = bytes;
+        _extraRentedArrayPoolBytes = extraRentedArrayPoolBytes;
+        _offsets = offsets;
+        _flags = flags;
     }
 
     /// <summary>
     /// Gets the UTF-8 IRI reference value.
     /// </summary>
-    public Utf8IriReference IriReference => _iriReference;
+    public Utf8IriReference IriReference => Utf8IriReference.CreateIriReferenceUnsafe(_bytes, _offsets, _flags);
 
     /// <summary>
-    /// Tries to get the value of the element at the specified index as a <see cref="Utf8IriReferenceReferenceValue"/>.
+    /// Tries to get the value of the element at the specified index as a <see cref="Utf8IriReferenceValue"/>.
     /// </summary>
     /// <typeparam name="T">The type of the document.</typeparam>
     /// <param name="index">The index of the element.</param>
-    /// <param name="value">The <see cref="Utf8IriReferenceReferenceValue"/> value.</param>
+    /// <param name="value">The <see cref="Utf8IriReferenceValue"/> value.</param>
     /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
     [CLSCompliant(false)]
-    public static bool TryGetValue<T>(in T jsonDocument, int index, out Utf8IriReferenceReferenceValue value)
+    public static bool TryGetValue<T>(in T jsonDocument, int index, out Utf8IriReferenceValue value)
         where T : IJsonDocument
     {
-
         if (jsonDocument.GetJsonTokenType(index) != JsonTokenType.String)
         {
             value = default;
             return false;
         }
 
-        UnescapedUtf8JsonString stringBacking = jsonDocument.GetUtf8JsonString(index, JsonTokenType.String);
-
-        if (!Utf8IriReference.TryCreateIriReference(stringBacking.Span, out Utf8IriReference iri))
+        using UnescapedUtf8JsonString stringBacking = jsonDocument.GetUtf8JsonString(index, JsonTokenType.String);
+        ReadOnlyMemory<byte> bytes = stringBacking.TakeOwnership(out byte[]? extraRentedArrayPoolBytes);
+        if (Utf8IriReference.TryCreateIriReference(bytes.Span, out Utf8IriReference utf8IriReference))
         {
-            stringBacking.Dispose();
-            value = default;
-            return false;
+            value = new Utf8IriReferenceValue(bytes, extraRentedArrayPoolBytes, utf8IriReference._offsets, utf8IriReference._flags);
+            return true;
         }
 
-        value = new Utf8IriReferenceReferenceValue(stringBacking, iri);
-        return true;
+        value = default;
+        return false;
     }
 
     /// <summary>
@@ -66,6 +67,9 @@ public readonly ref struct Utf8IriReferenceReferenceValue
     /// </summary>
     public void Dispose()
     {
-        _stringBacking.Dispose();
+        if (_extraRentedArrayPoolBytes is not null)
+        {
+            ArrayPool<byte>.Shared.Return(_extraRentedArrayPoolBytes);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
+using System.Buffers;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json;
@@ -11,34 +12,36 @@ namespace Corvus.Text.Json;
 /// <remarks>
 /// This type should be used in a using declaration to ensure that the underlying memory is released when it is no longer needed.
 /// </remarks>
-public readonly ref struct Utf8UriReferenceReferenceValue
-#if NET
+public readonly struct Utf8UriReferenceValue
     : IDisposable
-#endif
 {
-    private readonly UnescapedUtf8JsonString _stringBacking;
-    private readonly Utf8UriReference _uriReference;
+    private readonly Utf8UriOffset _offsets;
+    private readonly Utf8UriTools.Flags _flags;
+    private readonly ReadOnlyMemory<byte> _bytes;
+    private readonly byte[]? _extraRentedArrayPoolBytes;
 
-    private Utf8UriReferenceReferenceValue(UnescapedUtf8JsonString stringBacking, Utf8UriReference uriReference)
+    private Utf8UriReferenceValue(ReadOnlyMemory<byte> bytes, byte[]? extraRentedArrayPoolBytes, Utf8UriOffset offsets, Utf8UriTools.Flags flags)
     {
-        _stringBacking = stringBacking;
-        _uriReference = uriReference;
+        _bytes = bytes;
+        _extraRentedArrayPoolBytes = extraRentedArrayPoolBytes;
+        _offsets = offsets;
+        _flags = flags;
     }
 
     /// <summary>
     /// Gets the UTF-8 URI reference value.
     /// </summary>
-    public Utf8UriReference UriReference => _uriReference;
+    public Utf8UriReference UriReference => Utf8UriReference.CreateUriReferenceUnsafe(_bytes, _offsets, _flags);
 
     /// <summary>
-    /// Tries to get the value of the element at the specified index as a <see cref="Utf8UriReferenceReferenceValue"/>.
+    /// Tries to get the value of the element at the specified index as a <see cref="Utf8UriReferenceValue"/>.
     /// </summary>
     /// <typeparam name="T">The type of the document.</typeparam>
     /// <param name="index">The index of the element.</param>
-    /// <param name="value">The <see cref="Utf8UriReferenceReferenceValue"/> value.</param>
+    /// <param name="value">The <see cref="Utf8UriReferenceValue"/> value.</param>
     /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
     [CLSCompliant(false)]
-    public static bool TryGetValue<T>(in T jsonDocument, int index, out Utf8UriReferenceReferenceValue value)
+    public static bool TryGetValue<T>(in T jsonDocument, int index, out Utf8UriReferenceValue value)
         where T : IJsonDocument
     {
         if (jsonDocument.GetJsonTokenType(index) != JsonTokenType.String)
@@ -47,17 +50,16 @@ public readonly ref struct Utf8UriReferenceReferenceValue
             return false;
         }
 
-        UnescapedUtf8JsonString stringBacking = jsonDocument.GetUtf8JsonString(index, JsonTokenType.String);
-
-        if (!Utf8UriReference.TryCreateUriReference(stringBacking.Span, out Utf8UriReference uri))
+        using UnescapedUtf8JsonString stringBacking = jsonDocument.GetUtf8JsonString(index, JsonTokenType.String);
+        ReadOnlyMemory<byte> bytes = stringBacking.TakeOwnership(out byte[]? extraRentedArrayPoolBytes);
+        if (Utf8UriReference.TryCreateUriReference(bytes.Span, out Utf8UriReference utf8UriReference))
         {
-            stringBacking.Dispose();
-            value = default;
-            return false;
+            value = new Utf8UriReferenceValue(bytes, extraRentedArrayPoolBytes, utf8UriReference._offsets, utf8UriReference._flags);
+            return true;
         }
 
-        value = new Utf8UriReferenceReferenceValue(stringBacking, uri);
-        return true;
+        value = default;
+        return false;
     }
 
     /// <summary>
@@ -65,6 +67,9 @@ public readonly ref struct Utf8UriReferenceReferenceValue
     /// </summary>
     public void Dispose()
     {
-        _stringBacking.Dispose();
+        if (_extraRentedArrayPoolBytes is not null)
+        {
+            ArrayPool<byte>.Shared.Return(_extraRentedArrayPoolBytes);
+        }
     }
 }

@@ -33,6 +33,18 @@ public readonly ref struct Utf8UriReference
         IsValid = Utf8UriTools.ParseUriInfo(_originalUriReference, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: false, out _offsets, out _flags);
     }
 
+    private Utf8UriReference(ReadOnlyMemory<byte> originalUriReference, Utf8UriOffset offsets, Utf8UriTools.Flags flags) : this()
+    {
+        _offsets = offsets;
+        _flags = flags;
+        _originalUriReference = originalUriReference.Span;
+    }
+
+    internal static Utf8UriReference CreateUriReferenceUnsafe(ReadOnlyMemory<byte> uriReference, Utf8UriOffset offsets, Utf8UriTools.Flags flags)
+    {
+        return new(uriReference, offsets, flags);
+    }
+
     /// <summary>
     /// Gets the authority component of the reference.
     /// </summary>

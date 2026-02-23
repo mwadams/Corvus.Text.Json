@@ -1,6 +1,7 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
+using System.Buffers;
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json;
@@ -11,24 +12,26 @@ namespace Corvus.Text.Json;
 /// <remarks>
 /// This type should be used in a using declaration to ensure that the underlying memory is released when it is no longer needed.
 /// </remarks>
-public readonly ref struct Utf8UriValue
-#if NET
+public readonly struct Utf8UriValue
     : IDisposable
-#endif
 {
-    private readonly UnescapedUtf8JsonString _stringBacking;
-    private readonly Utf8Uri _uri;
+    private readonly Utf8UriOffset _offsets;
+    private readonly Utf8UriTools.Flags _flags;
+    private readonly ReadOnlyMemory<byte> _bytes;
+    private readonly byte[]? _extraRentedArrayPoolBytes;
 
-    private Utf8UriValue(UnescapedUtf8JsonString stringBacking, Utf8Uri uri)
+    private Utf8UriValue(ReadOnlyMemory<byte> bytes, byte[]? extraRentedArrayPoolBytes, Utf8UriOffset offsets, Utf8UriTools.Flags flags)
     {
-        _stringBacking = stringBacking;
-        _uri = uri;
+        _bytes = bytes;
+        _extraRentedArrayPoolBytes = extraRentedArrayPoolBytes;
+        _offsets = offsets;
+        _flags = flags;
     }
 
     /// <summary>
     /// Gets the UTF-8 URI value.
     /// </summary>
-    public Utf8Uri Uri => _uri;
+    public Utf8Uri Uri => Utf8Uri.CreateUriUnsafe(_bytes, _offsets, _flags);
 
     /// <summary>
     /// Tries to get the value of the element at the specified index as a <see cref="Utf8UriValue"/>.
@@ -47,17 +50,16 @@ public readonly ref struct Utf8UriValue
             return false;
         }
 
-        UnescapedUtf8JsonString stringBacking = jsonDocument.GetUtf8JsonString(index, JsonTokenType.String);
-
-        if (!Utf8Uri.TryCreateUri(stringBacking.Span, out Utf8Uri uri))
+        using UnescapedUtf8JsonString stringBacking = jsonDocument.GetUtf8JsonString(index, JsonTokenType.String);
+        ReadOnlyMemory<byte> bytes = stringBacking.TakeOwnership(out byte[]? extraRentedArrayPoolBytes);
+        if (Utf8Uri.TryCreateUri(bytes.Span, out Utf8Uri utf8Uri))
         {
-            stringBacking.Dispose();
-            value = default;
-            return false;
+            value = new Utf8UriValue(bytes, extraRentedArrayPoolBytes, utf8Uri._offsets, utf8Uri._flags);
+            return true;
         }
 
-        value = new Utf8UriValue(stringBacking, uri);
-        return true;
+        value = default;
+        return false;
     }
 
     /// <summary>
@@ -65,6 +67,9 @@ public readonly ref struct Utf8UriValue
     /// </summary>
     public void Dispose()
     {
-        _stringBacking.Dispose();
+        if (_extraRentedArrayPoolBytes is not null)
+        {
+            ArrayPool<byte>.Shared.Return(_extraRentedArrayPoolBytes);
+        }
     }
 }

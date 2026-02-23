@@ -11,6 +11,7 @@
   <Folder Name="/.tests/">
     <Project Path="Common/tests/TestUtilities/TestUtilities.csproj" />
     <Project Path="tests/Corvus.JsonSchemaTestSuite.CodeGenerator/Corvus.JsonSchemaTestSuite.CodeGenerator.csproj" Id="fc46ebe0-6bd7-4a8a-abae-6271aff53420" />
+    <Project Path="tests/Corvus.Text.Json.Tests.GeneratedModels/Corvus.Text.Json.Tests.GeneratedModels.csproj" />
     <Project Path="tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj" />
   </Folder>
   <Project Path="src/Corvus.Text.Json.CodeGeneration/Corvus.Text.Json.CodeGeneration.csproj" />

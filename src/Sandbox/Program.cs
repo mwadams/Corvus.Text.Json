@@ -494,4 +494,4 @@ int yearAsInt = year;
 long yearAsLong = year;
 byte yearAsByte = (byte)year;
 
-string firstName = testPersonDocBuilder.RootElement.Name.FirstName.GetString()!;
+string firstName = testPersonDocBuilder.RootElement.Name.FirstName.GetString();

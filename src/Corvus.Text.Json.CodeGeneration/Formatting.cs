@@ -39,7 +39,10 @@ public static class Formatting
         "while",
         "Equals", "Finalize", "GetHashCode", "GetType",
         "MemberwiseClone", "ReferenceEquals", "ToString",
-        "System", "Microsoft", "Item", "Uri"
+        "System", "Microsoft", "Item", "Uri",
+        "Byte", "SByte", "Int16", "UInt16", "Int32", "UInt32", "Int64", "UInt64",
+        "Single", "Double", "Decimal", "String", "Object", "Float",
+        "Boolean", "Char", "DateTime", "Guid",
     ];
 
     private static readonly string[] ReservedNames =
