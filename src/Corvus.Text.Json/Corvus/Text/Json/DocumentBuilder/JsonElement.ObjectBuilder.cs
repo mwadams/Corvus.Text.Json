@@ -219,6 +219,40 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        /// Adds a property with a boolean value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The string value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        public void Add(ReadOnlySpan<byte> propertyName, string value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        /// <summary>
+        /// Adds a property with a boolean value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The string value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        public void Add(ReadOnlySpan<byte> propertyName, ReadOnlySpan<char> value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                value,
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+        /// <summary>
         /// Adds a property with a GUID value to the current object.
         /// </summary>
         /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
