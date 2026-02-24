@@ -19,6 +19,7 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <Nullable>enable</Nullable>
+    <RootNamespace></RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +29,7 @@
   <ItemGroup>
     <Using Include="System" />
     <Using Include="System.Text" />
-    <Using Include="SR = Corvus.Text.Json.Resources.Strings" />
+    <Using Include="SR = Resources.Strings" />
   </ItemGroup>
 
   <ItemGroup>

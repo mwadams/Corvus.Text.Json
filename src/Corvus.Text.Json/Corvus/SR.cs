@@ -3,7 +3,7 @@
 
 using System.Resources;
 
-namespace Corvus.Text.Json.Resources;
+namespace Resources;
 
 internal static partial class Strings
 {
