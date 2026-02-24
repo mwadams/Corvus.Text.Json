@@ -189,6 +189,7 @@ internal class DummyDocument : IJsonDocument
 
 #endif
 
+
     public bool ValueIsEscaped(int index, bool isPropertyName)
     { return false; }
 
@@ -269,6 +270,13 @@ internal class DummyDocument : IJsonDocument
     int IJsonDocument.GetStartIndex(int endIndex) => throw new NotImplementedException();
     int IJsonDocument.BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking) => throw new NotImplementedException();
     void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db) => throw new NotImplementedException();
+
+    bool IJsonDocument.TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> jsonPointer, int index, out TValue value)
+    {
+        value = default;
+        return false;
+    }
+
     void IDisposable.Dispose() => throw new NotImplementedException();
     int IJsonDocument.GetArrayInsertionIndex(int currentIndex, int arrayIndex) => throw new NotImplementedException();
     ReadOnlyMemory<byte> IJsonDocument.GetPropertyNameRaw(int index, bool includeQuotes) => throw new NotImplementedException();

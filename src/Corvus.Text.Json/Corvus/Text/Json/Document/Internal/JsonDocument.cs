@@ -1574,6 +1574,125 @@ public abstract partial class JsonDocument
     }
 
     /// <summary>
+    /// Try to resolve the given UTF-8 JSON pointer.
+    /// </summary>
+    /// <param name="jsonPointerUtf8">The UTF-8 JSON pointer to resolve.</param>
+    /// <param name="startRowIndex">The index of the element.</param>
+    /// <param name="resultIndex">The index of the result, if it could be resolved. Otherwise <c>-1</c>.</param>
+    /// <returns><see langword="true"/> if the pointer could be resolved, otherwise <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    protected bool TryResolveJsonPointerUnsafe(ReadOnlySpan<byte> jsonPointerUtf8, int startRowIndex, out int resultIndex)
+    {
+        int currentRowIndex = startRowIndex;
+
+        int index = 0;
+        int startRun = 0;
+        byte[]? decodedComponentBytes = null;
+        Span<byte> decodedComponent =
+            jsonPointerUtf8.Length < JsonConstants.StackallocByteThreshold
+                ? stackalloc byte[jsonPointerUtf8.Length]
+                : (decodedComponentBytes = ArrayPool<byte>.Shared.Rent(jsonPointerUtf8.Length));
+
+        try
+        {
+            while (index < jsonPointerUtf8.Length)
+            {
+                if (index == 0 && jsonPointerUtf8[index] == (byte)'#')
+                {
+                    ++index;
+                }
+
+                if (index >= jsonPointerUtf8.Length)
+                {
+                    break;
+                }
+
+                if (jsonPointerUtf8[index] == (byte)'/')
+                {
+                    ++index;
+                }
+
+                startRun = index;
+
+                if (index >= jsonPointerUtf8.Length)
+                {
+                    break;
+                }
+
+                while (index < jsonPointerUtf8.Length && jsonPointerUtf8[index] != (byte)'/')
+                {
+                    ++index;
+                }
+
+                // We've either reached the fragment.Length (so have to go 1 back from the end)
+                // or we're sitting on the terminating '/'
+                int endRun = index;
+                ReadOnlySpan<byte> encodedComponent = jsonPointerUtf8[startRun..endRun];
+                int decodedWritten = Utf8JsonPointerTools.DecodePointer(encodedComponent, decodedComponent);
+                ReadOnlySpan<byte> component = decodedComponent[..decodedWritten];
+                JsonTokenType currentTokenType = _parsedData.GetJsonTokenType(currentRowIndex);
+                if (currentTokenType == JsonTokenType.StartObject)
+                {
+                    if (TryGetNamedPropertyValueIndexUnsafe(currentRowIndex, component, out int next))
+                    {
+                        currentRowIndex = next;
+                    }
+                    else
+                    {
+                        // We were unable to find the element at that location.
+                        resultIndex = -1;
+                        return false;
+                    }
+                }
+                else if (currentTokenType == JsonTokenType.StartArray)
+                {
+                    if (Utf8Parser.TryParse(component, out int targetArrayIndex, out int bytesConsumed))
+                    {
+                        index += bytesConsumed;
+                        if (targetArrayIndex >= GetArrayLengthUnsafe(currentRowIndex))
+                        {
+                            resultIndex = -1;
+                            return false;
+                        }
+
+                        currentRowIndex = GetArrayIndexElementUnsafe(currentRowIndex, targetArrayIndex);
+                    }
+                    else
+                    {
+                        resultIndex = -1;
+                        return false;
+                    }
+                }
+            }
+
+            resultIndex = currentRowIndex;
+            return true;
+        }
+        finally
+        {
+            if (decodedComponentBytes is byte[] dcb)
+            {
+                ArrayPool<byte>.Shared.Return(dcb);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the length of the JSON array at the specified index without performing any safety checks.
+    /// </summary>
+    /// <param name="index">The index of the start of the array.</param>
+    /// <returns>The length of the array.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected int GetArrayLengthUnsafe(int index)
+    {
+        DbRow row = _parsedData.Get(index);
+
+        CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
+
+        return row.SizeOrLengthOrPropertyMapIndex;
+    }
+
+    /// <summary>
     /// Gets the named property value from a specific <see cref="MetadataDb"/>.
     /// </summary>
     /// <param name="parsedData">The parsed data. This is used in place of the document's own MetadataDb.</param>

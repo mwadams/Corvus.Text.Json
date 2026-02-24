@@ -113,6 +113,23 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> indicating that a digit was expected after an escape character in a JSON Pointer,
+    /// but the end of the document was reached.
+    /// </summary>
+    public static void ThrowInvalidOperation_JsonPointer_Expected_Digit_After_Escape_Character_Found_End()
+    {
+        throw GetInvalidOperationException(SR.JsonPointer_Expected_Digit_After_Escape_Character_Found_End);
+    }
+
+    /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> indicating that a digit was expected after an escape character in a JSON Pointer.
+    /// </summary>
+    public static void ThrowInvalidOperation_JsonPointer_Expected_Digit_After_Escape_Character()
+    {
+        throw GetInvalidOperationException(SR.JsonPointer_Expected_Digit_After_Escape_Character);
+    }
+
+    /// <summary>
     /// Gets an <see cref="InvalidOperationException"/> based on the exception resource and current state.
     /// </summary>
     /// <param name="resource">The exception resource type.</param>

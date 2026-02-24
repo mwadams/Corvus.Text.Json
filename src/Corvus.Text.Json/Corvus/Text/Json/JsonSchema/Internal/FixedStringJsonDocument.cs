@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using NodaTime;
 
@@ -594,6 +595,25 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
     private static FixedStringJsonDocument<T> CreateEmptyInstanceForCaching()
     {
         return new FixedStringJsonDocument<T>(ReadOnlyMemory<byte>.Empty, requiresUnescaping: false);
+    }
+
+    bool IJsonDocument.TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> jsonPointer, int index, out TValue value)
+    {
+        if (jsonPointer.Length > 2 ||
+            (jsonPointer.Length > 1 && jsonPointer[1] != (byte)'/') ||
+            (jsonPointer.Length == 1 && jsonPointer[0] is not (byte)'#' or (byte)'/'))
+        {
+            value = default;
+            return false;
+        }
+
+#if NET
+        value = TValue.CreateInstance(this, 0);
+#else
+        value = JsonElementHelpers.CreateInstance<TValue>(this, 0);
+#endif
+
+        return true;
     }
 
     /// <summary>

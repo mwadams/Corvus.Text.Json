@@ -149,15 +149,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetArrayLengthUnsafe(index);
     }
 
-    private int GetArrayLengthUnsafe(int index)
-    {
-        DbRow row = _parsedData.Get(index);
-
-        CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
-
-        return row.SizeOrLengthOrPropertyMapIndex;
-    }
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetPropertyCount(int index)
     {
@@ -1642,6 +1633,24 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
 
         Debug.Fail($"Unexpected encounter with JsonTokenType {_parsedData.GetJsonTokenType(index)}");
+    }
+
+    bool IJsonDocument.TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> fragment, int index, out TValue value)
+    {
+        CheckNotDisposed();
+
+        if (TryResolveJsonPointerUnsafe(fragment, index, out int valueIndex))
+        {
+#if NET
+            value = TValue.CreateInstance(this, valueIndex);
+#else
+            value = JsonElementHelpers.CreateInstance<TValue>(this, valueIndex);
+#endif
+            return true;
+        }
+
+        value = default;
+        return false;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

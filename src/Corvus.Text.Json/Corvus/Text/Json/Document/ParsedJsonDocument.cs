@@ -161,16 +161,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return GetArrayLengthUnsafe(index);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private int GetArrayLengthUnsafe(int index)
-    {
-        DbRow row = _parsedData.Get(index);
-
-        CheckExpectedType(JsonTokenType.StartArray, row.TokenType);
-
-        return row.SizeOrLengthOrPropertyMapIndex;
-    }
-
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetPropertyCount(int index)
@@ -1096,6 +1086,26 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         row = _parsedData.Get(endElementIdx);
         end = row.LocationOrIndex + row.SizeOrLengthOrPropertyMapIndex;
         return JsonReaderHelper.TranscodeHelper(_utf8Json.Slice(start, end - start).Span);
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    bool IJsonDocument.TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> fragment, int index, out TValue value)
+    {
+        CheckNotDisposed();
+
+        if (TryResolveJsonPointerUnsafe(fragment, index, out int valueIndex))
+        {
+#if NET
+            value = TValue.CreateInstance(this, valueIndex);
+#else
+            value = JsonElementHelpers.CreateInstance<TValue>(this, valueIndex);
+#endif
+            return true;
+        }
+
+        value = default;
+        return false;
     }
 
     /// <summary>

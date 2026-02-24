@@ -559,4 +559,15 @@ public interface IJsonDocument : IDisposable
     /// <param name="workspace">The JSON workspace.</param>
     /// <param name="db">The metadata database.</param>
     void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db);
+
+    /// <summary>
+    /// Try to resolve the given JSON pointer.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the target value.</typeparam>
+    /// <param name="jsonPointer">The JSON pointer to resolve.</param>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="value">Providers the resolved value, if the pointer could be resolved.</param>
+    /// <returns><see langword="true"/> if the pointer could be resolved, otherwise <see langword="false"/>.</returns>
+    bool TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> jsonPointer, int index, out TValue value)
+        where TValue : struct, IJsonElement<TValue>;
 }
