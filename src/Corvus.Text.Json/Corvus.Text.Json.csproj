@@ -262,7 +262,7 @@
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriReference.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8Uri.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Internal\Utf8IriHelper.cs" />
-    <Compile Include="Corvus\Text\Json\Uri\Utf8JsonPointerTools.cs" />
+    <Compile Include="Corvus\Text\Json\Uri\Internal\Utf8JsonPointerTools.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Internal\Utf8UriOffset.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Internal\Utf8UriTools.cs" />
     <Compile Include="Corvus\Text\Json\Uri\Utf8UriComponents.cs" />
