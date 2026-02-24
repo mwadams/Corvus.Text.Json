@@ -363,6 +363,12 @@ namespace Corvus.Text.Json.Tests
         [InlineData("[\"array\", \"number\"]")]
         [InlineData("[\"array\", \"boolean\"]")]
         [InlineData("[\"array\", \"null\"]")]
+        [InlineData("[\"string\", \"boolean\"]")]
+        [InlineData("[\"string\", \"number\"]")]
+        [InlineData("[\"string\", \"null\"]")]
+        [InlineData("[\"number\", \"boolean\"]")]
+        [InlineData("[\"number\", \"null\"]")]
+        [InlineData("[\"boolean\", \"null\"]")]
         public static async Task GenerateCode_Emits_ArrayTypes(string type)
         {
             DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(

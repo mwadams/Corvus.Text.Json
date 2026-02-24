@@ -402,6 +402,29 @@ public readonly partial struct JsonElement : IJsonElement<JsonElement>
     }
 
     /// <summary>
+    /// Tries to get the value as a boolean
+    /// </summary>
+    /// <param name="value">Provides the boolean value if successful.</param>
+    /// <returns><see langword="true"/> if the value was a boolean, otherwise false.</returns>
+    public bool TryGetBoolean(out bool value)
+    {
+        JsonTokenType type = TokenType;
+
+        switch (type)
+        {
+            case JsonTokenType.True:
+                value = true;
+                return true;
+            case JsonTokenType.False:
+                value = false;
+                return true;
+            default:
+                value = default;
+                return false;
+        }
+    }
+
+    /// <summary>
     ///   Gets the value of the element as a <see cref="bool"/>.
     /// </summary>
     /// <remarks>

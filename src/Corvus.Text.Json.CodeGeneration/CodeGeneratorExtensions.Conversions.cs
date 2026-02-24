@@ -107,7 +107,31 @@ internal static partial class CodeGeneratorExtensions
                         generator
                             .AppendSeparatorLine()
                             .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                            .AppendLineIndent("public static implicit operator bool(", typeName, " value) => value._parent.TryGetValue(value._idx, out bool result) ? result : throw new FormatException();");
+                            .AppendLineIndent("public static implicit operator bool(", typeName, " value)")
+                            .AppendLineIndent("{")
+                            .PushIndent()
+                                .AppendLineIndent("JsonTokenType type = value._parent.GetJsonTokenType(value._idx);")
+                                .AppendSeparatorLine()
+                                .AppendLineIndent("switch (type)")
+                                .AppendLineIndent("{")
+                                .PushIndent()
+                                    .AppendLineIndent("case JsonTokenType.True:")
+                                    .PushIndent()
+                                        .AppendLineIndent("return true;")
+                                    .PopIndent()
+                                    .AppendLineIndent("case JsonTokenType.False:")
+                                    .PushIndent()
+                                        .AppendLineIndent("return false;")
+                                    .PopIndent()
+                                    .AppendLineIndent("default:")
+                                    .PushIndent()
+                                        .AppendLineIndent("throw new FormatException();")
+                                    .PopIndent()
+                                .PopIndent()
+                                .AppendLineIndent("}")
+                            .PopIndent()
+                            .AppendLineIndent("}");
+
                     }
                     break;
                 default:
@@ -299,8 +323,39 @@ internal static partial class CodeGeneratorExtensions
             {
                 generator
                     .AppendSeparatorLine()
+                    .AppendLineIndent("/// <summary>")
+                    .AppendLineIndent("/// Tries to get the value as a boolean")
+                    .AppendLineIndent("/// </summary>")
+                    .AppendLineIndent("/// <param name=\"value\">Provides the boolean value if successful.</param>")
+                    .AppendLineIndent("/// <returns><see langword=\"true\"/> if the value was a boolean, otherwise false.</returns>")
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public bool TryGetValue(out bool value) => _parent.TryGetValue(_idx, out value);");
+                    .AppendLineIndent("public bool TryGetValue(out bool value)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("JsonTokenType type = _parent.GetJsonTokenType(_idx);")
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("switch (type)")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("case JsonTokenType.True:")
+                            .PushIndent()
+                                .AppendLineIndent("value = true;")
+                                .AppendLineIndent("return true;")
+                            .PopIndent()
+                            .AppendLineIndent("case JsonTokenType.False:")
+                            .PushIndent()
+                                .AppendLineIndent("value = false;")
+                                .AppendLineIndent("return true;")
+                            .PopIndent()
+                            .AppendLineIndent("default:")
+                            .PushIndent()
+                                .AppendLineIndent("value = default;")
+                                .AppendLineIndent("return false;")
+                            .PopIndent()
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                    .PopIndent()
+                    .AppendLineIndent("}");
             }
         }
 
