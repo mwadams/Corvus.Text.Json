@@ -39,6 +39,12 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="builder">The <see cref="ArrayBuilder"/> instance to build with.</param>
         public delegate void Build(ref ArrayBuilder builder);
+#if NET9_0_OR_GREATER
+        public delegate void Build<T>(in T context, ref ArrayBuilder builder)
+            where T : allows ref struct;
+#else
+        public delegate void Build<T>(in T context, ref ArrayBuilder builder);
+#endif
 
         private ComplexValueBuilder _builder;
 
@@ -63,13 +69,41 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        /// Builds a JSON array value using the provided delegate and value builder.
+        /// </summary>
+        /// <param name="value">The delegate to build the array.</param>
+        /// <param name="valueBuilder">The <see cref="ComplexValueBuilder"/> to use.</param>
+        public static void BuildValue<TContext>(in TContext context, Build<TContext> value, ref ComplexValueBuilder valueBuilder)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            valueBuilder.StartArray();
+            ArrayBuilder ovb = new(valueBuilder);
+            value(context, ref ovb);
+            valueBuilder = ovb._builder;
+            valueBuilder.EndArray();
+        }
+
+        /// <summary>
         /// Adds an object to the array using a builder delegate.
         /// </summary>
         /// <param name="value">A delegate that builds the object to add to the array.</param>
         public void Add(ObjectBuilder.Build value)
         {
-            _builder.AddItem(
-                (ref valueBuilder) => ObjectBuilder.BuildValue(value, ref valueBuilder));
+            _builder.AddItem(value, static (in context, ref valueBuilder) => ObjectBuilder.BuildValue(context, ref valueBuilder));
+        }
+
+        /// <summary>
+        /// Adds an object to the array using a builder delegate.
+        /// </summary>
+        /// <param name="value">A delegate that builds the object to add to the array.</param>
+        public void Add<TContext>(in TContext context, ObjectBuilder.Build<TContext> value)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            _builder.AddItem(BuildWithContext.Create(context, value), static (in context, ref valueBuilder) => ObjectBuilder.BuildValue(context.Context, context.Build, ref valueBuilder));
         }
 
         /// <summary>
@@ -78,7 +112,19 @@ public readonly partial struct JsonElement
         /// <param name="value">A delegate that builds the array to add as an item.</param>
         public void Add(Build value)
         {
-            _builder.AddItem((ref valueBuilder) => BuildValue(value, ref valueBuilder));
+            _builder.AddItem(value, static (in context, ref valueBuilder) => BuildValue(context, ref valueBuilder));
+        }
+
+        /// <summary>
+        /// Adds an array to the array using a builder delegate.
+        /// </summary>
+        /// <param name="value">A delegate that builds the array to add as an item.</param>
+        public void Add<TContext>(in TContext context, Build<TContext> value)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            _builder.AddItem(BuildWithContext.Create(context, value), static (in contextWrapper, ref valueBuilder) => BuildValue(contextWrapper.Context, contextWrapper.Build, ref valueBuilder));
         }
 
         /// <summary>
@@ -388,7 +434,7 @@ public readonly partial struct JsonElement
         /// Adds an array of <see cref="long"/> values to the array.
         /// </summary>
         /// <param name="array">The array of <see cref="long"/> values to add.</param>
-        public void AddArrayValue(ReadOnlySpan<long> array)
+        public void AddRange(ReadOnlySpan<long> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -397,7 +443,7 @@ public readonly partial struct JsonElement
         /// Adds an array of <see cref="int"/> values to the array.
         /// </summary>
         /// <param name="array">The array of <see cref="int"/> values to add.</param>
-        public void AddArrayValue(ReadOnlySpan<int> array)
+        public void AddRange(ReadOnlySpan<int> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -406,7 +452,7 @@ public readonly partial struct JsonElement
         /// Adds an array of <see cref="short"/> values to the array.
         /// </summary>
         /// <param name="array">The array of <see cref="short"/> values to add.</param>
-        public void AddArrayValue(ReadOnlySpan<short> array)
+        public void AddRange(ReadOnlySpan<short> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -416,7 +462,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="array">The array of <see cref="sbyte"/> values to add.</param>
         [CLSCompliant(false)]
-        public void AddArrayValue(ReadOnlySpan<sbyte> array)
+        public void AddRange(ReadOnlySpan<sbyte> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -436,7 +482,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="array">The array of <see cref="uint"/> values to add.</param>
         [CLSCompliant(false)]
-        public void AddArrayValue(ReadOnlySpan<uint> array)
+        public void AddRange(ReadOnlySpan<uint> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -446,7 +492,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="array">The array of <see cref="ushort"/> values to add.</param>
         [CLSCompliant(false)]
-        public void AddArrayValue(ReadOnlySpan<ushort> array)
+        public void AddRange(ReadOnlySpan<ushort> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -455,7 +501,7 @@ public readonly partial struct JsonElement
         /// Adds an array of <see cref="byte"/> values to the array.
         /// </summary>
         /// <param name="array">The array of <see cref="byte"/> values to add.</param>
-        public void AddArrayValue(ReadOnlySpan<byte> array)
+        public void AddRange(ReadOnlySpan<byte> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -464,7 +510,7 @@ public readonly partial struct JsonElement
         /// Adds an array of <see cref="decimal"/> values to the array.
         /// </summary>
         /// <param name="array">The array of <see cref="decimal"/> values to add.</param>
-        public void AddArrayValue(ReadOnlySpan<decimal> array)
+        public void AddRange(ReadOnlySpan<decimal> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -473,7 +519,7 @@ public readonly partial struct JsonElement
         /// Adds an array of <see cref="double"/> values to the array.
         /// </summary>
         /// <param name="array">The array of <see cref="double"/> values to add.</param>
-        public void AddArrayValue(ReadOnlySpan<double> array)
+        public void AddRange(ReadOnlySpan<double> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -482,7 +528,7 @@ public readonly partial struct JsonElement
         /// Adds an array of <see cref="float"/> values to the array.
         /// </summary>
         /// <param name="array">The array of <see cref="float"/> values to add.</param>
-        public void AddArrayValue(ReadOnlySpan<float> array)
+        public void AddRange(ReadOnlySpan<float> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -494,7 +540,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="array">The array of <see cref="Int128"/> values to add.</param>
         [CLSCompliant(false)]
-        public void AddArrayValue(ReadOnlySpan<Int128> array)
+        public void AddRange(ReadOnlySpan<Int128> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -504,7 +550,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="array">The array of <see cref="UInt128"/> values to add.</param>
         [CLSCompliant(false)]
-        public void AddArrayValue(ReadOnlySpan<UInt128> array)
+        public void AddRange(ReadOnlySpan<UInt128> array)
         {
             _builder.AddItemArrayValue(array);
         }
@@ -514,7 +560,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="array">The array of <see cref="Half"/> values to add.</param>
         [CLSCompliant(false)]
-        public void AddArrayValue(ReadOnlySpan<Half> array)
+        public void AddRange(ReadOnlySpan<Half> array)
         {
             _builder.AddItemArrayValue(array);
         }

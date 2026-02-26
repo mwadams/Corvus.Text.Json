@@ -245,10 +245,19 @@ Console.WriteLine("************");
 Console.WriteLine("************");
 Console.WriteLine();
 
+
+#if NET9_0_OR_GREATER
+ReadOnlySpan<int> years = [2012, 2016, 2024];
+#else
+int[] years = [2012, 2016, 2024];
+#endif
+
+
 // Create a builder for our root element
 using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocumentBuilder(
     workspace,
-    new(static (ref o) =>
+    years,
+    static (in years, ref o) =>
     {
         o.Add(
             "name"u8,
@@ -266,24 +275,23 @@ using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateDocum
             });
         o.Add("age"u8, 51);
         o.Add("competedInYears"u8,
-            static (ref arrayBuilder) =>
+            years,
+            static (in years, ref arrayBuilder) =>
             {
-                arrayBuilder.Add(2012);
-                arrayBuilder.Add(2016);
-                arrayBuilder.Add(2024);
+                arrayBuilder.AddRange(years);
             });
-    }));
+    });
 
 // Validate that we can write the document back out again
 Console.WriteLine(builder.RootElement.ToString());
 
-int[] years = [2012, 2016, 2024];
-
 using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocumentBuilder(
     workspace,
-    new((ref b) => b.Create(
+    years,
+    static (in years, ref b) => b.Create(
+        years,
         age: 51,
-        name: new(static (ref personName) =>
+        name: new PersonName.Source(static (ref personName) =>
         {
             personName.Create(
                 firstName: "Michael"u8,
@@ -294,13 +302,13 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocumentBuil
                     otherNames.Add("James"u8);
                 }));
         }),
-        competedInYears: new((ref competedInYears) =>
+        competedInYears: new(years, static (in years, ref competedInYears) =>
         {
             foreach (int year in years)
             {
                 competedInYears.Add(year);
             }
-        }))));
+        })));
 
 docBuilder.RootElement.Name.SetOtherNames(new((ref b) => b.Add("Leo"u8)));
 docBuilder.RootElement.Name.SetOtherNames("William"u8);
@@ -313,9 +321,9 @@ Console.WriteLine(docBuilder.RootElement.ToString());
 
 using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocumentBuilder(
     workspace,
-    new ((ref b) => b.Create(
+    (ref b) => b.Create(
         age: 51,
-    name: new((ref personName) =>
+        name: new((ref personName) =>
         {
             personName.Create(
                 firstName: "Michael"u8,
@@ -327,7 +335,7 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocumentBui
             competedInYears.Add(2012);
             competedInYears.Add(2016);
             competedInYears.Add(2024);
-        }))));
+        })));
 
 Console.WriteLine();
 Console.WriteLine("************");
@@ -347,13 +355,13 @@ Person.Mutable isItOK = (Person.Mutable)person; // This will throw if `person` w
 
 using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocumentBuilder(
     workspace,
-    new((ref b) => b.Create(
+    (ref b) => b.Create(
         age: person.Age ?? default, // Happily assign an existing instance, will not copy
         name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
         competedInYears: new((ref competedInYears) =>
         {
             competedInYears.Add(2012);
-        }))));
+        })));
 
 Console.WriteLine(docBuilder3.RootElement.ToString());
 
@@ -458,7 +466,7 @@ static void EvaluateAndWriteResults(Person person, JsonSchemaResultsLevel level)
 
 using JsonDocumentBuilder<Person.Mutable> testPersonDocBuilder = Person.CreateDocumentBuilder(
         workspace,
-        new(static (ref b) => b.Create(
+        static (ref b) => b.Create(
             age: 51,
             name: new(static (ref personName) =>
             {
@@ -467,7 +475,7 @@ using JsonDocumentBuilder<Person.Mutable> testPersonDocBuilder = Person.CreateDo
                     lastName: "Adams"u8,
                     otherNames: "Francis James"u8);
             }),
-            competedInYears: CompetedInYears.Source.FromArray([2012, 2020, 2024]))));
+            competedInYears: CompetedInYears.Source.FromArray([2012, 2020, 2024])));
 
 Console.WriteLine(testPersonDocBuilder.RootElement);
 

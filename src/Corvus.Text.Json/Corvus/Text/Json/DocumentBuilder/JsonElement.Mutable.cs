@@ -1,19 +1,25 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
+using System;
+using System.Buffers;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Corvus.Text.Json.Internal;
 using NodaTime;
+using static Corvus.Text.Json.JsonElement;
 
 namespace Corvus.Text.Json;
 
 public readonly partial struct JsonElement
 {
+    private static readonly StandardFormat s_dateTimeStandardFormat = new StandardFormat('O');
+
     /// <summary>
     /// Represents a source for creating mutable JSON elements from various value types.
     /// </summary>
@@ -383,19 +389,13 @@ public readonly partial struct JsonElement
         /// </remarks>
         private Source(DateTimeOffset value)
         {
-            //                                                                We inject the actual formatting code from the formatter infrastructure
-            //                                                                                                                     |
-            //                                                                                              /---------------------------------------------\
-            SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
-            // ... and also get the kind to use from there
-            //                 |
-            //      /-------------------\
+            SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written, s_dateTimeStandardFormat));
             _kind = Kind.StringSimpleType;
         }
 
         private Source(DateTime value)
         {
-            SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written));
+            SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written, s_dateTimeStandardFormat));
             _kind = Kind.StringSimpleType;
         }
 
@@ -514,8 +514,17 @@ public readonly partial struct JsonElement
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator Source(in JsonElement value)
         {
-            // This would normally be
-            //return new(JsonElement.From(value));
+            return new(value);
+        }
+
+        /// <summary>
+        /// Implicitly converts a <see cref="JsonElement"/> to a <see cref="Source"/>.
+        /// </summary>
+        /// <param name="value">The JSON element to convert.</param>
+        /// <returns>A source representing the JSON element.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(in Mutable value)
+        {
             return new(value);
         }
 
@@ -983,7 +992,7 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.StringSimpleType:
-                    valueBuilder.AddProperty(utf8Name, _simpleTypeBacking.Span(), escapeName, escapeValue: true, nameRequiresUnescaping, valueRequiresUnescaping: false);
+                    valueBuilder.AddProperty(utf8Name, _simpleTypeBacking.Span(), escapeName, escapeValue: false, nameRequiresUnescaping, valueRequiresUnescaping: false);
                     break;
 
                 case Kind.RawUtf8StringRequiresUnescaping:
@@ -1003,11 +1012,11 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.JsonArrayBuilderInstance:
-                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                    valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (in b, ref o) => ArrayBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
 
                 case Kind.JsonObjectBuilderInstance:
-                    valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
+                    valueBuilder.AddProperty(utf8Name, _objectBuilder!, static (in b, ref o) => ObjectBuilder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
 
                 default:
@@ -1060,7 +1069,7 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.StringSimpleType:
-                    valueBuilder.AddProperty(name, _simpleTypeBacking.Span(), escapeValue: true, valueRequiresUnescaping: false);
+                    valueBuilder.AddProperty(name, _simpleTypeBacking.Span(), escapeValue: false, valueRequiresUnescaping: false);
                     break;
 
                 case Kind.RawUtf8StringRequiresUnescaping:
@@ -1080,11 +1089,11 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.JsonArrayBuilderInstance:
-                    valueBuilder.AddProperty(name, _arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o));
+                    valueBuilder.AddProperty(name, _arrayBuilder!, static (in b, ref o) => ArrayBuilder.BuildValue(b, ref o));
                     break;
 
                 case Kind.JsonObjectBuilderInstance:
-                    valueBuilder.AddProperty(name, _objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o));
+                    valueBuilder.AddProperty(name, _objectBuilder!, static (in b, ref o) => ObjectBuilder.BuildValue(b, ref o));
                     break;
 
                 default:
@@ -1147,7 +1156,7 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.StringSimpleType:
-                    valueBuilder.AddItem(_simpleTypeBacking.Span());
+                    valueBuilder.AddItem(_simpleTypeBacking.Span(), escapeValue: false, requiresUnescaping: false);
                     break;
 
                 case Kind.RawUtf8StringRequiresUnescaping:
@@ -1167,11 +1176,213 @@ public readonly partial struct JsonElement
                     break;
 
                 case Kind.JsonArrayBuilderInstance:
-                    valueBuilder.AddItem(_arrayBuilder!, static (b, ref o) => ArrayBuilder.BuildValue(b, ref o));
+                    valueBuilder.AddItem(_arrayBuilder!, static (in b, ref o) => ArrayBuilder.BuildValue(b, ref o));
                     break;
 
                 case Kind.JsonObjectBuilderInstance:
-                    valueBuilder.AddItem(_objectBuilder!, static (b, ref o) => ObjectBuilder.BuildValue(b, ref o));
+                    valueBuilder.AddItem(_objectBuilder!, static (in b, ref o) => ObjectBuilder.BuildValue(b, ref o));
+                    break;
+
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
+            }
+        }
+    }
+
+    public readonly ref struct Source<TContext>
+#if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+#endif
+    {
+        /// <summary>
+        /// Discriminates the type and storage mechanism for the source value.
+        /// </summary>
+        /// <remarks>
+        private enum Kind
+        {
+            // We only need to include the kinds we
+            // actually need!
+            Unknown,
+            Source,
+            JsonArrayBuilderInstance,
+            JsonObjectBuilderInstance,
+        }
+
+        private readonly Kind _kind;
+        private readonly TContext _context;
+        private readonly ArrayBuilder.Build<TContext>? _arrayBuilder;
+        private readonly ObjectBuilder.Build<TContext>? _objectBuilder;
+        private readonly Source _source;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from a JSON array builder.
+        /// </summary>
+        /// <param name="context">The context to pass to the builder.</param>
+        /// <param name="value">The array builder delegate to use as the source.</param>
+        public Source(in TContext context, ArrayBuilder.Build<TContext> value)
+        {
+            _context = context;
+            _arrayBuilder = value;
+            _kind = Kind.JsonArrayBuilderInstance;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from a JSON object builder.
+        /// </summary>
+        /// <param name="value">The object builder delegate to use as the source.</param>
+        public Source(in TContext context, ObjectBuilder.Build<TContext> value)
+        {
+            _context = context;
+            _objectBuilder = value;
+            _kind = Kind.JsonObjectBuilderInstance;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Source"/> struct from a JSON object builder.
+        /// </summary>
+        /// <param name="source">The context-free source to use as the source.</param>
+        public Source(Source source)
+        {
+            _source = source;
+            _context = default!;
+            _kind = Kind.Source;
+        }
+
+        public static implicit operator Source<TContext>(Source source)
+        {
+            return new(source);
+        }
+
+        /// <summary>
+        /// Adds this source as a property to a complex value builder.
+        /// </summary>
+        /// <param name="utf8Name">The UTF-8 encoded property name.</param>
+        /// <param name="valueBuilder">The complex value builder to add the property to.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        /// <remarks>
+        /// <para>
+        /// This method implements type-specific dispatch based on the internal <see cref="Kind"/> value,
+        /// routing each source type to the appropriate <see cref="ComplexValueBuilder"/> method:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><strong>Primitives:</strong> Direct calls to type-specific AddProperty overloads</description></item>
+        /// <item><description><strong>Numeric Types:</strong> Formatted as JSON numbers using pre-computed UTF-8 bytes</description></item>
+        /// <item><description><strong>String Types:</strong> Handled with appropriate escaping and encoding parameters</description></item>
+        /// <item><description><strong>Complex Types:</strong> Delegates to builder instances for recursive construction</description></item>
+        /// </list>
+        /// <para>
+        /// <strong>Escape Handling:</strong>
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><c>escapeName</c>: Controls whether property names are JSON-escaped</description></item>
+        /// <item><description><c>nameRequiresUnescaping</c>: Indicates pre-escaped property names</description></item>
+        /// <item><description>String values have separate escape handling based on their source type</description></item>
+        /// </list>
+        /// <para>
+        /// This method is typically called automatically during JSON object construction and
+        /// forms part of the internal document building pipeline.
+        /// </para>
+        /// </remarks>
+        public void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonArrayBuilderInstance:
+                    valueBuilder.AddProperty(utf8Name, BuildWithContext.Create(_context, _arrayBuilder!), static (in b, ref o) => ArrayBuilder.BuildValue(b.Context, b.Build, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+
+                case Kind.JsonObjectBuilderInstance:
+                    valueBuilder.AddProperty(utf8Name, BuildWithContext.Create(_context, _objectBuilder!), static (in b, ref o) => ObjectBuilder.BuildValue(b.Context, b.Build, ref o), escapeName, nameRequiresUnescaping);
+                    break;
+
+                case Kind.Source:
+                    _source.AddAsProperty(utf8Name, ref valueBuilder, escapeName, nameRequiresUnescaping);
+                    break;
+
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Adds this source as a property to a complex value builder.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="valueBuilder">The complex value builder to add the property to.</param>
+        public void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
+        {
+            AddAsProperty(name.AsSpan(), ref valueBuilder);
+        }
+
+        /// <summary>
+        /// Adds this source as a property to a complex value builder.
+        /// </summary>
+        /// <param name="name">The property name as a character span.</param>
+        /// <param name="valueBuilder">The complex value builder to add the property to.</param>
+        public void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonArrayBuilderInstance:
+                    valueBuilder.AddProperty(name, BuildWithContext.Create(_context, _arrayBuilder!), static (in b, ref o) => ArrayBuilder.BuildValue(b.Context, b.Build, ref o));
+                    break;
+
+                case Kind.JsonObjectBuilderInstance:
+                    valueBuilder.AddProperty(name, BuildWithContext.Create(_context, _objectBuilder!), static (in b, ref o) => ObjectBuilder.BuildValue(b.Context, b.Build, ref o));
+                    break;
+
+                case Kind.Source:
+                    _source.AddAsProperty(name, ref valueBuilder);
+                    break;
+
+                default:
+                    Debug.Fail("Unrecognized kind.");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Adds this source as an item to a complex value builder.
+        /// </summary>
+        /// <param name="valueBuilder">The complex value builder to add the item to.</param>
+        /// <remarks>
+        /// <para>
+        /// This method implements type-specific dispatch based on the internal <see cref="Kind"/> value,
+        /// routing each source type to the appropriate <see cref="ComplexValueBuilder"/> method for array items:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><strong>Primitives:</strong> Direct calls to type-specific AddItem overloads</description></item>
+        /// <item><description><strong>Numeric Types:</strong> Formatted as JSON numbers using pre-computed UTF-8 bytes</description></item>
+        /// <item><description><strong>String Types:</strong> Handled with appropriate escaping parameters</description></item>
+        /// <item><description><strong>Complex Types:</strong> Delegates to builder instances for recursive construction</description></item>
+        /// </list>
+        /// <para>
+        /// Unlike <see cref="AddAsProperty"/>, this method does not handle property name escaping
+        /// since array items do not have names. String values are processed with their appropriate
+        /// escape handling based on the source type.
+        /// </para>
+        /// <para>
+        /// This method is typically called automatically during JSON array construction and
+        /// forms part of the internal document building pipeline.
+        /// </para>
+        /// </remarks>
+        public void AddAsItem(ref ComplexValueBuilder valueBuilder)
+        {
+            switch (_kind)
+            {
+                case Kind.JsonArrayBuilderInstance:
+                    valueBuilder.AddItem(BuildWithContext.Create(_context, _arrayBuilder!), static (in b, ref o) => ArrayBuilder.BuildValue(b.Context, b.Build, ref o));
+                    break;
+
+                case Kind.JsonObjectBuilderInstance:
+                    valueBuilder.AddItem(BuildWithContext.Create(_context, _objectBuilder!), static (in b, ref o) => ObjectBuilder.BuildValue(b.Context, b.Build, ref o));
+                    break;
+
+                case Kind.Source:
+                    _source.AddAsItem(ref valueBuilder);
                     break;
 
                 default:
@@ -1251,6 +1462,52 @@ public readonly partial struct JsonElement
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         source.AddAsItem(ref cvb);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates a JSON document builder from an array builder.
+    /// </summary>
+    /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+    /// <param name="workspace">The JSON workspace to use for the document builder.</param>
+    /// <param name="context">The builder context.</param>
+    /// <param name="builder">The array value builder.</param>
+    /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
+    /// <returns>A JSON document builder containing the source value.</returns>
+    [CLSCompliant(false)]
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder<TContext>(JsonWorkspace workspace, in TContext context, ArrayBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+#endif
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        cvb.AddItem(BuildWithContext.Create(context, builder), static (in b, ref o) => ArrayBuilder.BuildValue(b.Context, b.Build, ref o));
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates a JSON document builder from an object builder.
+    /// </summary>
+    /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+    /// <param name="workspace">The JSON workspace to use for the document builder.</param>
+    /// <param name="context">The builder context.</param>
+    /// <param name="builder">The array value builder.</param>
+    /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
+    /// <returns>A JSON document builder containing the array value.</returns>
+    [CLSCompliant(false)]
+    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder<TContext>(JsonWorkspace workspace, in TContext context, ObjectBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+#endif
+    {
+        // Create the document builder without a MetadataDb
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        cvb.AddItem(BuildWithContext.Create(context, builder), static (in b, ref o) => ObjectBuilder.BuildValue(b.Context, b.Build, ref o));
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }
@@ -3766,6 +4023,107 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        ///   Sets a JSON object property on this element using a value Source.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="source">The source of the property.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetProperty(string propertyName, in Source source)
+        {
+            SetProperty(propertyName.AsSpan(), source);
+        }
+
+        /// <summary>
+        ///   Sets a JSON object property on this element using a value Source.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="source">The source of the property.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
+        public void SetProperty(ReadOnlySpan<char> propertyName, in Source source, int estimatedMemberCount = 30)
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                source.AddAsItem(ref cvb);
+                _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                source.AddAsProperty(propertyName, ref cvb);
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+
+        /// <summary>
+        ///   Sets a JSON object property on this element using a value Source.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="source">The source of the property.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
+        public void SetProperty(ReadOnlySpan<byte> propertyName, in Source source, int estimatedMemberCount = 30)
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                source.AddAsItem(ref cvb);
+                _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                source.AddAsProperty(propertyName, ref cvb);
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
         ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
         /// </summary>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -3792,6 +4150,40 @@ public readonly partial struct JsonElement
         public void SetProperty(string propertyName, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             SetProperty(propertyName.AsSpan(), objectValue, estimatedMemberCount);
+        }
+
+        /// <summary>
+        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="context">The builder context.</param>
+        /// <param name="objectValue">A delegate that builds the JSON object value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetProperty<TContext>(string propertyName, in TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            SetProperty(propertyName.AsSpan(), context, objectValue, estimatedMemberCount);
         }
 
         /// <summary>
@@ -3835,7 +4227,61 @@ public readonly partial struct JsonElement
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, (ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
+                cvb.AddProperty(propertyName, objectValue, static (in build, ref o) => ObjectBuilder.BuildValue(build, ref o));
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="context">The builder context.</param>
+        /// <param name="objectValue">A delegate that builds the JSON object value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
+        public void SetProperty<TContext>(ReadOnlySpan<char> propertyName, TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                // We are going to replace just the value
+                cvb.AddItem(BuildWithContext.Create(context, objectValue), static (in context, ref o) => ObjectBuilder.BuildValue(context.Context, context.Build, ref o));
+                _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                cvb.AddProperty(propertyName, BuildWithContext.Create(context, objectValue), static (in context, ref o) => ObjectBuilder.BuildValue(context.Context, context.Build, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -3878,13 +4324,67 @@ public readonly partial struct JsonElement
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
-                cvb.AddItem((ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
+                cvb.AddItem(objectValue, static (in build, ref o) => ObjectBuilder.BuildValue(build, ref o));
                 _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
             }
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, (ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
+                cvb.AddProperty(propertyName, objectValue, static (in build, ref o) => ObjectBuilder.BuildValue(build, ref o));
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="context">The builder context.</param>
+        /// <param name="objectValue">A delegate that builds the JSON object value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
+        ///   </para>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
+        public void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                // We are going to replace just the value
+                cvb.AddItem(BuildWithContext.Create(context, objectValue), static (in context, ref o) => ObjectBuilder.BuildValue(context.Context, context.Build, ref o));
+                _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                cvb.AddProperty(propertyName, BuildWithContext.Create(context, objectValue), static (in context, ref o) => ObjectBuilder.BuildValue(context.Context, context.Build, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -3924,6 +4424,40 @@ public readonly partial struct JsonElement
         /// <summary>
         ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
         /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="context">The builder context.</param>
+        /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetProperty<TContext>(string propertyName, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            SetProperty(propertyName.AsSpan(), context, arrayValue, estimatedMemberCount);
+        }
+
+        /// <summary>
+        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// </summary>
         /// <param name="propertyName">The name of the property to set as a character span.</param>
         /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of elements in the array for performance optimization.</param>
@@ -3956,13 +4490,67 @@ public readonly partial struct JsonElement
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
-                cvb.AddItem((ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+                cvb.AddItem(arrayValue, static (in build, ref o) => ArrayBuilder.BuildValue(build, ref o));
                 _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
             }
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, (ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+                cvb.AddProperty(propertyName, arrayValue, static (in arrayValue, ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+                int endIndex = _idx + _parent.GetDbSize(_idx, false);
+                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="context">The builder context.</param>
+        /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This overload accepts a character span to avoid string allocation when the property name
+        ///     is already available as a span.
+        ///   </para>
+        ///   <para>
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
+        ///   </para>
+        ///   <para>
+        ///     If the property already exists, its value will be replaced.
+        ///     If the property doesn't exist, it will be added to the object.
+        ///   </para>
+        /// </remarks>
+        public void SetProperty<TContext>(ReadOnlySpan<char> propertyName, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            CheckValidInstance();
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                // We are going to replace just the value
+                cvb.AddItem(BuildWithContext.Create(context, arrayValue), static (in context, ref o) => ArrayBuilder.BuildValue(context.Context, context.Build, ref o));
+                _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
+            }
+            else
+            {
+                // We are going to insert the new value
+                cvb.AddProperty(propertyName, BuildWithContext.Create(context, arrayValue), (in context, ref o) => ArrayBuilder.BuildValue(context.Context, context.Build, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -4005,13 +4593,13 @@ public readonly partial struct JsonElement
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
-                cvb.AddItem((ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+                cvb.AddItem(arrayValue, static (in arrayValue, ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
                 _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
             }
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, (ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+                cvb.AddProperty(propertyName, arrayValue, static (in arrayValue, ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -4020,10 +4608,14 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a string property on this JSON object element.
+        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
         /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="utf8StringValue">The string value to set.</param>
+        /// <param name="context">The builder context.</param>
+        /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
+        /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
+        /// <exception cref="InvalidOperationException">
         /// <exception cref="InvalidOperationException">
         ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
         ///   or the element reference is stale due to document mutations.
@@ -4033,106 +4625,36 @@ public readonly partial struct JsonElement
         /// </exception>
         /// <remarks>
         ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
+        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        ///     with UTF-8 property names, avoiding encoding conversions.
         ///   </para>
         ///   <para>
-        ///     The string value will be properly escaped according to JSON string rules.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, string utf8StringValue)
-        {
-            SetProperty(propertyName.AsSpan(), utf8StringValue.AsSpan());
-        }
-
-        /// <summary>
-        ///   Sets a string property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="utf8StringValue">The string value to set as a character span.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts character spans to avoid string allocation when the property name
-        ///     and value are already available as spans.
+        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        ///     Providing an accurate estimate can improve performance by reducing reallocations.
         ///   </para>
         ///   <para>
         ///     If the property already exists, its value will be replaced.
         ///     If the property doesn't exist, it will be added to the object.
         ///   </para>
-        ///   <para>
-        ///     The string value will be properly escaped according to JSON string rules.
-        ///   </para>
         /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> utf8StringValue)
+        public void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
-                cvb.AddItem(utf8StringValue);
+                cvb.AddItem(BuildWithContext.Create(context, arrayValue), (in context, ref o) => ArrayBuilder.BuildValue(context.Context, context.Build, ref o));
                 _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
             }
             else
             {
                 // We are going to insert the new value
-                cvb.AddProperty(propertyName, utf8StringValue);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a string property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="utf8StringValue">The string value to set as a UTF-8 encoded byte span.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts UTF-8 encoded byte spans for optimal performance when working
-        ///     with UTF-8 data, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        ///   <para>
-        ///     The string value will be properly escaped according to JSON string rules.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8StringValue)
-        {
-            CheckValidInstance();
-
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(utf8StringValue);
-                _parent.OverwriteAndDispose(_idx, value._idx, value._idx + value._parent.GetDbSize(value._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, utf8StringValue);
+                cvb.AddProperty(propertyName, BuildWithContext.Create(context, arrayValue), static (in context, ref o) => ArrayBuilder.BuildValue(context.Context, context.Build, ref o));
                 int endIndex = _idx + _parent.GetDbSize(_idx, false);
                 _parent.InsertAndDispose(_idx, endIndex, ref cvb);
             }
@@ -4259,2892 +4781,11 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a boolean property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The boolean value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, bool value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a boolean property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The boolean value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, bool value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a boolean property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The boolean value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, bool value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a property value on this JSON object element using a generic JSON element type.
-        /// </summary>
-        /// <typeparam name="T">The type of JSON element to set, must implement <see cref="IJsonElement{T}"/>.</typeparam>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The JSON element value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This generic method allows setting properties using any JSON element type that
-        ///     implements the <see cref="IJsonElement{T}"/> interface.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty<T>(string propertyName, T value)
-            where T : struct, IJsonElement<T>
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a property value on this JSON object element using a generic JSON element type.
-        /// </summary>
-        /// <typeparam name="T">The type of JSON element to set, must implement <see cref="IJsonElement{T}"/>.</typeparam>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The JSON element value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     This generic method allows setting properties using any JSON element type that
-        ///     implements the <see cref="IJsonElement{T}"/> interface.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty<T>(ReadOnlySpan<char> propertyName, T value)
-            where T : struct, IJsonElement<T>
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a property value on this JSON object element using a generic JSON element type.
-        /// </summary>
-        /// <typeparam name="T">The type of JSON element to set, must implement <see cref="IJsonElement{T}"/>.</typeparam>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The JSON element value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     This generic method allows setting properties using any JSON element type that
-        ///     implements the <see cref="IJsonElement{T}"/> interface.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty<T>(ReadOnlySpan<byte> propertyName, T value)
-            where T : struct, IJsonElement<T>
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a GUID property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The GUID value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The GUID will be serialized as a JSON string in standard format (e.g., "12345678-1234-5678-9abc-123456789abc").
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, Guid value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a GUID property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The GUID value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     The GUID will be serialized as a JSON string in standard format (e.g., "12345678-1234-5678-9abc-123456789abc").
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, Guid value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a GUID property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The GUID value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The GUID will be serialized as a JSON string in standard format (e.g., "12345678-1234-5678-9abc-123456789abc").
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, Guid value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a DateTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The DateTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, in DateTime value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a DateTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The DateTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, in DateTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a DateTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The DateTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, in DateTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a DateTimeOffset property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The DateTimeOffset value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, in DateTimeOffset value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a DateTimeOffset property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The DateTimeOffset value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, in DateTimeOffset value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a DateTimeOffset property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The DateTimeOffset value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, in DateTimeOffset value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an OffsetDateTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The OffsetDateTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///     This provides more precise timezone handling than standard .NET DateTime types.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, in OffsetDateTime value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets an OffsetDateTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The OffsetDateTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///     This provides more precise timezone handling than standard .NET DateTime types.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, in OffsetDateTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an OffsetDateTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The OffsetDateTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///     This provides more precise timezone handling than standard .NET DateTime types.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, in OffsetDateTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an OffsetDate property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The OffsetDate value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format with timezone offset.
-        ///     This represents a date with timezone information but no time component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, in OffsetDate value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets an OffsetDate property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The OffsetDate value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format with timezone offset.
-        ///     This represents a date with timezone information but no time component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, in OffsetDate value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an OffsetDate property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The OffsetDate value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format with timezone offset.
-        ///     This represents a date with timezone information but no time component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, in OffsetDate value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an OffsetTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The OffsetTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string in ISO 8601 time format with timezone offset.
-        ///     This represents a time with timezone information but no date component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, in OffsetTime value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets an OffsetTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The OffsetTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string in ISO 8601 time format with timezone offset.
-        ///     This represents a time with timezone information but no date component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, in OffsetTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an OffsetTime property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The OffsetTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string in ISO 8601 time format with timezone offset.
-        ///     This represents a time with timezone information but no date component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, in OffsetTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a LocalDate property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The LocalDate value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The LocalDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format.
-        ///     This represents a date without any timezone information or time component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, in LocalDate value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a LocalDate property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The LocalDate value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The LocalDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format.
-        ///     This represents a date without any timezone information or time component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, in LocalDate value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a LocalDate property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The LocalDate value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The LocalDate (from NodaTime) will be serialized as a JSON string in ISO 8601 date format.
-        ///     This represents a date without any timezone information or time component.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, in LocalDate value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a Period property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The Period value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 period format.
-        ///     This represents a time period (e.g., "P1Y2M3DT4H5M6S") with year, month, day, hour, minute,
-        ///     and second components.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, in Period value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a Period property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The Period value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 period format.
-        ///     This represents a time period (e.g., "P1Y2M3DT4H5M6S") with year, month, day, hour, minute,
-        ///     and second components.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, in Period value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a Period property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The Period value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 period format.
-        ///     This represents a time period (e.g., "P1Y2M3DT4H5M6S") with year, month, day, hour, minute,
-        ///     and second components.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, in Period value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an sbyte property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The sbyte value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The sbyte value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void SetProperty(string propertyName, sbyte value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets an sbyte property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The sbyte value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The sbyte value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<char> propertyName, sbyte value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an sbyte property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The sbyte value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The sbyte value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<byte> propertyName, sbyte value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a byte property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The byte value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The byte value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, byte value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a byte property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The byte value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The byte value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, byte value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a byte property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The byte value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The byte value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, byte value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an int property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The int value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The int value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, int value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets an int property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The int value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The int value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, int value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an int property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The int value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The int value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, int value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a uint property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The uint value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The uint value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void SetProperty(string propertyName, uint value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a uint property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The uint value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The uint value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<char> propertyName, uint value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a uint property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The uint value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The uint value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<byte> propertyName, uint value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a long property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The long value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The long value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, long value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a long property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The long value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The long value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, long value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a long property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The long value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The long value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, long value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a ulong property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The ulong value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The ulong value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void SetProperty(string propertyName, ulong value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a ulong property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The ulong value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The ulong value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<char> propertyName, ulong value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a ulong property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The ulong value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The ulong value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<byte> propertyName, ulong value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a short property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The short value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The short value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, short value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a short property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The short value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The short value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, short value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a short property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The short value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The short value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, short value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a ushort property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The ushort value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The ushort value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void SetProperty(string propertyName, ushort value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a ushort property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The ushort value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The ushort value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<char> propertyName, ushort value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a ushort property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The ushort value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The ushort value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<byte> propertyName, ushort value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a float property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The float value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The float value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, float value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a float property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The float value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The float value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, float value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a float property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The float value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The float value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, float value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a double property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The double value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The double value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, double value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a double property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The double value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The double value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, double value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a double property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The double value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The double value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, double value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a decimal property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The decimal value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The decimal value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, decimal value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a decimal property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The decimal value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The decimal value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, decimal value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a decimal property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The decimal value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The decimal value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, decimal value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-#if NET
-
-        /// <summary>
-        ///   Sets an Int128 property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The Int128 value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The Int128 value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, Int128 value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets an Int128 property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The Int128 value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient property name handling.
-        ///   </para>
-        ///   <para>
-        ///     The Int128 value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, Int128 value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets an Int128 property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The Int128 value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The Int128 value will be serialized as a JSON number.
-        ///     This type is only available in .NET 7 and later.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, Int128 value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a UInt128 property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The UInt128 value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CLSCompliant(false)]
-        public void SetProperty(string propertyName, UInt128 value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a UInt128 property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The UInt128 value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<char> propertyName, UInt128 value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a UInt128 property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The UInt128 value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetProperty(ReadOnlySpan<byte> propertyName, UInt128 value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a Half property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The Half value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetProperty(string propertyName, Half value)
-        {
-            SetProperty(propertyName.AsSpan(), value);
-        }
-
-        /// <summary>
-        ///   Sets a Half property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a character span.</param>
-        /// <param name="value">The Half value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<char> propertyName, Half value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets a Half property on this JSON object element.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
-        /// <param name="value">The Half value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
-        /// </remarks>
-        public void SetProperty(ReadOnlySpan<byte> propertyName, Half value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement element))
-            {
-                // We are going to replace just the value
-                cvb.AddItem(value);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-            else
-            {
-                // We are going to insert the new value
-                cvb.AddProperty(propertyName, value);
-                int endIndex = _idx + _parent.GetDbSize(_idx, false);
-                _parent.InsertAndDispose(_idx, endIndex, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-#endif
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index.
+        ///   Sets the value of an array element at the specified index using a value Source.
         /// </summary>
         /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The string value to set.</param>
+        /// <param name="source">The source of the item.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
         ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
         ///   or the element reference is stale due to document mutations.
@@ -7153,102 +4794,23 @@ public readonly partial struct JsonElement
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
         ///   <para>
-        ///     This method allows replacing existing array elements or appending new elements
-        ///     when <paramref name="itemIndex"/> equals the current array length.
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
         ///   </para>
         ///   <para>
-        ///     The string value will be serialized as a JSON string with proper escaping.
+        ///     The object is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON objects.
         ///   </para>
         /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetItem(int itemIndex, string value)
-        {
-            SetItem(itemIndex, value.AsSpan());
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The string value to set as a character span.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient string handling.
-        ///   </para>
-        ///   <para>
-        ///     This method allows replacing existing array elements or appending new elements
-        ///     when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The string value will be serialized as a JSON string with proper escaping.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, ReadOnlySpan<char> value)
+        public void SetItem(int itemIndex, in Source source, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
 
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The string value to set as a UTF-8 encoded byte span.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 string data, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     This method allows replacing existing array elements or appending new elements
-        ///     when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The string value will be serialized as a JSON string with proper escaping.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, ReadOnlySpan<byte> value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            source.AddAsItem(ref cvb);
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
             {
@@ -7292,7 +4854,56 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
-            cvb.AddItem((ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
+            cvb.AddItem(objectValue, static (in objectValue, ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
+            int arrayLength = GetArrayLength();
+            if (itemIndex == arrayLength)
+            {
+                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+            }
+            else
+            {
+                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON object.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="context">The context to pass to the builder.</param>
+        /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The object is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON objects.
+        ///   </para>
+        /// </remarks>
+        public void SetItem<TContext>(int itemIndex, in TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            cvb.AddItem(BuildWithContext.Create(context, objectValue), static (in context, ref o) => ObjectBuilder.BuildValue(context.Context, context.Build, ref o));
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
             {
@@ -7336,7 +4947,56 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
-            cvb.AddItem((ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+            cvb.AddItem(arrayValue, static (in arrayValue, ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+            int arrayLength = GetArrayLength();
+            if (itemIndex == arrayLength)
+            {
+                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
+            }
+            else
+            {
+                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
+                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
+            }
+
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON array.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
+        /// <param name="context">The context to pass to the builder.</param>
+        /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
+        /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The array is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON arrays.
+        ///   </para>
+        /// </remarks>
+        public void SetItem<TContext>(int itemIndex, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            cvb.AddItem(BuildWithContext.Create(context, arrayValue), static (in context, ref o) => ArrayBuilder.BuildValue(context.Context, context.Build, ref o));
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
             {
@@ -7387,1131 +5047,12 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a boolean value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The boolean value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        /// </remarks>
-        public void SetItem(int itemIndex, bool value)
+        public void InsertItem(int itemIndex, in Source source, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
 
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON element value.
-        /// </summary>
-        /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The JSON element value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This generic overload accepts any type implementing <see cref="IJsonElement{T}"/>,
-        ///     enabling type-safe JSON element assignment with compile-time type checking.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetItem<T>(int itemIndex, T value)
-            where T : struct, IJsonElement<T>
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a GUID value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The GUID value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The GUID will be serialized as a JSON string in standard format (e.g., "550e8400-e29b-41d4-a716-446655440000").
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, Guid value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a DateTime value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The DateTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, in DateTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a DateTimeOffset value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The DateTimeOffset value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, in DateTimeOffset value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an OffsetDateTime value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The OffsetDateTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///     This provides more precise timezone handling than standard .NET DateTime types.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, in OffsetDateTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an OffsetDate value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The OffsetDate value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string representing a date with timezone offset.
-        ///     This provides timezone-aware date handling.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, in OffsetDate value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an OffsetTime value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The OffsetTime value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string representing a time with timezone offset.
-        ///     This provides timezone-aware time handling.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, in OffsetTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a LocalDate value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The LocalDate value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The LocalDate (from NodaTime) will be serialized as a JSON string representing a local date without timezone information.
-        ///     This provides calendar date handling without timezone concerns.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, in LocalDate value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a Period value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The Period value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 duration format.
-        ///     This represents a period of time such as "P1Y2M3DT4H5M6S".
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, in Period value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an sbyte value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The sbyte value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The sbyte value will be serialized as a JSON number.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetItem(int itemIndex, sbyte value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a byte value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The byte value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The byte value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, byte value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an int value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The int value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The int value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, int value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a uint value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The uint value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The uint value will be serialized as a JSON number.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetItem(int itemIndex, uint value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a long value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The long value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The long value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, long value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a ulong value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The ulong value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The ulong value will be serialized as a JSON number.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetItem(int itemIndex, ulong value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a short value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The short value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The short value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, short value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a ushort value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The ushort value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The ushort value will be serialized as a JSON number.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetItem(int itemIndex, ushort value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a float value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The float value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The float value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, float value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a double value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The double value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The double value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, double value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a decimal value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The decimal value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The decimal value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, decimal value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-#if NET
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an Int128 value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The Int128 value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     Int128 is a .NET 6+ type providing 128-bit signed integer support.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, Int128 value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a UInt128 value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The UInt128 value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void SetItem(int itemIndex, UInt128 value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a Half value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index of the array element to set.</param>
-        /// <param name="value">The Half value to set.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void SetItem(int itemIndex, Half value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            int arrayLength = GetArrayLength();
-            if (itemIndex == arrayLength)
-            {
-                _parent.InsertAndDispose(_idx, _idx + _parent.GetDbSize(_idx, false), ref cvb);
-            }
-            else
-            {
-                Mutable element = _parent.GetArrayIndexElement(_idx, itemIndex);
-                _parent.OverwriteAndDispose(_idx, element._idx, element._idx + element._parent.GetDbSize(element._idx, true), 1, ref cvb);
-            }
-
-            _documentVersion = _parent.Version;
-        }
-
-#endif
-
-        /// <summary>
-        ///   Inserts a value into an array at the specified index.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The string value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This method allows inserting between existing elements,  or appending new elements
-        ///     when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The string value will be serialized as a JSON string with proper escaping.
-        ///   </para>
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void InsertItem(int itemIndex, string value)
-        {
-            InsertItem(itemIndex, value.AsSpan());
-        }
-
-        /// <summary>
-        ///   Inserts a value into an array at the specified index.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The string value to insert as a character span.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span for efficient string handling.
-        ///   </para>
-        ///   <para>
-        ///     This method allows inserting between existing elements,  or appending new elements
-        ///     when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The string value will be serialized as a JSON string with proper escaping.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, ReadOnlySpan<char> value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Inserts a value into an array at the specified index.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The string value to insert as a UTF-8 encoded byte span.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 string data, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     This method allows inserting between existing elements,  or appending new elements
-        ///     when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The string value will be serialized as a JSON string with proper escaping.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, ReadOnlySpan<byte> value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            source.AddAsItem(ref cvb);
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
         }
@@ -8545,7 +5086,46 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
-            cvb.AddItem((ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
+            cvb.AddItem(objectValue, static (in objectValue, ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON object.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="context">The context to pass to the builder.</param>
+        /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The object is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON objects.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem<TContext>(int itemIndex, in TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            cvb.AddItem(BuildWithContext.Create(context, objectValue), static (in context, ref o) => ObjectBuilder.BuildValue(context.Context, context.Build, ref o));
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
         }
@@ -8579,7 +5159,44 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
-            cvb.AddItem((ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+            cvb.AddItem(arrayValue, static (in arrayValue, ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Sets the value of an array element at the specified index to a JSON array.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
+        /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        ///   </para>
+        ///   <para>
+        ///     The array is constructed using the provided builder delegate, which provides a fluent API
+        ///     for efficiently building nested JSON arrays.
+        ///   </para>
+        /// </remarks>
+        public void InsertItem<TContext>(int itemIndex, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            cvb.AddItem(BuildWithContext.Create(context, arrayValue), static (in context, ref o) => ArrayBuilder.BuildValue(context.Context, context.Build, ref o));
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
         }
@@ -8609,791 +5226,6 @@ public readonly partial struct JsonElement
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
         }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a boolean value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The boolean value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        /// </remarks>
-        public void InsertItem(int itemIndex, bool value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON element value.
-        /// </summary>
-        /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The JSON element value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     This generic overload accepts any type implementing <see cref="IJsonElement{T}"/>,
-        ///     enabling type-safe JSON element assignment with compile-time type checking.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void InsertItem<T>(int itemIndex, T value)
-            where T : struct, IJsonElement<T>
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a GUID value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The GUID value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The GUID will be serialized as a JSON string in standard format (e.g., "550e8400-e29b-41d4-a716-446655440000").
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, Guid value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a DateTime value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The DateTime value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The DateTime will be serialized as a JSON string in ISO 8601 format.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, in DateTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a DateTimeOffset value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The DateTimeOffset value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The DateTimeOffset will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, in DateTimeOffset value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an OffsetDateTime value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The OffsetDateTime value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetDateTime (from NodaTime) will be serialized as a JSON string in ISO 8601 format with timezone offset.
-        ///     This provides more precise timezone handling than standard .NET DateTime types.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, in OffsetDateTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an OffsetDate value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The OffsetDate value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetDate (from NodaTime) will be serialized as a JSON string representing a date with timezone offset.
-        ///     This provides timezone-aware date handling.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, in OffsetDate value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an OffsetTime value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The OffsetTime value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The OffsetTime (from NodaTime) will be serialized as a JSON string representing a time with timezone offset.
-        ///     This provides timezone-aware time handling.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, in OffsetTime value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a LocalDate value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The LocalDate value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The LocalDate (from NodaTime) will be serialized as a JSON string representing a local date without timezone information.
-        ///     This provides calendar date handling without timezone concerns.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, in LocalDate value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a Period value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The Period value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The Period (from NodaTime) will be serialized as a JSON string in ISO 8601 duration format.
-        ///     This represents a period of time such as "P1Y2M3DT4H5M6S".
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, in Period value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an sbyte value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The sbyte value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The sbyte value will be serialized as a JSON number.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void InsertItem(int itemIndex, sbyte value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a byte value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The byte value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The byte value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, byte value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an int value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The int value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The int value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, int value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a uint value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The uint value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The uint value will be serialized as a JSON number.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void InsertItem(int itemIndex, uint value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a long value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The long value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The long value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, long value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a ulong value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The ulong value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The ulong value will be serialized as a JSON number.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void InsertItem(int itemIndex, ulong value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a short value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The short value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The short value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, short value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a ushort value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The ushort value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The ushort value will be serialized as a JSON number.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void InsertItem(int itemIndex, ushort value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a float value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The float value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The float value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, float value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a double value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The double value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The double value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, double value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a decimal value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The decimal value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     The decimal value will be serialized as a JSON number.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, decimal value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-#if NET
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to an Int128 value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The Int128 value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     Int128 is a .NET 6+ type providing 128-bit signed integer support.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, Int128 value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a UInt128 value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The UInt128 value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     UInt128 is a .NET 6+ type providing 128-bit unsigned integer support.
-        ///     This type is not CLS-compliant.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        [CLSCompliant(false)]
-        public void InsertItem(int itemIndex, UInt128 value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-
-        /// <summary>
-        ///   Sets the value of an array element at the specified index to a Half value.
-        /// </summary>
-        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
-        /// <param name="value">The Half value to insert.</param>
-        /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
-        /// </exception>
-        /// <remarks>
-        ///   <para>
-        ///     Half is a .NET 5+ type providing 16-bit floating-point (half-precision) support.
-        ///   </para>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        /// </remarks>
-        public void InsertItem(int itemIndex, Half value)
-        {
-            CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
-            cvb.AddItem(value);
-            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
-            _documentVersion = _parent.Version;
-        }
-#endif
 
         /// <summary>
         ///   Removes a range of items from the array starting at the specified index.

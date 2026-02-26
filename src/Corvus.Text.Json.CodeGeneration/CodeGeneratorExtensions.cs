@@ -558,7 +558,8 @@ internal static partial class CodeGeneratorExtensions
         this CodeGenerator generator,
         GeneratedTypeAccessibility accessibility,
         string dotnetTypeName,
-        bool isReadOnly = false)
+        bool isReadOnly = false,
+        string? genericConstraints = null)
     {
         if (generator.IsCancellationRequested)
         {
@@ -579,6 +580,14 @@ internal static partial class CodeGeneratorExtensions
             .Append(isReadOnly ? " readonly" : "")
             .Append(" ref struct ")
             .AppendLine(dotnetTypeName);
+
+        if (genericConstraints is string gs)
+        {
+            generator
+                .PushIndent()
+                    .AppendBlockIndent(gs)
+                .PopIndent();
+        }
 
         return generator
             .AppendLineIndent("{")
@@ -677,6 +686,43 @@ internal static partial class CodeGeneratorExtensions
             .PushIndent();
     }
 
+    /// <summary>
+    /// Begin a method declaration for an explicit name which will be reserved in the scope.
+    /// </summary>
+    /// <param name="generator">The generator to which to append the method.</param>
+    /// <param name="visibilityAndModifiers">The visibility and modifiers for the method.</param>
+    /// <param name="returnType">The return type of the method.</param>
+    /// <param name="methodName">The method name, which will be reserved in the scope.</param>
+    /// <param name="genericConstraints">Generic constraints for the method.</param>
+    /// <param name="parameters">The parameter list.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator BeginReservedMethodDeclaration(
+        this CodeGenerator generator,
+        string visibilityAndModifiers,
+        string returnType,
+        string methodName,
+        string genericConstraints,
+        params MethodParameter[] parameters)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        return generator
+            .AppendSeparatorLine()
+            .AppendIndent(visibilityAndModifiers)
+            .Append(' ')
+            .Append(returnType)
+            .Append(' ')
+            .Append(methodName)
+            .ReserveName(methodName) // Reserve the method name in the parent scope
+            .PushMemberScope(methodName, ScopeType.Method) // Then move to the method scope before appending parameters
+            .AppendParameterList(parameters)
+            .AppendBlockIndent(genericConstraints)
+            .AppendLineIndent("{")
+            .PushIndent();
+    }
     /// <summary>
     /// Begin a method declaration for an explicit name which will be reserved in the scope, if it is not already reserved
     /// </summary>
@@ -987,12 +1033,12 @@ internal static partial class CodeGeneratorExtensions
             .AppendSeparatorLine()
             .AppendLineIndent("/// <summary>")
             .AppendIndent("/// Initializes a new instance of the ")
-            .AppendTypeAsSeeCref(forMutable ? "Mutable" : typeDeclaration.DotnetTypeName())
+            .AppendTypeAsSeeCref(forMutable ? generator.MutableClassName() : typeDeclaration.DotnetTypeName())
             .AppendLine(" struct.")
             .AppendLineIndent("/// </summary>")
             .AppendLineIndent("/// <param name=\"value\">The value from which to construct the instance.</param>")
             .AppendIndent("internal ")
-            .Append(forMutable ? "Mutable" : typeDeclaration.DotnetTypeName())
+            .Append(forMutable ? generator.MutableClassName() : typeDeclaration.DotnetTypeName())
             .AppendLine("(IJsonDocument parent, int idx)")
             .AppendLineIndent("{")
             .PushIndent();
@@ -1418,7 +1464,7 @@ internal static partial class CodeGeneratorExtensions
                 /// <returns>An instance of this type, initialized from the JSON element.</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 """)
-            .AppendLineIndent("public static ", forMutable ? "Mutable" : typeDeclaration.DotnetTypeName(), " From<T>(in T instance)")
+            .AppendLineIndent("public static ", forMutable ? generator.MutableClassName() : typeDeclaration.DotnetTypeName(), " From<T>(in T instance)")
             .PushIndent()
                 .AppendLineIndent(forMutable ? "where T : struct, IMutableJsonElement<T>" : "where T : struct, IJsonElement<T>")
             .PopIndent()
@@ -1641,8 +1687,9 @@ internal static partial class CodeGeneratorExtensions
 
         if (forMutable)
         {
+            string mutable = generator.MutableClassName();
             return generator
-                .AppendLineIndent("static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);")
+                .AppendLineIndent("static ", mutable, " IJsonElement<", mutable, ">.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);")
                 .AppendLine("#endif");
         }
 
@@ -1676,7 +1723,7 @@ internal static partial class CodeGeneratorExtensions
                 /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 """)
-            .AppendLineIndent("public static implicit operator JsonElement(", forMutable ? "Mutable" : typeDeclaration.DotnetTypeName(), " instance)")
+            .AppendLineIndent("public static implicit operator JsonElement(", forMutable ? generator.MutableClassName() : typeDeclaration.DotnetTypeName(), " instance)")
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("return JsonElement.From(instance);")
@@ -1698,6 +1745,7 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
+        string mutable = generator.MutableClassName();
         return generator
             .ReserveName("FromJson")
             .AppendSeparatorLine()
@@ -1710,7 +1758,7 @@ internal static partial class CodeGeneratorExtensions
                 /// <returns>A mutable instance.</returns>
                 /// <exception cref="FormatException">Thrown if the instance is not backed by a mutable document.</exception>
                 """)
-            .AppendLineIndent("public static explicit operator Mutable(", typeDeclaration.DotnetTypeName(), " instance)")
+            .AppendLineIndent("public static explicit operator ", mutable, "(", typeDeclaration.DotnetTypeName(), " instance)")
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("if (instance._parent is not IMutableJsonDocument doc)")
@@ -1726,12 +1774,12 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("}")
             .AppendSeparatorLine()
             .AppendLineIndent("/// <summary>")
-            .AppendLineIndent("/// Converts to an immutable instance of the <see cref=\"Mutable\"/> type.")
+            .AppendLineIndent("/// Converts to an immutable instance of the <see cref=\"", generator.MutableClassName(), "\"/> type.")
             .AppendLineIndent("/// </summary>")
-            .AppendLineIndent("/// <param name=\"value\">The <see cref=\"Mutable\"/> instance.</param>")
-            .AppendLineIndent("/// <returns>An immutable instance of a <see cref=\"", typeDeclaration.DotnetTypeName(), "\"/>, initialized from the <see cref=\"Mutable\"/> value.</returns>")
+            .AppendLineIndent("/// <param name=\"value\">The <see cref=\"", mutable, "\"/> instance.</param>")
+            .AppendLineIndent("/// <returns>An immutable instance of a <see cref=\"", typeDeclaration.DotnetTypeName(), "\"/>, initialized from the <see cref=\"", mutable, "\"/> value.</returns>")
             .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-            .AppendLineIndent("public static implicit operator ", typeDeclaration.DotnetTypeName(), "(Mutable instance)")
+            .AppendLineIndent("public static implicit operator ", typeDeclaration.DotnetTypeName(), "(", mutable, " instance)")
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("return new(instance._parent, instance._idx);")
@@ -2029,7 +2077,7 @@ internal static partial class CodeGeneratorExtensions
             .ReserveName("DebuggerDisplay")
             .AppendSeparatorLine()
             .AppendLineIndent("[DebuggerBrowsable(DebuggerBrowsableState.Never)]")
-            .AppendLineIndent("private string DebuggerDisplay => $\"", typeDeclaration.DotnetTypeName(), forMutable ? ".Mutable" : "", ": ValueKind = {ValueKind} : \\\"{ToString()}\\\"\";");
+            .AppendLineIndent("private string DebuggerDisplay => $\"", typeDeclaration.DotnetTypeName(), forMutable ? $".{generator.MutableClassName()}" : "", ": ValueKind = {ValueKind} : \\\"{ToString()}\\\"\";");
     }
 
     /// <summary>

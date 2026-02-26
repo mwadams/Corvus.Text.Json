@@ -574,8 +574,47 @@ internal static partial class CodeGeneratorExtensions
                 .PopIndent()
                 .AppendLineIndent("}");
 
-
-
+            if ((property.ReducedPropertyType.ImpliedCoreTypesOrAny() & (CoreTypes.Object | CoreTypes.Array)) != 0)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("/// <summary>")
+                    .AppendLineIndent("/// Set the <c>", name, "</c> property.")
+                    .AppendLineIndent("/// </summary>")
+                    .AppendLineIndent("/// <param name=\"value\">The value of the property to add.</param>")
+                    .AppendLineIndent("public void Set", property.DotnetPropertyName(), "<TContext>(in ", propertyTypeName, ".", generator.SourceClassName(propertyTypeName), "<TContext> value)")
+                    .AppendLine("#if NET9_0_OR_GREATER")
+                    .PushIndent()
+                        .AppendLineIndent("where TContext : allows ref struct")
+                    .PopIndent()
+                    .AppendLine("#endif")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("CheckValidInstance();")
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);")
+                        .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8, out IJsonDocument? elementParent, out int elementIdx))")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("// We are going to replace just the value")
+                            .AppendLineIndent("value.AddAsItem(ref cvb);")
+                            .AppendLineIndent("_parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);")
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                        .AppendLineIndent("else")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("// We are going to insert the new value")
+                            .AppendLineIndent("value.AddAsProperty(", generator.JsonPropertyNamesEscapedClassName(), ".", property.DotnetPropertyName(), ", ref cvb, escapeName: false, nameRequiresUnescaping: ", requiresEncoding ? "true" : "false", ");")
+                            .AppendLineIndent("int endIndex = _idx + _parent.GetDbSize(_idx, false);")
+                            .AppendLineIndent("_parent.InsertAndDispose(_idx, endIndex, ref cvb);")
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("_documentVersion = _parent.Version;")
+                    .PopIndent()
+                    .AppendLineIndent("}");
+            }
         }
 
         return generator;

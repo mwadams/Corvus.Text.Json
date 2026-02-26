@@ -3834,7 +3834,7 @@ namespace Corvus.Text.Json.Tests
             using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             var value = builderDoc2.RootElement;
 
-            root.SetItem<JsonElement.Mutable>(0, value);
+            root.SetItem(0, value);
             Assert.Equal(42, root[0].GetInt32());
         }
 
@@ -4213,8 +4213,8 @@ namespace Corvus.Text.Json.Tests
             using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             var value = builderDoc2.RootElement;
 
-            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(-1, value));
-            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(2, value));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, value));
         }
 
         [Fact]

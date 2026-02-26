@@ -1,5 +1,6 @@
 using Corvus.Text.Json;
 using System;
+using System.Buffers;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,8 +52,23 @@ class Program
         // Example 13: Build document from external API data
         await Example13_BuildFromApiDataAsync();
 
-        // Example 14: Write to file
+        // Example 14: Write to file with async boundary handling
         await Example14_WriteToFileAsync();
+
+        // Example 15: Serialize with rented writer and buffer
+        Example15_SerializeWithRentedWriter();
+
+        // Example 16: Serialize to stream (file)
+        await Example16_SerializeToStreamAsync();
+
+        // Example 17: Simulate ASP.NET Core response writing
+        await Example17_SimulateAspNetCoreResponseAsync();
+
+        // Example 18: Compose documents from multiple async API calls
+        await Example18_ComposeFromMultipleApisAsync();
+
+        // Example 19: Build document across async boundaries with CreateUnrented
+        await Example19_BuildAcrossAsyncBoundariesAsync();
 
         Console.WriteLine("\nAll examples completed!");
     }
@@ -135,7 +151,7 @@ class Program
                         });
                     });
                 });
-                
+
                 objectBuilder.Add("timestamp"u8, "2026-02-24T11:00:00Z"u8);
                 objectBuilder.Add("active"u8, true);
             }));
@@ -214,14 +230,14 @@ class Program
                     userBuilder.Add("name"u8, "Alice"u8);
                     userBuilder.Add("role"u8, "Admin"u8);
                 });
-                
+
                 arrayBuilder.Add(static (ref userBuilder) =>
                 {
                     userBuilder.Add("id"u8, 2);
                     userBuilder.Add("name"u8, "Bob"u8);
                     userBuilder.Add("role"u8, "User"u8);
                 });
-                
+
                 arrayBuilder.Add(static (ref userBuilder) =>
                 {
                     userBuilder.Add("id"u8, 3);
@@ -256,15 +272,15 @@ class Program
             }
             """;
 
-        using ParsedJsonDocument<JsonElement> sourceDoc = 
+        using ParsedJsonDocument<JsonElement> sourceDoc =
             ParsedJsonDocument<JsonElement>.Parse(json);
 
         // Create a mutable builder from the parsed document
-        using JsonDocumentBuilder<JsonElement.Mutable> builder = 
+        using JsonDocumentBuilder<JsonElement.Mutable> builder =
             sourceDoc.RootElement.CreateDocumentBuilder(workspace);
 
         JsonElement.Mutable root = builder.RootElement;
-        
+
         Console.WriteLine("Original:");
         Console.WriteLine(root.ToString());
         Console.WriteLine();
@@ -329,20 +345,20 @@ class Program
             {
                 objectBuilder.Add("id"u8, "12345"u8);
                 objectBuilder.Add("created"u8, "2026-02-24T11:00:00Z"u8);
-                
+
                 objectBuilder.Add("profile"u8, static (ref profileBuilder) =>
                 {
                     profileBuilder.Add("username"u8, "john.doe"u8);
                     profileBuilder.Add("displayName"u8, "John Doe"u8);
                 });
-                
+
                 objectBuilder.Add("tags"u8, static (ref tagsBuilder) =>
                 {
                     tagsBuilder.Add("admin"u8);
                     tagsBuilder.Add("user"u8);
                     tagsBuilder.Add("verified"u8);
                 });
-                
+
                 objectBuilder.Add("metadata"u8, static (ref metaBuilder) =>
                 {
                     metaBuilder.Add("version"u8, "1.0.0"u8);
@@ -369,7 +385,7 @@ class Program
                 {
                     companyBuilder.Add("name"u8, "Tech Corp"u8);
                     companyBuilder.Add("founded"u8, 2010);
-                    
+
                     companyBuilder.Add("departments"u8, static (ref deptsBuilder) =>
                     {
                         // Engineering department
@@ -384,7 +400,7 @@ class Program
                                 teamsBuilder.Add("DevOps"u8);
                             });
                         });
-                        
+
                         // Sales department
                         deptsBuilder.Add(static (ref deptBuilder) =>
                         {
@@ -397,7 +413,7 @@ class Program
                             });
                         });
                     });
-                    
+
                     companyBuilder.Add("locations"u8, static (ref locationsBuilder) =>
                     {
                         // San Francisco location
@@ -407,7 +423,7 @@ class Program
                             locationBuilder.Add("country"u8, "USA"u8);
                             locationBuilder.Add("headquarters"u8, true);
                         });
-                        
+
                         // London location
                         locationsBuilder.Add(static (ref locationBuilder) =>
                         {
@@ -423,73 +439,6 @@ class Program
         Console.WriteLine();
     }
 
-    static async Task Example14_WriteToFileAsync()
-    {
-        Console.WriteLine("--- Example 14: Write to File ---");
-
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-
-        using var config = JsonElement.CreateDocumentBuilder(
-            workspace,
-            new JsonElement.Source(static (ref objectBuilder) =>
-            {
-                objectBuilder.Add("appName"u8, "JsonDocumentBuilder Demo"u8);
-                objectBuilder.Add("version"u8, "1.0.0"u8);
-                objectBuilder.Add("environment"u8, "development"u8);
-                
-                objectBuilder.Add("database"u8, static (ref dbBuilder) =>
-                {
-                    dbBuilder.Add("host"u8, "localhost"u8);
-                    dbBuilder.Add("port"u8, 5432);
-                    dbBuilder.Add("name"u8, "demo_db"u8);
-                    dbBuilder.Add("ssl"u8, false);
-                });
-                
-                objectBuilder.Add("features"u8, static (ref featuresBuilder) =>
-                {
-                    featuresBuilder.Add("logging"u8, true);
-                    featuresBuilder.Add("caching"u8, true);
-                    featuresBuilder.Add("compression"u8, false);
-                    featuresBuilder.Add("authentication"u8, true);
-                });
-                
-                objectBuilder.Add("logging"u8, static (ref loggingBuilder) =>
-                {
-                    loggingBuilder.Add("level"u8, "Debug"u8);
-                    loggingBuilder.Add("console"u8, true);
-                    loggingBuilder.Add("file"u8, "logs/app.log"u8);
-                });
-            }));
-
-        string tempFile = Path.Combine(Path.GetTempPath(), "example-config.json");
-
-        try
-        {
-            // Write to file with formatting
-            using (var stream = File.OpenWrite(tempFile))
-            using (var writer = new Utf8JsonWriter(
-                stream,
-                new JsonWriterOptions { Indented = true }))
-            {
-                config.WriteTo(writer);
-            }
-
-            string json = File.ReadAllText(tempFile);
-            Console.WriteLine($"Configuration written to: {tempFile}");
-            Console.WriteLine("\nContent:");
-            Console.WriteLine(json);
-        }
-        finally
-        {
-            if (File.Exists(tempFile))
-            {
-                File.Delete(tempFile);
-                Console.WriteLine($"\nCleaned up temporary file: {tempFile}");
-            }
-        }
-
-        Console.WriteLine();
-    }
 
     static void Example10_ArrayItemOperations()
     {
@@ -510,7 +459,7 @@ class Program
             }));
 
         JsonElement.Mutable root = doc.RootElement;
-        
+
         Console.WriteLine("Initial array:");
         Console.WriteLine(root.ToString());
 
@@ -520,7 +469,7 @@ class Program
 
         Console.WriteLine("\nAfter SetItem modifications:");
         Console.WriteLine(root.ToString());
-        
+
         // Create an object with arrays to show nested modification
         using var doc2 = JsonElement.CreateDocumentBuilder(
             workspace,
@@ -537,11 +486,11 @@ class Program
         JsonElement.Mutable root2 = doc2.RootElement;
         Console.WriteLine("\nInitial document with tags:");
         Console.WriteLine(root2.ToString());
-        
+
         // Get the tags array and modify it
         JsonElement.Mutable tags = root2.GetProperty("tags");
         tags.SetItem(1, "BETA");  // Change "beta" to "BETA"
-        
+
         // IMPORTANT: Version tracking - after modifying the document, we need to
         // re-get the root element to see the changes. The modification incremented
         // the document's internal version, so our old 'root2' reference is now invalid.
@@ -570,7 +519,7 @@ class Program
                 objectBuilder.Add("address"u8, "123 Main St"u8);
                 objectBuilder.Add("temp"u8, "temporary data"u8);
                 objectBuilder.Add("debug"u8, true);
-                
+
                 // Remove properties before finalizing
                 objectBuilder.RemoveProperty("temp"u8);
                 objectBuilder.RemoveProperty("debug"u8);
@@ -578,7 +527,7 @@ class Program
             }));
 
         JsonElement.Mutable root = doc.RootElement;
-        
+
         Console.WriteLine("Document after building (temp, debug, and address removed):");
         Console.WriteLine(root.ToString());
         Console.WriteLine();
@@ -616,14 +565,14 @@ class Program
             }));
 
         JsonElement.Mutable root = doc.RootElement;
-        
+
         Console.WriteLine("Initial document:");
         Console.WriteLine(root.ToString());
 
         // Remove single item from numbers array
         JsonElement.Mutable numbers = root.GetProperty("numbers");
         Console.WriteLine($"\nNumbers array length before: {numbers.GetArrayLength()}");
-        
+
         numbers.Remove(5);  // Remove item at index 5 (value 50)
         Console.WriteLine($"Removed item at index 5");
         Console.WriteLine($"Numbers array length after: {numbers.GetArrayLength()}");
@@ -633,11 +582,11 @@ class Program
         // becomes invalid. We must re-get it from doc.RootElement before accessing
         // other properties like 'colors'. This prevents accessing stale data.
         root = doc.RootElement;
-        
+
         // Remove a range from colors array
         JsonElement.Mutable colors = root.GetProperty("colors");
         Console.WriteLine($"\nColors array length before: {colors.GetArrayLength()}");
-        
+
         colors.RemoveRange(2, 3);  // Remove 3 items starting at index 2 (yellow, green, blue)
         Console.WriteLine($"Removed range starting at index 2, count 3");
         Console.WriteLine($"Colors array length after: {colors.GetArrayLength()}");
@@ -645,17 +594,17 @@ class Program
 
         // Version tracking: After modifying 'colors', we need fresh references again
         numbers = doc.RootElement.GetProperty("numbers");
-        
+
         // Remove multiple single items
         numbers.Remove(0);  // Remove first item
         numbers.Remove(numbers.GetArrayLength() - 1);  // Remove last item
-        
+
         Console.WriteLine($"\nAfter removing first and last from numbers:");
         Console.WriteLine($"Numbers: {numbers.ToString()}");
 
         // Version tracking: Get fresh reference for RemoveWhere operation
         colors = doc.RootElement.GetProperty("colors");
-        
+
         // Demonstrate RemoveWhere with predicate
         Console.WriteLine($"\nColors before RemoveWhere: {colors.ToString()}");
         colors.RemoveWhere((in JsonElement element) =>
@@ -690,7 +639,7 @@ class Program
         Console.WriteLine(apiResponse);
 
         // Parse the API response - explicitly use Corvus.Text.Json.JsonElement
-        using ParsedJsonDocument<JsonElement> apiDoc = 
+        using ParsedJsonDocument<JsonElement> apiDoc =
             ParsedJsonDocument<JsonElement>.Parse(apiResponse);
         JsonElement apiRoot = apiDoc.RootElement;
 
@@ -766,13 +715,13 @@ class Program
 
         // Example: Modify based on business logic
         JsonElement.Mutable root = enrichedDoc.RootElement;
-        
+
         // If login count is high, add a badge
         if (loginCount > 40)
         {
             // Get current root to add new property
             root = enrichedDoc.RootElement;
-            
+
             // Note: We'd need to rebuild to add properties after initial construction
             // This demonstrates that you might parse, transform, and rebuild
         }
@@ -819,7 +768,7 @@ class Program
                             postBuilder.Add("id", post.GetProperty("id"));
                             postBuilder.Add("title", post.GetProperty("title"));
                             postBuilder.Add("likes", post.GetProperty("likes"));
-                            
+
                             // Augment with computed data
                             int likes = post.GetProperty("likes").GetInt32();
                             postBuilder.Add("popular", likes > 100);
@@ -865,7 +814,7 @@ class Program
             {
                 // Map old field names to new structure using native JsonElement
                 objectBuilder.Add("id", legacyRoot.GetProperty("user_id"));
-                
+
                 objectBuilder.Add("account", (ref accountBuilder) =>
                 {
                     accountBuilder.Add("username", legacyRoot.GetProperty("user_name"));
@@ -893,5 +842,461 @@ class Program
         Console.WriteLine(transformedDoc.RootElement.ToString());
 
         Console.WriteLine();
+    }
+
+    static async Task Example14_WriteToFileAsync()
+    {
+        Console.WriteLine("--- Example 14: Write to File ---");
+
+        using JsonWorkspace workspace = JsonWorkspace.Create();
+
+        using var config = JsonElement.CreateDocumentBuilder(
+            workspace,
+            new JsonElement.Source(static (ref objectBuilder) =>
+            {
+                objectBuilder.Add("appName"u8, "JsonDocumentBuilder Demo"u8);
+                objectBuilder.Add("version"u8, "1.0.0"u8);
+                objectBuilder.Add("environment"u8, "development"u8);
+
+                objectBuilder.Add("database"u8, static (ref dbBuilder) =>
+                {
+                    dbBuilder.Add("host"u8, "localhost"u8);
+                    dbBuilder.Add("port"u8, 5432);
+                    dbBuilder.Add("name"u8, "demo_db"u8);
+                    dbBuilder.Add("ssl"u8, false);
+                });
+
+                objectBuilder.Add("features"u8, static (ref featuresBuilder) =>
+                {
+                    featuresBuilder.Add("logging"u8, true);
+                    featuresBuilder.Add("caching"u8, true);
+                    featuresBuilder.Add("compression"u8, false);
+                    featuresBuilder.Add("authentication"u8, true);
+                });
+
+                objectBuilder.Add("logging"u8, static (ref loggingBuilder) =>
+                {
+                    loggingBuilder.Add("level"u8, "Debug"u8);
+                    loggingBuilder.Add("console"u8, true);
+                    loggingBuilder.Add("file"u8, "logs/app.log"u8);
+                });
+            }));
+
+        string tempFile = Path.Combine(Path.GetTempPath(), "example-config.json");
+
+        try
+        {
+            // Write to file with formatting
+            using (var stream = File.OpenWrite(tempFile))
+            using (var writer = new Utf8JsonWriter(
+                stream,
+                new JsonWriterOptions { Indented = true }))
+            {
+                config.WriteTo(writer);
+            }
+
+            string json = File.ReadAllText(tempFile);
+            Console.WriteLine($"Configuration written to: {tempFile}");
+            Console.WriteLine("\nContent:");
+            Console.WriteLine(json);
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+                Console.WriteLine($"\nCleaned up temporary file: {tempFile}");
+            }
+        }
+
+        Console.WriteLine();
+    }
+
+    static void Example15_SerializeWithRentedWriter()
+    {
+        Console.WriteLine("--- Example 15: Serialize with Rented Writer and Buffer ---");
+
+        // Configure writer options - applies to all rented writers
+        var writerOptions = new JsonWriterOptions { Indented = true };
+        using JsonWorkspace workspace = JsonWorkspace.Create(options: writerOptions);
+
+        // Build a document
+        using var doc = JsonElement.CreateDocumentBuilder(
+            workspace,
+            new JsonElement.Source(static (ref objectBuilder) =>
+            {
+                objectBuilder.Add("message"u8, "Hello from rented writer!"u8);
+                objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
+                objectBuilder.Add("success"u8, true);
+
+                objectBuilder.Add("items"u8, static (ref arrayBuilder) =>
+                {
+                    arrayBuilder.Add(1);
+                    arrayBuilder.Add(2);
+                    arrayBuilder.Add(3);
+                });
+            }));
+
+        // Rent writer + buffer for serialization
+        Utf8JsonWriter writer = workspace.RentWriterAndBuffer(
+            defaultBufferSize: 1024,
+            out IByteBufferWriter bufferWriter);
+
+        try
+        {
+            // Write the document to the rented writer
+            doc.WriteTo(writer);
+            writer.Flush();
+
+            // Get the serialized result
+            ReadOnlySpan<byte> jsonBytes = bufferWriter.WrittenSpan;
+            string json = Encoding.UTF8.GetString(jsonBytes);
+
+            Console.WriteLine("Serialized JSON:");
+            Console.WriteLine(json);
+        }
+        finally
+        {
+            // Always return rented resources
+            workspace.ReturnWriterAndBuffer(writer, bufferWriter);
+        }
+
+        Console.WriteLine();
+    }
+
+    static async Task Example16_SerializeToStreamAsync()
+    {
+        Console.WriteLine("--- Example 16: Serialize to Stream (File) ---");
+
+        string tempFile = Path.Combine(Path.GetTempPath(), "document-builder-output.json");
+
+        try
+        {
+            // Build document and serialize to buffer within workspace scope
+            ReadOnlyMemory<byte> jsonBytes;
+
+            using (JsonWorkspace workspace = JsonWorkspace.Create(
+                options: new JsonWriterOptions { Indented = true }))
+            {
+                // Build the document
+                using var doc = JsonElement.CreateDocumentBuilder(
+                    workspace,
+                    new JsonElement.Source(static (ref objectBuilder) =>
+                    {
+                        objectBuilder.Add("configName"u8, "Production Settings"u8);
+                        objectBuilder.Add("version"u8, "2.0"u8);
+                        objectBuilder.Add("lastModified"u8, DateTime.UtcNow);
+
+                        objectBuilder.Add("database"u8, static (ref dbBuilder) =>
+                        {
+                            dbBuilder.Add("host"u8, "db.example.com"u8);
+                            dbBuilder.Add("port"u8, 5432);
+                            dbBuilder.Add("name"u8, "production_db"u8);
+                        });
+
+                        objectBuilder.Add("features"u8, static (ref featuresBuilder) =>
+                        {
+                            featuresBuilder.Add("logging"u8, true);
+                            featuresBuilder.Add("caching"u8, true);
+                            featuresBuilder.Add("debug"u8, false);
+                        });
+                    }));
+
+                // Rent writer and buffer for serialization
+                Utf8JsonWriter writer = workspace.RentWriterAndBuffer(
+                    defaultBufferSize: 2048,
+                    out IByteBufferWriter bufferWriter);
+
+                try
+                {
+                    // Write document to buffer
+                    doc.WriteTo(writer);
+                    writer.Flush();
+
+                    // Get the bytes before returning the buffer
+                    jsonBytes = bufferWriter.WrittenMemory.ToArray();
+                }
+                finally
+                {
+                    workspace.ReturnWriterAndBuffer(writer, bufferWriter);
+                }
+            } // Workspace disposed before async operations
+
+            // Write to file asynchronously (after workspace disposal)
+            await File.WriteAllBytesAsync(tempFile, jsonBytes.ToArray());
+
+            // Read back and display (async operation after workspace disposal)
+            string json = await File.ReadAllTextAsync(tempFile);
+            Console.WriteLine($"Written to: {tempFile}");
+            Console.WriteLine("\nContent:");
+            Console.WriteLine(json);
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+                Console.WriteLine($"\nCleaned up: {tempFile}");
+            }
+        }
+
+        Console.WriteLine();
+    }
+
+    static async Task Example17_SimulateAspNetCoreResponseAsync()
+    {
+        Console.WriteLine("--- Example 17: Simulate ASP.NET Core Response Writing ---");
+        Console.WriteLine("(Demonstrates the pattern: fetch async -> build sync -> flush async)\n");
+
+        // Simulate fetching user data from an API (async)
+        string userData = await SimulateFetchUserDataAsync();
+        Console.WriteLine($"Fetched user data: {userData}");
+
+        // Simulate ASP.NET Core PipeWriter with ArrayBufferWriter
+        var responseBuffer = new ArrayBufferWriter<byte>();
+
+        // Build and write response (synchronous, within workspace scope)
+        using (JsonWorkspace workspace = JsonWorkspace.Create(
+            options: new JsonWriterOptions { Indented = false }))
+        {
+            // Build the response document
+            using var doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new JsonElement.Source((ref objectBuilder) =>
+                {
+                    objectBuilder.Add("success"u8, true);
+                    objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
+                    objectBuilder.Add("requestId"u8, Guid.NewGuid().ToString());
+
+                    objectBuilder.Add("data"u8, (ref dataBuilder) =>
+                    {
+                        dataBuilder.Add("username"u8, Encoding.UTF8.GetBytes(userData));
+                        dataBuilder.Add("lastLogin"u8, DateTime.UtcNow.AddDays(-2));
+                        dataBuilder.Add("isActive"u8, true);
+                    });
+                }));
+
+            // Rent writer for the response buffer (in real ASP.NET Core, this would be context.Response.BodyWriter)
+            Utf8JsonWriter writer = workspace.RentWriter(responseBuffer);
+
+            try
+            {
+                // Write document directly to response pipe - zero copies!
+                doc.WriteTo(writer);
+                writer.Flush();
+            }
+            finally
+            {
+                workspace.ReturnWriter(writer);
+            }
+        } // Workspace disposed before any awaits
+
+        // Simulate flushing the response (async operation happens AFTER workspace disposal)
+        await SimulateFlushResponseAsync(responseBuffer);
+
+        Console.WriteLine("\nSimulated API response:");
+        Console.WriteLine(Encoding.UTF8.GetString(responseBuffer.WrittenSpan));
+        Console.WriteLine("\nKey pattern: Async fetch -> Sync build+write -> Async flush");
+        Console.WriteLine();
+    }
+
+    // Helper methods for Example 17
+    static async Task<string> SimulateFetchUserDataAsync()
+    {
+        await Task.Delay(50); // Simulate API call
+        return "john.doe";
+    }
+
+    static async Task SimulateFlushResponseAsync(ArrayBufferWriter<byte> buffer)
+    {
+        await Task.Delay(10); // Simulate flushing to network
+    }
+
+    static async Task Example18_ComposeFromMultipleApisAsync()
+    {
+        Console.WriteLine("--- Example 18: Compose Documents from Multiple Async API Calls ---");
+
+        // Simulate fetching data from multiple APIs concurrently
+        // This demonstrates that ParsedJsonDocument is safe across async boundaries
+        Console.WriteLine("Fetching data from multiple APIs in parallel...");
+
+        Task<ParsedJsonDocument<JsonElement>> userTask = FetchUserDataAsync(123);
+        Task<ParsedJsonDocument<JsonElement>> postsTask = FetchUserPostsAsync(123);
+        Task<ParsedJsonDocument<JsonElement>> analyticsTask = FetchUserAnalyticsAsync(123);
+
+        // Wait for all APIs to complete
+        await Task.WhenAll(userTask, postsTask, analyticsTask);
+
+        using ParsedJsonDocument<JsonElement> userDoc = await userTask;
+        using ParsedJsonDocument<JsonElement> postsDoc = await postsTask;
+        using ParsedJsonDocument<JsonElement> analyticsDoc = await analyticsTask;
+
+        Console.WriteLine("All API calls completed. Composing profile document...");
+
+        // All async work is done, use regular workspace
+        using (JsonWorkspace workspace = JsonWorkspace.Create())
+        {
+            using var profileDoc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new JsonElement.Source((ref objectBuilder) =>
+                {
+                    // User info from first API
+                    JsonElement user = userDoc.RootElement;
+                    objectBuilder.Add("userId"u8, user.GetProperty("id"));
+                    objectBuilder.Add("username"u8, user.GetProperty("username"));
+                    objectBuilder.Add("email"u8, user.GetProperty("email"));
+
+                    // Posts from second API
+                    objectBuilder.Add("recentPosts"u8, (ref postsBuilder) =>
+                    {
+                        JsonElement posts = postsDoc.RootElement.GetProperty("posts");
+                        foreach (JsonElement post in posts.EnumerateArray())
+                        {
+                            postsBuilder.Add((ref postBuilder) =>
+                            {
+                                postBuilder.Add("id"u8, post.GetProperty("id"));
+                                postBuilder.Add("title"u8, post.GetProperty("title"));
+                                postBuilder.Add("publishedAt"u8, post.GetProperty("publishedAt"));
+                            });
+                        }
+                    });
+
+                    // Analytics from third API
+                    objectBuilder.Add("stats"u8, (ref statsBuilder) =>
+                    {
+                        JsonElement analytics = analyticsDoc.RootElement;
+                        statsBuilder.Add("totalViews"u8, analytics.GetProperty("totalViews"));
+                        statsBuilder.Add("totalLikes"u8, analytics.GetProperty("totalLikes"));
+                        statsBuilder.Add("followerCount"u8, analytics.GetProperty("followerCount"));
+                    });
+
+                    // Computed fields
+                    DateTime lastLogin = userDoc.RootElement.GetProperty("lastLoginAt").GetDateTime();
+                    objectBuilder.Add("isActive"u8, lastLogin > DateTime.UtcNow.AddDays(-30));
+                }));
+
+            Console.WriteLine("\nComposed User Profile:");
+            Console.WriteLine(profileDoc.RootElement.ToString());
+        }
+
+        Console.WriteLine();
+    }
+
+    // Helper methods to simulate API calls
+    static async Task<ParsedJsonDocument<JsonElement>> FetchUserDataAsync(int userId)
+    {
+        await Task.Delay(50); // Simulate network delay
+
+        string json = """
+            {
+                "id": 123,
+                "username": "johndoe",
+                "email": "john@example.com",
+                "lastLoginAt": "2024-02-20T10:30:00Z"
+            }
+            """;
+
+        return ParsedJsonDocument<JsonElement>.Parse(json);
+    }
+
+    static async Task<ParsedJsonDocument<JsonElement>> FetchUserPostsAsync(int userId)
+    {
+        await Task.Delay(75); // Simulate network delay
+
+        string json = """
+            {
+                "posts": [
+                    {
+                        "id": 1,
+                        "title": "Getting Started with JSON",
+                        "publishedAt": "2024-02-15T08:00:00Z"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Advanced JSON Patterns",
+                        "publishedAt": "2024-02-18T14:30:00Z"
+                    }
+                ]
+            }
+            """;
+
+        return ParsedJsonDocument<JsonElement>.Parse(json);
+    }
+
+    static async Task<ParsedJsonDocument<JsonElement>> FetchUserAnalyticsAsync(int userId)
+    {
+        await Task.Delay(60); // Simulate network delay
+
+        string json = """
+            {
+                "totalViews": 15420,
+                "totalLikes": 892,
+                "followerCount": 347
+            }
+            """;
+
+        return ParsedJsonDocument<JsonElement>.Parse(json);
+    }
+
+    static async Task Example19_BuildAcrossAsyncBoundariesAsync()
+    {
+        Console.WriteLine("--- Example 19: Building Document Across Async Boundaries with CreateUnrented ---");
+
+        // Sometimes you need to partially build a document, make an async call,
+        // then continue building. The regular JsonWorkspace.Create() uses thread-static
+        // storage and will fail across async boundaries. Use CreateUnrented() instead.
+
+        Console.WriteLine("Fetching initial data...");
+        string initialData = await FetchInitialDataAsync();
+        using ParsedJsonDocument<JsonElement> initialDoc = ParsedJsonDocument<JsonElement>.Parse(initialData);
+
+        Console.WriteLine("Building document with CreateUnrented to safely cross async boundaries...");
+
+        // Use CreateUnrented() - this workspace can cross async boundaries
+        using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
+        {
+            // Start building the document
+            using var doc = JsonElement.CreateDocumentBuilder(
+                workspace,
+                new JsonElement.Source((ref objectBuilder) =>
+                {
+                    objectBuilder.Add("initialData"u8, initialDoc.RootElement.GetProperty("value"));
+                    objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
+                }));
+
+            Console.WriteLine("Making async call in the middle of document building...");
+            
+            // Make an async call - workspace survives the await because it's unrented
+            string additionalData = await FetchAdditionalDataAsync();
+            using ParsedJsonDocument<JsonElement> additionalDoc = ParsedJsonDocument<JsonElement>.Parse(additionalData);
+
+            Console.WriteLine("Continuing to build document after async operation...");
+
+            // Continue modifying the document after the await
+            JsonElement.Mutable mutableRoot = doc.RootElement;
+            mutableRoot.SetProperty("additionalData", additionalDoc.RootElement.GetProperty("extra"));
+            mutableRoot.SetProperty("completedAt", DateTime.UtcNow);
+
+            Console.WriteLine("\nCompleted Document:");
+            Console.WriteLine(doc.RootElement.ToString());
+
+            // Important: The workspace will dispose all mutable documents it created (doc),
+            // but NOT the immutable ParsedJsonDocuments (initialDoc, additionalDoc) -
+            // those are managed separately with their own using statements
+        }
+
+        Console.WriteLine();
+    }
+
+    static async Task<string> FetchInitialDataAsync()
+    {
+        await Task.Delay(30);
+        return """{"value": "initial-123"}""";
+    }
+
+    static async Task<string> FetchAdditionalDataAsync()
+    {
+        await Task.Delay(40);
+        return """{"extra": "additional-456"}""";
     }
 }

@@ -48,7 +48,12 @@ public ref struct ComplexValueBuilder
     /// <typeparam name="TContext">The type of the context object.</typeparam>
     /// <param name="context">The context object.</param>
     /// <param name="builder">The builder to use for value construction.</param>
-    public delegate void ValueBuilderAction<TContext>(TContext context, ref ComplexValueBuilder builder);
+#if NET9_0_OR_GREATER
+    public delegate void ValueBuilderAction<TContext>(in TContext context, ref ComplexValueBuilder builder)
+        where TContext : allows ref struct;
+#else
+    public delegate void ValueBuilderAction<TContext>(in TContext context, ref ComplexValueBuilder builder);
+#endif
 
     private IMutableJsonDocument _parentDocument;
     private MetadataDb _parsedData;
@@ -102,7 +107,10 @@ public ref struct ComplexValueBuilder
     /// <param name="context">The context object to pass to the delegate.</param>
     /// <param name="createComplexValue">A delegate that builds the property value.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, TContext context, ValueBuilderAction<TContext> createComplexValue)
+    public void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, ValueBuilderAction<TContext> createComplexValue)
+#if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+#endif
     {
         AddProperty(propertyName, context, createComplexValue, true, false);
     }
@@ -135,7 +143,10 @@ public ref struct ComplexValueBuilder
     /// <param name="createComplexValue">A delegate that builds the property value.</param>
     /// <param name="escapeName">Whether to escape the property name.</param>
     /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-    public void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, TContext context, ValueBuilderAction<TContext> createComplexValue, bool escapeName, bool nameRequiresUnescaping)
+    public void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, ValueBuilderAction<TContext> createComplexValue, bool escapeName, bool nameRequiresUnescaping)
+#if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+#endif
     {
         int currentMemberCount = _memberCount;
         int currentRowCount = _rowCount;
@@ -171,7 +182,10 @@ public ref struct ComplexValueBuilder
     /// <param name="propertyName">The property name as a character span.</param>
     /// <param name="context">The context object to pass to the delegate.</param>
     /// <param name="createComplexValue">A delegate that builds the property value.</param>
-    public void AddProperty<TContext>(ReadOnlySpan<char> propertyName, TContext context, ValueBuilderAction<TContext> createComplexValue)
+    public void AddProperty<TContext>(ReadOnlySpan<char> propertyName, in TContext context, ValueBuilderAction<TContext> createComplexValue)
+#if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+#endif
     {
         int currentMemberCount = _memberCount;
         int currentRowCount = _rowCount;
@@ -2374,7 +2388,10 @@ public ref struct ComplexValueBuilder
     /// <typeparam name="TContext">The type of the context.</typeparam>
     /// <param name="context">The context to pass to the create value action.</param>
     /// <param name="createValue">The action to create the item value.</param>
-    public void AddItem<TContext>(TContext context, ValueBuilderAction<TContext> createValue)
+    public void AddItem<TContext>(in TContext context, ValueBuilderAction<TContext> createValue)
+#if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+#endif
     {
         int currentMemberCount = _memberCount;
         int currentRowCount = _rowCount;

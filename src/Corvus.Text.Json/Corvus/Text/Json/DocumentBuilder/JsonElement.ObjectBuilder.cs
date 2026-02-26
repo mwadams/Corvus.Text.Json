@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Numerics;
 using Corvus.Text.Json.Internal;
 using NodaTime;
+using static Corvus.Text.Json.JsonElement.ArrayBuilder;
 
 namespace Corvus.Text.Json;
 
@@ -41,7 +42,12 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="builder">The builder to use for value construction.</param>
         public delegate void Build(ref ObjectBuilder builder);
-
+#if NET9_0_OR_GREATER
+        public delegate void Build<T>(in T context, ref ObjectBuilder builder)
+            where T : allows ref struct;
+#else
+        public delegate void Build<T>(in T context, ref ObjectBuilder builder);
+#endif
         private ComplexValueBuilder _builder;
 
         /// <summary>
@@ -61,6 +67,23 @@ public readonly partial struct JsonElement
             ObjectBuilder objectBuilder = new(valueBuilder);
             value(ref objectBuilder);
             valueBuilder = objectBuilder._builder;
+            valueBuilder.EndObject();
+        }
+
+        /// <summary>
+        /// Builds a JSON array value using the provided delegate and value builder.
+        /// </summary>
+        /// <param name="value">The delegate to build the array.</param>
+        /// <param name="valueBuilder">The <see cref="ComplexValueBuilder"/> to use.</param>
+        public static void BuildValue<TContext>(in TContext context, Build<TContext> value, ref ComplexValueBuilder valueBuilder)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            valueBuilder.StartObject();
+            ObjectBuilder ovb = new(valueBuilder);
+            value(context, ref ovb);
+            valueBuilder = ovb._builder;
             valueBuilder.EndObject();
         }
 
@@ -112,10 +135,33 @@ public readonly partial struct JsonElement
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
                 propertyName,
-                (ref valueBuilder) => BuildValue(value, ref valueBuilder),
+                value,
+                static (in contextValue, ref valueBuilder) => BuildValue(contextValue, ref valueBuilder),
                 escapeName,
                 nameRequiresUnescaping);
         }
+
+        /// <summary>
+        /// Adds a property with a complex value to the current object using a builder delegate.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">A delegate that builds the property value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        public void Add<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, Build<TContext> value, bool escapeName = true, bool nameRequiresUnescaping = false)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                BuildWithContext.Create(context, value),
+                static (in context, ref valueBuilder) => BuildValue(context.Context, context.Build, ref valueBuilder),
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
 
         /// <summary>
         /// Adds a property with a JSON array value to the current object using a builder delegate.
@@ -129,7 +175,30 @@ public readonly partial struct JsonElement
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
                 propertyName,
-                (ref valueBuilder) => ArrayBuilder.BuildValue(value, ref valueBuilder),
+                value,
+                static (in contextValue, ref valueBuilder) => ArrayBuilder.BuildValue(contextValue, ref valueBuilder),
+                escapeName,
+                nameRequiresUnescaping);
+        }
+
+
+        /// <summary>
+        /// Adds a property with a JSON array value to the current object using a builder delegate.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">A delegate that builds the array value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        public void Add<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, ArrayBuilder.Build<TContext> value, bool escapeName = true, bool nameRequiresUnescaping = false)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
+            _builder.AddProperty(
+                propertyName,
+                BuildWithContext.Create(context, value),
+                static (in context, ref valueBuilder) => ArrayBuilder.BuildValue(context.Context, context.Build, ref valueBuilder),
                 escapeName,
                 nameRequiresUnescaping);
         }
@@ -633,6 +702,22 @@ public readonly partial struct JsonElement
             _builder.AddProperty(
                 propertyName,
                 (ref valueBuilder) => ArrayBuilder.BuildValue(value, ref valueBuilder));
+        }
+
+        /// <summary>
+        /// Adds a property with a JSON array value to the current object using a builder delegate.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">A delegate that builds the array value.</param>
+        public void Add<TContext>(ReadOnlySpan<char> propertyName, in TContext context, ArrayBuilder.Build<TContext> value)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            _builder.AddProperty(
+                propertyName,
+                BuildWithContext.Create(context, value),
+                static (in context, ref valueBuilder) => ArrayBuilder.BuildValue(context.Context, context.Build, ref valueBuilder));
         }
 
         /// <summary>

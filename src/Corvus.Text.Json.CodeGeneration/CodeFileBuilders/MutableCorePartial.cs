@@ -52,10 +52,11 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                         .PushBuilderClassNameAndScope()
                         .PushSourceClassNameAndScope()
                         .PushConstantsClassNameAndScope()
+                        .PushMutableClassNameAndScope()
                         // Begin the mutable part of the declaration
                         .BeginPartialStructDeclaration(
                             GeneratedTypeAccessibility.Public,
-                            "Mutable",
+                            generator.MutableClassName(),
                             interfaces: [
                                 typeDeclaration.GetIJsonElementInterface(forMutable: true)
                                 ],
@@ -66,10 +67,10 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendTokenTypeProperty()
                             .AppendConversionToCompositionTypes(typeDeclaration, forMutable: true)
                             .AppendCoreTypeAndFormatConversionOperators(typeDeclaration, forMutable: true)
-                            .AppendBinaryOperator("Mutable", "Mutable", "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")
-                            .AppendBinaryOperator("Mutable", "Mutable", "bool", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
-                            .AppendBinaryOperator("Mutable", "JsonElement", "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")
-                            .AppendBinaryOperator("Mutable", "JsonElement", "bool", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
+                            .AppendBinaryOperator(generator.MutableClassName(), generator.MutableClassName(), "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")
+                            .AppendBinaryOperator(generator.MutableClassName(), generator.MutableClassName(), "bool", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
+                            .AppendBinaryOperator(generator.MutableClassName(), "JsonElement", "bool", "==", "return left.Equals(right);", "<c>True</c> if the values are equal.")
+                            .AppendBinaryOperator(generator.MutableClassName(), "JsonElement", "bool", "!=", "return !left.Equals(right);", "<c>True</c> if the values are not equal.")
                             .AppendJsonElementConversionOperator(typeDeclaration, forMutable: true)
                             .AppendMutableConversionOperators(typeDeclaration)
                             .AppendFromFactoryMethod(typeDeclaration, forMutable: true)
@@ -98,6 +99,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendTryGetAsCompositionTypeMethods(typeDeclaration, forMutable: true)
                         .EndClassStructOrEnumDeclaration()
                         .AppendSourceAndBuilder(typeDeclaration)
+                        .PopMutableClassNameAndScope()
                         .PopConstantsClassNameAndScope()
                         .PopSourceClassNameAndScope()
                         .PopBuilderClassNameAndScope()

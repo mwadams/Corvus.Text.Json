@@ -15,12 +15,13 @@ public class JsonWorkspace : IDisposable
     private static readonly JsonWriterOptions s_internalWriterOptions = new() { Indented = false };
 
     private IJsonDocument[] _documents;
-    private readonly Dictionary<IJsonDocument, int> _documentIndices = [];
+    private readonly Dictionary<IJsonDocument, int> _documentIndices;
     private int _length;
     private bool _rented;
 
     internal JsonWorkspace(bool rented, int initialDocumentCapacity = 5, JsonWriterOptions? options = null)
     {
+        _documentIndices = new Dictionary<IJsonDocument, int>(initialDocumentCapacity);
         _documents = ArrayPool<IJsonDocument>.Shared.Rent(initialDocumentCapacity);
         _length = 0;
         Options = options ?? s_internalWriterOptions;
@@ -111,14 +112,17 @@ public class JsonWorkspace : IDisposable
         }
         else
         {
-            if (_length > 0)
+            // Dispose the documents
+            foreach (IJsonDocument document in _documents.AsSpan(0, _length))
             {
-                // Dispose the documents
-                foreach (IJsonDocument document in _documents.AsSpan(0, _length))
+                if (document is IMutableJsonDocument)
                 {
                     document.Dispose();
                 }
+            }
 
+            if (_length > 0)
+            {
                 ArrayPool<IJsonDocument>.Shared.Return(_documents);
                 _documentIndices.Clear();
                 _length = -1;

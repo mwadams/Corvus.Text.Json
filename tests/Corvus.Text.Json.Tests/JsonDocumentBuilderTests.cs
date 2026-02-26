@@ -4011,7 +4011,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable value = builderDoc2.RootElement;
 
-            root.SetItem<JsonElement.Mutable>(0, value);
+            root.SetItem(0, value);
             Assert.Equal(42, root[0].GetInt32());
         }
 
@@ -4457,8 +4457,8 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
             JsonElement.Mutable value = builderDoc2.RootElement;
 
-            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(-1, value));
-            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem<JsonElement.Mutable>(2, value));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
+            Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, value));
         }
 
         [Fact]
@@ -5703,11 +5703,11 @@ namespace Corvus.Text.Json.Tests
             JsonElement.Mutable value = builderDoc2.RootElement;
 
             // Non-ASCII property name
-            root.SetProperty<JsonElement.Mutable>("héllo"u8, value);
+            root.SetProperty("héllo"u8, value);
             Assert.Equal(123, root.GetProperty("héllo").GetInt32());
 
             // Encoded/escaped property name (contains a quote)
-            root.SetProperty<JsonElement.Mutable>("foo\"bar"u8, value);
+            root.SetProperty("foo\"bar"u8, value);
             Assert.Equal(123, root.GetProperty("foo\"bar").GetInt32());
         }
 
@@ -6082,22 +6082,22 @@ namespace Corvus.Text.Json.Tests
                     });
 
                     // Add arrays using AddArrayValue(ReadOnlySpan<byte>, ...)
-                    arrayBuilder.AddArrayValue(byteArray);
-                    arrayBuilder.AddArrayValue(shortArray);
-                    arrayBuilder.AddArrayValue(intArray);
-                    arrayBuilder.AddArrayValue(longArray);
-                    arrayBuilder.AddArrayValue(sbyteArray);
-                    arrayBuilder.AddArrayValue(ushortArray);
-                    arrayBuilder.AddArrayValue(uintArray);
+                    arrayBuilder.AddRange(byteArray);
+                    arrayBuilder.AddRange(shortArray);
+                    arrayBuilder.AddRange(intArray);
+                    arrayBuilder.AddRange(longArray);
+                    arrayBuilder.AddRange(sbyteArray);
+                    arrayBuilder.AddRange(ushortArray);
+                    arrayBuilder.AddRange(uintArray);
                     arrayBuilder.AddArrayValue(ulongArray);
-                    arrayBuilder.AddArrayValue(floatArray);
-                    arrayBuilder.AddArrayValue(doubleArray);
-                    arrayBuilder.AddArrayValue(decimalArray);
+                    arrayBuilder.AddRange(floatArray);
+                    arrayBuilder.AddRange(doubleArray);
+                    arrayBuilder.AddRange(decimalArray);
 
 #if NET
-                    arrayBuilder.AddArrayValue(int128Array);
-                    arrayBuilder.AddArrayValue(uint128Array);
-                    arrayBuilder.AddArrayValue(halfArray);
+                    arrayBuilder.AddRange(int128Array);
+                    arrayBuilder.AddRange(uint128Array);
+                    arrayBuilder.AddRange(halfArray);
 #endif
 
                     arrayBuilder.Add(parsedDoc.RootElement);

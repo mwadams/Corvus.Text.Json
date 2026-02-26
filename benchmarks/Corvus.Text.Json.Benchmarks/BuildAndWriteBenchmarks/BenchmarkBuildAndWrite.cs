@@ -67,7 +67,7 @@ public class BenchmarkBuildAndWrite
 
         using JsonDocumentBuilder<Person.Mutable> person = Person.CreateDocumentBuilder(            
             workspace,
-            new((ref b) => b.Create(
+            (ref b) => b.Create(
             age: 51,
             name: new(static (ref personName) =>
             {
@@ -85,7 +85,7 @@ public class BenchmarkBuildAndWrite
                 competedInYears.Add(2012);
                 competedInYears.Add(2016);
                 competedInYears.Add(2024);
-            }))));
+            })));
 
         Utf8JsonWriter writer = workspace.RentWriterAndBuffer(defaultBufferSize: 1024, out IByteBufferWriter bufferWriter);
         person.WriteTo(writer);
