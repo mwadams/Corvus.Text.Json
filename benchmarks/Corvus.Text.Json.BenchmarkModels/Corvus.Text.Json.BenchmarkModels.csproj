@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CorvusJsonSchemaModel\" />
+  </ItemGroup>
+
 </Project>

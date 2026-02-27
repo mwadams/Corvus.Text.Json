@@ -21,7 +21,7 @@ internal class DummyResultsCollector : IJsonSchemaResultsCollector
     public int BeginChildContext(int parentSequenceNumber, ReadOnlySpan<byte> propertyName, JsonSchemaPathProvider reducedEvaluationPath = null, JsonSchemaPathProvider? schemaEvaluationPath = null) => _childContextCount++;
 
     public int BeginChildContext<TProviderContext>(int parentSequenceNumber, TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> reducedEvaluationPath, JsonSchemaPathProvider<TProviderContext> schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext> documentEvaluationPath) => _childContextCount++;
-
+    public int BeginChildContext(int parentSequenceNumber, int itemIndex, JsonSchemaPathProvider reducedEvaluationPath = null, JsonSchemaPathProvider schemaEvaluationPath = null) => _childContextCount++;
     public int BeginChildContextUnescaped(int parentSequenceNumber, ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider reducedEvaluationPath = null, JsonSchemaPathProvider? schemaEvaluationPath = null) => _childContextCount++;
 
     public void CommitChildContext(int sequenceNumber, bool parentIsMatch, bool childIsMatch, JsonSchemaMessageProvider messageProvider) => _childContextCount--;

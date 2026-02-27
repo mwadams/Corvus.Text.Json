@@ -1,7 +1,7 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using Benchmark.CorvusJsonSchema2;
+using Benchmark.CorvusJsonSchema;
 using BenchmarkDotNet.Attributes;
 
 namespace ValidationBenchmarks;
@@ -35,12 +35,12 @@ public class BenchmarkBuild
             workspace,
             (ref b) => b.Create(
                 age: 51,
-                name: new(static (ref personName) =>
+                name: Benchmark.CorvusTextJson.PersonName.Build(static (ref personName) =>
                 {
                     personName.Create(
                         firstName: "Michael"u8,
                         lastName: "Adams"u8,
-                        otherNames: new(static (ref otherNames) =>
+                        otherNames: Benchmark.CorvusTextJson.OtherNames.Build(static (ref otherNames) =>
                         {
                             otherNames.Add("Francis"u8);
                             otherNames.Add("James"u8);

@@ -40,7 +40,7 @@ public class BenchmarkSimpleValidation
     [Benchmark(Baseline = true)]
     public bool ValidateCorvusJsonSchema()
     {
-        return Benchmark.CorvusJsonSchema.PersonSchema.FromJson(documentA1!.RootElement).IsValid();
+        return Benchmark.CorvusJsonSchema.Person.FromJson(documentA1!.RootElement).IsValid();
     }
 
     [Benchmark]

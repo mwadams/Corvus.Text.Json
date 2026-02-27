@@ -291,18 +291,18 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocumentBuil
     static (in years, ref b) => b.Create(
         years,
         age: 51,
-        name: new PersonName.Source(static (ref personName) =>
+        name: PersonName.Build(static (ref personName) =>
         {
             personName.Create(
                 firstName: "Michael"u8,
                 lastName: "Adams"u8,
-                otherNames: new(static (ref otherNames) =>
+                otherNames: OtherNames.Build(static (ref otherNames) =>
                 {
                     otherNames.Add("Francis"u8);
                     otherNames.Add("James"u8);
                 }));
         }),
-        competedInYears: new(years, static (in years, ref competedInYears) =>
+        competedInYears: CompetedInYears.Build(years, static (in years, ref competedInYears) =>
         {
             foreach (int year in years)
             {
@@ -310,7 +310,7 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateDocumentBuil
             }
         })));
 
-docBuilder.RootElement.Name.SetOtherNames(new((ref b) => b.Add("Leo"u8)));
+docBuilder.RootElement.Name.SetOtherNames(OtherNames.Build((ref b) => b.Add("Leo"u8)));
 docBuilder.RootElement.Name.SetOtherNames("William"u8);
 
 Console.WriteLine();
@@ -323,14 +323,14 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateDocumentBui
     workspace,
     (ref b) => b.Create(
         age: 51,
-        name: new((ref personName) =>
+        name: PersonName.Build((ref personName) =>
         {
             personName.Create(
                 firstName: "Michael"u8,
                 lastName: "Adams"u8,
                 otherNames: "Francis James"u8);
         }),
-        competedInYears: new((ref competedInYears) =>
+        competedInYears: CompetedInYears.Build((ref competedInYears) =>
         {
             competedInYears.Add(2012);
             competedInYears.Add(2016);
@@ -358,7 +358,7 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateDocumentBui
     (ref b) => b.Create(
         age: person.Age ?? default, // Happily assign an existing instance, will not copy
         name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
-        competedInYears: new((ref competedInYears) =>
+        competedInYears: CompetedInYears.Build((ref competedInYears) =>
         {
             competedInYears.Add(2012);
         })));
@@ -468,7 +468,7 @@ using JsonDocumentBuilder<Person.Mutable> testPersonDocBuilder = Person.CreateDo
         workspace,
         static (ref b) => b.Create(
             age: 51,
-            name: new(static (ref personName) =>
+            name: PersonName.Build(static (ref personName) =>
             {
                 personName.Create(
                     firstName: "Michael"u8,

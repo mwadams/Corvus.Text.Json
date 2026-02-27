@@ -55,10 +55,10 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
             tupleEvaluationPathProperty = generator.GetPropertyNameInScope("SchemaEvaluationPath", prefix: ttd.Keyword.Keyword);
             generator
                 .AppendLineIndent(
-                    "private static readonly JsonSchemaPathProvider<int> ",
-                    tupleEvaluationPathProperty, " = static (index, buffer, out written) => JsonSchemaEvaluation.SchemaLocationForIndexedKeyword(",
+                    "private static readonly JsonSchemaPathProvider ",
+                    tupleEvaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
                     SymbolDisplay.FormatLiteral(ttd.Keyword.Keyword, true),
-                    "u8, index, buffer, out written);");
+                    "u8, buffer, out written);");
         }
 
         if (typeDeclaration.ExplicitUnevaluatedItemsType() is ArrayItemsTypeDeclaration aitd)
@@ -66,8 +66,8 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
             unevaluatedItemsEvaluationPathProperty = generator.GetPropertyNameInScope("SchemaEvaluationPath", prefix: ((IKeyword)aitd.Keyword).Keyword);            
             generator
                 .AppendLineIndent(
-                    "private static readonly JsonSchemaPathProvider<int> ",
-                    unevaluatedItemsEvaluationPathProperty, " = static (_, buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                    "private static readonly JsonSchemaPathProvider ",
+                    unevaluatedItemsEvaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
                     SymbolDisplay.FormatLiteral(aitd.Keyword.GetPathModifier(aitd), true),
                     "u8, buffer, out written);");
         }
@@ -77,8 +77,8 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
             nonTupleEvaluationPathProperty = generator.GetPropertyNameInScope("SchemaEvaluationPath", prefix: ((IKeyword)nonTupleItemsTypeDeclaration.Keyword).Keyword);
             generator
                 .AppendLineIndent(
-                    "private static readonly JsonSchemaPathProvider<int> ",
-                    nonTupleEvaluationPathProperty, " = static (_, buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                    "private static readonly JsonSchemaPathProvider ",
+                    nonTupleEvaluationPathProperty, " = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
                     SymbolDisplay.FormatLiteral(nonTupleItemsTypeDeclaration.Keyword.GetPathModifier(nonTupleItemsTypeDeclaration), true),
                     "u8, buffer, out written);");
         }
@@ -140,9 +140,8 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
                             .AppendLineIndent("parentDocument,")
                             .AppendLineIndent("arrayValidation_currentIndex,")
                             .AppendLineIndent("ref context,")
-                            .AppendLineIndent("providerContext: arrayValidation_itemCount,")
-                            .AppendLineIndent("schemaEvaluationPath: ", validationConfiguration.TupleEvaluationPathProperty!, ",")
-                            .AppendLineIndent("documentEvaluationPath: JsonSchemaEvaluation.ItemIndex);")
+                            .AppendLineIndent("itemIndex: arrayValidation_itemCount,")
+                            .AppendLineIndent("evaluationPath: ", validationConfiguration.TupleEvaluationPathProperty!, ");")
                         .PopIndent()
                         .AppendSeparatorLine()
                         .AppendLineIndent(tupleTypeName, ".", tupleJsonSchemaClassName, ".Evaluate(parentDocument, arrayValidation_currentIndex, ref ", tupleChildContextName, ");")
@@ -192,9 +191,8 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
                     .AppendLineIndent("parentDocument,")
                     .AppendLineIndent("arrayValidation_currentIndex,")
                     .AppendLineIndent("ref context,")
-                    .AppendLineIndent("providerContext: arrayValidation_itemCount,")
-                    .AppendLineIndent("schemaEvaluationPath: ", validationConfiguration.NonTupleEvaluationPathProperty!, ",")
-                    .AppendLineIndent("documentEvaluationPath: JsonSchemaEvaluation.ItemIndex);")
+                    .AppendLineIndent("itemIndex: arrayValidation_itemCount,")
+                    .AppendLineIndent("evaluationPath: ", validationConfiguration.NonTupleEvaluationPathProperty!, ");")
                 .PopIndent()
                 .AppendSeparatorLine()
                 .AppendLineIndent(nonTupleTypeName, ".", nonTupleJsonSchemaClassName, ".Evaluate(parentDocument, arrayValidation_currentIndex, ref ", nonTupleChildContextName, ");")
@@ -231,10 +229,9 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
                     .PushIndent()
                         .AppendLineIndent("parentDocument,")
                         .AppendLineIndent("arrayValidation_currentIndex,")
-                        .AppendLineIndent("ref context,")
-                        .AppendLineIndent("providerContext: arrayValidation_itemCount,")
-                        .AppendLineIndent("schemaEvaluationPath: ", validationConfiguration.UnevaluatedItemsEvaluationPathProperty!, ",")
-                        .AppendLineIndent("documentEvaluationPath: JsonSchemaEvaluation.ItemIndex);")
+                    .AppendLineIndent("ref context,")
+                        .AppendLineIndent("itemIndex: arrayValidation_itemCount,")
+                        .AppendLineIndent("evaluationPath: ", validationConfiguration.UnevaluatedItemsEvaluationPathProperty!, ");")
                     .PopIndent()
                     .AppendSeparatorLine()
                     .AppendLineIndent(unevaluatedTypeName, ".", unevaluatedJsonSchemaClassName, ".Evaluate(parentDocument, arrayValidation_currentIndex, ref ", unevaluatedChildContextName, ");")

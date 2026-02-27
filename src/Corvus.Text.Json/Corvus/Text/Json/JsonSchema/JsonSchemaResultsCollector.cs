@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Buffers;
+using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1303,6 +1304,45 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
         _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
     }
 
+    private void AppendToDocumentEvaluationPath(int index)
+    {
+        if (_currentDocumentEvaluationPathRange.End + MaxPathSegmentLength > _documentEvaluationPath.Length)
+        {
+            Enlarge(MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
+        }
+
+        _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+        if (!Utf8Formatter.TryFormat(index, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
+        {
+            ThrowHelper.ThrowArgumentException_DestinationTooShort();
+        }
+
+        _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
+    }
+
+    private void AppendParallelDocumentEvaluationPath(int sequenceOffset, int index)
+    {
+        ValueRange parentRange = _documentEvaluationPathStack[^(sequenceOffset + 1)];
+        if (_currentDocumentEvaluationPathRange.End + parentRange.Length + MaxPathSegmentLength > _documentEvaluationPath.Length)
+        {
+            Enlarge(parentRange.Length + MaxPathSegmentLength, ref _documentEvaluationPath, _currentDocumentEvaluationPathRange.End);
+        }
+
+        _documentEvaluationPath.AsSpan(parentRange.Start, parentRange.Length).CopyTo(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End));
+
+        _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.End, _currentDocumentEvaluationPathRange.End + parentRange.Length);
+
+        _documentEvaluationPath[_currentDocumentEvaluationPathRange.End] = JsonConstants.Slash; // Ensure we start with a slash
+
+        if (!Utf8Formatter.TryFormat(index, _documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.End + 1), out int written))
+        {
+            ThrowHelper.ThrowArgumentException_DestinationTooShort();
+        }
+
+        _currentDocumentEvaluationPathRange = new ValueRange(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.End + written + 1);
+    }
+
     private void UnescapeEncodeAndAppendToDocumentEvaluationPath(ReadOnlySpan<byte> escapedAndUnencodedPropertyName)
     {
         int length = (escapedAndUnencodedPropertyName.Length * JsonConstants.MaxExpansionFactorWhileEncodingPointer);
@@ -1510,6 +1550,52 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
             {
                 AppendToDocumentEvaluationPath(providerContext, documentEvaluationPath);
             }
+        }
+
+        // There are no current results for this context (hence our result stack has 0 length)
+        // But we also record the committed result stack at this point, in case we wish to pop and unwind it later.
+        _resultStack.Append(
+            new ValueRangeWithCommitIndexAndSequenceNumber(_utf8StringBackingLength, _utf8StringBackingLength, _committedResultStack.Length, _sequenceNumber));
+
+        _sequenceNumber++;
+        return _sequenceNumber;
+    }
+
+    int IJsonSchemaResultsCollector.BeginChildContext(int parentSequenceNumber, int itemIndex, JsonSchemaPathProvider? evaluationPath, JsonSchemaPathProvider? schemaEvaluationPath)
+    {
+        IsConsistent(_sequenceNumber);
+
+        // Push the paths onto the stack
+        _evaluationPathStack.Append(_currentEvaluationPathRange);
+        _documentEvaluationPathStack.Append(_currentDocumentEvaluationPathRange);
+        _schemaEvaluationPathStack.Append(_currentSchemaEvaluationPathRange);
+
+        int sequenceOffset = _sequenceNumber - parentSequenceNumber;
+
+        if (evaluationPath is not null)
+        {
+            if (sequenceOffset > 0)
+            {
+                AppendParallelEvaluationPath(sequenceOffset, evaluationPath);
+            }
+            else
+            {
+                AppendToEvaluationPath(evaluationPath);
+            }
+        }
+
+        if (schemaEvaluationPath is not null)
+        {
+            SetSchemaEvaluationPath(schemaEvaluationPath);
+        }
+
+        if (sequenceOffset > 0)
+        {
+            AppendParallelDocumentEvaluationPath(sequenceOffset, itemIndex);
+        }
+        else
+        {
+            AppendToDocumentEvaluationPath(itemIndex);
         }
 
         // There are no current results for this context (hence our result stack has 0 length)

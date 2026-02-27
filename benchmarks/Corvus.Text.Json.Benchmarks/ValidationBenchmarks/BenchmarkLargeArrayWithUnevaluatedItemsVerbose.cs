@@ -50,7 +50,7 @@ public class BenchmarkLargeArrayWithUnevaluatedItemsVerbose
     [Benchmark(Baseline = true)]
     public bool ValidateCorvusJsonSchema()
     {
-        ValidationContext result = Benchmark.CorvusJsonSchema2.PersonArray.FromJson(documentA1!.RootElement).Validate(ValidationContext.ValidContext, ValidationLevel.Verbose);
+        ValidationContext result = Benchmark.CorvusJsonSchema.PersonArray.FromJson(documentA1!.RootElement).Validate(ValidationContext.ValidContext, ValidationLevel.Verbose);
         return result.IsValid;
     }
 

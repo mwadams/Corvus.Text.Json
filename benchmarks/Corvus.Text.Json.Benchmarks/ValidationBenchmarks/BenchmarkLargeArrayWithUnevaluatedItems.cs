@@ -50,7 +50,7 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
     [Benchmark(Baseline = true)]
     public bool ValidateCorvusJsonSchema()
     {
-        bool result = Benchmark.CorvusJsonSchema2.PersonArray.FromJson(documentA1!.RootElement).IsValid();
+        bool result = Benchmark.CorvusJsonSchema.PersonArray.FromJson(documentA1!.RootElement).IsValid();
         if (!result)
         {
             throw new InvalidOperationException();

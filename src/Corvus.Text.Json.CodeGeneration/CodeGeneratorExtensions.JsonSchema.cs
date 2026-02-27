@@ -205,6 +205,46 @@ internal static partial class CodeGenerationExtensions
             .PopIndent()
             .AppendLineIndent("}");
 
+        generator
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                """
+                /// <summary>
+                /// Push the current context as a child context for schema evaluation of an array item.
+                /// </summary>
+                /// <param name="parentDocument">The parent document of the instance for which to push the child context.</param>
+                /// <param name="parentDocumentIndex">The index in the parent document of the instance for which to push the child context.</param>
+                /// <param name="context">The current evaluation context.</param>
+                /// <param name="itemIndex">The index of the item in the array.</param>
+                /// <param name="evaluationPath">The (optional) reduced evaluation path in the child context.</param>
+                /// <returns>The child context.</returns>
+                """)
+            .AppendLineIndent("internal static JsonSchemaContext PushChildContext(")
+            .PushIndent()
+                .AppendLineIndent("IJsonDocument parentDocument,")
+                .AppendLineIndent("int parentDocumentIndex,")
+                .AppendLineIndent("ref JsonSchemaContext context,")
+                .AppendLineIndent("int itemIndex,")
+                .AppendLineIndent("JsonSchemaPathProvider? evaluationPath = null)")
+            .PopIndent()
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return")
+                .PushIndent()
+                    .AppendLineIndent("context.PushChildContext(")
+                    .PushIndent()
+                        .AppendLineIndent("parentDocument,")
+                        .AppendLineIndent("parentDocumentIndex,")
+                        .AppendLineIndent("useEvaluatedItems: ", useEvaluatedItems, ",")
+                        .AppendLineIndent("useEvaluatedProperties: ", useEvaluatedProperties, ",")
+                        .AppendLineIndent("itemIndex,")
+                        .AppendLineIndent("evaluationPath: evaluationPath,")
+                        .AppendLineIndent("schemaEvaluationPath: SchemaLocationProvider);")
+                    .PopIndent()
+                .PopIndent()
+            .PopIndent()
+            .AppendLineIndent("}");
+
         return generator;
     }
 

@@ -292,6 +292,57 @@ public struct JsonSchemaContext
     }
 
     /// <summary>
+    /// Creates a new child context for schema evaluation with item index tracking.
+    /// </summary>
+    /// <param name="parentDocument">The JSON document containing the element being evaluated.</param>
+    /// <param name="parentDocumentIndex">The index of the parent element in the document.</param>
+    /// <param name="useEvaluatedItems">Whether this child context should track evaluated array items.</param>
+    /// <param name="useEvaluatedProperties">Whether this child context should track evaluated object properties.</param>
+    /// <param name="itemIndex">The item index for path tracking in validation results.</param>
+    /// <param name="evaluationPath">Optional provider for the reduced evaluation path in the schema.</param>
+    /// <param name="schemaEvaluationPath">Optional provider for the full schema evaluation path.</param>
+    /// <returns>A new child context initialized for the specified element.</returns>
+    /// <remarks>
+    /// <para>
+    /// This method is part of the context lifecycle management system for JSON Schema validation.
+    /// Child contexts inherit buffer space and configuration from their parent but maintain
+    /// separate tracking for evaluated properties and items.
+    /// </para>
+    /// <para>
+    /// The child context shares the same underlying buffer as the parent but uses a different
+    /// offset to avoid conflicts. When the child context is committed via <see cref="CommitChildContext"/>,
+    /// its results are merged back into the parent's validation results.
+    /// </para>
+    /// <para>
+    /// <strong>Usage Pattern:</strong>
+    /// <code>
+    /// // Push child context for validating a property
+    /// JsonSchemaContext childContext = parentContext.PushChildContext(
+    ///     document, propertyIndex, useItems: false, useProperties: true, propertyName);
+    ///
+    /// // Perform validation using child context
+    /// bool isValid = ValidateProperty(ref childContext);
+    ///
+    /// // Commit results back to parent
+    /// parentContext.CommitChildContext(isValid, ref childContext);
+    /// </code>
+    /// </para>
+    /// </remarks>
+    public readonly JsonSchemaContext PushChildContext(
+        IJsonDocument parentDocument,
+        int parentDocumentIndex,
+        bool useEvaluatedItems,
+        bool useEvaluatedProperties,
+        int itemIndex,
+        JsonSchemaPathProvider? evaluationPath = null,
+        JsonSchemaPathProvider? schemaEvaluationPath = null)
+    {
+        int sequenceNumber = _resultsCollector?.BeginChildContext(_sequenceNumber, itemIndex, evaluationPath, schemaEvaluationPath) ?? 0;
+
+        return PushChildContextCore(sequenceNumber, parentDocument, parentDocumentIndex, useEvaluatedItems, useEvaluatedProperties);
+    }
+
+    /// <summary>
     /// Creates a new child context for schema evaluation with unescaped property name tracking.
     /// </summary>
     /// <param name="parentDocument">The JSON document containing the element being evaluated.</param>

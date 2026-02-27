@@ -34,6 +34,7 @@ internal static partial class CodeGeneratorExtensions
             .AppendSourceOfContextRefStruct(typeDeclaration, builders)
             .AppendBuilderRefStruct(typeDeclaration, builders, forArray: true)
             .AppendBuilderRefStruct(typeDeclaration, builders, forArray: false)
+            .AppendCommonBuild(typeDeclaration, builders)
             .AppendCommonCreateDocumentBuilders(typeDeclaration, builders);
     }
 
@@ -1225,11 +1226,11 @@ internal static partial class CodeGeneratorExtensions
             /// <param name="value">The value with which to initialize the builder.</param>
             /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
             /// <returns>An instance of a mutable document initialized with the given value.</returns>
-            public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-                JsonWorkspace workspace, in {{generator.SourceClassName()}} value, int initialCapacity = {{initialCapacity}})
+            public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateDocumentBuilder(
+                JsonWorkspace workspace, scoped in {{generator.SourceClassName()}} value, int initialCapacity = {{initialCapacity}})
             {
                 // Create the document builder without a MetadataDb
-                JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+                JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.CreateDocumentBuilder<{{generator.MutableClassName()}}>(-1);
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
                 value.AddAsItem(ref cvb);
                 Debug.Assert(cvb.MemberCount == 1);
@@ -1299,10 +1300,10 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("/// </summary>")
             .AppendLineIndent("/// <param name=\"workspace\">The JSON workspace.</param>")
             .AppendLineIndent("/// <returns>An instance of a mutable document initialized with this instance.</returns>")
-            .AppendLineIndent("public JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)")
+            .AppendLineIndent("public JsonDocumentBuilder<", generator.MutableClassName(), "> CreateDocumentBuilder(JsonWorkspace workspace)")
             .AppendLineIndent("{")
             .PushIndent()
-                .AppendLineIndent("return workspace.CreateDocumentBuilder<", typeDeclaration.DotnetTypeName(), ", Mutable>(this);")
+                .AppendLineIndent("return workspace.CreateDocumentBuilder<", typeDeclaration.DotnetTypeName(), ", ", generator.MutableClassName(), ">(this);")
             .PopIndent()
             .AppendLineIndent("}");
 
@@ -1321,11 +1322,11 @@ internal static partial class CodeGeneratorExtensions
                         /// <param name="value">The value with which to initialize the builder.</param>
                         /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
                         /// <returns>An instance of a mutable document initialized with the given value.</returns>
-                        public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(
-                            JsonWorkspace workspace, in {{builderClassName}}.Build value, int initialCapacity = {{initialCapacity}})
+                        public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateDocumentBuilder(
+                            JsonWorkspace workspace, scoped in {{builderClassName}}.Build value, int initialCapacity = {{initialCapacity}})
                         {
                             // Create the document builder without a MetadataDb
-                            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+                            JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.CreateDocumentBuilder<{{generator.MutableClassName()}}>(-1);
                             ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
                             var source = new {{sourceClassName}}(value);
                             source.AddAsItem(ref cvb);
@@ -1349,20 +1350,122 @@ internal static partial class CodeGeneratorExtensions
                     /// <param name="value">The value with which to initialize the builder.</param>
                     /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
                     /// <returns>An instance of a mutable document initialized with the given value.</returns>
-                    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder<TContext>(
-                        JsonWorkspace workspace, in TContext context, in {{builderClassName}}.Build<TContext> value, int initialCapacity = {{initialCapacity}})
+                    public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateDocumentBuilder<TContext>(
+                        JsonWorkspace workspace, scoped in TContext context, scoped in {{builderClassName}}.Build<TContext> value, int initialCapacity = {{initialCapacity}})
                         #if NET9_0_OR_GREATER
                         where TContext : allows ref struct
                         #endif
                     {
                         // Create the document builder without a MetadataDb
-                        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+                        JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.CreateDocumentBuilder<{{generator.MutableClassName()}}>(-1);
                         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
                         var source = new {{sourceClassName}}<TContext>(context, value);
                         source.AddAsItem(ref cvb);
                         Debug.Assert(cvb.MemberCount == 1);
                         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
                         return documentBuilder;
+                    }
+                    """);
+        }
+    }
+
+    /// <summary>
+    /// Appends methods to create <c>Source</c> and <c>Source&lt;TContext&gt;</c> instances for the specified type declaration.
+    /// </summary>
+    /// <param name="generator">The code generator to which to append the methods.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the document builder creation methods.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    private static CodeGenerator AppendCommonBuild(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
+    {
+        // We only expect 1 row for a simple type.
+        int initialCapacity = 1;
+
+        CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
+        if ((core & (CoreTypes.Object | CoreTypes.Array)) == 0)
+        {
+            return generator;
+        }
+
+        bool isArray = (core & CoreTypes.Array) != 0;
+        bool isObject = (core & CoreTypes.Object) != 0;
+        string sourceClassName = generator.SourceClassName();
+
+        if (isArray && isObject)
+        {
+            if (generator.ArrayBuilderClassName() is string arrayBuilderClassName)
+            {
+                AppendCreateBuild(generator, initialCapacity, sourceClassName, arrayBuilderClassName);
+            }
+
+            if (generator.ObjectBuilderClassName() is string objectBuilderClassName)
+            {
+                AppendCreateBuild(generator, initialCapacity, sourceClassName, objectBuilderClassName);
+            }
+        }
+        else if (generator.BuilderClassName() is string builderClassName)
+        {
+            AppendCreateBuild(generator, initialCapacity, sourceClassName, builderClassName);
+        }
+
+        foreach (ComposedBuilder builder in builders)
+        {
+            // Don't add them for built-in JsonNotAny types
+            if (builder.TypeDeclaration.IsBuiltInJsonNotAnyType())
+            {
+                continue;
+            }
+
+            if (builder.IsArray && builder.ArrayBuilderName is string arrayBuilderClassName1)
+            {
+                AppendCreateBuild(generator, initialCapacity, $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{generator.SourceClassName(builder.TypeDeclaration.FullyQualifiedDotnetTypeName())}", $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{arrayBuilderClassName1}");
+            }
+
+            if (builder.IsObject && builder.ObjectBuilderName is string objectBuilderClassName1)
+            {
+                AppendCreateBuild(generator, initialCapacity, $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{generator.SourceClassName(builder.TypeDeclaration.FullyQualifiedDotnetTypeName())}", $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{objectBuilderClassName1}");
+            }
+        }
+
+        return generator;
+
+        static void AppendCreateBuild(CodeGenerator generator, int initialCapacity, string sourceClassName, string builderClassName)
+        {
+            generator
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    $$"""
+                    /// <summary>
+                    /// Build an instance of the value.
+                    /// </summary>
+                    /// <param name="buildValue">The callback that builds the value.</param>
+                    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+                    /// <returns>The source from which to build the value.</returns>
+                    public static {{sourceClassName}} Build(
+                        scoped in {{builderClassName}}.Build buildValue, int initialCapacity = {{initialCapacity}})
+                    {
+                        return new {{sourceClassName}}(buildValue);
+                    }
+                    """);
+
+            generator
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    $$"""
+                    /// <summary>
+                    /// Build an instance of the value.
+                    /// </summary>
+                    /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+                    /// <param name="context">The context to pass to the builder.</param>
+                    /// <param name="buildValue">The callback that builds the value.</param>
+                    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+                    /// <returns>The source from which to build the value.</returns>
+                    public static {{sourceClassName}}<TContext> Build<TContext>(
+                        scoped in TContext context, scoped in {{builderClassName}}.Build<TContext> buildValue, int initialCapacity = {{initialCapacity}})
+                        #if NET9_0_OR_GREATER
+                        where TContext : allows ref struct
+                        #endif
+                    {
+                        return new {{sourceClassName}}<TContext>(context, buildValue);
                     }
                     """);
         }
@@ -2095,7 +2198,7 @@ internal static partial class CodeGeneratorExtensions
                 generator
                     .AppendSeparatorLine()
                     .AppendLineIndent(
-                        "public ", generator.SourceClassName(), "(",
+                        "internal ", generator.SourceClassName(), "(",
                         forContext ? "scoped in TContext context, " : "",
                          fqdtn,
                         ".",
@@ -2111,7 +2214,7 @@ internal static partial class CodeGeneratorExtensions
                 generator
                     .AppendSeparatorLine()
                     .AppendLineIndent(
-                        "public ", generator.SourceClassName(), "(",
+                        "internal ", generator.SourceClassName(), "(",
                         forContext ? "scoped in TContext context, " : "",
                         fqdtn,
                         ".",

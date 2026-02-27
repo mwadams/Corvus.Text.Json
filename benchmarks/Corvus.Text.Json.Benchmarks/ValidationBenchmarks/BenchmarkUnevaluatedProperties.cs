@@ -40,7 +40,7 @@ public class BenchmarkUnevaluatedProperties
     [Benchmark(Baseline = true)]
     public bool ValidateCorvusJsonSchema()
     {
-        return Benchmark.CorvusJsonSchema2.Person.FromJson(documentA1!.RootElement).IsValid();
+        return Benchmark.CorvusJsonSchema.Person.FromJson(documentA1!.RootElement).IsValid();
     }
 
     [Benchmark]

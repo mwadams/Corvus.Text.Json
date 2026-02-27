@@ -45,9 +45,9 @@ public class BenchmarkBuildAndWrite
     {
         var bufferWriter = new ArrayPoolBufferWriter<byte>();
         System.Text.Json.Utf8JsonWriter writer = new(bufferWriter);
-        Benchmark.CorvusJsonSchema2.Person person = Benchmark.CorvusJsonSchema2.Person.Create(
+        Benchmark.CorvusJsonSchema.Person person = Benchmark.CorvusJsonSchema.Person.Create(
             age: 51,
-            name: Benchmark.CorvusJsonSchema2.PersonName.Create(
+            name: Benchmark.CorvusJsonSchema.PersonName.Create(
                 firstName: "Michael",
                 lastName: "Adams",
                 otherNames: ["Francis", "James"]),
@@ -69,18 +69,18 @@ public class BenchmarkBuildAndWrite
             workspace,
             (ref b) => b.Create(
             age: 51,
-            name: new(static (ref personName) =>
+            name: PersonName.Build(static (ref personName) =>
             {
                 personName.Create(
                     firstName: "Michael"u8,
                     lastName: "Adams"u8,
-                    otherNames: new(static (ref otherNames) =>
+                    otherNames: OtherNames.Build(static (ref otherNames) =>
                     {
                         otherNames.Add("Francis"u8);
                         otherNames.Add("James"u8);
                     }));
             }),
-            competedInYears: new(static (ref competedInYears) =>
+            competedInYears: CompetedInYears.Build(static (ref competedInYears) =>
             {
                 competedInYears.Add(2012);
                 competedInYears.Add(2016);

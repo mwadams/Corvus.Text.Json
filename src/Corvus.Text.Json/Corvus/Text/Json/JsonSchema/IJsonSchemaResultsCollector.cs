@@ -113,6 +113,26 @@ public interface IJsonSchemaResultsCollector : IDisposable
         JsonSchemaPathProvider? schemaEvaluationPath = null);
 
     /// <summary>
+    /// Begin a child context for an item evaluation.
+    /// </summary>
+    /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
+    /// <param name="itemIndex">The index of the item for which to begin a child context.</param>
+    /// <param name="reducedEvaluationPath">The fully reduced evaluation path for the keyword.</param>
+    /// <param name="schemaEvaluationPath">The schema evaluation path of the target schema.</param>
+    /// <returns>The sequence number of the child context.</returns>
+    /// <remarks>
+    /// <para>
+    /// Begins evaluation of a schema in a child context. The context may later be committed with <see cref="CommitChildContext"/>
+    /// or abandoned with <see cref="PopChildContext"/>.
+    /// </para>
+    /// </remarks>
+    int BeginChildContext(
+        int parentSequenceNumber,
+        int itemIndex,
+        JsonSchemaPathProvider? reducedEvaluationPath = null,
+        JsonSchemaPathProvider? schemaEvaluationPath = null);
+
+    /// <summary>
     /// Begin a child context.
     /// </summary>
     /// <param name="parentSequenceNumber">The sequence number of the parent context.</param>
