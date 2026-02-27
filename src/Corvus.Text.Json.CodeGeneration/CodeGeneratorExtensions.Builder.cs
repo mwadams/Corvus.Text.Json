@@ -1377,7 +1377,7 @@ internal static partial class CodeGeneratorExtensions
     /// <returns>A reference to the generator having completed the operation.</returns>
     private static CodeGenerator AppendCommonBuild(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
     {
-        // We only expect 1 row for a simple type.
+        // We only expect row for a simple type.
         int initialCapacity = 1;
 
         CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
@@ -1390,19 +1390,27 @@ internal static partial class CodeGeneratorExtensions
         bool isObject = (core & CoreTypes.Object) != 0;
         string sourceClassName = generator.SourceClassName();
 
+        bool hasFallbackArrayType =
+            typeDeclaration.ExplicitArrayItemsType() is not null;
+
+        bool hasFallbackObjectType =
+            typeDeclaration.LocalEvaluatedPropertyType() is not null ||
+            typeDeclaration.HasPropertyDeclarations;
+
         if (isArray && isObject)
         {
-            if (generator.ArrayBuilderClassName() is string arrayBuilderClassName)
+            if (hasFallbackArrayType && generator.ArrayBuilderClassName() is string arrayBuilderClassName)
             {
                 AppendCreateBuild(generator, initialCapacity, sourceClassName, arrayBuilderClassName);
             }
 
-            if (generator.ObjectBuilderClassName() is string objectBuilderClassName)
+            if (hasFallbackObjectType && generator.ObjectBuilderClassName() is string objectBuilderClassName)
             {
                 AppendCreateBuild(generator, initialCapacity, sourceClassName, objectBuilderClassName);
             }
         }
-        else if (generator.BuilderClassName() is string builderClassName)
+        else if (((isObject && hasFallbackObjectType) || (isArray && hasFallbackArrayType)) &&
+                generator.BuilderClassName() is string builderClassName)
         {
             AppendCreateBuild(generator, initialCapacity, sourceClassName, builderClassName);
         }

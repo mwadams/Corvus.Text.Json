@@ -110,6 +110,25 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         }
 
         [CLSCompliant(false)]
+        public static JsonSchemaContext PushChildContext(
+            IJsonDocument parentDocument,
+            int parentDocumentIndex,
+            ref JsonSchemaContext context,
+            int itemIndex,
+            JsonSchemaPathProvider? evaluationPath = null)
+        {
+            return
+                context.PushChildContext(
+                    parentDocument,
+                    parentDocumentIndex,
+                    useEvaluatedItems: false, // We don't use evaluated items
+                    useEvaluatedProperties: false,
+                    itemIndex,
+                    evaluationPath: evaluationPath,
+                    schemaEvaluationPath: SchemaLocationProvider);
+        }
+
+        [CLSCompliant(false)]
         public static JsonSchemaContext PushChildContextUnescaped(
             IJsonDocument parentDocument,
             int parentDocumentIndex,
