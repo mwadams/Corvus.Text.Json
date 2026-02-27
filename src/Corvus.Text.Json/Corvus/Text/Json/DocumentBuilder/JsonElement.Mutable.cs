@@ -42,7 +42,7 @@ public readonly partial struct JsonElement
     /// <strong>Integration with JsonDocumentBuilder:</strong>
     /// </para>
     /// <list type="bullet">
-    /// <item><description><see cref="CreateDocumentBuilder"/> creates document builders from Source instances</description></item>
+    /// <item><description><see cref="BuildDocument"/> creates document builders from Source instances</description></item>
     /// <item><description><see cref="AddAsProperty"/> and <see cref="AddAsItem"/> integrate with <see cref="ComplexValueBuilder"/> for nested structures</description></item>
     /// <item><description>Automatic format selection and optimization based on value type and characteristics</description></item>
     /// </list>
@@ -62,22 +62,22 @@ public readonly partial struct JsonElement
     /// using JsonWorkspace workspace = JsonWorkspace.Create();
     ///
     /// // Numeric values
-    /// using var intDoc = JsonElement.CreateDocumentBuilder(workspace, 42);
-    /// using var doubleDoc = JsonElement.CreateDocumentBuilder(workspace, 3.14159);
+    /// using var intDoc = JsonElement.BuildDocument(workspace, 42);
+    /// using var doubleDoc = JsonElement.BuildDocument(workspace, 3.14159);
     ///
     /// // String values
-    /// using var stringDoc = JsonElement.CreateDocumentBuilder(workspace, "Hello, World!");
-    /// using var utf8Doc = JsonElement.CreateDocumentBuilder(workspace, "Hello"u8);
+    /// using var stringDoc = JsonElement.BuildDocument(workspace, "Hello, World!");
+    /// using var utf8Doc = JsonElement.BuildDocument(workspace, "Hello"u8);
     ///
     /// // Boolean and null
-    /// using var boolDoc = JsonElement.CreateDocumentBuilder(workspace, true);
-    /// using var nullDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Source.Null());
+    /// using var boolDoc = JsonElement.BuildDocument(workspace, true);
+    /// using var nullDoc = JsonElement.BuildDocument(workspace, JsonElement.Source.Null());
     /// </code>
     /// </example>
     /// <example>
     /// <para>Complex object construction:</para>
     /// <code>
-    /// using var objectDoc = JsonElement.CreateDocumentBuilder(workspace,
+    /// using var objectDoc = JsonElement.BuildDocument(workspace,
     ///     new((ref JsonObjectBuilder objBuilder) =>
     ///     {
     ///         objBuilder.Add("name", "John Doe");
@@ -94,7 +94,7 @@ public readonly partial struct JsonElement
     /// <example>
     /// <para>Array construction:</para>
     /// <code>
-    /// using var arrayDoc = JsonElement.CreateDocumentBuilder(workspace,
+    /// using var arrayDoc = JsonElement.BuildDocument(workspace,
     ///     new((ref JsonArrayBuilder arrayBuilder) =>
     ///     {
     ///         arrayBuilder.Add(1);
@@ -667,7 +667,7 @@ public readonly partial struct JsonElement
         /// </para>
         /// <code>
         /// // Create a document with null value
-        /// using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Source.Null());
+        /// using var doc = JsonElement.BuildDocument(workspace, JsonElement.Source.Null());
         ///
         /// // Add null property to object
         /// objBuilder.Add("nullProp", JsonElement.Source.Null());
@@ -1444,22 +1444,22 @@ public readonly partial struct JsonElement
     /// </para>
     /// <code>
     /// // Simple value
-    /// using var doc = JsonElement.CreateDocumentBuilder(workspace, 42);
+    /// using var doc = JsonElement.BuildDocument(workspace, 42);
     ///
     /// // Complex object
-    /// using var doc = JsonElement.CreateDocumentBuilder(workspace,
+    /// using var doc = JsonElement.BuildDocument(workspace,
     ///     new(objectBuilder => { /* build object */ }));
     ///
     /// // From existing JsonElement
-    /// using var doc = JsonElement.CreateDocumentBuilder(workspace, existingElement);
+    /// using var doc = JsonElement.BuildDocument(workspace, existingElement);
     /// </code>
     /// </remarks>
     /// <remarks>This method is not CLS compliant.</remarks>
     [CLSCompliant(false)]
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace, in Source source, int estimatedMemberCount = 30)
+    public static JsonDocumentBuilder<Mutable> BuildDocument(JsonWorkspace workspace, in Source source, int estimatedMemberCount = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.BuildDocument<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         source.AddAsItem(ref cvb);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
@@ -1476,13 +1476,13 @@ public readonly partial struct JsonElement
     /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
     /// <returns>A JSON document builder containing the source value.</returns>
     [CLSCompliant(false)]
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder<TContext>(JsonWorkspace workspace, in TContext context, ArrayBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
+    public static JsonDocumentBuilder<Mutable> BuildDocument<TContext>(JsonWorkspace workspace, in TContext context, ArrayBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
         where TContext : allows ref struct
 #endif
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.BuildDocument<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         cvb.AddItem(BuildWithContext.Create(context, builder), static (in b, ref o) => ArrayBuilder.BuildValue(b.Context, b.Build, ref o));
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
@@ -1499,13 +1499,13 @@ public readonly partial struct JsonElement
     /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
     /// <returns>A JSON document builder containing the array value.</returns>
     [CLSCompliant(false)]
-    public static JsonDocumentBuilder<Mutable> CreateDocumentBuilder<TContext>(JsonWorkspace workspace, in TContext context, ObjectBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
+    public static JsonDocumentBuilder<Mutable> BuildDocument<TContext>(JsonWorkspace workspace, in TContext context, ObjectBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
         where TContext : allows ref struct
 #endif
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.BuildDocument<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         cvb.AddItem(BuildWithContext.Create(context, builder), static (in b, ref o) => ObjectBuilder.BuildValue(b.Context, b.Build, ref o));
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
@@ -1560,7 +1560,7 @@ public readonly partial struct JsonElement
     /// <para>Basic property manipulation:</para>
     /// <code>
     /// using var workspace = JsonWorkspace.Create();
-    /// using var doc = JsonElement.CreateDocumentBuilder(workspace, new Source(
+    /// using var doc = JsonElement.BuildDocument(workspace, new Source(
     ///     new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
     ///     {
     ///         builder.Add("name", "John Doe");
@@ -1589,7 +1589,7 @@ public readonly partial struct JsonElement
     /// <para>Array manipulation:</para>
     /// <code>
     /// // Create array document
-    /// using var arrayDoc = JsonElement.CreateDocumentBuilder(workspace, new Source(
+    /// using var arrayDoc = JsonElement.BuildDocument(workspace, new Source(
     ///     new JsonArrayBuilder.Build((ref JsonArrayBuilder builder) =>
     ///     {
     ///         builder.Add(1);
@@ -2074,9 +2074,9 @@ public readonly partial struct JsonElement
         /// <returns>A JSON document builder containing this mutable JSON element.</returns>
         /// <remarks>This method is not CLS compliant.</remarks>
         [CLSCompliant(false)]
-        public readonly JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+        public readonly JsonDocumentBuilder<Mutable> BuildDocument(JsonWorkspace workspace)
         {
-            return workspace.CreateDocumentBuilder<Mutable, Mutable>(this);
+            return workspace.BuildDocument<Mutable, Mutable>(this);
         }
 
         /// <summary>

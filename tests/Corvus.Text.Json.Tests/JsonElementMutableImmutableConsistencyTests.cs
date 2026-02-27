@@ -22,7 +22,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -55,7 +55,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -88,7 +88,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -121,7 +121,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -154,7 +154,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -187,7 +187,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -220,7 +220,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -253,7 +253,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -286,7 +286,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -332,7 +332,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -378,7 +378,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -415,7 +415,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -448,7 +448,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -477,7 +477,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -506,7 +506,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind
@@ -535,7 +535,7 @@ namespace Corvus.Text.Json.Tests
             
             // Mutable version
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var mutableDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var mutableDoc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable mutableElement = mutableDoc.RootElement;
             
             // Both should have same value kind

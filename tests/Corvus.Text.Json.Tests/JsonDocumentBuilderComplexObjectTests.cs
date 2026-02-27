@@ -10,7 +10,7 @@ namespace Corvus.Text.Json.Tests;
 
 /// <summary>
 /// Tests for JsonDocumentBuilder complex object processing, specifically targeting the ProcessComplexObject method
-/// through its public call tree: CreateDocumentBuilder -> BuildRentedMetadataDb -> AppendLocalElement -> ProcessComplexObject.
+/// through its public call tree: BuildDocument -> BuildRentedMetadataDb -> AppendLocalElement -> ProcessComplexObject.
 /// </summary>
 public static class JsonDocumentBuilderComplexObjectTests
 {
@@ -77,7 +77,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Arrange & Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable rootElement = builderDoc.RootElement;
@@ -98,7 +98,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Arrange & Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable rootElement = builderDoc.RootElement;
@@ -119,7 +119,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Arrange & Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable rootElement = builderDoc.RootElement;
@@ -146,7 +146,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable rootElement = builderDoc.RootElement;
@@ -176,7 +176,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable current = builderDoc.RootElement;
@@ -208,8 +208,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         using ParsedJsonDocument<JsonElement> doc1 = ParsedJsonDocument<JsonElement>.Parse(json1);
         using ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(json2);
 
-        using JsonDocumentBuilder<JsonElement.Mutable> builder1 = doc1.RootElement.CreateDocumentBuilder(workspace);
-        using JsonDocumentBuilder<JsonElement.Mutable> builder2 = doc2.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builder1 = doc1.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builder2 = doc2.RootElement.BuildDocument(workspace);
 
         // Assert
         // Verify both documents maintain their structure independently
@@ -243,7 +243,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         stopwatch.Stop();
 
@@ -268,7 +268,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Arrange & Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable rootElement = builderDoc.RootElement;
@@ -289,7 +289,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable rootElement = builderDoc.RootElement;
@@ -316,7 +316,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable rootElement = builderDoc.RootElement;
@@ -345,7 +345,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
 
         // Create first builder - this establishes the document
-        using JsonDocumentBuilder<JsonElement.Mutable> builder1 = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builder1 = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Access the external property value (which is an immutable JsonElement)
         JsonElement.Mutable externalProperty = builder1.RootElement.GetProperty("external");
@@ -370,7 +370,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Arrange & Act
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.BuildDocument(workspace);
 
         // Assert
         JsonElement.Mutable rootElement = builderDoc.RootElement;

@@ -35,7 +35,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -85,7 +85,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -134,7 +134,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -184,7 +184,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -233,7 +233,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -283,7 +283,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -332,7 +332,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -382,7 +382,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -433,7 +433,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -472,7 +472,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -510,7 +510,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);
@@ -565,7 +565,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = value;
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Number, element.ValueKind);

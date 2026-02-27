@@ -14,7 +14,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             byte value = 42;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetByte());
             
@@ -29,7 +29,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             sbyte value = -42;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetSByte());
             
@@ -43,7 +43,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             short value = -1234;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetInt16());
             
@@ -57,7 +57,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             ushort value = 12345;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetUInt16());
             
@@ -71,7 +71,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             int value = -123456;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetInt32());
             
@@ -85,7 +85,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             uint value = 123456u;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetUInt32());
             
@@ -99,7 +99,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             long value = -123456789012345L;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetInt64());
             
@@ -113,7 +113,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             ulong value = 123456789012345UL;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetUInt64());
             
@@ -127,7 +127,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             float value = 3.14159f;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetSingle());
             
@@ -144,7 +144,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             double value = 3.141592653589793;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetDouble(), precision: 10);
         }
@@ -155,7 +155,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             decimal value = 123456.789m;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetDecimal());
             
@@ -171,7 +171,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             DateTime value = new DateTime(2023, 7, 15, 10, 30, 45, DateTimeKind.Utc);
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetString();
@@ -195,7 +195,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             DateTimeOffset value = new DateTimeOffset(2023, 7, 15, 10, 30, 45, TimeSpan.FromHours(2));
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetString();
@@ -217,7 +217,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             Guid value = Guid.Parse("12345678-1234-1234-1234-123456789012");
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             Assert.Equal(value, doc.RootElement.GetGuid());
             
@@ -231,7 +231,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             Uri value = new Uri("https://example.com/path?query=value");
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             string result = doc.RootElement.GetString();
             Assert.Equal("https://example.com/path?query=value", result);
@@ -243,7 +243,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             string value = "Hello, World!";
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             string result = doc.RootElement.GetString();
             Assert.Equal(value, result);
@@ -256,7 +256,7 @@ namespace Corvus.Text.Json.Tests
             string expectedValue = "Test String";
             ReadOnlySpan<char> value = expectedValue.AsSpan();
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             string result = doc.RootElement.GetString();
             Assert.Equal(expectedValue, result);
@@ -270,7 +270,7 @@ namespace Corvus.Text.Json.Tests
                 new LocalDateTime(2023, 7, 15, 10, 30, 45),
                 Offset.FromHours(2));
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetString();
@@ -297,7 +297,7 @@ namespace Corvus.Text.Json.Tests
                 new LocalDate(2023, 7, 15),
                 Offset.FromHours(2));
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetString();
@@ -321,7 +321,7 @@ namespace Corvus.Text.Json.Tests
                 new LocalTime(10, 30, 45),
                 Offset.FromHours(2));
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetString();
@@ -343,7 +343,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             LocalDate value = new LocalDate(2023, 7, 15);
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetString();
@@ -357,7 +357,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             Period value = Period.FromYears(1) + Period.FromMonths(2) + Period.FromDays(3);
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.String, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetString();
@@ -372,7 +372,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             Int128 value = new Int128(0, 123456789012345678UL);
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetRawText();
@@ -387,7 +387,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             UInt128 value = new UInt128(0, 123456789012345678UL);
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetRawText();
@@ -402,7 +402,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             Half value = (Half)3.14;
             
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, value);
+            using var doc = JsonElement.BuildDocument(workspace, value);
             Assert.Equal(JsonValueKind.Number, doc.RootElement.ValueKind);
             
             string json = doc.RootElement.GetRawText();
@@ -447,7 +447,7 @@ namespace Corvus.Text.Json.Tests
                 builder.Add("period"u8, periodValue);
             }));
 
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, source);
+            using var doc = JsonElement.BuildDocument(workspace, source);
             
             Assert.Equal(JsonValueKind.Object, doc.RootElement.ValueKind);
             
@@ -592,7 +592,7 @@ namespace Corvus.Text.Json.Tests
                 builder.Add("period", periodValue);
             }));
 
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, source);
+            using var doc = JsonElement.BuildDocument(workspace, source);
             
             Assert.Equal(JsonValueKind.Object, doc.RootElement.ValueKind);
             
@@ -737,7 +737,7 @@ namespace Corvus.Text.Json.Tests
                 builder.Add("period".AsSpan(), periodValue);
             }));
 
-            using var doc = JsonElement.CreateDocumentBuilder(workspace, source);
+            using var doc = JsonElement.BuildDocument(workspace, source);
             
             Assert.Equal(JsonValueKind.Object, doc.RootElement.ValueKind);
             

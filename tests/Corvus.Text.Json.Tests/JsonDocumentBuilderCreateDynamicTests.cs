@@ -3831,7 +3831,7 @@ namespace Corvus.Text.Json.Tests
 
             // Use a JsonElement.Mutable as the value
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
+            using var builderDoc2 = doc2.RootElement.BuildDocument(workspace);
             var value = builderDoc2.RootElement;
 
             root.SetItem(0, value);
@@ -4210,7 +4210,7 @@ namespace Corvus.Text.Json.Tests
             var root = builderDoc.RootElement;
 
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.CreateDocumentBuilder(workspace);
+            using var builderDoc2 = doc2.RootElement.BuildDocument(workspace);
             var value = builderDoc2.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
@@ -4388,7 +4388,7 @@ namespace Corvus.Text.Json.Tests
         {
             if (source.ValueKind == JsonValueKind.Object)
             {
-                return JsonElement.CreateDocumentBuilder(workspace, new((ref objectBuilder) =>
+                return JsonElement.BuildDocument(workspace, new((ref objectBuilder) =>
                 {
                     foreach (JsonProperty<JsonElement> property in source.EnumerateObject())
                     {
@@ -4398,7 +4398,7 @@ namespace Corvus.Text.Json.Tests
             }
             else if (source.ValueKind == JsonValueKind.Array)
             {
-                return JsonElement.CreateDocumentBuilder(workspace, new((ref arrayBuilder) =>
+                return JsonElement.BuildDocument(workspace, new((ref arrayBuilder) =>
                 {
                     foreach (JsonElement value in source.EnumerateArray())
                     {
@@ -4408,23 +4408,23 @@ namespace Corvus.Text.Json.Tests
             }
             else if (source.ValueKind == JsonValueKind.String)
             {
-                return JsonElement.CreateDocumentBuilder(workspace, JsonElement.Source.RawString(source.ValueSpan, requiresUnescaping: source.ValueIsEscaped));
+                return JsonElement.BuildDocument(workspace, JsonElement.Source.RawString(source.ValueSpan, requiresUnescaping: source.ValueIsEscaped));
             }
             else if (source.ValueKind == JsonValueKind.True)
             {
-                return JsonElement.CreateDocumentBuilder(workspace, true);
+                return JsonElement.BuildDocument(workspace, true);
             }
             else if (source.ValueKind == JsonValueKind.False)
             {
-                return JsonElement.CreateDocumentBuilder(workspace, false);
+                return JsonElement.BuildDocument(workspace, false);
             }
             else if (source.ValueKind == JsonValueKind.Null)
             {
-                return JsonElement.CreateDocumentBuilder(workspace, JsonElement.Source.Null());
+                return JsonElement.BuildDocument(workspace, JsonElement.Source.Null());
             }
             else if (source.ValueKind == JsonValueKind.Number)
             {
-                return JsonElement.CreateDocumentBuilder(workspace, JsonElement.Source.FormattedNumber(source.ValueSpan));
+                return JsonElement.BuildDocument(workspace, JsonElement.Source.FormattedNumber(source.ValueSpan));
             }
 
             throw new InvalidOperationException($"Unsupported value kind {source.ValueKind}");

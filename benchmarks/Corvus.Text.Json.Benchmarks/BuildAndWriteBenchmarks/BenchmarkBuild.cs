@@ -31,7 +31,7 @@ public class BenchmarkBuild
     {
         using Corvus.Text.Json.JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
 
-        using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateDocumentBuilder(
+        using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.BuildDocument(
             workspace,
             (ref b) => b.Create(
                 age: 51,

@@ -15,7 +15,7 @@ namespace Corvus.Text.Json.Tests
         {
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"First\":1}", default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 foreach (JsonProperty<JsonElement.Mutable> property in doc.RootElement.EnumerateObject())
                 {
@@ -32,7 +32,7 @@ namespace Corvus.Text.Json.Tests
             var buffer = new ArrayBufferWriter<byte>(1024);
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"First\":1}", default))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 JsonElement.Mutable root = doc.RootElement;
                 var options = new JsonWriterOptions
@@ -70,7 +70,7 @@ namespace Corvus.Text.Json.Tests
             var buffer = new ArrayBufferWriter<byte>(1024);
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"First\":1, \"Number\":1e400}"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 using var writer = new Utf8JsonWriter(buffer);
                 writer.WriteStartObject();
@@ -107,7 +107,7 @@ namespace Corvus.Text.Json.Tests
             string jsonString = $"{{ \"{propertyName}\" : \"itsValue\" }}";
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 JsonElement.Mutable jElement = doc.RootElement;
                 JsonProperty<JsonElement.Mutable> property = jElement.EnumerateObject().First();
@@ -128,7 +128,7 @@ namespace Corvus.Text.Json.Tests
             string jsonString = $"{{ \"{propertyName}\" : \"itsValue\" }}";
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 JsonElement.Mutable jElement = doc.RootElement;
                 JsonProperty<JsonElement.Mutable> property = jElement.EnumerateObject().First();
@@ -143,7 +143,7 @@ namespace Corvus.Text.Json.Tests
             string jsonString = $"{{ \"aPropertyName\" : \"itsValue\" }}";
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 JsonElement.Mutable jElement = doc.RootElement;
                 JsonProperty<JsonElement.Mutable> property = jElement.EnumerateObject().First();

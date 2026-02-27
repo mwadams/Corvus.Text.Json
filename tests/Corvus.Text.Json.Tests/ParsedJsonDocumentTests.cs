@@ -783,7 +783,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
 
             {
@@ -800,7 +800,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals2))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
             {
                 Assert.True(doc.RootElement.Equals(doc2.RootElement));
@@ -1196,7 +1196,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
             {
                 Assert.False(doc.RootElement.Equals(doc2.RootElement));
@@ -1211,7 +1211,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
 
             {
@@ -1228,7 +1228,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals2))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
             {
                 Assert.True(doc.RootElement == doc2.RootElement);
@@ -1263,7 +1263,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
             {
                 Assert.False(doc.RootElement == doc2.RootElement);
@@ -1278,7 +1278,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
 
             {
@@ -1295,7 +1295,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals2))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
             {
                 Assert.False(doc.RootElement != doc2.RootElement);
@@ -1330,7 +1330,7 @@ namespace Corvus.Text.Json.Tests
             using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.JsonDeepEquals1))
             using (ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
             using (JsonWorkspace workspace = JsonWorkspace.Create())
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc3 = doc.RootElement.BuildDocument(workspace))
             using (JsonDocumentBuilder<JsonElement.Mutable> doc4 = doc2.RootElement.BuildDynamicDocument(workspace))
             {
                 Assert.True(doc.RootElement != doc2.RootElement);

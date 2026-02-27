@@ -184,9 +184,9 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         /// <param name="workspace">The JSON workspace to use for creating the document builder.</param>
         /// <returns>A document builder that can be used to create a new JSON document based on this element.</returns>
         [CLSCompliant(false)]
-        public readonly JsonDocumentBuilder<Mutable> CreateDocumentBuilder(JsonWorkspace workspace)
+        public readonly JsonDocumentBuilder<Mutable> BuildDocument(JsonWorkspace workspace)
         {
-            return workspace.CreateDocumentBuilder<Mutable, Mutable>(this);
+            return workspace.BuildDocument<Mutable, Mutable>(this);
         }
 
         /// <summary>

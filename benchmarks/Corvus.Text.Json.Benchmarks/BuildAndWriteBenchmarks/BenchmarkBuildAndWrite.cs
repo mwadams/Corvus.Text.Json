@@ -65,7 +65,7 @@ public class BenchmarkBuildAndWrite
     {
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using JsonDocumentBuilder<Person.Mutable> person = Person.CreateDocumentBuilder(            
+        using JsonDocumentBuilder<Person.Mutable> person = Person.BuildDocument(            
             workspace,
             (ref b) => b.Create(
             age: 51,

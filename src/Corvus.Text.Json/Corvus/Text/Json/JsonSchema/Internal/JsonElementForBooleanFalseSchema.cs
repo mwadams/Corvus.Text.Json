@@ -288,7 +288,7 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     public static JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity = 30)
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateDocumentBuilder<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.BuildDocument<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
         cvb.AddItem(year);
         Debug.Assert(cvb.MemberCount == 1);
@@ -304,7 +304,7 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     [CLSCompliant(false)]
     public JsonDocumentBuilder<Mutable> CreateDocument(JsonWorkspace workspace)
     {
-        return workspace.CreateDocumentBuilder<JsonElementForBooleanFalseSchema, Mutable>(this);
+        return workspace.BuildDocument<JsonElementForBooleanFalseSchema, Mutable>(this);
     }
 
     /// <summary>

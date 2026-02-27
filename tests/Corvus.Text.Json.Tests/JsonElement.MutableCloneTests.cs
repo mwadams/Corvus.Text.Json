@@ -94,7 +94,7 @@ null
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[[]]]"))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 JsonElement middle = doc.RootElement[0].Clone();
                 JsonElement inner = middle[0];
@@ -121,7 +121,7 @@ null
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 root = doc.RootElement;
                 clone = root.Clone();
@@ -163,7 +163,7 @@ null
 
             using (JsonWorkspace workspace = JsonWorkspace.Create())
             using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(json))
-            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateDocumentBuilder(workspace))
+            using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.BuildDocument(workspace))
             {
                 JsonElement.Mutable target = doc.RootElement.GetProperty("obj")[0].GetProperty("target");
                 Assert.Equal(valueType, target.ValueKind);

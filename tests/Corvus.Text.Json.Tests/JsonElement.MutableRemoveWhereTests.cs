@@ -21,7 +21,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -37,7 +37,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3, 4, 5]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -54,7 +54,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 3, 4, 5]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
             string originalJson = mutableArray.GetRawText();
 
@@ -73,7 +73,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 3, 4, 5, 6]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -94,7 +94,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[\"first\", \"second\", \"third\"]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -114,7 +114,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[\"first\", \"second\", \"third\"]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -134,7 +134,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[\"first\", \"second\", \"third\"]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -158,7 +158,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 3, 10, 11, 12]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act - Remove elements less than 10
@@ -179,7 +179,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 3, 10, 11, 12]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act - Remove elements greater than 5
@@ -200,7 +200,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 10, 11, 12, 2]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act - Remove elements greater than 5
@@ -220,7 +220,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 5, 6, 9, 10]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act - Remove even numbers
@@ -241,7 +241,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 3, 4, 5, 6, 7, 8]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act - Remove even numbers (alternating pattern)
@@ -267,7 +267,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[\"hello\", 42, \"world\", true, \"test\", null]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -287,7 +287,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[\"hello\", 42, \"world\", 3.14, \"test\", 0]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -307,7 +307,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[\"hello\", null, \"world\", null, \"test\"]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -337,7 +337,7 @@ namespace Corvus.Text.Json.Tests
                 """;
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act - Remove objects where age > 30
@@ -367,7 +367,7 @@ namespace Corvus.Text.Json.Tests
                 """;
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act - Remove empty arrays
@@ -398,7 +398,7 @@ namespace Corvus.Text.Json.Tests
                 """;
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
             JsonElement.Mutable itemsArray = root.GetProperty("items");
 
@@ -436,7 +436,7 @@ namespace Corvus.Text.Json.Tests
                 """;
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
             JsonElement.Mutable usersArray = root.GetProperty("users");
 
@@ -481,7 +481,7 @@ namespace Corvus.Text.Json.Tests
                 """;
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act - Multiple RemoveWhere operations on different nested arrays
@@ -556,7 +556,7 @@ namespace Corvus.Text.Json.Tests
                 """;
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act - Remove even numbers from first array
@@ -611,7 +611,7 @@ namespace Corvus.Text.Json.Tests
                 """;
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act - Remove even numbers from the first deepest array
@@ -674,7 +674,7 @@ namespace Corvus.Text.Json.Tests
                 """;
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable root = builderDoc.RootElement;
 
             // Act - Multiple operations on deeply nested arrays
@@ -740,7 +740,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[42]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -758,7 +758,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[42]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act
@@ -783,7 +783,7 @@ namespace Corvus.Text.Json.Tests
 
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(jsonBuilder.ToString());
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act - Remove even numbers
@@ -809,7 +809,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 3]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act & Assert
@@ -824,7 +824,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "\"not an array\"";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableElement = builderDoc.RootElement;
 
             // Act & Assert
@@ -839,7 +839,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "{\"key\": \"value\"}";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableElement = builderDoc.RootElement;
 
             // Act & Assert
@@ -854,7 +854,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "null";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableElement = builderDoc.RootElement;
 
             // Act & Assert
@@ -873,7 +873,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 3]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
 
             // Act & Assert
@@ -889,7 +889,7 @@ namespace Corvus.Text.Json.Tests
             const string json = "[1, 2, 3]";
             using ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.CreateDocumentBuilder(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = document.RootElement.BuildDocument(workspace);
             JsonElement.Mutable mutableArray = builderDoc.RootElement;
             int callCount = 0;
 
