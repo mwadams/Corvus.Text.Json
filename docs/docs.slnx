@@ -1,4 +1,9 @@
 <Solution>
-  <Project Path="ParsedJsonDocumentExample\ParsedJsonDocumentExample.csproj" />
+  <Folder Name="/Docs/">
+    <File Path="JsonDocumentBuilder.md" />
+    <File Path="ParsedJsonDocument.md" />
+    <File Path="README.md" />
+  </Folder>
   <Project Path="JsonDocumentBuilderExample\JsonDocumentBuilderExample.csproj" />
+  <Project Path="ParsedJsonDocumentExample\ParsedJsonDocumentExample.csproj" />
 </Solution>

@@ -80,27 +80,27 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // Integer
-        using var intDoc = JsonElement.CreateDocumentBuilder(workspace, 42);
+        using var intDoc = JsonElement.BuildDocument(workspace, 42);
         Console.WriteLine($"Integer: {intDoc.RootElement.GetInt32()}");
 
         // Double
-        using var doubleDoc = JsonElement.CreateDocumentBuilder(workspace, 3.14159);
+        using var doubleDoc = JsonElement.BuildDocument(workspace, 3.14159);
         Console.WriteLine($"Double: {doubleDoc.RootElement.GetDouble():F5}");
 
         // String
-        using var stringDoc = JsonElement.CreateDocumentBuilder(workspace, "Hello, World!");
+        using var stringDoc = JsonElement.BuildDocument(workspace, "Hello, World!");
         Console.WriteLine($"String: {stringDoc.RootElement.GetString()}");
 
         // UTF-8
-        using var utf8Doc = JsonElement.CreateDocumentBuilder(workspace, "Hello"u8);
+        using var utf8Doc = JsonElement.BuildDocument(workspace, "Hello"u8);
         Console.WriteLine($"UTF-8: {utf8Doc.RootElement.GetString()}");
 
         // Boolean
-        using var boolDoc = JsonElement.CreateDocumentBuilder(workspace, true);
+        using var boolDoc = JsonElement.BuildDocument(workspace, true);
         Console.WriteLine($"Boolean: {boolDoc.RootElement.GetBoolean()}");
 
         // Null
-        using var nullDoc = JsonElement.CreateDocumentBuilder(workspace, JsonElement.Source.Null());
+        using var nullDoc = JsonElement.BuildDocument(workspace, JsonElement.Source.Null());
         Console.WriteLine($"Null: {nullDoc.RootElement.ValueKind}");
 
         Console.WriteLine();
@@ -112,7 +112,7 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var personDoc = JsonElement.CreateDocumentBuilder(
+        using var personDoc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -132,7 +132,7 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var doc = JsonElement.CreateDocumentBuilder(
+        using var doc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -180,7 +180,7 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // Array of numbers
-        using var numbersDoc = JsonElement.CreateDocumentBuilder(
+        using var numbersDoc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref arrayBuilder) =>
             {
@@ -195,7 +195,7 @@ class Program
         Console.WriteLine(numbersDoc.RootElement.ToString());
 
         // Array of strings
-        using var namesDoc = JsonElement.CreateDocumentBuilder(
+        using var namesDoc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref arrayBuilder) =>
             {
@@ -220,7 +220,7 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var usersDoc = JsonElement.CreateDocumentBuilder(
+        using var usersDoc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref arrayBuilder) =>
             {
@@ -277,7 +277,7 @@ class Program
 
         // Create a mutable builder from the parsed document
         using JsonDocumentBuilder<JsonElement.Mutable> builder =
-            sourceDoc.RootElement.CreateDocumentBuilder(workspace);
+            sourceDoc.RootElement.BuildDocument(workspace);
 
         JsonElement.Mutable root = builder.RootElement;
 
@@ -301,7 +301,7 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var doc = JsonElement.CreateDocumentBuilder(
+        using var doc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -339,7 +339,7 @@ class Program
         // Dynamic data to include
         int[] years = [2020, 2021, 2022, 2023, 2024];
 
-        using var doc = JsonElement.CreateDocumentBuilder(
+        using var doc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -377,7 +377,7 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var doc = JsonElement.CreateDocumentBuilder(
+        using var doc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -447,7 +447,7 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // Create an array document
-        using var doc = JsonElement.CreateDocumentBuilder(
+        using var doc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref arrayBuilder) =>
             {
@@ -471,7 +471,7 @@ class Program
         Console.WriteLine(root.ToString());
 
         // Create an object with arrays to show nested modification
-        using var doc2 = JsonElement.CreateDocumentBuilder(
+        using var doc2 = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -507,7 +507,7 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // RemoveProperty is available during document construction via ObjectBuilder
-        using var doc = JsonElement.CreateDocumentBuilder(
+        using var doc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -540,7 +540,7 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // Create document with arrays
-        using var doc = JsonElement.CreateDocumentBuilder(
+        using var doc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -650,7 +650,7 @@ class Program
         int loginCount = 42;
 
         // Build an enriched document combining API data with additional information
-        using var enrichedDoc = JsonElement.CreateDocumentBuilder(
+        using var enrichedDoc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
@@ -745,7 +745,7 @@ class Program
         int totalPosts = postsRoot.GetProperty("totalPosts").GetInt32();
 
         // Create a comprehensive document merging user and posts data
-        using var mergedDoc = JsonElement.CreateDocumentBuilder(
+        using var mergedDoc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
@@ -808,7 +808,7 @@ class Program
         JsonElement legacyRoot = legacyDoc.RootElement;
 
         // Transform to modern format
-        using var transformedDoc = JsonElement.CreateDocumentBuilder(
+        using var transformedDoc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
@@ -850,7 +850,7 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var config = JsonElement.CreateDocumentBuilder(
+        using var config = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -921,7 +921,7 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create(options: writerOptions);
 
         // Build a document
-        using var doc = JsonElement.CreateDocumentBuilder(
+        using var doc = JsonElement.BuildDocument(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
@@ -979,7 +979,7 @@ class Program
                 options: new JsonWriterOptions { Indented = true }))
             {
                 // Build the document
-                using var doc = JsonElement.CreateDocumentBuilder(
+                using var doc = JsonElement.BuildDocument(
                     workspace,
                     new JsonElement.Source(static (ref objectBuilder) =>
                     {
@@ -1060,7 +1060,7 @@ class Program
             options: new JsonWriterOptions { Indented = false }))
         {
             // Build the response document
-            using var doc = JsonElement.CreateDocumentBuilder(
+            using var doc = JsonElement.BuildDocument(
                 workspace,
                 new JsonElement.Source((ref objectBuilder) =>
                 {
@@ -1136,7 +1136,7 @@ class Program
         // All async work is done, use regular workspace
         using (JsonWorkspace workspace = JsonWorkspace.Create())
         {
-            using var profileDoc = JsonElement.CreateDocumentBuilder(
+            using var profileDoc = JsonElement.BuildDocument(
                 workspace,
                 new JsonElement.Source((ref objectBuilder) =>
                 {
@@ -1256,7 +1256,7 @@ class Program
         using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
         {
             // Start building the document
-            using var doc = JsonElement.CreateDocumentBuilder(
+            using var doc = JsonElement.BuildDocument(
                 workspace,
                 new JsonElement.Source((ref objectBuilder) =>
                 {
