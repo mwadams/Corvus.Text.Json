@@ -59,9 +59,9 @@ class Program
         using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 
         JsonElement root = doc.RootElement;
-        string name = root.GetProperty("name").GetString()!;
-        int age = root.GetProperty("age").GetInt32();
-        bool isActive = root.GetProperty("isActive").GetBoolean();
+        string name = root.GetProperty("name"u8).GetString()!;
+        int age = root.GetProperty("age"u8).GetInt32();
+        bool isActive = root.GetProperty("isActive"u8).GetBoolean();
 
         Console.WriteLine($"Name: {name}");
         Console.WriteLine($"Age: {age}");
@@ -81,7 +81,7 @@ class Program
         using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(utf8Json.ToArray().AsMemory());
 
         JsonElement root = doc.RootElement;
-        string message = root.GetProperty("message").GetString()!;
+        string message = root.GetProperty("message"u8).GetString()!;
 
         Console.WriteLine($"Message: {message}");
         Console.WriteLine();
@@ -143,12 +143,12 @@ class Program
         using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 
         JsonElement root = doc.RootElement;
-        JsonElement person = root.GetProperty("person");
-        JsonElement contact = person.GetProperty("contact");
+        JsonElement person = root.GetProperty("person"u8);
+        JsonElement contact = person.GetProperty("contact"u8);
 
-        string name = person.GetProperty("name").GetString()!;
-        string email = contact.GetProperty("email").GetString()!;
-        string phone = contact.GetProperty("phone").GetString()!;
+        string name = person.GetProperty("name"u8).GetString()!;
+        string email = contact.GetProperty("email"u8).GetString()!;
+        string phone = contact.GetProperty("phone"u8).GetString()!;
 
         Console.WriteLine($"Name: {name}");
         Console.WriteLine($"Email: {email}");
@@ -233,8 +233,8 @@ class Program
         using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(stream);
 
         JsonElement root = doc.RootElement;
-        string source = root.GetProperty("source").GetString()!;
-        int value = root.GetProperty("value").GetInt32();
+        string source = root.GetProperty("source"u8).GetString()!;
+        int value = root.GetProperty("value"u8).GetInt32();
 
         Console.WriteLine($"Source: {source}");
         Console.WriteLine($"Value: {value}");
@@ -274,16 +274,16 @@ class Program
         using ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(stream);
 
         JsonElement root = doc.RootElement;
-        JsonElement users = root.GetProperty("users");
-        string timestamp = root.GetProperty("timestamp").GetString()!;
+        JsonElement users = root.GetProperty("users"u8);
+        string timestamp = root.GetProperty("timestamp"u8).GetString()!;
 
         Console.WriteLine($"Timestamp: {timestamp}");
         Console.WriteLine("Users:");
         foreach (JsonElement user in users.EnumerateArray())
         {
-            int id = user.GetProperty("id").GetInt32();
-            string name = user.GetProperty("name").GetString()!;
-            string email = user.GetProperty("email").GetString()!;
+            int id = user.GetProperty("id"u8).GetInt32();
+            string name = user.GetProperty("name"u8).GetString()!;
+            string email = user.GetProperty("email"u8).GetString()!;
             Console.WriteLine($"  [{id}] {name} - {email}");
         }
         Console.WriteLine();
@@ -316,8 +316,8 @@ class Program
             using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(fileStream);
 
             JsonElement root = doc.RootElement;
-            string appName = root.GetProperty("application").GetString()!;
-            string version = root.GetProperty("version").GetString()!;
+            string appName = root.GetProperty("application"u8).GetString()!;
+            string version = root.GetProperty("version"u8).GetString()!;
             JsonElement features = root.GetProperty("features");
 
             Console.WriteLine($"Application: {appName}");

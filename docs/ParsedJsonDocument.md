@@ -110,6 +110,7 @@ foreach (JsonElement element in root.EnumerateArray())
 }
 
 // Or using indexed access
+// Note that indexed access is *not* as efficient as enumeration.
 int length = root.GetArrayLength();
 for (int i = 0; i < length; i++)
 {
