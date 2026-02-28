@@ -1381,38 +1381,29 @@ internal static partial class CodeGeneratorExtensions
         int initialCapacity = 1;
 
         CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
-        if ((core & (CoreTypes.Object | CoreTypes.Array)) == 0)
+
+        if ((core & (CoreTypes.Object | CoreTypes.Array)) != 0)
         {
-            return generator;
-        }
+            bool isArray = (core & CoreTypes.Array) != 0;
+            bool isObject = (core & CoreTypes.Object) != 0;
+            string sourceClassName = generator.SourceClassName();
 
-        bool isArray = (core & CoreTypes.Array) != 0;
-        bool isObject = (core & CoreTypes.Object) != 0;
-        string sourceClassName = generator.SourceClassName();
+            bool hasFallbackArrayType =
+                typeDeclaration.ExplicitArrayItemsType() is not null;
 
-        bool hasFallbackArrayType =
-            typeDeclaration.ExplicitArrayItemsType() is not null;
+            bool hasFallbackObjectType =
+                typeDeclaration.LocalEvaluatedPropertyType() is not null ||
+                typeDeclaration.HasPropertyDeclarations;
 
-        bool hasFallbackObjectType =
-            typeDeclaration.LocalEvaluatedPropertyType() is not null ||
-            typeDeclaration.HasPropertyDeclarations;
-
-        if (isArray && isObject)
-        {
-            if (hasFallbackArrayType && generator.ArrayBuilderClassName() is string arrayBuilderClassName)
+            if (isObject && (hasFallbackObjectType || !builders.Any(b => b.IsObject)))
             {
-                AppendCreateBuild(generator, initialCapacity, sourceClassName, arrayBuilderClassName);
+                AppendCreateBuild(generator, initialCapacity, sourceClassName, isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName() );
             }
 
-            if (hasFallbackObjectType && generator.ObjectBuilderClassName() is string objectBuilderClassName)
+            if (isArray && (hasFallbackArrayType || !builders.Any(b => b.IsArray)))
             {
-                AppendCreateBuild(generator, initialCapacity, sourceClassName, objectBuilderClassName);
+                AppendCreateBuild(generator, initialCapacity, sourceClassName, isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName());
             }
-        }
-        else if (((isObject && hasFallbackObjectType) || (isArray && hasFallbackArrayType)) &&
-                generator.BuilderClassName() is string builderClassName)
-        {
-            AppendCreateBuild(generator, initialCapacity, sourceClassName, builderClassName);
         }
 
         foreach (ComposedBuilder builder in builders)
@@ -1423,12 +1414,12 @@ internal static partial class CodeGeneratorExtensions
                 continue;
             }
 
-            if (builder.IsArray && builder.ArrayBuilderName is string arrayBuilderClassName1)
+            if (builder.ArrayBuilderName is string arrayBuilderClassName1)
             {
                 AppendCreateBuild(generator, initialCapacity, $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{generator.SourceClassName(builder.TypeDeclaration.FullyQualifiedDotnetTypeName())}", $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{arrayBuilderClassName1}");
             }
 
-            if (builder.IsObject && builder.ObjectBuilderName is string objectBuilderClassName1)
+            if (builder.ObjectBuilderName is string objectBuilderClassName1)
             {
                 AppendCreateBuild(generator, initialCapacity, $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{generator.SourceClassName(builder.TypeDeclaration.FullyQualifiedDotnetTypeName())}", $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{objectBuilderClassName1}");
             }
