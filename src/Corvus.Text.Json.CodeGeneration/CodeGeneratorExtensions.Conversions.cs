@@ -171,13 +171,13 @@ internal static partial class CodeGeneratorExtensions
                 generator
                     .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public bool TryGetValue(out string? value) => _parent.TryGetString(_idx, JsonTokenType.String, out value);")
+                    .AppendLineIndent("public bool TryGetValue(out string? value) { CheckValidInstance(); return _parent.TryGetString(_idx, JsonTokenType.String, out value); }")
                     .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public UnescapedUtf8JsonString GetUtf8String() => _parent.GetUtf8JsonString(_idx, JsonTokenType.String);")
+                    .AppendLineIndent("public UnescapedUtf8JsonString GetUtf8String() { CheckValidInstance(); return _parent.GetUtf8JsonString(_idx, JsonTokenType.String); }")
                     .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public string? GetString() => _parent.GetString(_idx, JsonTokenType.String);");
+                    .AppendLineIndent("public string? GetString() { CheckValidInstance(); return _parent.GetString(_idx, JsonTokenType.String); }");
             }
         }
 
@@ -190,7 +190,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out long value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out long value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("int"))
@@ -198,7 +198,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out int value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out int value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("short"))
@@ -206,7 +206,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out short value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out short value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("sbyte"))
@@ -214,7 +214,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out sbyte value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out sbyte value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("ulong"))
@@ -222,7 +222,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out ulong value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out ulong value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("uint"))
@@ -230,7 +230,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out uint value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out uint value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
 
@@ -239,7 +239,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out ushort value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out ushort value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("byte"))
@@ -247,7 +247,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out byte value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out byte value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
 #if NET
@@ -256,7 +256,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Int128 value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out Int128 value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("UInt128"))
@@ -264,7 +264,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out UInt128 value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out UInt128 value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("Half"))
@@ -272,7 +272,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Half value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out Half value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 #endif
 
@@ -281,7 +281,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out double value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out double value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("float"))
@@ -289,7 +289,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out float value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out float value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("BigNumber"))
@@ -297,7 +297,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out BigNumber value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out BigNumber value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("BigInteger"))
@@ -305,7 +305,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out System.Numerics.BigInteger value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out System.Numerics.BigInteger value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("decimal"))
@@ -313,7 +313,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out decimal value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out decimal value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
             }
         }
@@ -332,6 +332,8 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLineIndent("public bool TryGetValue(out bool value)")
                     .AppendLineIndent("{")
                     .PushIndent()
+                        .AppendLineIndent("CheckValidInstance();")
+                        .AppendSeparatorLine()
                         .AppendLineIndent("JsonTokenType type = _parent.GetJsonTokenType(_idx);")
                         .AppendSeparatorLine()
                         .AppendLineIndent("switch (type)")

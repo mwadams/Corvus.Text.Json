@@ -330,7 +330,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out NodaTime.LocalDate value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out NodaTime.LocalDate value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
                 return true;
 
@@ -340,7 +340,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out NodaTime.OffsetDateTime value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out NodaTime.OffsetDateTime value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
                 return true;
 
@@ -350,7 +350,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out NodaTime.OffsetTime value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out NodaTime.OffsetTime value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
                 return true;
 
@@ -360,7 +360,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Period value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out Period value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
                 return true;
 
@@ -376,7 +376,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Guid value) => _parent.TryGetValue(_idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out Guid value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
                 return true;
 
@@ -386,7 +386,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Utf8UriValue value) => Utf8UriValue.TryGetValue(_parent, _idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out Utf8UriValue value) { CheckValidInstance(); return Utf8UriValue.TryGetValue(_parent, _idx, out value); }");
                 }
                 return true;
 
@@ -396,7 +396,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Utf8UriReferenceValue value) => Utf8UriReferenceValue.TryGetValue(_parent, _idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out Utf8UriReferenceValue value) { CheckValidInstance(); return Utf8UriReferenceValue.TryGetValue(_parent, _idx, out value); }");
                 }
                 return true;
 
@@ -406,7 +406,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Utf8IriValue value) => Utf8IriValue.TryGetValue(_parent, _idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out Utf8IriValue value) { CheckValidInstance(); return Utf8IriValue.TryGetValue(_parent, _idx, out value); }");
                 }
                 return true;
 
@@ -416,7 +416,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Utf8IriReferenceValue value) => Utf8IriReferenceValue.TryGetValue(_parent, _idx, out value);");
+                        .AppendLineIndent("public bool TryGetValue(out Utf8IriReferenceValue value) { CheckValidInstance(); return Utf8IriReferenceValue.TryGetValue(_parent, _idx, out value); }");
                 }
                 return true;
 
