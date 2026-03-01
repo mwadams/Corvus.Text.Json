@@ -20,7 +20,7 @@ public class BigNumberConversionTests
     public void LongToBigNumber_ShouldConvertCorrectly(long value)
     {
         // Act
-        Corvus.Text.Json.BigNumber bigNumber = value;
+        Corvus.Numerics.BigNumber bigNumber = value;
         var normalized = bigNumber.Normalize();
 
         // Assert
@@ -35,7 +35,7 @@ public class BigNumberConversionTests
     public void ULongToBigNumber_ShouldConvertCorrectly(ulong value)
     {
         // Act
-        Corvus.Text.Json.BigNumber bigNumber = value;
+        Corvus.Numerics.BigNumber bigNumber = value;
         var normalized = bigNumber.Normalize();
 
         // Assert
@@ -59,7 +59,7 @@ public class BigNumberConversionTests
     public void DoubleToBigNumber_ShouldConvertCorrectly(double value)
     {
         // Act
-        Corvus.Text.Json.BigNumber bigNumber = value;
+        Corvus.Numerics.BigNumber bigNumber = value;
         var normalized = bigNumber.Normalize();
 
         // Assert
@@ -86,7 +86,7 @@ public class BigNumberConversionTests
     public void FloatToBigNumber_ShouldConvertCorrectly(float value)
     {
         // Act
-        Corvus.Text.Json.BigNumber bigNumber = value;
+        Corvus.Numerics.BigNumber bigNumber = value;
         var normalized = bigNumber.Normalize();
 
         // Assert
@@ -104,7 +104,7 @@ public class BigNumberConversionTests
     public void BigNumberToDouble_ShouldConvertCorrectly(long significand, int exponent, double expected)
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(significand), exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(significand), exponent);
 
         // Act
         double result = (double)bigNumber;
@@ -120,7 +120,7 @@ public class BigNumberConversionTests
     public void BigNumberToFloat_ShouldConvertCorrectly(long significand, int exponent, float expected)
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(significand), exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(significand), exponent);
 
         // Act
         float result = (float)bigNumber;
@@ -136,7 +136,7 @@ public class BigNumberConversionTests
     public void BigNumberToLong_ShouldConvertCorrectly(long significand, int exponent, long expected)
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(significand), exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(significand), exponent);
 
         // Act
         long result = (long)bigNumber;
@@ -152,7 +152,7 @@ public class BigNumberConversionTests
     public void BigNumberToULong_ShouldConvertCorrectly(ulong significand, int exponent, ulong expected)
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(significand), exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(significand), exponent);
 
         // Act
         ulong result = (ulong)bigNumber;
@@ -168,7 +168,7 @@ public class BigNumberConversionTests
     public void BigNumberToDecimal_ShouldConvertCorrectly(long significand, int exponent, string expected)
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(significand), exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(significand), exponent);
         decimal expectedDecimal = decimal.Parse(expected);
 
         // Act
@@ -184,7 +184,7 @@ public class BigNumberConversionTests
         // Arrange
         // This number has more digits than a double can represent
         var significand = BigInteger.Parse("123456789012345678901234567890");
-        var bigNumber = new Corvus.Text.Json.BigNumber(significand, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(significand, 0);
 
         // Act
         double result = (double)bigNumber;
@@ -200,7 +200,7 @@ public class BigNumberConversionTests
         // Arrange
         // This number has more digits than a float can represent
         var significand = BigInteger.Parse("12345678901234567");
-        var bigNumber = new Corvus.Text.Json.BigNumber(significand, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(significand, 0);
 
         // Act
         float result = (float)bigNumber;
@@ -214,7 +214,7 @@ public class BigNumberConversionTests
     public void BigNumberToLong_WithTruncation_ShouldTruncate()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(12345, -2); // Represents 123.45
+        var bigNumber = new Corvus.Numerics.BigNumber(12345, -2); // Represents 123.45
 
         // Act
         long result = (long)bigNumber;
@@ -227,7 +227,7 @@ public class BigNumberConversionTests
     public void BigNumberToULong_WithTruncation_ShouldTruncate()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(12345, -2); // Represents 123.45
+        var bigNumber = new Corvus.Numerics.BigNumber(12345, -2); // Represents 123.45
 
         // Act
         ulong result = (ulong)bigNumber;
@@ -242,7 +242,7 @@ public class BigNumberConversionTests
         // Arrange
         // This number has 30 decimal places, which is more than a decimal can handle.
         var significand = BigInteger.Parse("123456789012345678901234567890");
-        var bigNumber = new Corvus.Text.Json.BigNumber(significand, -30); // 1.2345...
+        var bigNumber = new Corvus.Numerics.BigNumber(significand, -30); // 1.2345...
 
         // Act
         decimal result = (decimal)bigNumber;
@@ -256,7 +256,7 @@ public class BigNumberConversionTests
     public void BigNumberToLong_Overflow_ShouldThrow()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Parse(long.MaxValue.ToString() + "0"), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Parse(long.MaxValue.ToString() + "0"), 0);
 
         // Act & Assert
         Assert.Throws<OverflowException>(() => (long)bigNumber);
@@ -266,7 +266,7 @@ public class BigNumberConversionTests
     public void BigNumberToULong_Overflow_ShouldThrow()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Parse(ulong.MaxValue.ToString() + "0"), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Parse(ulong.MaxValue.ToString() + "0"), 0);
 
         // Act & Assert
         Assert.Throws<OverflowException>(() => (ulong)bigNumber);
@@ -276,7 +276,7 @@ public class BigNumberConversionTests
     public void BigNumberToULong_Negative_ShouldThrow()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(-1, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(-1, 0);
 
         // Act & Assert
         Assert.Throws<OverflowException>(() => (ulong)bigNumber);
@@ -286,7 +286,7 @@ public class BigNumberConversionTests
     public void BigNumberToDecimal_Overflow_ShouldThrow()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Parse(decimal.MaxValue.ToString() + "0"), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Parse(decimal.MaxValue.ToString() + "0"), 0);
 
         // Act & Assert
         Assert.Throws<OverflowException>(() => (decimal)bigNumber);

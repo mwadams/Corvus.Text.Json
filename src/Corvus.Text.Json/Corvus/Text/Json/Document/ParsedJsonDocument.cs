@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Xml.Linq;
+using Corvus.Numerics;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 

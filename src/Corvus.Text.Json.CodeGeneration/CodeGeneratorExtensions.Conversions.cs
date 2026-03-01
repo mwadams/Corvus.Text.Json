@@ -81,7 +81,7 @@ internal static partial class CodeGeneratorExtensions
                         generator
                             .AppendSeparatorLine()
                             .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                            .AppendLineIndent("public static explicit operator BigNumber(", typeName, " value) => value._parent.TryGetValue(value._idx, out BigNumber result) ? result : throw new FormatException();");
+                            .AppendLineIndent("public static explicit operator Corvus.Numerics.BigNumber(", typeName, " value) => value._parent.TryGetValue(value._idx, out Corvus.Numerics.BigNumber result) ? result : throw new FormatException();");
                     }
 
                     if (seenConversionOperators.Add("BigInteger"))
@@ -297,7 +297,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out BigNumber value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
+                        .AppendLineIndent("public bool TryGetValue(out Corvus.Numerics.BigNumber value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
                 if (seenConversionOperators.Add("BigInteger"))

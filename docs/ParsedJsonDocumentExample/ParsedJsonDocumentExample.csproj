@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
+    <ProjectReference Include="..\..\src\Corvus.Numerics\Corvus.Numerics.csproj" />
   </ItemGroup>
 
 </Project>

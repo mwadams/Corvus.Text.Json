@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using Corvus.Numerics;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 using static Corvus.Text.Json.JsonElement;
@@ -3239,6 +3240,7 @@ public readonly partial struct JsonElement
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
+        [CLSCompliant(false)]
         public readonly bool TryGetBigNumber(out BigNumber value)
         {
             CheckValidInstance();
@@ -3263,6 +3265,7 @@ public readonly partial struct JsonElement
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
+        [CLSCompliant(false)]
         public readonly BigNumber GetBigNumber()
         {
             if (!TryGetBigNumber(out BigNumber value))

@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using System.Numerics;
+using Corvus.Numerics;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 using static Corvus.Text.Json.JsonElement.ArrayBuilder;
@@ -644,6 +645,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="BigNumber"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+        [CLSCompliant(false)]
         public void Add(ReadOnlySpan<byte> propertyName, in BigNumber value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
@@ -995,6 +997,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="BigNumber"/> value.</param>
+        [CLSCompliant(false)]
         public void Add(ReadOnlySpan<char> propertyName, in BigNumber value)
         {
             _builder.AddProperty(

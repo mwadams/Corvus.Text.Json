@@ -19,8 +19,8 @@ public class BigNumberComparisonTests
         int expected)
     {
         // Arrange
-        var bigNumber1 = new Corvus.Text.Json.BigNumber(significand1, exponent1);
-        var bigNumber2 = new Corvus.Text.Json.BigNumber(significand2, exponent2);
+        var bigNumber1 = new Corvus.Numerics.BigNumber(significand1, exponent1);
+        var bigNumber2 = new Corvus.Numerics.BigNumber(significand2, exponent2);
 
         // Act
         int result1 = bigNumber1.CompareTo(bigNumber2);
@@ -39,8 +39,8 @@ public class BigNumberComparisonTests
         int expected)
     {
         // Arrange
-        var bigNumber1 = new Corvus.Text.Json.BigNumber(significand1, exponent1);
-        var bigNumber2 = new Corvus.Text.Json.BigNumber(significand2, exponent2);
+        var bigNumber1 = new Corvus.Numerics.BigNumber(significand1, exponent1);
+        var bigNumber2 = new Corvus.Numerics.BigNumber(significand2, exponent2);
 
         // Act & Assert
         Assert.Equal(expected > 0, bigNumber1 > bigNumber2);

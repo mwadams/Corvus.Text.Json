@@ -142,6 +142,10 @@
     <Compile Include="..\Common\JsonCommentHandling.cs" Link="Common\System\Text\Json\JsonCommentHandling.cs" />
     <Compile Include="..\Common\JsonConstants.cs" Link="Common\System\Text\Json\JsonConstants.cs" />
     <Compile Include="..\Common\ThrowHelper.cs" Link="Common\System\Text\Json\ThrowHelper.cs" />
+    <Compile Include="Corvus\Numerics\BigNumber.cs" />
+    <Compile Include="Corvus\Numerics\BigNumber.OptimizedFormatting.cs" />
+    <Compile Include="Corvus\Numerics\ParsingPolyfills.cs" />
+    <Compile Include="Corvus\Numerics\PolyfillExtensions.cs" />
     <Compile Include="Corvus\Runtime\InteropServices\JsonMarshal.cs" />
     <Compile Include="Corvus\Text\Json\BitStack.cs" />
     <Compile Include="Corvus\Text\Json\Compatibility\Polyfills.cs" />
@@ -228,7 +232,6 @@
     <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsCollector.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsLevel.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Matcher.cs" />
-    <Compile Include="Corvus\Text\Json\BigNumber.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexCaseBehavior.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexCharClass.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexNode.cs" />
@@ -393,5 +396,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
 </Project>

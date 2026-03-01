@@ -5,6 +5,7 @@ using System.Buffers;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Corvus.Numerics;
 using NodaTime;
 
 namespace Corvus.Text.Json.Internal;
@@ -1276,6 +1277,7 @@ public ref struct ComplexValueBuilder
     /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
     /// <param name="value">The <see cref="BigNumber"/> value.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [CLSCompliant(false)]
     public void AddProperty(ReadOnlySpan<byte> propertyName, in BigNumber value)
     {
         AddProperty(propertyName, value, true, false);
@@ -1288,6 +1290,7 @@ public ref struct ComplexValueBuilder
     /// <param name="value">The <see cref="BigNumber"/> value.</param>
     /// <param name="escapeName">Whether to escape the property name.</param>
     /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
+    [CLSCompliant(false)]
     public void AddProperty(ReadOnlySpan<byte> propertyName, in BigNumber value, bool escapeName, bool nameRequiresUnescaping)
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
@@ -1306,6 +1309,7 @@ public ref struct ComplexValueBuilder
     /// </summary>
     /// <param name="propertyName">The property name as a character span.</param>
     /// <param name="value">The <see cref="BigNumber"/> value.</param>
+    [CLSCompliant(false)]
     public void AddProperty(ReadOnlySpan<char> propertyName, in BigNumber value)
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
@@ -2666,6 +2670,7 @@ public ref struct ComplexValueBuilder
     /// Adds a <see cref="BigNumber"/> item to the current array.
     /// </summary>
     /// <param name="value">The <see cref="BigNumber"/> value.</param>
+    [CLSCompliant(false)]
     public void AddItem(in BigNumber value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);

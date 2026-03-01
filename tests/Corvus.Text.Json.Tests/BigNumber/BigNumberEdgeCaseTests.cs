@@ -16,8 +16,8 @@ public class BigNumberEdgeCaseTests
     public void Constructor_WithMinMaxExponentValues_ShouldWork()
     {
         // Arrange & Act
-        var minExponentBigNumber = new Corvus.Text.Json.BigNumber(BigInteger.One, int.MinValue);
-        var maxExponentBigNumber = new Corvus.Text.Json.BigNumber(BigInteger.One, int.MaxValue);
+        var minExponentBigNumber = new Corvus.Numerics.BigNumber(BigInteger.One, int.MinValue);
+        var maxExponentBigNumber = new Corvus.Numerics.BigNumber(BigInteger.One, int.MaxValue);
 
         // Assert
         Assert.Equal(BigInteger.One, BigNumberTestData.GetSignificand(minExponentBigNumber));
@@ -33,7 +33,7 @@ public class BigNumberEdgeCaseTests
         var veryLargeSignificand = BigInteger.Parse(new string('9', 1000)); // 1000 nines
 
         // Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(veryLargeSignificand, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(veryLargeSignificand, 0);
 
         // Assert
         Assert.Equal(veryLargeSignificand, BigNumberTestData.GetSignificand(bigNumber));
@@ -47,7 +47,7 @@ public class BigNumberEdgeCaseTests
         var veryLargeNegativeSignificand = -BigInteger.Parse(new string('9', 1000)); // -1000 nines
 
         // Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(veryLargeNegativeSignificand, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(veryLargeNegativeSignificand, 0);
 
         // Assert
         Assert.Equal(veryLargeNegativeSignificand, BigNumberTestData.GetSignificand(bigNumber));
@@ -58,7 +58,7 @@ public class BigNumberEdgeCaseTests
     public void DefaultConstructor_ShouldCreateZeroBigNumber()
     {
         // Arrange & Act
-        var bigNumber = default(Corvus.Text.Json.BigNumber);
+        var bigNumber = default(Corvus.Numerics.BigNumber);
 
         // Assert
         Assert.Equal(BigInteger.Zero, BigNumberTestData.GetSignificand(bigNumber));
@@ -71,7 +71,7 @@ public class BigNumberEdgeCaseTests
     {
         // Arrange
         var veryLargeSignificand = BigInteger.Parse(new string('9', 10000)); // 10000 nines
-        var bigNumber = new Corvus.Text.Json.BigNumber(veryLargeSignificand, int.MaxValue);
+        var bigNumber = new Corvus.Numerics.BigNumber(veryLargeSignificand, int.MaxValue);
         Span<char> buffer = stackalloc char[20000]; // Large buffer
 
         // Act
@@ -89,7 +89,7 @@ public class BigNumberEdgeCaseTests
     public void TryFormat_WithExtremelySmallBuffer_ShouldReturnFalse()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 0);
         Span<char> buffer = stackalloc char[1]; // Too small even for "123"
 
         // Act
@@ -108,7 +108,7 @@ public class BigNumberEdgeCaseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(veryLongNumber);
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         Assert.True(success);
@@ -125,12 +125,12 @@ public class BigNumberEdgeCaseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(veryLongNumber);
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         Assert.False(success);
         string resultString = result.ToString();
-        Assert.Equal(default(Corvus.Text.Json.BigNumber), result);
+        Assert.Equal(default(Corvus.Numerics.BigNumber), result);
     }
 
     [Fact]
@@ -141,18 +141,18 @@ public class BigNumberEdgeCaseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(invalidLongString);
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         Assert.False(success);
-        Assert.Equal(default(Corvus.Text.Json.BigNumber), result);
+        Assert.Equal(default(Corvus.Numerics.BigNumber), result);
     }
 
     [Fact]
     public void Normalize_WithZeroSignificand_ShouldHandleGracefully()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Zero, int.MaxValue);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, int.MaxValue);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -166,8 +166,8 @@ public class BigNumberEdgeCaseTests
     public void Normalize_WithExtremeExponentValues_ShouldHandleGracefully()
     {
         // Arrange
-        var minExponentBigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), int.MinValue);
-        var maxExponentBigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), int.MaxValue);
+        var minExponentBigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), int.MinValue);
+        var maxExponentBigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), int.MaxValue);
 
         // Act & Assert - Should not throw
         var normalizedMin = minExponentBigNumber.Normalize();
@@ -181,9 +181,9 @@ public class BigNumberEdgeCaseTests
     public void Equality_WithExtremeValues_ShouldWorkCorrectly()
     {
         // Arrange
-        var bigNumber1 = new Corvus.Text.Json.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MaxValue);
-        var bigNumber2 = new Corvus.Text.Json.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MaxValue);
-        var bigNumber3 = new Corvus.Text.Json.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MaxValue - 1);
+        var bigNumber1 = new Corvus.Numerics.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MaxValue);
+        var bigNumber2 = new Corvus.Numerics.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MaxValue);
+        var bigNumber3 = new Corvus.Numerics.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MaxValue - 1);
 
         // Act & Assert
         BigNumberTestData.AssertBigNumbersEqual(bigNumber1, bigNumber2);
@@ -194,8 +194,8 @@ public class BigNumberEdgeCaseTests
     public void GetHashCode_WithExtremeValues_ShouldBeConsistent()
     {
         // Arrange
-        var bigNumber1 = new Corvus.Text.Json.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MinValue);
-        var bigNumber2 = new Corvus.Text.Json.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MinValue);
+        var bigNumber1 = new Corvus.Numerics.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MinValue);
+        var bigNumber2 = new Corvus.Numerics.BigNumber(BigInteger.Parse(new string('9', 1000)), int.MinValue);
 
         // Act
         int hashCode1 = bigNumber1.GetHashCode();
@@ -209,7 +209,7 @@ public class BigNumberEdgeCaseTests
     public void ToString_WithExtremeValues_ShouldNotThrow()
     {
         // Arrange
-        var extremeBigNumber = new Corvus.Text.Json.BigNumber(
+        var extremeBigNumber = new Corvus.Numerics.BigNumber(
             -BigInteger.Parse(new string('9', 5000)),
             int.MinValue);
 
@@ -225,13 +225,13 @@ public class BigNumberEdgeCaseTests
     public void RoundTrip_WithExtremeValues_ShouldBeConsistent()
     {
         // Arrange
-        var originalBigNumber = new Corvus.Text.Json.BigNumber(
+        var originalBigNumber = new Corvus.Numerics.BigNumber(
             BigInteger.Parse(new string('1', 100) + new string('0', 100)),
             -999999);
 
         // Act
         string stringRepresentation = originalBigNumber.ToString();
-        bool parseSuccess = Corvus.Text.Json.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringRepresentation), out var parsedBigNumber);
+        bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringRepresentation), out var parsedBigNumber);
 
         originalBigNumber = originalBigNumber.Normalize();
 
@@ -247,9 +247,9 @@ public class BigNumberEdgeCaseTests
         var testCases = new[]
         {
             (new BigInteger(1), 0, 1),          // "1" - 1 char
-            (new BigInteger(10), 1, 4),         // "10E1" - 4 chars
+            (new BigInteger(10), 1, 3),         // "1E2" - 3 chars
             (new BigInteger(-1), 0, 2),         // "-1" - 2 chars
-            (new BigInteger(-10), -1, 6),       // "-10E-1" - 6 chars
+            (new BigInteger(-10), -1, 2),       // "-1" - 2 chars
             (new BigInteger(123), 456, 7),      // "123E456" - 7 chars
             (new BigInteger(-123), -456, 9),    // "-123E-456" - 9 chars
         };
@@ -261,7 +261,7 @@ public class BigNumberEdgeCaseTests
         foreach (var (significand, exponent, expectedLength) in testCases)
         {
             // Arrange
-            var bigNumber = new Corvus.Text.Json.BigNumber(significand, exponent);
+            var bigNumber = new Corvus.Numerics.BigNumber(significand, exponent);
             var exactBufferSlice = exactBuffer.Slice(0, expectedLength);
             var tooSmallLength = Math.Max(0, expectedLength - 1);
             var tooSmallBufferSlice = tooSmallBuffer.Slice(0, tooSmallLength);
@@ -312,14 +312,14 @@ public class BigNumberEdgeCaseTests
         foreach (string testCase in testCases)
         {
             // Act
-            bool success = Corvus.Text.Json.BigNumber.TryParse(Encoding.UTF8.GetBytes(testCase), out var result);
+            bool success = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(testCase), out var result);
 
             // Assert
             Assert.True(success, $"Should successfully parse '{testCase}'");
 
             // Round trip test
             string roundTrip = result.ToString();
-            bool roundTripSuccess = Corvus.Text.Json.BigNumber.TryParse(Encoding.UTF8.GetBytes(roundTrip), out var roundTripResult);
+            bool roundTripSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(roundTrip), out var roundTripResult);
             Assert.True(roundTripSuccess, $"Should successfully parse round trip for '{testCase}'");
             BigNumberTestData.AssertBigNumbersEqual(result, roundTripResult);
         }
@@ -331,14 +331,14 @@ public class BigNumberEdgeCaseTests
         // This test ensures that operations with large numbers don't consume excessive memory
         // Arrange
         var largeSignificand = BigInteger.Parse(new string('9', 1000));
-        var bigNumber = new Corvus.Text.Json.BigNumber(largeSignificand, 1000);
+        var bigNumber = new Corvus.Numerics.BigNumber(largeSignificand, 1000);
 
         // Act & Assert - These operations should complete without excessive memory usage
         string stringResult = bigNumber.ToString();
         Assert.NotNull(stringResult);
 
         var normalizedResult = bigNumber.Normalize();
-        Assert.NotEqual(default(Corvus.Text.Json.BigNumber), normalizedResult);
+        Assert.NotEqual(default(Corvus.Numerics.BigNumber), normalizedResult);
 
         int hashCode = bigNumber.GetHashCode();
         Assert.NotEqual(0, hashCode); // Very unlikely to be zero for such a large number
@@ -372,13 +372,13 @@ public class BigNumberEdgeCaseTests
             foreach (int exponent in new[] { int.MinValue, -1000, -1, 0, 1, 1000, int.MaxValue })
             {
                 // Act & Assert - Should not throw
-                var bigNumber = new Corvus.Text.Json.BigNumber(significand, exponent);
+                var bigNumber = new Corvus.Numerics.BigNumber(significand, exponent);
                 string stringResult = bigNumber.ToString();
                 Assert.NotNull(stringResult);
                 bigNumber = bigNumber.Normalize();
 
                 // Parsing round trip
-                bool parseSuccess = Corvus.Text.Json.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringResult), out var parsedResult);
+                bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringResult), out var parsedResult);
                 Assert.True(parseSuccess, $"Failed to parse: {stringResult}");
                 BigNumberTestData.AssertBigNumbersEqual(bigNumber, parsedResult);
             }
@@ -389,7 +389,7 @@ public class BigNumberEdgeCaseTests
     public void ConcurrentOperations_ShouldBeThreadSafe()
     {
         // BigNumber should be immutable and thread-safe
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(12345), 678);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(12345), 678);
         const int threadCount = 10;
         const int operationsPerThread = 1000;
         var tasks = new Task[threadCount];

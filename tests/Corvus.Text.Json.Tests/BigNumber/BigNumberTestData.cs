@@ -57,16 +57,16 @@ public static class BigNumberTestData
         {
             // significand, exponent, expected string
             { BigInteger.Zero, 0, "0" },
-            { BigInteger.Zero, 5, "0E5" },
+            { BigInteger.Zero, 5, "0" },
             { new BigInteger(123), 0, "123" },
             { new BigInteger(-456), 0, "-456" },
             { new BigInteger(123), 5, "123E5" },
             { new BigInteger(123), -5, "123E-5" },
             { new BigInteger(-456), 10, "-456E10" },
             { new BigInteger(-456), -10, "-456E-10" },
-            { BigInteger.Parse("12345678901234567890"), 0, "12345678901234567890" },
-            { BigInteger.Parse("12345678901234567890"), 100, "12345678901234567890E100" },
-            { BigInteger.Parse("-98765432109876543210"), -100, "-98765432109876543210E-100" },
+            { BigInteger.Parse("12345678901234567890"), 0, "1234567890123456789E1" },
+            { BigInteger.Parse("12345678901234567890"), 100, "1234567890123456789E101" },
+            { BigInteger.Parse("-98765432109876543210"), -100, "-9876543210987654321E-99" },
         };
 
     /// <summary>
@@ -93,6 +93,8 @@ public static class BigNumberTestData
             { "-0", true, BigInteger.Zero, 0 },
             { "12345678901234567890", true, BigInteger.Parse("1234567890123456789"), 1 },
             { "1.23456789012345678901234567890e50", true, BigInteger.Parse("12345678901234567890123456789"), 22 },
+            { ".123", true, new BigInteger(123), -3 },
+            { "123.", true, new BigInteger(123), 0 },
 
             // Invalid cases
             { "", false, BigInteger.Zero, 0 },
@@ -102,8 +104,6 @@ public static class BigNumberTestData
             { "12e+", false, BigInteger.Zero, 0 },
             { "12e-", false, BigInteger.Zero, 0 },
             { "e5", false, BigInteger.Zero, 0 },
-            { ".123", false, BigInteger.Zero, 0 },
-            { "123.", false, BigInteger.Zero, 0 },
         };
 
     /// <summary>
@@ -367,13 +367,13 @@ public static class BigNumberTestData
     /// <summary>
     /// Helper method to create a BigNumber for testing.
     /// </summary>
-    public static Corvus.Text.Json.BigNumber CreateBigNumber(BigInteger significand, int exponent) =>
+    public static Corvus.Numerics.BigNumber CreateBigNumber(BigInteger significand, int exponent) =>
         new(significand, exponent);
 
     /// <summary>
     /// Helper method to assert BigNumber equality with better error messages.
     /// </summary>
-    public static void AssertBigNumberEqual(Corvus.Text.Json.BigNumber expected, Corvus.Text.Json.BigNumber actual, string message = "")
+    public static void AssertBigNumberEqual(Corvus.Numerics.BigNumber expected, Corvus.Numerics.BigNumber actual, string message = "")
     {
         if (!string.IsNullOrEmpty(message))
         {
@@ -387,7 +387,7 @@ public static class BigNumberTestData
     /// <summary>
     /// Helper method to assert BigNumber equality with better error messages.
     /// </summary>
-    public static void AssertBigNumbersEqual(Corvus.Text.Json.BigNumber expected, Corvus.Text.Json.BigNumber actual, string message = "")
+    public static void AssertBigNumbersEqual(Corvus.Numerics.BigNumber expected, Corvus.Numerics.BigNumber actual, string message = "")
     {
         if (!string.IsNullOrEmpty(message))
         {
@@ -401,7 +401,7 @@ public static class BigNumberTestData
     /// <summary>
     /// Helper method to assert BigNumber inequality with better error messages.
     /// </summary>
-    public static void AssertBigNumbersNotEqual(Corvus.Text.Json.BigNumber left, Corvus.Text.Json.BigNumber right, string message = "")
+    public static void AssertBigNumbersNotEqual(Corvus.Numerics.BigNumber left, Corvus.Numerics.BigNumber right, string message = "")
     {
         if (!string.IsNullOrEmpty(message))
         {
@@ -415,10 +415,10 @@ public static class BigNumberTestData
     /// <summary>
     /// Helper method to get the significand from a BigNumber (uses reflection or ToString parsing).
     /// </summary>
-    public static BigInteger GetSignificand(Corvus.Text.Json.BigNumber bigNumber)
+    public static BigInteger GetSignificand(Corvus.Numerics.BigNumber bigNumber)
     {
         // Since BigNumber might not expose Significand publicly, we'll use reflection or parse from string
-        var type = typeof(Corvus.Text.Json.BigNumber);
+        var type = typeof(Corvus.Numerics.BigNumber);
         var significandProperty = type.GetProperty("Significand", BindingFlags.Public | BindingFlags.Instance);
         if (significandProperty != null)
         {
@@ -438,10 +438,10 @@ public static class BigNumberTestData
     /// <summary>
     /// Helper method to get the exponent from a BigNumber (uses reflection or ToString parsing).
     /// </summary>
-    public static int GetExponent(Corvus.Text.Json.BigNumber bigNumber)
+    public static int GetExponent(Corvus.Numerics.BigNumber bigNumber)
     {
         // Since BigNumber might not expose Exponent publicly, we'll use reflection or parse from string
-        var type = typeof(Corvus.Text.Json.BigNumber);
+        var type = typeof(Corvus.Numerics.BigNumber);
         var exponentProperty = type.GetProperty("Exponent", BindingFlags.Public | BindingFlags.Instance);
         if (exponentProperty != null)
         {
@@ -461,7 +461,7 @@ public static class BigNumberTestData
     /// <summary>
     /// Helper method to validate parsing result.
     /// </summary>
-    public static void AssertParseResult(bool success, Corvus.Text.Json.BigNumber result, BigInteger expectedSignificand, int expectedExponent, string input)
+    public static void AssertParseResult(bool success, Corvus.Numerics.BigNumber result, BigInteger expectedSignificand, int expectedExponent, string input)
     {
         Assert.True(success, $"Should successfully parse: '{input}'");
 
@@ -552,16 +552,16 @@ public static class BigNumberTestData
     /// Gets test numbers for round-trip testing.
     /// </summary>
     /// <returns>A collection of test BigNumber instances.</returns>
-    public static IEnumerable<Corvus.Text.Json.BigNumber> GetTestNumbers()
+    public static IEnumerable<Corvus.Numerics.BigNumber> GetTestNumbers()
     {
-        yield return new Corvus.Text.Json.BigNumber(BigInteger.Zero, 0);
-        yield return new Corvus.Text.Json.BigNumber(BigInteger.One, 0);
-        yield return new Corvus.Text.Json.BigNumber(BigInteger.MinusOne, 0);
-        yield return new Corvus.Text.Json.BigNumber(new BigInteger(123), 0);
-        yield return new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
-        yield return new Corvus.Text.Json.BigNumber(new BigInteger(123), -3);
-        yield return new Corvus.Text.Json.BigNumber(BigInteger.Parse("9999999999999999999999999999"), 0);
-        yield return new Corvus.Text.Json.BigNumber(BigInteger.Parse("1234567890123456789"), 10);
-        yield return new Corvus.Text.Json.BigNumber(BigInteger.Parse("1234567890123456789"), -10);
+        yield return new Corvus.Numerics.BigNumber(BigInteger.Zero, 0);
+        yield return new Corvus.Numerics.BigNumber(BigInteger.One, 0);
+        yield return new Corvus.Numerics.BigNumber(BigInteger.MinusOne, 0);
+        yield return new Corvus.Numerics.BigNumber(new BigInteger(123), 0);
+        yield return new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
+        yield return new Corvus.Numerics.BigNumber(new BigInteger(123), -3);
+        yield return new Corvus.Numerics.BigNumber(BigInteger.Parse("9999999999999999999999999999"), 0);
+        yield return new Corvus.Numerics.BigNumber(BigInteger.Parse("1234567890123456789"), 10);
+        yield return new Corvus.Numerics.BigNumber(BigInteger.Parse("1234567890123456789"), -10);
     }
 }

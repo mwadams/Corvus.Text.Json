@@ -1,0 +1,299 @@
+// <copyright file="JsonUtf8FormattingTests.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+using System.Globalization;
+using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Shouldly;
+
+namespace Corvus.Numerics.Tests;
+
+/// <summary>
+/// Tests for the highly-optimized JSON UTF-8 formatting fast path.
+/// </summary>
+[TestClass]
+public class JsonUtf8FormattingTests
+{
+    [TestMethod]
+    public void TryFormatJsonUtf8_Zero_ReturnsZero()
+    {
+        BigNumber value = BigNumber.Zero;
+        Span<byte> buffer = stackalloc byte[64];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("0");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_PositiveInteger_NoExponent()
+    {
+        BigNumber value = new BigNumber(1234, 0);
+        Span<byte> buffer = stackalloc byte[64];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("1234");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_NegativeInteger_NoExponent()
+    {
+        BigNumber value = new BigNumber(-1234, 0);
+        Span<byte> buffer = stackalloc byte[64];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("-1234");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_PositiveWithNegativeExponent()
+    {
+        BigNumber value = new BigNumber(1234, -3);
+        Span<byte> buffer = stackalloc byte[64];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("1234E-3");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_PositiveWithPositiveExponent()
+    {
+        BigNumber value = new BigNumber(1234, 2);
+        Span<byte> buffer = stackalloc byte[64];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("1234E2");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_NegativeWithNegativeExponent()
+    {
+        BigNumber value = new BigNumber(-1234, -3);
+        Span<byte> buffer = stackalloc byte[64];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("-1234E-3");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_NegativeWithPositiveExponent()
+    {
+        BigNumber value = new BigNumber(-1234, 2);
+        Span<byte> buffer = stackalloc byte[64];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("-1234E2");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_WithGFormat_SameAsEmpty()
+    {
+        BigNumber value = new BigNumber(1234, -3);
+        Span<byte> buffer1 = stackalloc byte[64];
+        Span<byte> buffer2 = stackalloc byte[64];
+
+        bool success1 = value.TryFormatUtf8Optimized(buffer1, out int bytes1, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+        bool success2 = value.TryFormatUtf8Optimized(buffer2, out int bytes2, "G".AsSpan(), CultureInfo.InvariantCulture);
+
+        success1.ShouldBeTrue();
+        success2.ShouldBeTrue();
+        bytes1.ShouldBe(bytes2);
+        buffer1.Slice(0, bytes1).SequenceEqual(buffer2.Slice(0, bytes2)).ShouldBeTrue();
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_WithLowercaseG_SameAsEmpty()
+    {
+        BigNumber value = new BigNumber(1234, -3);
+        Span<byte> buffer1 = stackalloc byte[64];
+        Span<byte> buffer2 = stackalloc byte[64];
+
+        bool success1 = value.TryFormatUtf8Optimized(buffer1, out int bytes1, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+        bool success2 = value.TryFormatUtf8Optimized(buffer2, out int bytes2, "g".AsSpan(), CultureInfo.InvariantCulture);
+
+        success1.ShouldBeTrue();
+        success2.ShouldBeTrue();
+        bytes1.ShouldBe(bytes2);
+        buffer1.Slice(0, bytes1).SequenceEqual(buffer2.Slice(0, bytes2)).ShouldBeTrue();
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_WithNullProvider_SameAsInvariant()
+    {
+        BigNumber value = new BigNumber(1234, -3);
+        Span<byte> buffer1 = stackalloc byte[64];
+        Span<byte> buffer2 = stackalloc byte[64];
+
+        bool success1 = value.TryFormatUtf8Optimized(buffer1, out int bytes1, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+        bool success2 = value.TryFormatUtf8Optimized(buffer2, out int bytes2, ReadOnlySpan<char>.Empty, null);
+
+        success1.ShouldBeTrue();
+        success2.ShouldBeTrue();
+        bytes1.ShouldBe(bytes2);
+        buffer1.Slice(0, bytes1).SequenceEqual(buffer2.Slice(0, bytes2)).ShouldBeTrue();
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_LargeNumber()
+    {
+        BigNumber value = new BigNumber(123456789012345678, 10);
+        Span<byte> buffer = stackalloc byte[128];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("123456789012345678E10");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_VeryLargeExponent()
+    {
+        BigNumber value = new BigNumber(123, 12345);
+        Span<byte> buffer = stackalloc byte[128];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("123E12345");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_VeryNegativeExponent()
+    {
+        BigNumber value = new BigNumber(123, -12345);
+        Span<byte> buffer = stackalloc byte[128];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("123E-12345");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_Normalization_RemovesTrailingZeros()
+    {
+        BigNumber value = new BigNumber(12340, -2); // Should normalize to 1234E-1
+        Span<byte> buffer = stackalloc byte[64];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("1234E-1");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_BufferTooSmall_ReturnsFalse()
+    {
+        BigNumber value = new BigNumber(1234567890, 100);
+        Span<byte> buffer = stackalloc byte[5]; // Too small
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeFalse();
+        bytesWritten.ShouldBe(0);
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_ExactBufferSize_Succeeds()
+    {
+        BigNumber value = new BigNumber(123, 0);
+        Span<byte> buffer = stackalloc byte[3]; // Exact size
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        bytesWritten.ShouldBe(3);
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("123");
+    }
+
+    [DataTestMethod]
+    [DataRow(0L, 0, "0")]
+    [DataRow(1L, 0, "1")]
+    [DataRow(-1L, 0, "-1")]
+    [DataRow(12L, 0, "12")]
+    [DataRow(123L, 0, "123")]
+    [DataRow(1234L, 0, "1234")]
+    [DataRow(12345L, 0, "12345")]
+    [DataRow(1L, 1, "1E1")]
+    [DataRow(1L, -1, "1E-1")]
+    [DataRow(12L, 5, "12E5")]
+    [DataRow(12L, -5, "12E-5")]
+    [DataRow(-12L, 5, "-12E5")]
+    [DataRow(-12L, -5, "-12E-5")]
+    public void TryFormatJsonUtf8_VariousValues_CorrectOutput(long significand, int exponent, string expected)
+    {
+        BigNumber value = new BigNumber(significand, exponent);
+        Span<byte> buffer = stackalloc byte[128];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+        StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe(expected);
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_ConsistentWithCharFormatting()
+    {
+        BigNumber value = new BigNumber(1234567, -5);
+
+        Span<byte> utf8Buffer = stackalloc byte[128];
+        Span<char> charBuffer = stackalloc char[128];
+
+        bool utf8Success = value.TryFormatUtf8Optimized(utf8Buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+        bool charSuccess = value.TryFormatOptimized(charBuffer, out int charsWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        utf8Success.ShouldBeTrue();
+        charSuccess.ShouldBeTrue();
+
+        string utf8String = StringFromSpan.CreateFromUtf8(utf8Buffer.Slice(0, bytesWritten));
+        string charString = charBuffer.Slice(0, charsWritten).ToString();
+
+        utf8String.ShouldBe(charString);
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_DecimalNumber()
+    {
+        BigNumber value = BigNumber.Parse("123.456", CultureInfo.InvariantCulture);
+        Span<byte> buffer = stackalloc byte[128];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+
+        string result = StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten));
+
+        // Should be normalized form
+        result.ShouldContain("E");
+    }
+
+    [TestMethod]
+    public void TryFormatJsonUtf8_VerySmallNumber()
+    {
+        BigNumber value = BigNumber.Parse("0.000001", CultureInfo.InvariantCulture);
+        Span<byte> buffer = stackalloc byte[128];
+
+        bool success = value.TryFormatUtf8Optimized(buffer, out int bytesWritten, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
+
+        success.ShouldBeTrue();
+
+        string result = StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten));
+
+        // Should be in scientific notation
+        result.ShouldContain("E");
+    }
+}

@@ -18,7 +18,7 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes("0");
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         BigNumberTestData.AssertParseResult(success, result, BigInteger.Zero, 0, "0");
@@ -31,7 +31,7 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes("123");
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         BigNumberTestData.AssertParseResult(success, result, new BigInteger(123), 0, "123");
@@ -44,7 +44,7 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes("-456");
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         BigNumberTestData.AssertParseResult(success, result, new BigInteger(-456), 0, "-456");
@@ -57,7 +57,7 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes("123.456");
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         Assert.True(success);
@@ -72,7 +72,7 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes("1.23e4");
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         Assert.True(success);
@@ -87,7 +87,7 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes("999999999999999999999999999999");
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         Assert.True(success);
@@ -102,11 +102,11 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> input = ReadOnlySpan<byte>.Empty;
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         Assert.False(success);
-        Assert.Equal(default(Corvus.Text.Json.BigNumber), result);
+        Assert.Equal(default(Corvus.Numerics.BigNumber), result);
     }
 
     [Fact]
@@ -116,11 +116,11 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes("abc");
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
 
         // Assert
         Assert.False(success);
-        Assert.Equal(default(Corvus.Text.Json.BigNumber), result);
+        Assert.Equal(default(Corvus.Numerics.BigNumber), result);
     }
 
     [Theory]
@@ -132,7 +132,7 @@ public class BigNumberTryParseTests
         ReadOnlySpan<byte> inputSpan = Encoding.UTF8.GetBytes(input);
 
         // Act
-        bool success = Corvus.Text.Json.BigNumber.TryParse(inputSpan, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(inputSpan, out var result);
 
         // Assert
         Assert.Equal(expectedSuccess, success);
@@ -161,7 +161,7 @@ public class BigNumberTryParseTests
             ReadOnlySpan<byte> formattedInput = Encoding.UTF8.GetBytes(formattedString.ToString());
 
             // Act - parse it back
-            bool parseSuccess = Corvus.Text.Json.BigNumber.TryParse(formattedInput, out var parsedBigNumber);
+            bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(formattedInput, out var parsedBigNumber);
 
             // Assert
             Assert.True(parseSuccess);

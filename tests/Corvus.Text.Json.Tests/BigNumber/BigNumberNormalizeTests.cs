@@ -15,7 +15,7 @@ public class BigNumberNormalizeTests
     public void Normalize_WithZeroSignificand_ShouldReturnSameInstance()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Zero, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, 0);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -28,7 +28,7 @@ public class BigNumberNormalizeTests
     public void Normalize_WithSignificandWithoutTrailingZeros_ShouldReturnSameInstance()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 0);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -41,8 +41,8 @@ public class BigNumberNormalizeTests
     public void Normalize_WithSignificandHavingOneTrailingZero_ShouldNormalize()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(1230), 5);
-        var expected = new Corvus.Text.Json.BigNumber(new BigInteger(123), 6);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(1230), 5);
+        var expected = new Corvus.Numerics.BigNumber(new BigInteger(123), 6);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -55,8 +55,8 @@ public class BigNumberNormalizeTests
     public void Normalize_WithSignificandHavingMultipleTrailingZeros_ShouldNormalize()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123000), 5);
-        var expected = new Corvus.Text.Json.BigNumber(new BigInteger(123), 8);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123000), 5);
+        var expected = new Corvus.Numerics.BigNumber(new BigInteger(123), 8);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -69,8 +69,8 @@ public class BigNumberNormalizeTests
     public void Normalize_WithNegativeSignificandHavingTrailingZeros_ShouldNormalize()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-567000), 10);
-        var expected = new Corvus.Text.Json.BigNumber(new BigInteger(-567), 13);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-567000), 10);
+        var expected = new Corvus.Numerics.BigNumber(new BigInteger(-567), 13);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -83,8 +83,8 @@ public class BigNumberNormalizeTests
     public void Normalize_WithLargeSignificandHavingManyTrailingZeros_ShouldNormalize()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123456000000), -5);
-        var expected = new Corvus.Text.Json.BigNumber(new BigInteger(123456), 1);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123456000000), -5);
+        var expected = new Corvus.Numerics.BigNumber(new BigInteger(123456), 1);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -97,7 +97,7 @@ public class BigNumberNormalizeTests
     public void Normalize_AlreadyNormalizedNumber_ShouldReturnSameValues()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(12345), 7);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(12345), 7);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -110,8 +110,8 @@ public class BigNumberNormalizeTests
     public void Normalize_WithAllZerosSignificand_ShouldNormalizeToSingleZero()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(100000), 0);
-        var expected = new Corvus.Text.Json.BigNumber(new BigInteger(1), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(100000), 0);
+        var expected = new Corvus.Numerics.BigNumber(new BigInteger(1), 5);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -127,8 +127,8 @@ public class BigNumberNormalizeTests
         BigInteger expectedSignificand, int expectedExponent)
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(inputSignificand, inputExponent);
-        var expected = new Corvus.Text.Json.BigNumber(expectedSignificand, expectedExponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(inputSignificand, inputExponent);
+        var expected = new Corvus.Numerics.BigNumber(expectedSignificand, expectedExponent);
 
         // Act
         var normalized = bigNumber.Normalize();
@@ -142,7 +142,7 @@ public class BigNumberNormalizeTests
     public void Normalize_MultipleCallsOnSameInstance_ShouldBeIdempotent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(12300), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(12300), 5);
 
         // Act
         var normalized1 = bigNumber.Normalize();
@@ -159,9 +159,9 @@ public class BigNumberNormalizeTests
     {
         // Arrange
         var largeSignificand = BigInteger.Parse("12345678901234567890000000000");
-        var bigNumber = new Corvus.Text.Json.BigNumber(largeSignificand, -10);
+        var bigNumber = new Corvus.Numerics.BigNumber(largeSignificand, -10);
         var expectedSignificand = BigInteger.Parse("1234567890123456789");
-        var expected = new Corvus.Text.Json.BigNumber(expectedSignificand, 0);
+        var expected = new Corvus.Numerics.BigNumber(expectedSignificand, 0);
 
         // Act
         var normalized = bigNumber.Normalize();

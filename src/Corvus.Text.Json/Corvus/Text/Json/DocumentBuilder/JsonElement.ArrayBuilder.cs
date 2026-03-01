@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Numerics;
+using Corvus.Numerics;
 using Corvus.Text.Json.Internal;
 using NodaTime;
 
@@ -393,6 +394,7 @@ public readonly partial struct JsonElement
         /// Adds a <see cref="BigNumber"/> value to the array.
         /// </summary>
         /// <param name="value">The <see cref="BigNumber"/> value to add.</param>
+        [CLSCompliant(false)]
         public void Add(in BigNumber value)
         {
             _builder.AddItem(value);

@@ -3,6 +3,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using Corvus.Numerics;
 using NodaTime;
 
 namespace Corvus.Text.Json.Internal;

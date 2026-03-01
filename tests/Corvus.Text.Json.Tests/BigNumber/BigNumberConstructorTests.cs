@@ -15,7 +15,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithZeroSignificandZeroExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Zero, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, 0);
 
         // Assert
         Assert.Equal(BigInteger.Zero, bigNumber.Significand);
@@ -26,7 +26,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithPositiveSignificandZeroExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 0);
 
         // Assert
         Assert.Equal(new BigInteger(123), bigNumber.Significand);
@@ -37,7 +37,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithNegativeSignificandZeroExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-456), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-456), 0);
 
         // Assert
         Assert.Equal(new BigInteger(-456), bigNumber.Significand);
@@ -48,7 +48,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithZeroSignificandNonZeroExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Zero, 10);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, 10);
 
         // Assert
         Assert.Equal(BigInteger.Zero, bigNumber.Significand);
@@ -59,7 +59,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithPositiveSignificandPositiveExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
 
         // Assert
         Assert.Equal(new BigInteger(123), bigNumber.Significand);
@@ -70,7 +70,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithPositiveSignificandNegativeExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), -5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), -5);
 
         // Assert
         Assert.Equal(new BigInteger(123), bigNumber.Significand);
@@ -81,7 +81,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithNegativeSignificandPositiveExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-456), 10);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-456), 10);
 
         // Assert
         Assert.Equal(new BigInteger(-456), bigNumber.Significand);
@@ -92,7 +92,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithNegativeSignificandNegativeExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-456), -10);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-456), -10);
 
         // Assert
         Assert.Equal(new BigInteger(-456), bigNumber.Significand);
@@ -106,7 +106,7 @@ public class BigNumberConstructorTests
         var maxSignificand = BigInteger.Parse("12345678901234567890123456789012345678901234567890");
 
         // Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(maxSignificand, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(maxSignificand, 0);
 
         // Assert
         Assert.Equal(maxSignificand, bigNumber.Significand);
@@ -120,7 +120,7 @@ public class BigNumberConstructorTests
         var minSignificand = BigInteger.Parse("-12345678901234567890123456789012345678901234567890");
 
         // Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(minSignificand, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(minSignificand, 0);
 
         // Assert
         Assert.Equal(minSignificand, bigNumber.Significand);
@@ -131,7 +131,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithMaxExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), int.MaxValue);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), int.MaxValue);
 
         // Assert
         Assert.Equal(new BigInteger(123), bigNumber.Significand);
@@ -142,7 +142,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithMinExponent_ShouldCreateValidInstance()
     {
         // Arrange & Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), int.MinValue);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), int.MinValue);
 
         // Assert
         Assert.Equal(new BigInteger(123), bigNumber.Significand);
@@ -154,7 +154,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithVariousInputs_ShouldCreateValidInstance(BigInteger significand, int exponent)
     {
         // Act
-        var bigNumber = new Corvus.Text.Json.BigNumber(significand, exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(significand, exponent);
 
         // Assert
         Assert.Equal(significand, bigNumber.Significand);
@@ -166,7 +166,7 @@ public class BigNumberConstructorTests
     public void Constructor_WithExtremeValues_ShouldNotThrow(BigInteger significand, int exponent)
     {
         // Act & Assert (should not throw)
-        var bigNumber = new Corvus.Text.Json.BigNumber(significand, exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(significand, exponent);
 
         Assert.Equal(significand, bigNumber.Significand);
         Assert.Equal(exponent, bigNumber.Exponent);

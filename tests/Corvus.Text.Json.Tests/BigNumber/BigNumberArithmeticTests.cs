@@ -19,9 +19,9 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(s1, e1);
-        var bn2 = new Corvus.Text.Json.BigNumber(s2, e2);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var bn1 = new Corvus.Numerics.BigNumber(s1, e1);
+        var bn2 = new Corvus.Numerics.BigNumber(s2, e2);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
         var result = bn1 + bn2;
@@ -38,9 +38,9 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(s1, e1);
-        var bn2 = new Corvus.Text.Json.BigNumber(s2, e2);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var bn1 = new Corvus.Numerics.BigNumber(s1, e1);
+        var bn2 = new Corvus.Numerics.BigNumber(s2, e2);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
         var result = bn1 - bn2;
@@ -57,9 +57,9 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(s1, e1);
-        var bn2 = new Corvus.Text.Json.BigNumber(s2, e2);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var bn1 = new Corvus.Numerics.BigNumber(s1, e1);
+        var bn2 = new Corvus.Numerics.BigNumber(s2, e2);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
         var result = bn1 * bn2;
@@ -77,12 +77,12 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(s1, e1);
-        var bn2 = new Corvus.Text.Json.BigNumber(s2, e2);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var bn1 = new Corvus.Numerics.BigNumber(s1, e1);
+        var bn2 = new Corvus.Numerics.BigNumber(s2, e2);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = Corvus.Text.Json.BigNumber.Divide(bn1, bn2, precision);
+        var result = Corvus.Numerics.BigNumber.Divide(bn1, bn2, precision);
 
         // Assert
         Assert.Equal(expected, result);
@@ -92,8 +92,8 @@ public class BigNumberArithmeticTests
     public void Division_ByZero_ShouldThrow()
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(1, 0);
-        var bn2 = new Corvus.Text.Json.BigNumber(0, 0);
+        var bn1 = new Corvus.Numerics.BigNumber(1, 0);
+        var bn2 = new Corvus.Numerics.BigNumber(0, 0);
 
         // Act & Assert
         Assert.Throws<DivideByZeroException>(() => bn1 / bn2);
@@ -107,9 +107,9 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(s1, e1);
-        var bn2 = new Corvus.Text.Json.BigNumber(s2, e2);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var bn1 = new Corvus.Numerics.BigNumber(s1, e1);
+        var bn2 = new Corvus.Numerics.BigNumber(s2, e2);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
         var result = bn1 % bn2;
@@ -122,8 +122,8 @@ public class BigNumberArithmeticTests
     public void Modulo_ByZero_ShouldThrow()
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(7, 0);
-        var bn2 = new Corvus.Text.Json.BigNumber(0, 0);
+        var bn1 = new Corvus.Numerics.BigNumber(7, 0);
+        var bn2 = new Corvus.Numerics.BigNumber(0, 0);
 
         // Act & Assert
         Assert.Throws<DivideByZeroException>(() => bn1 % bn2);
@@ -133,9 +133,9 @@ public class BigNumberArithmeticTests
     public void Modulo_ZeroDividend_ShouldReturnZero()
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(0, 0);
-        var bn2 = new Corvus.Text.Json.BigNumber(5, 0);
-        var expected = new Corvus.Text.Json.BigNumber(0, 0);
+        var bn1 = new Corvus.Numerics.BigNumber(0, 0);
+        var bn2 = new Corvus.Numerics.BigNumber(5, 0);
+        var expected = new Corvus.Numerics.BigNumber(0, 0);
 
         // Act
         var result = bn1 % bn2;
@@ -151,8 +151,8 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var value = new Corvus.Text.Json.BigNumber(inputS, inputE);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var value = new Corvus.Numerics.BigNumber(inputS, inputE);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
         var result = ++value;
@@ -168,8 +168,8 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var value = new Corvus.Text.Json.BigNumber(inputS, inputE);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var value = new Corvus.Numerics.BigNumber(inputS, inputE);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
         var result = --value;
@@ -185,8 +185,8 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var value = new Corvus.Text.Json.BigNumber(inputS, inputE);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var value = new Corvus.Numerics.BigNumber(inputS, inputE);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
         var result = +value;
@@ -202,8 +202,8 @@ public class BigNumberArithmeticTests
         BigInteger expectedS, int expectedE)
     {
         // Arrange
-        var value = new Corvus.Text.Json.BigNumber(inputS, inputE);
-        var expected = new Corvus.Text.Json.BigNumber(expectedS, expectedE);
+        var value = new Corvus.Numerics.BigNumber(inputS, inputE);
+        var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
         var result = -value;
@@ -216,7 +216,7 @@ public class BigNumberArithmeticTests
     public void UnaryMinus_AppliedTwice_ShouldReturnOriginalValue()
     {
         // Arrange
-        var original = new Corvus.Text.Json.BigNumber(123, 5);
+        var original = new Corvus.Numerics.BigNumber(123, 5);
 
         // Act
         var result = -(-original);
@@ -229,7 +229,7 @@ public class BigNumberArithmeticTests
     public void IncrementDecrement_Sequence_ShouldReturnToOriginal()
     {
         // Arrange
-        var original = new Corvus.Text.Json.BigNumber(100, 0);
+        var original = new Corvus.Numerics.BigNumber(100, 0);
         var unchangedOriginal = original;
 
         // Act
@@ -247,8 +247,8 @@ public class BigNumberArithmeticTests
     public void Modulo_WithLargeNumbers_ShouldWorkCorrectly()
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(BigInteger.Parse("123456789012345678901234567890"), 0);
-        var bn2 = new Corvus.Text.Json.BigNumber(BigInteger.Parse("987654321"), 0);
+        var bn1 = new Corvus.Numerics.BigNumber(BigInteger.Parse("123456789012345678901234567890"), 0);
+        var bn2 = new Corvus.Numerics.BigNumber(BigInteger.Parse("987654321"), 0);
 
         // Act
         var result = bn1 % bn2;
@@ -256,7 +256,7 @@ public class BigNumberArithmeticTests
         // Assert
       // 123456789012345678901234567890 % 987654321 = expected remainder
         var expectedRemainder = BigInteger.Parse("123456789012345678901234567890") % BigInteger.Parse("987654321");
-        var expected = new Corvus.Text.Json.BigNumber(expectedRemainder, 0);
+        var expected = new Corvus.Numerics.BigNumber(expectedRemainder, 0);
         Assert.Equal(expected, result);
     }
 
@@ -264,13 +264,13 @@ public class BigNumberArithmeticTests
     public void Increment_WithNegativeExponent_PreservesDecimalPrecision()
     {
         // Arrange
-      var value = new Corvus.Text.Json.BigNumber(125, -2); // 1.25
+      var value = new Corvus.Numerics.BigNumber(125, -2); // 1.25
 
    // Act
    var result = ++value;
 
         // Assert
-        var expected = new Corvus.Text.Json.BigNumber(225, -2); // 2.25
+        var expected = new Corvus.Numerics.BigNumber(225, -2); // 2.25
         Assert.Equal(expected, result);
     }
 
@@ -278,13 +278,13 @@ public class BigNumberArithmeticTests
     public void Decrement_WithNegativeExponent_PreservesDecimalPrecision()
     {
         // Arrange
-        var value = new Corvus.Text.Json.BigNumber(225, -2); // 2.25
+        var value = new Corvus.Numerics.BigNumber(225, -2); // 2.25
 
         // Act
  var result = --value;
 
         // Assert
-        var expected = new Corvus.Text.Json.BigNumber(125, -2); // 1.25
+        var expected = new Corvus.Numerics.BigNumber(125, -2); // 1.25
         Assert.Equal(expected, result);
   }
 
@@ -292,14 +292,14 @@ public class BigNumberArithmeticTests
   public void Modulo_WithMixedExponents_ShouldAlignProperly()
     {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(35, -1); // 3.5
-        var bn2 = new Corvus.Text.Json.BigNumber(1, 0); // 1
+        var bn1 = new Corvus.Numerics.BigNumber(35, -1); // 3.5
+        var bn2 = new Corvus.Numerics.BigNumber(1, 0); // 1
 
         // Act
         var result = bn1 % bn2;
 
         // Assert
-        var expected = new Corvus.Text.Json.BigNumber(5, -1); // 0.5
+        var expected = new Corvus.Numerics.BigNumber(5, -1); // 0.5
         Assert.Equal(expected, result);
     }
 
@@ -307,13 +307,13 @@ public class BigNumberArithmeticTests
   public void Increment_CrossingIntegerBoundary_ShouldWorkCorrectly()
   {
    // Arrange
-      var value = new Corvus.Text.Json.BigNumber(99, -2); // 0.99
+      var value = new Corvus.Numerics.BigNumber(99, -2); // 0.99
 
         // Act
         var result = ++value;
 
      // Assert
-        var expected = new Corvus.Text.Json.BigNumber(199, -2); // 1.99
+        var expected = new Corvus.Numerics.BigNumber(199, -2); // 1.99
  Assert.Equal(expected, result);
     }
 
@@ -321,13 +321,13 @@ public class BigNumberArithmeticTests
     public void Decrement_CrossingZero_WithNegativeExponent()
     {
         // Arrange
-    var value = new Corvus.Text.Json.BigNumber(1, -2); // 0.01
+    var value = new Corvus.Numerics.BigNumber(1, -2); // 0.01
 
     // Act
  var result = --value;
 
         // Assert
-     var expected = new Corvus.Text.Json.BigNumber(-99, -2); // -0.99
+     var expected = new Corvus.Numerics.BigNumber(-99, -2); // -0.99
         Assert.Equal(expected, result);
     }
 
@@ -335,7 +335,7 @@ public class BigNumberArithmeticTests
     public void UnaryMinus_WithNegativeExponent_ShouldPreserveExponent()
     {
         // Arrange
-        var value = new Corvus.Text.Json.BigNumber(12345, -4); // 1.2345
+        var value = new Corvus.Numerics.BigNumber(12345, -4); // 1.2345
 
         // Act
         var result = -value;
@@ -349,14 +349,14 @@ public class BigNumberArithmeticTests
     public void Modulo_WithSmallDecimalValues_ShouldWorkCorrectly()
  {
         // Arrange
-        var bn1 = new Corvus.Text.Json.BigNumber(5, -1); // 0.5
-        var bn2 = new Corvus.Text.Json.BigNumber(2, -1); // 0.2
+        var bn1 = new Corvus.Numerics.BigNumber(5, -1); // 0.5
+        var bn2 = new Corvus.Numerics.BigNumber(2, -1); // 0.2
 
   // Act
         var result = bn1 % bn2;
 
         // Assert
-        var expected = new Corvus.Text.Json.BigNumber(1, -1); // 0.1
+        var expected = new Corvus.Numerics.BigNumber(1, -1); // 0.1
         Assert.Equal(expected, result);
     }
 
@@ -364,7 +364,7 @@ public class BigNumberArithmeticTests
     public void IncrementDecrement_WithNegativeExponent_RoundTrip()
     {
       // Arrange
-      var original = new Corvus.Text.Json.BigNumber(75, -2); // 0.75
+      var original = new Corvus.Numerics.BigNumber(75, -2); // 0.75
      var unchangedOriginal = original;
 
         // Act
@@ -379,7 +379,7 @@ public class BigNumberArithmeticTests
     public void MultipleIncrements_WithNegativeExponent()
     {
         // Arrange
-        var value = new Corvus.Text.Json.BigNumber(1, -1); // 0.1
+        var value = new Corvus.Numerics.BigNumber(1, -1); // 0.1
 
     // Act
  value = ++value; // 1.1
@@ -387,7 +387,7 @@ public class BigNumberArithmeticTests
         value = ++value; // 3.1
 
         // Assert
-      var expected = new Corvus.Text.Json.BigNumber(31, -1); // 3.1
+      var expected = new Corvus.Numerics.BigNumber(31, -1); // 3.1
  Assert.Equal(expected, value);
     }
 
@@ -395,7 +395,7 @@ public class BigNumberArithmeticTests
     public void MultipleDecrements_WithNegativeExponent()
     {
         // Arrange
-    var value = new Corvus.Text.Json.BigNumber(5, -1); // 0.5
+    var value = new Corvus.Numerics.BigNumber(5, -1); // 0.5
 
      // Act
     value = --value; // -0.5
@@ -403,7 +403,7 @@ public class BigNumberArithmeticTests
         value = --value; // -2.5
 
         // Assert
-        var expected = new Corvus.Text.Json.BigNumber(-25, -1); // -2.5
+        var expected = new Corvus.Numerics.BigNumber(-25, -1); // -2.5
         Assert.Equal(expected, value);
     }
 }

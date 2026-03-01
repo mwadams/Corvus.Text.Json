@@ -15,7 +15,7 @@ public class BigNumberToStringTests
     public void ToString_WithZeroSignificandZeroExponent_ShouldReturnZero()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Zero, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, 0);
 
         // Act
         string result = bigNumber.ToString();
@@ -28,7 +28,7 @@ public class BigNumberToStringTests
     public void ToString_WithPositiveSignificandZeroExponent_ShouldReturnSignificand()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 0);
 
         // Act
         string result = bigNumber.ToString();
@@ -41,7 +41,7 @@ public class BigNumberToStringTests
     public void ToString_WithNegativeSignificandZeroExponent_ShouldReturnSignificand()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-456), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-456), 0);
 
         // Act
         string result = bigNumber.ToString();
@@ -54,7 +54,7 @@ public class BigNumberToStringTests
     public void ToString_WithZeroExponentPositiveSignificand_ShouldNotIncludeExponent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(789), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(789), 0);
 
         // Act
         string result = bigNumber.ToString();
@@ -68,7 +68,7 @@ public class BigNumberToStringTests
     public void ToString_WithPositiveExponent_ShouldIncludeExponent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
 
         // Act
         string result = bigNumber.ToString();
@@ -81,7 +81,7 @@ public class BigNumberToStringTests
     public void ToString_WithNegativeExponent_ShouldIncludeExponent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), -5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), -5);
 
         // Act
         string result = bigNumber.ToString();
@@ -95,20 +95,20 @@ public class BigNumberToStringTests
     {
         // Arrange
         var largeSignificand = BigInteger.Parse("12345678901234567890123456789012345678901234567890");
-        var bigNumber = new Corvus.Text.Json.BigNumber(largeSignificand, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(largeSignificand, 0);
 
         // Act
         string result = bigNumber.ToString();
 
         // Assert
-        Assert.Equal("12345678901234567890123456789012345678901234567890", result);
+        Assert.Equal("1234567890123456789012345678901234567890123456789E1", result);
     }
 
     [Fact]
     public void ToString_WithVeryLargeExponent_ShouldReturnCorrectString()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 999999);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 999999);
 
         // Act
         string result = bigNumber.ToString();
@@ -121,7 +121,7 @@ public class BigNumberToStringTests
     public void ToString_WithVeryLargeNegativeExponent_ShouldReturnCorrectString()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), -999999);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), -999999);
 
         // Act
         string result = bigNumber.ToString();
@@ -136,7 +136,7 @@ public class BigNumberToStringTests
         BigInteger significand, int exponent, string expected)
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(significand, exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(significand, exponent);
 
         // Act
         string result = bigNumber.ToString();
@@ -149,7 +149,7 @@ public class BigNumberToStringTests
     public void ToString_WithNegativeSignificandAndPositiveExponent_ShouldReturnCorrectString()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-789), 10);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-789), 10);
 
         // Act
         string result = bigNumber.ToString();
@@ -162,7 +162,7 @@ public class BigNumberToStringTests
     public void ToString_WithNegativeSignificandAndNegativeExponent_ShouldReturnCorrectString()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-789), -10);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-789), -10);
 
         // Act
         string result = bigNumber.ToString();
@@ -175,20 +175,20 @@ public class BigNumberToStringTests
     public void ToString_WithZeroSignificandAndNonZeroExponent_ShouldReturnCorrectString()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Zero, 42);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, 42);
 
         // Act
         string result = bigNumber.ToString();
 
         // Assert
-        Assert.Equal("0E42", result);
+        Assert.Equal("0", result);
     }
 
     [Fact]
     public void ToString_CompareWithTryFormatChar_ShouldProduceSameResult()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-98765), 12345);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-98765), 12345);
         Span<char> charBuffer = stackalloc char[50];
 
         // Act
@@ -205,7 +205,7 @@ public class BigNumberToStringTests
     public void ToString_CompareWithTryFormatByte_ShouldProduceSameResult()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-98765), 12345);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-98765), 12345);
         Span<byte> byteBuffer = stackalloc byte[50];
 
         // Act
@@ -222,11 +222,11 @@ public class BigNumberToStringTests
     public void ToString_RoundTripWithParse_ShouldProduceSameResult()
     {
         // Arrange
-        var originalBigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-789), 123);
+        var originalBigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-789), 123);
 
         // Act
         string stringResult = originalBigNumber.ToString();
-        bool parseSuccess = Corvus.Text.Json.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringResult), out var parsedBigNumber);
+        bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringResult), out var parsedBigNumber);
 
         // Assert
         Assert.True(parseSuccess);
@@ -237,7 +237,7 @@ public class BigNumberToStringTests
     public void ToString_MultipleCallsOnSameInstance_ShouldReturnSameValue()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
 
         // Act
         string result1 = bigNumber.ToString();
@@ -253,7 +253,7 @@ public class BigNumberToStringTests
     public void ToString_WithDefaultStruct_ShouldReturnZero()
     {
         // Arrange
-        var bigNumber = default(Corvus.Text.Json.BigNumber);
+        var bigNumber = default(Corvus.Numerics.BigNumber);
 
         // Act
         string result = bigNumber.ToString();
@@ -266,7 +266,7 @@ public class BigNumberToStringTests
     public void ToString_AfterNormalization_ShouldBeConsistent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
         var normalizedBigNumber = bigNumber.Normalize();
 
         // Act
@@ -284,7 +284,7 @@ public class BigNumberToStringTests
     {
         // Arrange
         var veryLargeSignificand = BigInteger.Parse(new string('9', 1000)); // 1000 nines
-        var bigNumber = new Corvus.Text.Json.BigNumber(veryLargeSignificand, 999999);
+        var bigNumber = new Corvus.Numerics.BigNumber(veryLargeSignificand, 999999);
 
         // Act & Assert
         string result = bigNumber.ToString();
@@ -298,7 +298,7 @@ public class BigNumberToStringTests
     public void ToString_WithMinimumValues_ShouldWork()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-1), int.MinValue);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-1), int.MinValue);
 
         // Act
         string result = bigNumber.ToString();
@@ -311,7 +311,7 @@ public class BigNumberToStringTests
     public void ToString_WithMaximumValues_ShouldWork()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.One, int.MaxValue);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.One, int.MaxValue);
 
         // Act
         string result = bigNumber.ToString();
@@ -324,7 +324,7 @@ public class BigNumberToStringTests
     public void ToString_ConsistentWithObjectToString_ShouldBeTrue()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
         object objectBigNumber = bigNumber;
 
         // Act
@@ -339,7 +339,7 @@ public class BigNumberToStringTests
     public void ToString_ExponentOfOne_ShouldIncludeExponent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 1);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 1);
 
         // Act
         string result = bigNumber.ToString();
@@ -352,7 +352,7 @@ public class BigNumberToStringTests
     public void ToString_ExponentOfMinusOne_ShouldIncludeExponent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), -1);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), -1);
 
         // Act
         string result = bigNumber.ToString();
@@ -365,7 +365,7 @@ public class BigNumberToStringTests
     public void ToString_SignificandOfOne_ShouldWork()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.One, 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.One, 5);
 
         // Act
         string result = bigNumber.ToString();
@@ -378,7 +378,7 @@ public class BigNumberToStringTests
     public void ToString_SignificandOfMinusOne_ShouldWork()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.MinusOne, 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.MinusOne, 5);
 
         // Act
         string result = bigNumber.ToString();

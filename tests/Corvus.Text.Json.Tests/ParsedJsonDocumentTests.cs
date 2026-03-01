@@ -13,6 +13,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Corvus.Numerics;
 using Corvus.Text.Json.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

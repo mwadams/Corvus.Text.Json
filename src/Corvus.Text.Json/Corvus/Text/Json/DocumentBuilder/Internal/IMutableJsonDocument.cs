@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Numerics;
+using Corvus.Numerics;
 using NodaTime;
 
 namespace Corvus.Text.Json.Internal;

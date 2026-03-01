@@ -6,8 +6,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
+using Corvus.Numerics;
 using NodaTime;
 
 namespace Corvus.Text.Json.Internal;

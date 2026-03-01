@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/.benchmarks/">
+    <Project Path="benchmarks/Corvus.Numerics.Benchmarks/Corvus.Numerics.Benchmarks.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.BenchmarkModels/Corvus.Text.Json.BenchmarkModels.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.Benchmarks/Corvus.Text.Json.Benchmarks.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.ClassicBenchmarkModels/Corvus.Text.Json.ClassicBenchmarkModels.csproj" />
@@ -11,6 +12,7 @@
   <Folder Name="/.tests/">
     <Project Path="Common/tests/TestUtilities/TestUtilities.csproj" />
     <Project Path="tests/Corvus.JsonSchemaTestSuite.CodeGenerator/Corvus.JsonSchemaTestSuite.CodeGenerator.csproj" Id="fc46ebe0-6bd7-4a8a-abae-6271aff53420" />
+    <Project Path="tests/Corvus.Numerics.Tests/Corvus.Numerics.Tests.csproj" />
     <Project Path="tests/Corvus.Text.Json.Tests.GeneratedModels/Corvus.Text.Json.Tests.GeneratedModels.csproj" />
     <Project Path="tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj" />
   </Folder>

@@ -10,6 +10,8 @@ using NodaTime;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Corvus.Numerics;
+
 
 #if NET
 
@@ -1080,6 +1082,7 @@ public abstract partial class JsonDocument
     /// </summary>
     /// <param name="value">The BigNumber value to store.</param>
     /// <returns>The offset of the stored value in the value buffer.</returns>
+    [CLSCompliant(false)]
     protected int StoreValue(in BigNumber value)
     {
         int offset = _valueOffset;

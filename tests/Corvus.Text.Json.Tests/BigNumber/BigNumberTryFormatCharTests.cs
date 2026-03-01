@@ -15,7 +15,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithZeroSignificandZeroExponent_ShouldFormatCorrectly()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Zero, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, 0);
         Span<char> buffer = stackalloc char[10];
 
         // Act
@@ -30,7 +30,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithPositiveSignificandZeroExponent_ShouldFormatCorrectly()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 0);
         Span<char> buffer = stackalloc char[10];
 
         // Act
@@ -45,7 +45,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithNegativeSignificandZeroExponent_ShouldFormatCorrectly()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-456), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-456), 0);
         Span<char> buffer = stackalloc char[10];
 
         // Act
@@ -60,7 +60,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithZeroExponentPositiveSignificand_ShouldNotIncludeExponent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(789), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(789), 0);
         Span<char> buffer = stackalloc char[10];
 
         // Act
@@ -76,7 +76,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithPositiveExponent_ShouldIncludeExponent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
         Span<char> buffer = stackalloc char[20];
 
         // Act
@@ -91,7 +91,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithNegativeExponent_ShouldIncludeExponent()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), -5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), -5);
         Span<char> buffer = stackalloc char[20];
 
         // Act
@@ -107,7 +107,7 @@ public class BigNumberTryFormatCharTests
     {
         // Arrange
         var largeSignificand = BigInteger.Parse("12345678901234567890123456789012345678901234567890");
-        var bigNumber = new Corvus.Text.Json.BigNumber(largeSignificand, 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(largeSignificand, 0);
         Span<char> buffer = stackalloc char[100];
 
         // Act
@@ -116,14 +116,14 @@ public class BigNumberTryFormatCharTests
 
         // Assert
         BigNumberTestData.AssertFormatResult(success, charsWritten, result, 
-            "12345678901234567890123456789012345678901234567890");
+            "1234567890123456789012345678901234567890123456789E1");
     }
 
     [Fact]
     public void TryFormat_ToCharSpan_WithVeryLargeExponent_ShouldFormatCorrectly()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 999999);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 999999);
         Span<char> buffer = stackalloc char[20];
 
         // Act
@@ -138,7 +138,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithVeryLargeNegativeExponent_ShouldFormatCorrectly()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), -999999);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), -999999);
         Span<char> buffer = stackalloc char[20];
 
         // Act
@@ -153,7 +153,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithInsufficientBufferSize_ShouldReturnFalse()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
         Span<char> buffer = stackalloc char[4]; // Too small for "123E5"
 
         // Act
@@ -168,7 +168,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithExactBufferSize_ShouldReturnTrue()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
         Span<char> buffer = stackalloc char[5]; // Exact size for "123E5"
         buffer.Fill('\0'); // Initialize to ensure we only write what we expect
 
@@ -184,7 +184,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithExcessiveBufferSize_ShouldReturnTrue()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 5);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
         Span<char> buffer = stackalloc char[100]; // Much larger than needed
 
         // Act
@@ -199,7 +199,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithZeroLengthSpan_ShouldReturnFalse()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(123), 0);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 0);
         Span<char> buffer = Span<char>.Empty;
 
         // Act
@@ -216,7 +216,7 @@ public class BigNumberTryFormatCharTests
         BigInteger significand, int exponent, string expected)
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(significand, exponent);
+        var bigNumber = new Corvus.Numerics.BigNumber(significand, exponent);
         Span<char> buffer = stackalloc char[200]; // Large enough for any test case
 
         // Act
@@ -232,7 +232,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithNegativeSignificandAndPositiveExponent_ShouldFormatCorrectly()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-789), 10);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-789), 10);
         Span<char> buffer = stackalloc char[20];
 
         // Act
@@ -247,7 +247,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithNegativeSignificandAndNegativeExponent_ShouldFormatCorrectly()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(new BigInteger(-789), -10);
+        var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-789), -10);
         Span<char> buffer = stackalloc char[20];
 
         // Act
@@ -262,7 +262,7 @@ public class BigNumberTryFormatCharTests
     public void TryFormat_ToCharSpan_WithZeroSignificandAndNonZeroExponent_ShouldFormatCorrectly()
     {
         // Arrange
-        var bigNumber = new Corvus.Text.Json.BigNumber(BigInteger.Zero, 42);
+        var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, 42);
         Span<char> buffer = stackalloc char[20];
 
         // Act
@@ -270,7 +270,7 @@ public class BigNumberTryFormatCharTests
         string result = buffer.Slice(0, charsWritten).ToString();
 
         // Assert
-        BigNumberTestData.AssertFormatResult(success, charsWritten, result, "0E42");
+        BigNumberTestData.AssertFormatResult(success, charsWritten, result, "0");
     }
 
     [Fact]
@@ -278,7 +278,7 @@ public class BigNumberTryFormatCharTests
     {
         // Arrange - Create a very large significand to test buffer limits
         var veryLargeSignificand = BigInteger.Parse(new string('9', 100)); // 100 nines
-        var bigNumber = new Corvus.Text.Json.BigNumber(veryLargeSignificand, 999);
+        var bigNumber = new Corvus.Numerics.BigNumber(veryLargeSignificand, 999);
         Span<char> buffer = stackalloc char[200]; // Large buffer
 
         // Act
