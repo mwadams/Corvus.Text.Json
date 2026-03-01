@@ -312,23 +312,24 @@ byte[] signature = root.GetProperty("signature").GetBytesFromBase64();
 Corvus.Text.Json provides additional numeric types not available in System.Text.Json:
 
 ```csharp
-using System.Numerics;
+        Console.WriteLine("--- Example 12: Extended Numeric Types (Beyond System.Text.Json) ---");
 
-string json = """
-    {
-        "largeInteger": 12345678901234567890,
-        "preciseNumber": 123.456
-    }
-    """;
+        string json = """
+            {
+                "largeInteger": 12345678901234567890,
+                "preciseNumber": 1234567890123456789.1234567890123456789,
+                "bigNumberWithScale": 123456789012345678901234567890123456789E-10
+            }
+            """;
 
-using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
-JsonElement root = doc.RootElement;
+        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        JsonElement root = doc.RootElement;
 
-// BigInteger for large integers beyond long range
-BigInteger largeNum = root.GetProperty("largeInteger").GetBigInteger();
-
-// BigNumber for high-precision arithmetic with scale tracking
-BigNumber preciseNum = root.GetProperty("preciseNumber").GetBigNumber();
+        // BigInteger for large integers beyond long range
+        BigInteger largeNum = root.GetProperty("largeInteger"u8).GetBigInteger();
+        // BigNumber for high-precision arithmetic
+        BigNumber preciseNum = root.GetProperty("preciseNumber"u8).GetBigNumber();
+        BigNumber bigNumWithScale = root.GetProperty("bigNumberWithScale"u8).GetBigNumber();
 ```
 
 ### NodaTime Types (Beyond System.Text.Json)
@@ -432,22 +433,415 @@ JsonElement root = doc.RootElement;
 
 ## Writing JSON from ParsedJsonDocument
 
-```csharp
-ReadOnlySpan<byte> utf8Json = """
-    {
-        "message": "Hello"
-    }
-    """u8;
-using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(utf8Json.ToArray().AsMemory());
+After parsing a JSON document, you often need to serialize it for storage, transmission, or API responses. The `WriteTo` method provides efficient UTF-8 serialization.
 
+### Basic Serialization to Stream
+
+```csharp
+string json = """
+    {
+        "message": "Hello",
+        "status": 200
+    }
+    """;
+using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+// Write to any stream - file, network, memory
 using var stream = new MemoryStream();
-using (var writer = new Utf8JsonWriter(stream))
+using (var writer = new Utf8JsonWriter(
+    stream,
+    new JsonWriterOptions { Indented = true }))
 {
     doc.WriteTo(writer);
 }
 
 string outputJson = Encoding.UTF8.GetString(stream.ToArray());
 Console.WriteLine(outputJson);
+```
+
+### Serialization Options
+
+Control output formatting with `JsonWriterOptions`:
+
+```csharp
+using System.Text.Encodings.Web;
+
+string json = """{"name":"<script>alert('xss')</script>"}""";
+using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+var options = new JsonWriterOptions
+{
+    Indented = true,           // Pretty-print with indentation
+    SkipValidation = false,     // Validate during write
+    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping  // Less aggressive escaping
+};
+
+using var stream = new MemoryStream();
+using (var writer = new Utf8JsonWriter(stream, options))
+{
+    doc.WriteTo(writer);
+}
+
+string output = Encoding.UTF8.GetString(stream.ToArray());
+Console.WriteLine(output);
+```
+
+### Writing to File
+
+```csharp
+string json = """
+    {
+        "config": "data",
+        "version": "1.0"
+    }
+    """;
+using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+using FileStream fileStream = File.Create("output.json");
+using var writer = new Utf8JsonWriter(
+    fileStream,
+    new JsonWriterOptions { Indented = true });
+    
+doc.WriteTo(writer);
+// Flush happens automatically on dispose
+```
+
+### Writing to HTTP Response (ASP.NET Core)
+
+For web APIs, write directly to the response stream for optimal performance:
+
+```csharp
+public async Task WriteJsonResponse(HttpContext context)
+{
+    // Parse or build your JSON document
+    string json = GetDataAsJson();
+    using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+    
+    context.Response.ContentType = "application/json";
+    
+    // Write directly to response body
+    await using var writer = new Utf8JsonWriter(
+        context.Response.Body,
+        new JsonWriterOptions { Indented = false });
+        
+    doc.WriteTo(writer);
+    await writer.FlushAsync();
+}
+```
+
+### Getting JSON as String
+
+For simpler scenarios, use `ToString()` or `GetRawText()`:
+
+```csharp
+string json = """{"message":"Hello","value":42}""";
+using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+// Get formatted string representation
+string formattedJson = doc.RootElement.ToString();
+Console.WriteLine(formattedJson);
+
+// Get original raw JSON text (preserves formatting)
+string rawJson = doc.RootElement.GetRawText();
+Console.WriteLine(rawJson);
+```
+
+**Note**: `ToString()` creates a new string allocation. For high-performance scenarios, prefer `WriteTo()` with a writer.
+
+### Performance Considerations
+
+1. **Use UTF-8 directly**: `WriteTo()` writes UTF-8 bytes without encoding conversion
+2. **Stream to destination**: Write directly to your target stream instead of intermediate buffers
+3. **Disable validation**: Set `SkipValidation = true` if you trust the source data
+4. **Avoid ToString()**: In hot paths, use `WriteTo()` instead of string conversion
+5. **Reuse writers**: For repeated operations, consider writer pooling (see JsonDocumentBuilder docs)
+
+### Performance Comparison
+
+```csharp
+// ❌ Slower: Multiple allocations
+string jsonString = doc.RootElement.ToString();
+byte[] bytes = Encoding.UTF8.GetBytes(jsonString);
+await stream.WriteAsync(bytes);
+
+// ✅ Faster: Direct UTF-8 serialization
+using var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = false });
+doc.WriteTo(writer);
+await writer.FlushAsync();
+```
+
+## Common Serialization Patterns
+
+### API Gateway: Parse and Forward
+
+A common pattern in API gateways and middleware - parse incoming JSON, optionally validate or transform it, then forward to an upstream service:
+
+```csharp
+public async Task ForwardJsonAsync(HttpContext context, string upstreamUrl)
+{
+    // Parse incoming request
+    using var requestDoc = await ParsedJsonDocument<JsonElement>.ParseAsync(
+        context.Request.Body);
+    
+    // Optional: validate or transform here
+    // if (!IsValid(requestDoc.RootElement)) { return BadRequest(); }
+    
+    // Forward to upstream service
+    using var httpClient = new HttpClient();
+    using var stream = new MemoryStream();
+    using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = false }))
+    {
+        requestDoc.WriteTo(writer);
+    }
+    
+    stream.Position = 0;
+    var content = new StreamContent(stream);
+    content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+    
+    var response = await httpClient.PostAsync(upstreamUrl, content);
+    
+    // Forward response back to client
+    context.Response.StatusCode = (int)response.StatusCode;
+    await response.Content.CopyToAsync(context.Response.Body);
+}
+```
+
+### Caching: Serialize for Storage
+
+Serialize JSON documents to byte arrays for caching in Redis, Memcached, or in-memory caches:
+
+```csharp
+public async Task CacheJsonAsync(string key, ParsedJsonDocument<JsonElement> doc)
+{
+    using var stream = new MemoryStream();
+    using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = false }))
+    {
+        doc.WriteTo(writer);
+    }
+    
+    byte[] jsonBytes = stream.ToArray();
+    
+    // Store in cache with expiration
+    await _cache.SetAsync(
+        key, 
+        jsonBytes, 
+        new DistributedCacheEntryOptions 
+        { 
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) 
+        });
+}
+
+public async Task<ParsedJsonDocument<JsonElement>?> GetCachedJsonAsync(string key)
+{
+    byte[]? jsonBytes = await _cache.GetAsync(key);
+    if (jsonBytes == null)
+    {
+        return null;
+    }
+    
+    return ParsedJsonDocument<JsonElement>.Parse(jsonBytes.AsMemory());
+}
+```
+
+### Logging: Structured JSON
+
+Log JSON data efficiently:
+
+```csharp
+public void LogStructuredData(ParsedJsonDocument<JsonElement> data, string operation)
+{
+    if (!_logger.IsEnabled(LogLevel.Information))
+    {
+        return;
+    }
+    
+    // For logging, ToString() is fine - it's already a single allocation
+    _logger.LogInformation(
+        "Operation {Operation} completed with data: {Json}", 
+        operation,
+        data.RootElement.ToString());
+}
+
+// For high-volume logging where you want to avoid ToString(),
+// log the document directly and let the logger handle serialization:
+public void LogStructuredDataHighVolume(ParsedJsonDocument<JsonElement> data, string operation)
+{
+    if (!_logger.IsEnabled(LogLevel.Information))
+    {
+        return;
+    }
+    
+    // Pass the JsonElement directly - many structured logging systems
+    // can serialize it without intermediate string conversion
+    _logger.LogInformation(
+        "Operation {Operation} completed with data: {@Data}", 
+        operation,
+        data.RootElement);
+}
+```
+
+### File Operations: Batch Processing
+
+Process multiple JSON files efficiently:
+
+```csharp
+public async Task ProcessJsonFilesAsync(string inputDirectory, string outputDirectory)
+{
+    foreach (string inputFile in Directory.GetFiles(inputDirectory, "*.json"))
+    {
+        // Parse with pooled memory
+        using FileStream inputStream = File.OpenRead(inputFile);
+        using ParsedJsonDocument<JsonElement> doc = 
+            await ParsedJsonDocument<JsonElement>.ParseAsync(inputStream);
+        
+        // Validate or transform
+        if (!ValidateDocument(doc.RootElement))
+        {
+            _logger.LogWarning("Skipping invalid file: {File}", inputFile);
+            continue;
+        }
+        
+        // Write to output with formatting
+        string outputFile = Path.Combine(
+            outputDirectory, 
+            Path.GetFileName(inputFile));
+        
+        using FileStream outputStream = File.Create(outputFile);
+        using var writer = new Utf8JsonWriter(
+            outputStream,
+            new JsonWriterOptions { Indented = true });
+        
+        doc.WriteTo(writer);
+        await writer.FlushAsync();
+    }
+}
+```
+
+## Comparison: ParsedJsonDocument vs System.Text.Json.JsonDocument
+
+### Writing/Serialization Comparison
+
+Both support similar serialization patterns with identical APIs:
+
+**System.Text.Json.JsonDocument**:
+```csharp
+using System.Text.Json;
+
+string json = """{"message":"Hello"}""";
+using var doc = JsonDocument.Parse(json);
+
+using var stream = new MemoryStream();
+using var writer = new Utf8JsonWriter(stream);
+doc.WriteTo(writer);
+
+string output = Encoding.UTF8.GetString(stream.ToArray());
+```
+
+**Corvus.Text.Json.ParsedJsonDocument**:
+```csharp
+using Corvus.Text.Json;
+
+string json = """{"message":"Hello"}""";
+using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+using var stream = new MemoryStream();
+using var writer = new Utf8JsonWriter(stream);
+doc.WriteTo(writer);
+
+string output = Encoding.UTF8.GetString(stream.ToArray());
+```
+
+**Key Differences**:
+
+| Aspect | System.Text.Json.JsonDocument | Corvus.Text.Json.ParsedJsonDocument |
+|--------|-------------------------------|-------------------------------------|
+| **API Compatibility** | Standard .NET API | Compatible API with extensions |
+| **Type System** | Fixed to `JsonElement` | Generic over `IJsonElement<T>` |
+
+### When to Choose Which
+
+**Use System.Text.Json.JsonDocument when:**
+- Standard .NET library is sufficient
+
+**Use ParsedJsonDocument when:**
+- Need extended type support (BigNumber, NodaTime)
+- Need JSON Schema Serialization support (`IJsonElement<T>`)
+
+## Error Handling
+
+### Handling Write Errors
+
+```csharp
+public async Task WriteJsonSafelyAsync(ParsedJsonDocument<JsonElement> doc, string filePath)
+{
+    try
+    {
+        using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+        using var writer = new Utf8JsonWriter(
+            stream,
+            new JsonWriterOptions { Indented = true });
+        
+        doc.WriteTo(writer);
+        await writer.FlushAsync();
+        
+        _logger.LogInformation("Successfully wrote JSON to {FilePath}", filePath);
+    }
+    catch (IOException ex)
+    {
+        _logger.LogError(ex, "Failed to write JSON to file {FilePath}", filePath);
+        throw new ApplicationException($"Could not write to {filePath}", ex);
+    }
+    catch (UnauthorizedAccessException ex)
+    {
+        _logger.LogError(ex, "Access denied writing to {FilePath}", filePath);
+        throw;
+    }
+}
+```
+
+### Handling Parse and Write Pipeline
+
+```csharp
+public async Task<bool> TryProcessJsonAsync(Stream input, Stream output)
+{
+    ParsedJsonDocument<JsonElement>? doc = null;
+    try
+    {
+        // Parse
+        doc = await ParsedJsonDocument<JsonElement>.ParseAsync(input);
+        
+        // Validate
+        if (!IsValidDocument(doc.RootElement))
+        {
+            _logger.LogWarning("Document failed validation");
+            return false;
+        }
+        
+        // Write
+        using var writer = new Utf8JsonWriter(
+            output,
+            new JsonWriterOptions { Indented = false });
+        doc.WriteTo(writer);
+        await writer.FlushAsync();
+        
+        return true;
+    }
+    catch (JsonException ex)
+    {
+        _logger.LogError(ex, "Invalid JSON format");
+        return false;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Unexpected error processing JSON");
+        return false;
+    }
+    finally
+    {
+        // Critical: Always dispose to return pooled memory
+        doc?.Dispose();
+    }
+}
 ```
 
 ## Important Notes
@@ -519,5 +913,3 @@ catch (JsonException ex)
 2. **Reuse streams**: When parsing multiple documents, reuse stream objects when possible
 3. **Use UTF-8 directly**: Parsing from `ReadOnlyMemory<byte>` is more efficient than parsing from strings
 4. **Dispose properly**: Always dispose documents to return memory to the pool
-5. **Avoid unnecessary copies**: When working with byte data, use `ReadOnlyMemory<byte>` directly instead of converting to strings
-6. **Seekable vs non-seekable streams**: The parser handles both types efficiently, but seekable streams (like FileStream) can be slightly faster

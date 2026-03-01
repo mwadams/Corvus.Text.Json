@@ -57,20 +57,26 @@ class Program
         // Example 14: Type checking and safe conversion
         Example14_TypeCheckingAndSafeConversion();
 
-        // Example 15: Write JSON
-        Example15_WriteJson();
+        // Example 15: Write JSON (basic)
+        Example15_WriteJsonBasic();
 
-        // Example 16: Use static constants
-        Example16_StaticConstants();
+        // Example 16: Write JSON with options
+        Example16_WriteJsonWithOptions();
 
-        // Example 17: Parse from stream
-        Example17_ParseFromStream();
+        // Example 17: Write JSON to file
+        Example17_WriteJsonToFile();
 
-        // Example 18: Parse from stream asynchronously
-        await Example18_ParseFromStreamAsync();
+        // Example 18: Use static constants
+        Example18_StaticConstants();
 
-        // Example 19: Parse from file stream
-        Example19_ParseFromFileStream();
+        // Example 19: Parse from stream
+        Example19_ParseFromStream();
+
+        // Example 20: Parse from stream asynchronously
+        await Example20_ParseFromStreamAsync();
+
+        // Example 21: Parse from file stream
+        Example21_ParseFromFileStream();
 
         Console.WriteLine("\nAll examples completed!");
     }
@@ -393,8 +399,8 @@ class Program
         string json = """
             {
                 "largeInteger": 12345678901234567890,
-                "preciseNumber": 123.456,
-                "bigNumberWithScale": 123456
+                "preciseNumber": 1234567890123456789.1234567890123456789,
+                "bigNumberWithScale": 123456789012345678901234567890123456789E-10
             }
             """;
 
@@ -409,8 +415,8 @@ class Program
         BigNumber bigNumWithScale = root.GetProperty("bigNumberWithScale"u8).GetBigNumber();
 
         Console.WriteLine($"BigInteger: {largeNum}");
-        Console.WriteLine($"BigNumber (precise): {preciseNum.ToString()}");
-        Console.WriteLine($"BigNumber (with scale): {bigNumWithScale.ToString()}");
+        Console.WriteLine($"BigNumber (precise): {preciseNum}");
+        Console.WriteLine($"BigNumber (with scale): {bigNumWithScale}");
         Console.WriteLine();
     }
 
@@ -497,20 +503,47 @@ class Program
         Console.WriteLine();
     }
 
-    static void Example15_WriteJson()
+    static void Example15_WriteJsonBasic()
     {
-        Console.WriteLine("--- Example 15: Write JSON ---");
+        Console.WriteLine("--- Example 15: Write JSON (Basic) ---");
 
-        ReadOnlySpan<byte> utf8Json = """
+        string json = """
             {
-                "status": "success",
-                "code": 200
+                "message": "Hello",
+                "status": 200,
+                "timestamp": "2024-02-28T10:30:00Z"
             }
-            """u8;
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(utf8Json.ToArray().AsMemory());
+            """;
+        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+        // Write to memory stream
+        using var stream = new MemoryStream();
+        using (var writer = new Corvus.Text.Json.Utf8JsonWriter(stream))
+        {
+            doc.WriteTo(writer);
+        }
+
+        string outputJson = Encoding.UTF8.GetString(stream.ToArray());
+        Console.WriteLine("Output JSON:");
+        Console.WriteLine(outputJson);
+        Console.WriteLine();
+    }
+
+    static void Example16_WriteJsonWithOptions()
+    {
+        Console.WriteLine("--- Example 16: Write JSON with Options ---");
+
+        string json = """{"name":"John","age":30,"active":true}""";
+        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+        // Write with indentation for readability
+        var options = new Corvus.Text.Json.JsonWriterOptions
+        {
+            Indented = true
+        };
 
         using var stream = new MemoryStream();
-        using (var writer = new Corvus.Text.Json.Utf8JsonWriter(stream, new Corvus.Text.Json.JsonWriterOptions { Indented = true }))
+        using (var writer = new Corvus.Text.Json.Utf8JsonWriter(stream, options))
         {
             doc.WriteTo(writer);
         }
@@ -521,9 +554,54 @@ class Program
         Console.WriteLine();
     }
 
-    static void Example16_StaticConstants()
+    static void Example17_WriteJsonToFile()
     {
-        Console.WriteLine("--- Example 16: Static Constants ---");
+        Console.WriteLine("--- Example 17: Write JSON to File ---");
+
+        string json = """
+            {
+                "application": "ParsedJsonDocument Example",
+                "version": "1.0.0",
+                "settings": {
+                    "debug": false,
+                    "timeout": 30
+                }
+            }
+            """;
+        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+        // Create a temporary file
+        string tempFile = Path.Combine(Path.GetTempPath(), "example-output.json");
+        try
+        {
+            using FileStream fileStream = File.Create(tempFile);
+            using var writer = new Corvus.Text.Json.Utf8JsonWriter(
+                fileStream,
+                new Corvus.Text.Json.JsonWriterOptions { Indented = true });
+
+            doc.WriteTo(writer);
+
+            Console.WriteLine($"JSON written to: {tempFile}");
+
+            // Read it back to verify
+            string writtenContent = File.ReadAllText(tempFile);
+            Console.WriteLine("Content:");
+            Console.WriteLine(writtenContent);
+        }
+        finally
+        {
+            // Clean up
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+            }
+        }
+        Console.WriteLine();
+    }
+
+    static void Example18_StaticConstants()
+    {
+        Console.WriteLine("--- Example 18: Static Constants ---");
 
         JsonElement nullValue = ParsedJsonDocument<JsonElement>.Null;
         JsonElement trueValue = ParsedJsonDocument<JsonElement>.True;
@@ -535,9 +613,9 @@ class Program
         Console.WriteLine();
     }
 
-    static void Example17_ParseFromStream()
+    static void Example19_ParseFromStream()
     {
-        Console.WriteLine("--- Example 17: Parse from Stream (Synchronous) ---");
+        Console.WriteLine("--- Example 19: Parse from Stream (Synchronous) ---");
 
         // Create a sample JSON in a memory stream
         ReadOnlySpan<byte> utf8Json = """
@@ -559,9 +637,9 @@ class Program
         Console.WriteLine();
     }
 
-    static async Task Example18_ParseFromStreamAsync()
+    static async Task Example20_ParseFromStreamAsync()
     {
-        Console.WriteLine("--- Example 18: Parse from Stream (Asynchronous) ---");
+        Console.WriteLine("--- Example 20: Parse from Stream (Asynchronous) ---");
 
         // Create a larger JSON document to demonstrate async parsing
         ReadOnlySpan<byte> utf8Json = """
@@ -607,9 +685,9 @@ class Program
         Console.WriteLine();
     }
 
-    static void Example19_ParseFromFileStream()
+    static void Example21_ParseFromFileStream()
     {
-        Console.WriteLine("--- Example 19: Parse from File Stream ---");
+        Console.WriteLine("--- Example 21: Parse from File Stream ---");
 
         // Create a temporary JSON file
         string tempFile = Path.Combine(Path.GetTempPath(), "example.json");
