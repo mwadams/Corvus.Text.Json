@@ -332,7 +332,7 @@ Corvus.Text.Json provides additional numeric types not available in System.Text.
         BigNumber bigNumWithScale = root.GetProperty("bigNumberWithScale"u8).GetBigNumber();
 ```
 
-### NodaTime Types (Beyond System.Text.Json)
+### NodaTime Types
 
 For applications using NodaTime, Corvus.Text.Json provides direct support:
 
