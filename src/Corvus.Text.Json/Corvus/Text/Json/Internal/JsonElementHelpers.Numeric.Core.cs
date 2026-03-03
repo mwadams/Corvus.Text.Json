@@ -1,8 +1,10 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
+using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 #if CORVUS_TEXT_JSON_CODEGENERATION

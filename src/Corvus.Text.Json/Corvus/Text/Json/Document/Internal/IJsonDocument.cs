@@ -571,4 +571,35 @@ public interface IJsonDocument : IDisposable
     /// <returns><see langword="true"/> if the pointer could be resolved, otherwise <see langword="false"/>.</returns>
     bool TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> jsonPointer, int index, out TValue value)
         where TValue : struct, IJsonElement<TValue>;
+
+    /// <summary>
+    /// Formats the value to the provided destination span according to the specified format and format provider.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="destination">The destination span to write the formatted value to.</param>
+    /// <param name="charsWritten">The number of characters written to the destination span.</param>
+    /// <param name="format">The format string.</param>
+    /// <param name="formatProvider">The format provider.</param>
+    /// <returns><see langword="true"/> if the formatting was successful; otherwise, <see langword="false"/>.</returns>
+    bool TryFormat(int index, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider);
+
+    /// <summary>
+    /// Formats the value to the provided destination UTF-8 span according to the specified format and format provider.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="destination">The destination span to write the UTF-8 formatted value to.</param>
+    /// <param name="bytesWritten">The number of bytes written to the destination span.</param>
+    /// <param name="format">The format string.</param>
+    /// <param name="formatProvider">The format provider.</param>
+    /// <returns><see langword="true"/> if the formatting was successful; otherwise, <see langword="false"/>.</returns>
+    bool TryFormat(int index, Span<byte> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider);
+
+    /// <summary>
+    /// Gets the display string representation of the element at the specified index according to the specified format and format provider.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="format">The format string.</param>
+    /// <param name="formatProvider">The format provider.</param>
+    /// <returns>The display string representation of the element.</returns>
+    string ToString(int index, string? format, IFormatProvider? formatProvider);
 }

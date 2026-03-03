@@ -16,7 +16,12 @@ namespace Corvus.Text.Json;
 ///   Represents a specific JSON value within a <see cref="JsonDocument"/>.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct JsonElement : IJsonElement<JsonElement>
+public readonly partial struct JsonElement
+    : IJsonElement<JsonElement>, IFormattable
+#if NET
+    , ISpanFormattable
+    , IUtf8SpanFormattable
+#endif
 {
     private readonly IJsonDocument _parent;
     private readonly int _idx;
@@ -1993,11 +1998,34 @@ public readonly partial struct JsonElement : IJsonElement<JsonElement>
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-
     /// <inheritdoc/>
     static JsonElement IJsonElement<JsonElement>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 
 #endif
+
+    /// <inheritdoc/>
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        CheckValidInstance();
+
+        return _parent.ToString(_idx, format, formatProvider);
+    }
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        CheckValidInstance();
+
+        return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+    }
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        CheckValidInstance();
+
+        return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+    }
 
     /// <inheritdoc/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

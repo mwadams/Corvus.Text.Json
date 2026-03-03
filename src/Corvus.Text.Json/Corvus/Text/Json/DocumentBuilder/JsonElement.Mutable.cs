@@ -1618,7 +1618,11 @@ public readonly partial struct JsonElement
     /// </code>
     /// </example>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public partial struct Mutable : IMutableJsonElement<Mutable>
+    public partial struct Mutable : IMutableJsonElement<Mutable>, IFormattable
+#if NET
+    , ISpanFormattable
+    , IUtf8SpanFormattable
+#endif
     {
         private readonly IMutableJsonDocument _parent;
         private readonly int _idx;
@@ -4008,6 +4012,30 @@ public readonly partial struct JsonElement
             }
 
             return _parent.GetHashCode(_idx);
+        }
+
+        /// <inheritdoc/>
+        public string ToString(string? format, IFormatProvider? formatProvider)
+        {
+            CheckValidInstance();
+
+            return _parent.ToString(_idx, format, formatProvider);
+        }
+
+        /// <inheritdoc/>
+        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+        {
+            CheckValidInstance();
+
+            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+        }
+
+        /// <inheritdoc/>
+        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+        {
+            CheckValidInstance();
+
+            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
         }
 
         /// <summary>

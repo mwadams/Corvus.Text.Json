@@ -2581,15 +2581,4 @@ public ref partial struct Utf8JsonReader
             JsonTokenType.True => nameof(JsonTokenType.True),
             _ => ((byte)TokenType).ToString()
         };
-
-    private ReadOnlySpan<byte> GetUnescapedSpan()
-    {
-        ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
-        if (ValueIsEscaped)
-        {
-            span = JsonReaderHelper.GetUnescapedSpan(span);
-        }
-
-        return span;
-    }
 }

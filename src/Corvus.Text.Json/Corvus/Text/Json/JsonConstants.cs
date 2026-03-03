@@ -88,6 +88,13 @@ internal static partial class JsonConstants
     public static ReadOnlySpan<byte> ZeroValue => "0"u8;
     public static ReadOnlySpan<byte> OneValue => "1"u8;
 
+    public static ReadOnlySpan<byte> ToStringTrueValue => "True"u8;
+    public static ReadOnlySpan<byte> ToStringFalseValue => "False"u8;
+    public static ReadOnlySpan<char> ToStringTrueValueUtf16 => "True";
+    public static ReadOnlySpan<char> ToStringFalseValueUtf16 => "False";
+    public static string ToStringTrueValueUtf16String => "True";
+    public static string ToStringFalseValueUtf16String => "False";
+
     public static byte[] TrueValueArray { get; } = TrueValue.ToArray();
     public static byte[] FalseValueArray { get; } = FalseValue.ToArray();
     public static byte[] NullValueArray { get; } = NullValue.ToArray();
@@ -149,6 +156,7 @@ internal static partial class JsonConstants
     public const int InitialFormatBigIntegerLength = 80;
     public const int InitialFormatBigNumberLength = InitialFormatBigIntegerLength + MaximumFormatUInt32Length;
     public const int MaximumFormatUInt128Length = 39;
+    public const int MaximumFormatNumberLength = 2048; // We only permit up to 2048 characters when writing a number in order to prevent DoS scenarios where an extremely large number is written that would cause excessive memory usage when parsed.
     public const int MaximumFormatHalfLength = 20;
     public const int MaximumEscapedGuidLength = MaxExpansionFactorWhileEscaping * MaximumFormatGuidLength;
     public const int MaximumFormatDateTimeLength = 27;    // StandardFormat 'O', e.g. 2017-06-12T05:30:45.7680000

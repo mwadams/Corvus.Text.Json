@@ -47,7 +47,10 @@ public sealed class CorePartial : ICodeFileBuilder
                         typeDeclaration.DotnetAccessibility(),
                         typeDeclaration.DotnetTypeName(),
                         interfaces: [
-                            typeDeclaration.GetIJsonElementInterface(forMutable: false)
+                            typeDeclaration.GetIJsonElementInterface(forMutable: false),
+                            "IFormattable",
+                            new("ISpanFormattable", FrameworkType.Net80OrGreater),
+                            new("IUtf8SpanFormattable", FrameworkType.Net80OrGreater),
                             ])
                         .PushJsonSchemaClassNameAndScope()
                         .PushJsonPropertyNamesEscapedClassNameAndScope()

@@ -530,6 +530,42 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return new UnescapedUtf8JsonString(segment);
     }
 
+    private bool TryGetUnescapedUtf8JsonStringUnsafe(int index, Span<byte> destination, JsonTokenType expectedType, out int bytesWritten)
+    {
+        DbRow row = _parsedData.Get(index);
+
+        JsonTokenType tokenType = row.TokenType;
+
+        if (expectedType != JsonTokenType.None)
+        {
+            CheckExpectedType(expectedType, tokenType);
+        }
+        else
+        {
+            if (tokenType is not JsonTokenType.String or JsonTokenType.PropertyName)
+            {
+                ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.String, tokenType);
+            }
+        }
+
+        ReadOnlyMemory<byte> segment = GetRawSimpleValueUnsafe(index, false);
+
+        if (row.HasComplexChildren)
+        {
+            return JsonReaderHelper.TryUnescape(segment.Span, destination, out bytesWritten);
+        }
+
+        if (segment.Span.TryCopyTo(destination))
+        {
+            bytesWritten = segment.Length;
+            return true;
+        }
+
+        bytesWritten = 0;
+        return false;
+    }
+
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
     {
@@ -1082,10 +1118,10 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
                 return string.Empty;
 
             case JsonTokenType.True:
-                return bool.TrueString;
+                return JsonConstants.ToStringTrueValueUtf16String;
 
             case JsonTokenType.False:
-                return bool.FalseString;
+                return JsonConstants.ToStringFalseValueUtf16String;
 
             case JsonTokenType.Number:
             case JsonTokenType.StartArray:
@@ -1751,5 +1787,153 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     int IMutableJsonDocument.StoreValue(UInt128 value) => StoreValue(value);
 
     int IMutableJsonDocument.StoreValue(Half value) => StoreValue(value);
+
 #endif
+    string IJsonDocument.ToString(int index, string? format, IFormatProvider? formatProvider)
+    {
+        if (_parsedData.GetJsonTokenType(index) == JsonTokenType.Number)
+        {
+            ReadOnlyMemory<byte> segment = GetRawSimpleValueUnsafe(index, includeQuotes: false);
+            if (JsonElementHelpers.TryFormatNumberAsString(segment.Span, format, formatProvider, out string? result))
+            {
+                return result;
+            }
+        }
+
+        return ((IJsonDocument)this).ToString(index);
+    }
+
+    bool IJsonDocument.TryFormat(int index, Span<byte> destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
+    {
+        CheckNotDisposed();
+
+        switch (_parsedData.GetJsonTokenType(index))
+        {
+            case JsonTokenType.None:
+            case JsonTokenType.Null:
+                bytesWritten = 0;
+                return true;
+
+            case JsonTokenType.True:
+                if (JsonConstants.ToStringTrueValue.TryCopyTo(destination))
+                {
+                    bytesWritten = JsonConstants.ToStringTrueValue.Length;
+                    return true;
+                }
+                else
+                {
+                    bytesWritten = 0;
+                    return false;
+                }
+
+            case JsonTokenType.False:
+                if (JsonConstants.ToStringFalseValue.TryCopyTo(destination))
+                {
+                    bytesWritten = JsonConstants.ToStringFalseValue.Length;
+                    return true;
+                }
+                else
+                {
+                    bytesWritten = 0;
+                    return false;
+                }
+
+            case JsonTokenType.Number:
+            {
+                ReadOnlyMemory<byte> segment = GetRawSimpleValueUnsafe(index, includeQuotes: false);
+                return JsonElementHelpers.TryFormatNumber(segment.Span, destination, out bytesWritten, format, formatProvider);
+            }
+
+            case JsonTokenType.StartArray:
+            case JsonTokenType.StartObject:
+            {
+                RawUtf8JsonString segment = GetRawValueUnsafe(index, includeQuotes: true);
+                if (segment.Span.TryCopyTo(destination))
+                {
+                    bytesWritten = segment.Span.Length;
+                    return true;
+                }
+
+                bytesWritten = 0;
+                return false;
+            }
+
+            case JsonTokenType.String:
+            {
+                return TryGetUnescapedUtf8JsonStringUnsafe(index, destination, JsonTokenType.String, out bytesWritten);
+            }
+
+            case JsonTokenType.Comment:
+            case JsonTokenType.EndArray:
+            case JsonTokenType.EndObject:
+            default:
+                Debug.Fail($"No handler for {nameof(JsonTokenType)}.{_parsedData.GetJsonTokenType(index)}");
+                bytesWritten = 0;
+                return false;
+        }
+    }
+
+    bool IJsonDocument.TryFormat(int index, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
+    {
+        CheckNotDisposed();
+
+        switch (_parsedData.GetJsonTokenType(index))
+        {
+            case JsonTokenType.None:
+            case JsonTokenType.Null:
+                charsWritten = 0;
+                return true;
+
+            case JsonTokenType.True:
+                if (JsonConstants.ToStringTrueValueUtf16.TryCopyTo(destination))
+                {
+                    charsWritten = JsonConstants.ToStringTrueValueUtf16.Length;
+                    return true;
+                }
+                else
+                {
+                    charsWritten = 0;
+                    return false;
+                }
+
+            case JsonTokenType.False:
+                if (JsonConstants.ToStringFalseValueUtf16.TryCopyTo(destination))
+                {
+                    charsWritten = JsonConstants.ToStringFalseValueUtf16.Length;
+                    return true;
+                }
+                else
+                {
+                    charsWritten = 0;
+                    return false;
+                }
+
+            case JsonTokenType.Number:
+            {
+                ReadOnlyMemory<byte> segment = GetRawSimpleValueUnsafe(index, includeQuotes: false);
+                return JsonElementHelpers.TryFormatNumber(segment.Span, destination, out charsWritten, format, formatProvider);
+            }
+
+            case JsonTokenType.StartArray:
+            case JsonTokenType.StartObject:
+            {
+                using RawUtf8JsonString rawString = GetRawValueUnsafe(index, includeQuotes: true);
+                return JsonReaderHelper.TryTranscode(rawString.Span, destination, out charsWritten);
+            }
+
+            case JsonTokenType.String:
+            {
+                using UnescapedUtf8JsonString stringValue = GetUtf8JsonStringUnsafe(index, JsonTokenType.String);
+                return JsonReaderHelper.TryTranscode(stringValue.Span, destination, out charsWritten);
+            }
+
+            case JsonTokenType.Comment:
+            case JsonTokenType.EndArray:
+            case JsonTokenType.EndObject:
+            default:
+                Debug.Fail($"No handler for {nameof(JsonTokenType)}.{_parsedData.GetJsonTokenType(index)}");
+                charsWritten = 0;
+                return false;
+        }
+    }
 }

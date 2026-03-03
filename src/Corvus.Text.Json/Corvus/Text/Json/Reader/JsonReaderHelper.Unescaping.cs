@@ -66,31 +66,6 @@ internal static partial class JsonReaderHelper
         return utf8String;
     }
 
-    public static ReadOnlySpan<byte> GetUnescapedSpan(ReadOnlySpan<byte> utf8Source)
-    {
-        // The escaped name is always >= than the unescaped, so it is safe to use escaped name for the buffer length.
-        int length = utf8Source.Length;
-        byte[]? pooledName = null;
-
-        Span<byte> utf8Unescaped = length <= JsonConstants.StackallocByteThreshold ?
-            stackalloc byte[JsonConstants.StackallocByteThreshold] :
-            (pooledName = ArrayPool<byte>.Shared.Rent(length));
-
-        Unescape(utf8Source, utf8Unescaped, out int written);
-        Debug.Assert(written > 0);
-
-        ReadOnlySpan<byte> propertyName = utf8Unescaped.Slice(0, written).ToArray();
-        Debug.Assert(!propertyName.IsEmpty);
-
-        if (pooledName != null)
-        {
-            new Span<byte>(pooledName, 0, written).Clear();
-            ArrayPool<byte>.Shared.Return(pooledName);
-        }
-
-        return propertyName;
-    }
-
     public static bool UnescapeAndCompare(ReadOnlySpan<byte> utf8Source, ReadOnlySpan<byte> other)
     {
         Debug.Assert(utf8Source.Length >= other.Length && utf8Source.Length / JsonConstants.MaxExpansionFactorWhileEscaping <= other.Length);
@@ -279,6 +254,36 @@ internal static partial class JsonReaderHelper
             // Therefore, wrapping the DecoderFallbackException around an InvalidOperationException.
             throw ThrowHelper.GetInvalidOperationException_ReadInvalidUTF8(ex);
         }
+    }
+
+    public static bool TryTranscode(ReadOnlySpan<byte> utf8Unescaped, Span<char> destination, out int charsWritten)
+    {
+#if NET
+        return s_utf8Encoding.TryGetChars(utf8Unescaped, destination, out charsWritten);
+#else
+        if (utf8Unescaped.IsEmpty)
+        {
+            charsWritten = 0;
+            return true;
+        }
+
+        unsafe
+        {
+            fixed (byte* srcPtr = utf8Unescaped)
+            fixed (char* destPtr = destination)
+            {
+                if (s_utf8Encoding.GetCharCount(srcPtr, utf8Unescaped.Length) > destination.Length)
+                {
+                    charsWritten = 0;
+                    return false;
+                }
+
+                charsWritten = s_utf8Encoding.GetChars(srcPtr, utf8Unescaped.Length, destPtr, destination.Length);
+                return true;
+            }
+        }
+
+#endif
     }
 
     public static int TranscodeHelper(ReadOnlySpan<byte> utf8Unescaped, Span<char> destination)

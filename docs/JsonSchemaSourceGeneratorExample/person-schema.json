@@ -7,10 +7,8 @@
     "required": ["name", "age"],
     "properties": {
         "name": {
-            "type": "string",
-            "description": "The person's full name",
-            "minLength": 1,
-            "maxLength": 100
+            "$ref": "#/$defs/PersonName",
+            "description": "The person's full name"
         },
         "age": {
             "type": "number",
@@ -37,7 +35,8 @@
             "type": "array",
             "description": "List of the person's hobbies",
             "items": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
             }
         },
         "isActive": {
@@ -47,6 +46,27 @@
         }
     },
     "$defs": {
+        "PersonName": {
+            "type": "object",
+            "description": "A person's full name",
+            "required": ["firstName", "lastName"],
+            "properties": {
+                "firstName": {
+                    "type": "string",
+                    "description": "First name",
+                    "minLength": 1
+                },
+                "lastName": {
+                    "type": "string",
+                    "description": "Last name",
+                    "minLength": 1
+                },
+                "middleName": {
+                    "type": "string",
+                    "description": "Middle name"
+                }
+            }
+        },
         "Address": {
             "type": "object",
             "description": "A physical address",

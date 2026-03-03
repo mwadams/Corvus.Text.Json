@@ -1002,6 +1002,10 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("#pragma warning disable CS8618 // JsonDocument nullability");
+
         if (forMutable)
         {
             return generator
@@ -1012,7 +1016,9 @@ internal static partial class CodeGeneratorExtensions
 
         return generator
             .AppendLineIndent("private readonly IJsonDocument _parent;")
-            .AppendLineIndent("private readonly int _idx;");
+            .AppendLineIndent("private readonly int _idx;")
+            .AppendSeparatorLine()
+            .AppendLineIndent("#pragma warning restore CS8618 // JsonDocument nullability");
     }
 
     /// <summary>
@@ -2015,8 +2021,37 @@ internal static partial class CodeGeneratorExtensions
                     return _parent.GetHashCode(_idx);
                 }
                 """)
-            .AppendSeparatorLine();
-
+            .AppendSeparatorLine()
+            .ReserveNameIfNotReserved("TryFormat")
+            .AppendLineIndent("/// <inheritdoc/>")
+            .AppendLineIndent("public string ToString(string? format, IFormatProvider? formatProvider)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendSeparatorLine()
+                .AppendLineIndent("return _parent.ToString(_idx, format, formatProvider);")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <inheritdoc/>")
+            .AppendLineIndent("public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendSeparatorLine()
+                .AppendLineIndent("return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <inheritdoc/>")
+            .AppendLineIndent("public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("")
+                .AppendLineIndent("return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);")
+            .PopIndent()
+            .AppendLineIndent("}");
 
         if (forMutable)
         {

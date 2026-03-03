@@ -282,4 +282,7 @@ internal class DummyDocument : IJsonDocument
     int IJsonDocument.GetArrayInsertionIndex(int currentIndex, int arrayIndex) => throw new NotImplementedException();
     ReadOnlyMemory<byte> IJsonDocument.GetPropertyNameRaw(int index, bool includeQuotes) => throw new NotImplementedException();
     UnescapedUtf8JsonString IJsonDocument.GetPropertyNameUnescaped(int index) => throw new NotImplementedException();
+    bool IJsonDocument.TryFormat(int index, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider) => throw new NotImplementedException();
+    bool IJsonDocument.TryFormat(int index, Span<byte> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider) => throw new NotImplementedException();
+    string IJsonDocument.ToString(int index, string format, IFormatProvider formatProvider) => throw new NotImplementedException();
 }

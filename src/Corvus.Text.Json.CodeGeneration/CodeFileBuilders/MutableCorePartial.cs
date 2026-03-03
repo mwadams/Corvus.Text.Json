@@ -58,7 +58,10 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             GeneratedTypeAccessibility.Public,
                             generator.MutableClassName(),
                             interfaces: [
-                                typeDeclaration.GetIJsonElementInterface(forMutable: true)
+                                typeDeclaration.GetIJsonElementInterface(forMutable: true),
+                                "IFormattable",
+                                new("ISpanFormattable", FrameworkType.Net80OrGreater),
+                                new("IUtf8SpanFormattable", FrameworkType.Net80OrGreater),
                                 ],
                             isReadOnly: false)
                             .AppendBackingFields(forMutable: true)

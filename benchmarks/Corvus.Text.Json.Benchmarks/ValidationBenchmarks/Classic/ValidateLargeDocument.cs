@@ -4,7 +4,6 @@
 
 using System.Collections.Immutable;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using CorvusValidator = global::Corvus.Json.Validator;
 using JsonEverything = global::Json.Schema;

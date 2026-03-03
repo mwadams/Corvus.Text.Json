@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Corvus.Text.Json.Internal;
 
 namespace Corvus.Numerics;
 
@@ -1146,9 +1147,6 @@ public readonly partial struct BigNumber
             return false;
         }
 
-        Span<char> temp = stackalloc char[tempChars];
-        destination.Slice(0, tempChars).CopyTo(temp);
-        temp.CopyTo(destination);
         destination[tempChars] = ' ';
         formatInfo.PercentSymbol.AsSpan().CopyTo(destination.Slice(tempChars + 1));
 
@@ -1187,15 +1185,29 @@ public readonly partial struct BigNumber
             return true;
         }
 
-        // Use UTF-16 then convert
-        Span<char> charBuffer = stackalloc char[256];
-        if (!TryFormatZero(charBuffer, out int charsWritten, format, provider))
-        {
-            bytesWritten = 0;
-            return false;
-        }
+        char[]? bufferChars = null;
+        Span<char> buffer = destination.Length < StackAllocThreshold
+            ? stackalloc char[StackAllocThreshold]
+            : (bufferChars = ArrayPool<char>.Shared.Rent(destination.Length));
 
-        return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
+        try
+        {
+
+            if (!TryFormatZero(buffer, out int charsWritten, format, provider))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            return TryEncodeUtf8(buffer.Slice(0, charsWritten), destination, out bytesWritten);
+        }
+        finally
+        {
+            if (bufferChars is char[] bc)
+            {
+                ArrayPool<char>.Shared.Return(bc);
+            }
+        }
     }
 
     private bool TryFormatRawUtf8(Span<byte> destination, out int bytesWritten, IFormatProvider? provider)
@@ -1255,68 +1267,152 @@ public readonly partial struct BigNumber
 
     private bool TryFormatGeneralUtf8(Span<byte> destination, out int bytesWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
-        Span<char> charBuffer = stackalloc char[512];
-        if (!TryFormatGeneral(charBuffer, out int charsWritten, precision, exponentChar, formatInfo))
+        char[]? bufferChars = null;
+        Span<char> charBuffer = destination.Length < StackAllocThreshold
+            ? stackalloc char[StackAllocThreshold]
+            : (bufferChars = ArrayPool<char>.Shared.Rent(destination.Length));
+
+        try
         {
-            bytesWritten = 0;
-            return false;
+            if (!TryFormatGeneral(charBuffer, out int charsWritten, precision, exponentChar, formatInfo))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+            return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
         }
-        return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
+        finally
+        {
+            if (bufferChars is char[] bc)
+            {
+                ArrayPool<char>.Shared.Return(bc);
+            }
+        }
     }
 
     private bool TryFormatFixedPointUtf8(Span<byte> destination, out int bytesWritten, int precision, NumberFormatInfo formatInfo)
     {
-        Span<char> charBuffer = stackalloc char[512];
-        if (!TryFormatFixedPoint(charBuffer, out int charsWritten, precision, formatInfo))
+        char[]? bufferChars = null;
+        Span<char> charBuffer = destination.Length < StackAllocThreshold
+            ? stackalloc char[StackAllocThreshold]
+            : (bufferChars = ArrayPool<char>.Shared.Rent(destination.Length));
+
+        try
         {
-            bytesWritten = 0;
-            return false;
+            if (!TryFormatFixedPoint(charBuffer, out int charsWritten, precision, formatInfo))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+            return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
         }
-        return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
+        finally
+        {
+            if (bufferChars is char[] bc)
+            {
+                ArrayPool<char>.Shared.Return(bc);
+            }
+        }
     }
 
     private bool TryFormatNumberUtf8(Span<byte> destination, out int bytesWritten, int precision, NumberFormatInfo formatInfo)
     {
-        Span<char> charBuffer = stackalloc char[512];
-        if (!TryFormatNumber(charBuffer, out int charsWritten, precision, formatInfo))
+        char[]? bufferChars = null;
+        Span<char> charBuffer = destination.Length < StackAllocThreshold
+            ? stackalloc char[StackAllocThreshold]
+            : (bufferChars = ArrayPool<char>.Shared.Rent(destination.Length));
+
+        try
         {
-            bytesWritten = 0;
-            return false;
+            if (!TryFormatNumber(charBuffer, out int charsWritten, precision, formatInfo))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+            return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
         }
-        return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
+        finally
+        {
+            if (bufferChars is char[] bc)
+            {
+                ArrayPool<char>.Shared.Return(bc);
+            }
+        }
     }
 
     private bool TryFormatExponentialUtf8(Span<byte> destination, out int bytesWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
-        Span<char> charBuffer = stackalloc char[512];
-        if (!TryFormatExponential(charBuffer, out int charsWritten, precision, exponentChar, formatInfo))
+        char[]? bufferChars = null;
+        Span<char> charBuffer = destination.Length < StackAllocThreshold
+            ? stackalloc char[StackAllocThreshold]
+            : (bufferChars = ArrayPool<char>.Shared.Rent(destination.Length));
+
+        try
         {
-            bytesWritten = 0;
-            return false;
+            if (!TryFormatExponential(charBuffer, out int charsWritten, precision, exponentChar, formatInfo))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+            return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
         }
-        return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
+        finally
+        {
+            if (bufferChars is char[] bc)
+            {
+                ArrayPool<char>.Shared.Return(bc);
+            }
+        }
     }
 
     private bool TryFormatCurrencyUtf8(Span<byte> destination, out int bytesWritten, int precision, NumberFormatInfo formatInfo)
     {
-        Span<char> charBuffer = stackalloc char[512];
-        if (!TryFormatCurrency(charBuffer, out int charsWritten, precision, formatInfo))
+        char[]? bufferChars = null;
+        Span<char> charBuffer = destination.Length < StackAllocThreshold
+            ? stackalloc char[StackAllocThreshold]
+            : (bufferChars = ArrayPool<char>.Shared.Rent(destination.Length));
+
+        try
         {
-            bytesWritten = 0;
-            return false;
+            if (!TryFormatCurrency(charBuffer, out int charsWritten, precision, formatInfo))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+            return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
         }
-        return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
+        finally
+        {
+            if (bufferChars is char[] bc)
+            {
+                ArrayPool<char>.Shared.Return(bc);
+            }
+        }
     }
 
     private bool TryFormatPercentUtf8(Span<byte> destination, out int bytesWritten, int precision, NumberFormatInfo formatInfo)
     {
-        Span<char> charBuffer = stackalloc char[512];
-        if (!TryFormatPercent(charBuffer, out int charsWritten, precision, formatInfo))
+        char[]? bufferChars = null;
+        Span<char> charBuffer = destination.Length < StackAllocThreshold
+            ? stackalloc char[StackAllocThreshold]
+            : (bufferChars = ArrayPool<char>.Shared.Rent(destination.Length));
+
+        try
         {
-            bytesWritten = 0;
-            return false;
+            if (!TryFormatPercent(charBuffer, out int charsWritten, precision, formatInfo))
+            {
+                bytesWritten = 0;
+                return false;
+            }
+            return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
         }
-        return TryEncodeUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
+        finally
+        {
+            if (bufferChars is char[] bc)
+            {
+                ArrayPool<char>.Shared.Return(bc);
+            }
+        }
     }
 
     #endregion

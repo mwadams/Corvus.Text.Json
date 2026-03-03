@@ -8,10 +8,3 @@ namespace JsonSchemaSourceGeneratorExample.Models;
 /// </summary>
 [JsonSchemaTypeGenerator("person-schema.json")]
 public readonly partial struct Person;
-
-/// <summary>
-/// A physical address.
-/// Generated from person-schema.json#/$defs/Address.
-/// </summary>
-[JsonSchemaTypeGenerator("person-schema.json#/$defs/Address")]
-public readonly partial struct Address;

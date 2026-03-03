@@ -616,6 +616,39 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         return true;
     }
 
+    public bool TryFormat(int index, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
+    {
+        Debug.Assert(index == 0);
+        using UnescapedUtf8JsonString unescapedString = ((IJsonDocument)this).GetUtf8JsonString(0, JsonTokenType.String);
+        return JsonReaderHelper.TryTranscode(unescapedString.Span, destination, out charsWritten);
+    }
+
+    public bool TryFormat(int index, Span<byte> destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
+    {
+        Debug.Assert(index == 0);
+
+        if (_requiresUnescaping)
+        {
+            return JsonReaderHelper.TryUnescape(_rawJsonStringValue[1..^1].Span, destination, out bytesWritten);
+        }
+
+        if (_rawJsonStringValue[1..^1].Span.TryCopyTo(destination))
+        {
+            bytesWritten = _rawJsonStringValue.Length - 2;
+            return true;
+        }
+
+        bytesWritten = 0;
+        return false;
+    }
+
+    public string ToString(int index, string? format, IFormatProvider? formatProvider)
+    {
+        Debug.Assert(index == 0);
+
+        return ((IJsonDocument)this).ToString(index);
+    }
+
     /// <summary>
     /// Defines a thread-local cache for us to store reusable FixedString document instances.
     /// </summary>
