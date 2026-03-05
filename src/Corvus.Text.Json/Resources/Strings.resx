@@ -769,5 +769,8 @@
   <data name="IncorrectArrayBufferLength" xml:space="preserve">
     <value>Expected an array buffer length of '{0}'.</value>
   </data>
-  
+  <data name="PrecisionMustBeBetween0And255" xml:space="preserve">
+    <value>Precision must be between 0 and 255.</value>
+  </data>
+
 </root>

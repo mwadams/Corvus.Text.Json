@@ -1709,10 +1709,13 @@ public readonly partial struct BigNumber :
         {
             int smallDivisor = (int)divisor.Significand;
 
-            // Cap precision at 255 to stay within the primary power-of-10 cache
-            // This avoids allocations while maintaining more than sufficient accuracy
-            // (255 decimal places is far more than needed for any practical calculation)
-            int cappedPrecision = Math.Min(precision, 255);
+            // Precision must be within the primary power-of-10 cache range (0-255)
+            if (precision < 0 || precision > 255)
+            {
+                ThrowHelper.ThrowArgumentOutOfRangeException_PrecisionMustBeBetween0And255();
+            }
+
+            int cappedPrecision = precision;
 
             BigInteger scaledDividend = dividend.Significand * GetPowerOf10(cappedPrecision);
             BigInteger quotient = scaledDividend / smallDivisor;
@@ -1724,8 +1727,13 @@ public readonly partial struct BigNumber :
         // Cap precision to stay within cache for better performance
         if (dividend.Exponent == divisor.Exponent)
         {
-            // Cap precision at 255 to use primary cache
-            int cappedPrecision = Math.Min(precision, 255);
+            // Precision must be within the primary power-of-10 cache range (0-255)
+            if (precision < 0 || precision > 255)
+            {
+                ThrowHelper.ThrowArgumentOutOfRangeException_PrecisionMustBeBetween0And255();
+            }
+
+            int cappedPrecision = precision;
 
             BigInteger scaledDividend = dividend.Significand * GetPowerOf10(cappedPrecision);
             BigInteger quotient = scaledDividend / divisor.Significand;
@@ -1733,8 +1741,13 @@ public readonly partial struct BigNumber :
         }
 
         // Standard path: full BigInteger division
-        // Cap precision at 255 to use primary cache when possible
-        int standardPrecision = Math.Min(precision, 255);
+        // Precision must be within the primary power-of-10 cache range (0-255)
+        if (precision < 0 || precision > 255)
+        {
+            ThrowHelper.ThrowArgumentOutOfRangeException_PrecisionMustBeBetween0And255();
+        }
+
+        int standardPrecision = precision;
         BigInteger standardScaledDividend = dividend.Significand * GetPowerOf10(standardPrecision);
         BigInteger standardQuotient = standardScaledDividend / divisor.Significand;
         int standardNewExponent = dividend.Exponent - divisor.Exponent - standardPrecision;
@@ -1757,25 +1770,27 @@ public readonly partial struct BigNumber :
             return Zero;
         }
 
-        // Align exponents
-        BigInteger leftSignificand = left.Significand;
-        BigInteger rightSignificand = right.Significand;
-        int minExponent = Math.Min(left.Exponent, right.Exponent);
-
-        if (left.Exponent > minExponent)
+        // Use modular arithmetic to avoid expanding unnecessarily
+        // For left = s1 * 10^e1 and right = s2 * 10^e2:
+        // If e1 >= e2: (s1 * 10^e1) % (s2 * 10^e2) = ((s1 * 10^(e1-e2)) % s2) * 10^e2
+        // If e1 < e2: (s1 * 10^e1) % (s2 * 10^e2) = s1 * 10^e1 (since left < right in magnitude)
+        
+        if (left.Exponent >= right.Exponent)
         {
-            int diff = left.Exponent - minExponent;
-            leftSignificand = SafeScaleByPowerOf10(leftSignificand, diff);
+            int exponentDiff = left.Exponent - right.Exponent;
+            BigInteger scaledLeft = exponentDiff == 0 ? left.Significand : left.Significand * GetPowerOf10(exponentDiff);
+            BigInteger remainder = scaledLeft % right.Significand;
+            return new BigNumber(remainder, right.Exponent).Normalize();
         }
-
-        if (right.Exponent > minExponent)
+        else
         {
-            int diff = right.Exponent - minExponent;
-            rightSignificand = SafeScaleByPowerOf10(rightSignificand, diff);
+            // left has smaller exponent, so if |left| < |right * 10^(e2-e1)|, result is just left
+            // But we need to check this properly
+            int exponentDiff = right.Exponent - left.Exponent;
+            BigInteger scaledRight = right.Significand * GetPowerOf10(exponentDiff);
+            BigInteger remainder = left.Significand % scaledRight;
+            return new BigNumber(remainder, left.Exponent).Normalize();
         }
-
-        BigInteger remainder = leftSignificand % rightSignificand;
-        return new BigNumber(remainder, minExponent).Normalize();
     }
 
     /// <summary>

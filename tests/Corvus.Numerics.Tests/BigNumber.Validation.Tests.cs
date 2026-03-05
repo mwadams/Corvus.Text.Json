@@ -36,15 +36,33 @@ public class BigNumberValidationTests
     }
 
     [TestMethod]
-    public void Divide_VeryHighPrecision_Succeeds()
+    public void Divide_MaxValidPrecision_Succeeds()
     {
         BigNumber dividend = new(10, 0);
         BigNumber divisor = new(3, 0);
 
-        BigNumber result = BigNumber.Divide(dividend, divisor, 100);
+        BigNumber result = BigNumber.Divide(dividend, divisor, 255);
 
         // Should complete without error
         result.ShouldNotBe(BigNumber.Zero);
+    }
+
+    [TestMethod]
+    public void Divide_PrecisionAbove255_ThrowsArgumentOutOfRangeException()
+    {
+        BigNumber dividend = new(10, 0);
+        BigNumber divisor = new(3, 0);
+
+        Should.Throw<ArgumentOutOfRangeException>(() => BigNumber.Divide(dividend, divisor, 256));
+    }
+
+    [TestMethod]
+    public void Divide_PrecisionWellAbove255_ThrowsArgumentOutOfRangeException()
+    {
+        BigNumber dividend = new(10, 0);
+        BigNumber divisor = new(3, 0);
+
+        Should.Throw<ArgumentOutOfRangeException>(() => BigNumber.Divide(dividend, divisor, 1000));
     }
 
     #endregion

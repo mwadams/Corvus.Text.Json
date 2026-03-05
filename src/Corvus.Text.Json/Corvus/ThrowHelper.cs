@@ -15,6 +15,7 @@ internal enum ExceptionArgument
     culture,
     index,
     input,
+    precision,
     value,
 }
 
@@ -57,6 +58,12 @@ internal static class ThrowHelper
         throw new ArgumentOutOfRangeException(GetArgumentName(argument));
     }
 
+    [DoesNotReturn]
+    internal static void ThrowArgumentOutOfRangeException_PrecisionMustBeBetween0And255()
+    {
+        throw GetArgumentOutOfRangeException(ExceptionArgument.precision, ExceptionResource.PrecisionMustBeBetween0And255);
+    }
+
     private static ArgumentException GetArgumentException(ExceptionResource resource, ExceptionArgument argument)
     {
         return new ArgumentException(GetResourceString(resource), GetArgumentName(argument));
@@ -77,6 +84,9 @@ internal static class ThrowHelper
 
             case ExceptionArgument.input:
                 return nameof(ExceptionArgument.input);
+
+            case ExceptionArgument.precision:
+                return nameof(ExceptionArgument.precision);
 
             case ExceptionArgument.value:
                 return nameof(ExceptionArgument.value);
@@ -102,6 +112,9 @@ internal static class ThrowHelper
             case ExceptionResource.Argument_CannotExtractScalar:
                 return SR.Argument_CannotExtractScalar;
 
+            case ExceptionResource.PrecisionMustBeBetween0And255:
+                return SR.PrecisionMustBeBetween0And255;
+
             default:
                 Debug.Fail("The enum value is not defined, please check the ExceptionResource Enum.");
                 return "";
@@ -115,5 +128,6 @@ internal static class ThrowHelper
 internal enum ExceptionResource
 {
     Argument_CannotExtractScalar,
-    ArgumentOutOfRange_IndexMustBeLess
+    ArgumentOutOfRange_IndexMustBeLess,
+    PrecisionMustBeBetween0And255
 }
