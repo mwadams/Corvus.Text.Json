@@ -121,8 +121,8 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        // Should round to 5 significant digits
-        result.ShouldContain("12346");
+        // JsonElementHelpers uses exponential notation for large numbers with precision
+        result.ShouldBe("1.2346E+8");
     }
 
     [TestMethod]
@@ -135,7 +135,8 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldBe("123e5");
+        // JsonElementHelpers expands small exponents to fixed-point notation
+        result.ShouldBe("12300000");
     }
 
     [TestMethod]
@@ -148,7 +149,8 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldBe("123E5");
+        // JsonElementHelpers expands small exponents to fixed-point notation
+        result.ShouldBe("12300000");
     }
 
     #endregion
@@ -165,8 +167,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldStartWith("1.");
-        result.ShouldContain("E+");
+        result.ShouldBe("1.234500E+004");
     }
 
     [TestMethod]
@@ -179,8 +180,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldStartWith("1.23");
-        result.ShouldContain("E+004");
+        result.ShouldBe("1.23E+004");
     }
 
     [TestMethod]
@@ -193,8 +193,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldStartWith("1.23");
-        result.ShouldContain("e+004");
+        result.ShouldBe("1.23e+004");
     }
 
     [TestMethod]
@@ -207,8 +206,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldStartWith("1.23");
-        result.ShouldContain("-003");
+        result.ShouldBe("1.23E-003");
     }
 
     [TestMethod]
@@ -238,8 +236,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        // Should have 2 decimal places for InvariantCulture
-        result.ShouldContain("123.45");
+        result.ShouldBe("¤123.45");
     }
 
     [TestMethod]
@@ -252,7 +249,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldContain("123.45");
+        result.ShouldBe("¤123.45");
     }
 
     #endregion
@@ -269,8 +266,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldContain("50");
-        result.ShouldContain("%");
+        result.ShouldBe("50.00 %");
     }
 
     [TestMethod]
@@ -283,8 +279,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldContain("75");
-        result.ShouldContain("%");
+        result.ShouldBe("75.00 %");
     }
 
     [TestMethod]
@@ -297,8 +292,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldContain("1");
-        result.ShouldContain("%");
+        result.ShouldBe("1 %");
     }
 
     #endregion
@@ -315,7 +309,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldContain("123");
+        result.ShouldBe("123.45");
     }
 
     [TestMethod]
@@ -372,7 +366,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten));
-        result.ShouldBe("123E5");
+        result.ShouldBe("12300000");
     }
 
     [TestMethod]
@@ -460,7 +454,7 @@ public class BigNumberAdvancedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        result.ShouldContain("-100");
+        result.ShouldBe("1.0000000000E-100");
     }
 
     [TestMethod]

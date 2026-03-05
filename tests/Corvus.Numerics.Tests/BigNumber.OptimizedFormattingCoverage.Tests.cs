@@ -136,7 +136,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         bool success = num.TryFormatOptimized(buffer, out int written, "E4", CultureInfo.InvariantCulture);
 
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("E+");
+        buffer.Slice(0, written).ToString().ShouldBe("1.2345E+004");
     }
 
     [TestMethod]
@@ -148,7 +148,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         bool success = num.TryFormatOptimized(buffer, out int written, "e4", CultureInfo.InvariantCulture);
 
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("e+");
+        buffer.Slice(0, written).ToString().ShouldBe("1.2345e+004");
     }
 
     [TestMethod]
@@ -172,7 +172,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         bool success = num.TryFormatOptimized(buffer, out int written, "G5", CultureInfo.InvariantCulture);
 
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("E");
+        buffer.Slice(0, written).ToString().ShouldBe("1.2345E+14");
     }
 
     [TestMethod]
@@ -184,7 +184,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         bool success = num.TryFormatOptimized(buffer, out int written, "g5", CultureInfo.InvariantCulture);
 
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("e");
+        buffer.Slice(0, written).ToString().ShouldBe("1.2345e+14");
     }
 
     [TestMethod]
@@ -196,7 +196,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         bool success = num.TryFormatOptimized(buffer, out int written, "C2", CultureInfo.InvariantCulture);
 
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("123.45");
+        buffer.Slice(0, written).ToString().ShouldBe("¤123.45");
     }
 
     [TestMethod]
@@ -208,7 +208,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         bool success = num.TryFormatOptimized(buffer, out int written, "P2", CultureInfo.InvariantCulture);
 
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("123.45");
+        buffer.Slice(0, written).ToString().ShouldBe("123.45 %");
     }
 
     [TestMethod]
@@ -292,7 +292,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         // Test each format type with negative number
         bool success = num.TryFormatOptimized(buffer, out int written, "F2", CultureInfo.InvariantCulture);
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("-");
+        buffer.Slice(0, written).ToString().ShouldBe("-123.45");
 
         success = num.TryFormatOptimized(buffer, out written, "N2", CultureInfo.InvariantCulture);
         success.ShouldBeTrue();
@@ -316,7 +316,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         bool success = num.TryFormatOptimized(buffer, out int written, "E2", CultureInfo.InvariantCulture);
 
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("E+");
+        buffer.Slice(0, written).ToString().ShouldBe("1.23E+108");
     }
 
     [TestMethod]
@@ -328,6 +328,6 @@ public class BigNumberOptimizedFormattingCoverageTests
         bool success = num.TryFormatOptimized(buffer, out int written, "E2", CultureInfo.InvariantCulture);
 
         success.ShouldBeTrue();
-        buffer.Slice(0, written).ToString().ShouldContain("E-");
+        buffer.Slice(0, written).ToString().ShouldBe("1.23E-092");
     }
 }

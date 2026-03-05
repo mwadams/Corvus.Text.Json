@@ -27,9 +27,7 @@ public class BigNumberDeepBranchCoverageTests
         culture.NumberFormat.CurrencyNegativePattern = 0;
 
         string result = num.ToString("C2", culture);
-        result.ShouldContain("(");
-        result.ShouldContain(")");
-        result.ShouldContain("$");
+        result.ShouldBe("($123.45)");
     }
 
     [TestMethod]
@@ -41,8 +39,7 @@ public class BigNumberDeepBranchCoverageTests
         culture.NumberFormat.CurrencyNegativePattern = 1;
 
         string result = num.ToString("C2", culture);
-        result.ShouldStartWith("-");
-        result.ShouldContain("$");
+        result.ShouldBe("-$123.45");
     }
 
     [TestMethod]
@@ -54,7 +51,7 @@ public class BigNumberDeepBranchCoverageTests
         culture.NumberFormat.CurrencyNegativePattern = 2;
 
         string result = num.ToString("C2", culture);
-        result.ShouldContain("$-");
+        result.ShouldBe("$-123.45");
     }
 
     [TestMethod]

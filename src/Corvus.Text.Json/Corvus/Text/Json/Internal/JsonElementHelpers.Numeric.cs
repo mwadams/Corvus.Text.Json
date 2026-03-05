@@ -382,10 +382,16 @@ public static partial class JsonElementHelpers
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryFormatNumber(ReadOnlySpan<byte> span, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         ParseNumber(span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
 
+        return TryFormatNumber(span, destination, out charsWritten, format, provider, isNegative, integral, fractional, exponent);
+    }
+
+    internal static bool TryFormatNumber(ReadOnlySpan<byte> span, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider, bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent)
+    {
         if (integral.Length == 0 && fractional.Length == 0)
         {
             // Fast path for zero, which is common and can be formatted without any further processing.
@@ -3099,7 +3105,7 @@ public static partial class JsonElementHelpers
         return true;
     }
 
-    private static bool TryFormatZero(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    internal static bool TryFormatZero(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         if (format.IsEmpty)
         {
@@ -3142,7 +3148,7 @@ public static partial class JsonElementHelpers
         };
     }
 
-    private static bool TryFormatZeroFixedPoint(Span<char> destination, out int charsWritten, int precision, NumberFormatInfo formatInfo)
+    internal static bool TryFormatZeroFixedPoint(Span<char> destination, out int charsWritten, int precision, NumberFormatInfo formatInfo)
     {
         int requiredLength = 1 + (precision > 0 ? formatInfo.NumberDecimalSeparator.Length + precision : 0);
 
@@ -3170,7 +3176,7 @@ public static partial class JsonElementHelpers
         return true;
     }
 
-    private static bool TryFormatZeroExponential(Span<char> destination, out int charsWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
+    internal static bool TryFormatZeroExponential(Span<char> destination, out int charsWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
         int requiredLength = 1 + (precision > 0 ? formatInfo.NumberDecimalSeparator.Length + precision : 0) + 5; // E+000
 
@@ -3205,7 +3211,7 @@ public static partial class JsonElementHelpers
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryFormatZeroCurrency(Span<char> destination, out int charsWritten, int precision, NumberFormatInfo formatInfo)
+    internal static bool TryFormatZeroCurrency(Span<char> destination, out int charsWritten, int precision, NumberFormatInfo formatInfo)
     {
         // Format the zero number part first
         Span<char> tempDest = stackalloc char[100];
@@ -3545,11 +3551,15 @@ public static partial class JsonElementHelpers
     }
 
     /***** TRY FORMAT UTF-8 *****/
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryFormatNumber(ReadOnlySpan<byte> span, Span<byte> destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         ParseNumber(span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
+        return TryFormatNumber(span, destination, out bytesWritten, format, provider, isNegative, integral, fractional, exponent);
+    }
 
+    internal static bool TryFormatNumber(ReadOnlySpan<byte> span, Span<byte> destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider, bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent)
+    {
         if (integral.Length == 0 && fractional.Length == 0)
         {
             // Fast path for zero, which is common and can be formatted without any further processing.
@@ -3558,7 +3568,7 @@ public static partial class JsonElementHelpers
 
         if (format.IsEmpty)
         {
-            if(span.TryCopyTo(destination))
+            if (span.TryCopyTo(destination))
             {
                 bytesWritten = span.Length;
                 return true;
@@ -6132,7 +6142,7 @@ public static partial class JsonElementHelpers
         return true;
     }
 
-    private static bool TryFormatZero(Span<byte> destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    internal static bool TryFormatZero(Span<byte> destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         if (format.IsEmpty)
         {
@@ -6175,7 +6185,7 @@ public static partial class JsonElementHelpers
         };
     }
 
-    private static bool TryFormatZeroFixedPoint(Span<byte> destination, out int bytesWritten, int precision, NumberFormatInfo formatInfo)
+    internal static bool TryFormatZeroFixedPoint(Span<byte> destination, out int bytesWritten, int precision, NumberFormatInfo formatInfo)
     {
         int requiredLength = 1 + (precision > 0 ? Encoding.UTF8.GetByteCount(formatInfo.NumberDecimalSeparator) + precision : 0);
 
@@ -6208,7 +6218,7 @@ public static partial class JsonElementHelpers
         return true;
     }
 
-    private static bool TryFormatZeroExponential(Span<byte> destination, out int bytesWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
+    internal static bool TryFormatZeroExponential(Span<byte> destination, out int bytesWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
         int requiredLength = 1 + (precision > 0 ? Encoding.UTF8.GetByteCount(formatInfo.NumberDecimalSeparator) + precision : 0) + Encoding.UTF8.GetByteCount(formatInfo.PositiveSign) + 4; // E+000
 
@@ -6254,7 +6264,7 @@ public static partial class JsonElementHelpers
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryFormatZeroCurrency(Span<byte> destination, out int bytesWritten, int precision, NumberFormatInfo formatInfo)
+    internal static bool TryFormatZeroCurrency(Span<byte> destination, out int bytesWritten, int precision, NumberFormatInfo formatInfo)
     {
         // Format the zero number part first
         Span<byte> tempDest = stackalloc byte[100];

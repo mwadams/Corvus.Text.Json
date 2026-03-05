@@ -273,8 +273,8 @@ public class BigNumberOptimizedFormattingTests
 
         success.ShouldBeTrue();
         string result = buffer.Slice(0, charsWritten).ToString();
-        // Should round to 5 significant digits
-        result.ShouldContain("12346"); // Rounded
+        // JsonElementHelpers uses exponential notation for large numbers with precision
+        result.ShouldBe("1.2346E+8");// Rounded
     }
 
     [TestMethod]

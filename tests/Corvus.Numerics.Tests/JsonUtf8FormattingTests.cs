@@ -100,7 +100,7 @@ public class JsonUtf8FormattingTests
     }
 
     [TestMethod]
-    public void TryFormatJsonUtf8_WithGFormat_SameAsEmpty()
+    public void TryFormatJsonUtf8_WithGFormat_DifferentThanEmpty()
     {
         BigNumber value = new BigNumber(1234, -3);
         Span<byte> buffer1 = stackalloc byte[64];
@@ -111,12 +111,16 @@ public class JsonUtf8FormattingTests
 
         success1.ShouldBeTrue();
         success2.ShouldBeTrue();
-        bytes1.ShouldBe(bytes2);
-        buffer1.Slice(0, bytes1).SequenceEqual(buffer2.Slice(0, bytes2)).ShouldBeTrue();
+        
+        // Empty format produces raw JSON format: "1234E-3"
+        StringFromSpan.CreateFromUtf8(buffer1.Slice(0, bytes1)).ShouldBe("1234E-3");
+        
+        // G format produces normalized general format: "1.234"
+        StringFromSpan.CreateFromUtf8(buffer2.Slice(0, bytes2)).ShouldBe("1.234");
     }
 
     [TestMethod]
-    public void TryFormatJsonUtf8_WithLowercaseG_SameAsEmpty()
+    public void TryFormatJsonUtf8_WithLowercaseG_DifferentThanEmpty()
     {
         BigNumber value = new BigNumber(1234, -3);
         Span<byte> buffer1 = stackalloc byte[64];
@@ -127,8 +131,12 @@ public class JsonUtf8FormattingTests
 
         success1.ShouldBeTrue();
         success2.ShouldBeTrue();
-        bytes1.ShouldBe(bytes2);
-        buffer1.Slice(0, bytes1).SequenceEqual(buffer2.Slice(0, bytes2)).ShouldBeTrue();
+        
+        // Empty format produces raw JSON format: "1234E-3"
+        StringFromSpan.CreateFromUtf8(buffer1.Slice(0, bytes1)).ShouldBe("1234E-3");
+        
+        // g format produces normalized general format with lowercase e: "1.234"
+        StringFromSpan.CreateFromUtf8(buffer2.Slice(0, bytes2)).ShouldBe("1.234");
     }
 
     [TestMethod]
