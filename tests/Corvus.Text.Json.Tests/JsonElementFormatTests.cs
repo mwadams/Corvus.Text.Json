@@ -122,6 +122,53 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(expected, mutableElement.ToString(format, formatInfo));
         }
 
+        [Theory]
+        [InlineData(0, "$0.00")] // $n
+        [InlineData(1, "0.00$")] // n$
+        [InlineData(2, "$ 0.00")] // $ n
+        [InlineData(3, "0.00 $")] // n $
+        public void CurrencyZero_AllMethods_FormatConsistently(int pattern, string expected)
+        {
+            string jsonValue = "0";
+            string format = "C2";
+            
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            using var workspace = JsonWorkspace.Create();
+            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            
+            var element = doc.RootElement;
+            var mutableElement = mutableDoc.RootElement;
+            
+            var formatInfo = new NumberFormatInfo
+            {
+                CurrencySymbol = "$",
+                CurrencyGroupSeparator = ",",
+                CurrencyDecimalSeparator = ".",
+                CurrencyPositivePattern = pattern
+            };
+
+            // Test all 6 methods
+            Span<char> charDest = stackalloc char[100];
+            element.TryFormat(charDest, out int charsWritten, format, formatInfo);
+            Assert.Equal(expected, charDest.Slice(0, charsWritten).ToString());
+
+            Span<byte> byteDest = stackalloc byte[100];
+            element.TryFormat(byteDest, out int bytesWritten, format, formatInfo);
+            Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(byteDest.Slice(0, bytesWritten)));
+
+            Assert.Equal(expected, element.ToString(format, formatInfo));
+
+            Span<char> mutableCharDest = stackalloc char[100];
+            mutableElement.TryFormat(mutableCharDest, out int mutableCharsWritten, format, formatInfo);
+            Assert.Equal(expected, mutableCharDest.Slice(0, mutableCharsWritten).ToString());
+
+            Span<byte> mutableByteDest = stackalloc byte[100];
+            mutableElement.TryFormat(mutableByteDest, out int mutableBytesWritten, format, formatInfo);
+            Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(mutableByteDest.Slice(0, mutableBytesWritten)));
+
+            Assert.Equal(expected, mutableElement.ToString(format, formatInfo));
+        }
+
         [Fact]
         public void Number_WithMultiCharSeparators_AllMethodsConsistent()
         {
