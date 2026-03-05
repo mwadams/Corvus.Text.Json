@@ -260,60 +260,6 @@ public readonly partial struct BigNumber
     }
 
     /// <summary>
-    /// Highly-optimized fast path for JSON formatting: culture-invariant 'G' format.
-    /// Produces output like: 1234E-3, 1234E2, 1234, 0, -1234E-3, -1234E2, -1234
-    /// </summary>
-    /// <param name="utf8Destination">The destination UTF-8 buffer.</param>
-    /// <param name="bytesWritten">The number of bytes written.</param>
-    /// <returns><c>true</c> if formatting succeeded; otherwise, <c>false</c>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal bool TryFormatJsonUtf8(Span<byte> utf8Destination, out int bytesWritten)
-    {
-        // Fast path: Zero
-        if (this.Significand.IsZero)
-        {
-            if (utf8Destination.Length < 1)
-            {
-                bytesWritten = 0;
-                return false;
-            }
-            utf8Destination[0] = (byte)'0';
-            bytesWritten = 1;
-            return true;
-        }
-
-        // Normalize to get canonical form
-        BigNumber normalized = this.Normalize();
-
-        // Fast path: No exponent (e.g., "1234", "-5678")
-        if (normalized.Exponent == 0)
-        {
-            return TryFormatBigIntegerUtf8(normalized.Significand, utf8Destination, out bytesWritten);
-        }
-
-        // Format significand
-        if (!TryFormatBigIntegerUtf8(normalized.Significand, utf8Destination, out int sigBytes))
-        {
-            bytesWritten = 0;
-            return false;
-        }
-
-        // Add 'E'
-        utf8Destination[sigBytes] = (byte)'E';
-        int position = sigBytes + 1;
-
-        // Format exponent
-        if (!TryFormatInt64Utf8(normalized.Exponent, utf8Destination.Slice(position), out int expBytes))
-        {
-            bytesWritten = 0;
-            return false;
-        }
-
-        bytesWritten = position + expBytes;
-        return true;
-    }
-
-    /// <summary>
     /// Formats a BigInteger to UTF-8 bytes (ASCII digits only).
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -560,23 +506,6 @@ public readonly partial struct BigNumber
     }
 
     /// <summary>
-    /// Formats a long to UTF-8 bytes (ASCII digits only).
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryFormatInt64Utf8(long value, Span<byte> destination, out int bytesWritten)
-    {
-        Span<char> charBuffer = stackalloc char[20]; // long.MinValue is 20 chars
-
-        if (!value.TryFormat(charBuffer, out int charsWritten, default, CultureInfo.InvariantCulture))
-        {
-            bytesWritten = 0;
-            return false;
-        }
-
-        return TryConvertAsciiToUtf8(charBuffer.Slice(0, charsWritten), destination, out bytesWritten);
-    }
-
-    /// <summary>
     /// Converts ASCII-only chars to UTF-8 bytes (direct copy for ASCII).
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -608,7 +537,7 @@ public readonly partial struct BigNumber
     }
     
     /// <summary>
-    /// Estimates the number of digits needed for a long.
+    /// Estimates the number of digits needed for an int.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int NumberOfDigits(int value)
@@ -634,69 +563,4 @@ public readonly partial struct BigNumber
             _ => digits + 10
         };
     }
-
-    #region UTF-16 Helper Methods
-
-    #endregion
-
-    #region UTF-8 Helper Methods
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryEncodeUtf8(ReadOnlySpan<char> source, Span<byte> destination, out int bytesWritten)
-    {
-        int requiredBytes = Encoding.UTF8.GetByteCount(source);
-        if (requiredBytes > destination.Length)
-        {
-            bytesWritten = 0;
-            return false;
-        }
-        bytesWritten = Encoding.UTF8.GetBytes(source, destination);
-        return true;
-    }
-
-    #endregion
-
-    #region Utility Methods
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryParseInt32(ReadOnlySpan<char> span, out int value)
-    {
-#if NET
-        return int.TryParse(span, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
-#else
-        return ParsingPolyfills.TryParseInt32Invariant(span, out value);
-#endif
-    }
-
-    private static BigNumber RoundToSignificantDigits(BigNumber value, int significantDigits)
-    {
-        if (value.Significand.IsZero || significantDigits <= 0)
-        {
-            return value;
-        }
-
-        BigInteger absSignificand = BigInteger.Abs(value.Significand);
-        int digits = (int)BigInteger.Log10(absSignificand) + 1;
-        if (digits <= significantDigits)
-        {
-            return value;
-        }
-
-        int digitsToRemove = digits - significantDigits;
-        BigInteger divisor = GetPowerOf10(digitsToRemove);
-        BigInteger quotient = BigInteger.DivRem(value.Significand, divisor, out BigInteger remainder);
-
-        // Round to nearest, ties to even
-        BigInteger halfDivisor = divisor / 2;
-        BigInteger absRemainder = BigInteger.Abs(remainder);
-        if (absRemainder > halfDivisor ||
-            absRemainder == halfDivisor && !quotient.IsEven)
-        {
-            quotient += value.Significand.Sign;
-        }
-
-        return new BigNumber(quotient, value.Exponent + digitsToRemove);
-    }
-
-    #endregion
 }
