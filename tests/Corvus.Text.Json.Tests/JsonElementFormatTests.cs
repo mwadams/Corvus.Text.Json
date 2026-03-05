@@ -5499,5 +5499,398 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region Hexadecimal Formatting Tests
+
+        [Theory]
+        [InlineData("0", "X", "0")]
+        [InlineData("15", "X", "F")]
+        [InlineData("255", "X", "FF")]
+        [InlineData("256", "X", "100")]
+        [InlineData("4095", "X", "FFF")]
+        [InlineData("65535", "X", "FFFF")]
+        [InlineData("1234567", "X", "12D687")]
+        [InlineData("15", "x", "f")]
+        [InlineData("255", "x", "ff")]
+        [InlineData("1234567", "x", "12d687")]
+        [InlineData("0", "X8", "00000000")]
+        [InlineData("255", "X8", "000000FF")]
+        [InlineData("255", "x8", "000000ff")]
+        // Large numbers > 64 bits
+        [InlineData("18446744073709551615", "X", "FFFFFFFFFFFFFFFF")] // 2^64 - 1
+        [InlineData("18446744073709551616", "X", "10000000000000000")] // 2^64
+        [InlineData("1427247692705959881058285969449495136382746624", "X", "40000000000000000000000000000000000000")] // ~150 bit number
+        public void Number_HexFormatChar_FormatsCorrectly(string jsonValue, string format, string expected)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+
+            Span<char> charDest = stackalloc char[256];
+            bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(success, "Hex format should succeed for integer");
+            string result = charDest.Slice(0, charsWritten).ToString();
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("0", "X", "0")]
+        [InlineData("15", "X", "F")]
+        [InlineData("255", "X", "FF")]
+        [InlineData("256", "X", "100")]
+        [InlineData("4095", "X", "FFF")]
+        [InlineData("65535", "X", "FFFF")]
+        [InlineData("1234567", "X", "12D687")]
+        [InlineData("15", "x", "f")]
+        [InlineData("255", "x", "ff")]
+        [InlineData("1234567", "x", "12d687")]
+        [InlineData("0", "X8", "00000000")]
+        [InlineData("255", "X8", "000000FF")]
+        [InlineData("255", "x8", "000000ff")]
+        // Large numbers > 64 bits
+        [InlineData("18446744073709551615", "X", "FFFFFFFFFFFFFFFF")] // 2^64 - 1
+        [InlineData("18446744073709551616", "X", "10000000000000000")] // 2^64
+        [InlineData("1427247692705959881058285969449495136382746624", "X", "40000000000000000000000000000000000000")] // ~150 bit number
+        public void Number_HexFormatUtf8_FormatsCorrectly(string jsonValue, string format, string expected)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+
+            Span<byte> byteDest = stackalloc byte[256];
+            bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(success, "Hex format should succeed for integer");
+            string result = JsonReaderHelper.TranscodeHelper(byteDest.Slice(0, bytesWritten));
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("1.5", "X")]
+        [InlineData("-15", "X")]
+        [InlineData("0.001", "X")]
+        public void Number_HexFormatChar_FailsForInvalidValues(string jsonValue, string format)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+
+            Span<char> charDest = stackalloc char[256];
+            bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
+            Assert.False(success, "Hex format should fail for non-integer or negative values");
+        }
+
+        [Theory]
+        [InlineData("1.5", "X")]
+        [InlineData("-15", "X")]
+        [InlineData("0.001", "X")]
+        public void Number_HexFormatUtf8_FailsForInvalidValues(string jsonValue, string format)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+
+            Span<byte> byteDest = stackalloc byte[256];
+            bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
+            Assert.False(success, "Hex format should fail for non-integer or negative values");
+        }
+
+        #endregion
+
+        #region Binary Formatting Tests
+
+        [Theory]
+        [InlineData("0", "B", "0")]
+        [InlineData("1", "B", "1")]
+        [InlineData("2", "B", "10")]
+        [InlineData("3", "B", "11")]
+        [InlineData("7", "B", "111")]
+        [InlineData("8", "B", "1000")]
+        [InlineData("15", "B", "1111")]
+        [InlineData("16", "B", "10000")]
+        [InlineData("255", "B", "11111111")]
+        [InlineData("256", "B", "100000000")]
+        [InlineData("1023", "B", "1111111111")]
+        [InlineData("1024", "B", "10000000000")]
+        [InlineData("0", "B8", "00000000")]
+        [InlineData("5", "B8", "00000101")]
+        [InlineData("255", "B8", "11111111")]
+        [InlineData("7", "B16", "0000000000000111")]
+        // Large numbers
+        [InlineData("65535", "B", "1111111111111111")] // 2^16 - 1
+        [InlineData("65536", "B", "10000000000000000")] // 2^16
+        [InlineData("1048575", "B", "11111111111111111111")] // 2^20 - 1
+        public void Number_BinaryFormatChar_FormatsCorrectly(string jsonValue, string format, string expected)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+
+            Span<char> charDest = stackalloc char[1024];
+            bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(success, "Binary format should succeed for integer");
+            string result = charDest.Slice(0, charsWritten).ToString();
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("0", "B", "0")]
+        [InlineData("1", "B", "1")]
+        [InlineData("2", "B", "10")]
+        [InlineData("3", "B", "11")]
+        [InlineData("7", "B", "111")]
+        [InlineData("8", "B", "1000")]
+        [InlineData("15", "B", "1111")]
+        [InlineData("16", "B", "10000")]
+        [InlineData("255", "B", "11111111")]
+        [InlineData("256", "B", "100000000")]
+        [InlineData("1023", "B", "1111111111")]
+        [InlineData("1024", "B", "10000000000")]
+        [InlineData("0", "B8", "00000000")]
+        [InlineData("5", "B8", "00000101")]
+        [InlineData("255", "B8", "11111111")]
+        [InlineData("7", "B16", "0000000000000111")]
+        // Large numbers
+        [InlineData("65535", "B", "1111111111111111")] // 2^16 - 1
+        [InlineData("65536", "B", "10000000000000000")] // 2^16
+        [InlineData("1048575", "B", "11111111111111111111")] // 2^20 - 1
+        public void Number_BinaryFormatUtf8_FormatsCorrectly(string jsonValue, string format, string expected)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+
+            Span<byte> byteDest = stackalloc byte[1024];
+            bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(success, "Binary format should succeed for integer");
+            string result = JsonReaderHelper.TranscodeHelper(byteDest.Slice(0, bytesWritten));
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("1.5", "B")]
+        [InlineData("-15", "B")]
+        [InlineData("0.001", "B")]
+        public void Number_BinaryFormatChar_FailsForInvalidValues(string jsonValue, string format)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+
+            Span<char> charDest = stackalloc char[1024];
+            bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
+            Assert.False(success, "Binary format should fail for non-integer or negative values");
+        }
+
+        [Theory]
+        [InlineData("1.5", "B")]
+        [InlineData("-15", "B")]
+        [InlineData("0.001", "B")]
+        public void Number_BinaryFormatUtf8_FailsForInvalidValues(string jsonValue, string format)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+
+            Span<byte> byteDest = stackalloc byte[1024];
+            bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
+            Assert.False(success, "Binary format should fail for non-integer or negative values");
+        }
+
+        #endregion
+
+        #region Hex and Binary Formatting - Buffer Size and Negative Number Tests
+
+        [Fact]
+        public void HexFormat_BufferTooSmall_ReturnsFalse()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("255");
+            var element = doc.RootElement;
+            
+            // Buffer too small for "FF" result
+            Span<char> charDest = stackalloc char[1];
+            bool success = element.TryFormat(charDest, out int charsWritten, "X", CultureInfo.InvariantCulture);
+            Assert.False(success);
+            Assert.Equal(0, charsWritten);
+        }
+
+        [Fact]
+        public void HexFormat_BufferTooSmall_Utf8_ReturnsFalse()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("255");
+            var element = doc.RootElement;
+            
+            // Buffer too small for "FF" result
+            Span<byte> byteDest = stackalloc byte[1];
+            bool success = element.TryFormat(byteDest, out int bytesWritten, "X", CultureInfo.InvariantCulture);
+            Assert.False(success);
+            Assert.Equal(0, bytesWritten);
+        }
+
+        [Fact]
+        public void BinaryFormat_BufferTooSmall_ReturnsFalse()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("15");
+            var element = doc.RootElement;
+            
+            // Buffer too small for "1111" result
+            Span<char> charDest = stackalloc char[3];
+            bool success = element.TryFormat(charDest, out int charsWritten, "B", CultureInfo.InvariantCulture);
+            Assert.False(success);
+            Assert.Equal(0, charsWritten);
+        }
+
+        [Fact]
+        public void BinaryFormat_BufferTooSmall_Utf8_ReturnsFalse()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("15");
+            var element = doc.RootElement;
+            
+            // Buffer too small for "1111" result
+            Span<byte> byteDest = stackalloc byte[3];
+            bool success = element.TryFormat(byteDest, out int bytesWritten, "B", CultureInfo.InvariantCulture);
+            Assert.False(success);
+            Assert.Equal(0, bytesWritten);
+        }
+
+
+
+        [Theory]
+        [InlineData("1000000000000000000000000", "X")]  // Very large number requiring ArrayPool
+        [InlineData("1000000000000000000000000", "B")]  // Very large number requiring ArrayPool
+        public void HexBinaryFormat_VeryLargeNumbers_UsesArrayPool(string jsonValue, string format)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+            
+            // Test char path - should use ArrayPool for large numbers
+            Span<char> charDest = stackalloc char[2048];
+            bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(success);
+            Assert.True(charsWritten > 0);
+            
+            // Test UTF-8 path
+            Span<byte> byteDest = stackalloc byte[2048];
+            bool successUtf8 = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(successUtf8);
+            Assert.True(bytesWritten > 0);
+        }
+
+        [Theory]
+        [InlineData("12345678901234567890", "X", "AB54A98CEB1F0AD2")]
+        [InlineData("18446744073709551615", "X", "FFFFFFFFFFFFFFFF")]  // Max ulong
+        [InlineData("340282366920938463463374607431768211455", "X", "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")]  // Max UInt128
+        public void HexFormat_LargeIntegers_FormatsCorrectly(string jsonValue, string format, string expected)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+            
+            // Test char path
+            Span<char> charDest = stackalloc char[256];
+            bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(success);
+            string result = charDest.Slice(0, charsWritten).ToString();
+            Assert.Equal(expected, result);
+            
+            // Test UTF-8 path
+            Span<byte> byteDest = stackalloc byte[256];
+            bool successUtf8 = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(successUtf8);
+            string resultUtf8 = JsonReaderHelper.TranscodeHelper(byteDest.Slice(0, bytesWritten));
+            Assert.Equal(expected, resultUtf8);
+        }
+
+        [Theory]
+        [InlineData("1023", "B", "1111111111")]
+        [InlineData("65535", "B", "1111111111111111")]  // Max ushort
+        [InlineData("4294967295", "B", "11111111111111111111111111111111")]  // Max uint
+        public void BinaryFormat_LargeIntegers_FormatsCorrectly(string jsonValue, string format, string expected)
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
+            var element = doc.RootElement;
+            
+            // Test char path
+            Span<char> charDest = stackalloc char[512];
+            bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(success);
+            string result = charDest.Slice(0, charsWritten).ToString();
+            Assert.Equal(expected, result);
+            
+            // Test UTF-8 path
+            Span<byte> byteDest = stackalloc byte[512];
+            bool successUtf8 = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
+            Assert.True(successUtf8);
+            string resultUtf8 = JsonReaderHelper.TranscodeHelper(byteDest.Slice(0, bytesWritten));
+            Assert.Equal(expected, resultUtf8);
+        }
+
+        [Fact]
+        public void HexFormat_NegativeNumber_ReturnsFalse()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("-42");
+            var element = doc.RootElement;
+
+            // Test char path
+            Span<char> charDest = stackalloc char[100];
+            bool success = element.TryFormat(charDest, out int charsWritten, "X", CultureInfo.InvariantCulture);
+            Assert.False(success);
+            Assert.Equal(0, charsWritten);
+
+            // Test UTF-8 path
+            Span<byte> byteDest = stackalloc byte[100];
+            bool successUtf8 = element.TryFormat(byteDest, out int bytesWritten, "X", CultureInfo.InvariantCulture);
+            Assert.False(successUtf8);
+            Assert.Equal(0, bytesWritten);
+        }
+
+        [Fact]
+        public void BinaryFormat_NegativeNumber_ReturnsFalse()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("-42");
+            var element = doc.RootElement;
+
+            // Test char path
+            Span<char> charDest = stackalloc char[100];
+            bool success = element.TryFormat(charDest, out int charsWritten, "B", CultureInfo.InvariantCulture);
+            Assert.False(success);
+            Assert.Equal(0, charsWritten);
+
+            // Test UTF-8 path
+            Span<byte> byteDest = stackalloc byte[100];
+            bool successUtf8 = element.TryFormat(byteDest, out int bytesWritten, "B", CultureInfo.InvariantCulture);
+            Assert.False(successUtf8);
+            Assert.Equal(0, bytesWritten);
+        }
+
+        [Fact]
+        public void HexFormat_NonInteger_ReturnsFalse()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("123.456");
+            var element = doc.RootElement;
+
+            // Test char path
+            Span<char> charDest = stackalloc char[100];
+            bool success = element.TryFormat(charDest, out int charsWritten, "X", CultureInfo.InvariantCulture);
+            Assert.False(success);
+            Assert.Equal(0, charsWritten);
+
+            // Test UTF-8 path
+            Span<byte> byteDest = stackalloc byte[100];
+            bool successUtf8 = element.TryFormat(byteDest, out int bytesWritten, "X", CultureInfo.InvariantCulture);
+            Assert.False(successUtf8);
+            Assert.Equal(0, bytesWritten);
+        }
+
+        [Fact]
+        public void BinaryFormat_NonInteger_ReturnsFalse()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("123.456");
+            var element = doc.RootElement;
+
+            // Test char path
+            Span<char> charDest = stackalloc char[100];
+            bool success = element.TryFormat(charDest, out int charsWritten, "B", CultureInfo.InvariantCulture);
+            Assert.False(success);
+            Assert.Equal(0, charsWritten);
+
+            // Test UTF-8 path
+            Span<byte> byteDest = stackalloc byte[100];
+            bool successUtf8 = element.TryFormat(byteDest, out int bytesWritten, "B", CultureInfo.InvariantCulture);
+            Assert.False(successUtf8);
+            Assert.Equal(0, bytesWritten);
+        }
+
+        #endregion
     }
 }

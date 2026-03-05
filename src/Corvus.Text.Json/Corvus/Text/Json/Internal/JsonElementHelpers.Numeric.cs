@@ -419,6 +419,8 @@ public static partial class JsonElementHelpers
             'E' => TryFormatExponential(isNegative, integral, fractional, exponent, destination, out charsWritten, precision >= 0 ? precision : 6, char.IsLower(format[0]) ? 'e' : 'E', formatInfo),
             'C' => TryFormatCurrency(isNegative, integral, fractional, exponent, destination, out charsWritten, precision >= 0 ? precision : formatInfo.CurrencyDecimalDigits, formatInfo),
             'P' => TryFormatPercent(isNegative, integral, fractional, exponent, destination, out charsWritten, precision >= 0 ? precision : formatInfo.PercentDecimalDigits, formatInfo),
+            'X' => TryFormatHexadecimal(isNegative, integral, fractional, exponent, destination, out charsWritten, precision, char.IsLower(format[0])),
+            'B' => TryFormatBinary(isNegative, integral, fractional, exponent, destination, out charsWritten, precision),
             _ => UnknownFormat(out charsWritten)
         };
     }
@@ -759,7 +761,622 @@ public static partial class JsonElementHelpers
         charsWritten = pos;
         return true;
     }
-    
+
+    internal static bool TryFormatHexadecimal(
+        bool isNegative,
+        ReadOnlySpan<byte> integral,
+        ReadOnlySpan<byte> fractional,
+        int exponent,
+        Span<char> destination,
+        out int charsWritten,
+        int precision,
+        bool lowercase)
+    {
+        // Hexadecimal format only works for non-negative integers
+        if (isNegative || exponent < 0)
+        {
+            charsWritten = 0;
+            return false;
+        }
+
+        // Convert decimal representation to hex using virtualized access
+        int totalLength = GetDecimalLength(integral, fractional, exponent);
+        return DecimalToHexVirtualized(integral, fractional, exponent, totalLength, destination, out charsWritten, precision, lowercase);
+    }
+
+    internal static bool TryFormatBinary(
+        bool isNegative,
+        ReadOnlySpan<byte> integral,
+        ReadOnlySpan<byte> fractional,
+        int exponent,
+        Span<char> destination,
+        out int charsWritten,
+        int precision)
+    {
+        // Binary format only works for non-negative integers
+        if (isNegative || exponent < 0)
+        {
+            charsWritten = 0;
+            return false;
+        }
+
+        // Convert decimal representation to binary using virtualized access
+        int totalLength = GetDecimalLength(integral, fractional, exponent);
+        return DecimalToBinaryVirtualized(integral, fractional, exponent, totalLength, destination, out charsWritten, precision);
+    }
+
+    private static bool DecimalToHexVirtualized(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, int totalLength, Span<char> destination, out int charsWritten, int precision, bool lowercase)
+    {
+        // Handle zero
+        if (totalLength == 0 || (totalLength == 1 && GetDecimalDigitAtPosition(integral, fractional, exponent, 0) == (byte)'0'))
+        {
+            int requiredLength = precision > 0 ? precision : 1;
+            if (destination.Length < requiredLength)
+            {
+                charsWritten = 0;
+                return false;
+            }
+            
+            destination[0] = '0';
+            for (int i = 1; i < requiredLength; i++)
+            {
+                destination[i] = '0';
+            }
+            charsWritten = requiredLength;
+            return true;
+        }
+
+        // Optimize: trailing zeros from positive exponent can be handled separately
+        // Each trailing zero represents a factor of 10, which needs processing
+        int significandLength = integral.Length + fractional.Length;
+        int trailingZeros = exponent > 0 ? exponent : 0;
+        
+        // Working buffer needed for repeated division algorithm - stores intermediate quotients
+        // that shrink with each division step. Only allocate for the significand digits.
+        byte[]? rentedWorkingBuffer = null;
+        Span<byte> workingDigits = significandLength <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[significandLength]
+            : (rentedWorkingBuffer = ArrayPool<byte>.Shared.Rent(significandLength)).AsSpan(0, significandLength);
+        
+        try
+        {
+            // Initialize working buffer from significand only (skip virtual trailing zeros)
+            for (int i = 0; i < significandLength; i++)
+            {
+                workingDigits[i] = (byte)(GetDigitAtPosition(integral, fractional, i) - (byte)'0');
+            }
+
+            // Generate hex digits directly in reverse order at the end of destination buffer
+            // We'll shift them down to the beginning once we know the final count
+            int writePos = destination.Length - 1;
+            int digitCount = significandLength;
+            int remainingTrailingZeros = trailingZeros;
+            int hexDigitsGenerated = 0;
+
+            // Repeatedly divide by 16 and write hex digits from right to left
+            while (digitCount > 0 || remainingTrailingZeros > 0)
+            {
+                // Check if we're done
+                if (digitCount == 0)
+                {
+                    break;
+                }
+                if (digitCount == 1 && workingDigits[0] == 0 && remainingTrailingZeros == 0)
+                {
+                    break;
+                }
+                
+                int remainder = 0;
+                int newDigitCount = 0;
+                
+                for (int i = 0; i < digitCount; i++)
+                {
+                    int current = remainder * 10 + workingDigits[i];
+                    int quotient = current / 16;
+                    remainder = current % 16;
+                    
+                    if (quotient > 0 || newDigitCount > 0)
+                    {
+                        workingDigits[newDigitCount++] = (byte)quotient;
+                    }
+                }
+                
+                // Process trailing zeros
+                if (remainingTrailingZeros > 0)
+                {
+                    remainder = remainder * 10;
+                    int quotient = remainder / 16;
+                    if (quotient > 0 || newDigitCount > 0)
+                    {
+                        workingDigits[newDigitCount++] = (byte)quotient;
+                    }
+                    remainingTrailingZeros--;
+                }
+                
+                // Convert remainder to hex digit and write directly at end of buffer
+                remainder = remainder % 16;
+                char hexDigit = remainder < 10 
+                    ? (char)('0' + remainder)
+                    : (lowercase ? (char)('a' + (remainder - 10)) : (char)('A' + (remainder - 10)));
+                    
+                if (writePos < 0)
+                {
+                    charsWritten = 0;
+                    return false;
+                }
+                    
+                destination[writePos--] = hexDigit;
+                hexDigitsGenerated++;
+                digitCount = newDigitCount;
+            }
+
+            // Calculate final output length with precision
+            int outputLength = Math.Max(hexDigitsGenerated, precision > 0 ? precision : hexDigitsGenerated);
+            if (outputLength > destination.Length)
+            {
+                charsWritten = 0;
+                return false;
+            }
+
+            // Shift generated hex digits to the beginning and add leading zeros
+            int sourceStart = destination.Length - hexDigitsGenerated;
+            int leadingZeros = outputLength - hexDigitsGenerated;
+            
+            // Move generated digits to their final position
+            if (leadingZeros > 0)
+            {
+                // Copy from right to left position
+                destination.Slice(sourceStart, hexDigitsGenerated).CopyTo(destination.Slice(leadingZeros));
+                // Fill leading zeros
+                for (int i = 0; i < leadingZeros; i++)
+                {
+                    destination[i] = '0';
+                }
+            }
+            else if (sourceStart > 0)
+            {
+                // No leading zeros, just move to start
+                destination.Slice(sourceStart, hexDigitsGenerated).CopyTo(destination);
+            }
+
+            charsWritten = outputLength;
+            return true;
+        }
+        finally
+        {
+            if (rentedWorkingBuffer is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedWorkingBuffer);
+            }
+        }
+    }
+
+    private static bool DecimalToBinaryVirtualized(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, int totalLength, Span<char> destination, out int charsWritten, int precision)
+    {
+        // Handle zero
+        if (totalLength == 0 || (totalLength == 1 && GetDecimalDigitAtPosition(integral, fractional, exponent, 0) == (byte)'0'))
+        {
+            int requiredLength = precision > 0 ? precision : 1;
+            if (destination.Length < requiredLength)
+            {
+                charsWritten = 0;
+                return false;
+            }
+            
+            destination[0] = '0';
+            for (int i = 1; i < requiredLength; i++)
+            {
+                destination[i] = '0';
+            }
+            charsWritten = requiredLength;
+            return true;
+        }
+
+        // Optimize: trailing zeros from positive exponent can be handled separately
+        int significandLength = integral.Length + fractional.Length;
+        int trailingZeros = exponent > 0 ? exponent : 0;
+        
+        // Working buffer needed for repeated division algorithm - stores intermediate quotients
+        // that shrink with each division step. Only allocate for the significand digits.
+        byte[]? rentedWorkingBuffer = null;
+        Span<byte> workingDigits = significandLength <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[significandLength]
+            : (rentedWorkingBuffer = ArrayPool<byte>.Shared.Rent(significandLength)).AsSpan(0, significandLength);
+        
+        try
+        {
+            // Initialize working buffer from significand only (skip virtual trailing zeros)
+            for (int i = 0; i < significandLength; i++)
+            {
+                workingDigits[i] = (byte)(GetDigitAtPosition(integral, fractional, i) - (byte)'0');
+            }
+
+            // Generate binary digits directly in reverse order at the end of destination buffer
+            // We'll shift them down to the beginning once we know the final count
+            int writePos = destination.Length - 1;
+            int digitCount = significandLength;
+            int remainingTrailingZeros = trailingZeros;
+            int binaryDigitsGenerated = 0;
+
+            // Repeatedly divide by 2 and write binary digits from right to left
+            while (digitCount > 0 || remainingTrailingZeros > 0)
+            {
+                // Check if we're done
+                if (digitCount == 0)
+                {
+                    break;
+                }
+                if (digitCount == 1 && workingDigits[0] == 0 && remainingTrailingZeros == 0)
+                {
+                    break;
+                }
+                
+                int remainder = 0;
+                int newDigitCount = 0;
+                
+                for (int i = 0; i < digitCount; i++)
+                {
+                    int current = remainder * 10 + workingDigits[i];
+                    int quotient = current / 2;
+                    remainder = current % 2;
+                    
+                    if (quotient > 0 || newDigitCount > 0)
+                    {
+                        workingDigits[newDigitCount++] = (byte)quotient;
+                    }
+                }
+                
+                // Process trailing zeros
+                if (remainingTrailingZeros > 0)
+                {
+                    remainder = remainder * 10;
+                    int quotient = remainder / 2;
+                    remainder = remainder % 2;
+                    if (quotient > 0 || newDigitCount > 0)
+                    {
+                        if (newDigitCount < workingDigits.Length)
+                        {
+                            workingDigits[newDigitCount++] = (byte)quotient;
+                        }
+                    }
+                    remainingTrailingZeros--;
+                }
+                else
+                {
+                    remainder = remainder % 2;
+                }
+                
+                // Write binary digit directly at end of buffer
+                if (writePos < 0)
+                {
+                    charsWritten = 0;
+                    return false;
+                }
+                destination[writePos--] = (char)('0' + remainder);
+                binaryDigitsGenerated++;
+                digitCount = newDigitCount;
+            }
+
+            // Calculate final output length with precision
+            int outputLength = Math.Max(binaryDigitsGenerated, precision > 0 ? precision : binaryDigitsGenerated);
+            if (outputLength > destination.Length)
+            {
+                charsWritten = 0;
+                return false;
+            }
+
+            // Shift generated binary digits to the beginning and add leading zeros
+            int sourceStart = destination.Length - binaryDigitsGenerated;
+            int leadingZeros = outputLength - binaryDigitsGenerated;
+            
+            // Move generated digits to their final position
+            if (leadingZeros > 0)
+            {
+                // Copy from right to left position
+                destination.Slice(sourceStart, binaryDigitsGenerated).CopyTo(destination.Slice(leadingZeros));
+                // Fill leading zeros
+                for (int i = 0; i < leadingZeros; i++)
+                {
+                    destination[i] = '0';
+                }
+            }
+            else if (sourceStart > 0)
+            {
+                // No leading zeros, just move to start
+                destination.Slice(sourceStart, binaryDigitsGenerated).CopyTo(destination);
+            }
+
+            charsWritten = outputLength;
+            return true;
+        }
+        finally
+        {
+            if (rentedWorkingBuffer is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedWorkingBuffer);
+            }
+        }
+    }
+
+    private static bool DecimalToHexVirtualizedUtf8(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, int totalLength, Span<byte> destination, out int bytesWritten, int precision, bool lowercase)
+    {
+        // Handle zero
+        if (totalLength == 0 || (totalLength == 1 && GetDecimalDigitAtPosition(integral, fractional, exponent, 0) == (byte)'0'))
+        {
+            int requiredLength = precision > 0 ? precision : 1;
+            if (destination.Length < requiredLength)
+            {
+                bytesWritten = 0;
+                return false;
+            }
+            
+            destination[0] = (byte)'0';
+            for (int i = 1; i < requiredLength; i++)
+            {
+                destination[i] = (byte)'0';
+            }
+            bytesWritten = requiredLength;
+            return true;
+        }
+
+        // Optimize: trailing zeros from positive exponent can be handled separately
+        int significandLength = integral.Length + fractional.Length;
+        int trailingZeros = exponent > 0 ? exponent : 0;
+        
+        // Working buffer needed for repeated division algorithm - stores intermediate quotients
+        byte[]? rentedWorkingBuffer = null;
+        Span<byte> workingDigits = significandLength <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[significandLength]
+            : (rentedWorkingBuffer = ArrayPool<byte>.Shared.Rent(significandLength)).AsSpan(0, significandLength);
+        
+        try
+        {
+            // Initialize working buffer from significand only
+            for (int i = 0; i < significandLength; i++)
+            {
+                workingDigits[i] = (byte)(GetDigitAtPosition(integral, fractional, i) - (byte)'0');
+            }
+
+            // Generate hex digits directly in reverse order at the end of destination buffer
+            int writePos = destination.Length - 1;
+            int digitCount = significandLength;
+            int remainingTrailingZeros = trailingZeros;
+            int hexDigitsGenerated = 0;
+
+            // Repeatedly divide by 16 and write hex digits from right to left
+            while (digitCount > 0 || remainingTrailingZeros > 0)
+            {
+                if (digitCount == 0)
+                {
+                    break;
+                }
+                if (digitCount == 1 && workingDigits[0] == 0 && remainingTrailingZeros == 0)
+                {
+                    break;
+                }
+                
+                int remainder = 0;
+                int newDigitCount = 0;
+                
+                for (int i = 0; i < digitCount; i++)
+                {
+                    int current = remainder * 10 + workingDigits[i];
+                    int quotient = current / 16;
+                    remainder = current % 16;
+                    
+                    if (quotient > 0 || newDigitCount > 0)
+                    {
+                        workingDigits[newDigitCount++] = (byte)quotient;
+                    }
+                }
+                
+                // Process trailing zeros
+                if (remainingTrailingZeros > 0)
+                {
+                    remainder = remainder * 10;
+                    int quotient = remainder / 16;
+                    if (quotient > 0 || newDigitCount > 0)
+                    {
+                        workingDigits[newDigitCount++] = (byte)quotient;
+                    }
+                    remainingTrailingZeros--;
+                }
+                
+                // Convert remainder to hex digit
+                remainder = remainder % 16;
+                byte hexDigit = remainder < 10 
+                    ? (byte)('0' + remainder)
+                    : (lowercase ? (byte)('a' + (remainder - 10)) : (byte)('A' + (remainder - 10)));
+                    
+                if (writePos < 0)
+                {
+                    bytesWritten = 0;
+                    return false;
+                }
+                    
+                destination[writePos--] = hexDigit;
+                hexDigitsGenerated++;
+                digitCount = newDigitCount;
+            }
+
+            // Calculate final output length with precision
+            int outputLength = Math.Max(hexDigitsGenerated, precision > 0 ? precision : hexDigitsGenerated);
+            if (outputLength > destination.Length)
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            // Shift generated hex digits to the beginning and add leading zeros
+            int sourceStart = destination.Length - hexDigitsGenerated;
+            int leadingZeros = outputLength - hexDigitsGenerated;
+            
+            // Move generated digits to their final position
+            if (leadingZeros > 0)
+            {
+                destination.Slice(sourceStart, hexDigitsGenerated).CopyTo(destination.Slice(leadingZeros));
+                for (int i = 0; i < leadingZeros; i++)
+                {
+                    destination[i] = (byte)'0';
+                }
+            }
+            else if (sourceStart > 0)
+            {
+                destination.Slice(sourceStart, hexDigitsGenerated).CopyTo(destination);
+            }
+
+            bytesWritten = outputLength;
+            return true;
+        }
+        finally
+        {
+            if (rentedWorkingBuffer is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedWorkingBuffer);
+            }
+        }
+    }
+
+    private static bool DecimalToBinaryVirtualizedUtf8(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, int totalLength, Span<byte> destination, out int bytesWritten, int precision)
+    {
+        // Handle zero
+        if (totalLength == 0 || (totalLength == 1 && GetDecimalDigitAtPosition(integral, fractional, exponent, 0) == (byte)'0'))
+        {
+            int requiredLength = precision > 0 ? precision : 1;
+            if (destination.Length < requiredLength)
+            {
+                bytesWritten = 0;
+                return false;
+            }
+            
+            destination[0] = (byte)'0';
+            for (int i = 1; i < requiredLength; i++)
+            {
+                destination[i] = (byte)'0';
+            }
+            bytesWritten = requiredLength;
+            return true;
+        }
+
+        // Optimize: trailing zeros from positive exponent can be handled separately
+        int significandLength = integral.Length + fractional.Length;
+        int trailingZeros = exponent > 0 ? exponent : 0;
+        
+        // Working buffer needed for repeated division algorithm
+        byte[]? rentedWorkingBuffer = null;
+        Span<byte> workingDigits = significandLength <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[significandLength]
+            : (rentedWorkingBuffer = ArrayPool<byte>.Shared.Rent(significandLength)).AsSpan(0, significandLength);
+        
+        try
+        {
+            // Initialize working buffer from significand only
+            for (int i = 0; i < significandLength; i++)
+            {
+                workingDigits[i] = (byte)(GetDigitAtPosition(integral, fractional, i) - (byte)'0');
+            }
+
+            // Generate binary digits directly in reverse order at the end of destination buffer
+            int writePos = destination.Length - 1;
+            int digitCount = significandLength;
+            int remainingTrailingZeros = trailingZeros;
+            int binaryDigitsGenerated = 0;
+
+            // Repeatedly divide by 2 and write binary digits from right to left
+            while (digitCount > 0 || remainingTrailingZeros > 0)
+            {
+                if (digitCount == 0)
+                {
+                    break;
+                }
+                if (digitCount == 1 && workingDigits[0] == 0 && remainingTrailingZeros == 0)
+                {
+                    break;
+                }
+                
+                int remainder = 0;
+                int newDigitCount = 0;
+                
+                for (int i = 0; i < digitCount; i++)
+                {
+                    int current = remainder * 10 + workingDigits[i];
+                    int quotient = current / 2;
+                    remainder = current % 2;
+                    
+                    if (quotient > 0 || newDigitCount > 0)
+                    {
+                        workingDigits[newDigitCount++] = (byte)quotient;
+                    }
+                }
+                
+                // Process trailing zeros
+                if (remainingTrailingZeros > 0)
+                {
+                    remainder = remainder * 10;
+                    int quotient = remainder / 2;
+                    remainder = remainder % 2;
+                    if (quotient > 0 || newDigitCount > 0)
+                    {
+                        if (newDigitCount < workingDigits.Length)
+                        {
+                            workingDigits[newDigitCount++] = (byte)quotient;
+                        }
+                    }
+                    remainingTrailingZeros--;
+                }
+                else
+                {
+                    remainder = remainder % 2;
+                }
+                
+                // Write binary digit
+                if (writePos < 0)
+                {
+                    bytesWritten = 0;
+                    return false;
+                }
+                destination[writePos--] = (byte)('0' + remainder);
+                binaryDigitsGenerated++;
+                digitCount = newDigitCount;
+            }
+
+            // Calculate final output length with precision
+            int outputLength = Math.Max(binaryDigitsGenerated, precision > 0 ? precision : binaryDigitsGenerated);
+            if (outputLength > destination.Length)
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            // Shift generated binary digits to the beginning and add leading zeros
+            int sourceStart = destination.Length - binaryDigitsGenerated;
+            int leadingZeros = outputLength - binaryDigitsGenerated;
+            
+            // Move generated digits to their final position
+            if (leadingZeros > 0)
+            {
+                destination.Slice(sourceStart, binaryDigitsGenerated).CopyTo(destination.Slice(leadingZeros));
+                for (int i = 0; i < leadingZeros; i++)
+                {
+                    destination[i] = (byte)'0';
+                }
+            }
+            else if (sourceStart > 0)
+            {
+                destination.Slice(sourceStart, binaryDigitsGenerated).CopyTo(destination);
+            }
+
+            bytesWritten = outputLength;
+            return true;
+        }
+        finally
+        {
+            if (rentedWorkingBuffer is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedWorkingBuffer);
+            }
+        }
+    }
 
     internal static bool TryFormatCurrency(
         bool isNegative,
@@ -2519,6 +3136,8 @@ public static partial class JsonElementHelpers
             'E' => TryFormatZeroExponential(destination, out charsWritten, precision >= 0 ? precision : 6, format[0], formatInfo),
             'C' => TryFormatZeroCurrency(destination, out charsWritten, precision >= 0 ? precision : formatInfo.CurrencyDecimalDigits, formatInfo),
             'P' => TryFormatZeroPercent(destination, out charsWritten, precision >= 0 ? precision : formatInfo.PercentDecimalDigits, formatInfo),
+            'X' => TryFormatZeroHexOrBinary(destination, out charsWritten, precision),
+            'B' => TryFormatZeroHexOrBinary(destination, out charsWritten, precision),
             _ => WriteChar(destination, out charsWritten, '0'),
         };
     }
@@ -2681,6 +3300,24 @@ public static partial class JsonElementHelpers
 
         destination[tempChars] = ' ';
         formatInfo.PercentSymbol.AsSpan().CopyTo(destination.Slice(tempChars + 1));
+
+        charsWritten = requiredLength;
+        return true;
+    }
+
+    private static bool TryFormatZeroHexOrBinary(Span<char> destination, out int charsWritten, int precision)
+    {
+        int requiredLength = precision > 0 ? precision : 1;
+        if (destination.Length < requiredLength)
+        {
+            charsWritten = 0;
+            return false;
+        }
+
+        for (int i = 0; i < requiredLength; i++)
+        {
+            destination[i] = '0';
+        }
 
         charsWritten = requiredLength;
         return true;
@@ -2953,6 +3590,8 @@ public static partial class JsonElementHelpers
             'E' => TryFormatExponential(isNegative, integral, fractional, exponent, destination, out bytesWritten, precision >= 0 ? precision : 6, char.IsLower(format[0]) ? 'e' : 'E', formatInfo),
             'C' => TryFormatCurrency(isNegative, integral, fractional, exponent, destination, out bytesWritten, precision >= 0 ? precision : formatInfo.CurrencyDecimalDigits, formatInfo),
             'P' => TryFormatPercent(isNegative, integral, fractional, exponent, destination, out bytesWritten, precision >= 0 ? precision : formatInfo.PercentDecimalDigits, formatInfo),
+            'X' => TryFormatHexadecimal(isNegative, integral, fractional, exponent, destination, out bytesWritten, precision, char.IsLower(format[0])),
+            'B' => TryFormatBinary(isNegative, integral, fractional, exponent, destination, out bytesWritten, precision),
             _ => UnknownFormat(out bytesWritten)
         };
     }
@@ -3437,6 +4076,49 @@ public static partial class JsonElementHelpers
 
         bytesWritten = pos;
         return true;
+    }
+
+    internal static bool TryFormatHexadecimal(
+        bool isNegative,
+        ReadOnlySpan<byte> integral,
+        ReadOnlySpan<byte> fractional,
+        int exponent,
+        Span<byte> destination,
+        out int bytesWritten,
+        int precision,
+        bool lowercase)
+    {
+        // Hexadecimal format only works for non-negative integers
+        if (isNegative || exponent < 0)
+        {
+            bytesWritten = 0;
+            return false;
+        }
+
+        // Convert decimal representation to hex using virtualized access
+        int totalLength = GetDecimalLength(integral, fractional, exponent);
+        return DecimalToHexVirtualizedUtf8(integral, fractional, exponent, totalLength, destination, out bytesWritten, precision, lowercase);
+    }
+
+    internal static bool TryFormatBinary(
+        bool isNegative,
+        ReadOnlySpan<byte> integral,
+        ReadOnlySpan<byte> fractional,
+        int exponent,
+        Span<byte> destination,
+        out int bytesWritten,
+        int precision)
+    {
+        // Binary format only works for non-negative integers
+        if (isNegative || exponent < 0)
+        {
+            bytesWritten = 0;
+            return false;
+        }
+
+        // Convert decimal representation to binary using virtualized access
+        int totalLength = GetDecimalLength(integral, fractional, exponent);
+        return DecimalToBinaryVirtualizedUtf8(integral, fractional, exponent, totalLength, destination, out bytesWritten, precision);
     }
 
 
@@ -5487,6 +6169,8 @@ public static partial class JsonElementHelpers
             'E' => TryFormatZeroExponential(destination, out bytesWritten, precision >= 0 ? precision : 6, format[0], formatInfo),
             'C' => TryFormatZeroCurrency(destination, out bytesWritten, precision >= 0 ? precision : formatInfo.CurrencyDecimalDigits, formatInfo),
             'P' => TryFormatZeroPercent(destination, out bytesWritten, precision >= 0 ? precision : formatInfo.PercentDecimalDigits, formatInfo),
+            'X' => TryFormatZeroHexOrBinary(destination, out bytesWritten, precision),
+            'B' => TryFormatZeroHexOrBinary(destination, out bytesWritten, precision),
             _ => WriteByte(destination, out bytesWritten, (byte)'0'),
         };
     }
@@ -5680,6 +6364,24 @@ public static partial class JsonElementHelpers
         JsonReaderHelper.TryGetUtf8FromText(formatInfo.PercentSymbol, destination.Slice(pos), out int written);
 
         bytesWritten = pos + written;
+        return true;
+    }
+
+    private static bool TryFormatZeroHexOrBinary(Span<byte> destination, out int bytesWritten, int precision)
+    {
+        int requiredLength = precision > 0 ? precision : 1;
+        if (destination.Length < requiredLength)
+        {
+            bytesWritten = 0;
+            return false;
+        }
+
+        for (int i = 0; i < requiredLength; i++)
+        {
+            destination[i] = (byte)'0';
+        }
+
+        bytesWritten = requiredLength;
         return true;
     }
 

@@ -374,4 +374,48 @@ public static partial class JsonElementHelpers
             return fractionalIndex >= 0 && fractionalIndex < fractional.Length ? fractional[fractionalIndex] : (byte)'0';
         }
     }
+
+    /// <summary>
+    /// Gets the decimal digit at a position in the complete decimal representation,
+    /// accounting for the exponent without materializing trailing zeros.
+    /// </summary>
+    /// <param name="integral">The integral digits.</param>
+    /// <param name="fractional">The fractional digits.</param>
+    /// <param name="exponent">The exponent.</param>
+    /// <param name="position">The position in the complete decimal representation.</param>
+    /// <returns>The digit at the position, or '0' if beyond the significant digits.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static byte GetDecimalDigitAtPosition(
+        ReadOnlySpan<byte> integral,
+        ReadOnlySpan<byte> fractional,
+        int exponent,
+        int position)
+    {
+        int significandLength = integral.Length + fractional.Length;
+        
+        // If position is within the significand, get it from integral/fractional
+        if (position < significandLength)
+        {
+            return GetDigitAtPosition(integral, fractional, position);
+        }
+        
+        // If position is in the trailing zeros added by positive exponent
+        if (exponent > 0 && position < significandLength + exponent)
+        {
+            return (byte)'0';
+        }
+        
+        // Beyond the decimal representation
+        return (byte)'0';
+    }
+
+    /// <summary>
+    /// Gets the total length of the decimal representation including exponent.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int GetDecimalLength(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent)
+    {
+        int significandLength = integral.Length + fractional.Length;
+        return exponent >= 0 ? significandLength + exponent : significandLength;
+    }
 }
