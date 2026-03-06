@@ -727,6 +727,357 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
         }
     }
 
+    public bool AppendFormatToStringAndTryFormatOverrides(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, bool forMutable)
+    {
+        switch (format)
+        {
+            case "date":
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.DateOnly.ToString(string?, IFormatProvider?)"/>, which accepts
+                        /// standard .NET date format strings (e.g. <c>"d"</c>, <c>"D"</c>, <c>"o"</c>).
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <c>NodaTime.LocalDate.ToString</c>, which uses NodaTime pattern syntax
+                        /// (e.g. <c>"uuuu-MM-dd"</c>, <c>"d MMMM uuuu"</c>).
+                        /// </para>
+                        /// <para>
+                        /// When <paramref name="format"/> is <see langword="null"/> or empty, the canonical
+                        /// JSON string representation is returned on all target frameworks.
+                        /// </para>
+                        /// </remarks>
+                        public string ToString(string? format, IFormatProvider? formatProvider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!string.IsNullOrEmpty(format) && _parent.TryGetValue(_idx, out global::System.DateOnly value))
+                                return value.ToString(format, formatProvider);
+                        #else
+                            if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.LocalDate value))
+                                return value.ToString(format, formatProvider);
+                        #endif
+                            return _parent.ToString(_idx, format, formatProvider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.DateOnly.TryFormat(Span{char}, out int, ReadOnlySpan{char}, IFormatProvider?)"/>,
+                        /// which accepts standard .NET date format strings (e.g. <c>"d"</c>, <c>"D"</c>, <c>"o"</c>).
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, or when <paramref name="format"/> is empty, the canonical
+                        /// JSON string representation is written instead.
+                        /// </para>
+                        /// </remarks>
+                        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.DateOnly value))
+                                return value.TryFormat(destination, out charsWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.DateOnly.TryFormat(Span{byte}, out int, ReadOnlySpan{char}, IFormatProvider?)"/>,
+                        /// which accepts standard .NET date format strings and writes UTF-8 encoded output.
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, or when <paramref name="format"/> is empty, the canonical
+                        /// JSON string representation is written as UTF-8 instead.
+                        /// </para>
+                        /// </remarks>
+                        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.DateOnly value))
+                                return value.TryFormat(utf8Destination, out bytesWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                        }
+                        """);
+                return true;
+
+            case "date-time":
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.DateTimeOffset.ToString(string?, IFormatProvider?)"/>, which accepts
+                        /// standard .NET date-time format strings (e.g. <c>"G"</c>, <c>"o"</c>, <c>"r"</c>).
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <c>NodaTime.OffsetDateTime.ToString</c>, which uses NodaTime pattern syntax
+                        /// (e.g. <c>"uuuu'/'MM'/'dd HH:mm:ss"</c>).
+                        /// </para>
+                        /// <para>
+                        /// When <paramref name="format"/> is <see langword="null"/> or empty, the canonical
+                        /// JSON string representation is returned on all target frameworks.
+                        /// </para>
+                        /// </remarks>
+                        public string ToString(string? format, IFormatProvider? formatProvider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!string.IsNullOrEmpty(format) && _parent.TryGetValue(_idx, out global::System.DateTimeOffset value))
+                                return value.ToString(format, formatProvider);
+                        #else
+                            if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.OffsetDateTime value))
+                                return value.ToString(format, formatProvider);
+                        #endif
+                            return _parent.ToString(_idx, format, formatProvider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.DateTimeOffset.TryFormat(Span{char}, out int, ReadOnlySpan{char}, IFormatProvider?)"/>,
+                        /// which accepts standard .NET date-time format strings (e.g. <c>"G"</c>, <c>"o"</c>, <c>"r"</c>).
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, or when <paramref name="format"/> is empty, the canonical
+                        /// JSON string representation is written instead.
+                        /// </para>
+                        /// </remarks>
+                        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.DateTimeOffset value))
+                                return value.TryFormat(destination, out charsWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.DateTimeOffset.TryFormat(Span{byte}, out int, ReadOnlySpan{char}, IFormatProvider?)"/>,
+                        /// which accepts standard .NET date-time format strings and writes UTF-8 encoded output.
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, or when <paramref name="format"/> is empty, the canonical
+                        /// JSON string representation is written as UTF-8 instead.
+                        /// </para>
+                        /// </remarks>
+                        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.DateTimeOffset value))
+                                return value.TryFormat(utf8Destination, out bytesWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                        }
+                        """);
+                return true;
+
+            case "time":
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.TimeOnly.ToString(string?, IFormatProvider?)"/>, which accepts
+                        /// standard .NET time format strings (e.g. <c>"t"</c>, <c>"T"</c>, <c>"o"</c>).
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <c>NodaTime.OffsetTime.ToString</c>, which uses NodaTime pattern syntax
+                        /// (e.g. <c>"HH:mm:ss"</c>, <c>"HH'.'mm'.'ss"</c>).
+                        /// </para>
+                        /// <para>
+                        /// When <paramref name="format"/> is <see langword="null"/> or empty, the canonical
+                        /// JSON string representation is returned on all target frameworks.
+                        /// </para>
+                        /// </remarks>
+                        public string ToString(string? format, IFormatProvider? formatProvider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!string.IsNullOrEmpty(format) && _parent.TryGetValue(_idx, out global::System.TimeOnly value))
+                                return value.ToString(format, formatProvider);
+                        #else
+                            if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.OffsetTime value))
+                                return value.ToString(format, formatProvider);
+                        #endif
+                            return _parent.ToString(_idx, format, formatProvider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.TimeOnly.TryFormat(Span{char}, out int, ReadOnlySpan{char}, IFormatProvider?)"/>,
+                        /// which accepts standard .NET time format strings (e.g. <c>"t"</c>, <c>"T"</c>, <c>"o"</c>).
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, or when <paramref name="format"/> is empty, the canonical
+                        /// JSON string representation is written instead.
+                        /// </para>
+                        /// </remarks>
+                        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.TimeOnly value))
+                                return value.TryFormat(destination, out charsWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.TimeOnly.TryFormat(Span{byte}, out int, ReadOnlySpan{char}, IFormatProvider?)"/>,
+                        /// which accepts standard .NET time format strings and writes UTF-8 encoded output.
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, or when <paramref name="format"/> is empty, the canonical
+                        /// JSON string representation is written as UTF-8 instead.
+                        /// </para>
+                        /// </remarks>
+                        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.TimeOnly value))
+                                return value.TryFormat(utf8Destination, out bytesWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                        }
+                        """);
+                return true;
+
+            case "duration":
+                return false;
+
+            case "uuid":
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// When a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.Guid.ToString(string?, IFormatProvider?)"/>, which accepts
+                        /// standard .NET GUID format strings (<c>"D"</c>, <c>"N"</c>, <c>"B"</c>, <c>"P"</c>, <c>"X"</c>).
+                        /// This behaviour is identical on all target frameworks.
+                        /// </para>
+                        /// <para>
+                        /// When <paramref name="format"/> is <see langword="null"/> or empty, the canonical
+                        /// JSON string representation is returned.
+                        /// </para>
+                        /// </remarks>
+                        public string ToString(string? format, IFormatProvider? formatProvider)
+                        {
+                            CheckValidInstance();
+                            if (!string.IsNullOrEmpty(format) && TryGetValue(out Guid value))
+                                return value.ToString(format, formatProvider);
+                            return _parent.ToString(_idx, format, formatProvider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.Guid.TryFormat(Span{char}, out int, ReadOnlySpan{char})"/>,
+                        /// which accepts standard .NET GUID format strings (<c>"D"</c>, <c>"N"</c>, <c>"B"</c>, <c>"P"</c>, <c>"X"</c>).
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, or when <paramref name="format"/> is empty, the canonical
+                        /// JSON string representation is written instead.
+                        /// </para>
+                        /// </remarks>
+                        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && TryGetValue(out Guid value))
+                                return value.TryFormat(destination, out charsWritten, format);
+                        #endif
+                            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        /// <remarks>
+                        /// <para>
+                        /// On .NET, when a non-empty <paramref name="format"/> is provided, this delegates to
+                        /// <see cref="System.Guid.TryFormat(Span{byte}, out int, ReadOnlySpan{char})"/>,
+                        /// which accepts standard .NET GUID format strings and writes UTF-8 encoded output.
+                        /// </para>
+                        /// <para>
+                        /// On netstandard2.0, or when <paramref name="format"/> is empty, the canonical
+                        /// JSON string representation is written as UTF-8 instead.
+                        /// </para>
+                        /// </remarks>
+                        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && TryGetValue(out Guid value))
+                                return value.TryFormat(utf8Destination, out bytesWritten, format);
+                        #endif
+                            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                        }
+                        """);
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
     private static bool HandlesFormat(string format)
     {
         return format switch

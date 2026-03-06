@@ -390,6 +390,22 @@ public interface IJsonDocument : IDisposable
     /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
     bool TryGetValue(int index, out Half value);
 
+    /// <summary>
+    /// Tries to get the value of the element at the specified index as a <see cref="DateOnly"/>.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="value">The <see cref="DateOnly"/> value.</param>
+    /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
+    bool TryGetValue(int index, out DateOnly value);
+
+    /// <summary>
+    /// Tries to get the value of the element at the specified index as a <see cref="TimeOnly"/>.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="value">The <see cref="TimeOnly"/> value.</param>
+    /// <returns><c>true</c> if the value was retrieved; otherwise, <c>false</c>.</returns>
+    bool TryGetValue(int index, out TimeOnly value);
+
 #endif
 
     /// <summary>

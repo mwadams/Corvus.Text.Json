@@ -90,7 +90,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendObjectPropertySetters(typeDeclaration)
                             .AppendApplyObjectCompositionTypes(typeDeclaration)
                             .AppendWriteToMethod()
-                            .AppendGetHashCodeAndToStringMethods(forMutable: true)
+                            .AppendGetHashCodeAndToStringMethods(typeDeclaration, forMutable: true)
                             .AppendEvaluateSchemaMethod()
                             .AppendCheckValidInstance(forMutable: true)
                             .AppendCreateInstance(typeDeclaration, forMutable: true)
