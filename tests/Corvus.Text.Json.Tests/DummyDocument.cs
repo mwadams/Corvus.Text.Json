@@ -179,6 +179,12 @@ internal class DummyDocument : IJsonDocument
 
 #if NET
 
+    public bool TryGetValue(int index, out DateOnly value)
+    { value = default; return false; }
+
+    public bool TryGetValue(int index, out TimeOnly value)
+    { value = default; return false; }
+
     public bool TryGetValue(int index, out Int128 value)
     { value = default; return false; }
 
@@ -251,6 +257,10 @@ internal class DummyDocument : IJsonDocument
     bool IJsonDocument.TryGetValue(int index, out LocalDate value) => throw new NotImplementedException();
     bool IJsonDocument.TryGetValue(int index, out Period value) => throw new NotImplementedException();
     bool IJsonDocument.TryGetValue(int index, out Guid value) => throw new NotImplementedException();
+#if NET
+    bool IJsonDocument.TryGetValue(int index, out DateOnly value) => throw new NotImplementedException();
+    bool IJsonDocument.TryGetValue(int index, out TimeOnly value) => throw new NotImplementedException();
+#endif
     string IJsonDocument.GetNameOfPropertyValue(int index) => throw new NotImplementedException();
     ReadOnlySpan<byte> IJsonDocument.GetPropertyNameRaw(int index) => throw new NotImplementedException();
     JsonElement IJsonDocument.GetPropertyName(int index) => throw new NotImplementedException();

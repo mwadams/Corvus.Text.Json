@@ -10,17 +10,19 @@ The repo structure mirrors the dotnet/runtime repository conventions: shared sou
 
 ```bash
 # Build the full solution
-dotnet build src/src.sln
+dotnet build Corvus.Text.Json.slnx
 
-# Run all tests (targets net9.0, net10.0, net481)
-dotnet test tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj
+# Run the standard test suite — exclude the 'failing' and 'outerloop' categories
+dotnet test Corvus.Text.Json.slnx --filter "Category!=failing&Category!=outerloop"
 
 # Run a single test class
-dotnet test tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj --filter "ClassName=Corvus.Text.Json.Tests.ParsedJsonDocumentTests"
+dotnet test Corvus.Text.Json.slnx --filter "ClassName=Corvus.Text.Json.Tests.ParsedJsonDocumentTests&Category!=failing&Category!=outerloop"
 
 # Run a single test method
-dotnet test tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj --filter "FullyQualifiedName~ParseValidUtf8BOM"
+dotnet test Corvus.Text.Json.slnx --filter "FullyQualifiedName~ParseValidUtf8BOM&Category!=failing&Category!=outerloop"
 ```
+
+Always exclude `failing` and `outerloop` categories when running tests. Never run all tests without these filters.
 
 `TreatWarningsAsErrors=true` is set across all projects — the build will fail on any warning.
 

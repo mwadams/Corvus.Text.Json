@@ -540,6 +540,18 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
 
 
 #if NET
+    bool IJsonDocument.TryGetValue(int index, out DateOnly value)
+    {
+        Debug.Assert(index == 0);
+        return JsonReaderHelper.TryGetValue(_rawJsonStringValue.Span[1..^1], _requiresUnescaping, out value);
+    }
+
+    bool IJsonDocument.TryGetValue(int index, out TimeOnly value)
+    {
+        Debug.Assert(index == 0);
+        return JsonReaderHelper.TryGetValue(_rawJsonStringValue.Span[1..^1], _requiresUnescaping, out value);
+    }
+
     bool IJsonDocument.TryGetValue(int index, out Int128 value)
     {
         ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.Number, JsonTokenType.String);

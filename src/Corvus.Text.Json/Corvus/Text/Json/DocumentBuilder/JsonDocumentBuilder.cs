@@ -1057,6 +1057,32 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+#if NET
+    bool IJsonDocument.TryGetValue(int index, out DateOnly value)
+    {
+        CheckNotDisposed();
+
+        DbRow row = _parsedData.Get(index);
+
+        CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+        ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+        return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
+    }
+
+    bool IJsonDocument.TryGetValue(int index, out TimeOnly value)
+    {
+        CheckNotDisposed();
+
+        DbRow row = _parsedData.Get(index);
+
+        CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+        ReadOnlySpan<byte> segment = GetRawSimpleValueUnsafe(index, false).Span;
+        return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
+    }
+#endif
+
     bool IJsonDocument.TryGetValue(int index, out Guid value)
     {
         CheckNotDisposed();

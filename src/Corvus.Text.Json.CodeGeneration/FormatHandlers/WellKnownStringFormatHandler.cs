@@ -727,6 +727,194 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
         }
     }
 
+    public bool AppendFormatToStringAndTryFormatOverrides(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, bool forMutable)
+    {
+        switch (format)
+        {
+            case "date":
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public string ToString(string? format, IFormatProvider? formatProvider)
+                        {
+                            CheckValidInstance();
+                            if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.LocalDate value))
+                                return value.ToString(format, formatProvider);
+                            return _parent.ToString(_idx, format, formatProvider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.DateOnly value))
+                                return value.TryFormat(destination, out charsWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.DateOnly value))
+                                return value.TryFormat(utf8Destination, out bytesWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                        }
+                        """);
+                return true;
+
+            case "date-time":
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public string ToString(string? format, IFormatProvider? formatProvider)
+                        {
+                            CheckValidInstance();
+                            if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.OffsetDateTime value))
+                                return value.ToString(format, formatProvider);
+                            return _parent.ToString(_idx, format, formatProvider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.DateTimeOffset value))
+                                return value.TryFormat(destination, out charsWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.DateTimeOffset value))
+                                return value.TryFormat(utf8Destination, out bytesWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                        }
+                        """);
+                return true;
+
+            case "time":
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public string ToString(string? format, IFormatProvider? formatProvider)
+                        {
+                            CheckValidInstance();
+                            if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.OffsetTime value))
+                                return value.ToString(format, formatProvider);
+                            return _parent.ToString(_idx, format, formatProvider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.TimeOnly value))
+                                return value.TryFormat(destination, out charsWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && _parent.TryGetValue(_idx, out global::System.TimeOnly value))
+                                return value.TryFormat(utf8Destination, out bytesWritten, format, provider);
+                        #endif
+                            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                        }
+                        """);
+                return true;
+
+            case "duration":
+                return false;
+
+            case "uuid":
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public string ToString(string? format, IFormatProvider? formatProvider)
+                        {
+                            CheckValidInstance();
+                            if (!string.IsNullOrEmpty(format) && TryGetValue(out Guid value))
+                                return value.ToString(format, formatProvider);
+                            return _parent.ToString(_idx, format, formatProvider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && TryGetValue(out Guid value))
+                                return value.TryFormat(destination, out charsWritten, format);
+                        #endif
+                            return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                        }
+                        """)
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        """
+                        /// <inheritdoc/>
+                        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                        {
+                            CheckValidInstance();
+                        #if NET
+                            if (!format.IsEmpty && TryGetValue(out Guid value))
+                                return value.TryFormat(utf8Destination, out bytesWritten, format);
+                        #endif
+                            return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                        }
+                        """);
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
     private static bool HandlesFormat(string format)
     {
         return format switch

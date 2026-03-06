@@ -88,7 +88,7 @@ public sealed class CorePartial : ICodeFileBuilder
                         .AppendEqualsOverloads(typeDeclaration)
                         .AppendValueEqualsOverloads(typeDeclaration)
                         .AppendWriteToMethod()
-                        .AppendGetHashCodeAndToStringMethods(forMutable: false)
+                        .AppendGetHashCodeAndToStringMethods(typeDeclaration, forMutable: false)
                         .AppendEvaluateSchemaMethod()
                         .AppendCheckValidInstance()
                         .AppendCreateInstance(typeDeclaration)

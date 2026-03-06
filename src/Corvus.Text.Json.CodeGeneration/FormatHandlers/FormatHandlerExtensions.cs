@@ -174,6 +174,35 @@ internal static class FormatHandlerExtensions
         return false;
     }
 
+    /// <summary>
+    /// Appends format-aware <c>ToString</c> and <c>TryFormat</c> overload implementations.
+    /// </summary>
+    /// <typeparam name="T">The type of the format handler.</typeparam>
+    /// <param name="handlers">The handlers which may append overloads.</param>
+    /// <param name="generator">The generator to which to append the overloads.</param>
+    /// <param name="typeDeclaration">The type declaration for which to append the overloads.</param>
+    /// <param name="format">The format for which to append overloads.</param>
+    /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
+    /// <returns><see langword="true"/> if a handler handled this format and generated all three overloads.</returns>
+    public static bool AppendFormatToStringAndTryFormatOverrides<T>(this IEnumerable<T> handlers, CodeGenerator generator, TypeDeclaration typeDeclaration, string format, bool forMutable)
+        where T : notnull, IStringFormatHandler
+    {
+        foreach (T handler in handlers)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return false;
+            }
+
+            if (handler.AppendFormatToStringAndTryFormatOverrides(generator, typeDeclaration, format, forMutable))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static bool AppendFormatAssertion<T>(
         this IEnumerable<T> handlers,
         CodeGenerator generator,

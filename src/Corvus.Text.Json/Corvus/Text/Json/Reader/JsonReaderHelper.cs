@@ -326,6 +326,32 @@ internal static partial class JsonReaderHelper
         return false;
     }
 
+#if NET
+    public static bool TryGetValue(ReadOnlySpan<byte> segment, bool hasComplexChildren, out DateOnly value)
+    {
+        if (TryGetValue(segment, hasComplexChildren, out LocalDate localDate))
+        {
+            value = new DateOnly(localDate.Year, localDate.Month, localDate.Day);
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+
+    public static bool TryGetValue(ReadOnlySpan<byte> segment, bool hasComplexChildren, out TimeOnly value)
+    {
+        if (TryGetValue(segment, hasComplexChildren, out OffsetTime offsetTime))
+        {
+            value = new TimeOnly(offsetTime.TimeOfDay.TickOfDay);
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+#endif
+
     /// <summary>
     /// Encodes the ~ encoding in a pointer.
     /// </summary>

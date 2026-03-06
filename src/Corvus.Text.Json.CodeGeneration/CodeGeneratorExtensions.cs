@@ -1996,8 +1996,9 @@ internal static partial class CodeGeneratorExtensions
     /// </summary>
     /// <param name="generator">The code generator.</param>
     /// <param name="typeDeclaration">The type declaration for which to append the methods.</param>
+    /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
     /// <returns>A reference to the generator having completed the operation.</returns>
-    public static CodeGenerator AppendGetHashCodeAndToStringMethods(this CodeGenerator generator, bool forMutable)
+    public static CodeGenerator AppendGetHashCodeAndToStringMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable)
     {
         if (generator.IsCancellationRequested)
         {
@@ -2022,36 +2023,47 @@ internal static partial class CodeGeneratorExtensions
                 }
                 """)
             .AppendSeparatorLine()
-            .ReserveNameIfNotReserved("TryFormat")
-            .AppendLineIndent("/// <inheritdoc/>")
-            .AppendLineIndent("public string ToString(string? format, IFormatProvider? formatProvider)")
-            .AppendLineIndent("{")
-            .PushIndent()
-                .AppendLineIndent("CheckValidInstance();")
+            .ReserveNameIfNotReserved("TryFormat");
+
+        // If the type has a known string format, let the format handler generate format-aware overloads.
+        if (typeDeclaration.Format() is string format &&
+            FormatHandlerRegistry.Instance.StringFormatHandlers.AppendFormatToStringAndTryFormatOverrides(generator, typeDeclaration, format, forMutable))
+        {
+            // Format handler generated the ToString/TryFormat overloads; skip the fallback generation.
+        }
+        else
+        {
+            generator
+                .AppendLineIndent("/// <inheritdoc/>")
+                .AppendLineIndent("public string ToString(string? format, IFormatProvider? formatProvider)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("CheckValidInstance();")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("return _parent.ToString(_idx, format, formatProvider);")
+                .PopIndent()
+                .AppendLineIndent("}")
                 .AppendSeparatorLine()
-                .AppendLineIndent("return _parent.ToString(_idx, format, formatProvider);")
-            .PopIndent()
-            .AppendLineIndent("}")
-            .AppendSeparatorLine()
-            .AppendLineIndent("/// <inheritdoc/>")
-            .AppendLineIndent("public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)")
-            .AppendLineIndent("{")
-            .PushIndent()
-                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("/// <inheritdoc/>")
+                .AppendLineIndent("public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("CheckValidInstance();")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);")
+                .PopIndent()
+                .AppendLineIndent("}")
                 .AppendSeparatorLine()
-                .AppendLineIndent("return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);")
-            .PopIndent()
-            .AppendLineIndent("}")
-            .AppendSeparatorLine()
-            .AppendLineIndent("/// <inheritdoc/>")
-            .AppendLineIndent("public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)")
-            .AppendLineIndent("{")
-            .PushIndent()
-                .AppendLineIndent("CheckValidInstance();")
-                .AppendLineIndent("")
-                .AppendLineIndent("return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);")
-            .PopIndent()
-            .AppendLineIndent("}");
+                .AppendLineIndent("/// <inheritdoc/>")
+                .AppendLineIndent("public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("CheckValidInstance();")
+                    .AppendLineIndent("")
+                    .AppendLineIndent("return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);")
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
 
         if (forMutable)
         {

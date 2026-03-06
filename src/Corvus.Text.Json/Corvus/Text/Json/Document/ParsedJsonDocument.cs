@@ -1027,6 +1027,38 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+#if NET
+    /// <inheritdoc />
+    bool IJsonDocument.TryGetValue(int index, out DateOnly value)
+    {
+        CheckNotDisposed();
+
+        DbRow row = _parsedData.Get(index);
+
+        CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+        ReadOnlySpan<byte> data = _utf8Json.Span;
+        ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+        return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
+    }
+
+    /// <inheritdoc />
+    bool IJsonDocument.TryGetValue(int index, out TimeOnly value)
+    {
+        CheckNotDisposed();
+
+        DbRow row = _parsedData.Get(index);
+
+        CheckExpectedType(JsonTokenType.String, row.TokenType);
+
+        ReadOnlySpan<byte> data = _utf8Json.Span;
+        ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+        return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
+    }
+#endif
+
     /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out Guid value)
     {
