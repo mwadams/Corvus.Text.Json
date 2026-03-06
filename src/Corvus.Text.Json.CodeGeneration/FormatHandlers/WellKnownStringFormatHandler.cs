@@ -1073,9 +1073,163 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         """);
                 return true;
 
+            case "uri":
+                return AppendUriLikeFormatOverrides(generator, "Utf8UriValue", "Utf8Uri", "Uri", "URI", "Uri");
+
+            case "uri-reference":
+                return AppendUriLikeFormatOverrides(generator, "Utf8UriReferenceValue", "Utf8UriReference", "UriReference", "URI reference", "UriReference");
+
+            case "iri":
+                return AppendUriLikeFormatOverrides(generator, "Utf8IriValue", "Utf8Iri", "Iri", "IRI", "Iri");
+
+            case "iri-reference":
+                return AppendUriLikeFormatOverrides(generator, "Utf8IriReferenceValue", "Utf8IriReference", "IriReference", "IRI reference", "IriReference");
+
             default:
                 return false;
         }
+    }
+
+    private static bool AppendUriLikeFormatOverrides(
+        CodeGenerator generator,
+        string valueTypeName,
+        string uriTypeName,
+        string uriPropertyName,
+        string formatKind,
+        string helperMethodSuffix)
+    {
+        generator
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                $$"""
+                /// <inheritdoc/>
+                /// <remarks>
+                /// <para>
+                /// When <paramref name="format"/> is <c>"g"</c> or <c>"G"</c>, produces the display form of
+                /// the {{formatKind}} with percent-encoded sequences decoded for human readability.
+                /// </para>
+                /// <para>
+                /// When <paramref name="format"/> is <c>"c"</c> or <c>"C"</c>, produces the canonical form of
+                /// the {{formatKind}} with all required characters percent-encoded.
+                /// </para>
+                /// <para>
+                /// When <paramref name="format"/> is <see langword="null"/> or empty, or an unrecognised
+                /// format string is provided, the raw JSON string representation is returned.
+                /// </para>
+                /// <para>
+                /// There are no culture-specific variations; <paramref name="formatProvider"/> is ignored.
+                /// </para>
+                /// </remarks>
+                public string ToString(string? format, IFormatProvider? formatProvider)
+                {
+                    CheckValidInstance();
+                    if (!string.IsNullOrEmpty(format) && (format is "g" or "G" or "c" or "C") && TryGetValue(out {{valueTypeName}} uriValue))
+                    {
+                        using (uriValue)
+                        {
+                            bool isDisplay = format is "g" or "G";
+                            {{uriTypeName}} uri = uriValue.{{uriPropertyName}};
+                            if (global::Corvus.Text.Json.Internal.JsonElementHelpers.TryFormat{{helperMethodSuffix}}(uri, isDisplay, out string? result))
+                                return result;
+                        }
+                    }
+                    return _parent.ToString(_idx, format, formatProvider);
+                }
+                """)
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                $$"""
+                /// <inheritdoc/>
+                /// <remarks>
+                /// <para>
+                /// When <paramref name="format"/> is <c>"g"</c> or <c>"G"</c>, writes the display form of
+                /// the {{formatKind}} with percent-encoded sequences decoded for human readability.
+                /// </para>
+                /// <para>
+                /// When <paramref name="format"/> is <c>"c"</c> or <c>"C"</c>, writes the canonical form of
+                /// the {{formatKind}} with all required characters percent-encoded.
+                /// </para>
+                /// <para>
+                /// When <paramref name="format"/> is empty, or an unrecognised format string is provided,
+                /// the raw JSON string representation is written.
+                /// </para>
+                /// <para>
+                /// There are no culture-specific variations; <paramref name="provider"/> is ignored.
+                /// </para>
+                /// </remarks>
+                public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                {
+                    CheckValidInstance();
+                    if (!format.IsEmpty && format.Length == 1)
+                    {
+                        char f = format[0];
+                        bool isDisplay = f == 'g' || f == 'G';
+                        bool isCanonical = !isDisplay && (f == 'c' || f == 'C');
+                        if ((isDisplay || isCanonical) && TryGetValue(out {{valueTypeName}} uriValue))
+                        {
+                            using (uriValue)
+                            {
+                                {{uriTypeName}} uri = uriValue.{{uriPropertyName}};
+                                return global::Corvus.Text.Json.Internal.JsonElementHelpers.TryFormat{{helperMethodSuffix}}(uri, isDisplay, destination, out charsWritten);
+                            }
+                        }
+                    }
+                    return _parent.TryFormat(_idx, destination, out charsWritten, format, provider);
+                }
+                """)
+            .AppendSeparatorLine()
+            .AppendBlockIndent(
+                $$"""
+                /// <inheritdoc/>
+                /// <remarks>
+                /// <para>
+                /// When <paramref name="format"/> is <c>"g"</c> or <c>"G"</c>, writes the display form of
+                /// the {{formatKind}} as UTF-8 with percent-encoded sequences decoded for human readability.
+                /// </para>
+                /// <para>
+                /// When <paramref name="format"/> is <c>"c"</c> or <c>"C"</c>, writes the canonical form of
+                /// the {{formatKind}} as UTF-8 with all required characters percent-encoded.
+                /// </para>
+                /// <para>
+                /// When <paramref name="format"/> is empty, or an unrecognised format string is provided,
+                /// the raw JSON string representation is written as UTF-8.
+                /// </para>
+                /// <para>
+                /// There are no culture-specific variations; <paramref name="provider"/> is ignored.
+                /// </para>
+                /// </remarks>
+                public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+                {
+                    CheckValidInstance();
+                    if (!format.IsEmpty && format.Length == 1)
+                    {
+                        char f = format[0];
+                        bool isDisplay = f == 'g' || f == 'G';
+                        bool isCanonical = !isDisplay && (f == 'c' || f == 'C');
+                        if ((isDisplay || isCanonical) && TryGetValue(out {{valueTypeName}} uriValue))
+                        {
+                            using (uriValue)
+                            {
+                                {{uriTypeName}} uri = uriValue.{{uriPropertyName}};
+                                if (isDisplay)
+                                {
+                                    if (uri.TryFormatDisplay(utf8Destination, out bytesWritten))
+                                        return true;
+                                }
+                                else
+                                {
+                                    if (uri.TryFormatCanonical(utf8Destination, out bytesWritten))
+                                        return true;
+                                }
+                                bytesWritten = 0;
+                                return false;
+                            }
+                        }
+                    }
+                    return _parent.TryFormat(_idx, utf8Destination, out bytesWritten, format, provider);
+                }
+                """);
+        return true;
     }
 
     private static bool HandlesFormat(string format)

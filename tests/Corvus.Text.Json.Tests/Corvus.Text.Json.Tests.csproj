@@ -92,6 +92,7 @@
     <Compile Include="JsonElementHelpersTryFormatFixedPointUtf8Tests.cs" />
     <Compile Include="JsonElementFormatTests.cs" />
     <Compile Include="FormatAwareStringFormatTests.cs" />
+    <Compile Include="FormatAwareUriFormatTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralUtf8Tests.cs" />
     <Compile Include="JsonElementHelpersTryFormatNumberTests.cs" />

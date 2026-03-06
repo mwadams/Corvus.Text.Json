@@ -7,90 +7,357 @@ using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal;
 
+
 /// <summary>
 /// Helper methods for JSON element URI operations.
 /// </summary>
 public static partial class JsonElementHelpers
 {
     /// <summary>
-    /// Gets an instance of an empty URI, that is configured to be <see cref="UriKind.RelativeOrAbsolute"/>.
+    /// Tries to format a <see cref="Utf8Uri"/> as a display (human-readable) or canonical (percent-encoded) string.
     /// </summary>
-    public static readonly Uri EmptyUri = new(string.Empty, UriKind.RelativeOrAbsolute);
-
-    /// <summary>
-    /// Format a date as a UTF-8 string.
-    /// </summary>
-    /// <param name="value">The value to format.</param>
-    /// <param name="output">The output buffer.</param>
-    /// <param name="bytesWritten">The number of bytes written to the output buffer.</param>
-    /// <returns><see langword="true"/> if the date was formatted successfully.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryFormatUri(Uri value, Span<byte> output, out int bytesWritten)
+    /// <param name="uri">The URI to format.</param>
+    /// <param name="isDisplay">
+    /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+    /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
+    /// </param>
+    /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>
+    /// <returns><see langword="true"/> if formatting succeeded.</returns>
+    public static bool TryFormatUri(Utf8Uri uri, bool isDisplay, [NotNullWhen(true)] out string? result)
     {
-        OperationStatus result = JsonWriterHelper.ToUtf8(value.OriginalString.AsSpan(), output, out bytesWritten);
-        if (result != OperationStatus.Done)
+        int maxLen = isDisplay ? uri.OriginalUri.Length : uri.OriginalUri.Length * 3;
+        byte[]? rentedBuffer = null;
+        Span<byte> buffer = maxLen <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(maxLen));
+        try
         {
-            bytesWritten = 0;
+            if (isDisplay)
+            {
+                if (uri.TryFormatDisplay(buffer, out int written))
+                {
+                    result = JsonReaderHelper.TranscodeHelper(buffer.Slice(0, written));
+                    return true;
+                }
+            }
+            else
+            {
+                if (uri.TryFormatCanonical(buffer, out int written))
+                {
+                    result = JsonReaderHelper.TranscodeHelper(buffer.Slice(0, written));
+                    return true;
+                }
+            }
+
+            result = null;
             return false;
         }
-
-        return true;
+        finally
+        {
+            if (rentedBuffer is not null)
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
     }
 
     /// <summary>
-    /// Try to parse a <see cref="Uri"/>.
+    /// Tries to format a <see cref="Utf8Uri"/> as a display (human-readable) or canonical (percent-encoded) string
+    /// into a <see cref="Span{T}"/> of <see cref="char"/>.
     /// </summary>
-    /// <param name="text">The text to parse.</param>
-    /// <param name="value">The resulting URI, or <see langword="null"/> if the uri format could not be parsed.</param>
-    /// <returns><see langword="true"/> if the URI could be parsed.</returns>
-    /// <remarks>
-    /// This will parse any uri format including <c>uri</c>, <c>uri-reference</c>, <c>iri</c>, and <c>iri-reference</c>.
-    /// </remarks>
-    public static bool TryParseUri(string text, [NotNullWhen(true)] out Uri? value)
+    /// <param name="uri">The URI to format.</param>
+    /// <param name="isDisplay">
+    /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+    /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
+    /// </param>
+    /// <param name="destination">The destination buffer.</param>
+    /// <param name="charsWritten">The number of characters written.</param>
+    /// <returns><see langword="true"/> if formatting succeeded.</returns>
+    public static bool TryFormatUri(Utf8Uri uri, bool isDisplay, Span<char> destination, out int charsWritten)
     {
-        // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
-        // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
-        // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
-        // of a problem because a lot of relative Uris of the kind you come across on the web
-        // look exactly like Unix file paths.)
-        // https://github.com/dotnet/runtime/issues/22718
-        // However, this only needs to be a problem if you insist that the Uri is absolute.
-        // If you accept either absolute or relative Uris, it will interpret "/abc" as a
-        // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
-        // if you pass UriKind.Absolute when parsing.
-        // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
-        // and then rejecting relative Uris. This causes this method to reject "/abc" on all
-        // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
-        // "abc".
-        return Uri.TryCreate(text, UriKind.RelativeOrAbsolute, out value) &&
-            value.IsAbsoluteUri;
+        byte[]? rentedBuffer = null;
+        Span<byte> buffer = destination.Length <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(destination.Length));
+        try
+        {
+            if (isDisplay)
+            {
+                if (uri.TryFormatDisplay(buffer, out int written))
+                    return JsonReaderHelper.TryTranscode(buffer.Slice(0, written), destination, out charsWritten);
+            }
+            else
+            {
+                if (uri.TryFormatCanonical(buffer, out int written))
+                    return JsonReaderHelper.TryTranscode(buffer.Slice(0, written), destination, out charsWritten);
+            }
+
+            charsWritten = 0;
+            return false;
+        }
+        finally
+        {
+            if (rentedBuffer is not null)
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
     }
 
     /// <summary>
-    /// Try to parse a <see cref="Uri"/>.
+    /// Tries to format a <see cref="Utf8UriReference"/> as a display (human-readable) or canonical (percent-encoded) string.
     /// </summary>
-    /// <param name="text">The text to parse.</param>
-    /// <param name="value">The resulting URI, or <see langword="null"/> if the uri format could not be parsed.</param>
-    /// <returns><see langword="true"/> if the URI could be parsed.</returns>
-    /// <remarks>
-    /// This will parse any uri format including <c>uri</c>, <c>uri-reference</c>, <c>iri</c>, and <c>iri-reference</c>.
-    /// </remarks>
-    public static bool TryParseUriReference(string text, [NotNullWhen(true)] out Uri? value)
+    /// <param name="uriReference">The URI reference to format.</param>
+    /// <param name="isDisplay">
+    /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+    /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
+    /// </param>
+    /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>
+    /// <returns><see langword="true"/> if formatting succeeded.</returns>
+    public static bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, [NotNullWhen(true)] out string? result)
     {
-        // Uri.TryCreate considers full-qualified file paths to be acceptable as absolute Uris.
-        // This means that on Linux "/abc" is considered an acceptable absolute Uri! (This is
-        // conceptually equivalent to "C:\abc" being an absolute Uri on Windows, but it's more
-        // of a problem because a lot of relative Uris of the kind you come across on the web
-        // look exactly like Unix file paths.)
-        // https://github.com/dotnet/runtime/issues/22718
-        // However, this only needs to be a problem if you insist that the Uri is absolute.
-        // If you accept either absolute or relative Uris, it will interpret "/abc" as a
-        // relative Uri on either Windows or Linux. It only interprets it as an absolute Uri
-        // if you pass UriKind.Absolute when parsing.
-        // This is why we take the peculiar-looking step of passing UriKind.RelativeOrAbsolute
-        // and then rejecting relative Uris. This causes this method to reject "/abc" on all
-        // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
-        // "abc".
-        return Uri.TryCreate(text, UriKind.RelativeOrAbsolute, out value);
+        int maxLen = isDisplay ? uriReference.OriginalUriReference.Length : uriReference.OriginalUriReference.Length * 3;
+        byte[]? rentedBuffer = null;
+        Span<byte> buffer = maxLen <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(maxLen));
+        try
+        {
+            if (isDisplay)
+            {
+                if (uriReference.TryFormatDisplay(buffer, out int written))
+                {
+                    result = JsonReaderHelper.TranscodeHelper(buffer.Slice(0, written));
+                    return true;
+                }
+            }
+            else
+            {
+                if (uriReference.TryFormatCanonical(buffer, out int written))
+                {
+                    result = JsonReaderHelper.TranscodeHelper(buffer.Slice(0, written));
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
+        finally
+        {
+            if (rentedBuffer is not null)
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
+    }
+
+    /// <summary>
+    /// Tries to format a <see cref="Utf8UriReference"/> as a display (human-readable) or canonical (percent-encoded) string
+    /// into a <see cref="Span{T}"/> of <see cref="char"/>.
+    /// </summary>
+    /// <param name="uriReference">The URI reference to format.</param>
+    /// <param name="isDisplay">
+    /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+    /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
+    /// </param>
+    /// <param name="destination">The destination buffer.</param>
+    /// <param name="charsWritten">The number of characters written.</param>
+    /// <returns><see langword="true"/> if formatting succeeded.</returns>
+    public static bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, Span<char> destination, out int charsWritten)
+    {
+        byte[]? rentedBuffer = null;
+        Span<byte> buffer = destination.Length <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(destination.Length));
+        try
+        {
+            if (isDisplay)
+            {
+                if (uriReference.TryFormatDisplay(buffer, out int written))
+                    return JsonReaderHelper.TryTranscode(buffer.Slice(0, written), destination, out charsWritten);
+            }
+            else
+            {
+                if (uriReference.TryFormatCanonical(buffer, out int written))
+                    return JsonReaderHelper.TryTranscode(buffer.Slice(0, written), destination, out charsWritten);
+            }
+
+            charsWritten = 0;
+            return false;
+        }
+        finally
+        {
+            if (rentedBuffer is not null)
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
+    }
+
+    /// <summary>
+    /// Tries to format a <see cref="Utf8Iri"/> as a display (human-readable) or canonical (percent-encoded) string.
+    /// </summary>
+    /// <param name="iri">The IRI to format.</param>
+    /// <param name="isDisplay">
+    /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+    /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
+    /// </param>
+    /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>
+    /// <returns><see langword="true"/> if formatting succeeded.</returns>
+    public static bool TryFormatIri(Utf8Iri iri, bool isDisplay, [NotNullWhen(true)] out string? result)
+    {
+        int maxLen = isDisplay ? iri.OriginalIri.Length : iri.OriginalIri.Length * 3;
+        byte[]? rentedBuffer = null;
+        Span<byte> buffer = maxLen <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(maxLen));
+        try
+        {
+            if (isDisplay)
+            {
+                if (iri.TryFormatDisplay(buffer, out int written))
+                {
+                    result = JsonReaderHelper.TranscodeHelper(buffer.Slice(0, written));
+                    return true;
+                }
+            }
+            else
+            {
+                if (iri.TryFormatCanonical(buffer, out int written))
+                {
+                    result = JsonReaderHelper.TranscodeHelper(buffer.Slice(0, written));
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
+        finally
+        {
+            if (rentedBuffer is not null)
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
+    }
+
+    /// <summary>
+    /// Tries to format a <see cref="Utf8Iri"/> as a display (human-readable) or canonical (percent-encoded) string
+    /// into a <see cref="Span{T}"/> of <see cref="char"/>.
+    /// </summary>
+    /// <param name="iri">The IRI to format.</param>
+    /// <param name="isDisplay">
+    /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+    /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
+    /// </param>
+    /// <param name="destination">The destination buffer.</param>
+    /// <param name="charsWritten">The number of characters written.</param>
+    /// <returns><see langword="true"/> if formatting succeeded.</returns>
+    public static bool TryFormatIri(Utf8Iri iri, bool isDisplay, Span<char> destination, out int charsWritten)
+    {
+        byte[]? rentedBuffer = null;
+        Span<byte> buffer = destination.Length <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(destination.Length));
+        try
+        {
+            if (isDisplay)
+            {
+                if (iri.TryFormatDisplay(buffer, out int written))
+                    return JsonReaderHelper.TryTranscode(buffer.Slice(0, written), destination, out charsWritten);
+            }
+            else
+            {
+                if (iri.TryFormatCanonical(buffer, out int written))
+                    return JsonReaderHelper.TryTranscode(buffer.Slice(0, written), destination, out charsWritten);
+            }
+
+            charsWritten = 0;
+            return false;
+        }
+        finally
+        {
+            if (rentedBuffer is not null)
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
+    }
+
+    /// <summary>
+    /// Tries to format a <see cref="Utf8IriReference"/> as a display (human-readable) or canonical (percent-encoded) string.
+    /// </summary>
+    /// <param name="iriReference">The IRI reference to format.</param>
+    /// <param name="isDisplay">
+    /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+    /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
+    /// </param>
+    /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>
+    /// <returns><see langword="true"/> if formatting succeeded.</returns>
+    public static bool TryFormatIriReference(Utf8IriReference iriReference, bool isDisplay, [NotNullWhen(true)] out string? result)
+    {
+        int maxLen = isDisplay ? iriReference.OriginalIriReference.Length : iriReference.OriginalIriReference.Length * 3;
+        byte[]? rentedBuffer = null;
+        Span<byte> buffer = maxLen <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(maxLen));
+        try
+        {
+            if (isDisplay)
+            {
+                if (iriReference.TryFormatDisplay(buffer, out int written))
+                {
+                    result = JsonReaderHelper.TranscodeHelper(buffer.Slice(0, written));
+                    return true;
+                }
+            }
+            else
+            {
+                if (iriReference.TryFormatCanonical(buffer, out int written))
+                {
+                    result = JsonReaderHelper.TranscodeHelper(buffer.Slice(0, written));
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
+        finally
+        {
+            if (rentedBuffer is not null)
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
+    }
+
+    /// <summary>
+    /// Tries to format a <see cref="Utf8IriReference"/> as a display (human-readable) or canonical (percent-encoded) string
+    /// into a <see cref="Span{T}"/> of <see cref="char"/>.
+    /// </summary>
+    /// <param name="iriReference">The IRI reference to format.</param>
+    /// <param name="isDisplay">
+    /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+    /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
+    /// </param>
+    /// <param name="destination">The destination buffer.</param>
+    /// <param name="charsWritten">The number of characters written.</param>
+    /// <returns><see langword="true"/> if formatting succeeded.</returns>
+    public static bool TryFormatIriReference(Utf8IriReference iriReference, bool isDisplay, Span<char> destination, out int charsWritten)
+    {
+        byte[]? rentedBuffer = null;
+        Span<byte> buffer = destination.Length <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(destination.Length));
+        try
+        {
+            if (isDisplay)
+            {
+                if (iriReference.TryFormatDisplay(buffer, out int written))
+                    return JsonReaderHelper.TryTranscode(buffer.Slice(0, written), destination, out charsWritten);
+            }
+            else
+            {
+                if (iriReference.TryFormatCanonical(buffer, out int written))
+                    return JsonReaderHelper.TryTranscode(buffer.Slice(0, written), destination, out charsWritten);
+            }
+
+            charsWritten = 0;
+            return false;
+        }
+        finally
+        {
+            if (rentedBuffer is not null)
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
     }
 }
