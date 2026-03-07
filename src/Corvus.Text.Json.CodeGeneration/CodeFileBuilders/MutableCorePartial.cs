@@ -96,7 +96,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendCreateInstance(typeDeclaration, forMutable: true)
                             .AppendDebuggerDisplayProperty(typeDeclaration, forMutable: true)
                             .AppendArrayMutators(typeDeclaration)
-                            ////.AppendObjectMutators(typeDeclaration)
+                            .AppendObjectMutators(typeDeclaration)
                             .AppendIJsonElementExplicitImplementation()
                             .AppendMatchMethods(typeDeclaration, forMutable: true)
                             .AppendTryGetAsCompositionTypeMethods(typeDeclaration, forMutable: true)

@@ -503,3 +503,5 @@ long yearAsLong = year;
 byte yearAsByte = (byte)year;
 
 string? firstName = testPersonDocBuilder.RootElement.Name.FirstName.GetString();
+
+Person.Mutable person;

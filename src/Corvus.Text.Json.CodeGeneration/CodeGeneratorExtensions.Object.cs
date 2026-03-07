@@ -621,6 +621,190 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
+    /// Append mutation methods for objects.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the mutators.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendObjectMutators(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if ((typeDeclaration.ImpliedCoreTypes() & CoreTypes.Object) == 0)
+        {
+            return generator;
+        }
+
+        // Get the type for the object properties.
+        string fqdtn;
+
+        if (typeDeclaration.FallbackObjectPropertyType() is FallbackObjectPropertyType objectPropertyType)
+        {
+            if (objectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                return generator;
+            }
+
+            fqdtn = objectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+        }
+        else if (typeDeclaration.LocalEvaluatedPropertyType() is FallbackObjectPropertyType localObjectPropertyType)
+        {
+            if (localObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                return generator;
+            }
+
+            fqdtn = localObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+        }
+        else if (typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is FallbackObjectPropertyType localAndAppliedObjectPropertyType)
+        {
+            if (localAndAppliedObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                return generator;
+            }
+
+            fqdtn = localAndAppliedObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+        }
+        else
+        {
+            fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+        }
+
+        // SetProperty(string) - delegates to ReadOnlySpan<char>
+        generator
+            .ReserveNameIfNotReserved("SetProperty")
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Sets a property on this JSON object element.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"propertyName\">The name of the property to set.</param>")
+            .AppendLineIndent("/// <param name=\"value\">The value of the property to set.</param>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Object\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <remarks>")
+            .AppendLineIndent("///   <para>")
+            .AppendLineIndent("///     If the property already exists, its value will be replaced.")
+            .AppendLineIndent("///     If the property doesn't exist, it will be added to the object.")
+            .AppendLineIndent("///   </para>")
+            .AppendLineIndent("/// </remarks>")
+            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+            .AppendLineIndent("public void SetProperty(string propertyName, in ", fqdtn, ".", generator.SourceClassName(fqdtn), " value)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("SetProperty(propertyName.AsSpan(), value);")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        // SetProperty(ReadOnlySpan<char>) - full implementation
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Sets a property on this JSON object element.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"propertyName\">The name of the property to set.</param>")
+            .AppendLineIndent("/// <param name=\"value\">The value of the property to set.</param>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Object\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <remarks>")
+            .AppendLineIndent("///   <para>")
+            .AppendLineIndent("///     If the property already exists, its value will be replaced.")
+            .AppendLineIndent("///     If the property doesn't exist, it will be added to the object.")
+            .AppendLineIndent("///   </para>")
+            .AppendLineIndent("/// </remarks>")
+            .AppendLineIndent("public void SetProperty(ReadOnlySpan<char> propertyName, in ", fqdtn, ".", generator.SourceClassName(fqdtn), " value)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendSeparatorLine()
+                .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);")
+                .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out IJsonDocument? elementParent, out int elementIdx))")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("// We are going to replace just the value")
+                    .AppendLineIndent("value.AddAsItem(ref cvb);")
+                    .AppendLineIndent("_parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendLineIndent("else")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("// We are going to insert the new value")
+                    .AppendLineIndent("value.AddAsProperty(propertyName, ref cvb);")
+                    .AppendLineIndent("int endIndex = _idx + _parent.GetDbSize(_idx, false);")
+                    .AppendLineIndent("_parent.InsertAndDispose(_idx, endIndex, ref cvb);")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        // SetProperty(ReadOnlySpan<byte>) - UTF-8 implementation
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Sets a property on this JSON object element.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"propertyName\">The UTF-8 encoded name of the property to set.</param>")
+            .AppendLineIndent("/// <param name=\"value\">The value of the property to set.</param>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Object\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <remarks>")
+            .AppendLineIndent("///   <para>")
+            .AppendLineIndent("///     If the property already exists, its value will be replaced.")
+            .AppendLineIndent("///     If the property doesn't exist, it will be added to the object.")
+            .AppendLineIndent("///   </para>")
+            .AppendLineIndent("/// </remarks>")
+            .AppendLineIndent("public void SetProperty(ReadOnlySpan<byte> propertyName, in ", fqdtn, ".", generator.SourceClassName(fqdtn), " value)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendSeparatorLine()
+                .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);")
+                .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out IJsonDocument? elementParent, out int elementIdx))")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("// We are going to replace just the value")
+                    .AppendLineIndent("value.AddAsItem(ref cvb);")
+                    .AppendLineIndent("_parent.OverwriteAndDispose(_idx, elementIdx, elementIdx + elementParent.GetDbSize(elementIdx, true), 1, ref cvb);")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendLineIndent("else")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("// We are going to insert the new value")
+                    .AppendLineIndent("value.AddAsProperty(propertyName, ref cvb);")
+                    .AppendLineIndent("int endIndex = _idx + _parent.GetDbSize(_idx, false);")
+                    .AppendLineIndent("_parent.InsertAndDispose(_idx, endIndex, ref cvb);")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        return generator;
+    }
+
+    /// <summary>
     /// Append the start of a public readonly property declaration.
     /// </summary>
     /// <param name="generator">The generator to which to append the property.</param>
