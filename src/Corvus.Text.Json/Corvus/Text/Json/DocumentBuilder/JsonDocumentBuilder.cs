@@ -1752,6 +1752,18 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return TryGetNamedPropertyValueIndexUnsafe(ref parsedData, startIndex, endIndex, propertyName, out valueIndex);
     }
 
+    bool IMutableJsonDocument.TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<byte> propertyName, out int valueIndex)
+    {
+        CheckNotDisposed();
+        return TryGetNamedPropertyValueIndexUnsafe(index, propertyName, out valueIndex);
+    }
+
+    bool IMutableJsonDocument.TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<char> propertyName, out int valueIndex)
+    {
+        CheckNotDisposed();
+        return TryGetNamedPropertyValueIndexUnsafe(index, propertyName, out valueIndex);
+    }
+
     int IMutableJsonDocument.StoreBooleanValue(bool value) => StoreBooleanValue(value);
 
     int IMutableJsonDocument.StoreNullValue() => StoreNullValue();

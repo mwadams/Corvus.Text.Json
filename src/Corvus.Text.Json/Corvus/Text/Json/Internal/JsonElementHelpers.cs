@@ -58,6 +58,54 @@ public static partial class JsonElementHelpers
     }
 
     /// <summary>
+    /// Removes a property value from a target element.
+    /// </summary>
+    /// <param name="targetElement">The target element instance.</param>
+    /// <param name="propertyName">The name of the property to remove.</param>
+    /// <returns><see langword="true"/> if the property was found and removed; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<char> propertyName)
+    {
+        if (parentDocument.TryGetNamedPropertyValueIndex(parentDocumentIndex, propertyName, out int index))
+        {
+            // We are going to replace just the value
+            parentDocument.RemoveRange(
+                parentDocumentIndex,
+                index - DbRow.Size, // Start with the property name
+                index + parentDocument.GetDbSize(index, true),
+                1);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Removes a property value from a target element.
+    /// </summary>
+    /// <param name="targetElement">The target element instance.</param>
+    /// <param name="propertyName">The name of the property to remove.</param>
+    /// <returns><see langword="true"/> if the property was found and removed; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<byte> propertyName)
+    {
+        if (parentDocument.TryGetNamedPropertyValueIndex(parentDocumentIndex, propertyName, out int index))
+        {
+            // We are going to replace just the value
+            parentDocument.RemoveRange(
+                parentDocumentIndex,
+                index - DbRow.Size, // Start with the property name
+                index + parentDocument.GetDbSize(index, true),
+                1);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Removes a range of items from an array element.
     /// </summary>
     /// <typeparam name="TArray">The type of the array element.</typeparam>

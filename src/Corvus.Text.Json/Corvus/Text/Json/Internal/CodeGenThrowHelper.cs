@@ -178,6 +178,17 @@ public static partial class CodeGenThrowHelper
     {
         return new InvalidOperationException(message) { Source = ExceptionSourceValueToRethrowAsJsonException };
     }
+
+    /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> when attempting to set a required property to an undefined value.
+    /// </summary>
+    /// <param name="propertyName">The name of the required property.</param>
+    /// <exception cref="InvalidOperationException">Always thrown.</exception>
+    [DoesNotReturn]
+    public static void ThrowInvalidOperationException_SetRequiredPropertyToUndefined(string propertyName)
+    {
+        throw GetInvalidOperationException(SR.Format(SR.CannotSetRequiredPropertyToUndefined, propertyName));
+    }
 }
 
 /// <summary>

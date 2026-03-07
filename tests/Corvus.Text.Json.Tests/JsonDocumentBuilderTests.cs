@@ -8135,5 +8135,416 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
+        #region RemoveProperty Tests
+
+        [Fact]
+        public static void RemoveProperty_String_RemovesExistingProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1,\"b\":2,\"c\":3}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("b");
+
+            // Assert
+            Assert.True(removed);
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root.GetPropertyCount());
+            Assert.Equal(1, root.GetProperty("a").GetInt32());
+            Assert.Equal(3, root.GetProperty("c").GetInt32());
+            Assert.False(root.TryGetProperty("b", out _));
+        }
+
+        [Fact]
+        public static void RemoveProperty_SpanOfChar_RemovesExistingProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1,\"b\":2,\"c\":3}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("b".AsSpan());
+
+            // Assert
+            Assert.True(removed);
+            Assert.Equal(2, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{\"a\":1,\"c\":3}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_Utf8_RemovesExistingProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1,\"b\":2,\"c\":3}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("b"u8);
+
+            // Assert
+            Assert.True(removed);
+            Assert.Equal(2, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{\"a\":1,\"c\":3}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_ReturnsFalse_WhenPropertyDoesNotExist()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("nonexistent");
+
+            // Assert
+            Assert.False(removed);
+            Assert.Equal(1, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{\"a\":1}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_RemovesFirstProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1,\"b\":2,\"c\":3}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("a");
+
+            // Assert
+            Assert.True(removed);
+            Assert.Equal(2, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{\"b\":2,\"c\":3}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_RemovesLastProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1,\"b\":2,\"c\":3}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("c");
+
+            // Assert
+            Assert.True(removed);
+            Assert.Equal(2, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{\"a\":1,\"b\":2}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_RemovesOnlyProperty_LeavesEmptyObject()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("a");
+
+            // Assert
+            Assert.True(removed);
+            Assert.Equal(0, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_RemovesNestedObjectProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":{\"nested\":true},\"b\":2}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("a");
+
+            // Assert
+            Assert.True(removed);
+            Assert.Equal(1, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{\"b\":2}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_RemovesNestedArrayProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":[1,2,3],\"b\":\"hello\"}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("a");
+
+            // Assert
+            Assert.True(removed);
+            Assert.Equal(1, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{\"b\":\"hello\"}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_OnNestedObject()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"outer\":{\"a\":1,\"b\":2}}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.GetProperty("outer").RemoveProperty("a");
+
+            // Assert
+            Assert.True(removed);
+            Assert.Equal("{\"outer\":{\"b\":2}}", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void RemoveProperty_FromEmptyObject_ReturnsFalse()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            bool removed = builderDoc.RootElement.RemoveProperty("anything");
+
+            // Assert
+            Assert.False(removed);
+            Assert.Equal(0, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{}", builderDoc.RootElement.ToString());
+        }
+
+        #endregion
+
+        #region SetProperty with default(JsonElement) removes property
+
+        [Fact]
+        public static void SetProperty_String_WithDefaultSource_RemovesExistingProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1,\"b\":2,\"c\":3}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            builderDoc.RootElement.SetProperty("b", default(JsonElement));
+
+            // Assert
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root.GetPropertyCount());
+            Assert.False(root.TryGetProperty("b", out _));
+            Assert.Equal("{\"a\":1,\"c\":3}", root.ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_SpanOfChar_WithDefaultSource_RemovesExistingProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1,\"b\":2,\"c\":3}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            builderDoc.RootElement.SetProperty("b".AsSpan(), default(JsonElement));
+
+            // Assert
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root.GetPropertyCount());
+            Assert.False(root.TryGetProperty("b", out _));
+            Assert.Equal("{\"a\":1,\"c\":3}", root.ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_Utf8_WithDefaultSource_RemovesExistingProperty()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1,\"b\":2,\"c\":3}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            builderDoc.RootElement.SetProperty("b"u8, default(JsonElement));
+
+            // Assert
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root.GetPropertyCount());
+            Assert.False(root.TryGetProperty("b", out _));
+            Assert.Equal("{\"a\":1,\"c\":3}", root.ToString());
+        }
+
+        [Fact]
+        public static void SetProperty_WithDefaultSource_NoOpWhenPropertyDoesNotExist()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":1}");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            builderDoc.RootElement.SetProperty("nonexistent", default(JsonElement));
+
+            // Assert
+            Assert.Equal(1, builderDoc.RootElement.GetPropertyCount());
+            Assert.Equal("{\"a\":1}", builderDoc.RootElement.ToString());
+        }
+
+        #endregion
+
+        #region SetItem with default(JsonElement) removes item
+
+        [Fact]
+        public static void SetItem_WithDefaultSource_RemovesExistingItem()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            builderDoc.RootElement.SetItem(1, default(JsonElement));
+
+            // Assert
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal(1, root[0].GetInt32());
+            Assert.Equal(3, root[1].GetInt32());
+        }
+
+        [Fact]
+        public static void SetItem_WithDefaultSource_RemovesFirstItem()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            builderDoc.RootElement.SetItem(0, default(JsonElement));
+
+            // Assert
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal(2, root[0].GetInt32());
+            Assert.Equal(3, root[1].GetInt32());
+        }
+
+        [Fact]
+        public static void SetItem_WithDefaultSource_RemovesLastItem()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            builderDoc.RootElement.SetItem(2, default(JsonElement));
+
+            // Assert
+            Assert.Equal(2, builderDoc.RootElement.GetArrayLength());
+            Assert.Equal("[1,2]", builderDoc.RootElement.ToString());
+        }
+
+        [Fact]
+        public static void SetItem_WithDefaultSource_RemovesOnlyItem_LeavesEmptyArray()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[42]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+
+            // Act
+            builderDoc.RootElement.SetItem(0, default(JsonElement));
+
+            // Assert
+            Assert.Equal(0, builderDoc.RootElement.GetArrayLength());
+            Assert.Equal("[]", builderDoc.RootElement.ToString());
+        }
+
+        #endregion
+
+        #region InsertItem with default(JsonElement) is a no-op
+
+        [Fact]
+        public static void InsertItem_WithDefaultSource_IsNoOp()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.InsertItem(1, default(JsonElement));
+
+            // Assert - array is unchanged
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("[1,2,3]", root.ToString());
+        }
+
+        [Fact]
+        public static void InsertItem_WithDefaultSource_IsNoOp_AtStart()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.InsertItem(0, default(JsonElement));
+
+            // Assert - array is unchanged
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("[1,2]", root.ToString());
+        }
+
+        [Fact]
+        public static void InsertItem_WithDefaultSource_IsNoOp_AtEnd()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.InsertItem(2, default(JsonElement));
+
+            // Assert - array is unchanged
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("[1,2]", root.ToString());
+        }
+
+        [Fact]
+        public static void InsertItem_WithDefaultSource_IsNoOp_OnEmptyArray()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            // Act
+            root.InsertItem(0, default(JsonElement));
+
+            // Assert - array is unchanged
+            Assert.Equal(0, root.GetArrayLength());
+            Assert.Equal("[]", root.ToString());
+        }
+
+        #endregion
+
     }
 }

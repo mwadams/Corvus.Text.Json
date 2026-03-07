@@ -455,6 +455,8 @@ public ref struct ComplexValueBuilder
     public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName, bool nameRequiresUnescaping)
         where T : struct, IJsonElement<T>
     {
+        Debug.Assert(value.TokenType != JsonTokenType.None);
+
         int currentLength = Length;
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
@@ -472,6 +474,8 @@ public ref struct ComplexValueBuilder
     public void AddProperty<T>(ReadOnlySpan<char> propertyName, T value)
         where T : struct, IJsonElement<T>
     {
+        Debug.Assert(value.TokenType != JsonTokenType.None);
+
         int currentLength = Length;
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
@@ -2447,6 +2451,8 @@ public ref struct ComplexValueBuilder
     public void AddItem<T>(in T value)
         where T : struct, IJsonElement<T>
     {
+        Debug.Assert(value.TokenType != JsonTokenType.None);
+
         int currentLength = Length;
         value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
         _memberCount += 1;

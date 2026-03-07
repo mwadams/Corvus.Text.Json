@@ -2185,5 +2185,14 @@ namespace Corvus.Text.Json.Resources {
                 return ResourceManager.GetString("ZeroDepthAtEnd", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot set the required property &apos;{0}&apos; to an undefined value..
+        /// </summary>
+        internal static string CannotSetRequiredPropertyToUndefined {
+            get {
+                return ResourceManager.GetString("CannotSetRequiredPropertyToUndefined", resourceCulture);
+            }
+        }
     }
 }

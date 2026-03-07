@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Collections.Generic;
@@ -540,6 +540,8 @@ internal static partial class CodeGeneratorExtensions
             string name = SymbolDisplay.FormatLiteral(property.JsonPropertyName, true);
             name = name.Substring(1, name.Length - 2);
             bool requiresEncoding = JavaScriptEncoder.Default.Encode(property.JsonPropertyName) != property.JsonPropertyName;
+            bool isOptional = property.RequiredOrOptional == RequiredOrOptional.Optional;
+
             generator
                 .AppendSeparatorLine()
                 .AppendLineIndent("/// <summary>")
@@ -550,7 +552,33 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("CheckValidInstance();")
-                    .AppendSeparatorLine()
+                    .AppendSeparatorLine();
+
+            if (isOptional)
+            {
+                generator
+                    .AppendLineIndent("if (value.IsUndefined)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8);")
+                        .AppendLineIndent("return;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine();
+            }
+            else
+            {
+                generator
+                    .AppendLineIndent("if (value.IsUndefined)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("CodeGenThrowHelper.ThrowInvalidOperationException_SetRequiredPropertyToUndefined(\"", name, "\");")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine();
+            }
+
+            generator
                     .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);")
                     .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8, out IJsonDocument? elementParent, out int elementIdx))")
                     .AppendLineIndent("{")
@@ -591,7 +619,33 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLineIndent("{")
                     .PushIndent()
                         .AppendLineIndent("CheckValidInstance();")
-                        .AppendSeparatorLine()
+                        .AppendSeparatorLine();
+
+                if (isOptional)
+                {
+                    generator
+                        .AppendLineIndent("if (value.IsUndefined)")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8);")
+                            .AppendLineIndent("return;")
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                        .AppendSeparatorLine();
+                }
+                else
+                {
+                    generator
+                        .AppendLineIndent("if (value.IsUndefined)")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("CodeGenThrowHelper.ThrowInvalidOperationException_SetRequiredPropertyToUndefined(\"", name, "\");")
+                        .PopIndent()
+                        .AppendLineIndent("}")
+                        .AppendSeparatorLine();
+                }
+
+                generator
                         .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);")
                         .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8, out IJsonDocument? elementParent, out int elementIdx))")
                         .AppendLineIndent("{")
@@ -612,6 +666,24 @@ internal static partial class CodeGeneratorExtensions
                         .AppendLineIndent("}")
                         .AppendSeparatorLine()
                         .AppendLineIndent("_documentVersion = _parent.Version;")
+                    .PopIndent()
+                    .AppendLineIndent("}");
+            }
+
+            // For optional properties, also generate a Remove[PropertyName] method
+            if (isOptional)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("/// <summary>")
+                    .AppendLineIndent("/// Remove the <c>", name, "</c> property, if present.")
+                    .AppendLineIndent("/// </summary>")
+                    .AppendLineIndent("/// <returns><see langword=\"true\"/> if the property was found and removed; otherwise, <see langword=\"false\"/>.</returns>")
+                    .AppendLineIndent("public bool Remove", property.DotnetPropertyName(), "()")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("CheckValidInstance();")
+                        .AppendLineIndent("return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8);")
                     .PopIndent()
                     .AppendLineIndent("}");
             }
@@ -729,6 +801,14 @@ internal static partial class CodeGeneratorExtensions
             .PushIndent()
                 .AppendLineIndent("CheckValidInstance();")
                 .AppendSeparatorLine()
+                .AppendLineIndent("if (value.IsUndefined)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+                    .AppendLineIndent("return;")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
                 .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);")
                 .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out IJsonDocument? elementParent, out int elementIdx))")
                 .AppendLineIndent("{")
@@ -778,6 +858,14 @@ internal static partial class CodeGeneratorExtensions
             .PushIndent()
                 .AppendLineIndent("CheckValidInstance();")
                 .AppendSeparatorLine()
+                .AppendLineIndent("if (value.IsUndefined)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+                    .AppendLineIndent("return;")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
                 .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 2);")
                 .AppendLineIndent("if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out IJsonDocument? elementParent, out int elementIdx))")
                 .AppendLineIndent("{")
@@ -798,6 +886,76 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("}")
                 .AppendSeparatorLine()
                 .AppendLineIndent("_documentVersion = _parent.Version;")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        // RemoveProperty(string) - delegates to ReadOnlySpan<char>
+        generator
+            .ReserveNameIfNotReserved("RemoveProperty")
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Removes the property with the given name, if present.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"propertyName\">The property name to remove.</param>")
+            .AppendLineIndent("/// <returns><see langword=\"true\"/> if the property was found and removed; otherwise, <see langword=\"false\"/>.</returns>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Object\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+            .AppendLineIndent("public bool RemoveProperty(string propertyName)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return RemoveProperty(propertyName.AsSpan());")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        // RemoveProperty(ReadOnlySpan<char>)
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Removes the property with the given name, if present.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"propertyName\">The property name to remove.</param>")
+            .AppendLineIndent("/// <returns><see langword=\"true\"/> if the property was found and removed; otherwise, <see langword=\"false\"/>.</returns>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Object\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("public bool RemoveProperty(ReadOnlySpan<char> propertyName)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        // RemoveProperty(ReadOnlySpan<byte>)
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("///   Removes the property with the given name, if present.")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("/// <param name=\"propertyName\">The UTF-8 encoded property name to remove.</param>")
+            .AppendLineIndent("/// <returns><see langword=\"true\"/> if the property was found and removed; otherwise, <see langword=\"false\"/>.</returns>")
+            .AppendLineIndent("/// <exception cref=\"InvalidOperationException\">")
+            .AppendLineIndent("///   This element's <see cref=\"ValueKind\"/> is not <see cref=\"JsonValueKind.Object\"/>,")
+            .AppendLineIndent("///   or the element reference is stale due to document mutations.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("/// <exception cref=\"ObjectDisposedException\">")
+            .AppendLineIndent("///   The parent <see cref=\"JsonDocument\"/> has been disposed.")
+            .AppendLineIndent("/// </exception>")
+            .AppendLineIndent("public bool RemoveProperty(ReadOnlySpan<byte> propertyName)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
             .PopIndent()
             .AppendLineIndent("}");
 

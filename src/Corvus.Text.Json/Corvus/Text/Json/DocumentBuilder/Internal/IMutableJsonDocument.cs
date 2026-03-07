@@ -47,6 +47,24 @@ public interface IMutableJsonDocument : IJsonDocument
     bool TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, out int valueIndex);
 
     /// <summary>
+    /// Gets the named property value from a specific <see cref="MetadataDb"/>.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="propertyName">The unescaped property name to look up.</param>
+    /// <param name="valueIndex">The index of the value corresponding to the given property name.</param>
+    /// <returns><see langword="true"/> if the property with the given name is found.</returns>
+    bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<char> propertyName, out int valueIndex);
+
+    /// <summary>
+    /// Gets the named property value from a specific <see cref="MetadataDb"/>.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="propertyName">The name of the property as a UTF-8 byte span.</param>
+    /// <param name="valueIndex">The index of the value corresponding to the given property name.</param>
+    /// <returns><see langword="true"/> if the property with the given name is found.</returns>
+    bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<byte> propertyName, out int valueIndex);
+
+    /// <summary>
     /// Tries to get the value of a named property as a mutable JSON element.
     /// </summary>
     /// <param name="index">The index of the element.</param>

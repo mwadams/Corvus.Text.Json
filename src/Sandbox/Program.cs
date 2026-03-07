@@ -177,6 +177,7 @@ using JsonDocumentBuilder<JsonElement.Mutable> b8Builder = documentB8.RootElemen
 Console.WriteLine(b8Builder.RootElement.ToString());
 
 b8Builder.RootElement.SetProperty("complex"u8, 42);
+b8Builder.RootElement.SetProperty("complex"u8, default(JsonElement));
 
 Console.WriteLine();
 Console.WriteLine("*************");
@@ -503,5 +504,3 @@ long yearAsLong = year;
 byte yearAsByte = (byte)year;
 
 string? firstName = testPersonDocBuilder.RootElement.Name.FirstName.GetString();
-
-Person.Mutable person;

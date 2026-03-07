@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using Corvus.Json.CodeGeneration;
@@ -90,6 +90,15 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("CheckValidInstance();")
+                .AppendSeparatorLine()
+                .AppendLineIndent("if (value.IsUndefined)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("Remove(itemIndex);")
+                    .AppendLineIndent("return;")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
                 .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);")
                 .AppendLineIndent("value.AddAsItem(ref cvb);")
                 .AppendLineIndent("int arrayLength = GetArrayLength();")
@@ -140,6 +149,14 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("CheckValidInstance();")
+                .AppendSeparatorLine()
+                .AppendLineIndent("if (value.IsUndefined)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("return;")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
                 .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);")
                 .AppendLineIndent("value.AddAsItem(ref cvb);")
                 .AppendLineIndent("_parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);")

@@ -772,5 +772,8 @@
   <data name="PrecisionMustBeBetween0And255" xml:space="preserve">
     <value>Precision must be between 0 and 255.</value>
   </data>
+  <data name="CannotSetRequiredPropertyToUndefined" xml:space="preserve">
+    <value>Cannot set the required property '{0}' to an undefined value.</value>
+  </data>
 
 </root>

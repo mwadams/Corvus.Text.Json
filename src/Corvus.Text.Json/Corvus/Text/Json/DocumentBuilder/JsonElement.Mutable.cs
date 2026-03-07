@@ -157,10 +157,12 @@ public readonly partial struct JsonElement
         private readonly ArrayBuilder.Build? _arrayBuilder;
         private readonly ObjectBuilder.Build? _objectBuilder;
 
+        public bool IsUndefined => _kind == Kind.Unknown;
+
         private Source(JsonElement jsonElement)
         {
             _jsonElement = jsonElement;
-            _kind = Kind.JsonElement;
+            _kind = jsonElement.TokenType == JsonTokenType.None ? Kind.Unknown : Kind.JsonElement;
         }
 
         private Source(Kind kind)
@@ -1460,6 +1462,11 @@ public readonly partial struct JsonElement
     public static JsonDocumentBuilder<Mutable> BuildDocument(JsonWorkspace workspace, in Source source, int estimatedMemberCount = 30)
     {
         // Create the document builder without a MetadataDb
+        if (source.IsUndefined)
+        {
+            ThrowHelper.ThrowArgumentException(SR.EmptyJsonIsInvalid);
+        }
+
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.BuildDocument<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         source.AddAsItem(ref cvb);
@@ -4099,7 +4106,13 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            if (source.IsUndefined)
+            {
+                JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+                return;
+            }
+
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);            
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 source.AddAsItem(ref cvb);
@@ -4137,6 +4150,12 @@ public readonly partial struct JsonElement
         public void SetProperty(ReadOnlySpan<byte> propertyName, in Source source, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
+
+            if (source.IsUndefined)
+            {
+                JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+                return;
+            }
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
@@ -4812,6 +4831,38 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        /// Removes the property with the given name, if present.
+        /// </summary>
+        /// <param name="propertyName">The property name to remove.</param>
+        /// <returns><see langword="true"/> if the property was found and removed; otherwise, <see langword="false"/>.</returns>
+        public bool RemoveProperty(string propertyName)
+        {
+            return RemoveProperty(propertyName.AsSpan());
+        }
+
+        /// <summary>
+        /// Removes the property with the given name, if present.
+        /// </summary>
+        /// <param name="propertyName">The property name to remove.</param>
+        /// <returns><see langword="true"/> if the property was found and removed; otherwise, <see langword="false"/>.</returns>
+        public bool RemoveProperty(ReadOnlySpan<char> propertyName)
+        {
+            CheckValidInstance();
+            return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+        }
+
+        /// <summary>
+        /// Removes the property with the given name, if present.
+        /// </summary>
+        /// <param name="propertyName">The property name to remove.</param>
+        /// <returns><see langword="true"/> if the property was found and removed; otherwise, <see langword="false"/>.</returns>
+        public bool RemoveProperty(ReadOnlySpan<byte> propertyName)
+        {
+            CheckValidInstance();
+            return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+        }
+
+        /// <summary>
         ///   Sets the value of an array element at the specified index using a value Source.
         /// </summary>
         /// <param name="itemIndex">The zero-based index of the array element to set.</param>
@@ -4839,6 +4890,12 @@ public readonly partial struct JsonElement
         public void SetItem(int itemIndex, in Source source, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
+
+            if (source.IsUndefined)
+            {
+                Remove(itemIndex);
+                return;
+            }
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             source.AddAsItem(ref cvb);
@@ -5081,6 +5138,11 @@ public readonly partial struct JsonElement
         public void InsertItem(int itemIndex, in Source source, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
+
+            if (source.IsUndefined)
+            {
+                return;
+            }
 
             ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             source.AddAsItem(ref cvb);

@@ -2062,7 +2062,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("_jsonElement = jsonElement;")
-                    .AppendLineIndent("_kind = Kind.JsonElement;")
+                    .AppendLineIndent("_kind = jsonElement.ValueKind == JsonValueKind.Undefined ? Kind.Unknown : Kind.JsonElement;")
                 .PopIndent()
                 .AppendLineIndent("}");
 
@@ -2646,6 +2646,13 @@ internal static partial class CodeGeneratorExtensions
                 }
             }
         }
+
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// Gets a value indicating whether this Source is undefined (uninitialized).")
+            .AppendLineIndent("/// </summary>")
+            .AppendLineIndent("public bool IsUndefined => _kind == Kind.Unknown;");
 
         return generator;
     }
