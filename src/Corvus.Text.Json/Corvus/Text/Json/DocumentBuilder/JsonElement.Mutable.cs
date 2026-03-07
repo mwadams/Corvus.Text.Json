@@ -1258,6 +1258,11 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        /// Gets a value indicating whether this Source is undefined (uninitialized).
+        /// </summary>
+        public bool IsUndefined => _kind == Kind.Unknown;
+
+        /// <summary>
         /// Adds this source as a property to a complex value builder.
         /// </summary>
         /// <param name="utf8Name">The UTF-8 encoded property name.</param>

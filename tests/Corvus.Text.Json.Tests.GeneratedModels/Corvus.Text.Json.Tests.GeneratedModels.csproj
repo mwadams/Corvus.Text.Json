@@ -11,6 +11,19 @@
 
   <ItemGroup>
     <AdditionalFiles Include="format-types-2020-12.json" />
+    <AdditionalFiles Include="object-with-mixed-properties-2020-12.json" />
+    <AdditionalFiles Include="nested-object-2020-12.json" />
+    <AdditionalFiles Include="array-of-items-2020-12.json" />
+    <AdditionalFiles Include="object-with-array-property-2020-12.json" />
+    <AdditionalFiles Include="composition-any-of-2020-12.json" />
+    <AdditionalFiles Include="composition-all-of-2020-12.json" />
+    <AdditionalFiles Include="composition-one-of-2020-12.json" />
+    <AdditionalFiles Include="if-then-else-2020-12.json" />
+    <AdditionalFiles Include="allof-with-anyof-2020-12.json" />
+    <AdditionalFiles Include="properties-with-oneof-2020-12.json" />
+    <AdditionalFiles Include="allof-with-ifthenelse-2020-12.json" />
+    <AdditionalFiles Include="pure-tuple-2020-12.json" />
+    <AdditionalFiles Include="tuple-with-additional-items-2020-12.json" />
   </ItemGroup>
 
   <ItemGroup>

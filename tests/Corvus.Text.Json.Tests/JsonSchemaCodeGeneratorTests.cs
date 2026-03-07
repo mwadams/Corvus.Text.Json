@@ -18,6 +18,37 @@ namespace Corvus.Text.Json.Tests
             }}
             """;
 
+        private const string TupleType =
+        """
+        {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "PureTuple",
+            "description": "A fixed-length tuple array with positional types and no additional items.",
+            "type": "array",
+            "prefixItems": [
+            { "type": "string" },
+            { "type": "integer", "format": "int32" },
+            { "type": "boolean" }
+            ],
+            "items": false
+        }
+        """;
+
+        private const string TupleWithAdditionalItemsType =
+        """
+        {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "title": "TupleWithAdditionalItems",
+          "description": "A tuple array with positional types and additional items of a specific type.",
+          "type": "array",
+          "prefixItems": [
+            { "type": "string" },
+            { "type": "integer", "format": "int32" }
+          ],
+          "items": { "type": "boolean" }
+        }
+        """;
+
         private const string ArrayTypeWithItemsConstraint =
             """
             {{
@@ -394,6 +425,40 @@ namespace Corvus.Text.Json.Tests
                 s.Replace("]", "");
                 return s.ToString();
             }
+        }
+
+        [Fact]
+        public static async Task GenerateCode_Emits_TupleType ()
+        {
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"types_tupletype.json",
+                TupleType,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
+        }
+
+        [Fact]
+        public static async Task GenerateCode_Emits_TupleWithAdditionalItemsType()
+        {
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"types_tuplewithadditionalitemstype.json",
+                TupleWithAdditionalItemsType,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
         }
 
         [Theory]

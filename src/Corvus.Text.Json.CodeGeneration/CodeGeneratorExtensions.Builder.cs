@@ -168,7 +168,7 @@ internal static partial class CodeGeneratorExtensions
                 }
             }
 
-            if ((core & CoreTypes.Number) != 0)
+            if ((core & (CoreTypes.Number | CoreTypes.Integer)) != 0)
             {
                 if (seenKinds.Add("NumericSimpleType"))
                 {
@@ -519,7 +519,7 @@ internal static partial class CodeGeneratorExtensions
                 }
             }
 
-            if ((core & CoreTypes.Number) != 0)
+            if ((core & (CoreTypes.Number | CoreTypes.Integer)) != 0)
             {
                 if (seenKinds.Add("NumericSimpleType"))
                 {
@@ -840,7 +840,7 @@ internal static partial class CodeGeneratorExtensions
         generator
             .AppendFixedSizeNumericArray(typeDeclaration, isObject);
 
-        if (typeDeclaration.ImplicitTupleType() is TupleTypeDeclaration tupleType)
+        if (typeDeclaration.TupleType() is TupleTypeDeclaration tupleType)
         {
             hasTuple = true;
             if (allowsNonPrefixItems)
@@ -854,6 +854,21 @@ internal static partial class CodeGeneratorExtensions
             generator
                 .AppendSeparatorLine()
                 .AppendCreateTuple(typeDeclaration, tupleType, allowsNonPrefixItems);
+        }
+        else if(typeDeclaration.ExplicitTupleType() is TupleTypeDeclaration tupleType2)
+        {
+            hasTuple = true;
+            if (allowsNonPrefixItems)
+            {
+                generator
+                    .ReserveName("_addedPrefixItems")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("private bool _addedPrefixItems = false;");
+            }
+
+            generator
+                .AppendSeparatorLine()
+                .AppendCreateTuple(typeDeclaration, tupleType2, allowsNonPrefixItems);
         }
 
         if (allowsNonPrefixItems)
@@ -1534,7 +1549,7 @@ internal static partial class CodeGeneratorExtensions
         }
 
         generator
-            .AppendLine()
+            .AppendLine(")")
             .AppendLineIndent("{")
             .PushIndent();
 
@@ -1547,7 +1562,7 @@ internal static partial class CodeGeneratorExtensions
         if (allowsNonPrefixItems)
         {
             generator
-                .AppendLineIndent("_addedPrefixItems = true");
+                .AppendLineIndent("_addedPrefixItems = true;");
         }
 
         generator
@@ -2422,7 +2437,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("public static ", generator.SourceClassName(), " RawString(ReadOnlySpan<byte> value, bool requiresUnescaping) => new(value, requiresUnescaping);");
         }
 
-        if ((core & CoreTypes.Number) != 0)
+        if ((core & (CoreTypes.Number | CoreTypes.Integer)) != 0)
         {
             generator
                 .AppendSeparatorLine()
