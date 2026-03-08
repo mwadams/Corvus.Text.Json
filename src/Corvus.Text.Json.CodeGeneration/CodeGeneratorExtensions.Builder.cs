@@ -840,7 +840,7 @@ internal static partial class CodeGeneratorExtensions
         generator
             .AppendFixedSizeNumericArray(typeDeclaration, isObject);
 
-        if (typeDeclaration.TupleType() is TupleTypeDeclaration tupleType)
+        if (typeDeclaration.TupleType() is TupleTypeDeclaration tupleType && !HasNotAnyTupleItem(tupleType))
         {
             hasTuple = true;
             if (allowsNonPrefixItems)
@@ -855,7 +855,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendSeparatorLine()
                 .AppendCreateTuple(typeDeclaration, tupleType, allowsNonPrefixItems);
         }
-        else if(typeDeclaration.ExplicitTupleType() is TupleTypeDeclaration tupleType2)
+        else if(typeDeclaration.ExplicitTupleType() is TupleTypeDeclaration tupleType2 && !HasNotAnyTupleItem(tupleType2))
         {
             hasTuple = true;
             if (allowsNonPrefixItems)
@@ -870,7 +870,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendSeparatorLine()
                 .AppendCreateTuple(typeDeclaration, tupleType2, allowsNonPrefixItems);
         }
-        else if(typeDeclaration.ImplicitTupleType() is TupleTypeDeclaration tupleType3)
+        else if(typeDeclaration.ImplicitTupleType() is TupleTypeDeclaration tupleType3 && !HasNotAnyTupleItem(tupleType3))
         {
             hasTuple = true;
             if (allowsNonPrefixItems)
@@ -1531,6 +1531,19 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator;
+    }
+
+    private static bool HasNotAnyTupleItem(TupleTypeDeclaration tupleType)
+    {
+        foreach (ReducedTypeDeclaration item in tupleType.ItemsTypes)
+        {
+            if (item.ReducedType.IsBuiltInJsonNotAnyType())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static CodeGenerator AppendCreateTuple(this CodeGenerator generator, TypeDeclaration typeDeclaration, TupleTypeDeclaration tupleType, bool allowsNonPrefixItems)
