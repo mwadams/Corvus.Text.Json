@@ -57,7 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.3" />
   </ItemGroup>
   
@@ -243,7 +243,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.6.1" />
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25228.101" />
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25227.101" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />

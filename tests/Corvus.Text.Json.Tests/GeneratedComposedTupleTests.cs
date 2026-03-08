@@ -7,15 +7,16 @@ using Xunit;
 namespace Corvus.Text.Json.Tests
 {
     /// <summary>
-    /// Tests for tuple types composed via allOf/$ref alongside additional constraints
+    /// Tests for tuple types composed via allOf alongside additional constraints
     /// such as contains, items, or unevaluatedItems.
+    /// Covers the closed/open matrix for composed vs local type constraints.
     /// </summary>
     public class GeneratedComposedTupleTests
     {
-        #region RefTupleWithContains — allOf/$ref pure tuple + contains
+        #region RefTupleWithContains — closed composed tuple (items:false) + contains — pure tuple
 
         [Fact]
-        public void RefTupleWithContains_Parse_Succeeds()
+        public void ClosedComposed_Parse_Succeeds()
         {
             using ParsedJsonDocument<RefTupleWithContains> doc =
                 ParsedJsonDocument<RefTupleWithContains>.Parse("""["hello",42]""");
@@ -24,7 +25,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithContains_IndexAccess_ReturnsCorrectValues()
+        public void ClosedComposed_IndexAccess_ReturnsJsonElement()
         {
             using ParsedJsonDocument<RefTupleWithContains> doc =
                 ParsedJsonDocument<RefTupleWithContains>.Parse("""["hello",42]""");
@@ -34,34 +35,24 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithContains_TryGetAsBaseTuple_Succeeds()
+        public void ClosedComposed_TryGetAsAllOf0Array_AccessesPrefixItems()
         {
             using ParsedJsonDocument<RefTupleWithContains> doc =
                 ParsedJsonDocument<RefTupleWithContains>.Parse("""["hello",42]""");
 
-            Assert.True(doc.RootElement.TryGetAsBaseTuple(out RefTupleWithContains.BaseTuple baseTuple));
-            Assert.Equal(2, baseTuple.GetArrayLength());
-        }
+            Assert.True(doc.RootElement.TryGetAsAllOf0Array(out RefTupleWithContains.AllOf0Array allOf0));
 
-        [Fact]
-        public void RefTupleWithContains_PrefixItems_ViaBaseTuple()
-        {
-            using ParsedJsonDocument<RefTupleWithContains> doc =
-                ParsedJsonDocument<RefTupleWithContains>.Parse("""["hello",42]""");
-
-            Assert.True(doc.RootElement.TryGetAsBaseTuple(out RefTupleWithContains.BaseTuple baseTuple));
-
-            RefTupleWithContains.BaseTuple.PrefixItems0Entity item0 =
-                RefTupleWithContains.BaseTuple.PrefixItems0Entity.From(baseTuple[0]);
+            RefTupleWithContains.AllOf0Array.PrefixItems0Entity item0 =
+                RefTupleWithContains.AllOf0Array.PrefixItems0Entity.From(allOf0[0]);
             Assert.Equal("hello", (string)item0);
 
-            RefTupleWithContains.BaseTuple.PrefixItems1Entity item1 =
-                RefTupleWithContains.BaseTuple.PrefixItems1Entity.From(baseTuple[1]);
+            RefTupleWithContains.AllOf0Array.PrefixItems1Entity item1 =
+                RefTupleWithContains.AllOf0Array.PrefixItems1Entity.From(allOf0[1]);
             Assert.Equal(42, (int)item1);
         }
 
         [Fact]
-        public void RefTupleWithContains_EnumerateArray_IteratesAllItems()
+        public void ClosedComposed_EnumerateArray()
         {
             using ParsedJsonDocument<RefTupleWithContains> doc =
                 ParsedJsonDocument<RefTupleWithContains>.Parse("""["hello",42]""");
@@ -76,20 +67,19 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithContains_Build_CreatesValidSource()
+        public void ClosedComposed_Build_CreateTuple()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             RefTupleWithContains.Source source = RefTupleWithContains.Build(
                 static (ref RefTupleWithContains.Builder builder) =>
                 {
-                    builder.Add("world");
-                    builder.Add(99);
+                    builder.CreateTuple("world", 99);
                 });
 
-            using JsonDocumentBuilder<RefTupleWithContains.Mutable> builder =
+            using JsonDocumentBuilder<RefTupleWithContains.Mutable> doc =
                 RefTupleWithContains.BuildDocument(workspace, source);
-            RefTupleWithContains.Mutable root = builder.RootElement;
+            RefTupleWithContains.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
             Assert.Equal("world", root[0].ToString());
@@ -97,39 +87,32 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithContains_Mutable_SetItem()
+        public void ClosedComposed_Build_CreateTuple_MaterializesRoundTrip()
         {
-            using ParsedJsonDocument<RefTupleWithContains> doc =
-                ParsedJsonDocument<RefTupleWithContains>.Parse("""["hello",42]""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<RefTupleWithContains.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
 
-            RefTupleWithContains.Mutable root = builderDoc.RootElement;
-            root.SetItem(0, "replaced");
+            RefTupleWithContains.Source source = RefTupleWithContains.Build(
+                static (ref RefTupleWithContains.Builder b) =>
+                {
+                    b.CreateTuple("hello", 42);
+                });
 
-            Assert.Equal("replaced", root[0].ToString());
-            Assert.Equal("42", root[1].ToString());
+            using JsonDocumentBuilder<RefTupleWithContains.Mutable> doc =
+                RefTupleWithContains.BuildDocument(workspace, source);
+
+            string json = doc.RootElement.ToString();
+            Assert.Contains("hello", json);
+            Assert.Contains("42", json);
+
+            using ParsedJsonDocument<RefTupleWithContains> reparsed =
+                ParsedJsonDocument<RefTupleWithContains>.Parse(json);
+            Assert.Equal(2, reparsed.RootElement.GetArrayLength());
+            Assert.Equal("hello", reparsed.RootElement[0].ToString());
+            Assert.Equal("42", reparsed.RootElement[1].ToString());
         }
 
         [Fact]
-        public void RefTupleWithContains_Mutable_Remove()
-        {
-            using ParsedJsonDocument<RefTupleWithContains> doc =
-                ParsedJsonDocument<RefTupleWithContains>.Parse("""["hello",42]""");
-            using JsonWorkspace workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<RefTupleWithContains.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
-
-            RefTupleWithContains.Mutable root = builderDoc.RootElement;
-            root.Remove(0);
-
-            Assert.Equal(1, root.GetArrayLength());
-            Assert.Equal("42", root[0].ToString());
-        }
-
-        [Fact]
-        public void RefTupleWithContains_RoundTrip()
+        public void ClosedComposed_RoundTrip()
         {
             using ParsedJsonDocument<RefTupleWithContains> doc =
                 ParsedJsonDocument<RefTupleWithContains>.Parse("""["hello",42]""");
@@ -145,10 +128,108 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
-        #region RefTupleWithAdditionalItems — allOf/$ref tuple + items: boolean
+        #region AllOfOpenTupleClosedLocally — open composed + items:false locally — pure tuple
 
         [Fact]
-        public void RefTupleWithAdditionalItems_Parse_Succeeds()
+        public void OpenComposedClosedLocally_Parse_Succeeds()
+        {
+            using ParsedJsonDocument<AllOfOpenTupleClosedLocally> doc =
+                ParsedJsonDocument<AllOfOpenTupleClosedLocally>.Parse("""["hello",3.14]""");
+
+            Assert.Equal(2, doc.RootElement.GetArrayLength());
+        }
+
+        [Fact]
+        public void OpenComposedClosedLocally_IndexAccess_ReturnsJsonElement()
+        {
+            using ParsedJsonDocument<AllOfOpenTupleClosedLocally> doc =
+                ParsedJsonDocument<AllOfOpenTupleClosedLocally>.Parse("""["hello",3.14]""");
+
+            Assert.Equal("hello", doc.RootElement[0].ToString());
+            Assert.Equal("3.14", doc.RootElement[1].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedClosedLocally_TryGetAsAllOf0Array_AccessesPrefixItems()
+        {
+            using ParsedJsonDocument<AllOfOpenTupleClosedLocally> doc =
+                ParsedJsonDocument<AllOfOpenTupleClosedLocally>.Parse("""["hello",3.14]""");
+
+            Assert.True(doc.RootElement.TryGetAsAllOf0Array(out AllOfOpenTupleClosedLocally.AllOf0Array allOf0));
+
+            AllOfOpenTupleClosedLocally.AllOf0Array.PrefixItems0Entity item0 =
+                AllOfOpenTupleClosedLocally.AllOf0Array.PrefixItems0Entity.From(allOf0[0]);
+            Assert.Equal("hello", (string)item0);
+
+            AllOfOpenTupleClosedLocally.AllOf0Array.PrefixItems1Entity item1 =
+                AllOfOpenTupleClosedLocally.AllOf0Array.PrefixItems1Entity.From(allOf0[1]);
+            Assert.Equal(3.14, (double)item1, 2);
+        }
+
+        [Fact]
+        public void OpenComposedClosedLocally_Build_CreateTuple()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            AllOfOpenTupleClosedLocally.Source source = AllOfOpenTupleClosedLocally.Build(
+                static (ref AllOfOpenTupleClosedLocally.Builder builder) =>
+                {
+                    builder.CreateTuple("world", 2.718);
+                });
+
+            using JsonDocumentBuilder<AllOfOpenTupleClosedLocally.Mutable> doc =
+                AllOfOpenTupleClosedLocally.BuildDocument(workspace, source);
+            AllOfOpenTupleClosedLocally.Mutable root = doc.RootElement;
+
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("world", root[0].ToString());
+            Assert.Equal("2.718", root[1].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedClosedLocally_Build_CreateTuple_MaterializesRoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            AllOfOpenTupleClosedLocally.Source source = AllOfOpenTupleClosedLocally.Build(
+                static (ref AllOfOpenTupleClosedLocally.Builder b) =>
+                {
+                    b.CreateTuple("hello", 1.5);
+                });
+
+            using JsonDocumentBuilder<AllOfOpenTupleClosedLocally.Mutable> doc =
+                AllOfOpenTupleClosedLocally.BuildDocument(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<AllOfOpenTupleClosedLocally> reparsed =
+                ParsedJsonDocument<AllOfOpenTupleClosedLocally>.Parse(json);
+            Assert.Equal(2, reparsed.RootElement.GetArrayLength());
+            Assert.Equal("hello", reparsed.RootElement[0].ToString());
+            Assert.Equal("1.5", reparsed.RootElement[1].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedClosedLocally_RoundTrip()
+        {
+            using ParsedJsonDocument<AllOfOpenTupleClosedLocally> doc =
+                ParsedJsonDocument<AllOfOpenTupleClosedLocally>.Parse("""["hello",3.14]""");
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<AllOfOpenTupleClosedLocally> roundTrip =
+                ParsedJsonDocument<AllOfOpenTupleClosedLocally>.Parse(json);
+            Assert.Equal(2, roundTrip.RootElement.GetArrayLength());
+            Assert.Equal("hello", roundTrip.RootElement[0].ToString());
+            Assert.Equal("3.14", roundTrip.RootElement[1].ToString());
+        }
+
+        #endregion
+
+        #region RefTupleWithAdditionalItems — open composed + items:boolean — tuple with additional items
+
+        [Fact]
+        public void OpenComposedWithItems_Parse_Succeeds()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
@@ -157,12 +238,11 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_IndexAccess_ReturnsTypedItems()
+        public void OpenComposedWithItems_IndexAccess_ReturnsItemsEntity()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
 
-            // Indexer returns ItemsEntity
             Assert.Equal("hello", doc.RootElement[0].ToString());
             Assert.Equal("42", doc.RootElement[1].ToString());
             Assert.Equal("True", doc.RootElement[2].ToString());
@@ -170,34 +250,24 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_TryGetAsBaseTuple_Succeeds()
-        {
-            using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
-                ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
-
-            Assert.True(doc.RootElement.TryGetAsBaseTuple(out RefTupleWithAdditionalItems.BaseTuple baseTuple));
-            Assert.Equal(4, baseTuple.GetArrayLength());
-        }
-
-        [Fact]
-        public void RefTupleWithAdditionalItems_PrefixItems_ViaBaseTuple()
+        public void OpenComposedWithItems_TryGetAsAllOf0Array_AccessesPrefixItems()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true]""");
 
-            Assert.True(doc.RootElement.TryGetAsBaseTuple(out RefTupleWithAdditionalItems.BaseTuple baseTuple));
+            Assert.True(doc.RootElement.TryGetAsAllOf0Array(out RefTupleWithAdditionalItems.AllOf0Array allOf0));
 
-            RefTupleWithAdditionalItems.BaseTuple.PrefixItems0Entity item0 =
-                RefTupleWithAdditionalItems.BaseTuple.PrefixItems0Entity.From(baseTuple[0]);
+            RefTupleWithAdditionalItems.AllOf0Array.PrefixItems0Entity item0 =
+                RefTupleWithAdditionalItems.AllOf0Array.PrefixItems0Entity.From(allOf0[0]);
             Assert.Equal("hello", (string)item0);
 
-            RefTupleWithAdditionalItems.BaseTuple.PrefixItems1Entity item1 =
-                RefTupleWithAdditionalItems.BaseTuple.PrefixItems1Entity.From(baseTuple[1]);
+            RefTupleWithAdditionalItems.AllOf0Array.PrefixItems1Entity item1 =
+                RefTupleWithAdditionalItems.AllOf0Array.PrefixItems1Entity.From(allOf0[1]);
             Assert.Equal(42, (int)item1);
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_EnumerateArray_IteratesAllItems()
+        public void OpenComposedWithItems_EnumerateArray()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
@@ -212,29 +282,100 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_Build_CreatesValidSource()
+        public void OpenComposedWithItems_Build_CreateTupleThenAdd()
         {
-            // Builder.Add takes ItemsEntity.Source (boolean) — no CreateTuple on composed types
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefTupleWithAdditionalItems.Source source = RefTupleWithAdditionalItems.Build(
+                static (ref RefTupleWithAdditionalItems.Builder builder) =>
+                {
+                    builder.CreateTuple("hello", 42);
+                    builder.Add(true);
+                    builder.Add(false);
+                });
+
+            using JsonDocumentBuilder<RefTupleWithAdditionalItems.Mutable> doc =
+                RefTupleWithAdditionalItems.BuildDocument(workspace, source);
+            RefTupleWithAdditionalItems.Mutable root = doc.RootElement;
+
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal("hello", root[0].ToString());
+            Assert.Equal("42", root[1].ToString());
+            Assert.Equal("True", root[2].ToString());
+            Assert.Equal("False", root[3].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedWithItems_Build_CreateTupleOnly()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefTupleWithAdditionalItems.Source source = RefTupleWithAdditionalItems.Build(
+                static (ref RefTupleWithAdditionalItems.Builder builder) =>
+                {
+                    builder.CreateTuple("world", 99);
+                });
+
+            using JsonDocumentBuilder<RefTupleWithAdditionalItems.Mutable> doc =
+                RefTupleWithAdditionalItems.BuildDocument(workspace, source);
+            RefTupleWithAdditionalItems.Mutable root = doc.RootElement;
+
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("world", root[0].ToString());
+            Assert.Equal("99", root[1].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedWithItems_Build_AddBeforeCreateTuple_Throws()
+        {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             RefTupleWithAdditionalItems.Source source = RefTupleWithAdditionalItems.Build(
                 static (ref RefTupleWithAdditionalItems.Builder builder) =>
                 {
                     builder.Add(true);
-                    builder.Add(false);
                 });
 
-            using JsonDocumentBuilder<RefTupleWithAdditionalItems.Mutable> builder =
-                RefTupleWithAdditionalItems.BuildDocument(workspace, source);
-            RefTupleWithAdditionalItems.Mutable root = builder.RootElement;
+            try
+            {
+                using JsonDocumentBuilder<RefTupleWithAdditionalItems.Mutable> doc =
+                    RefTupleWithAdditionalItems.BuildDocument(workspace, source);
 
-            Assert.Equal(2, root.GetArrayLength());
-            Assert.Equal("True", root[0].ToString());
-            Assert.Equal("False", root[1].ToString());
+                Assert.Fail("Expected InvalidOperationException");
+            }
+            catch (InvalidOperationException)
+            {
+                // Expected: must call CreateTuple before Add
+            }
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_Mutable_SetItem()
+        public void OpenComposedWithItems_Build_CreateTuple_MaterializesRoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefTupleWithAdditionalItems.Source source = RefTupleWithAdditionalItems.Build(
+                static (ref RefTupleWithAdditionalItems.Builder b) =>
+                {
+                    b.CreateTuple("hello", 42);
+                    b.Add(true);
+                });
+
+            using JsonDocumentBuilder<RefTupleWithAdditionalItems.Mutable> doc =
+                RefTupleWithAdditionalItems.BuildDocument(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<RefTupleWithAdditionalItems> reparsed =
+                ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse(json);
+            Assert.Equal(3, reparsed.RootElement.GetArrayLength());
+            Assert.Equal("hello", reparsed.RootElement[0].ToString());
+            Assert.Equal("42", reparsed.RootElement[1].ToString());
+            Assert.Equal("True", reparsed.RootElement[2].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedWithItems_Mutable_SetItem()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
@@ -249,7 +390,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_Mutable_InsertItem()
+        public void OpenComposedWithItems_Mutable_InsertItem()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true]""");
@@ -266,7 +407,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_Mutable_Remove()
+        public void OpenComposedWithItems_Mutable_Remove()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
@@ -282,7 +423,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_Mutable_SetItemUndefined_Removes()
+        public void OpenComposedWithItems_Mutable_SetItemUndefined_Removes()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
@@ -297,7 +438,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefTupleWithAdditionalItems_RoundTrip()
+        public void OpenComposedWithItems_RoundTrip()
         {
             using ParsedJsonDocument<RefTupleWithAdditionalItems> doc =
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
@@ -308,14 +449,17 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse(json);
             Assert.Equal(4, roundTrip.RootElement.GetArrayLength());
             Assert.Equal("hello", roundTrip.RootElement[0].ToString());
+            Assert.Equal("42", roundTrip.RootElement[1].ToString());
+            Assert.Equal("True", roundTrip.RootElement[2].ToString());
+            Assert.Equal("False", roundTrip.RootElement[3].ToString());
         }
 
         #endregion
 
-        #region AllOfInlineTupleWithUnevaluated — inline prefixItems in allOf + unevaluatedItems
+        #region AllOfInlineTupleWithUnevaluated — open composed + unevaluatedItems:boolean — tuple with additional items
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_Parse_Succeeds()
+        public void OpenComposedWithUnevaluated_Parse_Succeeds()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true]""");
@@ -324,7 +468,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_IndexAccess_ReturnsUnevaluatedItemsEntity()
+        public void OpenComposedWithUnevaluated_IndexAccess_ReturnsUnevaluatedItemsEntity()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true,false]""");
@@ -336,17 +480,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_TryGetAsAllOf0Entity_Succeeds()
-        {
-            using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
-                ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true]""");
-
-            Assert.True(doc.RootElement.TryGetAsAllOf0Entity(out AllOfInlineTupleWithUnevaluated.AllOf0Entity entity));
-            Assert.Equal(3, entity.GetArrayLength());
-        }
-
-        [Fact]
-        public void AllOfInlineTupleWithUnevaluated_PrefixItems_ViaAllOf0Entity()
+        public void OpenComposedWithUnevaluated_TryGetAsAllOf0Entity_AccessesPrefixItems()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true]""");
@@ -363,7 +497,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_EnumerateArray_IteratesAllItems()
+        public void OpenComposedWithUnevaluated_EnumerateArray()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true,false]""");
@@ -378,29 +512,100 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_Build_CreatesValidSource()
+        public void OpenComposedWithUnevaluated_Build_CreateTupleThenAdd()
         {
-            // Builder.Add takes UnevaluatedItemsEntity.Source (boolean) — no CreateTuple on composed types
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            AllOfInlineTupleWithUnevaluated.Source source = AllOfInlineTupleWithUnevaluated.Build(
+                static (ref AllOfInlineTupleWithUnevaluated.Builder builder) =>
+                {
+                    builder.CreateTuple("hello", 3.14);
+                    builder.Add(true);
+                    builder.Add(false);
+                });
+
+            using JsonDocumentBuilder<AllOfInlineTupleWithUnevaluated.Mutable> doc =
+                AllOfInlineTupleWithUnevaluated.BuildDocument(workspace, source);
+            AllOfInlineTupleWithUnevaluated.Mutable root = doc.RootElement;
+
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal("hello", root[0].ToString());
+            Assert.Equal("3.14", root[1].ToString());
+            Assert.Equal("True", root[2].ToString());
+            Assert.Equal("False", root[3].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedWithUnevaluated_Build_CreateTupleOnly()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            AllOfInlineTupleWithUnevaluated.Source source = AllOfInlineTupleWithUnevaluated.Build(
+                static (ref AllOfInlineTupleWithUnevaluated.Builder builder) =>
+                {
+                    builder.CreateTuple("world", 2.718);
+                });
+
+            using JsonDocumentBuilder<AllOfInlineTupleWithUnevaluated.Mutable> doc =
+                AllOfInlineTupleWithUnevaluated.BuildDocument(workspace, source);
+            AllOfInlineTupleWithUnevaluated.Mutable root = doc.RootElement;
+
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("world", root[0].ToString());
+            Assert.Equal("2.718", root[1].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedWithUnevaluated_Build_AddBeforeCreateTuple_Throws()
+        {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             AllOfInlineTupleWithUnevaluated.Source source = AllOfInlineTupleWithUnevaluated.Build(
                 static (ref AllOfInlineTupleWithUnevaluated.Builder builder) =>
                 {
                     builder.Add(true);
-                    builder.Add(false);
                 });
 
-            using JsonDocumentBuilder<AllOfInlineTupleWithUnevaluated.Mutable> builder =
-                AllOfInlineTupleWithUnevaluated.BuildDocument(workspace, source);
-            AllOfInlineTupleWithUnevaluated.Mutable root = builder.RootElement;
+            try
+            {
+                using JsonDocumentBuilder<AllOfInlineTupleWithUnevaluated.Mutable> doc =
+                    AllOfInlineTupleWithUnevaluated.BuildDocument(workspace, source);
 
-            Assert.Equal(2, root.GetArrayLength());
-            Assert.Equal("True", root[0].ToString());
-            Assert.Equal("False", root[1].ToString());
+                Assert.Fail("Expected InvalidOperationException");
+            }
+            catch (InvalidOperationException)
+            {
+                // Expected: must call CreateTuple before Add
+            }
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_Mutable_SetItem()
+        public void OpenComposedWithUnevaluated_Build_CreateTuple_MaterializesRoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            AllOfInlineTupleWithUnevaluated.Source source = AllOfInlineTupleWithUnevaluated.Build(
+                static (ref AllOfInlineTupleWithUnevaluated.Builder b) =>
+                {
+                    b.CreateTuple("hello", 3.14);
+                    b.Add(true);
+                });
+
+            using JsonDocumentBuilder<AllOfInlineTupleWithUnevaluated.Mutable> doc =
+                AllOfInlineTupleWithUnevaluated.BuildDocument(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> reparsed =
+                ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse(json);
+            Assert.Equal(3, reparsed.RootElement.GetArrayLength());
+            Assert.Equal("hello", reparsed.RootElement[0].ToString());
+            Assert.Equal("3.14", reparsed.RootElement[1].ToString());
+            Assert.Equal("True", reparsed.RootElement[2].ToString());
+        }
+
+        [Fact]
+        public void OpenComposedWithUnevaluated_Mutable_SetItem()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true]""");
@@ -415,7 +620,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_Mutable_InsertItem()
+        public void OpenComposedWithUnevaluated_Mutable_InsertItem()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14]""");
@@ -431,7 +636,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_Mutable_Remove()
+        public void OpenComposedWithUnevaluated_Mutable_Remove()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true,false]""");
@@ -446,7 +651,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_Mutable_RemoveWhere()
+        public void OpenComposedWithUnevaluated_Mutable_RemoveWhere()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true,false]""");
@@ -462,7 +667,7 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void AllOfInlineTupleWithUnevaluated_RoundTrip()
+        public void OpenComposedWithUnevaluated_RoundTrip()
         {
             using ParsedJsonDocument<AllOfInlineTupleWithUnevaluated> doc =
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true,false]""");
@@ -473,6 +678,307 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse(json);
             Assert.Equal(4, roundTrip.RootElement.GetArrayLength());
             Assert.Equal("hello", roundTrip.RootElement[0].ToString());
+            Assert.Equal("3.14", roundTrip.RootElement[1].ToString());
+            Assert.Equal("True", roundTrip.RootElement[2].ToString());
+            Assert.Equal("False", roundTrip.RootElement[3].ToString());
+        }
+
+        #endregion
+
+        #region RefClosedTupleWithContains — $ref-based closed tuple (items:false) + contains — pure tuple
+
+        [Fact]
+        public void RefClosedComposed_Parse_Succeeds()
+        {
+            using ParsedJsonDocument<RefClosedTupleWithContains> doc =
+                ParsedJsonDocument<RefClosedTupleWithContains>.Parse("""["hello",42]""");
+
+            Assert.Equal(2, doc.RootElement.GetArrayLength());
+        }
+
+        [Fact]
+        public void RefClosedComposed_IndexAccess_ReturnsJsonElement()
+        {
+            using ParsedJsonDocument<RefClosedTupleWithContains> doc =
+                ParsedJsonDocument<RefClosedTupleWithContains>.Parse("""["hello",42]""");
+
+            Assert.Equal("hello", doc.RootElement[0].ToString());
+            Assert.Equal("42", doc.RootElement[1].ToString());
+        }
+
+        [Fact]
+        public void RefClosedComposed_TryGetAsBaseTuple_AccessesPrefixItems()
+        {
+            using ParsedJsonDocument<RefClosedTupleWithContains> doc =
+                ParsedJsonDocument<RefClosedTupleWithContains>.Parse("""["hello",42]""");
+
+            Assert.True(doc.RootElement.TryGetAsBaseTuple(out RefClosedTupleWithContains.BaseTuple baseTuple));
+
+            RefClosedTupleWithContains.BaseTuple.PrefixItems0Entity item0 =
+                RefClosedTupleWithContains.BaseTuple.PrefixItems0Entity.From(baseTuple[0]);
+            Assert.Equal("hello", (string)item0);
+
+            RefClosedTupleWithContains.BaseTuple.PrefixItems1Entity item1 =
+                RefClosedTupleWithContains.BaseTuple.PrefixItems1Entity.From(baseTuple[1]);
+            Assert.Equal(42, (int)item1);
+        }
+
+        [Fact]
+        public void RefClosedComposed_Build_CreateTuple()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefClosedTupleWithContains.Source source = RefClosedTupleWithContains.Build(
+                static (ref RefClosedTupleWithContains.Builder builder) =>
+                {
+                    builder.CreateTuple("world", 99);
+                });
+
+            using JsonDocumentBuilder<RefClosedTupleWithContains.Mutable> doc =
+                RefClosedTupleWithContains.BuildDocument(workspace, source);
+            RefClosedTupleWithContains.Mutable root = doc.RootElement;
+
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("world", root[0].ToString());
+            Assert.Equal("99", root[1].ToString());
+        }
+
+        [Fact]
+        public void RefClosedComposed_Build_CreateTuple_MaterializesRoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefClosedTupleWithContains.Source source = RefClosedTupleWithContains.Build(
+                static (ref RefClosedTupleWithContains.Builder b) =>
+                {
+                    b.CreateTuple("hello", 42);
+                });
+
+            using JsonDocumentBuilder<RefClosedTupleWithContains.Mutable> doc =
+                RefClosedTupleWithContains.BuildDocument(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<RefClosedTupleWithContains> reparsed =
+                ParsedJsonDocument<RefClosedTupleWithContains>.Parse(json);
+            Assert.Equal(2, reparsed.RootElement.GetArrayLength());
+            Assert.Equal("hello", reparsed.RootElement[0].ToString());
+            Assert.Equal("42", reparsed.RootElement[1].ToString());
+        }
+
+        [Fact]
+        public void RefClosedComposed_RoundTrip()
+        {
+            using ParsedJsonDocument<RefClosedTupleWithContains> doc =
+                ParsedJsonDocument<RefClosedTupleWithContains>.Parse("""["hello",42]""");
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<RefClosedTupleWithContains> roundTrip =
+                ParsedJsonDocument<RefClosedTupleWithContains>.Parse(json);
+            Assert.Equal(2, roundTrip.RootElement.GetArrayLength());
+            Assert.Equal("hello", roundTrip.RootElement[0].ToString());
+            Assert.Equal("42", roundTrip.RootElement[1].ToString());
+        }
+
+        #endregion
+
+        #region RefOpenTupleWithItems — $ref-based open tuple + items:boolean — tuple with additional items
+
+        [Fact]
+        public void RefOpenComposedWithItems_Parse_Succeeds()
+        {
+            using ParsedJsonDocument<RefOpenTupleWithItems> doc =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse("""["hello",42,true,false]""");
+
+            Assert.Equal(4, doc.RootElement.GetArrayLength());
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_IndexAccess_ReturnsItemsEntity()
+        {
+            using ParsedJsonDocument<RefOpenTupleWithItems> doc =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse("""["hello",42,true,false]""");
+
+            Assert.Equal("hello", doc.RootElement[0].ToString());
+            Assert.Equal("42", doc.RootElement[1].ToString());
+            Assert.Equal("True", doc.RootElement[2].ToString());
+            Assert.Equal("False", doc.RootElement[3].ToString());
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_TryGetAsBaseTuple_AccessesPrefixItems()
+        {
+            using ParsedJsonDocument<RefOpenTupleWithItems> doc =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse("""["hello",42,true]""");
+
+            Assert.True(doc.RootElement.TryGetAsBaseTuple(out RefOpenTupleWithItems.BaseTuple baseTuple));
+
+            RefOpenTupleWithItems.BaseTuple.PrefixItems0Entity item0 =
+                RefOpenTupleWithItems.BaseTuple.PrefixItems0Entity.From(baseTuple[0]);
+            Assert.Equal("hello", (string)item0);
+
+            RefOpenTupleWithItems.BaseTuple.PrefixItems1Entity item1 =
+                RefOpenTupleWithItems.BaseTuple.PrefixItems1Entity.From(baseTuple[1]);
+            Assert.Equal(42, (int)item1);
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_Build_CreateTupleThenAdd()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefOpenTupleWithItems.Source source = RefOpenTupleWithItems.Build(
+                static (ref RefOpenTupleWithItems.Builder builder) =>
+                {
+                    builder.CreateTuple("hello", 42);
+                    builder.Add(true);
+                    builder.Add(false);
+                });
+
+            using JsonDocumentBuilder<RefOpenTupleWithItems.Mutable> doc =
+                RefOpenTupleWithItems.BuildDocument(workspace, source);
+            RefOpenTupleWithItems.Mutable root = doc.RootElement;
+
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal("hello", root[0].ToString());
+            Assert.Equal("42", root[1].ToString());
+            Assert.Equal("True", root[2].ToString());
+            Assert.Equal("False", root[3].ToString());
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_Build_CreateTupleOnly()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefOpenTupleWithItems.Source source = RefOpenTupleWithItems.Build(
+                static (ref RefOpenTupleWithItems.Builder builder) =>
+                {
+                    builder.CreateTuple("world", 99);
+                });
+
+            using JsonDocumentBuilder<RefOpenTupleWithItems.Mutable> doc =
+                RefOpenTupleWithItems.BuildDocument(workspace, source);
+            RefOpenTupleWithItems.Mutable root = doc.RootElement;
+
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("world", root[0].ToString());
+            Assert.Equal("99", root[1].ToString());
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_Build_AddBeforeCreateTuple_Throws()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefOpenTupleWithItems.Source source = RefOpenTupleWithItems.Build(
+                static (ref RefOpenTupleWithItems.Builder builder) =>
+                {
+                    builder.Add(true);
+                });
+
+            try
+            {
+                using JsonDocumentBuilder<RefOpenTupleWithItems.Mutable> doc =
+                    RefOpenTupleWithItems.BuildDocument(workspace, source);
+
+                Assert.Fail("Expected InvalidOperationException");
+            }
+            catch (InvalidOperationException)
+            {
+                // Expected: must call CreateTuple before Add
+            }
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_Build_CreateTuple_MaterializesRoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            RefOpenTupleWithItems.Source source = RefOpenTupleWithItems.Build(
+                static (ref RefOpenTupleWithItems.Builder b) =>
+                {
+                    b.CreateTuple("hello", 42);
+                    b.Add(true);
+                });
+
+            using JsonDocumentBuilder<RefOpenTupleWithItems.Mutable> doc =
+                RefOpenTupleWithItems.BuildDocument(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<RefOpenTupleWithItems> reparsed =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse(json);
+            Assert.Equal(3, reparsed.RootElement.GetArrayLength());
+            Assert.Equal("hello", reparsed.RootElement[0].ToString());
+            Assert.Equal("42", reparsed.RootElement[1].ToString());
+            Assert.Equal("True", reparsed.RootElement[2].ToString());
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_Mutable_SetItem()
+        {
+            using ParsedJsonDocument<RefOpenTupleWithItems> doc =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse("""["hello",42,true,false]""");
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<RefOpenTupleWithItems.Mutable> builderDoc =
+                doc.RootElement.BuildDocument(workspace);
+
+            RefOpenTupleWithItems.Mutable root = builderDoc.RootElement;
+            root.SetItem(2, false);
+
+            Assert.Equal("False", root[2].ToString());
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_Mutable_InsertItem()
+        {
+            using ParsedJsonDocument<RefOpenTupleWithItems> doc =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse("""["hello",42,true]""");
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<RefOpenTupleWithItems.Mutable> builderDoc =
+                doc.RootElement.BuildDocument(workspace);
+
+            RefOpenTupleWithItems.Mutable root = builderDoc.RootElement;
+            root.InsertItem(2, false);
+
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal("False", root[2].ToString());
+            Assert.Equal("True", root[3].ToString());
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_Mutable_Remove()
+        {
+            using ParsedJsonDocument<RefOpenTupleWithItems> doc =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse("""["hello",42,true,false]""");
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<RefOpenTupleWithItems.Mutable> builderDoc =
+                doc.RootElement.BuildDocument(workspace);
+
+            RefOpenTupleWithItems.Mutable root = builderDoc.RootElement;
+            root.Remove(3);
+
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("True", root[2].ToString());
+        }
+
+        [Fact]
+        public void RefOpenComposedWithItems_RoundTrip()
+        {
+            using ParsedJsonDocument<RefOpenTupleWithItems> doc =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse("""["hello",42,true,false]""");
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<RefOpenTupleWithItems> roundTrip =
+                ParsedJsonDocument<RefOpenTupleWithItems>.Parse(json);
+            Assert.Equal(4, roundTrip.RootElement.GetArrayLength());
+            Assert.Equal("hello", roundTrip.RootElement[0].ToString());
+            Assert.Equal("42", roundTrip.RootElement[1].ToString());
+            Assert.Equal("True", roundTrip.RootElement[2].ToString());
+            Assert.Equal("False", roundTrip.RootElement[3].ToString());
         }
 
         #endregion

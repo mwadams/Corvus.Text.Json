@@ -870,6 +870,21 @@ internal static partial class CodeGeneratorExtensions
                 .AppendSeparatorLine()
                 .AppendCreateTuple(typeDeclaration, tupleType2, allowsNonPrefixItems);
         }
+        else if(typeDeclaration.ImplicitTupleType() is TupleTypeDeclaration tupleType3)
+        {
+            hasTuple = true;
+            if (allowsNonPrefixItems)
+            {
+                generator
+                    .ReserveName("_addedPrefixItems")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("private bool _addedPrefixItems = false;");
+            }
+
+            generator
+                .AppendSeparatorLine()
+                .AppendCreateTuple(typeDeclaration, tupleType3, allowsNonPrefixItems);
+        }
 
         if (allowsNonPrefixItems)
         {

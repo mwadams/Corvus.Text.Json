@@ -27,6 +27,9 @@
     <AdditionalFiles Include="ref-tuple-with-contains-2020-12.json" />
     <AdditionalFiles Include="ref-tuple-with-additional-items-2020-12.json" />
     <AdditionalFiles Include="allof-inline-tuple-with-unevaluated-2020-12.json" />
+    <AdditionalFiles Include="allof-open-tuple-closed-locally-2020-12.json" />
+    <AdditionalFiles Include="ref-closed-tuple-with-contains-2020-12.json" />
+    <AdditionalFiles Include="ref-open-tuple-with-items-2020-12.json" />
   </ItemGroup>
 
   <ItemGroup>

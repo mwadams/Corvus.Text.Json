@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "RefTupleWithContains",
-  "description": "An inline closed tuple (items:false) in allOf with a contains constraint. Pure tuple — closed in composed type.",
-  "allOf": [
-    {
+  "title": "RefClosedTupleWithContains",
+  "description": "A $ref-based closed tuple via allOf with a contains constraint.",
+  "$defs": {
+    "baseTuple": {
       "type": "array",
       "prefixItems": [
         { "type": "string" },
@@ -11,6 +11,9 @@
       ],
       "items": false
     }
+  },
+  "allOf": [
+    { "$ref": "#/$defs/baseTuple" }
   ],
   "contains": { "type": "integer" }
 }

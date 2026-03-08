@@ -227,7 +227,7 @@ public class BigNumberLargeValuesTests
         BigNumber parsed = BigNumber.Parse(hundredDigits);
 
         parsed.Significand.ToString().Length.ShouldBe(99);
-        Assert.AreEqual(parsed.Exponent, 1);
+        Assert.AreEqual(1, parsed.Exponent);
     }
 
     [TestMethod]

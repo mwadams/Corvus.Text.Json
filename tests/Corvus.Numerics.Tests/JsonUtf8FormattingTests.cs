@@ -228,7 +228,7 @@ public class JsonUtf8FormattingTests
         StringFromSpan.CreateFromUtf8(buffer.Slice(0, bytesWritten)).ShouldBe("123");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0L, 0, "0")]
     [DataRow(1L, 0, "1")]
     [DataRow(-1L, 0, "-1")]
