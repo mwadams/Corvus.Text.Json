@@ -34,6 +34,15 @@
     <AdditionalFiles Include="allof-object-with-properties-2020-12.json" />
     <AdditionalFiles Include="ref-array-with-items-2020-12.json" />
     <AdditionalFiles Include="allof-array-with-items-2020-12.json" />
+    <AdditionalFiles Include="rank1-double-vector-2020-12.json" />
+    <AdditionalFiles Include="rank1-int32-vector-2020-12.json" />
+    <AdditionalFiles Include="rank2-double-matrix-2020-12.json" />
+    <AdditionalFiles Include="rank3-int32-cube-2020-12.json" />
+    <AdditionalFiles Include="ref-items-double-vector-2020-12.json" />
+    <AdditionalFiles Include="ref-items-int32-vector-2020-12.json" />
+    <AdditionalFiles Include="ref-inner-array-double-matrix-2020-12.json" />
+    <AdditionalFiles Include="allof-double-vector-2020-12.json" />
+    <AdditionalFiles Include="allof-int32-matrix-2020-12.json" />
   </ItemGroup>
 
   <ItemGroup>

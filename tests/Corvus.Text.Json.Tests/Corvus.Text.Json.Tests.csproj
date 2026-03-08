@@ -103,6 +103,8 @@
     <Compile Include="GeneratedTupleArrayTests.cs" />
     <Compile Include="GeneratedComposedTupleTests.cs" />
     <Compile Include="GeneratedComposedCreationTests.cs" />
+    <Compile Include="GeneratedNumericArrayTests.cs" />
+    <Compile Include="GeneratedRefNumericArrayTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralUtf8Tests.cs" />
     <Compile Include="JsonElementHelpersTryFormatNumberTests.cs" />

@@ -175,7 +175,7 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendLineIndent("case Kind.NumericSimpleType:")
                         .PushIndent()
-                            .AppendLineIndent("valueBuilder.AddItem(_simpleTypeBacking.Span());")
+                            .AppendLineIndent("valueBuilder.AddItemFormattedNumber(_simpleTypeBacking.Span());")
                             .AppendLineIndent("break;")
                         .PopIndent();
                 }
@@ -1704,7 +1704,9 @@ internal static partial class CodeGeneratorExtensions
                         .AppendLineIndent("else")
                         .AppendLineIndent("{")
                         .PushIndent()
-                            .AppendLineIndent("foreach (int item in tensor)")
+                            .AppendLineIndent("foreach (")
+                            .Append(numericTypeName.Name)
+                            .Append(" item in tensor)")
                             .AppendLineIndent("{")
                             .PushIndent()
                                 .AppendLineIndent("_builder.AddItem(item);")
