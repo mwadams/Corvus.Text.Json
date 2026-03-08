@@ -4855,7 +4855,9 @@ public readonly partial struct JsonElement
         public bool RemoveProperty(ReadOnlySpan<char> propertyName)
         {
             CheckValidInstance();
-            return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+            bool result = JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+            _documentVersion = _parent.Version;
+            return result;
         }
 
         /// <summary>
@@ -4866,7 +4868,9 @@ public readonly partial struct JsonElement
         public bool RemoveProperty(ReadOnlySpan<byte> propertyName)
         {
             CheckValidInstance();
-            return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+            bool result = JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+            _documentVersion = _parent.Version;
+            return result;
         }
 
         /// <summary>
