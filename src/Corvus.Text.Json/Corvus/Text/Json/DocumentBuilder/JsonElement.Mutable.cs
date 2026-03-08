@@ -4114,6 +4114,7 @@ public readonly partial struct JsonElement
             if (source.IsUndefined)
             {
                 JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+                _documentVersion = _parent.Version;
                 return;
             }
 
@@ -4159,6 +4160,7 @@ public readonly partial struct JsonElement
             if (source.IsUndefined)
             {
                 JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);
+                _documentVersion = _parent.Version;
                 return;
             }
 

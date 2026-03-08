@@ -30,6 +30,10 @@
     <AdditionalFiles Include="allof-open-tuple-closed-locally-2020-12.json" />
     <AdditionalFiles Include="ref-closed-tuple-with-contains-2020-12.json" />
     <AdditionalFiles Include="ref-open-tuple-with-items-2020-12.json" />
+    <AdditionalFiles Include="ref-object-with-properties-2020-12.json" />
+    <AdditionalFiles Include="allof-object-with-properties-2020-12.json" />
+    <AdditionalFiles Include="ref-array-with-items-2020-12.json" />
+    <AdditionalFiles Include="allof-array-with-items-2020-12.json" />
   </ItemGroup>
 
   <ItemGroup>

@@ -561,6 +561,7 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLineIndent("{")
                     .PushIndent()
                         .AppendLineIndent("JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8);")
+                        .AppendLineIndent("_documentVersion = _parent.Version;")
                         .AppendLineIndent("return;")
                     .PopIndent()
                     .AppendLineIndent("}")
@@ -628,6 +629,7 @@ internal static partial class CodeGeneratorExtensions
                         .AppendLineIndent("{")
                         .PushIndent()
                             .AppendLineIndent("JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8);")
+                            .AppendLineIndent("_documentVersion = _parent.Version;")
                             .AppendLineIndent("return;")
                         .PopIndent()
                         .AppendLineIndent("}")
@@ -683,7 +685,9 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLineIndent("{")
                     .PushIndent()
                         .AppendLineIndent("CheckValidInstance();")
-                        .AppendLineIndent("return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8);")
+                        .AppendLineIndent("bool result = JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, ", generator.JsonPropertyNamesClassName(), ".", property.DotnetPropertyName(), "Utf8);")
+                        .AppendLineIndent("_documentVersion = _parent.Version;")
+                        .AppendLineIndent("return result;")
                     .PopIndent()
                     .AppendLineIndent("}");
             }
@@ -805,6 +809,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+                    .AppendLineIndent("_documentVersion = _parent.Version;")
                     .AppendLineIndent("return;")
                 .PopIndent()
                 .AppendLineIndent("}")
@@ -862,6 +867,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+                    .AppendLineIndent("_documentVersion = _parent.Version;")
                     .AppendLineIndent("return;")
                 .PopIndent()
                 .AppendLineIndent("}")
@@ -932,7 +938,9 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("CheckValidInstance();")
-                .AppendLineIndent("return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+                .AppendLineIndent("bool result = JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+                .AppendLineIndent("return result;")
             .PopIndent()
             .AppendLineIndent("}");
 
@@ -955,7 +963,9 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("CheckValidInstance();")
-                .AppendLineIndent("return JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+                .AppendLineIndent("bool result = JsonElementHelpers.RemovePropertyUnsafe(_parent, _idx, propertyName);")
+                .AppendLineIndent("_documentVersion = _parent.Version;")
+                .AppendLineIndent("return result;")
             .PopIndent()
             .AppendLineIndent("}");
 
