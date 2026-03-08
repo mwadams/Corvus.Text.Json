@@ -9,7 +9,7 @@ namespace Corvus.Text.Json.Tests
     /// <summary>
     /// Tests for generated fixed-size numeric array (tensor) types.
     /// Covers rank 1 (vector), rank 2 (matrix), rank 3 (cube) with both double and int32 numeric types.
-    /// Tests static properties, CreateTensor, FromArray, wrong-size validation, and round-trip materialisation.
+    /// Tests static properties, CreateTensor, wrong-size validation, and round-trip materialisation.
     /// </summary>
     public class GeneratedNumericArrayTests
     {
@@ -153,47 +153,6 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
-        #region Rank 1 FromArray — Source factory
-
-        [Fact]
-        public void Rank1DoubleVector_FromArray_CreatesValidSource()
-        {
-            using JsonWorkspace workspace = JsonWorkspace.Create();
-
-            ReadOnlySpan<double> values = [1.1, 2.2, 3.3];
-            Rank1DoubleVector.Source source = Rank1DoubleVector.Source.FromArray(values);
-
-            using JsonDocumentBuilder<Rank1DoubleVector.Mutable> doc =
-                Rank1DoubleVector.BuildDocument(workspace, source);
-            Rank1DoubleVector.Mutable root = doc.RootElement;
-
-            Assert.Equal(3, root.GetArrayLength());
-            Assert.Equal(1.1, (double)root[0]);
-            Assert.Equal(2.2, (double)root[1]);
-            Assert.Equal(3.3, (double)root[2]);
-        }
-
-        [Fact]
-        public void Rank1Int32Vector_FromArray_CreatesValidSource()
-        {
-            using JsonWorkspace workspace = JsonWorkspace.Create();
-
-            ReadOnlySpan<int> values = [100, 200, 300, 400];
-            Rank1Int32Vector.Source source = Rank1Int32Vector.Source.FromArray(values);
-
-            using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
-                Rank1Int32Vector.BuildDocument(workspace, source);
-            Rank1Int32Vector.Mutable root = doc.RootElement;
-
-            Assert.Equal(4, root.GetArrayLength());
-            Assert.Equal(100, (int)root[0]);
-            Assert.Equal(200, (int)root[1]);
-            Assert.Equal(300, (int)root[2]);
-            Assert.Equal(400, (int)root[3]);
-        }
-
-        #endregion
-
         #region Rank 1 wrong-size tensor — ArgumentException
 
         [Fact]
@@ -229,26 +188,6 @@ namespace Corvus.Text.Json.Tests
                     });
 
                 Rank1Int32Vector.BuildDocument(workspace, source).Dispose();
-            });
-        }
-
-        [Fact]
-        public void Rank1DoubleVector_FromArray_WrongSize_ThrowsArgumentException()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                ReadOnlySpan<double> values = [1.0, 2.0];
-                Rank1DoubleVector.Source.FromArray(values);
-            });
-        }
-
-        [Fact]
-        public void Rank1Int32Vector_FromArray_WrongSize_ThrowsArgumentException()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                ReadOnlySpan<int> values = [1, 2, 3];
-                Rank1Int32Vector.Source.FromArray(values);
             });
         }
 

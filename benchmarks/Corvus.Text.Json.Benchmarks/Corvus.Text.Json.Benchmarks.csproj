@@ -15,8 +15,8 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.15.8" />
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.1" />
-    <PackageReference Include="Corvus.Json.Validator" Version="4.6.1" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.2" />
+    <PackageReference Include="Corvus.Json.Validator" Version="4.6.2" />
     <PackageReference Include="JsonSchema.Net" Version="9.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.DiagnosticsHub.BenchmarkDotNetDiagnosers" Version="18.3.36812.1" />
   </ItemGroup>

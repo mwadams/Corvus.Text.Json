@@ -71,24 +71,6 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void RefItemsDoubleVector_FromArray_CreatesValidSource()
-        {
-            using JsonWorkspace workspace = JsonWorkspace.Create();
-
-            ReadOnlySpan<double> values = [1.1, 2.2, 3.3];
-            RefItemsDoubleVector.Source source = RefItemsDoubleVector.Source.FromArray(values);
-
-            using JsonDocumentBuilder<RefItemsDoubleVector.Mutable> doc =
-                RefItemsDoubleVector.BuildDocument(workspace, source);
-            RefItemsDoubleVector.Mutable root = doc.RootElement;
-
-            Assert.Equal(3, root.GetArrayLength());
-            Assert.Equal(1.1, (double)root[0]);
-            Assert.Equal(2.2, (double)root[1]);
-            Assert.Equal(3.3, (double)root[2]);
-        }
-
-        [Fact]
         public void RefItemsDoubleVector_CreateTensor_WrongSize_ThrowsArgumentException()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
@@ -165,25 +147,6 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(20, (int)reparsed.RootElement[1]);
             Assert.Equal(30, (int)reparsed.RootElement[2]);
             Assert.Equal(40, (int)reparsed.RootElement[3]);
-        }
-
-        [Fact]
-        public void RefItemsInt32Vector_FromArray_CreatesValidSource()
-        {
-            using JsonWorkspace workspace = JsonWorkspace.Create();
-
-            ReadOnlySpan<int> values = [100, 200, 300, 400];
-            RefItemsInt32Vector.Source source = RefItemsInt32Vector.Source.FromArray(values);
-
-            using JsonDocumentBuilder<RefItemsInt32Vector.Mutable> doc =
-                RefItemsInt32Vector.BuildDocument(workspace, source);
-            RefItemsInt32Vector.Mutable root = doc.RootElement;
-
-            Assert.Equal(4, root.GetArrayLength());
-            Assert.Equal(100, (int)root[0]);
-            Assert.Equal(200, (int)root[1]);
-            Assert.Equal(300, (int)root[2]);
-            Assert.Equal(400, (int)root[3]);
         }
 
         #endregion
@@ -290,21 +253,6 @@ namespace Corvus.Text.Json.Tests
             });
         }
 
-        [Fact]
-        public void RefInnerArrayDoubleMatrix_FromArray_CreatesValidSource()
-        {
-            using JsonWorkspace workspace = JsonWorkspace.Create();
-
-            ReadOnlySpan<double> values = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
-            RefInnerArrayDoubleMatrix.Source source = RefInnerArrayDoubleMatrix.Source.FromArray(values);
-
-            using JsonDocumentBuilder<RefInnerArrayDoubleMatrix.Mutable> doc =
-                RefInnerArrayDoubleMatrix.BuildDocument(workspace, source);
-
-            // FromArray creates a flat numeric array for Source (no nested structure)
-            Assert.Equal(6, doc.RootElement.GetArrayLength());
-        }
-
         #endregion
 
         #region AllOfDoubleVector — allOf-composed rank-1 vector
@@ -312,17 +260,64 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public void AllOfDoubleVector_StaticProperties()
         {
-            // Outer type only gets Rank; Dimension and ValueBufferSize live on the inner BaseVector type
             Assert.Equal(1, AllOfDoubleVector.Rank);
+            Assert.Equal(3, AllOfDoubleVector.Dimension);
+            Assert.Equal(3, AllOfDoubleVector.ValueBufferSize);
         }
 
         [Fact]
         public void AllOfDoubleVector_BaseVector_StaticProperties()
         {
-            // The inner BaseVector type gets full tensor properties
             Assert.Equal(1, AllOfDoubleVector.BaseVector.Rank);
             Assert.Equal(3, AllOfDoubleVector.BaseVector.Dimension);
             Assert.Equal(3, AllOfDoubleVector.BaseVector.ValueBufferSize);
+        }
+
+        [Fact]
+        public void AllOfDoubleVector_Build_CreateTensor()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
+                static (ref AllOfDoubleVector.Builder builder) =>
+                {
+                    ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
+                    builder.CreateTensor(values);
+                });
+
+            using JsonDocumentBuilder<AllOfDoubleVector.Mutable> doc =
+                AllOfDoubleVector.BuildDocument(workspace, source);
+            AllOfDoubleVector.Mutable root = doc.RootElement;
+
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(1.5, (double)root[0]);
+            Assert.Equal(2.5, (double)root[1]);
+            Assert.Equal(3.5, (double)root[2]);
+        }
+
+        [Fact]
+        public void AllOfDoubleVector_Build_CreateTensor_MaterializesRoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
+                static (ref AllOfDoubleVector.Builder builder) =>
+                {
+                    ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
+                    builder.CreateTensor(values);
+                });
+
+            using JsonDocumentBuilder<AllOfDoubleVector.Mutable> doc =
+                AllOfDoubleVector.BuildDocument(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<AllOfDoubleVector> reparsed =
+                ParsedJsonDocument<AllOfDoubleVector>.Parse(json);
+            Assert.Equal(3, reparsed.RootElement.GetArrayLength());
+            Assert.Equal(1.5, (double)reparsed.RootElement[0]);
+            Assert.Equal(2.5, (double)reparsed.RootElement[1]);
+            Assert.Equal(3.5, (double)reparsed.RootElement[2]);
         }
 
         [Fact]
@@ -375,6 +370,24 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
+        public void AllOfDoubleVector_CreateTensor_WrongSize_ThrowsArgumentException()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
+                    static (ref AllOfDoubleVector.Builder builder) =>
+                    {
+                        ReadOnlySpan<double> values = [1.0, 2.0];
+                        builder.CreateTensor(values);
+                    });
+
+                AllOfDoubleVector.BuildDocument(workspace, source).Dispose();
+            });
+        }
+
+        [Fact]
         public void AllOfDoubleVector_TryGetAsBaseVector_AccessesComposedType()
         {
             using ParsedJsonDocument<AllOfDoubleVector> doc =
@@ -387,27 +400,6 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(3.0, (double)baseVector[2]);
         }
 
-        [Fact]
-        public void AllOfDoubleVector_FromArray_CreatesValidSource()
-        {
-            using JsonWorkspace workspace = JsonWorkspace.Create();
-
-            ReadOnlySpan<double> values = [1.1, 2.2, 3.3];
-            AllOfDoubleVector.Source source = AllOfDoubleVector.Source.FromArray(values);
-
-            using JsonDocumentBuilder<AllOfDoubleVector.Mutable> doc =
-                AllOfDoubleVector.BuildDocument(workspace, source);
-
-            string json = doc.RootElement.ToString();
-
-            using ParsedJsonDocument<AllOfDoubleVector> reparsed =
-                ParsedJsonDocument<AllOfDoubleVector>.Parse(json);
-            Assert.Equal(3, reparsed.RootElement.GetArrayLength());
-            Assert.Equal(1.1, (double)reparsed.RootElement[0]);
-            Assert.Equal(2.2, (double)reparsed.RootElement[1]);
-            Assert.Equal(3.3, (double)reparsed.RootElement[2]);
-        }
-
         #endregion
 
         #region AllOfInt32Matrix — allOf-composed rank-2 matrix
@@ -415,17 +407,83 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public void AllOfInt32Matrix_StaticProperties()
         {
-            // Outer type only gets Rank; Dimension and ValueBufferSize live on the inner BaseMatrix type
             Assert.Equal(2, AllOfInt32Matrix.Rank);
+            Assert.Equal(2, AllOfInt32Matrix.Dimension);
+            Assert.Equal(6, AllOfInt32Matrix.ValueBufferSize);
         }
 
         [Fact]
         public void AllOfInt32Matrix_BaseMatrix_StaticProperties()
         {
-            // The inner BaseMatrix type gets full tensor properties
             Assert.Equal(2, AllOfInt32Matrix.BaseMatrix.Rank);
             Assert.Equal(2, AllOfInt32Matrix.BaseMatrix.Dimension);
             Assert.Equal(6, AllOfInt32Matrix.BaseMatrix.ValueBufferSize);
+        }
+
+        [Fact]
+        public void AllOfInt32Matrix_Build_CreateTensor()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            // 2×3 matrix: [[1, 2, 3], [4, 5, 6]]
+            AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
+                static (ref AllOfInt32Matrix.Builder builder) =>
+                {
+                    ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6];
+                    builder.CreateTensor(values);
+                });
+
+            using JsonDocumentBuilder<AllOfInt32Matrix.Mutable> doc =
+                AllOfInt32Matrix.BuildDocument(workspace, source);
+            AllOfInt32Matrix.Mutable root = doc.RootElement;
+
+            Assert.Equal(2, root.GetArrayLength());
+
+            var row0 = root[0];
+            Assert.Equal(3, row0.GetArrayLength());
+            Assert.Equal(1, (int)row0[0]);
+            Assert.Equal(2, (int)row0[1]);
+            Assert.Equal(3, (int)row0[2]);
+
+            var row1 = root[1];
+            Assert.Equal(3, row1.GetArrayLength());
+            Assert.Equal(4, (int)row1[0]);
+            Assert.Equal(5, (int)row1[1]);
+            Assert.Equal(6, (int)row1[2]);
+        }
+
+        [Fact]
+        public void AllOfInt32Matrix_Build_CreateTensor_MaterializesRoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
+                static (ref AllOfInt32Matrix.Builder builder) =>
+                {
+                    ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6];
+                    builder.CreateTensor(values);
+                });
+
+            using JsonDocumentBuilder<AllOfInt32Matrix.Mutable> doc =
+                AllOfInt32Matrix.BuildDocument(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<AllOfInt32Matrix> reparsed =
+                ParsedJsonDocument<AllOfInt32Matrix>.Parse(json);
+            Assert.Equal(2, reparsed.RootElement.GetArrayLength());
+
+            var row0 = reparsed.RootElement[0];
+            Assert.Equal(3, row0.GetArrayLength());
+            Assert.Equal(1, (int)row0[0]);
+            Assert.Equal(2, (int)row0[1]);
+            Assert.Equal(3, (int)row0[2]);
+
+            var row1 = reparsed.RootElement[1];
+            Assert.Equal(3, row1.GetArrayLength());
+            Assert.Equal(4, (int)row1[0]);
+            Assert.Equal(5, (int)row1[1]);
+            Assert.Equal(6, (int)row1[2]);
         }
 
         [Fact]
@@ -518,6 +576,24 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
+        public void AllOfInt32Matrix_CreateTensor_WrongSize_ThrowsArgumentException()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
+                    static (ref AllOfInt32Matrix.Builder builder) =>
+                    {
+                        ReadOnlySpan<int> values = [1, 2, 3];
+                        builder.CreateTensor(values);
+                    });
+
+                AllOfInt32Matrix.BuildDocument(workspace, source).Dispose();
+            });
+        }
+
+        [Fact]
         public void AllOfInt32Matrix_TryGetAsBaseMatrix_AccessesComposedType()
         {
             using ParsedJsonDocument<AllOfInt32Matrix> doc =
@@ -527,21 +603,6 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(2, baseMatrix.GetArrayLength());
             Assert.Equal(1, (int)baseMatrix[0][0]);
             Assert.Equal(6, (int)baseMatrix[1][2]);
-        }
-
-        [Fact]
-        public void AllOfInt32Matrix_FromArray_CreatesValidSource()
-        {
-            using JsonWorkspace workspace = JsonWorkspace.Create();
-
-            ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6];
-            AllOfInt32Matrix.Source source = AllOfInt32Matrix.Source.FromArray(values);
-
-            using JsonDocumentBuilder<AllOfInt32Matrix.Mutable> doc =
-                AllOfInt32Matrix.BuildDocument(workspace, source);
-
-            // FromArray creates a flat numeric array for Source (no nested structure)
-            Assert.Equal(6, doc.RootElement.GetArrayLength());
         }
 
         #endregion

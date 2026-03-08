@@ -245,7 +245,7 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLineIndent("break;")
                 .PopIndent();
 
-            if (!forContext && typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
+            if (!forContext && typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple() && !typeDeclaration.IsFixedSizeNumericArray())
             {
                 NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
                 string numericArrayKindName = GetNumericArrayKind(generator, numericTypeName);
@@ -599,7 +599,7 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLineIndent("break;")
                 .PopIndent();
 
-            if (!forContext && typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
+            if (!forContext && typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple() && !typeDeclaration.IsFixedSizeNumericArray())
             {
                 NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
                 string numericArrayKindName = GetNumericArrayKind(generator, numericTypeName);
@@ -1730,64 +1730,9 @@ internal static partial class CodeGeneratorExtensions
         return generator;
     }
 
-    private static void AppendFixedSizeNumericArrayFactoryMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration, HashSet<string> seenArrayValues)
-    {
-        NumericTypeName? arrayType = typeDeclaration.ArrayItemsType()?.ReducedType.PreferredDotnetNumericTypeName();
-        if (arrayType is NumericTypeName at)
-        {
-            if (at.IsNetOnly)
-            {
-                if (seenArrayValues.Add($"[{at.Name}]"))
-                {
-                    generator
-                        .ReserveNameIfNotReserved("FromArray")
-                        .AppendSeparatorLine()
-                        .AppendLine("#if NET")
-                        .AppendLineIndent("public static ", generator.SourceClassName(), " FromArray(ReadOnlySpan<", at.Name, "> value)")
-                        .AppendLineIndent("{")
-                        .PushIndent()
-                            .AppendLineIndent("if (value.Length != ValueBufferSize)")
-                            .AppendLineIndent("{")
-                            .PushIndent()
-                                .AppendLineIndent("throw new ArgumentException(nameof(value));")
-                            .PopIndent()
-                            .AppendLineIndent("}")
-                            .AppendSeparatorLine()
-                        .AppendLineIndent("return new(value);")
-                        .PopIndent()
-                        .AppendLineIndent("}")
-                        .AppendLine("#endif");
-                }
-            }
-            else
-            {
-                if (seenArrayValues.Add($"[{at.Name}]"))
-                {
-                    generator
-                        .ReserveNameIfNotReserved("FromArray")
-                        .AppendSeparatorLine()
-                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static ", generator.SourceClassName(), " FromArray(ReadOnlySpan<", at.Name, "> value)")
-                        .AppendLineIndent("{")
-                        .PushIndent()
-                            .AppendLineIndent("if (value.Length != ValueBufferSize)")
-                            .AppendLineIndent("{")
-                            .PushIndent()
-                                .AppendLineIndent("throw new ArgumentException(nameof(value));")
-                            .PopIndent()
-                            .AppendLineIndent("}")
-                            .AppendSeparatorLine()
-                        .AppendLineIndent("return new(value);")
-                        .PopIndent()
-                        .AppendLineIndent("}");
-                }
-            }
-        }
-    }
-
     private static CodeGenerator AppendNumericArrayConstructors(this CodeGenerator generator, TypeDeclaration typeDeclaration, HashSet<string> seenArrayValues)
     {
-        if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
+        if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple() && !typeDeclaration.IsFixedSizeNumericArray())
         {
             NumericTypeName? arrayType = typeDeclaration.ArrayItemsType()?.ReducedType.PreferredDotnetNumericTypeName();
 
@@ -1863,7 +1808,7 @@ internal static partial class CodeGeneratorExtensions
 
     private static void AppendNumericArrayTypeFields(this CodeGenerator generator, TypeDeclaration typeDeclaration, HashSet<string> seenArrayValues)
     {
-        if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
+        if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple() && !typeDeclaration.IsFixedSizeNumericArray())
         {
             NumericTypeName? arrayType = typeDeclaration.ArrayItemsType()?.ReducedType.PreferredDotnetNumericTypeName();
             if (arrayType is NumericTypeName at)
@@ -2480,13 +2425,6 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendNumericArrayFactoryMethod(typeDeclaration, seenArrayTypes);
                 }
-
-                // If the composed schema has a non-fixed size array
-                if (typeDeclaration.IsFixedSizeNumericArray() && !ComposedSchemaHasNonFixedSizeNumericArray(builders, typeDeclaration))
-                {
-                    generator
-                        .AppendFixedSizeNumericArrayFactoryMethod(typeDeclaration, seenArrayTypes);
-                }
             }
         }
 
@@ -2507,12 +2445,6 @@ internal static partial class CodeGeneratorExtensions
                     {
                         generator
                             .AppendNumericArrayFactoryMethod(t, seenArrayTypes);
-                    }
-
-                    if (t.IsFixedSizeArray() && !ComposedSchemaHasNonFixedSizeNumericArray(builders, t))
-                    {
-                        generator
-                            .AppendFixedSizeNumericArrayFactoryMethod(t, seenArrayTypes);
                     }
                 }
             }
@@ -2843,7 +2775,7 @@ internal static partial class CodeGeneratorExtensions
 
                     generator
                         .AppendLineIndent(arrayKindName, ",");
-                    if (t.IsNumericArray() && !t.IsTuple())
+                    if (t.IsNumericArray() && !t.IsTuple() && !t.IsFixedSizeNumericArray())
                     {
                         NumericTypeName numericTypeName = t.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
                         numericArrayKindName = GetNumericArrayKind(generator, numericTypeName, reserve: true);
@@ -2899,7 +2831,7 @@ internal static partial class CodeGeneratorExtensions
         }
 
         // Now add the numeric array kind for the base type
-        if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
+        if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple() && !typeDeclaration.IsFixedSizeNumericArray())
         {
             NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
             string numericArrayKindName = GetNumericArrayKind(generator, numericTypeName, reserve: true);
