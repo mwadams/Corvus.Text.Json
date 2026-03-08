@@ -50,7 +50,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all" />
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
   </ItemGroup>
 
@@ -100,7 +100,7 @@
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)PropertyDeclarationExtensions.cs" LinkBase="Corvus.Text.Json.CodeGeneration" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)SimpleTypeAndFormatterAndKind.cs" LinkBase="Corvus.Text.Json.CodeGeneration" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)ThrowHelper.cs" LinkBase="Corvus.Text.Json.CodeGeneration" />
-    <Compile Include="$(CorvusTextJsonCodeGenerationPath)TypeDeclarationExtensions.cs" LinkBase="Corvus.Text.Json.CodeGeneration"/>
+    <Compile Include="$(CorvusTextJsonCodeGenerationPath)TypeDeclarationExtensions.cs" LinkBase="Corvus.Text.Json.CodeGeneration" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)ValidationHandlers\AllOfChildHandlers\AllOfSubschemaValidationHandler.cs" LinkBase="Corvus.Text.Json.CodeGeneration\ValidationHandlers\AllOfChildHandlers" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)ValidationHandlers\AnyOfChildHandlers\AnyOfConstValidationHandler.cs" LinkBase="Corvus.Text.Json.CodeGeneration\ValidationHandlers\AnyOfChildHandlers" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)ValidationHandlers\AnyOfChildHandlers\AnyOfSubschemaValidationHandler.cs" LinkBase="Corvus.Text.Json.CodeGeneration\ValidationHandlers\AnyOfChildHandlers" />
@@ -158,8 +158,8 @@
     <!-- Roslyn 4.10 has a dependency on AsyncInterfaces 8.0.0: https://github.com/dotnet/roslyn/blob/3bdcd8b471bef9a522c16a0ada911eb9890b1a6c/eng/Versions.props#L39 -->
     <!-- So, stick with 8.x of STJ. -->
     <PackageReference Include="System.Text.Json" Version="8.0.6" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Corvus.Json.SourceGeneratorTools.ForLanguageProvider" Version="4.5.8" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Corvus.Json.SourceGeneratorTools.ForLanguageProvider" Version="4.6.0" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <PropertyGroup>

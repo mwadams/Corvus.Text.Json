@@ -163,18 +163,18 @@
   </ItemGroup>-->
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.201909" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.4" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.6" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.CorvusVocabulary" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.8" />
-    <PackageReference Include="Corvus.Json.SourceGenerator" Version="4.5.8">
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.201909" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.4" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.6" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.CorvusVocabulary" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.0" />
+    <PackageReference Include="Corvus.Json.SourceGenerator" Version="4.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

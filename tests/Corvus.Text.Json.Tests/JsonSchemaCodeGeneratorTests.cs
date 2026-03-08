@@ -49,6 +49,24 @@ namespace Corvus.Text.Json.Tests
         }
         """;
 
+        private const string AllOfInlineTupleWithUnevaluated =
+        """
+        {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "title": "AllOfInlineTupleWithUnevaluated",
+          "description": "An inline tuple within allOf with unevaluatedItems at the top level.",
+          "allOf": [
+            {
+              "prefixItems": [
+                { "type": "string" },
+                { "type": "number" }
+              ]
+            }
+          ],
+          "unevaluatedItems": { "type": "boolean" }
+        }        
+        """;
+
         private const string ArrayTypeWithItemsConstraint =
             """
             {{
@@ -450,6 +468,23 @@ namespace Corvus.Text.Json.Tests
             DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
                 $"types_tuplewithadditionalitemstype.json",
                 TupleWithAdditionalItemsType,
+                $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
+                "./someFakePath",
+                Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
+                validateFormat: true,
+                optionalAsNullable: false,
+                useImplicitOperatorString: false,
+                addExplicitUsings: false,
+                hostAssembly: Assembly.GetExecutingAssembly()
+                );
+        }
+
+        [Fact]
+        public static async Task GenerateCode_Emits_AllOfInlineTupleWithUnevaluated()
+        {
+            DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+                $"types_allofinlinetuplewithunevaluated.json",
+                AllOfInlineTupleWithUnevaluated,
                 $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
                 "./someFakePath",
                 Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,

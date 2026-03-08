@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.8" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>

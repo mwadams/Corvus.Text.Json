@@ -57,7 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.5.8" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.3" />
   </ItemGroup>
   
@@ -101,6 +101,7 @@
     <Compile Include="GeneratedIfThenElseMatchTests.cs" />
     <Compile Include="GeneratedMixedCompositionTests.cs" />
     <Compile Include="GeneratedTupleArrayTests.cs" />
+    <Compile Include="GeneratedComposedTupleTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralUtf8Tests.cs" />
     <Compile Include="JsonElementHelpersTryFormatNumberTests.cs" />
@@ -242,10 +243,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.5.8" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.6.0" />
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25228.101" />
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25227.101" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
@@ -268,7 +269,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JsonSchema.Net" Version="8.0.5" />
+    <PackageReference Include="JsonSchema.Net" Version="9.1.2" />
   </ItemGroup>
 
   <ItemGroup>

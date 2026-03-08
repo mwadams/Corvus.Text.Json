@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RefTupleWithAdditionalItems",
+  "description": "A composed tuple via allOf/$ref with additional items allowed.",
+  "$defs": {
+    "baseTuple": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "string" },
+        { "type": "integer", "format": "int32" }
+      ]
+    }
+  },
+  "allOf": [
+    { "$ref": "#/$defs/baseTuple" }
+  ],
+  "items": { "type": "boolean" }
+}

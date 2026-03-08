@@ -24,6 +24,9 @@
     <AdditionalFiles Include="allof-with-ifthenelse-2020-12.json" />
     <AdditionalFiles Include="pure-tuple-2020-12.json" />
     <AdditionalFiles Include="tuple-with-additional-items-2020-12.json" />
+    <AdditionalFiles Include="ref-tuple-with-contains-2020-12.json" />
+    <AdditionalFiles Include="ref-tuple-with-additional-items-2020-12.json" />
+    <AdditionalFiles Include="allof-inline-tuple-with-unevaluated-2020-12.json" />
   </ItemGroup>
 
   <ItemGroup>
