@@ -23,7 +23,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<AllOfWithAnyOf>.Parse("""{"id":"a1","role":"admin","level":5}""");
 
             string result = doc.RootElement.Match(
-                matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole v) => "admin:level=" + v.Level?.ToString(),
+                matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole v) => "admin:level=" + v.Level.ToString(),
                 matchAllOfWithAnyOfRequiredRole: static (in AllOfWithAnyOf.AllOfWithAnyOfRequiredRole _) => "user",
                 defaultMatch: static (in AllOfWithAnyOf _) => "default");
 
@@ -38,7 +38,7 @@ namespace Corvus.Text.Json.Tests
 
             string result = doc.RootElement.Match(
                 matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole _) => "admin",
-                matchAllOfWithAnyOfRequiredRole: static (in AllOfWithAnyOf.AllOfWithAnyOfRequiredRole v) => "user:email=" + v.Email?.ToString(),
+                matchAllOfWithAnyOfRequiredRole: static (in AllOfWithAnyOf.AllOfWithAnyOfRequiredRole v) => "user:email=" + v.Email.ToString(),
                 defaultMatch: static (in AllOfWithAnyOf _) => "default");
 
             Assert.Equal("user:email=u@test.com", result);
@@ -87,7 +87,7 @@ namespace Corvus.Text.Json.Tests
 
             AllOfWithAnyOf.Mutable root = builder.RootElement;
             string result = root.Match(
-                matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole v) => "admin:" + v.Level?.ToString(),
+                matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole v) => "admin:" + v.Level.ToString(),
                 matchAllOfWithAnyOfRequiredRole: static (in AllOfWithAnyOf.AllOfWithAnyOfRequiredRole _) => "user",
                 defaultMatch: static (in AllOfWithAnyOf.Mutable _) => "default");
 
@@ -177,7 +177,7 @@ namespace Corvus.Text.Json.Tests
                 matchCorvusTextJsonTestsGeneratedModelsDraft202012AllOfWithIfThenElseRequiredDiscount:
                     static (in AllOfWithIfThenElse.RequiredDiscount _) => "then",
                 matchCorvusTextJsonTestsGeneratedModelsDraft202012AllOfWithIfThenElseElseEntity:
-                    static (in AllOfWithIfThenElse.ElseEntity v) => "else:msg=" + v.Message?.ToString());
+                    static (in AllOfWithIfThenElse.ElseEntity v) => "else:msg=" + v.Message.ToString());
 
             Assert.Equal("else:msg=no discount", result);
         }
@@ -224,7 +224,7 @@ namespace Corvus.Text.Json.Tests
 
             AllOfWithIfThenElse.Mutable root = builder.RootElement;
             root.SetDiscount(0.25);
-            Assert.NotNull(root.Discount);
+            Assert.True(root.Discount.IsNotUndefined());
         }
 
         [Fact]
@@ -239,7 +239,7 @@ namespace Corvus.Text.Json.Tests
             bool removed = root.RemoveMessage();
 
             Assert.True(removed);
-            Assert.Null(root.Message);
+            Assert.True(root.Message.IsUndefined());
         }
 
         #endregion

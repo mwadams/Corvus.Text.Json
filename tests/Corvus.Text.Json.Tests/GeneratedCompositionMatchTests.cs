@@ -141,8 +141,8 @@ namespace Corvus.Text.Json.Tests
             string json = root.ToString();
 
             using ParsedJsonDocument<CompositionAllOf> roundTrip = ParsedJsonDocument<CompositionAllOf>.Parse(json);
-            Assert.Equal("Alice", roundTrip.RootElement.FirstName?.ToString());
-            Assert.Equal("Smith", roundTrip.RootElement.LastName?.ToString());
+            Assert.Equal("Alice", roundTrip.RootElement.FirstName.ToString());
+            Assert.Equal("Smith", roundTrip.RootElement.LastName.ToString());
         }
 
         #endregion

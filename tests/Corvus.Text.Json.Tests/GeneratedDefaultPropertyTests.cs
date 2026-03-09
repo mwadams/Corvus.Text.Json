@@ -20,11 +20,11 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.StatusEntity? status = instance.Status;
+        ObjectWithDefaultProperties.StatusEntity status = instance.Status;
 
-        Assert.NotNull(status);
-        Assert.Equal(JsonValueKind.String, status.Value.ValueKind);
-        Assert.Equal("active", (string)status.Value);
+        Assert.True(status.IsNotUndefined());
+        Assert.Equal(JsonValueKind.String, status.ValueKind);
+        Assert.Equal("active", (string)status);
     }
 
     [Fact]
@@ -34,11 +34,11 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.CountEntity? count = instance.Count;
+        ObjectWithDefaultProperties.CountEntity count = instance.Count;
 
-        Assert.NotNull(count);
-        Assert.Equal(JsonValueKind.Number, count.Value.ValueKind);
-        Assert.Equal(0, (int)count.Value);
+        Assert.True(count.IsNotUndefined());
+        Assert.Equal(JsonValueKind.Number, count.ValueKind);
+        Assert.Equal(0, (int)count);
     }
 
     [Fact]
@@ -48,10 +48,10 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test","status":"inactive"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.StatusEntity? status = instance.Status;
+        ObjectWithDefaultProperties.StatusEntity status = instance.Status;
 
-        Assert.NotNull(status);
-        Assert.Equal("inactive", (string)status.Value);
+        Assert.True(status.IsNotUndefined());
+        Assert.Equal("inactive", (string)status);
     }
 
     [Fact]
@@ -61,10 +61,10 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test","count":42}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.CountEntity? count = instance.Count;
+        ObjectWithDefaultProperties.CountEntity count = instance.Count;
 
-        Assert.NotNull(count);
-        Assert.Equal(42, (int)count.Value);
+        Assert.True(count.IsNotUndefined());
+        Assert.Equal(42, (int)count);
     }
 
     [Fact]
@@ -74,9 +74,9 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.LabelEntity? label = instance.Label;
+        ObjectWithDefaultProperties.LabelEntity label = instance.Label;
 
-        Assert.Null(label);
+        Assert.True(label.IsUndefined());
     }
 
     [Fact]
@@ -86,10 +86,10 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test","label":"hello"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.LabelEntity? label = instance.Label;
+        ObjectWithDefaultProperties.LabelEntity label = instance.Label;
 
-        Assert.NotNull(label);
-        Assert.Equal("hello", (string)label.Value);
+        Assert.True(label.IsNotUndefined());
+        Assert.Equal("hello", (string)label);
     }
 
     [Fact]
@@ -114,8 +114,8 @@ public class GeneratedDefaultPropertyTests
         ObjectWithDefaultProperties instance = doc.RootElement;
 
         Assert.Equal("Alice", (string)instance.Name);
-        Assert.Equal("pending", (string)instance.Status!.Value);
-        Assert.Equal(5, (int)instance.Count!.Value);
-        Assert.Equal("important", (string)instance.Label!.Value);
+        Assert.Equal("pending", (string)instance.Status);
+        Assert.Equal(5, (int)instance.Count);
+        Assert.Equal("important", (string)instance.Label);
     }
 }

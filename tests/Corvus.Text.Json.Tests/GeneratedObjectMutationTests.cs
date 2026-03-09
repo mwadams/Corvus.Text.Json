@@ -54,7 +54,7 @@ namespace Corvus.Text.Json.Tests
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetEmail("bob@example.com");
-            Assert.Equal("bob@example.com", root.Email?.ToString());
+            Assert.Equal("bob@example.com", root.Email.ToString());
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace Corvus.Text.Json.Tests
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetIsActive(false);
-            Assert.False((bool)root.IsActive!.Value);
+            Assert.False((bool)root.IsActive);
         }
 
         #endregion
@@ -130,7 +130,7 @@ namespace Corvus.Text.Json.Tests
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetEmail(default(ObjectWithMixedProperties.EmailEntity.Source));
-            Assert.Null(root.Email);
+            Assert.True(root.Email.IsUndefined());
         }
 
         [Fact]
@@ -142,7 +142,7 @@ namespace Corvus.Text.Json.Tests
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetIsActive(default(ObjectWithMixedProperties.IsActiveEntity.Source));
-            Assert.Null(root.IsActive);
+            Assert.True(root.IsActive.IsUndefined());
         }
 
         #endregion
@@ -160,7 +160,7 @@ namespace Corvus.Text.Json.Tests
             bool removed = root.RemoveEmail();
 
             Assert.True(removed);
-            Assert.Null(root.Email);
+            Assert.True(root.Email.IsUndefined());
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace Corvus.Text.Json.Tests
             bool removed = root.RemoveIsActive();
 
             Assert.True(removed);
-            Assert.Null(root.IsActive);
+            Assert.True(root.IsActive.IsUndefined());
         }
 
         #endregion
@@ -241,7 +241,7 @@ namespace Corvus.Text.Json.Tests
             bool removed = root.RemoveProperty("email");
 
             Assert.True(removed);
-            Assert.Null(root.Email);
+            Assert.True(root.Email.IsUndefined());
         }
 
         [Fact]
@@ -266,7 +266,7 @@ namespace Corvus.Text.Json.Tests
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetProperty("email", default(JsonElement.Source));
-            Assert.Null(root.Email);
+            Assert.True(root.Email.IsUndefined());
         }
 
         #endregion
@@ -291,8 +291,8 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<ObjectWithMixedProperties> roundTrip = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(json);
             Assert.Equal("Frank", roundTrip.RootElement.Name.ToString());
             Assert.Equal("55", roundTrip.RootElement.Age.ToString());
-            Assert.Equal("frank@test.com", roundTrip.RootElement.Email?.ToString());
-            Assert.True((bool)roundTrip.RootElement.IsActive!.Value);
+            Assert.Equal("frank@test.com", roundTrip.RootElement.Email.ToString());
+            Assert.True((bool)roundTrip.RootElement.IsActive);
         }
 
         #endregion

@@ -101,6 +101,7 @@
     <Compile Include="GeneratedCompositionMatchTests.cs" />
     <Compile Include="GeneratedIfThenElseMatchTests.cs" />
     <Compile Include="GeneratedMixedCompositionTests.cs" />
+    <Compile Include="GeneratedNullableOptionalTests.cs" />
     <Compile Include="GeneratedTupleArrayTests.cs" />
     <Compile Include="GeneratedComposedTupleTests.cs" />
     <Compile Include="GeneratedComposedCreationTests.cs" />
@@ -283,6 +284,7 @@
     <ProjectReference Include="..\..\Common\tests\TestUtilities\TestUtilities.csproj" />
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
     <ProjectReference Include="..\Corvus.Text.Json.Tests.GeneratedModels\Corvus.Text.Json.Tests.GeneratedModels.csproj" />
+    <ProjectReference Include="..\Corvus.Text.Json.Tests.GeneratedModels.OptionalAsNullable\Corvus.Text.Json.Tests.GeneratedModels.OptionalAsNullable.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">

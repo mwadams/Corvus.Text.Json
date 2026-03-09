@@ -109,7 +109,7 @@ public class IncrementalSourceGenerator : IIncrementalGenerator
             };
         }
 
-        bool optionalAsNullable = true;
+        bool optionalAsNullable = false;
 
         if (source.GlobalOptions.TryGetValue("build_property.CorvusTextJsonOptionalAsNullable", out string? optionalAsNullableName))
         {

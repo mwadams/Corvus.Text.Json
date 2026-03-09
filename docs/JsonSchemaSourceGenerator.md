@@ -121,6 +121,50 @@ bool isValid = person.EvaluateSchema();
 Console.WriteLine($"Valid: {isValid}");
 ```
 
+## Configuration
+
+The source generator supports several MSBuild properties that control code generation behavior. Set these in your `.csproj` file:
+
+### OptionalAsNullable
+
+Controls how optional properties are typed. By default, optional properties return non-nullable entity structs that are `Undefined` when the property is absent:
+
+```xml
+<!-- Default (off) — optional properties return T -->
+<!-- No property needed; this is the default behavior -->
+
+<!-- Opt-in — optional properties return T? (nullable) -->
+<PropertyGroup>
+  <CorvusTextJsonOptionalAsNullable>NullOrUndefined</CorvusTextJsonOptionalAsNullable>
+</PropertyGroup>
+```
+
+**Default (off):** Optional properties return the entity struct directly. When absent, the returned value is `Undefined` — check with `value.IsUndefined()` or `value.ValueKind == JsonValueKind.Undefined`:
+
+```csharp
+// Optional property returns non-nullable struct
+Person.EmailEntity email = person.Email;
+
+if (email.IsNotUndefined())
+{
+    Console.WriteLine($"Email: {email.GetString()}");
+}
+```
+
+**NullOrUndefined (opt-in):** Optional properties return `T?` (nullable struct). When absent, the property returns `null`:
+
+```csharp
+// Optional property returns nullable struct
+Person.EmailEntity? email = person.Email;
+
+if (email is { } e)
+{
+    Console.WriteLine($"Email: {e.GetString()}");
+}
+```
+
+> **Note:** Required properties are always non-nullable regardless of this setting. Setters and `Create()`/`Build()` factory methods are also unaffected.
+
 ## Working with Generated Types
 
 ### Parsing JSON
@@ -147,7 +191,7 @@ Person person4 = streamDoc.RootElement;
 
 ### Accessing Properties
 
-Properties return strongly-typed entity structs. Required properties return the entity directly; optional properties return a nullable entity (`T?`):
+Properties return strongly-typed entity structs. Required properties return the entity directly; optional properties return the entity as a non-nullable struct (see [Configuration](#configuration) for the nullable alternative):
 
 ```csharp
 Person person = Person.ParseValue(json);
@@ -157,10 +201,10 @@ Person person = Person.ParseValue(json);
 string firstName = person.Name.FirstName.GetString()!;
 int age = (int)person.Age;  // AgeEntity has implicit conversion to int
 
-// Optional properties — nullable; check before accessing
-if (person.Email is { } email)
+// Optional properties — check for undefined before accessing
+if (person.Email.IsNotUndefined())
 {
-    Console.WriteLine($"Email: {email.GetString()}");
+    Console.WriteLine($"Email: {person.Email.GetString()}");
 }
 ```
 
@@ -198,10 +242,10 @@ Person person = Person.ParseValue(json);
 string firstName = person.Name.FirstName.GetString()!;
 string lastName = person.Name.LastName.GetString()!;
 
-// Optional nested property — nullable entity
-if (person.Name.MiddleName is { } middleName)
+// Optional nested property — check for undefined
+if (person.Name.MiddleName.IsNotUndefined())
 {
-    Console.WriteLine($"Middle: {middleName.GetString()}");
+    Console.WriteLine($"Middle: {person.Name.MiddleName.GetString()}");
 }
 ```
 
@@ -227,16 +271,16 @@ Array properties are strongly-typed and enumerable:
 Person person = Person.ParseValue(json);
 
 // Enumerate array elements — each element is a typed entity
-foreach (var hobby in person.Hobbies!.Value.EnumerateArray())
+foreach (var hobby in person.Hobbies.EnumerateArray())
 {
     Console.WriteLine(hobby.GetString());
 }
 
 // Get array length
-int count = person.Hobbies!.Value.GetArrayLength();
+int count = person.Hobbies.GetArrayLength();
 
 // Access by index — returns the array item entity type
-var firstHobby = person.Hobbies!.Value[0];
+var firstHobby = person.Hobbies[0];
 Console.WriteLine(firstHobby.GetString());
 ```
 
@@ -625,8 +669,8 @@ Config config = doc.RootElement;
 string name = config.Name.ToString();     // "myapp"
 
 // Optional with default — returns DefaultInstance when missing
-string status = config.Status!.Value.ToString(); // "active" (from schema default)
-int count = (int)config.Count!.Value;             // 0 (from schema default)
+string status = config.Status.ToString(); // "active" (from schema default)
+int count = (int)config.Count;            // 0 (from schema default)
 ```
 
 The `DefaultInstance` static property is generated on the property type and initialized at class load time. Mutable property getters always return `default` (not the schema default) when a property is absent.

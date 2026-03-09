@@ -87,6 +87,6 @@ public static class JsonElementExtensions
     public static bool IsUndefined<T>(this T value)
         where T : struct, IJsonElement
     {
-        return value.ParentDocument is null || value.TokenType is not JsonTokenType.None;
+        return value.ParentDocument is null || value.TokenType is JsonTokenType.None;
     }
 }

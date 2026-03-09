@@ -29,7 +29,7 @@ namespace Corvus.Text.Json.Tests
 
             NestedObject.Mutable root = builder.RootElement;
             root.SetNotes("Updated notes");
-            Assert.Equal("Updated notes", root.Notes?.ToString());
+            Assert.Equal("Updated notes", root.Notes.ToString());
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace Corvus.Text.Json.Tests
 
             NestedObject.Mutable root = builder.RootElement;
             root.SetNotes(default(NestedObject.NotesEntity.Source));
-            Assert.Null(root.Notes);
+            Assert.True(root.Notes.IsUndefined());
         }
 
         #endregion
@@ -85,12 +85,12 @@ namespace Corvus.Text.Json.Tests
             bool removed = root.RemoveNotes();
 
             Assert.True(removed);
-            Assert.Null(root.Notes);
+            Assert.True(root.Notes.IsUndefined());
         }
 
         #endregion
 
-        #region Deep mutation on nested object
+        #region Deep mutationon nested object
 
         [Fact]
         public void MutateNestedObject_SetStreetOnAddress_UpdatesProperty()
@@ -117,7 +117,7 @@ namespace Corvus.Text.Json.Tests
             bool removed = address.RemoveCity();
 
             Assert.True(removed);
-            Assert.Null(address.City);
+            Assert.True(address.City.IsUndefined());
         }
 
         #endregion

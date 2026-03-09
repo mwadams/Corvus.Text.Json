@@ -357,7 +357,7 @@ Person.Mutable isItOK = (Person.Mutable)person; // This will throw if `person` w
 using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.BuildDocument(
     workspace,
     (ref b) => b.Create(
-        age: person.Age ?? default, // Happily assign an existing instance, will not copy
+        age: person.Age, // Happily assign an existing instance, will not copy
         name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
         competedInYears: CompetedInYears.Build((ref competedInYears) =>
         {
@@ -498,7 +498,7 @@ Console.WriteLine($"Added first: {addedFirst}");
 bool addedSecond = hashSet.AddItemIfNotExists(((IJsonElement)doc.RootElement.GetProperty("2")).ParentDocumentIndex);
 Console.WriteLine($"Added second: {addedSecond}");
 
-Year year = testPersonDocBuilder.RootElement.CompetedInYears!.Value[0];
+Year year = testPersonDocBuilder.RootElement.CompetedInYears[0];
 int yearAsInt = year;
 long yearAsLong = year;
 byte yearAsByte = (byte)year;

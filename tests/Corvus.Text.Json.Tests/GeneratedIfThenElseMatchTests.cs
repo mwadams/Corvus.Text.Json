@@ -21,7 +21,7 @@ namespace Corvus.Text.Json.Tests
 
             string result = doc.RootElement.Match(
                 matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseThenEntity:
-                    static (in IfThenElse.ThenEntity v) => "then:" + v.Value?.ToString(),
+                    static (in IfThenElse.ThenEntity v) => "then:" + v.Value.ToString(),
                 matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseElseEntity:
                     static (in IfThenElse.ElseEntity _) => "else");
 
@@ -38,7 +38,7 @@ namespace Corvus.Text.Json.Tests
                 matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseThenEntity:
                     static (in IfThenElse.ThenEntity _) => "then",
                 matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseElseEntity:
-                    static (in IfThenElse.ElseEntity v) => "else:" + v.Value?.ToString());
+                    static (in IfThenElse.ElseEntity v) => "else:" + v.Value.ToString());
 
             Assert.Equal("else:hello", result);
         }
@@ -52,7 +52,7 @@ namespace Corvus.Text.Json.Tests
             string result = doc.RootElement.Match(
                 "ctx",
                 matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseThenEntity:
-                    static (in IfThenElse.ThenEntity v, in string ctx) => ctx + ":then:" + v.Value?.ToString(),
+                    static (in IfThenElse.ThenEntity v, in string ctx) => ctx + ":then:" + v.Value.ToString(),
                 matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseElseEntity:
                     static (in IfThenElse.ElseEntity _, in string ctx) => ctx + ":else");
 

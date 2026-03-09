@@ -109,8 +109,8 @@ public class GeneratedCompositionApplyTests
 
         using ParsedJsonDocument<AllOfObjectWithProperties> roundTrip = ParsedJsonDocument<AllOfObjectWithProperties>.Parse(json);
         Assert.Equal("Bob", roundTrip.RootElement.Name.ToString());
-        Assert.Equal(30, (int)roundTrip.RootElement.Age!.Value);
-        Assert.Equal("a@b.com", roundTrip.RootElement.Email?.ToString());
+        Assert.Equal(30, (int)roundTrip.RootElement.Age);
+        Assert.Equal("a@b.com", roundTrip.RootElement.Email.ToString());
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class GeneratedCompositionApplyTests
 
         using ParsedJsonDocument<AllOfObjectWithProperties> roundTrip = ParsedJsonDocument<AllOfObjectWithProperties>.Parse(json);
         Assert.Equal("Bob", roundTrip.RootElement.Name.ToString());
-        Assert.Equal("a@b.com", roundTrip.RootElement.Email?.ToString());
+        Assert.Equal("a@b.com", roundTrip.RootElement.Email.ToString());
     }
 
     #endregion
@@ -156,8 +156,8 @@ public class GeneratedCompositionApplyTests
         string json = root.ToString();
 
         using ParsedJsonDocument<CompositionAllOf> roundTrip = ParsedJsonDocument<CompositionAllOf>.Parse(json);
-        Assert.Equal("Alice", roundTrip.RootElement.FirstName?.ToString());
-        Assert.Equal("Smith", roundTrip.RootElement.LastName?.ToString());
+        Assert.Equal("Alice", roundTrip.RootElement.FirstName.ToString());
+        Assert.Equal("Smith", roundTrip.RootElement.LastName.ToString());
     }
 
     [Fact]
@@ -176,8 +176,8 @@ public class GeneratedCompositionApplyTests
         string json = root.ToString();
 
         using ParsedJsonDocument<CompositionAllOf> roundTrip = ParsedJsonDocument<CompositionAllOf>.Parse(json);
-        Assert.Equal("Alice", roundTrip.RootElement.FirstName?.ToString());
-        Assert.Equal("Smith", roundTrip.RootElement.LastName?.ToString());
+        Assert.Equal("Alice", roundTrip.RootElement.FirstName.ToString());
+        Assert.Equal("Smith", roundTrip.RootElement.LastName.ToString());
     }
 
     #endregion

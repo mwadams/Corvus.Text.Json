@@ -72,7 +72,7 @@ class Program
             Console.WriteLine($"First Name: {name.FirstName}");
             Console.WriteLine($"Last Name: {name.LastName}");
             
-            if (name.MiddleName != null)
+            if (name.MiddleName.IsNotUndefined())
             {
                 Console.WriteLine($"Middle Name: {name.MiddleName}");
             }
@@ -104,9 +104,9 @@ class Program
         Console.WriteLine($"Name: {person.Name.FirstName} {person.Name.LastName}");
         
         // Access array elements using EnumerateArray()
-        if (person.Hobbies is not null)
+        if (person.Hobbies.IsNotUndefined())
         {
-            var hobbies = person.Hobbies.Value;
+            var hobbies = person.Hobbies;
             Console.WriteLine($"Hobbies:");
             
             int index = 1;

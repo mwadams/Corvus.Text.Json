@@ -70,7 +70,7 @@ namespace Corvus.Text.Json.Tests
 
             ObjectWithArrayProperty.Mutable root = builder.RootElement;
             root.SetScores(default(ObjectWithArrayProperty.ScoresEntityArray.Source));
-            Assert.Null(root.Scores);
+            Assert.True(root.Scores.IsUndefined());
         }
 
         #endregion
@@ -88,7 +88,7 @@ namespace Corvus.Text.Json.Tests
             bool removed = root.RemoveScores();
 
             Assert.True(removed);
-            Assert.Null(root.Scores);
+            Assert.True(root.Scores.IsUndefined());
         }
 
         #endregion

@@ -26,9 +26,9 @@ namespace Corvus.Text.Json.Tests
 
             Assert.Equal(3, root.GetArrayLength());
             Assert.Equal(1, (int)root[0].Id);
-            Assert.Equal("first", (string)root[0].Label!);
+            Assert.Equal("first", (string)root[0].Label);
             Assert.Equal(2, (int)root[1].Id);
-            Assert.Equal("second", (string)root[1].Label!);
+            Assert.Equal("second", (string)root[1].Label);
             Assert.Equal(3, (int)root[2].Id);
         }
 
@@ -75,9 +75,9 @@ namespace Corvus.Text.Json.Tests
 
             Assert.Equal(2, root.GetArrayLength());
             Assert.Equal(10, (int)root[0].Id);
-            Assert.Equal("a", (string)root[0].Label!);
+            Assert.Equal("a", (string)root[0].Label);
             Assert.Equal(20, (int)root[1].Id);
-            Assert.Equal("b", (string)root[1].Label!);
+            Assert.Equal("b", (string)root[1].Label);
         }
 
         [Fact]
