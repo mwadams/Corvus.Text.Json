@@ -97,6 +97,7 @@
     <Compile Include="GeneratedNestedObjectMutationTests.cs" />
     <Compile Include="GeneratedArrayMutationTests.cs" />
     <Compile Include="GeneratedObjectWithArrayPropertyTests.cs" />
+    <Compile Include="GeneratedCompositionApplyTests.cs" />
     <Compile Include="GeneratedCompositionMatchTests.cs" />
     <Compile Include="GeneratedIfThenElseMatchTests.cs" />
     <Compile Include="GeneratedMixedCompositionTests.cs" />
