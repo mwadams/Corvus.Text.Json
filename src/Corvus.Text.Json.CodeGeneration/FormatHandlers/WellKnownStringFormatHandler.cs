@@ -180,28 +180,37 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 return true;
 
             case "corvus-base64-content":
-                // TODO
                 return false;
 
             case "corvus-base64-content-pre201909":
-                // TODO
-                return false;
+                generator.AppendIndent(
+                   "JsonSchemaEvaluation.MatchBase64Content(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
 
             case "corvus-base64-string":
-                // TODO
                 return false;
 
             case "corvus-base64-string-pre201909":
-                // TODO
-                return false;
+                generator.AppendIndent(
+                   "JsonSchemaEvaluation.MatchBase64String(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
 
             case "corvus-json-content":
-                // TODO
                 return false;
 
             case "corvus-json-content-pre201909":
-                // TODO
-                return false;
+                generator.AppendIndent(
+                   "JsonSchemaEvaluation.MatchJsonContent(",
+                   valueIdentifier, ", ",
+                   formatKeywordProviderExpression, ", ",
+                   "ref ", validationContextIdentifier, ")");
+                return true;
 
             default:
                 return false;

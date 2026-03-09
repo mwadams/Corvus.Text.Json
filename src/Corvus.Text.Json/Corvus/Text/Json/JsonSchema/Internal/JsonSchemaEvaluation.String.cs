@@ -42,6 +42,9 @@ public static partial class JsonSchemaEvaluation
     private static readonly JsonSchemaMessageProvider ExpectedIriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIriReference.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedJsonPointer.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedRegex = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRegex.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedBase64String = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedBase64String.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedJsonContent = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedJsonContent.AsSpan(), buffer, out written);
+    private static readonly JsonSchemaMessageProvider ExpectedBase64Content = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedBase64Content.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedRelativeJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRelativeJsonPointer.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedTime = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601OffsetTime.AsSpan(), buffer, out written);
     private static readonly JsonSchemaMessageProvider ExpectedUri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUri.AsSpan(), buffer, out written);
@@ -719,6 +722,66 @@ public static partial class JsonSchemaEvaluation
         }
 
         context.EvaluatedKeyword(true, ExpectedUuid, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid Base64-encoded string.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid Base64-encoded string; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchBase64String(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchBase64String(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedBase64String, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedBase64String, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value contains valid JSON content.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is valid JSON content; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchJsonContent(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchJsonContent(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedJsonContent, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedJsonContent, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid Base64-encoded JSON document.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the value is a valid Base64-encoded JSON document; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchBase64Content(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!MatchBase64Content(value))
+        {
+            context.EvaluatedKeyword(false, messageProvider: ExpectedBase64Content, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, ExpectedBase64Content, keyword);
         return true;
     }
 
@@ -1534,5 +1597,102 @@ public static partial class JsonSchemaEvaluation
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid Base64-encoded string.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is a valid Base64-encoded string; otherwise, <see langword="false"/>.</returns>
+    internal static bool MatchBase64String(ReadOnlySpan<byte> value)
+    {
+        if (value.Length == 0)
+        {
+            return true;
+        }
+
+        int decodedLength = Base64.GetMaxDecodedFromUtf8Length(value.Length);
+
+        byte[]? rentedArray = null;
+        Span<byte> decoded = decodedLength <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedArray = ArrayPool<byte>.Shared.Rent(decodedLength));
+
+        try
+        {
+            OperationStatus status = Base64.DecodeFromUtf8(value, decoded, out _, out _, isFinalBlock: true);
+            return status == OperationStatus.Done;
+        }
+        finally
+        {
+            if (rentedArray != null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedArray);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Validates that a string value contains valid JSON content.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is valid JSON content; otherwise, <see langword="false"/>.</returns>
+    internal static bool MatchJsonContent(ReadOnlySpan<byte> value)
+    {
+        try
+        {
+            Utf8JsonReader reader = new(value, isFinalBlock: true, default);
+
+            // Read through the entire document to verify it is well-formed.
+            while (reader.Read())
+            {
+            }
+
+            // The reader must have consumed at least one token.
+            return reader.BytesConsumed > 0;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Validates that a string value is a valid Base64-encoded JSON document.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <returns><see langword="true"/> if the value is valid Base64-encoded JSON content; otherwise, <see langword="false"/>.</returns>
+    internal static bool MatchBase64Content(ReadOnlySpan<byte> value)
+    {
+        if (value.Length == 0)
+        {
+            return true;
+        }
+
+        int decodedLength = Base64.GetMaxDecodedFromUtf8Length(value.Length);
+
+        byte[]? rentedArray = null;
+        Span<byte> decoded = decodedLength <= JsonConstants.StackallocByteThreshold
+            ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+            : (rentedArray = ArrayPool<byte>.Shared.Rent(decodedLength));
+
+        try
+        {
+            OperationStatus status = Base64.DecodeFromUtf8(value, decoded, out _, out int bytesWritten, isFinalBlock: true);
+
+            if (status != OperationStatus.Done)
+            {
+                return false;
+            }
+
+            return MatchJsonContent(decoded.Slice(0, bytesWritten));
+        }
+        finally
+        {
+            if (rentedArray != null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedArray);
+            }
+        }
     }
 }

@@ -604,6 +604,15 @@
   <data name="JsonSchema_ExpectedRegex" xml:space="preserve">
     <value>Expected a regular expression specification.</value>
   </data>
+  <data name="JsonSchema_ExpectedBase64String" xml:space="preserve">
+    <value>Expected a valid Base64-encoded string.</value>
+  </data>
+  <data name="JsonSchema_ExpectedJsonContent" xml:space="preserve">
+    <value>Expected valid JSON content.</value>
+  </data>
+  <data name="JsonSchema_ExpectedBase64Content" xml:space="preserve">
+    <value>Expected valid Base64-encoded JSON content.</value>
+  </data>
   <data name="JsonSchema_ExpectedMatchRegularExpression" xml:space="preserve">
     <value>Expected the value to match the regular expression</value>
   </data>
