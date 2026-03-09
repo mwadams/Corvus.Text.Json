@@ -606,5 +606,82 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region TryGetNumericValues — ref and allOf types
+
+        [Fact]
+        public void RefItemsDoubleVector_TryGetNumericValues_Succeeds()
+        {
+            using ParsedJsonDocument<RefItemsDoubleVector> doc =
+                ParsedJsonDocument<RefItemsDoubleVector>.Parse("[1.1, 2.2, 3.3]");
+
+            Span<double> buffer = stackalloc double[3];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(3, written);
+            Assert.Equal(1.1, buffer[0]);
+            Assert.Equal(2.2, buffer[1]);
+            Assert.Equal(3.3, buffer[2]);
+        }
+
+        [Fact]
+        public void RefItemsInt32Vector_TryGetNumericValues_Succeeds()
+        {
+            using ParsedJsonDocument<RefItemsInt32Vector> doc =
+                ParsedJsonDocument<RefItemsInt32Vector>.Parse("[10, 20, 30, 40]");
+
+            Span<int> buffer = stackalloc int[4];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(4, written);
+            Assert.Equal(10, buffer[0]);
+            Assert.Equal(20, buffer[1]);
+            Assert.Equal(30, buffer[2]);
+            Assert.Equal(40, buffer[3]);
+        }
+
+        [Fact]
+        public void RefInnerArrayDoubleMatrix_TryGetNumericValues_FlattensValues()
+        {
+            using ParsedJsonDocument<RefInnerArrayDoubleMatrix> doc =
+                ParsedJsonDocument<RefInnerArrayDoubleMatrix>.Parse("[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]");
+
+            Span<double> buffer = stackalloc double[6];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(6, written);
+            Assert.Equal(1.0, buffer[0]);
+            Assert.Equal(6.0, buffer[5]);
+        }
+
+        [Fact]
+        public void AllOfDoubleVector_TryGetNumericValues_Succeeds()
+        {
+            using ParsedJsonDocument<AllOfDoubleVector> doc =
+                ParsedJsonDocument<AllOfDoubleVector>.Parse("[1.1, 2.2, 3.3]");
+
+            Span<double> buffer = stackalloc double[3];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(3, written);
+            Assert.Equal(1.1, buffer[0]);
+            Assert.Equal(2.2, buffer[1]);
+            Assert.Equal(3.3, buffer[2]);
+        }
+
+        [Fact]
+        public void AllOfInt32Matrix_TryGetNumericValues_FlattensValues()
+        {
+            using ParsedJsonDocument<AllOfInt32Matrix> doc =
+                ParsedJsonDocument<AllOfInt32Matrix>.Parse("[[1, 2, 3], [4, 5, 6]]");
+
+            Span<int> buffer = stackalloc int[6];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(6, written);
+            Assert.Equal(1, buffer[0]);
+            Assert.Equal(2, buffer[1]);
+            Assert.Equal(3, buffer[2]);
+            Assert.Equal(4, buffer[3]);
+            Assert.Equal(5, buffer[4]);
+            Assert.Equal(6, buffer[5]);
+        }
+
+        #endregion
     }
 }

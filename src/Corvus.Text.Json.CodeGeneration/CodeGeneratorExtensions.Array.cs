@@ -528,4 +528,122 @@ internal static partial class CodeGeneratorExtensions
             .PopIndent()
             .AppendLineIndent("}");
     }
+
+    /// <summary>
+    /// Append TryGetNumericValues() method for numeric array types.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the method.</param>
+    /// <param name="forMutable">Indicates that the method is for a mutable instance.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendTryGetNumericValues(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable = false)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (!typeDeclaration.IsNumericArray() || typeDeclaration.IsTuple())
+        {
+            return generator;
+        }
+
+        NumericTypeName? numericType = typeDeclaration.PreferredDotnetNumericTypeName();
+        if (numericType is not NumericTypeName nt)
+        {
+            return generator;
+        }
+
+        if (typeDeclaration.ArrayItemsType() is not ArrayItemsTypeDeclaration itemsType)
+        {
+            return generator;
+        }
+
+        if (itemsType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+        {
+            return generator;
+        }
+
+        string itemsFqdtn = itemsType.ReducedType.FullyQualifiedDotnetTypeName();
+        if (forMutable)
+        {
+            itemsFqdtn += ".Mutable";
+        }
+
+        bool isLeaf = itemsType.ReducedType.ArrayRank() is null;
+
+        if (nt.IsNetOnly)
+        {
+            generator.AppendLine("#if NET");
+        }
+
+        generator
+            .AppendSeparatorLine()
+            .ReserveNameIfNotReserved("TryGetNumericValues")
+            .AppendBlockIndent(
+                """
+            /// <summary>
+            /// Tries to get the numeric values from the array into the given buffer.
+            /// </summary>
+            /// <param name="items">The buffer into which to write the values.</param>
+            /// <param name="written">The number of values written to the buffer.</param>
+            /// <returns><c>true</c> if the values were successfully written to the buffer, otherwise <c>false</c>.</returns>
+            """)
+            .AppendLineIndent("public bool TryGetNumericValues(Span<", nt.Name, "> items, out int written)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("CheckValidInstance();")
+                .AppendLineIndent("written = 0;")
+                .AppendLineIndent("foreach (", itemsFqdtn, " item in EnumerateArray())")
+                .AppendLineIndent("{")
+                .PushIndent();
+
+        if (isLeaf)
+        {
+            generator
+                    .AppendLineIndent("if (written >= items.Length)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("return false;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("if (!item.TryGetValue(out ", nt.Name, " value))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("return false;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("items[written++] = value;");
+        }
+        else
+        {
+            generator
+                    .AppendLineIndent("if (!item.TryGetNumericValues(items.Slice(written), out int innerWritten))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("written += innerWritten;")
+                        .AppendLineIndent("return false;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("written += innerWritten;");
+        }
+
+        generator
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
+                .AppendLineIndent("return true;")
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        if (nt.IsNetOnly)
+        {
+            generator.AppendLine("#endif");
+        }
+
+        return generator;
+    }
 }

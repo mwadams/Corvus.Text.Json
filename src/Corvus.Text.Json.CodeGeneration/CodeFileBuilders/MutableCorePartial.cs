@@ -84,6 +84,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                             .AppendGetArrayLength(typeDeclaration)
                             .AppendGetPropertyCount(typeDeclaration)
                             .AppendEnumerateArray(typeDeclaration, forMutable: true)
+                            .AppendTryGetNumericValues(typeDeclaration, forMutable: true)
                             .AppendEnumerateObject(typeDeclaration, forMutable: true)
                             .AppendEqualsOverloads(typeDeclaration)
                             .AppendValueEqualsOverloads(typeDeclaration)

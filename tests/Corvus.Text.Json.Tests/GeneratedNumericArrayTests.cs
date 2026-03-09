@@ -419,5 +419,150 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region TryGetNumericValues — immutable
+
+        [Fact]
+        public void Rank1DoubleVector_TryGetNumericValues_Succeeds()
+        {
+            using ParsedJsonDocument<Rank1DoubleVector> doc =
+                ParsedJsonDocument<Rank1DoubleVector>.Parse("[1.1, 2.2, 3.3]");
+
+            Span<double> buffer = stackalloc double[3];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(3, written);
+            Assert.Equal(1.1, buffer[0]);
+            Assert.Equal(2.2, buffer[1]);
+            Assert.Equal(3.3, buffer[2]);
+        }
+
+        [Fact]
+        public void Rank1DoubleVector_TryGetNumericValues_BufferTooSmall_ReturnsFalse()
+        {
+            using ParsedJsonDocument<Rank1DoubleVector> doc =
+                ParsedJsonDocument<Rank1DoubleVector>.Parse("[1.1, 2.2, 3.3]");
+
+            Span<double> buffer = stackalloc double[2];
+            Assert.False(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(2, written);
+            Assert.Equal(1.1, buffer[0]);
+            Assert.Equal(2.2, buffer[1]);
+        }
+
+        [Fact]
+        public void Rank1Int32Vector_TryGetNumericValues_Succeeds()
+        {
+            using ParsedJsonDocument<Rank1Int32Vector> doc =
+                ParsedJsonDocument<Rank1Int32Vector>.Parse("[10, 20, 30, 40]");
+
+            Span<int> buffer = stackalloc int[4];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(4, written);
+            Assert.Equal(10, buffer[0]);
+            Assert.Equal(20, buffer[1]);
+            Assert.Equal(30, buffer[2]);
+            Assert.Equal(40, buffer[3]);
+        }
+
+        [Fact]
+        public void Rank2DoubleMatrix_TryGetNumericValues_FlattensValues()
+        {
+            using ParsedJsonDocument<Rank2DoubleMatrix> doc =
+                ParsedJsonDocument<Rank2DoubleMatrix>.Parse("[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]");
+
+            Span<double> buffer = stackalloc double[6];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(6, written);
+            Assert.Equal(1.0, buffer[0]);
+            Assert.Equal(2.0, buffer[1]);
+            Assert.Equal(3.0, buffer[2]);
+            Assert.Equal(4.0, buffer[3]);
+            Assert.Equal(5.0, buffer[4]);
+            Assert.Equal(6.0, buffer[5]);
+        }
+
+        [Fact]
+        public void Rank2DoubleMatrix_TryGetNumericValues_BufferTooSmall_ReturnsFalse()
+        {
+            using ParsedJsonDocument<Rank2DoubleMatrix> doc =
+                ParsedJsonDocument<Rank2DoubleMatrix>.Parse("[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]");
+
+            Span<double> buffer = stackalloc double[4];
+            Assert.False(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            // First row (3 values) succeeds, second row fails partway
+            Assert.True(written >= 3);
+        }
+
+        [Fact]
+        public void Rank3Int32Cube_TryGetNumericValues_FlattensValues()
+        {
+            using ParsedJsonDocument<Rank3Int32Cube> doc =
+                ParsedJsonDocument<Rank3Int32Cube>.Parse("[[[1,2,3],[4,5,6]],[[7,8,9],[10,11,12]]]");
+
+            Span<int> buffer = stackalloc int[12];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(12, written);
+            for (int i = 0; i < 12; i++)
+            {
+                Assert.Equal(i + 1, buffer[i]);
+            }
+        }
+
+        #endregion
+
+        #region TryGetNumericValues — mutable
+
+        [Fact]
+        public void Rank1DoubleVector_Mutable_TryGetNumericValues_Succeeds()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<Rank1DoubleVector> sourceDoc =
+                ParsedJsonDocument<Rank1DoubleVector>.Parse("[1.1, 2.2, 3.3]");
+            using JsonDocumentBuilder<Rank1DoubleVector.Mutable> doc =
+                sourceDoc.RootElement.BuildDocument(workspace);
+
+            Span<double> buffer = stackalloc double[3];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(3, written);
+            Assert.Equal(1.1, buffer[0]);
+            Assert.Equal(2.2, buffer[1]);
+            Assert.Equal(3.3, buffer[2]);
+        }
+
+        [Fact]
+        public void Rank2DoubleMatrix_Mutable_TryGetNumericValues_FlattensValues()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<Rank2DoubleMatrix> sourceDoc =
+                ParsedJsonDocument<Rank2DoubleMatrix>.Parse("[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]");
+            using JsonDocumentBuilder<Rank2DoubleMatrix.Mutable> doc =
+                sourceDoc.RootElement.BuildDocument(workspace);
+
+            Span<double> buffer = stackalloc double[6];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(6, written);
+            Assert.Equal(1.0, buffer[0]);
+            Assert.Equal(6.0, buffer[5]);
+        }
+
+        [Fact]
+        public void Rank3Int32Cube_Mutable_TryGetNumericValues_FlattensValues()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<Rank3Int32Cube> sourceDoc =
+                ParsedJsonDocument<Rank3Int32Cube>.Parse("[[[1,2,3],[4,5,6]],[[7,8,9],[10,11,12]]]");
+            using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
+                sourceDoc.RootElement.BuildDocument(workspace);
+
+            Span<int> buffer = stackalloc int[12];
+            Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
+            Assert.Equal(12, written);
+            for (int i = 0; i < 12; i++)
+            {
+                Assert.Equal(i + 1, buffer[i]);
+            }
+        }
+
+        #endregion
     }
 }
