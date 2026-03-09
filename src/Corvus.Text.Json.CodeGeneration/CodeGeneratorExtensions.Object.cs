@@ -495,6 +495,9 @@ internal static partial class CodeGeneratorExtensions
             bool isNullable = typeDeclaration.OptionalAsNullable() && property.RequiredOrOptional == RequiredOrOptional.Optional;
             string propertyType = $"{property.ReducedPropertyType.FullyQualifiedDotnetTypeName()}{(forMutable ? ".Mutable" : "")}";
 
+            string immutableTypeName = property.ReducedPropertyType.FullyQualifiedDotnetTypeName();
+            bool hasDefaultValue = !forMutable && property.ReducedPropertyType.DefaultValue().ValueKind != JsonValueKind.Undefined;
+
             generator
                 .AppendSeparatorLine()
                 .AppendPropertyDocumentation(property)
@@ -507,7 +510,7 @@ internal static partial class CodeGeneratorExtensions
                     .PopIndent()
                     .AppendLineIndent("}")
                     .AppendSeparatorLine()
-                    .AppendLineIndent("return default;")
+                    .AppendLineIndent(hasDefaultValue ? $"return {immutableTypeName}.DefaultInstance;" : "return default;")
                 .EndReadOnlyPropertyDeclaration();
         }
 

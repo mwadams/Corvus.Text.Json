@@ -701,6 +701,22 @@ public sealed partial class ParsedJsonDocument<T>
         {
             database = MetadataDbConstants.One;
         }
+        else if (tokenType == JsonTokenType.String)
+        {
+            // String constants are stored with the raw JSON representation (including
+            // surrounding quotes). We skip the opening quote and store the content length,
+            // matching how Parse() records string tokens.
+            Debug.Assert(utf8Json.Length >= 2 && utf8Json[0] == (byte)'"' && utf8Json[^1] == (byte)'"');
+
+            int contentLength = utf8Json.Length - 2;
+            database = MetadataDb.CreateLocked(utf8Json.Length);
+            database.Append(tokenType, startLocation: 1, contentLength);
+
+            if (utf8Json.AsSpan(1, contentLength).IndexOf((byte)'\\') >= 0)
+            {
+                database.SetHasComplexChildren(0);
+            }
+        }
         else
         {
             database = MetadataDb.CreateLocked(utf8Json.Length);

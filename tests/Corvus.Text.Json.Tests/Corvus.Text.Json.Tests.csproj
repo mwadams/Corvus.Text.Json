@@ -106,6 +106,7 @@
     <Compile Include="GeneratedNumericArrayTests.cs" />
     <Compile Include="GeneratedRefNumericArrayTests.cs" />
     <Compile Include="GeneratedIndexerTests.cs" />
+    <Compile Include="GeneratedDefaultPropertyTests.cs" />
     <Compile Include="JsonElementPropertyIndexerTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralUtf8Tests.cs" />
