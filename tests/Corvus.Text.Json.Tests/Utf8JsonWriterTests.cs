@@ -5859,8 +5859,8 @@ namespace Corvus.Text.Json.Tests
             }
         }
 
+#if NET
         [Theory]
-        [SkipOnTargetFramework(TargetFrameworkMonikers.NetFramework)]
         [MemberData(nameof(WriteValue_TestData))]
         public void WriteNumbers(JsonWriterOptions options, string keyString)
         {
@@ -6073,6 +6073,7 @@ namespace Corvus.Text.Json.Tests
                 JsonTestHelper.AssertContents(expectedStr, output);
             }
         }
+#endif
 
         [Theory]
         [MemberData(nameof(JsonOptions_TestData))]
