@@ -362,6 +362,81 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
+    /// Append tuple item properties (Item1, Item2, ...) for types that are pure tuples.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the properties.</param>
+    /// <param name="forMutable">Whether to emit the properties for the mutable element.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendTupleItemProperties(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable = false)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Array) == 0)
+        {
+            return generator;
+        }
+
+        TupleTypeDeclaration? tupleType =
+            typeDeclaration.TupleType() ??
+            typeDeclaration.ExplicitTupleType() ??
+            typeDeclaration.ImplicitTupleType();
+
+        if (tupleType is null)
+        {
+            return generator;
+        }
+
+        int index = 0;
+        foreach (ReducedTypeDeclaration item in tupleType.ItemsTypes)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            if (item.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                index++;
+                continue;
+            }
+
+            string fqdtn = item.ReducedType.FullyQualifiedDotnetTypeName();
+            int itemNumber = index + 1;
+
+            generator
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                """
+                /// <summary>
+                /// Gets the tuple item.
+                /// </summary>
+                /// <exception cref="IndexOutOfRangeException">The index was outside the bounds of the array.</exception>
+                /// <exception cref="InvalidOperationException">The value is not an array.</exception>
+                """)
+                .AppendLineIndent("public ", fqdtn, forMutable ? ".Mutable" : "", " Item", itemNumber.ToString())
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("get")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("CheckValidInstance();")
+                        .AppendLineIndent("return _parent.GetArrayIndexElement<", fqdtn, forMutable ? ".Mutable" : "", ">(_idx, ", index.ToString(), ");")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                .PopIndent()
+                .AppendLineIndent("}");
+
+            index++;
+        }
+
+        return generator;
+    }
+
+    /// <summary>
     /// Append the static property which provides the rank of the array.
     /// </summary>
     /// <param name="generator">The code generator.</param>

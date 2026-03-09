@@ -250,31 +250,35 @@ internal static partial class CodeGeneratorExtensions
                         .AppendLineIndent("public bool TryGetValue(out byte value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
 
-#if NET
                 if (seenConversionOperators.Add("Int128"))
                 {
                     generator
                         .AppendSeparatorLine()
+                        .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Int128 value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
+                        .AppendLineIndent("public bool TryGetValue(out Int128 value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }")
+                        .AppendLine("#endif");
                 }
 
                 if (seenConversionOperators.Add("UInt128"))
                 {
                     generator
                         .AppendSeparatorLine()
+                        .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out UInt128 value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
+                        .AppendLineIndent("public bool TryGetValue(out UInt128 value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }")
+                        .AppendLine("#endif");
                 }
 
                 if (seenConversionOperators.Add("Half"))
                 {
                     generator
                         .AppendSeparatorLine()
+                        .AppendLine("#if NET")
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public bool TryGetValue(out Half value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
+                        .AppendLineIndent("public bool TryGetValue(out Half value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }")
+                        .AppendLine("#endif");
                 }
-#endif
 
                 if (seenConversionOperators.Add("double"))
                 {

@@ -471,6 +471,86 @@ internal static partial class CodeGeneratorExtensions
     }
 
     /// <summary>
+    /// Append TryGetProperty methods for open object types.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the methods.</param>
+    /// <param name="forMutable">Whether to emit the methods for the mutable element.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendObjectTryGetPropertyMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable = false)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if ((typeDeclaration.ImpliedCoreTypesOrAny() & CoreTypes.Object) == 0)
+        {
+            return generator;
+        }
+
+        string fqdtn;
+
+        if (typeDeclaration.FallbackObjectPropertyType() is FallbackObjectPropertyType objectPropertyType)
+        {
+            if (objectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                return generator;
+            }
+
+            fqdtn = objectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+        }
+        else if (typeDeclaration.LocalEvaluatedPropertyType() is FallbackObjectPropertyType localObjectPropertyType)
+        {
+            if (localObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                return generator;
+            }
+
+            fqdtn = localObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+        }
+        else if (typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is FallbackObjectPropertyType localAndAppliedObjectPropertyType)
+        {
+            if (localAndAppliedObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
+            {
+                return generator;
+            }
+
+            fqdtn = localAndAppliedObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+        }
+        else
+        {
+            fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+        }
+
+        AppendTryGetPropertyMethod(generator, fqdtn, "ReadOnlySpan<byte>", forMutable);
+        AppendTryGetPropertyMethod(generator, fqdtn, "ReadOnlySpan<char>", forMutable);
+        AppendTryGetPropertyMethod(generator, fqdtn, "string", forMutable);
+
+        return generator;
+
+        static void AppendTryGetPropertyMethod(CodeGenerator generator, string fqdtn, string propertyNameType, bool forMutable) => generator
+                            .AppendSeparatorLine()
+                            .AppendBlockIndent(
+                            """
+                            /// <summary>
+                            /// Tries to get the value of the property with the given name.
+                            /// </summary>
+                            /// <param name="propertyName">The name of the property.</param>
+                            /// <param name="value">The value of the property, if present.</param>
+                            /// <returns><see langword="true"/> if the property was found, otherwise <see langword="false"/>.</returns>
+                            /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+                            """)
+                            .AppendLineIndent("public bool TryGetProperty(", propertyNameType, " propertyName, out ", fqdtn, forMutable ? ".Mutable" : "", " value)")
+                            .AppendLineIndent("{")
+                            .PushIndent()
+                                .AppendLineIndent("CheckValidInstance();")
+                                .AppendLineIndent("return _parent.TryGetNamedPropertyValue(_idx, propertyName, out value);")
+                            .PopIndent()
+                            .AppendLineIndent("}");
+    }
+
+    /// <summary>
     /// Append object properties.
     /// </summary>
     /// <param name="generator">The code generator.</param>
