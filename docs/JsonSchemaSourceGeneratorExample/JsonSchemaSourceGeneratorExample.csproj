@@ -15,11 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NodaTime" Version="3.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Reference the source generator and runtime library -->
-    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" 
-                      PrivateAssets="all" 
-                      ReferenceOutputAssembly="false" 
-                      OutputItemType="Analyzer" />
+    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 

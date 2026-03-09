@@ -441,6 +441,35 @@ items.SetItem(0, "Replace item1"u8);
 Console.WriteLine(root.ToString());
 ```
 
+### Property Indexers
+
+In addition to `GetProperty()`, mutable and immutable elements support indexed access using string, UTF-8, or UTF-16 property names:
+
+```csharp
+using var doc = ParsedJsonDocument<JsonElement>.Parse("""{"name":"Alice","age":30}""");
+
+// Indexed access on immutable element
+JsonElement name = doc.RootElement["name"u8];       // UTF-8 (most efficient)
+JsonElement age  = doc.RootElement["age"];           // string
+
+Console.WriteLine(name.GetString()); // "Alice"
+Console.WriteLine(age.GetInt32());   // 30
+```
+
+The same indexers work on mutable elements:
+
+```csharp
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using var builder = doc.RootElement.BuildDocument(workspace);
+
+JsonElement.Mutable root = builder.RootElement;
+JsonElement.Mutable nameEl = root["name"u8];
+
+Console.WriteLine(nameEl.GetString()); // "Alice"
+```
+
+UTF-8 access (`"key"u8`) avoids transcoding overhead and is the recommended approach in performance-critical paths.
+
 ## Serializing Documents
 
 After building or modifying a document, you need to serialize it for storage, transmission, or API responses. The `WriteTo` method provides efficient UTF-8 serialization directly to a `Utf8JsonWriter`.

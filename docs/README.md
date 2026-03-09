@@ -14,12 +14,25 @@ This folder contains documentation and examples for using the Corvus.Text.Json l
   - Memory management best practices
   - Performance tips
 
+- **[JsonSchemaSourceGenerator.md](./JsonSchemaSourceGenerator.md)** - Guide for generating strongly-typed C# from JSON Schema:
+  - Source generator setup and configuration
+  - Working with generated types (properties, arrays, enums)
+  - **Mutating generated types** (SetProperty, array mutators)
+  - **Default property values** (schema defaults, DefaultInstance)
+  - **Property indexers** (string, UTF-8, UTF-16 access)
+  - **Composition patterns** (Match discrimination, Apply merging)
+  - **RemoveProperty** on generated mutable types
+  - Schema references ($ref, $defs)
+  - Advanced scenarios (oneOf/anyOf/allOf, pattern properties, formats)
+  - Serialization and validation
+
 - **[JsonDocumentBuilder.md](./JsonDocumentBuilder.md)** - Guide for creating and modifying JSON documents:
   - Creating `JsonWorkspace` instances
   - Building documents from primitives
   - Creating objects and arrays
   - Nested structures
   - Modifying existing documents
+  - **Property indexers** (string, UTF-8 access on elements)
   - Writing documents to various outputs
   - Memory management and performance tips
 
@@ -36,6 +49,15 @@ This folder contains documentation and examples for using the Corvus.Text.Json l
   - Parsing from streams (synchronous)
   - Parsing from streams (asynchronous)
   - Parsing from file streams
+
+- **[JsonSchemaSourceGeneratorExample/](./JsonSchemaSourceGeneratorExample/)** - Console application demonstrating the JSON Schema source generator:
+  - Parsing into strongly-typed generated models
+  - Accessing properties and arrays
+  - Building documents with nested objects and arrays
+  - Modifying properties on mutable types
+  - **Property indexers** (UTF-8 and string)
+  - **Default property values** (schema defaults)
+  - **Removing properties** from mutable documents
 
 - **[JsonDocumentBuilderExample/](./JsonDocumentBuilderExample/)** - Console application demonstrating `JsonDocumentBuilder<T>`:
   - Creating documents from primitives
@@ -98,7 +120,7 @@ using Corvus.Text.Json;
 
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using var doc = JsonElement.CreateDocumentBuilder(
+using var doc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {

@@ -33,6 +33,15 @@ class Program
         // Example 8: Modify nested properties
         Example8_ModifyNestedProperties();
 
+        // Example 9: Property indexers
+        Example9_PropertyIndexers();
+
+        // Example 10: Default property values
+        Example10_DefaultPropertyValues();
+
+        // Example 11: Remove properties
+        Example11_RemoveProperties();
+
         Console.WriteLine("\nAll examples completed!");
     }
 
@@ -334,6 +343,113 @@ class Program
         }));
 
         Console.WriteLine("\nAfter modification:");
+        Console.WriteLine(mutablePerson.ToString());
+        Console.WriteLine();
+    }
+
+    static void Example9_PropertyIndexers()
+    {
+        Console.WriteLine("--- Example 9: Property Indexers ---");
+
+        string json = """
+            {
+                "name": {
+                    "firstName": "Jane",
+                    "lastName": "Doe"
+                },
+                "age": 29,
+                "email": "jane.doe@example.com"
+            }
+            """;
+
+        using ParsedJsonDocument<Person> doc = ParsedJsonDocument<Person>.Parse(json);
+        Person person = doc.RootElement;
+
+        // Access properties using UTF-8 indexer (most efficient)
+        JsonElement ageByUtf8 = person["age"u8];
+        Console.WriteLine($"Age (UTF-8 indexer): {ageByUtf8}");
+
+        // Access using string indexer
+        JsonElement emailByString = person["email"];
+        Console.WriteLine($"Email (string indexer): {emailByString}");
+        Console.WriteLine();
+    }
+
+    static void Example10_DefaultPropertyValues()
+    {
+        Console.WriteLine("--- Example 10: Default Property Values ---");
+
+        // Note: The schema defines "isActive" with "default": true
+        // When parsing JSON that doesn't include isActive, the getter
+        // returns the schema default value.
+
+        string jsonWithDefault = """
+            {
+                "name": {
+                    "firstName": "Kim",
+                    "lastName": "Lee"
+                },
+                "age": 25
+            }
+            """;
+
+        using ParsedJsonDocument<Person> doc = ParsedJsonDocument<Person>.Parse(jsonWithDefault);
+        Person person = doc.RootElement;
+
+        // isActive was not in the JSON, but schema has "default": true
+        var isActive = person.IsActive;
+        Console.WriteLine($"isActive (missing, schema default = true): {isActive}");
+
+        // Compare with a document that explicitly sets isActive to false
+        string jsonExplicit = """
+            {
+                "name": {
+                    "firstName": "Kim",
+                    "lastName": "Lee"
+                },
+                "age": 25,
+                "isActive": false
+            }
+            """;
+
+        using ParsedJsonDocument<Person> explicitDoc = ParsedJsonDocument<Person>.Parse(jsonExplicit);
+        Console.WriteLine($"isActive (explicitly false): {explicitDoc.RootElement.IsActive}");
+        Console.WriteLine();
+    }
+
+    static void Example11_RemoveProperties()
+    {
+        Console.WriteLine("--- Example 11: Remove Properties ---");
+
+        string json = """
+            {
+                "name": {
+                    "firstName": "Leo",
+                    "lastName": "Tolstoy"
+                },
+                "age": 82,
+                "email": "leo@example.com",
+                "isActive": true
+            }
+            """;
+
+        using ParsedJsonDocument<Person> doc = ParsedJsonDocument<Person>.Parse(json);
+        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<Person.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+
+        Person.Mutable mutablePerson = builder.RootElement;
+
+        Console.WriteLine("Before removing properties:");
+        Console.WriteLine(mutablePerson.ToString());
+
+        // Remove optional properties
+        mutablePerson.RemoveEmail();
+        mutablePerson.RemoveIsActive();
+
+        // Re-obtain reference after mutation
+        mutablePerson = builder.RootElement;
+
+        Console.WriteLine("\nAfter removing email and isActive:");
         Console.WriteLine(mutablePerson.ToString());
         Console.WriteLine();
     }

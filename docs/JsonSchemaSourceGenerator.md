@@ -2,17 +2,16 @@
 
 ## Overview
 
-The Corvus.Text.Json.SourceGenerator automatically generates strongly-typed C# models from JSON Schema documents at compile time. These generated types implement `IJsonValue<T>` and provide type-safe access to JSON data with built-in validation, efficient memory usage, and full IntelliSense support.
+The Corvus.Text.Json.SourceGenerator automatically generates strongly-typed C# models from JSON Schema documents at compile time. These generated types implement `IJsonElement<T>` and provide type-safe access to JSON data with built-in schema validation, efficient memory usage via `ParsedJsonDocument`, and full IntelliSense support.
 
 ## Key Features
 
 - **Compile-Time Code Generation**: Types are generated during build, catching errors early
 - **Type-Safe Access**: Strongly-typed properties with compile-time checking
-- **Built-in Validation**: JSON Schema validation built into the generated types
-- **High Performance**: Optimized for minimal allocations and fast parsing
+- **Built-in Schema Validation**: JSON Schema validation via `EvaluateSchema()` on every generated type
+- **High Performance**: Struct-based types backed by `ParsedJsonDocument` for minimal allocations
 - **IntelliSense Support**: Full IDE support with documentation from schema descriptions
-- **Multiple Backing Stores**: Efficient JsonElement backing or .NET object backing
-- **Immutable by Default**: Generated types are immutable structs
+- **Immutable by Default**: Generated types are immutable `readonly struct`s with optional mutable variants
 
 ## Quick Start
 
@@ -114,15 +113,11 @@ string json = """
 
 Person person = Person.ParseValue(json);
 
-// Access properties with full type safety
-string name = person.Name.GetString()!;
-int age = person.Age.GetInt32();
-string? email = person.Email.GetString();
+// Access properties — each returns a strongly-typed entity struct
+Console.WriteLine($"{person.Name} is {(int)person.Age} years old");
 
-Console.WriteLine($"{name} is {age} years old");
-
-// Validation is built-in
-bool isValid = person.IsValid();
+// Schema validation is built-in
+bool isValid = person.EvaluateSchema();
 Console.WriteLine($"Valid: {isValid}");
 ```
 
@@ -130,41 +125,42 @@ Console.WriteLine($"Valid: {isValid}");
 
 ### Parsing JSON
 
-Generated types provide multiple parsing methods:
+Generated types provide a static `ParseValue()` method. For document-lifetime management, use `ParsedJsonDocument<T>`:
 
 ```csharp
-// From string
+// ParseValue — returns the value directly (document is managed internally)
 Person person1 = Person.ParseValue(jsonString);
 
 // From UTF-8 bytes
 ReadOnlySpan<byte> utf8Json = """{"name":"Alice","age":25}"""u8;
 Person person2 = Person.ParseValue(utf8Json);
 
-// From stream
-using FileStream stream = File.OpenRead("person.json");
-Person person3 = Person.Parse(stream);
+// ParsedJsonDocument — explicit lifetime control with using/Dispose
+using ParsedJsonDocument<Person> doc = ParsedJsonDocument<Person>.Parse(jsonString);
+Person person3 = doc.RootElement;
 
-// From JsonElement
-using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString);
-Person person4 = Person.FromJson(doc.RootElement);
+// From a stream
+using FileStream stream = File.OpenRead("person.json");
+using ParsedJsonDocument<Person> streamDoc = ParsedJsonDocument<Person>.Parse(stream);
+Person person4 = streamDoc.RootElement;
 ```
 
 ### Accessing Properties
 
-Properties are accessed using strongly-typed getters:
+Properties return strongly-typed entity structs. Required properties return the entity directly; optional properties return a nullable entity (`T?`):
 
 ```csharp
 Person person = Person.ParseValue(json);
 
-// Required properties
-string name = person.Name.GetString()!;
-int age = person.Age.GetInt32();
+// Required properties — always present
+// person.Name returns Person.PersonName, person.Age returns Person.AgeEntity
+string firstName = person.Name.FirstName.GetString()!;
+int age = (int)person.Age;  // AgeEntity has implicit conversion to int
 
-// Optional properties - check if present
-if (person.Email.ValueKind != JsonValueKind.Undefined)
+// Optional properties — nullable; check before accessing
+if (person.Email is { } email)
 {
-    string email = person.Email.GetString()!;
-    Console.WriteLine($"Email: {email}");
+    Console.WriteLine($"Email: {email.GetString()}");
 }
 ```
 
@@ -198,14 +194,14 @@ public readonly partial struct Person;
 // Use the generated nested types
 Person person = Person.ParseValue(json);
 
-// Access nested properties
+// Access nested properties — each returns its own entity type
 string firstName = person.Name.FirstName.GetString()!;
 string lastName = person.Name.LastName.GetString()!;
 
-// Optional nested property
-if (person.Name.MiddleName.ValueKind != JsonValueKind.Undefined)
+// Optional nested property — nullable entity
+if (person.Name.MiddleName is { } middleName)
 {
-    string middleName = person.Name.MiddleName.GetString()!;
+    Console.WriteLine($"Middle: {middleName.GetString()}");
 }
 ```
 
@@ -230,41 +226,136 @@ Array properties are strongly-typed and enumerable:
 ```csharp
 Person person = Person.ParseValue(json);
 
-// Enumerate array elements
-foreach (JsonString hobby in person.Hobbies.EnumerateArray())
+// Enumerate array elements — each element is a typed entity
+foreach (var hobby in person.Hobbies!.Value.EnumerateArray())
 {
     Console.WriteLine(hobby.GetString());
 }
 
 // Get array length
-int count = person.Hobbies.GetArrayLength();
+int count = person.Hobbies!.Value.GetArrayLength();
 
-// Access by index
-JsonString firstHobby = person.Hobbies[0];
+// Access by index — returns the array item entity type
+var firstHobby = person.Hobbies!.Value[0];
+Console.WriteLine(firstHobby.GetString());
 ```
 
 ### Validation
 
-Generated types include built-in validation based on the JSON Schema:
+Generated types include built-in validation based on the JSON Schema via `EvaluateSchema()`:
 
 ```csharp
 Person person = Person.ParseValue(json);
 
-// Simple validation
-bool isValid = person.IsValid();
+// Validate against the schema
+bool isValid = person.EvaluateSchema();
 
-// Detailed validation with error information
-ValidationContext context = ValidationContext.Create();
-bool isValid = person.TryValidate(context, out var errors);
-
-if (!isValid)
-{
-    foreach (var error in errors)
-    {
-        Console.WriteLine($"Validation error: {error.Message}");
-    }
-}
+Console.WriteLine($"Schema evaluation: {isValid}");
 ```
+
+> **Tip:** Generated types are immutable by default. For mutation operations like setting properties, removing properties, and modifying arrays, see [Mutating Generated Types](#mutating-generated-types) below.
+
+### Building Documents
+
+In addition to parsing JSON, you can build documents from scratch using `BuildDocument()` and the generated `Build()` / `Create()` API. This uses a callback pattern with `ref struct` builders for zero-allocation construction.
+
+#### Building a complete document
+
+`BuildDocument()` takes a `JsonWorkspace` and a builder callback. The callback receives a `ref Builder` on which you call `Create()` with named parameters for each property:
+
+```csharp
+using JsonWorkspace workspace = JsonWorkspace.Create();
+
+// Build a Person from scratch — no JSON parsing needed
+using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
+    workspace,
+    (ref b) => b.Create(
+        age: 30,
+        email: "alice@example.com",
+        name: Person.PersonName.Build((ref nameBuilder) =>
+        {
+            nameBuilder.Create(
+                firstName: "Alice",
+                lastName: "Smith");
+        })));
+
+Console.WriteLine(docBuilder.RootElement.ToString());
+// Output: {"name":{"firstName":"Alice","lastName":"Smith"},"age":30,"email":"alice@example.com"}
+```
+
+#### Nested objects with Build()
+
+For nested object properties, call `NestedType.Build()` to create a `Source` value from a builder callback. `Build()` returns a lightweight `Source` ref struct that is consumed by the parent `Create()` call:
+
+```csharp
+// Build nested PersonName with required and optional properties
+name: Person.PersonName.Build((ref nameBuilder) =>
+{
+    nameBuilder.Create(
+        firstName: "Grace",
+        lastName: "Hopper",
+        middleName: "Brewster");  // Optional parameter — omit to leave undefined
+})
+```
+
+Required parameters must be provided; optional ones have `default` values and can be omitted.
+
+#### Array properties with Build()
+
+Array properties use the same `Build()` pattern. The callback receives a builder with `Add()` methods:
+
+```csharp
+// Build an array of hobbies
+hobbies: Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
+{
+    hobbiesBuilder.Add("reading");
+    hobbiesBuilder.Add("hiking");
+    hobbiesBuilder.Add("photography");
+})
+```
+
+#### Putting it all together
+
+Here is a complete document with nested objects and arrays:
+
+```csharp
+using JsonWorkspace workspace = JsonWorkspace.Create();
+
+using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
+    workspace,
+    (ref b) => b.Create(
+        age: 42,
+        email: "grace.hopper@navy.mil",
+        phoneNumber: "+15555551234",
+        isActive: true,
+        name: Person.PersonName.Build((ref nameBuilder) =>
+        {
+            nameBuilder.Create(
+                firstName: "Grace",
+                lastName: "Hopper",
+                middleName: "Brewster");
+        }),
+        address: Person.Address.Build((ref addressBuilder) =>
+        {
+            addressBuilder.Create(
+                street: "123 Navy Yard",
+                city: "Washington",
+                state: "DC",
+                zipCode: "20001",
+                country: "USA");
+        }),
+        hobbies: Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
+        {
+            hobbiesBuilder.Add("reading");
+            hobbiesBuilder.Add("coding");
+            hobbiesBuilder.Add("teaching");
+        })));
+
+Person.Mutable mutablePerson = docBuilder.RootElement;
+Console.WriteLine(mutablePerson.ToString());
+```
+
+> **Note:** `Build()` returns a `Source` ref struct, not a document. It is only materialised into a document when passed to `BuildDocument()` or a `Set*()` method. You can also pass an existing immutable instance anywhere a `Source` is expected — the generated `Source` type has an implicit conversion from the corresponding entity type.
 
 ## Schema References
 
@@ -360,13 +451,15 @@ Person person = Person.ParseValue(json);
 // Check which variant is present
 if (person.Identifier.ValueKind == JsonValueKind.String)
 {
-    string id = person.Identifier.GetString()!;
+    string id = (string)person.Identifier;
 }
 else if (person.Identifier.ValueKind == JsonValueKind.Number)
 {
-    int id = person.Identifier.GetInt32();
+    double id = (double)person.Identifier;
 }
 ```
+
+> **Note:** `ValueKind` checking works well for primitive type discrimination (string vs. number). For discriminating between **object** variants with distinct property shapes, the generated `Match()` method provides a type-safe alternative — see [Composition Patterns: Match and Apply](#composition-patterns-match-and-apply).
 
 ### Pattern Properties
 
@@ -404,7 +497,7 @@ Person person = Person.ParseValue(json);
 string status = person.Status.GetString()!;
 
 // Validation ensures it's one of the enum values
-bool isValid = person.IsValid(); // false if status is not in enum
+bool isValid = person.EvaluateSchema(); // false if status is not in enum
 ```
 
 ### Formats
@@ -424,24 +517,233 @@ The generator recognizes and validates standard JSON Schema formats:
 }
 ```
 
+## Mutating Generated Types
+
+Generated types are immutable by default — each is a `readonly struct` backed by a `ParsedJsonDocument`. To make changes, you create a mutable copy via a `JsonWorkspace`, which manages pooled memory for in-place edits and tracks a version number so that stale element references are detected at runtime.
+
+For full details on workspaces and the builder pattern, see [JsonDocumentBuilder](./JsonDocumentBuilder.md).
+
+### Setting Properties
+
+For object types, generated mutable types include `SetProperty()` methods for each defined property:
+
+```csharp
+// Given a schema with properties: name (string), age (int32), email (string)
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using ParsedJsonDocument<Person> doc =
+    ParsedJsonDocument<Person>.Parse("""{"name":"Alice","age":30}""");
+using JsonDocumentBuilder<Person.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+
+Person.Mutable root = builder.RootElement;
+root.SetAge(31);
+root.SetEmail("alice@example.com"u8);
+
+Console.WriteLine(root.ToString());
+// Output: {"name":"Alice","age":31,"email":"alice@example.com"}
+```
+
+You can also set nested object and array properties using the `Build()` pattern:
+
+```csharp
+// Replace a nested object property using Build()
+root.SetName(Person.PersonName.Build((ref nameBuilder) =>
+{
+    nameBuilder.Create(
+        firstName: "Alice",
+        lastName: "Johnson",       // Changed last name
+        middleName: "Marie");      // Added middle name
+}));
+
+// Replace an array property using Build()
+root.SetHobbies(Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
+{
+    hobbiesBuilder.Add("painting");
+    hobbiesBuilder.Add("gardening");
+}));
+
+// Re-obtain reference after mutation
+root = builder.RootElement;
+Console.WriteLine(root.ToString());
+```
+
+### Removing Properties
+
+Optional properties can be removed from mutable instances:
+
+```csharp
+Person.Mutable root = builder.RootElement;
+root.RemoveEmail();
+
+Console.WriteLine(root.ToString());
+// Output: {"name":"Alice","age":30}
+```
+
+### Array Mutation
+
+For array types, generated mutable types include methods like `InsertItem()`, `RemoveItem()`, and `SetItem()`:
+
+```csharp
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using ParsedJsonDocument<NumberArray> doc =
+    ParsedJsonDocument<NumberArray>.Parse("[1,2,3]");
+using JsonDocumentBuilder<NumberArray.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+
+NumberArray.Mutable root = builder.RootElement;
+root.InsertItem(1, 99); // Insert 99 at index 1
+root.RemoveItem(3);     // Remove item at index 3
+
+Console.WriteLine(root.ToString());
+// Output: [1,99,2]
+```
+
+> **Important:** After any mutation, re-obtain element references from `builder.RootElement` — previous references are invalidated by version tracking.
+
+## Default Property Values
+
+When a schema defines a `"default"` value for a property, the generated immutable type's property getter returns that default when the property is absent from the JSON document:
+
+```json
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["name"],
+    "properties": {
+        "name": { "type": "string" },
+        "status": { "type": "string", "default": "active" },
+        "count": { "type": "integer", "format": "int32", "default": 0 }
+    }
+}
+```
+
+```csharp
+using ParsedJsonDocument<Config> doc =
+    ParsedJsonDocument<Config>.Parse("""{"name":"myapp"}""");
+
+Config config = doc.RootElement;
+
+// Required property — always present
+string name = config.Name.ToString();     // "myapp"
+
+// Optional with default — returns DefaultInstance when missing
+string status = config.Status!.Value.ToString(); // "active" (from schema default)
+int count = (int)config.Count!.Value;             // 0 (from schema default)
+```
+
+The `DefaultInstance` static property is generated on the property type and initialized at class load time. Mutable property getters always return `default` (not the schema default) when a property is absent.
+
+## Property Indexers
+
+Generated types support indexed property access using string, UTF-8, or UTF-16 property names. These return `JsonElement`-typed values for flexible access.
+
+```csharp
+using ParsedJsonDocument<Person> doc =
+    ParsedJsonDocument<Person>.Parse("""{"name":"Alice","age":30}""");
+Person person = doc.RootElement;
+
+// UTF-8 property name (most efficient — no transcoding)
+JsonElement name = person["name"u8];
+
+// String property name
+JsonElement age = person["age"];
+```
+
+On `JsonElement` and `JsonElement.Mutable`, the same indexer patterns work:
+
+```csharp
+using ParsedJsonDocument<JsonElement> doc =
+    ParsedJsonDocument<JsonElement>.Parse("""{"name":"Alice"}""");
+
+// All three forms work
+JsonElement byUtf8 = doc.RootElement["name"u8];
+JsonElement byString = doc.RootElement["name"];
+```
+
+## Composition Patterns: Match and Apply
+
+### Match — Type-Safe Discrimination
+
+For `anyOf` and `oneOf` schemas with object variants, the generated type includes a `Match()` method for type-safe discrimination:
+
+```json
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "anyOf": [
+        {
+            "type": "object",
+            "required": ["kind", "message"],
+            "properties": {
+                "kind": { "const": "text" },
+                "message": { "type": "string" }
+            }
+        },
+        {
+            "type": "object",
+            "required": ["kind", "code"],
+            "properties": {
+                "kind": { "const": "numeric" },
+                "code": { "type": "number", "format": "int32" }
+            }
+        }
+    ]
+}
+```
+
+```csharp
+using ParsedJsonDocument<Notification> doc =
+    ParsedJsonDocument<Notification>.Parse("""{"kind":"text","message":"hello"}""");
+
+string result = doc.RootElement.Match(
+    matchRequiredKindAndMessage: static (in Notification.RequiredKindAndMessage v) =>
+        $"Text: {v.Message}",
+    matchRequiredCodeAndKind: static (in Notification.RequiredCodeAndKind v) =>
+        $"Code: {(int)v.Code}",
+    defaultMatch: static (in Notification _) =>
+        "Unknown");
+
+Console.WriteLine(result); // "Text: hello"
+```
+
+### Apply — Merging Composed Object Properties
+
+For `allOf`, `anyOf`, and `oneOf` schemas with object components, mutable types include `Apply()` methods that merge properties from a composed type into the mutable document:
+
+```csharp
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using ParsedJsonDocument<ComposedPerson> doc =
+    ParsedJsonDocument<ComposedPerson>.Parse("""{"firstName":"Alice"}""");
+using JsonDocumentBuilder<ComposedPerson.Mutable> builder =
+    doc.RootElement.BuildDocument(workspace);
+
+// Apply properties from an allOf component
+using ParsedJsonDocument<ComposedPerson.ContactInfo> contactDoc =
+    ParsedJsonDocument<ComposedPerson.ContactInfo>.Parse("""{"email":"alice@example.com"}""");
+
+ComposedPerson.Mutable root = builder.RootElement;
+root.Apply(contactDoc.RootElement);
+
+Console.WriteLine(root.ToString());
+// Output: {"firstName":"Alice","email":"alice@example.com"}
+```
+
+`Apply()` overwrites properties that already exist and adds new ones. Properties not present in the applied value are left unchanged.
+
 ## Serialization
 
 Generated types can be serialized back to JSON:
 
 ```csharp
-Person person = CreatePerson();
+using ParsedJsonDocument<Person> doc = ParsedJsonDocument<Person>.Parse(json);
+Person person = doc.RootElement;
 
 // To string
-string json = person.ToString();
+string output = person.ToString();
 
-// To UTF-8 bytes
+// To a Utf8JsonWriter
 using var stream = new MemoryStream();
 using var writer = new Utf8JsonWriter(stream);
 person.WriteTo(writer);
+writer.Flush();
 byte[] utf8Json = stream.ToArray();
-
-// With System.Text.Json
-string json = JsonSerializer.Serialize(person);
 ```
 
 ## Comparison with Other Approaches
@@ -453,28 +755,31 @@ string json = JsonSerializer.Serialize(person);
 | **Type Safety** | Manual properties | Auto-generated from schema |
 | **Validation** | Manual or FluentValidation | Built-in from schema |
 | **Schema Sync** | Manual sync required | Always in sync |
-| **Memory** | Allocates objects | Efficient struct-based |
-| **Maintenance** | High - manual updates | Low - regenerates on build |
+| **Memory Model** | Class-based, allocates objects | Struct-based, minimal allocations |
+| **Maintenance** | High — manual updates | Low — regenerates on build |
+| **IntelliSense** | Manual doc comments | Auto-generated from schema descriptions |
 
 ### vs. System.Text.Json JsonNode
 
 | Feature | JsonNode | Generated Types |
 |---------|----------|-----------------|
 | **Type Safety** | Weak typing | Strong typing |
-| **Validation** | Manual | Built-in |
-| **Performance** | Object allocations | Struct-based, minimal allocations |
-| **IntelliSense** | Limited | Full property support |
-| **Schema Enforcement** | None | Compile-time + runtime |
+| **Validation** | Manual | Built-in from schema |
+| **Schema Sync** | N/A | Always in sync |
+| **Memory Model** | Class-based, allocates objects | Struct-based, minimal allocations |
+| **Maintenance** | N/A | Low — regenerates on build |
+| **IntelliSense** | Limited | Auto-generated from schema descriptions |
 
 ### vs. NJsonSchema Code Generator
 
 | Feature | NJsonSchema | Corvus SourceGenerator |
 |---------|-------------|------------------------|
-| **Generation Time** | Pre-build tool | Compile-time (Roslyn) |
-| **Integration** | External tool | MSBuild integrated |
-| **Memory Model** | Class-based | Struct-based |
-| **Validation** | DataAnnotations | Schema-native |
-| **Performance** | Standard | Optimized for high-throughput |
+| **Type Safety** | Strong typing | Strong typing |
+| **Validation** | DataAnnotations | Built-in from schema |
+| **Schema Sync** | Pre-build tool | Always in sync (compile-time Roslyn) |
+| **Memory Model** | Class-based, allocates objects | Struct-based, minimal allocations |
+| **Maintenance** | Low — regenerates on demand | Low — regenerates on build |
+| **IntelliSense** | Auto-generated | Auto-generated from schema descriptions |
 
 ## Best Practices
 
@@ -591,9 +896,9 @@ schemas/
 
 ### Performance Issues
 
-1. **Use ParseValue for simple values**: Faster than Parse for in-memory JSON
-2. **Minimize allocations**: Prefer struct-backed types over conversions
-3. **Enable validation selectively**: Only validate when necessary
+1. **Use `ParseValue` for in-memory JSON**: Convenient for short-lived values without explicit document management
+2. **Prefer UTF-8 property access**: Use `"key"u8` indexers and UTF-8 overloads to avoid transcoding
+3. **Validate selectively**: Only call `EvaluateSchema()` when necessary — it walks the entire document
 
 ## Examples
 
