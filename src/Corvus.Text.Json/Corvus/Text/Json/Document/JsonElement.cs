@@ -78,6 +78,96 @@ public readonly partial struct JsonElement
     }
 
     /// <summary>
+    ///   Gets the value of the property with the given UTF-8 encoded name when the current value is an
+    ///   <see cref="JsonValueKind.Object"/>.
+    /// </summary>
+    /// <param name="propertyName">
+    ///   The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property.
+    /// </param>
+    /// <returns>
+    ///   The value of the property with the given name, or a default <see cref="JsonElement"/>
+    ///   if no such property exists.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+    /// </exception>
+    /// <exception cref="ObjectDisposedException">
+    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// </exception>
+    public JsonElement this[ReadOnlySpan<byte> propertyName]
+    {
+        get
+        {
+            CheckValidInstance();
+
+            if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                return default;
+            }
+
+            return value;
+        }
+    }
+
+    /// <summary>
+    ///   Gets the value of the property with the given name when the current value is an
+    ///   <see cref="JsonValueKind.Object"/>.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <returns>
+    ///   The value of the property with the given name, or a default <see cref="JsonElement"/>
+    ///   if no such property exists.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+    /// </exception>
+    /// <exception cref="ObjectDisposedException">
+    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// </exception>
+    public JsonElement this[ReadOnlySpan<char> propertyName]
+    {
+        get
+        {
+            CheckValidInstance();
+
+            if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                return default;
+            }
+
+            return value;
+        }
+    }
+
+    /// <summary>
+    ///   Gets the value of the property with the given name when the current value is an
+    ///   <see cref="JsonValueKind.Object"/>.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <returns>
+    ///   The value of the property with the given name, or a default <see cref="JsonElement"/>
+    ///   if no such property exists.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+    /// </exception>
+    /// <exception cref="ObjectDisposedException">
+    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// </exception>
+    /// <exception cref="ArgumentNullException">
+    ///   <paramref name="propertyName"/> is <see langword="null"/>.
+    /// </exception>
+    public JsonElement this[string propertyName]
+    {
+        get
+        {
+            ArgumentNullException.ThrowIfNull(propertyName);
+
+            return this[propertyName.AsSpan()];
+        }
+    }
+
+    /// <summary>
     /// Compares two JsonElement values for equality.
     /// </summary>
     /// <param name="left">The first JsonElement to compare.</param>

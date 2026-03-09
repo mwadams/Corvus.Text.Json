@@ -1803,6 +1803,96 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        ///   Gets the value of the property with the given UTF-8 encoded name when the current value is an
+        ///   <see cref="JsonValueKind.Object"/>.
+        /// </summary>
+        /// <param name="propertyName">
+        ///   The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property.
+        /// </param>
+        /// <returns>
+        ///   The value of the property with the given name, or a default <see cref="Mutable"/>
+        ///   if no such property exists.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent document has been disposed.
+        /// </exception>
+        public readonly Mutable this[ReadOnlySpan<byte> propertyName]
+        {
+            get
+            {
+                CheckValidInstance();
+
+                if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out Mutable value))
+                {
+                    return default;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets the value of the property with the given name when the current value is an
+        ///   <see cref="JsonValueKind.Object"/>.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>
+        ///   The value of the property with the given name, or a default <see cref="Mutable"/>
+        ///   if no such property exists.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent document has been disposed.
+        /// </exception>
+        public readonly Mutable this[ReadOnlySpan<char> propertyName]
+        {
+            get
+            {
+                CheckValidInstance();
+
+                if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out Mutable value))
+                {
+                    return default;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets the value of the property with the given name when the current value is an
+        ///   <see cref="JsonValueKind.Object"/>.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>
+        ///   The value of the property with the given name, or a default <see cref="Mutable"/>
+        ///   if no such property exists.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent document has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="propertyName"/> is <see langword="null"/>.
+        /// </exception>
+        public readonly Mutable this[string propertyName]
+        {
+            get
+            {
+                ArgumentNullException.ThrowIfNull(propertyName);
+
+                return this[propertyName.AsSpan()];
+            }
+        }
+
+        /// <summary>
         /// Implicitly converts a <see cref="Mutable"/> to a read-only <see cref="JsonElement"/>.
         /// </summary>
         /// <param name="value">The mutable JSON element to convert.</param>
