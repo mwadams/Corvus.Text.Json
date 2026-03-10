@@ -305,4 +305,81 @@ public class ParsingEquivalenceTests
         Assert.Equal("Jo", (string)v4.Name);
         Assert.Equal(30, (int)v4.Age);
     }
+
+    [Fact]
+    public void V4_ParsePersonFromJsonDocument()
+    {
+        // Common V4 pattern: manage the underlying JsonDocument lifetime directly.
+        using System.Text.Json.JsonDocument jsonDoc = System.Text.Json.JsonDocument.Parse(PersonJson);
+        V4.MigrationPerson v4 = V4.MigrationPerson.FromJson(jsonDoc.RootElement);
+        Assert.Equal(System.Text.Json.JsonValueKind.Object, v4.ValueKind);
+        Assert.Equal("Jo", (string)v4.Name);
+        Assert.Equal(30, (int)v4.Age);
+    }
+
+    [Fact]
+    public void V4_ParseArrayFromJsonDocument()
+    {
+        // Common V4 pattern: manage the underlying JsonDocument lifetime directly.
+        using System.Text.Json.JsonDocument jsonDoc = System.Text.Json.JsonDocument.Parse(ArrayJson);
+        V4.MigrationItemArray v4 = V4.MigrationItemArray.FromJson(jsonDoc.RootElement);
+        Assert.Equal(System.Text.Json.JsonValueKind.Array, v4.ValueKind);
+        Assert.Equal(2, v4.GetArrayLength());
+    }
+
+    [Fact]
+    public void V4_ParseIntVectorFromJsonDocument()
+    {
+        // Common V4 pattern: manage the underlying JsonDocument lifetime directly.
+        using System.Text.Json.JsonDocument jsonDoc = System.Text.Json.JsonDocument.Parse(IntVectorJson);
+        V4.MigrationIntVector v4 = V4.MigrationIntVector.FromJson(jsonDoc.RootElement);
+        Assert.Equal(System.Text.Json.JsonValueKind.Array, v4.ValueKind);
+        Assert.Equal(3, v4.GetArrayLength());
+    }
+
+    [Fact]
+    public void V4_ParseUnionFromJsonDocument_StringVariant()
+    {
+        // Common V4 pattern: manage the underlying JsonDocument lifetime directly.
+        using System.Text.Json.JsonDocument jsonDoc = System.Text.Json.JsonDocument.Parse(UnionStringJson);
+        V4.MigrationUnion v4 = V4.MigrationUnion.FromJson(jsonDoc.RootElement);
+        Assert.Equal(System.Text.Json.JsonValueKind.String, v4.ValueKind);
+    }
+
+    [Fact]
+    public void V4_ParseUnionFromJsonDocument_IntVariant()
+    {
+        // Common V4 pattern: manage the underlying JsonDocument lifetime directly.
+        using System.Text.Json.JsonDocument jsonDoc = System.Text.Json.JsonDocument.Parse(UnionIntJson);
+        V4.MigrationUnion v4 = V4.MigrationUnion.FromJson(jsonDoc.RootElement);
+        Assert.Equal(System.Text.Json.JsonValueKind.Number, v4.ValueKind);
+    }
+
+    [Fact]
+    public void V4_ParseUnionFromJsonDocument_BoolVariant()
+    {
+        // Common V4 pattern: manage the underlying JsonDocument lifetime directly.
+        using System.Text.Json.JsonDocument jsonDoc = System.Text.Json.JsonDocument.Parse(UnionBoolJson);
+        V4.MigrationUnion v4 = V4.MigrationUnion.FromJson(jsonDoc.RootElement);
+        Assert.Equal(System.Text.Json.JsonValueKind.True, v4.ValueKind);
+    }
+
+    [Fact]
+    public void V4_ParseEnumFromJsonDocument()
+    {
+        // Common V4 pattern: manage the underlying JsonDocument lifetime directly.
+        using System.Text.Json.JsonDocument jsonDoc = System.Text.Json.JsonDocument.Parse(EnumJson);
+        V4.MigrationStatusEnum v4 = V4.MigrationStatusEnum.FromJson(jsonDoc.RootElement);
+        Assert.Equal(System.Text.Json.JsonValueKind.String, v4.ValueKind);
+    }
+
+    [Fact]
+    public void V4_ParseTupleFromJsonDocument()
+    {
+        // Common V4 pattern: manage the underlying JsonDocument lifetime directly.
+        using System.Text.Json.JsonDocument jsonDoc = System.Text.Json.JsonDocument.Parse(TupleJson);
+        V4.MigrationTuple v4 = V4.MigrationTuple.FromJson(jsonDoc.RootElement);
+        Assert.Equal(System.Text.Json.JsonValueKind.Array, v4.ValueKind);
+        Assert.Equal(3, v4.GetArrayLength());
+    }
 }
