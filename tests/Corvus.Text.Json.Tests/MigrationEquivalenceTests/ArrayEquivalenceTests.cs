@@ -284,9 +284,9 @@ public class ArrayEquivalenceTests
     [Fact]
     public void V4_RemoveAt()
     {
-        // V4: RemoveAt by index via explicit IJsonArray<T> interface.
+        // V4: RemoveAt by index — now a public method.
         V4.MigrationItemArray v4 = V4.MigrationItemArray.Parse(ArrayJson);
-        V4.MigrationItemArray updated = ((Corvus.Json.IJsonArray<V4.MigrationItemArray>)v4).RemoveAt(1);
+        V4.MigrationItemArray updated = v4.RemoveAt(1);
         Assert.Equal(2, updated.GetArrayLength());
         Assert.Equal(1, (int)updated[0].Id);
         Assert.Equal(3, (int)updated[1].Id);
@@ -298,8 +298,8 @@ public class ArrayEquivalenceTests
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
         using Corvus.Json.ParsedValue<V4.MigrationItemArray> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
         V4.MigrationItemArray v4 = parsedV4.Instance;
-        // V4: RemoveAt by index via explicit IJsonArray<T> interface.
-        V4.MigrationItemArray updated = ((Corvus.Json.IJsonArray<V4.MigrationItemArray>)v4).RemoveAt(1);
+        // V4: RemoveAt by index — now a public method.
+        V4.MigrationItemArray updated = v4.RemoveAt(1);
         Assert.Equal(2, updated.GetArrayLength());
         Assert.Equal(1, (int)updated[0].Id);
         Assert.Equal(3, (int)updated[1].Id);

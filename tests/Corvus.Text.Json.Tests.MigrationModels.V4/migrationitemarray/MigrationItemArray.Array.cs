@@ -9,14 +9,6 @@
 
 #nullable enable
 
-using global::System;
-using global::System.Collections.Generic;
-using global::System.IO;
-using global::System.Linq;
-using global::System.Net.Http;
-using global::System.Threading;
-using global::System.Threading.Tasks;
-
 #if NET8_0_OR_GREATER
 using global::System.Buffers;
 #endif
@@ -571,13 +563,13 @@ public readonly partial struct MigrationItemArray
     }
 
     /// <inheritdoc/>
-    MigrationItemArray IJsonArray<MigrationItemArray>.RemoveAt(int index)
+    public MigrationItemArray RemoveAt(int index)
     {
         return new(__CorvusArrayHelpers.GetImmutableListWithoutRange(this, index, 1));
     }
 
     /// <inheritdoc/>
-    MigrationItemArray IJsonArray<MigrationItemArray>.RemoveRange(int index, int count)
+    public MigrationItemArray RemoveRange(int index, int count)
     {
         return new(__CorvusArrayHelpers.GetImmutableListWithoutRange(this, index, count));
     }

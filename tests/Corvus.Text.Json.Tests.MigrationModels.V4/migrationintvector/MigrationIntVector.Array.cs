@@ -9,14 +9,6 @@
 
 #nullable enable
 
-using global::System;
-using global::System.Collections.Generic;
-using global::System.IO;
-using global::System.Linq;
-using global::System.Net.Http;
-using global::System.Threading;
-using global::System.Threading.Tasks;
-
 #if NET8_0_OR_GREATER
 using global::System.Buffers;
 #endif
@@ -299,7 +291,7 @@ public readonly partial struct MigrationIntVector
 
         if ((this.backing & Backing.JsonElement) != 0)
         {
-            if (this.jsonElementBacking.ValueKind != JsonValueKind.Number)
+            if (this.jsonElementBacking.ValueKind != JsonValueKind.Array)
             {
                 written = 0;
                 return false;
@@ -551,13 +543,13 @@ public readonly partial struct MigrationIntVector
     }
 
     /// <inheritdoc/>
-    MigrationIntVector IJsonArray<MigrationIntVector>.RemoveAt(int index)
+    public MigrationIntVector RemoveAt(int index)
     {
         return new(__CorvusArrayHelpers.GetImmutableListWithoutRange(this, index, 1));
     }
 
     /// <inheritdoc/>
-    MigrationIntVector IJsonArray<MigrationIntVector>.RemoveRange(int index, int count)
+    public MigrationIntVector RemoveRange(int index, int count)
     {
         return new(__CorvusArrayHelpers.GetImmutableListWithoutRange(this, index, count));
     }

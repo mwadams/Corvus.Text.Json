@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.2" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.3" />
   </ItemGroup>
 
 </Project>
