@@ -678,7 +678,7 @@ internal static partial class CodeGenerationExtensions
 
                 case JsonValueKind.True:
                     {
-                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                        string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
                         string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("True", rootScope: enumValuesScope);
 
                         generator
@@ -691,14 +691,14 @@ internal static partial class CodeGenerationExtensions
                             .Append(dotnetTypeName)
                             .Append(" ")
                             .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                            .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
                     }
 
                     break;
 
                 case JsonValueKind.False:
                     {
-                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                        string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
                         string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("False", rootScope: enumValuesScope);
 
                         generator
@@ -711,14 +711,14 @@ internal static partial class CodeGenerationExtensions
                             .Append(dotnetTypeName)
                             .Append(" ")
                             .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                            .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
                     }
 
                     break;
 
                 case JsonValueKind.Null:
                     {
-                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                        string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
                         string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("Null", rootScope: enumValuesScope);
 
                         generator
@@ -731,7 +731,7 @@ internal static partial class CodeGenerationExtensions
                             .Append(dotnetTypeName)
                             .Append(" ")
                             .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                            .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
                     }
 
                     break;
@@ -739,7 +739,7 @@ internal static partial class CodeGenerationExtensions
                 case JsonValueKind.Array:
                 case JsonValueKind.Object:
                     {
-                        string constPropertyName = generator.GetPropertyNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
+                        string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
                         string propertyBaseName = value.ValueKind == JsonValueKind.Array ? "ArrayValue" : "ObjectValue";
                         string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: suffix);
 
@@ -753,7 +753,7 @@ internal static partial class CodeGenerationExtensions
                             .Append(dotnetTypeName)
                             .Append(" ")
                             .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", constPropertyName, ";");
+                            .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
                     }
 
                     break;
