@@ -116,7 +116,7 @@ namespace Corvus.Text.Json.Tests
         public void Mutable_StringIndexer_ExistingProperty_ReturnsValue()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(SampleObjectJson));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(SampleObjectJson));
             JsonElement.Mutable root = doc.RootElement;
 
             Assert.Equal("Alice", root["name"].GetString());
@@ -128,7 +128,7 @@ namespace Corvus.Text.Json.Tests
         public void Mutable_StringIndexer_MissingProperty_ReturnsDefault()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(SampleObjectJson));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(SampleObjectJson));
             JsonElement.Mutable root = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Undefined, root["nonexistent"].ValueKind);
@@ -138,7 +138,7 @@ namespace Corvus.Text.Json.Tests
         public void Mutable_StringIndexer_NestedAccess_ReturnsInnerValue()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(NestedObjectJson));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(NestedObjectJson));
             JsonElement.Mutable root = doc.RootElement;
 
             Assert.Equal("value", root["outer"]["inner"].GetString());
@@ -152,7 +152,7 @@ namespace Corvus.Text.Json.Tests
         public void Mutable_CharSpanIndexer_ExistingProperty_ReturnsValue()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(SampleObjectJson));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(SampleObjectJson));
             JsonElement.Mutable root = doc.RootElement;
 
             Assert.Equal("Alice", root["name".AsSpan()].GetString());
@@ -162,7 +162,7 @@ namespace Corvus.Text.Json.Tests
         public void Mutable_CharSpanIndexer_MissingProperty_ReturnsDefault()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(SampleObjectJson));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(SampleObjectJson));
             JsonElement.Mutable root = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Undefined, root["nonexistent".AsSpan()].ValueKind);
@@ -176,7 +176,7 @@ namespace Corvus.Text.Json.Tests
         public void Mutable_Utf8Indexer_ExistingProperty_ReturnsValue()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(SampleObjectJson));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(SampleObjectJson));
             JsonElement.Mutable root = doc.RootElement;
 
             Assert.Equal("Alice", root["name"u8].GetString());
@@ -186,7 +186,7 @@ namespace Corvus.Text.Json.Tests
         public void Mutable_Utf8Indexer_MissingProperty_ReturnsDefault()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(SampleObjectJson));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(SampleObjectJson));
             JsonElement.Mutable root = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Undefined, root["nonexistent"u8].ValueKind);

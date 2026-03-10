@@ -28,7 +28,7 @@ namespace Corvus.Text.Json.Tests
         {
             string json = "null";
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.Null, element.ValueKind);

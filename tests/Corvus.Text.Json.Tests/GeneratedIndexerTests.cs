@@ -69,7 +69,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc =
                 ParsedJsonDocument<ArrayOfItems>.Parse("""[{"id":10,"label":"a"},{"id":20,"label":"b"}]""");
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
 
@@ -86,7 +86,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfArrayWithItems> doc =
                 ParsedJsonDocument<AllOfArrayWithItems>.Parse("""["foo","bar"]""");
-            using JsonDocumentBuilder<AllOfArrayWithItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfArrayWithItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfArrayWithItems.Mutable root = builder.RootElement;
 
@@ -101,7 +101,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<RefArrayWithItems> doc =
                 ParsedJsonDocument<RefArrayWithItems>.Parse("""["x","y","z"]""");
-            using JsonDocumentBuilder<RefArrayWithItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<RefArrayWithItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             RefArrayWithItems.Mutable root = builder.RootElement;
 
@@ -279,7 +279,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfObjectWithProperties> doc =
                 ParsedJsonDocument<AllOfObjectWithProperties>.Parse("""{"name":"Eve","age":40,"email":"eve@f.com"}""");
-            using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfObjectWithProperties.Mutable root = builder.RootElement;
 
@@ -294,7 +294,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfObjectWithProperties> doc =
                 ParsedJsonDocument<AllOfObjectWithProperties>.Parse("""{"name":"Frank","age":50}""");
-            using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfObjectWithProperties.Mutable root = builder.RootElement;
 
@@ -308,7 +308,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfObjectWithProperties> doc =
                 ParsedJsonDocument<AllOfObjectWithProperties>.Parse("""{"name":"Grace","age":60}""");
-            using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfObjectWithProperties.Mutable root = builder.RootElement;
 
@@ -322,7 +322,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfObjectWithProperties> doc =
                 ParsedJsonDocument<AllOfObjectWithProperties>.Parse("""{"name":"Alice"}""");
-            using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfObjectWithProperties.Mutable root = builder.RootElement;
 
@@ -336,7 +336,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<RefObjectWithProperties> doc =
                 ParsedJsonDocument<RefObjectWithProperties>.Parse("""{"name":"Hank","age":35,"email":"h@i.com"}""");
-            using JsonDocumentBuilder<RefObjectWithProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<RefObjectWithProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             RefObjectWithProperties.Mutable root = builder.RootElement;
 
@@ -351,7 +351,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<NestedObject> doc =
                 ParsedJsonDocument<NestedObject>.Parse("""{"address":{"street":"Pine Rd","city":"Salem"},"notes":"ok"}""");
-            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             NestedObject.Mutable root = builder.RootElement;
 

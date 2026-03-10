@@ -44,7 +44,7 @@ public class BenchmarkLargeArrayWithUnevaluatedItems
         documentA1 = System.Text.Json.JsonDocument.Parse(json);
         documentB1 = Corvus.Text.Json.ParsedJsonDocument<Benchmark.CorvusTextJson.PersonArray>.Parse(json);
         workspace = Corvus.Text.Json.JsonWorkspace.Create();
-        documentB2 = documentB1.RootElement.BuildDocument(workspace);
+        documentB2 = documentB1.RootElement.CreateBuilder(workspace);
     }
 
     [Benchmark(Baseline = true)]

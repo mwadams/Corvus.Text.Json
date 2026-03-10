@@ -607,17 +607,29 @@ namespace TestUtilities
 
         public DynamicJsonElement ParseInstance(string json, JsonDocumentOptions options = default)
         {
-            object? instance = Type
+            Type documentType = typeof(ParsedJsonDocument<>).MakeGenericType(Type);
+
+            object? instance = documentType
                 .InvokeMember(
-                    "ParseValue",
+                    "Parse",
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod,
                     null,
                     null,
                     [json, options]);
 
-            Debug.Assert(instance is IJsonElement);
+            Debug.Assert(instance is IJsonDocument);
 
-            return new(Type, (IJsonElement)instance);
+            object? rootElement = documentType
+                .InvokeMember(
+                    "RootElement",
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty,
+                    null,
+                    instance,
+                    []);
+
+            Debug.Assert(rootElement is IJsonElement);
+
+            return new(Type, (IJsonElement)rootElement);
         }
     }
 

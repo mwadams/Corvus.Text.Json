@@ -64,7 +64,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfWithAnyOf> doc =
                 ParsedJsonDocument<AllOfWithAnyOf>.Parse("""{"role":"admin","level":3}""");
-            using JsonDocumentBuilder<AllOfWithAnyOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfWithAnyOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             using ParsedJsonDocument<AllOfWithAnyOf.RequiredId> idDoc =
                 ParsedJsonDocument<AllOfWithAnyOf.RequiredId>.Parse("""{"id":"merged-1"}""");
@@ -83,7 +83,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfWithAnyOf> doc =
                 ParsedJsonDocument<AllOfWithAnyOf>.Parse("""{"id":"a1","role":"admin","level":5}""");
-            using JsonDocumentBuilder<AllOfWithAnyOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfWithAnyOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfWithAnyOf.Mutable root = builder.RootElement;
             string result = root.Match(
@@ -141,7 +141,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<PropertiesWithOneOf> doc =
                 ParsedJsonDocument<PropertiesWithOneOf>.Parse("""{"kind":"text","content":"hello"}""");
-            using JsonDocumentBuilder<PropertiesWithOneOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<PropertiesWithOneOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             PropertiesWithOneOf.Mutable root = builder.RootElement;
             root.SetKind("updated");
@@ -188,7 +188,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfWithIfThenElse> doc =
                 ParsedJsonDocument<AllOfWithIfThenElse>.Parse("""{"discount":0.1}""");
-            using JsonDocumentBuilder<AllOfWithIfThenElse.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfWithIfThenElse.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             using ParsedJsonDocument<AllOfWithIfThenElse.RequiredType> typeDoc =
                 ParsedJsonDocument<AllOfWithIfThenElse.RequiredType>.Parse("""{"type":"premium"}""");
@@ -207,7 +207,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfWithIfThenElse> doc =
                 ParsedJsonDocument<AllOfWithIfThenElse>.Parse("""{"type":"standard","message":"hello"}""");
-            using JsonDocumentBuilder<AllOfWithIfThenElse.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfWithIfThenElse.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfWithIfThenElse.Mutable root = builder.RootElement;
             root.SetType("premium");
@@ -220,7 +220,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfWithIfThenElse> doc =
                 ParsedJsonDocument<AllOfWithIfThenElse>.Parse("""{"type":"premium"}""");
-            using JsonDocumentBuilder<AllOfWithIfThenElse.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfWithIfThenElse.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfWithIfThenElse.Mutable root = builder.RootElement;
             root.SetDiscount(0.25);
@@ -233,7 +233,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<AllOfWithIfThenElse> doc =
                 ParsedJsonDocument<AllOfWithIfThenElse>.Parse("""{"type":"standard","message":"hello"}""");
-            using JsonDocumentBuilder<AllOfWithIfThenElse.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<AllOfWithIfThenElse.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             AllOfWithIfThenElse.Mutable root = builder.RootElement;
             bool removed = root.RemoveMessage();

@@ -26,7 +26,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
 
@@ -42,7 +42,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
 
@@ -58,7 +58,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
             root.SetItem(1, default(ArrayOfItems.RequiredId.Source));
@@ -76,7 +76,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
 
@@ -94,10 +94,62 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
             root.InsertItem(1, default(ArrayOfItems.RequiredId.Source));
+            Assert.Equal(3, root.GetArrayLength());
+        }
+
+        #endregion
+
+        #region AddItem
+
+        [Fact]
+        public void AddItem_AppendsItemToEnd()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+
+            using ParsedJsonDocument<ArrayOfItems.RequiredId> itemDoc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":4,"label":"fourth"}""");
+            root.AddItem(itemDoc.RootElement);
+
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal(4, (int)root[3].Id);
+            Assert.Equal("fourth", (string)root[3].Label);
+        }
+
+        [Fact]
+        public void AddItem_MultipleAppends_PreservesOrder()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+
+            using ParsedJsonDocument<ArrayOfItems.RequiredId> item4Doc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":4,"label":"fourth"}""");
+            using ParsedJsonDocument<ArrayOfItems.RequiredId> item5Doc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":5,"label":"fifth"}""");
+            root.AddItem(item4Doc.RootElement);
+            root.AddItem(item5Doc.RootElement);
+
+            Assert.Equal(5, root.GetArrayLength());
+            Assert.Equal(4, (int)root[3].Id);
+            Assert.Equal(5, (int)root[4].Id);
+        }
+
+        [Fact]
+        public void AddItem_WithUndefinedSource_IsNoOp()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+            root.AddItem(default(ArrayOfItems.RequiredId.Source));
             Assert.Equal(3, root.GetArrayLength());
         }
 
@@ -110,10 +162,10 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
-            root.Remove(0);
+            root.RemoveAt(0);
             Assert.Equal(2, root.GetArrayLength());
             Assert.Equal(2, (int)root[0].Id);
         }
@@ -123,7 +175,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
             root.RemoveRange(0, 2);
@@ -136,7 +188,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
             root.RemoveWhere(static (in ArrayOfItems.RequiredId item) => (int)item.Id > 1);
@@ -153,7 +205,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
             Assert.Equal(3, root.GetArrayLength());
@@ -164,7 +216,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
-            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ArrayOfItems.Mutable root = builder.RootElement;
             int count = 0;

@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Buffers;
@@ -3831,7 +3831,7 @@ namespace Corvus.Text.Json.Tests
 
             // Use a JsonElement.Mutable as the value
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.BuildDocument(workspace);
+            using var builderDoc2 = doc2.RootElement.CreateBuilder(workspace);
             var value = builderDoc2.RootElement;
 
             root.SetItem(0, value);
@@ -4210,7 +4210,7 @@ namespace Corvus.Text.Json.Tests
             var root = builderDoc.RootElement;
 
             using var doc2 = ParsedJsonDocument<JsonElement>.Parse("42");
-            using var builderDoc2 = doc2.RootElement.BuildDocument(workspace);
+            using var builderDoc2 = doc2.RootElement.CreateBuilder(workspace);
             var value = builderDoc2.RootElement;
 
             Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
@@ -4388,7 +4388,7 @@ namespace Corvus.Text.Json.Tests
         {
             if (source.ValueKind == JsonValueKind.Object)
             {
-                return JsonElement.BuildDocument(workspace, new((ref objectBuilder) =>
+                return JsonElement.CreateBuilder(workspace, new((ref objectBuilder) =>
                 {
                     foreach (JsonProperty<JsonElement> property in source.EnumerateObject())
                     {
@@ -4398,7 +4398,7 @@ namespace Corvus.Text.Json.Tests
             }
             else if (source.ValueKind == JsonValueKind.Array)
             {
-                return JsonElement.BuildDocument(workspace, new((ref arrayBuilder) =>
+                return JsonElement.CreateBuilder(workspace, new((ref arrayBuilder) =>
                 {
                     foreach (JsonElement value in source.EnumerateArray())
                     {
@@ -4408,23 +4408,23 @@ namespace Corvus.Text.Json.Tests
             }
             else if (source.ValueKind == JsonValueKind.String)
             {
-                return JsonElement.BuildDocument(workspace, JsonElement.Source.RawString(source.ValueSpan, requiresUnescaping: source.ValueIsEscaped));
+                return JsonElement.CreateBuilder(workspace, JsonElement.Source.RawString(source.ValueSpan, requiresUnescaping: source.ValueIsEscaped));
             }
             else if (source.ValueKind == JsonValueKind.True)
             {
-                return JsonElement.BuildDocument(workspace, true);
+                return JsonElement.CreateBuilder(workspace, true);
             }
             else if (source.ValueKind == JsonValueKind.False)
             {
-                return JsonElement.BuildDocument(workspace, false);
+                return JsonElement.CreateBuilder(workspace, false);
             }
             else if (source.ValueKind == JsonValueKind.Null)
             {
-                return JsonElement.BuildDocument(workspace, JsonElement.Source.Null());
+                return JsonElement.CreateBuilder(workspace, JsonElement.Source.Null());
             }
             else if (source.ValueKind == JsonValueKind.Number)
             {
-                return JsonElement.BuildDocument(workspace, JsonElement.Source.FormattedNumber(source.ValueSpan));
+                return JsonElement.CreateBuilder(workspace, JsonElement.Source.FormattedNumber(source.ValueSpan));
             }
 
             throw new InvalidOperationException($"Unsupported value kind {source.ValueKind}");
@@ -4434,7 +4434,7 @@ namespace Corvus.Text.Json.Tests
                 switch (propertyValue.ValueKind)
                 {
                     case JsonValueKind.Object:
-                        builder.Add(propertyName, (ref objectBuilder) =>
+                        builder.AddProperty(propertyName, (ref objectBuilder) =>
                         {
                             foreach (JsonProperty<JsonElement> property in propertyValue.EnumerateObject())
                             {
@@ -4446,7 +4446,7 @@ namespace Corvus.Text.Json.Tests
                         break;
 
                     case JsonValueKind.Array:
-                        builder.Add(propertyName, (ref arrayBuilder) =>
+                        builder.AddProperty(propertyName, (ref arrayBuilder) =>
                         {
                             foreach (JsonElement value in propertyValue.EnumerateArray())
                             {
@@ -4466,15 +4466,15 @@ namespace Corvus.Text.Json.Tests
                         break;
 
                     case JsonValueKind.True:
-                        builder.Add(propertyName, true, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
+                        builder.AddProperty(propertyName, true, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
 
                     case JsonValueKind.False:
-                        builder.Add(propertyName, false, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
+                        builder.AddProperty(propertyName, false, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
 
                     case JsonValueKind.Null:
-                        builder.AddNull(propertyName, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
+                        builder.AddPropertyNull(propertyName, escapeName: false, nameRequiresUnescaping: nameRequiresUnescaping);
                         break;
 
                     default:
@@ -4487,7 +4487,7 @@ namespace Corvus.Text.Json.Tests
                 switch (value.ValueKind)
                 {
                     case JsonValueKind.Object:
-                        builder.Add((ref objectBuilder) =>
+                        builder.AddItem((ref objectBuilder) =>
                         {
                             foreach (JsonProperty<JsonElement> property in value.EnumerateObject())
                             {
@@ -4497,7 +4497,7 @@ namespace Corvus.Text.Json.Tests
                         break;
 
                     case JsonValueKind.Array:
-                        builder.Add((ref arrayBuilder) =>
+                        builder.AddItem((ref arrayBuilder) =>
                         {
                             foreach (JsonElement value in value.EnumerateArray())
                             {
@@ -4515,15 +4515,15 @@ namespace Corvus.Text.Json.Tests
                         break;
 
                     case JsonValueKind.True:
-                        builder.Add(true);
+                        builder.AddItem(true);
                         break;
 
                     case JsonValueKind.False:
-                        builder.Add(false);
+                        builder.AddItem(false);
                         break;
 
                     case JsonValueKind.Null:
-                        builder.AddNull();
+                        builder.AddItemNull();
                         break;
 
                     default:

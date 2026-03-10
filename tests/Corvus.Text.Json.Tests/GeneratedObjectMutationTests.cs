@@ -26,7 +26,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetName("Bob");
@@ -38,7 +38,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetAge(42);
@@ -50,7 +50,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetEmail("bob@example.com");
@@ -62,7 +62,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetIsActive(false);
@@ -78,7 +78,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
 
@@ -100,7 +100,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
 
@@ -126,7 +126,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetEmail(default(ObjectWithMixedProperties.EmailEntity.Source));
@@ -138,7 +138,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetIsActive(default(ObjectWithMixedProperties.IsActiveEntity.Source));
@@ -154,7 +154,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             bool removed = root.RemoveEmail();
@@ -168,7 +168,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30}""");
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             bool removed = root.RemoveEmail();
@@ -181,7 +181,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             bool removed = root.RemoveIsActive();
@@ -199,7 +199,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetProperty("name", "Charlie");
@@ -211,7 +211,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetProperty("name".AsSpan(), "Diana");
@@ -223,7 +223,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetProperty("name"u8, "Eve");
@@ -235,7 +235,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             bool removed = root.RemoveProperty("email");
@@ -249,7 +249,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30}""");
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             bool removed = root.RemoveProperty("email");
@@ -262,7 +262,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetProperty("email", default(JsonElement.Source));
@@ -278,7 +278,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithMixedProperties> doc = ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"X","age":0}""");
-            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
             root.SetName("Frank");

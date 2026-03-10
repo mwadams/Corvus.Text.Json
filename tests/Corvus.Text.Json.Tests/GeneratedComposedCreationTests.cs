@@ -27,7 +27,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<CompositionAllOf.Mutable> doc =
-                CompositionAllOf.BuildDocument(workspace, source);
+                CompositionAllOf.CreateBuilder(workspace, source);
             CompositionAllOf.Mutable root = doc.RootElement;
 
             Assert.Equal("Alice", root.FirstName.ToString());
@@ -47,7 +47,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<CompositionAllOf.Mutable> doc =
-                CompositionAllOf.BuildDocument(workspace, source);
+                CompositionAllOf.CreateBuilder(workspace, source);
             CompositionAllOf.Mutable root = doc.RootElement;
 
             Assert.Equal("Alice", root.FirstName.ToString());
@@ -65,7 +65,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<CompositionAllOf.Mutable> doc =
-                CompositionAllOf.BuildDocument(workspace, source);
+                CompositionAllOf.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -91,7 +91,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> doc =
-                AllOfObjectWithProperties.BuildDocument(workspace, source);
+                AllOfObjectWithProperties.CreateBuilder(workspace, source);
             AllOfObjectWithProperties.Mutable root = doc.RootElement;
 
             Assert.Equal("Bob", root.Name.ToString());
@@ -111,7 +111,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> doc =
-                AllOfObjectWithProperties.BuildDocument(workspace, source);
+                AllOfObjectWithProperties.CreateBuilder(workspace, source);
             AllOfObjectWithProperties.Mutable root = doc.RootElement;
 
             Assert.Equal("Bob", root.Name.ToString());
@@ -129,7 +129,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> doc =
-                AllOfObjectWithProperties.BuildDocument(workspace, source);
+                AllOfObjectWithProperties.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -147,7 +147,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<AllOfObjectWithProperties>.Parse("""{"name":"Bob"}""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             AllOfObjectWithProperties.Mutable root = builderDoc.RootElement;
             root.SetAge(25);
@@ -174,7 +174,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefObjectWithProperties.Mutable> doc =
-                RefObjectWithProperties.BuildDocument(workspace, source);
+                RefObjectWithProperties.CreateBuilder(workspace, source);
             RefObjectWithProperties.Mutable root = doc.RootElement;
 
             Assert.Equal("Carol", root.Name.ToString());
@@ -194,7 +194,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefObjectWithProperties.Mutable> doc =
-                RefObjectWithProperties.BuildDocument(workspace, source);
+                RefObjectWithProperties.CreateBuilder(workspace, source);
             RefObjectWithProperties.Mutable root = doc.RootElement;
 
             Assert.Equal("Carol", root.Name.ToString());
@@ -212,7 +212,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefObjectWithProperties.Mutable> doc =
-                RefObjectWithProperties.BuildDocument(workspace, source);
+                RefObjectWithProperties.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -241,7 +241,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefObjectWithProperties>.Parse("""{"name":"Carol"}""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<RefObjectWithProperties.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             RefObjectWithProperties.Mutable root = builderDoc.RootElement;
             root.SetAge(50);
@@ -259,7 +259,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefObjectWithProperties>.Parse("""{"name":"Carol","age":45,"email":"carol@test.com"}""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<RefObjectWithProperties.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             RefObjectWithProperties.Mutable root = builderDoc.RootElement;
             Assert.True(root.RemoveAge());
@@ -277,7 +277,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefObjectWithProperties>.Parse("""{"name":"Carol","age":45,"email":"carol@test.com"}""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<RefObjectWithProperties.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             RefObjectWithProperties.Mutable root = builderDoc.RootElement;
             Assert.True(root.RemoveEmail());
@@ -295,7 +295,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefObjectWithProperties>.Parse("""{"name":"Carol","age":45,"email":"carol@test.com"}""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<RefObjectWithProperties.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             RefObjectWithProperties.Mutable root = builderDoc.RootElement;
             Assert.True(root.RemoveAge());
@@ -319,12 +319,12 @@ namespace Corvus.Text.Json.Tests
             ArrayOfItems.Source source = ArrayOfItems.Build(
                 static (ref ArrayOfItems.Builder builder) =>
                 {
-                    builder.Add(ArrayOfItems.RequiredId.Build(
+                    builder.AddItem(ArrayOfItems.RequiredId.Build(
                         static (ref ArrayOfItems.RequiredId.Builder b) =>
                         {
                             b.Create(id: 1, label: "first");
                         }));
-                    builder.Add(ArrayOfItems.RequiredId.Build(
+                    builder.AddItem(ArrayOfItems.RequiredId.Build(
                         static (ref ArrayOfItems.RequiredId.Builder b) =>
                         {
                             b.Create(id: 2, label: "second");
@@ -332,7 +332,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<ArrayOfItems.Mutable> doc =
-                ArrayOfItems.BuildDocument(workspace, source);
+                ArrayOfItems.CreateBuilder(workspace, source);
             ArrayOfItems.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
@@ -346,7 +346,7 @@ namespace Corvus.Text.Json.Tests
             ArrayOfItems.Source source = ArrayOfItems.Build(
                 static (ref ArrayOfItems.Builder builder) =>
                 {
-                    builder.Add(ArrayOfItems.RequiredId.Build(
+                    builder.AddItem(ArrayOfItems.RequiredId.Build(
                         static (ref ArrayOfItems.RequiredId.Builder b) =>
                         {
                             b.Create(id: 1, label: "first");
@@ -354,7 +354,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<ArrayOfItems.Mutable> doc =
-                ArrayOfItems.BuildDocument(workspace, source);
+                ArrayOfItems.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -377,12 +377,12 @@ namespace Corvus.Text.Json.Tests
             AllOfArrayWithItems.Source source = AllOfArrayWithItems.Build(
                 static (ref AllOfArrayWithItems.Builder builder) =>
                 {
-                    builder.Add("hello");
-                    builder.Add("world");
+                    builder.AddItem("hello");
+                    builder.AddItem("world");
                 });
 
             using JsonDocumentBuilder<AllOfArrayWithItems.Mutable> doc =
-                AllOfArrayWithItems.BuildDocument(workspace, source);
+                AllOfArrayWithItems.CreateBuilder(workspace, source);
             AllOfArrayWithItems.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
@@ -398,12 +398,12 @@ namespace Corvus.Text.Json.Tests
             AllOfArrayWithItems.Source source = AllOfArrayWithItems.Build(
                 static (ref AllOfArrayWithItems.Builder builder) =>
                 {
-                    builder.Add("hello");
-                    builder.Add("world");
+                    builder.AddItem("hello");
+                    builder.AddItem("world");
                 });
 
             using JsonDocumentBuilder<AllOfArrayWithItems.Mutable> doc =
-                AllOfArrayWithItems.BuildDocument(workspace, source);
+                AllOfArrayWithItems.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -421,7 +421,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<AllOfArrayWithItems>.Parse("""["hello","world"]""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<AllOfArrayWithItems.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             AllOfArrayWithItems.Mutable root = builderDoc.RootElement;
             root.SetItem(0, "replaced");
@@ -437,7 +437,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<AllOfArrayWithItems>.Parse("""["hello","world"]""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<AllOfArrayWithItems.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             AllOfArrayWithItems.Mutable root = builderDoc.RootElement;
             root.InsertItem(1, "middle");
@@ -455,10 +455,10 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<AllOfArrayWithItems>.Parse("""["hello","world","extra"]""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<AllOfArrayWithItems.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             AllOfArrayWithItems.Mutable root = builderDoc.RootElement;
-            root.Remove(1);
+            root.RemoveAt(1);
 
             Assert.Equal(2, root.GetArrayLength());
             Assert.Equal("hello", root[0].ToString());
@@ -477,12 +477,12 @@ namespace Corvus.Text.Json.Tests
             RefArrayWithItems.Source source = RefArrayWithItems.Build(
                 static (ref RefArrayWithItems.Builder builder) =>
                 {
-                    builder.Add("hello");
-                    builder.Add("world");
+                    builder.AddItem("hello");
+                    builder.AddItem("world");
                 });
 
             using JsonDocumentBuilder<RefArrayWithItems.Mutable> doc =
-                RefArrayWithItems.BuildDocument(workspace, source);
+                RefArrayWithItems.CreateBuilder(workspace, source);
             RefArrayWithItems.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
@@ -498,12 +498,12 @@ namespace Corvus.Text.Json.Tests
             RefArrayWithItems.Source source = RefArrayWithItems.Build(
                 static (ref RefArrayWithItems.Builder builder) =>
                 {
-                    builder.Add("hello");
-                    builder.Add("world");
+                    builder.AddItem("hello");
+                    builder.AddItem("world");
                 });
 
             using JsonDocumentBuilder<RefArrayWithItems.Mutable> doc =
-                RefArrayWithItems.BuildDocument(workspace, source);
+                RefArrayWithItems.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -532,7 +532,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefArrayWithItems>.Parse("""["hello","world"]""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<RefArrayWithItems.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             RefArrayWithItems.Mutable root = builderDoc.RootElement;
             root.SetItem(0, "replaced");
@@ -548,7 +548,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefArrayWithItems>.Parse("""["hello","world"]""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<RefArrayWithItems.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             RefArrayWithItems.Mutable root = builderDoc.RootElement;
             root.InsertItem(1, "middle");
@@ -566,10 +566,10 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefArrayWithItems>.Parse("""["hello","world","extra"]""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<RefArrayWithItems.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             RefArrayWithItems.Mutable root = builderDoc.RootElement;
-            root.Remove(1);
+            root.RemoveAt(1);
 
             Assert.Equal(2, root.GetArrayLength());
             Assert.Equal("hello", root[0].ToString());
@@ -583,7 +583,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefArrayWithItems>.Parse("""["hello","world","extra"]""");
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using JsonDocumentBuilder<RefArrayWithItems.Mutable> builderDoc =
-                doc.RootElement.BuildDocument(workspace);
+                doc.RootElement.CreateBuilder(workspace);
 
             RefArrayWithItems.Mutable root = builderDoc.RootElement;
             root.RemoveWhere(
@@ -611,13 +611,13 @@ namespace Corvus.Text.Json.Tests
                         tags: ObjectWithArrayProperty.TagsEntityArray.Build(
                             static (ref ObjectWithArrayProperty.TagsEntityArray.Builder b) =>
                             {
-                                b.Add("tag1");
-                                b.Add("tag2");
+                                b.AddItem("tag1");
+                                b.AddItem("tag2");
                             }));
                 });
 
             using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> doc =
-                ObjectWithArrayProperty.BuildDocument(workspace, source);
+                ObjectWithArrayProperty.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
             Assert.Contains("tag1", json);

@@ -221,9 +221,9 @@ public readonly partial struct JsonElement
     /// <param name="workspace">The JsonWorkspace to use for creating the document builder.</param>
     /// <returns>A JsonDocumentBuilder configured for mutable operations on this JsonElement.</returns>
     [CLSCompliant(false)]
-    public JsonDocumentBuilder<Mutable> BuildDocument(JsonWorkspace workspace)
+    public JsonDocumentBuilder<Mutable> CreateBuilder(JsonWorkspace workspace)
     {
-        return workspace.BuildDocument<JsonElement, Mutable>(this);
+        return workspace.CreateBuilder<JsonElement, Mutable>(this);
     }
 
     /// <summary>

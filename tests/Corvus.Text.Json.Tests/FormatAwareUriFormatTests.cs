@@ -138,7 +138,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, null));
         }
 
@@ -151,7 +151,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[512];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, dest[..n].ToString());
@@ -166,7 +166,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<byte> dest = stackalloc byte[512];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -315,7 +315,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, null));
         }
 
@@ -328,7 +328,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[512];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, dest[..n].ToString());
@@ -343,7 +343,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<byte> dest = stackalloc byte[512];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -424,7 +424,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, null));
         }
 
@@ -437,7 +437,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[512];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, dest[..n].ToString());
@@ -452,7 +452,7 @@ namespace Corvus.Text.Json.Tests
             using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<byte> dest = stackalloc byte[512];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));

@@ -87,7 +87,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<PureTuple> doc =
                 ParsedJsonDocument<PureTuple>.Parse("""["hello",42,true]""");
-            using JsonDocumentBuilder<PureTuple.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<PureTuple.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             PureTuple.Mutable root = builder.RootElement;
             Assert.Equal(3, root.GetArrayLength());
@@ -102,7 +102,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<PureTuple> doc =
                 ParsedJsonDocument<PureTuple>.Parse("""["hello",42,true]""");
-            using JsonDocumentBuilder<PureTuple.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<PureTuple.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             PureTuple.Mutable root = builder.RootElement;
             int count = 0;
@@ -190,7 +190,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<TupleWithAdditionalItems> doc =
                 ParsedJsonDocument<TupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
-            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
             root.SetItem(3, true);
@@ -204,7 +204,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<TupleWithAdditionalItems> doc =
                 ParsedJsonDocument<TupleWithAdditionalItems>.Parse("""["hello",42,true]""");
-            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
             root.InsertItem(3, false);
@@ -217,7 +217,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<TupleWithAdditionalItems> doc =
                 ParsedJsonDocument<TupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
-            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
             root.SetItem(3, default(TupleWithAdditionalItems.ItemsEntity.Source));
@@ -230,7 +230,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<TupleWithAdditionalItems> doc =
                 ParsedJsonDocument<TupleWithAdditionalItems>.Parse("""["hello",42,true]""");
-            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
             root.InsertItem(3, default(TupleWithAdditionalItems.ItemsEntity.Source));
@@ -243,10 +243,10 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<TupleWithAdditionalItems> doc =
                 ParsedJsonDocument<TupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
-            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
-            root.Remove(3);
+            root.RemoveAt(3);
             Assert.Equal(3, root.GetArrayLength());
         }
 
@@ -256,7 +256,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<TupleWithAdditionalItems> doc =
                 ParsedJsonDocument<TupleWithAdditionalItems>.Parse("""["hello",42,true,false,true]""");
-            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
             root.RemoveWhere(static (in TupleWithAdditionalItems.ItemsEntity item) => item.ToString() == "False");
@@ -280,7 +280,7 @@ namespace Corvus.Text.Json.Tests
                     builder.CreateTuple("world", 99, false);
                 });
 
-            using JsonDocumentBuilder<PureTuple.Mutable> builder = PureTuple.BuildDocument(workspace, source);
+            using JsonDocumentBuilder<PureTuple.Mutable> builder = PureTuple.CreateBuilder(workspace, source);
             PureTuple.Mutable root = builder.RootElement;
 
             Assert.Equal(3, root.GetArrayLength());
@@ -301,7 +301,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             // Materialize the source into a document and verify round-trip
-            using JsonDocumentBuilder<PureTuple.Mutable> builder = PureTuple.BuildDocument(workspace, tupleSource);
+            using JsonDocumentBuilder<PureTuple.Mutable> builder = PureTuple.CreateBuilder(workspace, tupleSource);
             PureTuple.Mutable root = builder.RootElement;
 
             string json = root.ToString();
@@ -315,13 +315,13 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void BuildDocument_WithContext_CreatesValidDocument()
+        public void CreateBuilder_WithContext_CreatesValidDocument()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             (string Name, int Age, bool IsActive) context = ("contextValue", 77, true);
 
             using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder =
-                ObjectWithMixedProperties.BuildDocument(
+                ObjectWithMixedProperties.CreateBuilder(
                     workspace,
                     context,
                     static (in (string Name, int Age, bool IsActive) ctx, ref ObjectWithMixedProperties.Builder b) =>
@@ -347,13 +347,13 @@ namespace Corvus.Text.Json.Tests
             TupleWithAdditionalItems.Source source = TupleWithAdditionalItems.Build(
                 static (ref TupleWithAdditionalItems.Builder builder) =>
                 {
-                    builder.Add(true);
+                    builder.AddItem(true);
                 });
 
             try
             {
                 using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder =
-                    TupleWithAdditionalItems.BuildDocument(workspace, source);
+                    TupleWithAdditionalItems.CreateBuilder(workspace, source);
 
                 Assert.Fail("Expected InvalidOperationException");
             }
@@ -372,12 +372,12 @@ namespace Corvus.Text.Json.Tests
                 static (ref TupleWithAdditionalItems.Builder builder) =>
                 {
                     builder.CreateTuple("hello", 42);
-                    builder.Add(true);
-                    builder.Add(false);
+                    builder.AddItem(true);
+                    builder.AddItem(false);
                 });
 
             using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder =
-                TupleWithAdditionalItems.BuildDocument(workspace, source);
+                TupleWithAdditionalItems.CreateBuilder(workspace, source);
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
 
             Assert.Equal(4, root.GetArrayLength());
@@ -399,7 +399,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder =
-                TupleWithAdditionalItems.BuildDocument(workspace, source);
+                TupleWithAdditionalItems.CreateBuilder(workspace, source);
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());

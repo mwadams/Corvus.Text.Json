@@ -35,7 +35,7 @@ internal static partial class CodeGeneratorExtensions
             .AppendBuilderRefStruct(typeDeclaration, builders, forArray: true)
             .AppendBuilderRefStruct(typeDeclaration, builders, forArray: false)
             .AppendCommonBuild(typeDeclaration, builders)
-            .AppendCommonBuildDocuments(typeDeclaration, builders);
+            .AppendCommonCreateBuilder(typeDeclaration, builders);
     }
 
     private static CodeGenerator AppendAddAsItem(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders, bool forContext = false)
@@ -914,7 +914,7 @@ internal static partial class CodeGeneratorExtensions
             }
 
             generator
-                .AppendLineIndent("public void Add(in ", arrayItemsType, ".", generator.SourceClassName(arrayItemsType), " value)")
+                .AppendLineIndent("public void AddItem(in ", arrayItemsType, ".", generator.SourceClassName(arrayItemsType), " value)")
                 .AppendLineIndent("{")
                 .PushIndent();
 
@@ -1224,7 +1224,7 @@ internal static partial class CodeGeneratorExtensions
     /// <param name="generator">The code generator to which to append the methods.</param>
     /// <param name="typeDeclaration">The type declaration for which to emit the document builder creation methods.</param>
     /// <returns>A reference to the generator having completed the operation.</returns>
-    private static CodeGenerator AppendCommonBuildDocuments(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
+    private static CodeGenerator AppendCommonCreateBuilder(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
     {
         // We only expect 1 row for a simple type.
         int initialCapacity = 1;
@@ -1245,7 +1245,7 @@ internal static partial class CodeGeneratorExtensions
         }
 
         generator
-            .ReserveNameIfNotReserved("BuildDocument")
+            .ReserveNameIfNotReserved("CreateBuilder")
             .AppendSeparatorLine()
             .AppendBlockIndent(
             $$"""
@@ -1256,11 +1256,11 @@ internal static partial class CodeGeneratorExtensions
             /// <param name="value">The value with which to initialize the builder.</param>
             /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
             /// <returns>An instance of a mutable document initialized with the given value.</returns>
-            public static JsonDocumentBuilder<{{generator.MutableClassName()}}> BuildDocument(
+            public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateBuilder(
                 JsonWorkspace workspace, scoped in {{generator.SourceClassName()}} value, int initialCapacity = {{initialCapacity}})
             {
                 // Create the document builder without a MetadataDb
-                JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.BuildDocument<{{generator.MutableClassName()}}>(-1);
+                JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.CreateBuilder<{{generator.MutableClassName()}}>(-1);
                 ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
                 value.AddAsItem(ref cvb);
                 Debug.Assert(cvb.MemberCount == 1);
@@ -1287,12 +1287,12 @@ internal static partial class CodeGeneratorExtensions
         {
             if (hasFallbackArrayType && generator.ArrayBuilderClassName() is string arrayBuilderClassName)
             {
-                AppendBuildDocumentForBuilder(generator, initialCapacity, sourceClassName, arrayBuilderClassName, forContextOnly: true);
+                AppendCreateBuilderForBuilder(generator, initialCapacity, sourceClassName, arrayBuilderClassName, forContextOnly: true);
             }
 
             if (hasFallbackObjectType && generator.ObjectBuilderClassName() is string objectBuilderClassName)
             {
-                AppendBuildDocumentForBuilder(generator, initialCapacity, sourceClassName, objectBuilderClassName, forContextOnly: true);
+                AppendCreateBuilderForBuilder(generator, initialCapacity, sourceClassName, objectBuilderClassName, forContextOnly: true);
             }
         }
         else
@@ -1300,7 +1300,7 @@ internal static partial class CodeGeneratorExtensions
             if (((isObject && hasFallbackObjectType) || (isArray && hasFallbackArrayType)) &&
                 generator.BuilderClassName() is string builderClassName)
             {
-                AppendBuildDocumentForBuilder(generator, initialCapacity, sourceClassName, builderClassName);
+                AppendCreateBuilderForBuilder(generator, initialCapacity, sourceClassName, builderClassName);
             }
         }
 
@@ -1314,12 +1314,12 @@ internal static partial class CodeGeneratorExtensions
 
             if (builder.IsArray && builder.ArrayBuilderName is string arrayBuilderClassName1)
             {
-                AppendBuildDocumentForBuilder(generator, initialCapacity, $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{generator.SourceClassName(builder.TypeDeclaration.FullyQualifiedDotnetTypeName())}", $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{arrayBuilderClassName1}");
+                AppendCreateBuilderForBuilder(generator, initialCapacity, $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{generator.SourceClassName(builder.TypeDeclaration.FullyQualifiedDotnetTypeName())}", $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{arrayBuilderClassName1}");
             }
 
             if (builder.IsObject && builder.ObjectBuilderName is string objectBuilderClassName1)
             {
-                AppendBuildDocumentForBuilder(generator, initialCapacity, $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{generator.SourceClassName(builder.TypeDeclaration.FullyQualifiedDotnetTypeName())}", $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{objectBuilderClassName1}");
+                AppendCreateBuilderForBuilder(generator, initialCapacity, $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{generator.SourceClassName(builder.TypeDeclaration.FullyQualifiedDotnetTypeName())}", $"{builder.TypeDeclaration.FullyQualifiedDotnetTypeName()}.{objectBuilderClassName1}");
             }
         }
 
@@ -1330,14 +1330,14 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("/// </summary>")
             .AppendLineIndent("/// <param name=\"workspace\">The JSON workspace.</param>")
             .AppendLineIndent("/// <returns>An instance of a mutable document initialized with this instance.</returns>")
-            .AppendLineIndent("public JsonDocumentBuilder<", generator.MutableClassName(), "> BuildDocument(JsonWorkspace workspace)")
+            .AppendLineIndent("public JsonDocumentBuilder<", generator.MutableClassName(), "> CreateBuilder(JsonWorkspace workspace)")
             .AppendLineIndent("{")
             .PushIndent()
-                .AppendLineIndent("return workspace.BuildDocument<", typeDeclaration.DotnetTypeName(), ", ", generator.MutableClassName(), ">(this);")
+                .AppendLineIndent("return workspace.CreateBuilder<", typeDeclaration.DotnetTypeName(), ", ", generator.MutableClassName(), ">(this);")
             .PopIndent()
             .AppendLineIndent("}");
 
-        static void AppendBuildDocumentForBuilder(CodeGenerator generator, int initialCapacity, string sourceClassName, string builderClassName, bool forContextOnly = false)
+        static void AppendCreateBuilderForBuilder(CodeGenerator generator, int initialCapacity, string sourceClassName, string builderClassName, bool forContextOnly = false)
         {
             if (!forContextOnly)
             {
@@ -1352,11 +1352,11 @@ internal static partial class CodeGeneratorExtensions
                         /// <param name="value">The value with which to initialize the builder.</param>
                         /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
                         /// <returns>An instance of a mutable document initialized with the given value.</returns>
-                        public static JsonDocumentBuilder<{{generator.MutableClassName()}}> BuildDocument(
+                        public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateBuilder(
                             JsonWorkspace workspace, scoped in {{builderClassName}}.Build value, int initialCapacity = {{initialCapacity}})
                         {
                             // Create the document builder without a MetadataDb
-                            JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.BuildDocument<{{generator.MutableClassName()}}>(-1);
+                            JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.CreateBuilder<{{generator.MutableClassName()}}>(-1);
                             ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
                             var source = new {{sourceClassName}}(value);
                             source.AddAsItem(ref cvb);
@@ -1380,14 +1380,14 @@ internal static partial class CodeGeneratorExtensions
                     /// <param name="value">The value with which to initialize the builder.</param>
                     /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
                     /// <returns>An instance of a mutable document initialized with the given value.</returns>
-                    public static JsonDocumentBuilder<{{generator.MutableClassName()}}> BuildDocument<TContext>(
+                    public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateBuilder<TContext>(
                         JsonWorkspace workspace, scoped in TContext context, scoped in {{builderClassName}}.Build<TContext> value, int initialCapacity = {{initialCapacity}})
                         #if NET9_0_OR_GREATER
                         where TContext : allows ref struct
                         #endif
                     {
                         // Create the document builder without a MetadataDb
-                        JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.BuildDocument<{{generator.MutableClassName()}}>(-1);
+                        JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.CreateBuilder<{{generator.MutableClassName()}}>(-1);
                         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
                         var source = new {{sourceClassName}}<TContext>(context, value);
                         source.AddAsItem(ref cvb);

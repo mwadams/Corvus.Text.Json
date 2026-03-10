@@ -64,7 +64,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<Rank1DoubleVector.Mutable> doc =
-                Rank1DoubleVector.BuildDocument(workspace, source);
+                Rank1DoubleVector.CreateBuilder(workspace, source);
             Rank1DoubleVector.Mutable root = doc.RootElement;
 
             Assert.Equal(3, root.GetArrayLength());
@@ -86,7 +86,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<Rank1DoubleVector.Mutable> doc =
-                Rank1DoubleVector.BuildDocument(workspace, source);
+                Rank1DoubleVector.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -115,7 +115,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
-                Rank1Int32Vector.BuildDocument(workspace, source);
+                Rank1Int32Vector.CreateBuilder(workspace, source);
             Rank1Int32Vector.Mutable root = doc.RootElement;
 
             Assert.Equal(4, root.GetArrayLength());
@@ -138,7 +138,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
-                Rank1Int32Vector.BuildDocument(workspace, source);
+                Rank1Int32Vector.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -169,7 +169,7 @@ namespace Corvus.Text.Json.Tests
                         builder.CreateTensor(values);
                     });
 
-                Rank1DoubleVector.BuildDocument(workspace, source).Dispose();
+                Rank1DoubleVector.CreateBuilder(workspace, source).Dispose();
             });
         }
 
@@ -187,7 +187,7 @@ namespace Corvus.Text.Json.Tests
                         builder.CreateTensor(values);
                     });
 
-                Rank1Int32Vector.BuildDocument(workspace, source).Dispose();
+                Rank1Int32Vector.CreateBuilder(workspace, source).Dispose();
             });
         }
 
@@ -209,7 +209,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<Rank2DoubleMatrix.Mutable> doc =
-                Rank2DoubleMatrix.BuildDocument(workspace, source);
+                Rank2DoubleMatrix.CreateBuilder(workspace, source);
             Rank2DoubleMatrix.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
@@ -242,7 +242,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<Rank2DoubleMatrix.Mutable> doc =
-                Rank2DoubleMatrix.BuildDocument(workspace, source);
+                Rank2DoubleMatrix.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -277,7 +277,7 @@ namespace Corvus.Text.Json.Tests
                         builder.CreateTensor(values);
                     });
 
-                Rank2DoubleMatrix.BuildDocument(workspace, source).Dispose();
+                Rank2DoubleMatrix.CreateBuilder(workspace, source).Dispose();
             });
         }
 
@@ -311,7 +311,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
-                Rank3Int32Cube.BuildDocument(workspace, source);
+                Rank3Int32Cube.CreateBuilder(workspace, source);
             Rank3Int32Cube.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
@@ -358,7 +358,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
-                Rank3Int32Cube.BuildDocument(workspace, source);
+                Rank3Int32Cube.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -396,7 +396,7 @@ namespace Corvus.Text.Json.Tests
                         builder.CreateTensor(values);
                     });
 
-                Rank3Int32Cube.BuildDocument(workspace, source).Dispose();
+                Rank3Int32Cube.CreateBuilder(workspace, source).Dispose();
             });
         }
 
@@ -519,7 +519,7 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<Rank1DoubleVector> sourceDoc =
                 ParsedJsonDocument<Rank1DoubleVector>.Parse("[1.1, 2.2, 3.3]");
             using JsonDocumentBuilder<Rank1DoubleVector.Mutable> doc =
-                sourceDoc.RootElement.BuildDocument(workspace);
+                sourceDoc.RootElement.CreateBuilder(workspace);
 
             Span<double> buffer = stackalloc double[3];
             Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
@@ -536,7 +536,7 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<Rank2DoubleMatrix> sourceDoc =
                 ParsedJsonDocument<Rank2DoubleMatrix>.Parse("[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]");
             using JsonDocumentBuilder<Rank2DoubleMatrix.Mutable> doc =
-                sourceDoc.RootElement.BuildDocument(workspace);
+                sourceDoc.RootElement.CreateBuilder(workspace);
 
             Span<double> buffer = stackalloc double[6];
             Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));
@@ -552,7 +552,7 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<Rank3Int32Cube> sourceDoc =
                 ParsedJsonDocument<Rank3Int32Cube>.Parse("[[[1,2,3],[4,5,6]],[[7,8,9],[10,11,12]]]");
             using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
-                sourceDoc.RootElement.BuildDocument(workspace);
+                sourceDoc.RootElement.CreateBuilder(workspace);
 
             Span<int> buffer = stackalloc int[12];
             Assert.True(doc.RootElement.TryGetNumericValues(buffer, out int written));

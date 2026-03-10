@@ -43,7 +43,7 @@ public readonly partial struct JsonElement
     /// <strong>Integration with JsonDocumentBuilder:</strong>
     /// </para>
     /// <list type="bullet">
-    /// <item><description><see cref="BuildDocument"/> creates document builders from Source instances</description></item>
+    /// <item><description><see cref="CreateBuilder"/> creates document builders from Source instances</description></item>
     /// <item><description><see cref="AddAsProperty"/> and <see cref="AddAsItem"/> integrate with <see cref="ComplexValueBuilder"/> for nested structures</description></item>
     /// <item><description>Automatic format selection and optimization based on value type and characteristics</description></item>
     /// </list>
@@ -63,22 +63,22 @@ public readonly partial struct JsonElement
     /// using JsonWorkspace workspace = JsonWorkspace.Create();
     ///
     /// // Numeric values
-    /// using var intDoc = JsonElement.BuildDocument(workspace, 42);
-    /// using var doubleDoc = JsonElement.BuildDocument(workspace, 3.14159);
+    /// using var intDoc = JsonElement.CreateBuilder(workspace, 42);
+    /// using var doubleDoc = JsonElement.CreateBuilder(workspace, 3.14159);
     ///
     /// // String values
-    /// using var stringDoc = JsonElement.BuildDocument(workspace, "Hello, World!");
-    /// using var utf8Doc = JsonElement.BuildDocument(workspace, "Hello"u8);
+    /// using var stringDoc = JsonElement.CreateBuilder(workspace, "Hello, World!");
+    /// using var utf8Doc = JsonElement.CreateBuilder(workspace, "Hello"u8);
     ///
     /// // Boolean and null
-    /// using var boolDoc = JsonElement.BuildDocument(workspace, true);
-    /// using var nullDoc = JsonElement.BuildDocument(workspace, JsonElement.Source.Null());
+    /// using var boolDoc = JsonElement.CreateBuilder(workspace, true);
+    /// using var nullDoc = JsonElement.CreateBuilder(workspace, JsonElement.Source.Null());
     /// </code>
     /// </example>
     /// <example>
     /// <para>Complex object construction:</para>
     /// <code>
-    /// using var objectDoc = JsonElement.BuildDocument(workspace,
+    /// using var objectDoc = JsonElement.CreateBuilder(workspace,
     ///     new((ref JsonObjectBuilder objBuilder) =>
     ///     {
     ///         objBuilder.Add("name", "John Doe");
@@ -95,15 +95,15 @@ public readonly partial struct JsonElement
     /// <example>
     /// <para>Array construction:</para>
     /// <code>
-    /// using var arrayDoc = JsonElement.BuildDocument(workspace,
+    /// using var arrayDoc = JsonElement.CreateBuilder(workspace,
     ///     new((ref JsonArrayBuilder arrayBuilder) =>
     ///     {
-    ///         arrayBuilder.Add(1);
-    ///         arrayBuilder.Add("two");
-    ///         arrayBuilder.Add(3.0);
-    ///         arrayBuilder.Add(new((ref JsonObjectBuilder objBuilder) =>
+    ///         arrayBuilder.AddItem(1);
+    ///         arrayBuilder.AddItem("two");
+    ///         arrayBuilder.AddItem(3.0);
+    ///         arrayBuilder.AddItem(new((ref JsonObjectBuilder objBuilder) =>
     ///         {
-    ///             objBuilder.Add("nested", true);
+    ///             objBuilder.AddProperty("nested", true);
     ///         }));
     ///     }));
     /// </code>
@@ -670,7 +670,7 @@ public readonly partial struct JsonElement
         /// </para>
         /// <code>
         /// // Create a document with null value
-        /// using var doc = JsonElement.BuildDocument(workspace, JsonElement.Source.Null());
+        /// using var doc = JsonElement.CreateBuilder(workspace, JsonElement.Source.Null());
         ///
         /// // Add null property to object
         /// objBuilder.Add("nullProp", JsonElement.Source.Null());
@@ -1452,19 +1452,19 @@ public readonly partial struct JsonElement
     /// </para>
     /// <code>
     /// // Simple value
-    /// using var doc = JsonElement.BuildDocument(workspace, 42);
+    /// using var doc = JsonElement.CreateBuilder(workspace, 42);
     ///
     /// // Complex object
-    /// using var doc = JsonElement.BuildDocument(workspace,
+    /// using var doc = JsonElement.CreateBuilder(workspace,
     ///     new(objectBuilder => { /* build object */ }));
     ///
     /// // From existing JsonElement
-    /// using var doc = JsonElement.BuildDocument(workspace, existingElement);
+    /// using var doc = JsonElement.CreateBuilder(workspace, existingElement);
     /// </code>
     /// </remarks>
     /// <remarks>This method is not CLS compliant.</remarks>
     [CLSCompliant(false)]
-    public static JsonDocumentBuilder<Mutable> BuildDocument(JsonWorkspace workspace, in Source source, int estimatedMemberCount = 30)
+    public static JsonDocumentBuilder<Mutable> CreateBuilder(JsonWorkspace workspace, in Source source, int estimatedMemberCount = 30)
     {
         // Create the document builder without a MetadataDb
         if (source.IsUndefined)
@@ -1472,7 +1472,7 @@ public readonly partial struct JsonElement
             ThrowHelper.ThrowArgumentException(SR.EmptyJsonIsInvalid);
         }
 
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.BuildDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         source.AddAsItem(ref cvb);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
@@ -1489,13 +1489,13 @@ public readonly partial struct JsonElement
     /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
     /// <returns>A JSON document builder containing the source value.</returns>
     [CLSCompliant(false)]
-    public static JsonDocumentBuilder<Mutable> BuildDocument<TContext>(JsonWorkspace workspace, in TContext context, ArrayBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
+    public static JsonDocumentBuilder<Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, in TContext context, ArrayBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
         where TContext : allows ref struct
 #endif
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.BuildDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         cvb.AddItem(BuildWithContext.Create(context, builder), static (in b, ref o) => ArrayBuilder.BuildValue(b.Context, b.Build, ref o));
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
@@ -1512,13 +1512,13 @@ public readonly partial struct JsonElement
     /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
     /// <returns>A JSON document builder containing the array value.</returns>
     [CLSCompliant(false)]
-    public static JsonDocumentBuilder<Mutable> BuildDocument<TContext>(JsonWorkspace workspace, in TContext context, ObjectBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
+    public static JsonDocumentBuilder<Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, in TContext context, ObjectBuilder.Build<TContext> builder, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
         where TContext : allows ref struct
 #endif
     {
         // Create the document builder without a MetadataDb
-        JsonDocumentBuilder<Mutable> documentBuilder = workspace.BuildDocument<Mutable>(-1);
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
         ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         cvb.AddItem(BuildWithContext.Create(context, builder), static (in b, ref o) => ObjectBuilder.BuildValue(b.Context, b.Build, ref o));
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
@@ -1573,7 +1573,7 @@ public readonly partial struct JsonElement
     /// <para>Basic property manipulation:</para>
     /// <code>
     /// using var workspace = JsonWorkspace.Create();
-    /// using var doc = JsonElement.BuildDocument(workspace, new Source(
+    /// using var doc = JsonElement.CreateBuilder(workspace, new Source(
     ///     new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
     ///     {
     ///         builder.Add("name", "John Doe");
@@ -1602,7 +1602,7 @@ public readonly partial struct JsonElement
     /// <para>Array manipulation:</para>
     /// <code>
     /// // Create array document
-    /// using var arrayDoc = JsonElement.BuildDocument(workspace, new Source(
+    /// using var arrayDoc = JsonElement.CreateBuilder(workspace, new Source(
     ///     new JsonArrayBuilder.Build((ref JsonArrayBuilder builder) =>
     ///     {
     ///         builder.Add(1);
@@ -2181,9 +2181,9 @@ public readonly partial struct JsonElement
         /// <returns>A JSON document builder containing this mutable JSON element.</returns>
         /// <remarks>This method is not CLS compliant.</remarks>
         [CLSCompliant(false)]
-        public readonly JsonDocumentBuilder<Mutable> BuildDocument(JsonWorkspace workspace)
+        public readonly JsonDocumentBuilder<Mutable> CreateBuilder(JsonWorkspace workspace)
         {
-            return workspace.BuildDocument<Mutable, Mutable>(this);
+            return workspace.CreateBuilder<Mutable, Mutable>(this);
         }
 
         /// <summary>
@@ -4994,7 +4994,7 @@ public readonly partial struct JsonElement
 
             if (source.IsUndefined)
             {
-                Remove(itemIndex);
+                RemoveAt(itemIndex);
                 return;
             }
 
@@ -5422,6 +5422,122 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        ///   Adds an item to the end of the array using a value <see cref="Source"/>.
+        /// </summary>
+        /// <param name="source">The source of the item to add.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddItem(in Source source, int estimatedMemberCount = 30)
+        {
+            InsertItem(GetArrayLength(), in source, estimatedMemberCount);
+        }
+
+        /// <summary>
+        ///   Adds a JSON object item to the end of the array.
+        /// </summary>
+        /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddItem(ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
+        {
+            InsertItem(GetArrayLength(), objectValue, estimatedMemberCount);
+        }
+
+        /// <summary>
+        ///   Adds a JSON object item to the end of the array.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="context">The context to pass to the builder.</param>
+        /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddItem<TContext>(in TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            InsertItem(GetArrayLength(), in context, objectValue, estimatedMemberCount);
+        }
+
+        /// <summary>
+        ///   Adds a JSON array item to the end of the array.
+        /// </summary>
+        /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
+        /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddItem(ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
+        {
+            InsertItem(GetArrayLength(), arrayValue, estimatedMemberCount);
+        }
+
+        /// <summary>
+        ///   Adds a JSON array item to the end of the array.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="context">The context to pass to the builder.</param>
+        /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
+        /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddItem<TContext>(in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            InsertItem(GetArrayLength(), in context, arrayValue, estimatedMemberCount);
+        }
+
+        /// <summary>
+        ///   Adds a null item to the end of the array.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddItemNull()
+        {
+            InsertItemNull(GetArrayLength());
+        }
+
+        /// <summary>
         ///   Removes a range of items from the array starting at the specified index.
         /// </summary>
         /// <param name="startIndex">The zero-based index at which to begin removing items.</param>
@@ -5459,11 +5575,42 @@ public readonly partial struct JsonElement
         ///   <paramref name="index"/> is negative or greater than or equal to the current array length.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Remove(int index)
+        public void RemoveAt(int index)
         {
             CheckValidInstance();
             JsonElementHelpers.RemoveRangeUnsafe(this, index, 1);
             _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Removes the first array element that equals the specified item.
+        /// </summary>
+        /// <param name="item">The item to find and remove.</param>
+        /// <returns><see langword="true"/> if an element was found and removed; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method iterates forward through the array and removes the first element
+        ///     whose value deeply equals the specified <paramref name="item"/>.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public bool Remove(in JsonElement item)
+        {
+            CheckValidInstance();
+            if (!JsonElementHelpers.RemoveFirstUnsafe<Mutable, JsonElement>(this, in item))
+            {
+                return false;
+            }
+
+            _documentVersion = _parent.Version;
+            return true;
         }
 
         /// <summary>

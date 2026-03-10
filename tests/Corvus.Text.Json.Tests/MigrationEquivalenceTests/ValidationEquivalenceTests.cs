@@ -1,0 +1,336 @@
+// Copyright (c) William Adams. All rights reserved.
+// Licensed under the MIT License.
+
+namespace Corvus.Text.Json.Tests.MigrationEquivalenceTests;
+
+using Corvus.Json;
+using Xunit;
+
+using V4 = MigrationModels.V4;
+using V5 = MigrationModels.V5;
+
+/// <summary>
+/// Verifies that V4 <c>Validate()</c> and V5 <c>EvaluateSchema()</c> agree on valid/invalid instances.
+/// </summary>
+/// <remarks>
+/// <para>V4: <c>entity.Validate(ValidationContext.ValidContext, ValidationLevel.Flag).IsValid</c></para>
+/// <para>V5: <c>entity.EvaluateSchema()</c> returns <c>bool</c></para>
+/// </remarks>
+public class ValidationEquivalenceTests
+{
+    [Fact]
+    public void V4_ValidPerson_IsValid()
+    {
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse("""{"name":"Jo","age":30}""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_ValidPerson_IsValid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"name":"Jo","age":30}""");
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_ValidPerson_IsValid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse("""{"name":"Jo","age":30}""");
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        Assert.True(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_MissingRequiredProperty_IsInvalid()
+    {
+        // Missing required "name"
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse("""{"age":30}""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_MissingRequiredProperty_IsInvalid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"age":30}""");
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_MissingRequiredProperty_IsInvalid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse("""{"age":30}""");
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        Assert.False(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_InvalidRange_IsInvalid()
+    {
+        // Age > maximum (150)
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse("""{"name":"Jo","age":200}""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_InvalidRange_IsInvalid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"name":"Jo","age":200}""");
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_InvalidRange_IsInvalid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse("""{"name":"Jo","age":200}""");
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        Assert.False(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_ValidEnum_IsValid()
+    {
+        V4.MigrationStatusEnum v4 = V4.MigrationStatusEnum.Parse("\"active\"");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_ValidEnum_IsValid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationStatusEnum> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationStatusEnum>.Parse("\"active\"");
+        V4.MigrationStatusEnum v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_ValidEnum_IsValid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+        Assert.True(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_InvalidEnum_IsInvalid()
+    {
+        V4.MigrationStatusEnum v4 = V4.MigrationStatusEnum.Parse("\"unknown\"");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_InvalidEnum_IsInvalid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationStatusEnum> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationStatusEnum>.Parse("\"unknown\"");
+        V4.MigrationStatusEnum v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_InvalidEnum_IsInvalid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"unknown\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+        Assert.False(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_ValidIntVector_IsValid()
+    {
+        V4.MigrationIntVector v4 = V4.MigrationIntVector.Parse("""[1,2,3]""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_ValidIntVector_IsValid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationIntVector> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse("""[1,2,3]""");
+        V4.MigrationIntVector v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_ValidIntVector_IsValid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse("""[1,2,3]""");
+        V5.MigrationIntVector v5 = parsedV5.RootElement;
+        Assert.True(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_IntVectorWrongSize_IsInvalid()
+    {
+        // minItems: 3, maxItems: 3 — only 2 elements
+        V4.MigrationIntVector v4 = V4.MigrationIntVector.Parse("""[1,2]""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_IntVectorWrongSize_IsInvalid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationIntVector> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse("""[1,2]""");
+        V4.MigrationIntVector v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_IntVectorWrongSize_IsInvalid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse("""[1,2]""");
+        V5.MigrationIntVector v5 = parsedV5.RootElement;
+        Assert.False(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_ValidNestedObject_IsValid()
+    {
+        V4.MigrationNested v4 = V4.MigrationNested.Parse("""{"name":"Jo","address":{"street":"Main St","city":"NY"}}""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_ValidNestedObject_IsValid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationNested> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationNested>.Parse("""{"name":"Jo","address":{"street":"Main St","city":"NY"}}""");
+        V4.MigrationNested v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_ValidNestedObject_IsValid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationNested> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationNested>.Parse("""{"name":"Jo","address":{"street":"Main St","city":"NY"}}""");
+        V5.MigrationNested v5 = parsedV5.RootElement;
+        Assert.True(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_InvalidZipCodePattern_IsInvalid()
+    {
+        V4.MigrationNested v4 = V4.MigrationNested.Parse("""{"name":"Jo","address":{"street":"Main St","city":"NY","zipCode":"ABC"}}""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_InvalidZipCodePattern_IsInvalid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationNested> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationNested>.Parse("""{"name":"Jo","address":{"street":"Main St","city":"NY","zipCode":"ABC"}}""");
+        V4.MigrationNested v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_InvalidZipCodePattern_IsInvalid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationNested> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationNested>.Parse("""{"name":"Jo","address":{"street":"Main St","city":"NY","zipCode":"ABC"}}""");
+        V5.MigrationNested v5 = parsedV5.RootElement;
+        Assert.False(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_ValidTuple_IsValid()
+    {
+        V4.MigrationTuple v4 = V4.MigrationTuple.Parse("""["hello",42,true]""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_ValidTuple_IsValid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationTuple> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse("""["hello",42,true]""");
+        V4.MigrationTuple v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_ValidTuple_IsValid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse("""["hello",42,true]""");
+        V5.MigrationTuple v5 = parsedV5.RootElement;
+        Assert.True(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void V4_TupleExtraItems_IsInvalid()
+    {
+        // items: false — no additional items allowed
+        V4.MigrationTuple v4 = V4.MigrationTuple.Parse("""["hello",42,true,"extra"]""");
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V4_TupleExtraItems_IsInvalid_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationTuple> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse("""["hello",42,true,"extra"]""");
+        V4.MigrationTuple v4 = parsedV4.Instance;
+        ValidationContext result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void V5_TupleExtraItems_IsInvalid()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse("""["hello",42,true,"extra"]""");
+        V5.MigrationTuple v5 = parsedV5.RootElement;
+        Assert.False(v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void BothEngines_ValidPerson_BothValid()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"name":"Jo","age":30}""");
+        V4.MigrationPerson v4 = parsedV4.Instance;
+
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse("""{"name":"Jo","age":30}""");
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+
+        ValidationContext v4Result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.Equal(v4Result.IsValid, v5.EvaluateSchema());
+    }
+
+    [Fact]
+    public void BothEngines_MissingRequiredProperty_BothInvalid()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"age":30}""");
+        V4.MigrationPerson v4 = parsedV4.Instance;
+
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse("""{"age":30}""");
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+
+        ValidationContext v4Result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
+        Assert.Equal(v4Result.IsValid, v5.EvaluateSchema());
+    }
+}

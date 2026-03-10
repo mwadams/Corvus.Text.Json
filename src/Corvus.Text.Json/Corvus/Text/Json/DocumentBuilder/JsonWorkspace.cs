@@ -140,7 +140,7 @@ public class JsonWorkspace : IDisposable
     /// <param name="sourceElement">The source element to build from.</param>
     /// <returns>A document builder for the mutable element type.</returns>
     [CLSCompliant(false)]
-    public JsonDocumentBuilder<TMutableElement> BuildDocument<TElement, TMutableElement>(TElement sourceElement)
+    public JsonDocumentBuilder<TMutableElement> CreateBuilder<TElement, TMutableElement>(TElement sourceElement)
         where TElement : struct, IJsonElement<TElement>
         where TMutableElement : struct, IMutableJsonElement<TMutableElement>
     {
@@ -158,7 +158,7 @@ public class JsonWorkspace : IDisposable
     /// <param name="initialValueBufferSize">The initial size of the value buffer.</param>
     /// <returns>A document builder for the specified element type.</returns>
     [CLSCompliant(false)]
-    public JsonDocumentBuilder<TElement> BuildDocument<TElement>(int initialCapacity = 30, int initialValueBufferSize = 8192)
+    public JsonDocumentBuilder<TElement> CreateBuilder<TElement>(int initialCapacity = 30, int initialValueBufferSize = 8192)
         where TElement : struct, IMutableJsonElement<TElement>
     {
         JsonDocumentBuilder<TElement> result = new(this);

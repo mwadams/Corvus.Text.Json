@@ -36,7 +36,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefItemsDoubleVector.Mutable> doc =
-                RefItemsDoubleVector.BuildDocument(workspace, source);
+                RefItemsDoubleVector.CreateBuilder(workspace, source);
             RefItemsDoubleVector.Mutable root = doc.RootElement;
 
             Assert.Equal(3, root.GetArrayLength());
@@ -58,7 +58,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefItemsDoubleVector.Mutable> doc =
-                RefItemsDoubleVector.BuildDocument(workspace, source);
+                RefItemsDoubleVector.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -84,7 +84,7 @@ namespace Corvus.Text.Json.Tests
                         builder.CreateTensor(values);
                     });
 
-                RefItemsDoubleVector.BuildDocument(workspace, source).Dispose();
+                RefItemsDoubleVector.CreateBuilder(workspace, source).Dispose();
             });
         }
 
@@ -113,7 +113,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefItemsInt32Vector.Mutable> doc =
-                RefItemsInt32Vector.BuildDocument(workspace, source);
+                RefItemsInt32Vector.CreateBuilder(workspace, source);
             RefItemsInt32Vector.Mutable root = doc.RootElement;
 
             Assert.Equal(4, root.GetArrayLength());
@@ -136,7 +136,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefItemsInt32Vector.Mutable> doc =
-                RefItemsInt32Vector.BuildDocument(workspace, source);
+                RefItemsInt32Vector.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -183,7 +183,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefInnerArrayDoubleMatrix.Mutable> doc =
-                RefInnerArrayDoubleMatrix.BuildDocument(workspace, source);
+                RefInnerArrayDoubleMatrix.CreateBuilder(workspace, source);
             RefInnerArrayDoubleMatrix.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
@@ -214,7 +214,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<RefInnerArrayDoubleMatrix.Mutable> doc =
-                RefInnerArrayDoubleMatrix.BuildDocument(workspace, source);
+                RefInnerArrayDoubleMatrix.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -249,7 +249,7 @@ namespace Corvus.Text.Json.Tests
                         builder.CreateTensor(values);
                     });
 
-                RefInnerArrayDoubleMatrix.BuildDocument(workspace, source).Dispose();
+                RefInnerArrayDoubleMatrix.CreateBuilder(workspace, source).Dispose();
             });
         }
 
@@ -286,7 +286,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<AllOfDoubleVector.Mutable> doc =
-                AllOfDoubleVector.BuildDocument(workspace, source);
+                AllOfDoubleVector.CreateBuilder(workspace, source);
             AllOfDoubleVector.Mutable root = doc.RootElement;
 
             Assert.Equal(3, root.GetArrayLength());
@@ -308,7 +308,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<AllOfDoubleVector.Mutable> doc =
-                AllOfDoubleVector.BuildDocument(workspace, source);
+                AllOfDoubleVector.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -328,13 +328,13 @@ namespace Corvus.Text.Json.Tests
             AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
                 static (ref AllOfDoubleVector.Builder builder) =>
                 {
-                    builder.Add(1.5);
-                    builder.Add(2.5);
-                    builder.Add(3.5);
+                    builder.AddItem(1.5);
+                    builder.AddItem(2.5);
+                    builder.AddItem(3.5);
                 });
 
             using JsonDocumentBuilder<AllOfDoubleVector.Mutable> doc =
-                AllOfDoubleVector.BuildDocument(workspace, source);
+                AllOfDoubleVector.CreateBuilder(workspace, source);
             AllOfDoubleVector.Mutable root = doc.RootElement;
 
             Assert.Equal(3, root.GetArrayLength());
@@ -351,13 +351,13 @@ namespace Corvus.Text.Json.Tests
             AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
                 static (ref AllOfDoubleVector.Builder builder) =>
                 {
-                    builder.Add(1.5);
-                    builder.Add(2.5);
-                    builder.Add(3.5);
+                    builder.AddItem(1.5);
+                    builder.AddItem(2.5);
+                    builder.AddItem(3.5);
                 });
 
             using JsonDocumentBuilder<AllOfDoubleVector.Mutable> doc =
-                AllOfDoubleVector.BuildDocument(workspace, source);
+                AllOfDoubleVector.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -383,7 +383,7 @@ namespace Corvus.Text.Json.Tests
                         builder.CreateTensor(values);
                     });
 
-                AllOfDoubleVector.BuildDocument(workspace, source).Dispose();
+                AllOfDoubleVector.CreateBuilder(workspace, source).Dispose();
             });
         }
 
@@ -434,7 +434,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<AllOfInt32Matrix.Mutable> doc =
-                AllOfInt32Matrix.BuildDocument(workspace, source);
+                AllOfInt32Matrix.CreateBuilder(workspace, source);
             AllOfInt32Matrix.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
@@ -465,7 +465,7 @@ namespace Corvus.Text.Json.Tests
                 });
 
             using JsonDocumentBuilder<AllOfInt32Matrix.Mutable> doc =
-                AllOfInt32Matrix.BuildDocument(workspace, source);
+                AllOfInt32Matrix.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -494,24 +494,24 @@ namespace Corvus.Text.Json.Tests
             AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
                 static (ref AllOfInt32Matrix.Builder builder) =>
                 {
-                    builder.Add(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
+                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
                         static (ref AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Builder inner) =>
                         {
-                            inner.Add(1);
-                            inner.Add(2);
-                            inner.Add(3);
+                            inner.AddItem(1);
+                            inner.AddItem(2);
+                            inner.AddItem(3);
                         }));
-                    builder.Add(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
+                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
                         static (ref AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Builder inner) =>
                         {
-                            inner.Add(4);
-                            inner.Add(5);
-                            inner.Add(6);
+                            inner.AddItem(4);
+                            inner.AddItem(5);
+                            inner.AddItem(6);
                         }));
                 });
 
             using JsonDocumentBuilder<AllOfInt32Matrix.Mutable> doc =
-                AllOfInt32Matrix.BuildDocument(workspace, source);
+                AllOfInt32Matrix.CreateBuilder(workspace, source);
             AllOfInt32Matrix.Mutable root = doc.RootElement;
 
             Assert.Equal(2, root.GetArrayLength());
@@ -537,24 +537,24 @@ namespace Corvus.Text.Json.Tests
             AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
                 static (ref AllOfInt32Matrix.Builder builder) =>
                 {
-                    builder.Add(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
+                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
                         static (ref AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Builder inner) =>
                         {
-                            inner.Add(1);
-                            inner.Add(2);
-                            inner.Add(3);
+                            inner.AddItem(1);
+                            inner.AddItem(2);
+                            inner.AddItem(3);
                         }));
-                    builder.Add(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
+                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
                         static (ref AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Builder inner) =>
                         {
-                            inner.Add(4);
-                            inner.Add(5);
-                            inner.Add(6);
+                            inner.AddItem(4);
+                            inner.AddItem(5);
+                            inner.AddItem(6);
                         }));
                 });
 
             using JsonDocumentBuilder<AllOfInt32Matrix.Mutable> doc =
-                AllOfInt32Matrix.BuildDocument(workspace, source);
+                AllOfInt32Matrix.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
 
@@ -589,7 +589,7 @@ namespace Corvus.Text.Json.Tests
                         builder.CreateTensor(values);
                     });
 
-                AllOfInt32Matrix.BuildDocument(workspace, source).Dispose();
+                AllOfInt32Matrix.CreateBuilder(workspace, source).Dispose();
             });
         }
 

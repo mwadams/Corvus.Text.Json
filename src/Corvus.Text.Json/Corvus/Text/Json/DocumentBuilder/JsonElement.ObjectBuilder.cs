@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Diagnostics;
@@ -131,7 +131,7 @@ public readonly partial struct JsonElement
         /// <param name="value">A delegate that builds the property value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, Build value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, Build value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -149,7 +149,7 @@ public readonly partial struct JsonElement
         /// <param name="value">A delegate that builds the property value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, Build<TContext> value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, Build<TContext> value, bool escapeName = true, bool nameRequiresUnescaping = false)
 #if NET9_0_OR_GREATER
             where TContext : allows ref struct
 #endif
@@ -171,7 +171,7 @@ public readonly partial struct JsonElement
         /// <param name="value">A delegate that builds the array value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, ArrayBuilder.Build value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ArrayBuilder.Build value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -190,7 +190,7 @@ public readonly partial struct JsonElement
         /// <param name="value">A delegate that builds the array value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, ArrayBuilder.Build<TContext> value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, ArrayBuilder.Build<TContext> value, bool escapeName = true, bool nameRequiresUnescaping = false)
 #if NET9_0_OR_GREATER
             where TContext : allows ref struct
 #endif
@@ -211,7 +211,7 @@ public readonly partial struct JsonElement
         /// <param name="utf8String">The property value as a UTF-8 byte span.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -228,7 +228,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a string.</param>
         /// <param name="value">The property value as a string.</param>
-        public void Add(string propertyName, string value)
+        public void AddProperty(string propertyName, string value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -240,7 +240,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The property value as a character span.</param>
-        public void Add(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -253,7 +253,7 @@ public readonly partial struct JsonElement
         /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void AddNull(ReadOnlySpan<byte> propertyName, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddPropertyNull(propertyName, escapeName, nameRequiresUnescaping);
@@ -266,7 +266,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The boolean value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, bool value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -277,7 +277,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName = true, bool nameRequiresUnescaping = false)
             where T : struct, IJsonElement<T>
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
@@ -295,7 +295,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The string value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, string value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, string value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -312,7 +312,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The string value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, ReadOnlySpan<char> value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<char> value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -329,7 +329,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The GUID value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -346,7 +346,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="DateTime"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, in DateTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in DateTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -363,7 +363,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="DateTimeOffset"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, in DateTimeOffset value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in DateTimeOffset value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -380,7 +380,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="OffsetDateTime"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, in OffsetDateTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetDateTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -397,7 +397,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="OffsetDate"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, in OffsetDate value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetDate value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -414,7 +414,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="OffsetTime"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, in OffsetTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in OffsetTime value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -431,7 +431,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="LocalDate"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, in LocalDate value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in LocalDate value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -448,7 +448,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="Period"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, in Period value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in Period value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -459,7 +459,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -476,7 +476,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="byte"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, byte value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, byte value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -493,7 +493,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="int"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, int value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, int value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -504,7 +504,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, uint value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, uint value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -521,7 +521,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="long"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, long value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, long value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -532,7 +532,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -549,7 +549,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="short"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, short value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, short value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -560,7 +560,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -577,7 +577,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="float"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, float value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, float value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -594,7 +594,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="double"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, double value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, double value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -611,7 +611,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="decimal"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -628,7 +628,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="BigInteger"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, in BigInteger value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in BigInteger value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -646,7 +646,7 @@ public readonly partial struct JsonElement
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, in BigNumber value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, in BigNumber value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -687,7 +687,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">A delegate that builds the property value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, Build value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, Build value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -699,7 +699,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">A delegate that builds the array value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, ArrayBuilder.Build value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, ArrayBuilder.Build value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -711,7 +711,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">A delegate that builds the array value.</param>
-        public void Add<TContext>(ReadOnlySpan<char> propertyName, in TContext context, ArrayBuilder.Build<TContext> value)
+        public void AddProperty<TContext>(ReadOnlySpan<char> propertyName, in TContext context, ArrayBuilder.Build<TContext> value)
 #if NET9_0_OR_GREATER
             where TContext : allows ref struct
 #endif
@@ -729,7 +729,7 @@ public readonly partial struct JsonElement
         /// <param name="utf8String">The property value as a UTF-8 byte span.</param>
         /// <param name="escapeValue">Whether to escape the property value.</param>
         /// <param name="valueRequiresUnescaping">Whether the property value requires unescaping.</param>
-        public void Add(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> utf8String, bool escapeValue, bool valueRequiresUnescaping)
+        public void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> utf8String, bool escapeValue, bool valueRequiresUnescaping)
         {
             _builder.AddProperty(
                 propertyName,
@@ -742,7 +742,7 @@ public readonly partial struct JsonElement
         /// Adds a property with a null value to the current object.
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
-        public void AddNull(ReadOnlySpan<char> propertyName)
+        public void AddPropertyNull(ReadOnlySpan<char> propertyName)
         {
             _builder.AddPropertyNull(propertyName);
         }
@@ -752,7 +752,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The boolean value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, bool value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, bool value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -760,7 +760,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add<T>(ReadOnlySpan<char> propertyName, T value)
+        public void AddProperty<T>(ReadOnlySpan<char> propertyName, T value)
             where T : struct, IJsonElement<T>
         {
             _builder.AddProperty(
@@ -773,7 +773,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The GUID value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, Guid value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, Guid value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -785,7 +785,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="DateTime"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, in DateTime value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in DateTime value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -797,7 +797,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="DateTimeOffset"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, in DateTimeOffset value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in DateTimeOffset value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -809,7 +809,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="OffsetDateTime"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, in OffsetDateTime value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetDateTime value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -821,7 +821,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="OffsetDate"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, in OffsetDate value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetDate value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -833,7 +833,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="OffsetTime"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, in OffsetTime value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in OffsetTime value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -845,7 +845,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="LocalDate"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, in LocalDate value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in LocalDate value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -857,7 +857,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="Period"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, in Period value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in Period value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -865,7 +865,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<char> propertyName, sbyte value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, sbyte value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -877,7 +877,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="byte"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, byte value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, byte value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -889,7 +889,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="int"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, int value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, int value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -897,7 +897,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<char> propertyName, uint value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, uint value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -909,7 +909,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="long"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, long value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, long value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -917,7 +917,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<char> propertyName, ulong value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, ulong value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -929,7 +929,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="short"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, short value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, short value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -937,7 +937,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<char> propertyName, ushort value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, ushort value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -949,7 +949,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="float"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, float value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, float value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -961,7 +961,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="double"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, double value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, double value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -973,7 +973,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="decimal"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, decimal value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, decimal value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -985,7 +985,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="BigInteger"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, in BigInteger value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in BigInteger value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -998,7 +998,7 @@ public readonly partial struct JsonElement
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="BigNumber"/> value.</param>
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<char> propertyName, in BigNumber value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, in BigNumber value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -1014,7 +1014,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="Int128"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -1025,7 +1025,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -1042,7 +1042,7 @@ public readonly partial struct JsonElement
         /// <param name="value">The <see cref="Half"/> value.</param>
         /// <param name="escapeName">Whether to escape the property name.</param>
         /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
-        public void Add(ReadOnlySpan<byte> propertyName, Half value, bool escapeName = true, bool nameRequiresUnescaping = false)
+        public void AddProperty(ReadOnlySpan<byte> propertyName, Half value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             Debug.Assert((escapeName && !nameRequiresUnescaping) || (!escapeName));
             _builder.AddProperty(
@@ -1057,7 +1057,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="Int128"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, Int128 value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, Int128 value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -1065,7 +1065,7 @@ public readonly partial struct JsonElement
         }
 
         [CLSCompliant(false)]
-        public void Add(ReadOnlySpan<char> propertyName, UInt128 value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, UInt128 value)
         {
             _builder.AddProperty(
                 propertyName,
@@ -1077,7 +1077,7 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="propertyName">The property name as a character span.</param>
         /// <param name="value">The <see cref="Half"/> value.</param>
-        public void Add(ReadOnlySpan<char> propertyName, Half value)
+        public void AddProperty(ReadOnlySpan<char> propertyName, Half value)
         {
             _builder.AddProperty(
                 propertyName,

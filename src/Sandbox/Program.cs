@@ -1,4 +1,4 @@
-﻿using Benchmark.CorvusTextJson;
+using Benchmark.CorvusTextJson;
 using Corvus.Text.Json;
 using Corvus.Text.Json.Internal;
 
@@ -141,7 +141,7 @@ Console.WriteLine();
 // Create a workspace for manipulating documents
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using JsonDocumentBuilder<JsonElement.Mutable> initializedBuilder = documentB1.RootElement.BuildDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> initializedBuilder = documentB1.RootElement.CreateBuilder(workspace);
 
 Console.WriteLine(initializedBuilder.RootElement.ToString());
 
@@ -172,7 +172,7 @@ using ParsedJsonDocument<JsonElement> documentB8 = ParsedJsonDocument<JsonElemen
         }
         """);
 
-using JsonDocumentBuilder<JsonElement.Mutable> b8Builder = documentB8.RootElement.BuildDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> b8Builder = documentB8.RootElement.CreateBuilder(workspace);
 
 Console.WriteLine(b8Builder.RootElement.ToString());
 
@@ -193,7 +193,7 @@ Console.WriteLine("*** BEFORE ***");
 Console.WriteLine("**************");
 Console.WriteLine();
 
-using JsonDocumentBuilder<JsonElement.Mutable> b8Builder2 = documentB8.RootElement.BuildDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> b8Builder2 = documentB8.RootElement.CreateBuilder(workspace);
 
 Console.WriteLine(b8Builder2.RootElement.ToString());
 
@@ -255,27 +255,27 @@ int[] years = [2012, 2016, 2024];
 
 
 // Create a builder for our root element
-using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.BuildDocument(
+using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.CreateBuilder(
     workspace,
     years,
     static (in years, ref o) =>
     {
-        o.Add(
+        o.AddProperty(
             "name"u8,
             static (ref objectBuilder) =>
             {
-                objectBuilder.Add("firstName"u8, "Michael"u8);
-                objectBuilder.Add("lastName"u8, "Adams"u8);
-                objectBuilder.Add(
+                objectBuilder.AddProperty("firstName"u8, "Michael"u8);
+                objectBuilder.AddProperty("lastName"u8, "Adams"u8);
+                objectBuilder.AddProperty(
                     "otherNames"u8,
                     static (ref arrayBuilder) =>
                     {
-                        arrayBuilder.Add("Francis"u8);
-                        arrayBuilder.Add("James"u8);
+                        arrayBuilder.AddItem("Francis"u8);
+                        arrayBuilder.AddItem("James"u8);
                     });
             });
-        o.Add("age"u8, 51);
-        o.Add("competedInYears"u8,
+        o.AddProperty("age"u8, 51);
+        o.AddProperty("competedInYears"u8,
             years,
             static (in years, ref arrayBuilder) =>
             {
@@ -286,7 +286,7 @@ using JsonDocumentBuilder<JsonElement.Mutable> builder = JsonElement.BuildDocume
 // Validate that we can write the document back out again
 Console.WriteLine(builder.RootElement.ToString());
 
-using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
+using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateBuilder(
     workspace,
     years,
     static (in years, ref b) => b.Create(
@@ -299,19 +299,19 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
                 lastName: "Adams"u8,
                 otherNames: OtherNames.Build(static (ref otherNames) =>
                 {
-                    otherNames.Add("Francis"u8);
-                    otherNames.Add("James"u8);
+                    otherNames.AddItem("Francis"u8);
+                    otherNames.AddItem("James"u8);
                 }));
         }),
         competedInYears: CompetedInYears.Build(years, static (in years, ref competedInYears) =>
         {
             foreach (int year in years)
             {
-                competedInYears.Add(year);
+                competedInYears.AddItem(year);
             }
         })));
 
-docBuilder.RootElement.Name.SetOtherNames(OtherNames.Build((ref b) => b.Add("Leo"u8)));
+docBuilder.RootElement.Name.SetOtherNames(OtherNames.Build((ref b) => b.AddItem("Leo"u8)));
 docBuilder.RootElement.Name.SetOtherNames("William"u8);
 
 Console.WriteLine();
@@ -320,7 +320,7 @@ Console.WriteLine();
 
 Console.WriteLine(docBuilder.RootElement.ToString());
 
-using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.BuildDocument(
+using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.CreateBuilder(
     workspace,
     (ref b) => b.Create(
         age: 51,
@@ -333,9 +333,9 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder2 = Person.BuildDocument(
         }),
         competedInYears: CompetedInYears.Build((ref competedInYears) =>
         {
-            competedInYears.Add(2012);
-            competedInYears.Add(2016);
-            competedInYears.Add(2024);
+            competedInYears.AddItem(2012);
+            competedInYears.AddItem(2016);
+            competedInYears.AddItem(2024);
         })));
 
 Console.WriteLine();
@@ -354,14 +354,14 @@ Person.Mutable mutablePerson = docBuilder.RootElement;
 Person person = docBuilder.RootElement;
 Person.Mutable isItOK = (Person.Mutable)person; // This will throw if `person` wasn't created in a mutable document.
 
-using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.BuildDocument(
+using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateBuilder(
     workspace,
     (ref b) => b.Create(
         age: person.Age, // Happily assign an existing instance, will not copy
         name: person.Name, // Happily assign an existing instance - it will copy the object structure into the metadataDB but not the backing values
         competedInYears: CompetedInYears.Build((ref competedInYears) =>
         {
-            competedInYears.Add(2012);
+            competedInYears.AddItem(2012);
         })));
 
 Console.WriteLine(docBuilder3.RootElement.ToString());
@@ -386,7 +386,7 @@ string json =
 
 var personDoc = ParsedJsonDocument<JsonElement>.Parse(json);
 
-using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").BuildDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> nameValueDoc = personDoc.RootElement.GetProperty("name").CreateBuilder(workspace);
 
 // Get the name element
 JsonElement.Mutable nameValue = nameValueDoc.RootElement;
@@ -414,7 +414,7 @@ catch (InvalidOperationException ex)
 
 bool result = person == lastName;
 
-JsonDocumentBuilder<NameComponent.Mutable> nameComponentBuilder = NameComponent.BuildDocument(workspace, "foo"u8);
+JsonDocumentBuilder<NameComponent.Mutable> nameComponentBuilder = NameComponent.CreateBuilder(workspace, "foo"u8);
 
 EvaluateAndWriteResults(person, JsonSchemaResultsLevel.Basic);
 EvaluateAndWriteResults(person, JsonSchemaResultsLevel.Detailed);
@@ -465,7 +465,7 @@ static void EvaluateAndWriteResults(Person person, JsonSchemaResultsLevel level)
     Console.WriteLine("************");
 }
 
-using JsonDocumentBuilder<Person.Mutable> testPersonDocBuilder = Person.BuildDocument(
+using JsonDocumentBuilder<Person.Mutable> testPersonDocBuilder = Person.CreateBuilder(
         workspace,
         static (ref b) => b.Create(
             age: 51,

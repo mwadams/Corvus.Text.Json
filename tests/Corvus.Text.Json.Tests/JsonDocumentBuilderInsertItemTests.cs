@@ -16,7 +16,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItem(0, 0);
@@ -36,7 +36,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItem(1, 99);
@@ -56,7 +56,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItem(3, 4);
@@ -76,7 +76,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItem(0, 42);
@@ -93,7 +93,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItem(1, "inserted");
@@ -112,7 +112,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItem(1, true);
@@ -131,7 +131,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItemNull(1);
@@ -150,7 +150,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItemNull(0);
@@ -170,7 +170,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItemNull(3);
@@ -190,7 +190,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 5]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act - Insert multiple items
             builderDoc.RootElement.InsertItem(1, 2);
@@ -213,7 +213,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[[1, 2], [3, 4]]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act - Insert into nested array
             builderDoc.RootElement[0].InsertItem(1, 99);
@@ -236,7 +236,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"items\": [1, 2, 3]}");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.GetProperty("items").InsertItem(1, 99);
@@ -258,7 +258,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, \"text\", true]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItemNull(1);
@@ -280,7 +280,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act & Assert
             Assert.Throws<IndexOutOfRangeException>(() => builderDoc.RootElement.InsertItem(-1, 99));
@@ -292,7 +292,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act & Assert
             Assert.Throws<IndexOutOfRangeException>(() => builderDoc.RootElement.InsertItem(3, 99));
@@ -304,7 +304,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act & Assert
             Assert.Throws<IndexOutOfRangeException>(() => builderDoc.RootElement.InsertItemNull(-1));
@@ -316,7 +316,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act & Assert
             Assert.Throws<IndexOutOfRangeException>(() => builderDoc.RootElement.InsertItemNull(3));
@@ -328,7 +328,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[[1, 2], {\"nested\": [3, 4]}, [5]]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act - Insert into deeply nested array
             builderDoc.RootElement[1].GetProperty("nested").InsertItem(1, 99);
@@ -352,7 +352,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
       using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
             Guid testGuid = Guid.Parse("12345678-1234-1234-1234-123456789012");
 
             // Act
@@ -372,7 +372,7 @@ namespace Corvus.Text.Json.Tests
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-   using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+   using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
             DateTime testDate = new DateTime(2024, 1, 15, 10, 30, 0, DateTimeKind.Utc);
 
   // Act
@@ -392,7 +392,7 @@ builderDoc.RootElement.InsertItem(1, testDate);
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
      using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
     DateTimeOffset testDate = new DateTimeOffset(2024, 1, 15, 10, 30, 0, TimeSpan.FromHours(2));
 
        // Act
@@ -412,7 +412,7 @@ Assert.Equal(1, root[0].GetInt32());
 // Arrange
       using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
       using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
   // Act
             builderDoc.RootElement.InsertItem(1, (byte)255);
@@ -431,7 +431,7 @@ Assert.Equal(1, root[0].GetInt32());
           // Arrange
         using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
         using var workspace = JsonWorkspace.Create();
-    using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+    using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
       // Act
             builderDoc.RootElement.InsertItem(1, (sbyte)-100);
@@ -450,7 +450,7 @@ Assert.Equal(1, root[0].GetInt32());
        // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
         using var workspace = JsonWorkspace.Create();
-      using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+      using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
  // Act
           builderDoc.RootElement.InsertItem(1, (short)1000);
@@ -469,7 +469,7 @@ Assert.Equal(1, root[0].GetInt32());
    // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
 using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
     // Act
  builderDoc.RootElement.InsertItem(1, (ushort)50000);
@@ -488,7 +488,7 @@ using var workspace = JsonWorkspace.Create();
   // Arrange
      using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-     using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+     using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
 // Act
             builderDoc.RootElement.InsertItem(1, 123456);
@@ -507,7 +507,7 @@ using var workspace = JsonWorkspace.Create();
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
  using var workspace = JsonWorkspace.Create();
-          using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+          using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
   // Act
             builderDoc.RootElement.InsertItem(1, 3000000000u);
@@ -526,7 +526,7 @@ using var workspace = JsonWorkspace.Create();
      // Arrange
      using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
   using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
       // Act
          builderDoc.RootElement.InsertItem(1, 9876543210L);
@@ -545,7 +545,7 @@ using var workspace = JsonWorkspace.Create();
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
      using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
     // Act
             builderDoc.RootElement.InsertItem(1, 18446744073709551600UL);
@@ -564,7 +564,7 @@ Assert.Equal(18446744073709551600UL, root[1].GetUInt64());
     // Arrange
      using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
       using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItem(1, 3.14f);
@@ -583,7 +583,7 @@ Assert.Equal(18446744073709551600UL, root[1].GetUInt64());
         // Arrange
     using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
          using var workspace = JsonWorkspace.Create();
-      using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+      using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
   // Act
             builderDoc.RootElement.InsertItem(1, 2.718281828);
@@ -602,7 +602,7 @@ Assert.Equal(18446744073709551600UL, root[1].GetUInt64());
             // Arrange
   using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
 using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
  // Act
             builderDoc.RootElement.InsertItem(1, 123.456m);
@@ -622,7 +622,7 @@ using var workspace = JsonWorkspace.Create();
        // Arrange
    using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-       using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+       using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
        Int128 bigNumber = Int128.Parse("170141183460469231731687303715884105727");
 
             // Act
@@ -642,7 +642,7 @@ using var workspace = JsonWorkspace.Create();
             // Arrange
   using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
    using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
    UInt128 bigNumber = UInt128.Parse("340282366920938463463374607431768211455");
 
             // Act
@@ -662,7 +662,7 @@ using var workspace = JsonWorkspace.Create();
             // Arrange
       using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
  using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
             Half halfValue = (Half)1.5;
 
        // Act
@@ -683,13 +683,13 @@ using var workspace = JsonWorkspace.Create();
    // Arrange
         using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
 using var workspace = JsonWorkspace.Create();
- using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+ using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
             builderDoc.RootElement.InsertItem(1, (ref JsonElement.ObjectBuilder o) =>
     {
-     o.Add("name", "test");
-          o.Add("value", 42);
+     o.AddProperty("name", "test");
+          o.AddProperty("value", 42);
             });
 
          // Assert
@@ -708,14 +708,14 @@ using var workspace = JsonWorkspace.Create();
          // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
         using var workspace = JsonWorkspace.Create();
-      using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+      using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
      // Act
             builderDoc.RootElement.InsertItem(1, (ref JsonElement.ArrayBuilder a) =>
  {
-           a.Add(10);
-      a.Add(20);
-    a.Add(30);
+           a.AddItem(10);
+      a.AddItem(20);
+    a.AddItem(30);
     });
 
  // Assert
@@ -736,7 +736,7 @@ Assert.Equal(3, root.GetArrayLength());
    // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
           using var workspace = JsonWorkspace.Create();
-        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
    OffsetDateTime testDate = new OffsetDateTime(
                 new LocalDateTime(2024, 1, 15, 10, 30, 0),
  Offset.FromHours(2));
@@ -758,7 +758,7 @@ Assert.Equal(3, root.GetArrayLength());
       // Arrange
       using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
        using var workspace = JsonWorkspace.Create();
-          using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+          using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
             OffsetDate testDate = new OffsetDate(
     new LocalDate(2024, 1, 15),
             Offset.FromHours(2));
@@ -780,7 +780,7 @@ Assert.Equal(3, root.GetArrayLength());
             // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
    OffsetTime testTime = new OffsetTime(
       new LocalTime(10, 30, 0),
        Offset.FromHours(2));
@@ -802,7 +802,7 @@ Assert.Equal(testTime, root[1].GetOffsetTime());
        // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-  using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+  using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
    LocalDate testDate = new LocalDate(2024, 1, 15);
 
      // Act
@@ -822,7 +822,7 @@ Assert.Equal(testTime, root[1].GetOffsetTime());
         // Arrange
             using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
             using var workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
        Period testPeriod = Period.FromYears(1) + Period.FromMonths(2) + Period.FromDays(3);
 
     // Act
@@ -842,7 +842,7 @@ Assert.Equal(3, root.GetArrayLength());
    // Arrange
      using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
   using var workspace = JsonWorkspace.Create();
-       using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+       using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
             byte[] utf8String = "test string"u8.ToArray();
 
     // Act
@@ -862,7 +862,7 @@ Assert.Equal(3, root.GetArrayLength());
   // Arrange
     using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
           using var workspace = JsonWorkspace.Create();
-   using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.BuildDocument(workspace);
+   using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
             // Act
         builderDoc.RootElement.InsertItem(1, "char span".AsSpan());
@@ -873,6 +873,157 @@ Assert.Equal(3, root.GetArrayLength());
    Assert.Equal(1, root[0].GetInt32());
     Assert.Equal("char span", root[1].GetString());
             Assert.Equal(2, root[2].GetInt32());
+        }
+
+        #endregion
+
+        #region AddItem and AddItemNull Tests
+
+        [Fact]
+        public static void AddItem_Int_AppendsToEnd()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItem(4);
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal(1, root[0].GetInt32());
+            Assert.Equal(2, root[1].GetInt32());
+            Assert.Equal(3, root[2].GetInt32());
+            Assert.Equal(4, root[3].GetInt32());
+        }
+
+        [Fact]
+        public static void AddItem_String_AppendsToEnd()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("""["a","b"]""");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItem("c");
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("a", root[0].GetString());
+            Assert.Equal("b", root[1].GetString());
+            Assert.Equal("c", root[2].GetString());
+        }
+
+        [Fact]
+        public static void AddItem_Bool_AppendsToEnd()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[true]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItem(false);
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.True(root[0].GetBoolean());
+            Assert.False(root[1].GetBoolean());
+        }
+
+        [Fact]
+        public static void AddItemNull_AppendsNullToEnd()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItemNull();
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(1, root[0].GetInt32());
+            Assert.Equal(2, root[1].GetInt32());
+            Assert.Equal(JsonValueKind.Null, root[2].ValueKind);
+        }
+
+        [Fact]
+        public static void AddItem_ToEmptyArray_Works()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItem(42);
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(1, root.GetArrayLength());
+            Assert.Equal(42, root[0].GetInt32());
+        }
+
+        [Fact]
+        public static void AddItem_MultipleAdds_PreservesOrder()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItem(1);
+            builderDoc.RootElement.AddItem(2);
+            builderDoc.RootElement.AddItem(3);
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(1, root[0].GetInt32());
+            Assert.Equal(2, root[1].GetInt32());
+            Assert.Equal(3, root[2].GetInt32());
+        }
+
+        [Fact]
+        public static void AddItem_Object_AppendsToEnd()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItem(static (ref JsonElement.ObjectBuilder b) =>
+            {
+                b.AddProperty("name", "test");
+                b.AddProperty("value", 42);
+            });
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(1, root.GetArrayLength());
+            Assert.Equal("test", root[0].GetProperty("name").GetString());
+            Assert.Equal(42, root[0].GetProperty("value").GetInt32());
+        }
+
+        [Fact]
+        public static void AddItem_Array_AppendsToEnd()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[[1]]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItem(static (ref JsonElement.ArrayBuilder b) =>
+            {
+                b.AddItem(2);
+                b.AddItem(3);
+            });
+
+            JsonElement.Mutable root = builderDoc.RootElement;
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal(1, root[0][0].GetInt32());
+            Assert.Equal(2, root[1][0].GetInt32());
+            Assert.Equal(3, root[1][1].GetInt32());
+        }
+
+        [Fact]
+        public static void AddItem_WithUndefinedSource_IsNoOp()
+        {
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+
+            builderDoc.RootElement.AddItem(default(JsonElement.Source));
+
+            Assert.Equal(3, builderDoc.RootElement.GetArrayLength());
         }
 
         #endregion

@@ -16,6 +16,8 @@
     <Project Path="tests/Corvus.Text.Json.Tests.GeneratedModels/Corvus.Text.Json.Tests.GeneratedModels.csproj" />
     <Project Path="tests/Corvus.Text.Json.Tests.GeneratedModels.OptionalAsNullable/Corvus.Text.Json.Tests.GeneratedModels.OptionalAsNullable.csproj" />
     <Project Path="tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj" />
+    <Project Path="tests/Corvus.Text.Json.Tests.MigrationModels.V4/Corvus.Text.Json.Tests.MigrationModels.V4.csproj" />
+    <Project Path="tests/Corvus.Text.Json.Tests.MigrationModels.V5/Corvus.Text.Json.Tests.MigrationModels.V5.csproj" />
   </Folder>
   <Project Path="src/Corvus.Text.Json.CodeGeneration/Corvus.Text.Json.CodeGeneration.csproj" />
   <Project Path="src/Corvus.Text.Json.CodeGenerator/Corvus.Text.Json.CodeGenerator.csproj" />

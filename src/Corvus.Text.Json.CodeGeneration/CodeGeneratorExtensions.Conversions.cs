@@ -138,8 +138,172 @@ internal static partial class CodeGeneratorExtensions
                     break;
             }
         }
+        else if (typeDeclaration.ImpliedCoreTypes().CountTypes() > 1)
+        {
+            // For multi-type declarations (e.g. unions), emit explicit conversion operators
+            // for each implied core type.
+            CoreTypes coreTypes = typeDeclaration.ImpliedCoreTypes();
+
+            if ((coreTypes & CoreTypes.String) != 0)
+            {
+                if (seenConversionOperators.Add("string"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator string(", typeName, " value) => value._parent.GetString(value._idx, JsonTokenType.String) ?? throw new FormatException();");
+                }
+            }
+
+            if ((coreTypes & (CoreTypes.Number | CoreTypes.Integer)) != 0 && !handledNumber)
+            {
+                if (seenConversionOperators.Add("long"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator long(", typeName, " value) => value._parent.TryGetValue(value._idx, out long result) ? result : throw new FormatException();");
+                }
+
+                if (seenConversionOperators.Add("double"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator double(", typeName, " value) => value._parent.TryGetValue(value._idx, out double result) ? result : throw new FormatException();");
+                }
+
+                if (seenConversionOperators.Add("BigNumber"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator Corvus.Numerics.BigNumber(", typeName, " value) => value._parent.TryGetValue(value._idx, out Corvus.Numerics.BigNumber result) ? result : throw new FormatException();");
+                }
+
+                if (seenConversionOperators.Add("BigInteger"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator System.Numerics.BigInteger(", typeName, " value) => value._parent.TryGetValue(value._idx, out System.Numerics.BigInteger result) ? result : throw new FormatException();");
+                }
+
+                if (seenConversionOperators.Add("decimal"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator decimal(", typeName, " value) => value._parent.TryGetValue(value._idx, out decimal result) ? result : throw new FormatException();");
+                }
+            }
+
+            if ((coreTypes & CoreTypes.Boolean) != 0)
+            {
+                if (seenConversionOperators.Add("bool"))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                        .AppendLineIndent("public static explicit operator bool(", typeName, " value)")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("JsonTokenType type = value._parent.GetJsonTokenType(value._idx);")
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("switch (type)")
+                            .AppendLineIndent("{")
+                            .PushIndent()
+                                .AppendLineIndent("case JsonTokenType.True:")
+                                .PushIndent()
+                                    .AppendLineIndent("return true;")
+                                .PopIndent()
+                                .AppendLineIndent("case JsonTokenType.False:")
+                                .PushIndent()
+                                    .AppendLineIndent("return false;")
+                                .PopIndent()
+                                .AppendLineIndent("default:")
+                                .PushIndent()
+                                    .AppendLineIndent("throw new FormatException();")
+                                .PopIndent()
+                            .PopIndent()
+                            .AppendLineIndent("}")
+                        .PopIndent()
+                        .AppendLineIndent("}");
+                }
+            }
+
+            // Emit explicit operators for formats discovered in composition sub-types.
+            AppendCompositionSubtypeFormatOperators(generator, typeDeclaration, seenConversionOperators, forMutable);
+        }
 
         return generator;
+    }
+
+    /// <summary>
+    /// Iterates the composition sub-types (oneOf, anyOf, allOf) of a multi-type declaration
+    /// and emits explicit conversion operators for any format-specific CLR types they imply,
+    /// delegating to the registered format handlers.
+    /// </summary>
+    private static void AppendCompositionSubtypeFormatOperators(
+        CodeGenerator generator,
+        TypeDeclaration typeDeclaration,
+        HashSet<string> seenConversionOperators,
+        bool forMutable)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return;
+        }
+
+        HashSet<string> formats = [];
+        CollectCompositionFormats(typeDeclaration, formats);
+
+        foreach (string format in formats)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return;
+            }
+
+            FormatHandlerRegistry.Instance.NumberFormatHandlers.AppendFormatConversionOperators(generator, typeDeclaration, format, seenConversionOperators, forMutable, useExplicit: true);
+            FormatHandlerRegistry.Instance.StringFormatHandlers.AppendFormatConversionOperators(generator, typeDeclaration, format, seenConversionOperators, forMutable, useExplicit: true);
+        }
+
+        static void CollectCompositionFormats(TypeDeclaration typeDeclaration, HashSet<string> formats)
+        {
+            if (typeDeclaration.OneOfCompositionTypes() is IReadOnlyDictionary<IOneOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> oneOf)
+            {
+                foreach (TypeDeclaration subschema in oneOf.SelectMany(k => k.Value))
+                {
+                    if (subschema.ReducedTypeDeclaration().ReducedType.Format() is string format)
+                    {
+                        formats.Add(format);
+                    }
+                }
+            }
+
+            if (typeDeclaration.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> anyOf)
+            {
+                foreach (TypeDeclaration subschema in anyOf.SelectMany(k => k.Value))
+                {
+                    if (subschema.ReducedTypeDeclaration().ReducedType.Format() is string format)
+                    {
+                        formats.Add(format);
+                    }
+                }
+            }
+
+            if (typeDeclaration.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> allOf)
+            {
+                foreach (TypeDeclaration subschema in allOf.SelectMany(k => k.Value))
+                {
+                    if (subschema.ReducedTypeDeclaration().ReducedType.Format() is string format)
+                    {
+                        formats.Add(format);
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>

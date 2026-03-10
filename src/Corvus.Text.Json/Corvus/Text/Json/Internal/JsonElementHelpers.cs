@@ -160,6 +160,45 @@ public static partial class JsonElementHelpers
 
 
     /// <summary>
+    /// Removes the first array element that equals the specified item.
+    /// </summary>
+    /// <typeparam name="TArray">The type of the array element.</typeparam>
+    /// <typeparam name="T">The type of the item to find and remove.</typeparam>
+    /// <param name="arrayElement">The array element instance.</param>
+    /// <param name="item">The item to find and remove.</param>
+    /// <returns><see langword="true"/> if an element was found and removed; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool RemoveFirstUnsafe<TArray, T>(TArray arrayElement, in T item)
+        where TArray : struct, IMutableJsonElement<TArray>
+        where T : struct, IJsonElement<T>
+    {
+        IMutableJsonDocument parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
+        int arrayLength = parentDocument.GetArrayLength(arrayElement.ParentDocumentIndex);
+
+        if (arrayLength == 0)
+        {
+            return false;
+        }
+
+        ArrayEnumerator<T> enumerator = new(parentDocument, arrayElement.ParentDocumentIndex);
+        int logicalIndex = 0;
+
+        while (enumerator.MoveNext())
+        {
+            T current = enumerator.Current;
+            if (DeepEquals(in current, in item))
+            {
+                RemoveRangeUnsafe(arrayElement, logicalIndex, 1);
+                return true;
+            }
+
+            logicalIndex++;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Removes a items from an array element which match a predicate.
     /// </summary>
     /// <typeparam name="TArray">The type of the array element.</typeparam>

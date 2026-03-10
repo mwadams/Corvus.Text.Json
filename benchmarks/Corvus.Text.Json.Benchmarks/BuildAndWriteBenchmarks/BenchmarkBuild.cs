@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using Benchmark.CorvusJsonSchema;
@@ -31,7 +31,7 @@ public class BenchmarkBuild
     {
         using Corvus.Text.Json.JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
 
-        using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.BuildDocument(
+        using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateBuilder(
             workspace,
             (ref b) => b.Create(
                 age: 51,
@@ -42,8 +42,8 @@ public class BenchmarkBuild
                         lastName: "Adams"u8,
                         otherNames: Benchmark.CorvusTextJson.OtherNames.Build(static (ref otherNames) =>
                         {
-                            otherNames.Add("Francis"u8);
-                            otherNames.Add("James"u8);
+                            otherNames.AddItem("Francis"u8);
+                            otherNames.AddItem("James"u8);
                         }));
                 }),
                 competedInYears: Benchmark.CorvusTextJson.CompetedInYears.Source.FromArray([2012,2106,2024])));

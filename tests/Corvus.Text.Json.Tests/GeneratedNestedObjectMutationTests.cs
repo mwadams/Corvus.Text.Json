@@ -25,7 +25,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<NestedObject> doc = ParsedJsonDocument<NestedObject>.Parse(SampleJson);
-            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             NestedObject.Mutable root = builder.RootElement;
             root.SetNotes("Updated notes");
@@ -41,7 +41,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<NestedObject> doc = ParsedJsonDocument<NestedObject>.Parse(SampleJson);
-            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             NestedObject.Mutable root = builder.RootElement;
 
@@ -63,7 +63,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<NestedObject> doc = ParsedJsonDocument<NestedObject>.Parse(SampleJson);
-            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             NestedObject.Mutable root = builder.RootElement;
             root.SetNotes(default(NestedObject.NotesEntity.Source));
@@ -79,7 +79,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<NestedObject> doc = ParsedJsonDocument<NestedObject>.Parse(SampleJson);
-            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             NestedObject.Mutable root = builder.RootElement;
             bool removed = root.RemoveNotes();
@@ -97,7 +97,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<NestedObject> doc = ParsedJsonDocument<NestedObject>.Parse(SampleJson);
-            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             NestedObject.Mutable root = builder.RootElement;
             NestedObject.RequiredStreet.Mutable address = root.Address;
@@ -110,7 +110,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<NestedObject> doc = ParsedJsonDocument<NestedObject>.Parse(SampleJson);
-            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             NestedObject.Mutable root = builder.RootElement;
             NestedObject.RequiredStreet.Mutable address = root.Address;

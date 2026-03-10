@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using Benchmark.CorvusTextJson;
@@ -65,7 +65,7 @@ public class BenchmarkBuildAndWrite
     {
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using JsonDocumentBuilder<Person.Mutable> person = Person.BuildDocument(            
+        using JsonDocumentBuilder<Person.Mutable> person = Person.CreateBuilder(            
             workspace,
             (ref b) => b.Create(
             age: 51,
@@ -76,15 +76,15 @@ public class BenchmarkBuildAndWrite
                     lastName: "Adams"u8,
                     otherNames: OtherNames.Build(static (ref otherNames) =>
                     {
-                        otherNames.Add("Francis"u8);
-                        otherNames.Add("James"u8);
+                        otherNames.AddItem("Francis"u8);
+                        otherNames.AddItem("James"u8);
                     }));
             }),
             competedInYears: CompetedInYears.Build(static (ref competedInYears) =>
             {
-                competedInYears.Add(2012);
-                competedInYears.Add(2016);
-                competedInYears.Add(2024);
+                competedInYears.AddItem(2012);
+                competedInYears.AddItem(2016);
+                competedInYears.AddItem(2024);
             })));
 
         Utf8JsonWriter writer = workspace.RentWriterAndBuffer(defaultBufferSize: 1024, out IByteBufferWriter bufferWriter);

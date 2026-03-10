@@ -70,7 +70,7 @@ public class GeneratedNullableOptionalTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<ObjectWithMixedProperties> doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30,"email":"a@b.com"}""");
-        using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithMixedProperties.Mutable root = builder.RootElement;
 
@@ -88,7 +88,7 @@ public class GeneratedNullableOptionalTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<ObjectWithMixedProperties> doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30,"isActive":true}""");
-        using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithMixedProperties.Mutable root = builder.RootElement;
         root.SetIsActive(default(ObjectWithMixedProperties.IsActiveEntity.Source));
@@ -222,7 +222,7 @@ public class GeneratedNullableOptionalTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<ObjectWithMixedProperties> doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"X","age":0}""");
-        using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithMixedProperties.Mutable root = builder.RootElement;
         root.SetEmail("test@test.com");

@@ -218,9 +218,10 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
     }
 
     /// <inheritdoc/>
-    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable)
+    public bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable, bool useExplicit = false)
     {
         string typeName = forMutable ? "Mutable" : typeDeclaration.DotnetTypeName();
+        string operatorKind = useExplicit ? "explicit" : "implicit";
 
         switch (format)
         {
@@ -230,7 +231,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator NodaTime.LocalDate(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.LocalDate result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static ", operatorKind, " operator NodaTime.LocalDate(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.LocalDate result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -240,7 +241,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator NodaTime.OffsetDateTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetDateTime result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static ", operatorKind, " operator NodaTime.OffsetDateTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetDateTime result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -250,7 +251,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator NodaTime.OffsetTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetTime result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static ", operatorKind, " operator NodaTime.OffsetTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetTime result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -260,7 +261,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator Period(", typeName, " value) => value._parent.TryGetValue(value._idx, out Period result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static ", operatorKind, " operator Period(", typeName, " value) => value._parent.TryGetValue(value._idx, out Period result) ? result : throw new FormatException();");
                 }
                 return true;
 
@@ -276,7 +277,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     generator
                         .AppendSeparatorLine()
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static implicit operator Guid(", typeName, " value) => value._parent.TryGetValue(value._idx, out Guid result) ? result : throw new FormatException();");
+                        .AppendLineIndent("public static ", operatorKind, " operator Guid(", typeName, " value) => value._parent.TryGetValue(value._idx, out Guid result) ? result : throw new FormatException();");
                 }
                 return true;
 

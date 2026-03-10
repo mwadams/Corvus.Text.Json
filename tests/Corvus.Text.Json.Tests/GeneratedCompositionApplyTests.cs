@@ -18,7 +18,7 @@ public class GeneratedCompositionApplyTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<CompositionAnyOf> doc =
             ParsedJsonDocument<CompositionAnyOf>.Parse("{}");
-        using JsonDocumentBuilder<CompositionAnyOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<CompositionAnyOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         using ParsedJsonDocument<CompositionAnyOf.RequiredKindAndMessage> variantDoc =
             ParsedJsonDocument<CompositionAnyOf.RequiredKindAndMessage>.Parse("""{"kind":"text","message":"hello"}""");
@@ -43,7 +43,7 @@ public class GeneratedCompositionApplyTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<CompositionAnyOf> doc =
             ParsedJsonDocument<CompositionAnyOf>.Parse("{}");
-        using JsonDocumentBuilder<CompositionAnyOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<CompositionAnyOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         using ParsedJsonDocument<CompositionAnyOf.RequiredCodeAndKind> variantDoc =
             ParsedJsonDocument<CompositionAnyOf.RequiredCodeAndKind>.Parse("""{"kind":"numeric","code":42}""");
@@ -68,7 +68,7 @@ public class GeneratedCompositionApplyTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<CompositionAnyOf> doc =
             ParsedJsonDocument<CompositionAnyOf>.Parse("""{"kind":"text","message":"original"}""");
-        using JsonDocumentBuilder<CompositionAnyOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<CompositionAnyOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         using ParsedJsonDocument<CompositionAnyOf.RequiredCodeAndKind> variantDoc =
             ParsedJsonDocument<CompositionAnyOf.RequiredCodeAndKind>.Parse("""{"kind":"numeric","code":99}""");
@@ -98,7 +98,7 @@ public class GeneratedCompositionApplyTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<AllOfObjectWithProperties> doc =
             ParsedJsonDocument<AllOfObjectWithProperties>.Parse("""{"email":"a@b.com"}""");
-        using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         using ParsedJsonDocument<AllOfObjectWithProperties.RequiredName> nameDoc =
             ParsedJsonDocument<AllOfObjectWithProperties.RequiredName>.Parse("""{"name":"Bob","age":30}""");
@@ -119,7 +119,7 @@ public class GeneratedCompositionApplyTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<AllOfObjectWithProperties> doc =
             ParsedJsonDocument<AllOfObjectWithProperties>.Parse("""{"name":"Alice","email":"a@b.com"}""");
-        using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<AllOfObjectWithProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         using ParsedJsonDocument<AllOfObjectWithProperties.RequiredName> nameDoc =
             ParsedJsonDocument<AllOfObjectWithProperties.RequiredName>.Parse("""{"name":"Bob"}""");
@@ -143,7 +143,7 @@ public class GeneratedCompositionApplyTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<CompositionAllOf> doc =
             ParsedJsonDocument<CompositionAllOf>.Parse("{}");
-        using JsonDocumentBuilder<CompositionAllOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<CompositionAllOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         using ParsedJsonDocument<CompositionAllOf.AllOf0Entity> allOf0Doc =
             ParsedJsonDocument<CompositionAllOf.AllOf0Entity>.Parse("""{"firstName":"Alice"}""");
@@ -166,7 +166,7 @@ public class GeneratedCompositionApplyTests
         using JsonWorkspace workspace = JsonWorkspace.Create();
         using ParsedJsonDocument<CompositionAllOf> doc =
             ParsedJsonDocument<CompositionAllOf>.Parse("""{"firstName":"Alice","lastName":"Smith"}""");
-        using JsonDocumentBuilder<CompositionAllOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<CompositionAllOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         using ParsedJsonDocument<CompositionAllOf.AllOf0Entity> emptyDoc =
             ParsedJsonDocument<CompositionAllOf.AllOf0Entity>.Parse("{}");

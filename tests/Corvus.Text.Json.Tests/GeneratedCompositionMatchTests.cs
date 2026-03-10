@@ -131,7 +131,7 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<CompositionAllOf> doc =
                 ParsedJsonDocument<CompositionAllOf>.Parse("""{"firstName":"Alice"}""");
-            using JsonDocumentBuilder<CompositionAllOf.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<CompositionAllOf.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             using ParsedJsonDocument<CompositionAllOf.AllOf1Entity> allOf1Doc =
                 ParsedJsonDocument<CompositionAllOf.AllOf1Entity>.Parse("""{"lastName":"Smith"}""");

@@ -32,7 +32,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -87,7 +87,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -134,7 +134,7 @@ namespace Corvus.Text.Json.Tests
             
             using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -178,7 +178,7 @@ namespace Corvus.Text.Json.Tests
             
             using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -225,7 +225,7 @@ namespace Corvus.Text.Json.Tests
             
             using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -273,7 +273,7 @@ namespace Corvus.Text.Json.Tests
             
             using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -310,7 +310,7 @@ namespace Corvus.Text.Json.Tests
             
             using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -2332,7 +2332,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -2374,7 +2374,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -2418,7 +2418,7 @@ namespace Corvus.Text.Json.Tests
             
             using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -2463,7 +2463,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -2515,7 +2515,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;
@@ -2562,7 +2562,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<JsonElement>.Parse("1234567.89");
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             
             var element = doc.RootElement;
             var mutableElement = mutableDoc.RootElement;

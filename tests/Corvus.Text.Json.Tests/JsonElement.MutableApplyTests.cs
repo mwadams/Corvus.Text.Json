@@ -20,7 +20,7 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("{}");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("{}");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
 
         // Act - Apply immutable source to mutable target
         targetDoc.RootElement.Apply(sourceParsed.RootElement);
@@ -36,8 +36,8 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("{}");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("{}");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
-        using var sourceDoc = sourceParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
+        using var sourceDoc = sourceParsed.RootElement.CreateBuilder(workspace);
 
         // Act - Apply mutable source to mutable target
         targetDoc.RootElement.Apply(sourceDoc.RootElement);
@@ -53,7 +53,7 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("{}");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("""{"name": "John", "age": 30}""");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
 
         // Act - Apply immutable source to mutable target
         targetDoc.RootElement.Apply(sourceParsed.RootElement);
@@ -73,8 +73,8 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("{}");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("""{"name": "John", "age": 30}""");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
-        using var sourceDoc = sourceParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
+        using var sourceDoc = sourceParsed.RootElement.CreateBuilder(workspace);
 
         // Act - Apply mutable source to mutable target
         targetDoc.RootElement.Apply(sourceDoc.RootElement);
@@ -94,7 +94,7 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("""{"existing": "value"}""");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("""{"name": "John", "age": 30}""");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
 
         // Act - Apply immutable source to mutable target
         targetDoc.RootElement.Apply(sourceParsed.RootElement);
@@ -116,7 +116,7 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("""{"name": "Jane", "age": 25}""");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("""{"name": "John", "city": "New York"}""");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
 
         // Act - Apply immutable source to mutable target
         targetDoc.RootElement.Apply(sourceParsed.RootElement);
@@ -147,7 +147,7 @@ public class JsonElementMutableApplyTests
         }
         """);
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
 
         // Act - Apply immutable source to mutable target
         targetDoc.RootElement.Apply(sourceParsed.RootElement);
@@ -184,7 +184,7 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("""{"target": "value"}""");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("""{"source": "value"}""");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
         var originalSourceString = sourceParsed.RootElement.ToString();
 
         // Act - Apply immutable source to mutable target
@@ -201,8 +201,8 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("""{"target": "value"}""");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("""{"source": "value"}""");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
-        using var sourceDoc = sourceParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
+        using var sourceDoc = sourceParsed.RootElement.CreateBuilder(workspace);
         var originalSourceString = sourceDoc.RootElement.ToString();
 
         // Act - Apply mutable source to mutable target
@@ -220,7 +220,7 @@ public class JsonElementMutableApplyTests
         using var source1Parsed = ParsedJsonDocument<JsonElement>.Parse("""{"first": "application"}""");
         using var source2Parsed = ParsedJsonDocument<JsonElement>.Parse("""{"second": "application", "first": "overwritten"}""");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
 
         // Act - Apply immutable sources to mutable target
         targetDoc.RootElement.Apply(source1Parsed.RootElement);
@@ -243,7 +243,7 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("""{"property": "value"}""");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
 
         // Act & Assert - Apply immutable source to non-object mutable target
         Assert.Throws<InvalidOperationException>(() => targetDoc.RootElement.Apply(sourceParsed.RootElement));
@@ -256,7 +256,7 @@ public class JsonElementMutableApplyTests
         using var targetParsed = ParsedJsonDocument<JsonElement>.Parse("{}");
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
         using var workspace = JsonWorkspace.Create();
-        using var targetDoc = targetParsed.RootElement.BuildDocument(workspace);
+        using var targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
 
         // Act & Assert - Apply non-object source should fail
         Assert.ThrowsAny<InvalidOperationException>(() => targetDoc.RootElement.Apply(sourceParsed.RootElement));

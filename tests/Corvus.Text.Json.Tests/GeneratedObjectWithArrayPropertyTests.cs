@@ -25,7 +25,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithArrayProperty> doc = ParsedJsonDocument<ObjectWithArrayProperty>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithArrayProperty.Mutable root = builder.RootElement;
 
@@ -44,7 +44,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithArrayProperty> doc = ParsedJsonDocument<ObjectWithArrayProperty>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithArrayProperty.Mutable root = builder.RootElement;
 
@@ -66,7 +66,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithArrayProperty> doc = ParsedJsonDocument<ObjectWithArrayProperty>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithArrayProperty.Mutable root = builder.RootElement;
             root.SetScores(default(ObjectWithArrayProperty.ScoresEntityArray.Source));
@@ -82,7 +82,7 @@ namespace Corvus.Text.Json.Tests
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
             using ParsedJsonDocument<ObjectWithArrayProperty> doc = ParsedJsonDocument<ObjectWithArrayProperty>.Parse(SampleJson);
-            using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+            using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithArrayProperty.Mutable root = builder.RootElement;
             bool removed = root.RemoveScores();

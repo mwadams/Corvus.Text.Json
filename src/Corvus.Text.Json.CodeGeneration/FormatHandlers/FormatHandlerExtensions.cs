@@ -76,8 +76,10 @@ internal static class FormatHandlerExtensions
     /// <param name="typeDeclaration">The type declaration for which to append expressions.</param>
     /// <param name="format">The format for which to append expressions.</param>
     /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
+    /// <param name="useExplicit">If <see langword="true"/>, all operators will be emitted as <c>explicit</c>;
+    /// otherwise the handler chooses <c>implicit</c> or <c>explicit</c> per format.</param>
     /// <returns><see langword="true"/> if the instance handled this format.</returns>
-    public static bool AppendFormatConversionOperators<T>(this IEnumerable<T> handlers, CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable)
+    public static bool AppendFormatConversionOperators<T>(this IEnumerable<T> handlers, CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable, bool useExplicit = false)
         where T : notnull, IFormatHandler
     {
         foreach (T handler in handlers)
@@ -87,7 +89,7 @@ internal static class FormatHandlerExtensions
                 return false;
             }
 
-            if (handler.AppendFormatConversionOperators(generator, typeDeclaration, format, seenConversionOperators, forMutable))
+            if (handler.AppendFormatConversionOperators(generator, typeDeclaration, format, seenConversionOperators, forMutable, useExplicit))
             {
                 return true;
             }

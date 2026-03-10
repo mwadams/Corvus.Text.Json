@@ -66,7 +66,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBoolean_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -92,7 +92,7 @@ namespace Corvus.Text.Json.Tests
         public void GetString_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -118,7 +118,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt32_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -244,7 +244,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDateTimeOffset_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -266,7 +266,7 @@ namespace Corvus.Text.Json.Tests
         public void GetGuid_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -288,7 +288,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBytesFromBase64_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(expectedKind, element.ValueKind);
@@ -320,7 +320,7 @@ namespace Corvus.Text.Json.Tests
         public void GetInt32_Mutable_InvalidFormat_ThrowsInvalidOperationException(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -350,7 +350,7 @@ namespace Corvus.Text.Json.Tests
         public void GetGuid_Mutable_InvalidFormat_ThrowsFormatException(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -382,7 +382,7 @@ namespace Corvus.Text.Json.Tests
         public void GetDateTimeOffset_Mutable_InvalidFormat_ThrowsFormatException(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -410,7 +410,7 @@ namespace Corvus.Text.Json.Tests
         public void GetBytesFromBase64_Mutable_InvalidFormat_ThrowsFormatException(string json)
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using var doc = JsonElement.BuildDocument(workspace, JsonElement.ParseValue(json));
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
             JsonElement.Mutable element = doc.RootElement;
 
             Assert.Equal(JsonValueKind.String, element.ValueKind);

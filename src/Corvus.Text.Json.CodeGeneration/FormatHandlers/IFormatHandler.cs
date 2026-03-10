@@ -38,8 +38,10 @@ public interface IFormatHandler
     /// <param name="format">The format for which to append conversion operators.</param>
     /// <param name="seenValueGetters">Conversion operators that have already been generated, identified by a unique string.</param>
     /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
+    /// <param name="useExplicit">If <see langword="true"/>, all operators will be emitted as <c>explicit</c>;
+    /// otherwise the handler chooses <c>implicit</c> or <c>explicit</c> per format.</param>
     /// <returns><see langword="true"/> if the instance handled this format.</returns>
-    bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable);
+    bool AppendFormatConversionOperators(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConversionOperators, bool forMutable, bool useExplicit = false);
 
     /// <summary>
     /// Append format-specific constructors for the <c>Source</c> to the generator.

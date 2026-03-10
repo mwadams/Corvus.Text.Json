@@ -92,7 +92,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #else
@@ -103,7 +103,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #endif
@@ -180,7 +180,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[100];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -193,7 +193,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<byte> dest = stackalloc byte[100];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -261,7 +261,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #else
@@ -272,7 +272,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #endif
@@ -379,7 +379,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[200];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -435,7 +435,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #else
@@ -446,7 +446,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #endif
@@ -533,7 +533,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[100];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -576,7 +576,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, null));
         }
 
@@ -627,7 +627,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[100];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, dest[..n].ToString());
@@ -640,7 +640,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<byte> dest = stackalloc byte[100];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -711,7 +711,7 @@ namespace Corvus.Text.Json.Tests
 
             using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[200];
             Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, "d", heIL));
             Assert.Equal(expected, dest[..n].ToString());
@@ -792,7 +792,7 @@ namespace Corvus.Text.Json.Tests
         {
             using var doc = ParsedJsonDocument<FormatTypes.DurationEntity>.Parse(DurationJson);
             using var workspace = JsonWorkspace.Create();
-            using var mutableDoc = doc.RootElement.BuildDocument(workspace);
+            using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(CanonicalDuration, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
     }

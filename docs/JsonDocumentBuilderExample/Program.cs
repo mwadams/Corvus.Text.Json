@@ -573,7 +573,7 @@ class Program
         JsonElement.Mutable numbers = root.GetProperty("numbers");
         Console.WriteLine($"\nNumbers array length before: {numbers.GetArrayLength()}");
 
-        numbers.Remove(5);  // Remove item at index 5 (value 50)
+        numbers.RemoveAt(5);  // Remove item at index 5 (value 50)
         Console.WriteLine($"Removed item at index 5");
         Console.WriteLine($"Numbers array length after: {numbers.GetArrayLength()}");
         Console.WriteLine($"Numbers: {numbers.ToString()}");
@@ -596,8 +596,8 @@ class Program
         numbers = doc.RootElement.GetProperty("numbers");
 
         // Remove multiple single items
-        numbers.Remove(0);  // Remove first item
-        numbers.Remove(numbers.GetArrayLength() - 1);  // Remove last item
+        numbers.RemoveAt(0);  // Remove first item
+        numbers.RemoveAt(numbers.GetArrayLength() - 1);  // Remove last item
 
         Console.WriteLine($"\nAfter removing first and last from numbers:");
         Console.WriteLine($"Numbers: {numbers.ToString()}");

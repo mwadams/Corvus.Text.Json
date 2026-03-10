@@ -71,6 +71,17 @@
     <Compile Include="BigNumber\BigNumberArithmeticTests.cs" />
     <Compile Include="BigNumber\BigNumberComparisonTests.cs" />
     <Compile Include="BigNumber\BigNumberConversionTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\ArrayEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\DefaultValueEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\EnumConstEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\MutationEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\NumericArrayEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\ParsingEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\PropertyAccessEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\SerializationEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\TupleEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\UnionEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\ValidationEquivalenceTests.cs" />
     <Compile Include="DummyDocument.cs" />
     <Compile Include="DummyResultsCollector.cs" />
     <Compile Include="JsonDocumentBuilderComplexObjectTests.cs" />
@@ -285,6 +296,8 @@
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
     <ProjectReference Include="..\Corvus.Text.Json.Tests.GeneratedModels\Corvus.Text.Json.Tests.GeneratedModels.csproj" />
     <ProjectReference Include="..\Corvus.Text.Json.Tests.GeneratedModels.OptionalAsNullable\Corvus.Text.Json.Tests.GeneratedModels.OptionalAsNullable.csproj" />
+    <ProjectReference Include="..\Corvus.Text.Json.Tests.MigrationModels.V4\Corvus.Text.Json.Tests.MigrationModels.V4.csproj" />
+    <ProjectReference Include="..\Corvus.Text.Json.Tests.MigrationModels.V5\Corvus.Text.Json.Tests.MigrationModels.V5.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
