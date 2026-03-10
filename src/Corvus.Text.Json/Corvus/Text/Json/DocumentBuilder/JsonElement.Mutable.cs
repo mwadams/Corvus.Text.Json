@@ -1526,6 +1526,40 @@ public readonly partial struct JsonElement
     }
 
     /// <summary>
+    /// Creates an empty mutable array document builder.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace to use for the document builder.</param>
+    /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
+    /// <returns>A JSON document builder containing an empty array.</returns>
+    [CLSCompliant(false)]
+    public static JsonDocumentBuilder<Mutable> CreateArrayBuilder(JsonWorkspace workspace, int estimatedMemberCount = 30)
+    {
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        cvb.StartArray();
+        cvb.EndArray();
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates an empty mutable object document builder.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace to use for the document builder.</param>
+    /// <param name="estimatedMemberCount">The estimated number of members in the document.</param>
+    /// <returns>A JSON document builder containing an empty object.</returns>
+    [CLSCompliant(false)]
+    public static JsonDocumentBuilder<Mutable> CreateObjectBuilder(JsonWorkspace workspace, int estimatedMemberCount = 30)
+    {
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        cvb.StartObject();
+        cvb.EndObject();
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
     ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
     /// </summary>
 

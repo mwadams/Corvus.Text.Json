@@ -154,6 +154,158 @@ public readonly partial struct MigrationPerson
             return new(instance.ParentDocument, instance.ParentDocumentIndex);
         }
 
+        /// <summary>
+        ///   Parses one JSON value (including objects or arrays) from the provided span.
+        /// </summary>
+        /// <param name="utf8Json">The span to read.</param>
+        /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+        /// <returns>
+        ///   An instance representing the value (and nested values) read from the span.
+        /// </returns>
+        /// <remarks>
+        ///   <para>
+        ///     This method makes a copy of the data the reader acted on, so there is no caller
+        ///     requirement to maintain data integrity beyond the return of this method.
+        ///   </para>
+        /// </remarks>
+        /// <exception cref="JsonException">
+        ///   A value could not be read from the span.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static EmailEntity ParseValue(ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options = default)
+        {
+            return JsonElementHelpers.ParseValue<EmailEntity>(utf8Json, options);
+        }
+
+        /// <summary>
+        ///   Parses one JSON value (including objects or arrays) from the provided span.
+        /// </summary>
+        /// <param name="json">The span to read.</param>
+        /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+        /// <returns>
+        ///   An instance representing the value (and nested values) read from the span.
+        /// </returns>
+        /// <remarks>
+        ///   <para>
+        ///     This method makes a copy of the data the reader acted on, so there is no caller
+        ///     requirement to maintain data integrity beyond the return of this method.
+        ///   </para>
+        /// </remarks>
+        /// <exception cref="JsonException">
+        ///   A value could not be read from the span.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static EmailEntity ParseValue(ReadOnlySpan<char> json, JsonDocumentOptions options = default)
+        {
+            return JsonElementHelpers.ParseValue<EmailEntity>(json, options);
+        }
+
+        /// <summary>
+        ///   Parses one JSON value (including objects or arrays) from the provided text.
+        /// </summary>
+        /// <param name="json">The text to read.</param>
+        /// <param name="options">The <see cref="JsonDocumentOptions"/> for reading.</param>
+        /// <returns>
+        ///   An instance representing the value (and nested values) read from the text.
+        /// </returns>
+        /// <remarks>
+        ///   <para>
+        ///     This method makes a copy of the data the reader acted on, so there is no caller
+        ///     requirement to maintain data integrity beyond the return of this method.
+        ///   </para>
+        /// </remarks>
+        /// <exception cref="JsonException">
+        ///   A value could not be read from the text.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static EmailEntity ParseValue(string json, JsonDocumentOptions options = default)
+        {
+            return JsonElementHelpers.ParseValue<EmailEntity>(json, options);
+        }
+
+        /// <summary>
+        ///   Parses one JSON value (including objects or arrays) from the provided reader.
+        /// </summary>
+        /// <param name="reader">The reader to read.</param>
+        /// <returns>
+        ///   An instance representing the value (and nested values) read from the reader.
+        /// </returns>
+        /// <remarks>
+        ///   <para>
+        ///     If the <see cref="Utf8JsonReader.TokenType"/> property of <paramref name="reader"/>
+        ///     is <see cref="JsonTokenType.PropertyName"/> or <see cref="JsonTokenType.None"/>, the
+        ///     reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
+        ///     the start of the value.
+        ///   </para>
+        ///
+        ///   <para>
+        ///     Upon completion of this method, <paramref name="reader"/> will be positioned at the
+        ///     final token in the JSON value. If an exception is thrown, the reader is reset to
+        ///     the state it was in when the method was called.
+        ///   </para>
+        ///
+        ///   <para>
+        ///     This method makes a copy of the data the reader acted on, so there is no caller
+        ///     requirement to maintain data integrity beyond the return of this method.
+        ///   </para>
+        /// </remarks>
+        /// <exception cref="ArgumentException">
+        ///   <paramref name="reader"/> is using unsupported options.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///   The current <paramref name="reader"/> token does not start or represent a value.
+        /// </exception>
+        /// <exception cref="JsonException">
+        ///   A value could not be read from the reader.
+        /// </exception>
+        public static EmailEntity ParseValue(ref Utf8JsonReader reader)
+        {
+            return JsonElementHelpers.ParseValue<EmailEntity>(ref reader);
+        }
+
+        /// <summary>
+        ///   Attempts to parse one JSON value (including objects or arrays) from the provided reader.
+        /// </summary>
+        /// <param name="reader">The reader to read.</param>
+        /// <param name="element">Receives the parsed element.</param>
+        /// <returns>
+        ///   <see langword="true"/> if a value was read and parsed into a JsonElement;
+        ///   <see langword="false"/> if the reader ran out of data while parsing.
+        ///   All other situations result in an exception being thrown.
+        /// </returns>
+        /// <remarks>
+        ///   <para>
+        ///     If the <see cref="Utf8JsonReader.TokenType"/> property of <paramref name="reader"/>
+        ///     is <see cref="JsonTokenType.PropertyName"/> or <see cref="JsonTokenType.None"/>, the
+        ///     reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
+        ///     the start of the value.
+        ///   </para>
+        ///
+        ///   <para>
+        ///     Upon completion of this method, <paramref name="reader"/> will be positioned at the
+        ///     final token in the JSON value.  If an exception is thrown, or <see langword="false"/>
+        ///     is returned, the reader is reset to the state it was in when the method was called.
+        ///   </para>
+        ///
+        ///   <para>
+        ///     This method makes a copy of the data the reader acted on, so there is no caller
+        ///     requirement to maintain data integrity beyond the return of this method.
+        ///   </para>
+        /// </remarks>
+        /// <exception cref="ArgumentException">
+        ///   <paramref name="reader"/> is using unsupported options.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///   The current <paramref name="reader"/> token does not start or represent a value.
+        /// </exception>
+        /// <exception cref="JsonException">
+        ///   A value could not be read from the reader.
+        /// </exception>
+        public static bool TryParseValue(ref Utf8JsonReader reader, out EmailEntity? result)
+        {
+            return JsonElementHelpers.TryParseValue<EmailEntity>(ref reader, out result);
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

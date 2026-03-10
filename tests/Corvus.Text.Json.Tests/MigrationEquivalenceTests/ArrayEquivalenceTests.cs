@@ -384,4 +384,170 @@ public class ArrayEquivalenceTests
         Assert.Equal((int)v4Updated[0].Id, (int)root[0].Id);
         Assert.Equal((int)v4Updated[1].Id, (int)root[1].Id);
     }
+
+    [Fact]
+    public void V4_RemoveRange()
+    {
+        // V4: functional RemoveRange(index, count) returns new array without the range.
+        V4.MigrationItemArray v4 = V4.MigrationItemArray.Parse(ArrayJson);
+        V4.MigrationItemArray updated = v4.RemoveRange(0, 2);
+        Assert.Equal(1, updated.GetArrayLength());
+        Assert.Equal(3, (int)updated[0].Id);
+    }
+
+    [Fact]
+    public void V4_RemoveRange_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationItemArray> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
+        V4.MigrationItemArray v4 = parsedV4.Instance;
+        V4.MigrationItemArray updated = v4.RemoveRange(0, 2);
+        Assert.Equal(1, updated.GetArrayLength());
+        Assert.Equal(3, (int)updated[0].Id);
+    }
+
+    [Fact]
+    public void V5_RemoveRange()
+    {
+        // V5: imperative RemoveRange(startIndex, count) on the mutable type.
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using ParsedJsonDocument<V5.MigrationItemArray> doc = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray>.Parse(ArrayJson);
+        using JsonDocumentBuilder<V5.MigrationItemArray.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+        V5.MigrationItemArray.Mutable root = builder.RootElement;
+
+        root.RemoveRange(0, 2);
+        Assert.Equal(1, root.GetArrayLength());
+        Assert.Equal(3, (int)root[0].Id);
+    }
+
+    [Fact]
+    public void V4_Replace()
+    {
+        // V4: functional Replace(old, new) — finds first matching item and replaces it.
+        V4.MigrationItemArray v4 = V4.MigrationItemArray.Parse(ArrayJson);
+        V4.MigrationItemArray.RequiredId oldItem = v4[1];
+        V4.MigrationItemArray.RequiredId newItem = V4.MigrationItemArray.RequiredId.Parse(NewItemJson);
+        V4.MigrationItemArray updated = v4.Replace(oldItem, newItem);
+        Assert.Equal(3, updated.GetArrayLength());
+        Assert.Equal(99, (int)updated[1].Id);
+    }
+
+    [Fact]
+    public void V4_Replace_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationItemArray> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
+        V4.MigrationItemArray v4 = parsedV4.Instance;
+        V4.MigrationItemArray.RequiredId oldItem = v4[1];
+        using Corvus.Json.ParsedValue<V4.MigrationItemArray.RequiredId> parsedNew = Corvus.Json.ParsedValue<V4.MigrationItemArray.RequiredId>.Parse(NewItemJson);
+        V4.MigrationItemArray updated = v4.Replace(oldItem, parsedNew.Instance);
+        Assert.Equal(3, updated.GetArrayLength());
+        Assert.Equal(99, (int)updated[1].Id);
+    }
+
+    [Fact]
+    public void V5_Replace()
+    {
+        // V5: no direct Replace method — find the item index then SetItem.
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using ParsedJsonDocument<V5.MigrationItemArray> doc = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray>.Parse(ArrayJson);
+        using JsonDocumentBuilder<V5.MigrationItemArray.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+        V5.MigrationItemArray.Mutable root = builder.RootElement;
+
+        using ParsedJsonDocument<V5.MigrationItemArray.RequiredId> newItemDoc = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray.RequiredId>.Parse(NewItemJson);
+
+        // Find the item with id==2 and replace it
+        int indexToReplace = -1;
+        for (int i = 0; i < root.GetArrayLength(); i++)
+        {
+            if ((int)root[i].Id == 2)
+            {
+                indexToReplace = i;
+                break;
+            }
+        }
+
+        Assert.True(indexToReplace >= 0);
+        root.SetItem(indexToReplace, newItemDoc.RootElement);
+        Assert.Equal(3, root.GetArrayLength());
+        Assert.Equal(99, (int)root[1].Id);
+    }
+
+    [Fact]
+    public void V4_AddRange()
+    {
+        // V4: functional AddRange(IEnumerable) appends multiple items.
+        V4.MigrationItemArray v4 = V4.MigrationItemArray.Parse(ArrayJson);
+        V4.MigrationItemArray.RequiredId newItem = V4.MigrationItemArray.RequiredId.Parse(NewItemJson);
+        V4.MigrationItemArray updated = v4.AddRange(new[] { newItem, newItem });
+        Assert.Equal(5, updated.GetArrayLength());
+        Assert.Equal(99, (int)updated[3].Id);
+        Assert.Equal(99, (int)updated[4].Id);
+    }
+
+    [Fact]
+    public void V4_AddRange_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationItemArray> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
+        V4.MigrationItemArray v4 = parsedV4.Instance;
+        using Corvus.Json.ParsedValue<V4.MigrationItemArray.RequiredId> parsedNew = Corvus.Json.ParsedValue<V4.MigrationItemArray.RequiredId>.Parse(NewItemJson);
+        V4.MigrationItemArray updated = v4.AddRange(new[] { parsedNew.Instance, parsedNew.Instance });
+        Assert.Equal(5, updated.GetArrayLength());
+    }
+
+    [Fact]
+    public void V4_InsertRange()
+    {
+        // V4: functional InsertRange(index, items) inserts multiple items at position.
+        V4.MigrationItemArray v4 = V4.MigrationItemArray.Parse(ArrayJson);
+        V4.MigrationItemArray.RequiredId newItem = V4.MigrationItemArray.RequiredId.Parse(NewItemJson);
+        V4.MigrationItemArray updated = v4.InsertRange(1, new[] { newItem, newItem });
+        Assert.Equal(5, updated.GetArrayLength());
+        Assert.Equal(99, (int)updated[1].Id);
+        Assert.Equal(99, (int)updated[2].Id);
+        Assert.Equal(2, (int)updated[3].Id);
+    }
+
+    [Fact]
+    public void V4_InsertRange_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationItemArray> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
+        V4.MigrationItemArray v4 = parsedV4.Instance;
+        using Corvus.Json.ParsedValue<V4.MigrationItemArray.RequiredId> parsedNew = Corvus.Json.ParsedValue<V4.MigrationItemArray.RequiredId>.Parse(NewItemJson);
+        V4.MigrationItemArray updated = v4.InsertRange(1, new[] { parsedNew.Instance, parsedNew.Instance });
+        Assert.Equal(5, updated.GetArrayLength());
+        Assert.Equal(99, (int)updated[1].Id);
+    }
+
+    [Fact]
+    public void V4_FromItems()
+    {
+        // V4: static FromItems(...) creates array from individual items.
+        V4.MigrationItemArray.RequiredId item1 = V4.MigrationItemArray.RequiredId.Parse("""{"id":1,"label":"first"}""");
+        V4.MigrationItemArray.RequiredId item2 = V4.MigrationItemArray.RequiredId.Parse("""{"id":2,"label":"second"}""");
+        V4.MigrationItemArray v4 = V4.MigrationItemArray.FromItems(item1, item2);
+        Assert.Equal(2, v4.GetArrayLength());
+        Assert.Equal(1, (int)v4[0].Id);
+        Assert.Equal(2, (int)v4[1].Id);
+    }
+
+    [Fact]
+    public void V5_CreateFromItems()
+    {
+        // V5: create an empty array builder, then AddItem — equivalent to V4 FromItems.
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using JsonDocumentBuilder<V5.MigrationItemArray.Mutable> builder = V5.MigrationItemArray.CreateBuilder(workspace);
+        V5.MigrationItemArray.Mutable root = builder.RootElement;
+
+        using ParsedJsonDocument<V5.MigrationItemArray.RequiredId> doc1 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray.RequiredId>.Parse("""{"id":1,"label":"first"}""");
+        using ParsedJsonDocument<V5.MigrationItemArray.RequiredId> doc2 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray.RequiredId>.Parse("""{"id":2,"label":"second"}""");
+        root.AddItem(doc1.RootElement);
+        root.AddItem(doc2.RootElement);
+
+        Assert.Equal(2, root.GetArrayLength());
+        Assert.Equal(1, (int)root[0].Id);
+        Assert.Equal(2, (int)root[1].Id);
+    }
 }

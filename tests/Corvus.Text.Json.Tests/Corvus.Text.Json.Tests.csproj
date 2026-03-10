@@ -72,7 +72,9 @@
     <Compile Include="BigNumber\BigNumberComparisonTests.cs" />
     <Compile Include="BigNumber\BigNumberConversionTests.cs" />
     <Compile Include="MigrationEquivalenceTests\ArrayEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\CreateBuilderEquivalenceTests.cs" />
     <Compile Include="MigrationEquivalenceTests\DefaultValueEquivalenceTests.cs" />
+    <Compile Include="MigrationEquivalenceTests\EqualityEquivalenceTests.cs" />
     <Compile Include="MigrationEquivalenceTests\EnumConstEquivalenceTests.cs" />
     <Compile Include="MigrationEquivalenceTests\MutationEquivalenceTests.cs" />
     <Compile Include="MigrationEquivalenceTests\NumericArrayEquivalenceTests.cs" />

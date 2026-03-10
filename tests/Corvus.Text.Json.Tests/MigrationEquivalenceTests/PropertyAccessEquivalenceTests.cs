@@ -349,6 +349,116 @@ public class PropertyAccessEquivalenceTests
         Assert.Equal(v4.Count, v5.GetPropertyCount());
     }
 
+    [Fact]
+    public void V4_HasProperty_Exists()
+    {
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse(PersonJson);
+        Assert.True(v4.HasProperty("name"));
+        Assert.True(v4.HasProperty("age"));
+    }
+
+    [Fact]
+    public void V4_HasProperty_Exists_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        Assert.True(v4.HasProperty("name"));
+        Assert.True(v4.HasProperty("age"));
+    }
+
+    [Fact]
+    public void V5_HasProperty_ViaTryGetProperty()
+    {
+        // V5 does not have HasProperty() — use TryGetProperty() instead.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetProperty("name", out _));
+        Assert.True(v5.TryGetProperty("age", out _));
+    }
+
+    [Fact]
+    public void V4_HasProperty_Missing()
+    {
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse(MinimalJson);
+        Assert.False(v4.HasProperty("email"));
+        Assert.False(v4.HasProperty("nonexistent"));
+    }
+
+    [Fact]
+    public void V4_HasProperty_Missing_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(MinimalJson);
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        Assert.False(v4.HasProperty("email"));
+        Assert.False(v4.HasProperty("nonexistent"));
+    }
+
+    [Fact]
+    public void V5_HasProperty_Missing_ViaTryGetProperty()
+    {
+        // V5: TryGetProperty returns false for missing properties — equivalent to V4 HasProperty().
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(MinimalJson);
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        Assert.False(v5.TryGetProperty("email", out _));
+        Assert.False(v5.TryGetProperty("nonexistent", out _));
+    }
+
+    [Fact]
+    public void V4_HasProperties()
+    {
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse(PersonJson);
+        Assert.True(v4.HasProperties());
+    }
+
+    [Fact]
+    public void V4_HasProperties_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        Assert.True(v4.HasProperties());
+    }
+
+    [Fact]
+    public void V5_HasProperties_ViaPropertyCount()
+    {
+        // V5 does not have HasProperties() — use GetPropertyCount() > 0 instead.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        Assert.True(v5.GetPropertyCount() > 0);
+    }
+
+    [Fact]
+    public void V4_AsAny()
+    {
+        // V4: AsAny returns a JsonAny (the V4 "any" type).
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse(PersonJson);
+        JsonAny any = v4.AsAny;
+        Assert.Equal(System.Text.Json.JsonValueKind.Object, any.ValueKind);
+    }
+
+    [Fact]
+    public void V4_AsAny_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        JsonAny any = v4.AsAny;
+        Assert.Equal(System.Text.Json.JsonValueKind.Object, any.ValueKind);
+    }
+
+    [Fact]
+    public void V5_AsJsonElement()
+    {
+        // V5: implicit operator JsonElement (V5's JsonElement = V4's JsonAny).
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        Corvus.Text.Json.JsonElement element = v5;
+        Assert.Equal(Corvus.Text.Json.JsonValueKind.Object, element.ValueKind);
+    }
+
 #if NET
     [Fact]
     public void V5_TryGetProperty_Utf8()

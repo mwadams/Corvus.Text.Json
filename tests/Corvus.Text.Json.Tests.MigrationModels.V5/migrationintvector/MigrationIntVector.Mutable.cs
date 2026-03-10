@@ -885,6 +885,23 @@ int item in tensor)                {
     }
 
     /// <summary>
+    /// Creates an empty mutable document builder.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An empty mutable document builder.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateBuilder(
+        JsonWorkspace workspace, int initialCapacity = 5)
+    {
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        cvb.StartArray();
+        cvb.EndArray();
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
     /// Creates and initializes a mutable document from this instance.
     /// </summary>
     /// <param name="workspace">The JSON workspace.</param>

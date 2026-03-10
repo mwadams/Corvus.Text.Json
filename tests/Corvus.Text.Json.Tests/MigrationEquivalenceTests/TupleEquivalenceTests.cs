@@ -150,4 +150,61 @@ public class TupleEquivalenceTests
         Assert.Equal((int)v4.Item2, (int)v5.Item2);
         Assert.Equal((bool)v4.Item3, (bool)v5.Item3);
     }
+
+    [Fact]
+    public void V4_TupleCreate()
+    {
+        // V4: static Create(item1, item2, item3) builds a tuple.
+        V4.MigrationTuple v4 = V4.MigrationTuple.Create(
+            (Corvus.Json.JsonString)"hello",
+            V4.MigrationTuple.PrefixItems1Entity.Parse("42"),
+            (Corvus.Json.JsonBoolean)true);
+        Assert.Equal("hello", (string)v4.Item1);
+        Assert.Equal(42, (int)v4.Item2);
+        Assert.True((bool)v4.Item3);
+    }
+
+    [Fact]
+    public void V5_TupleCreate()
+    {
+        // V5: workspace builder — equivalent to V4 Create.
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using JsonDocumentBuilder<V5.MigrationTuple.Mutable> builder =
+            V5.MigrationTuple.CreateBuilder(
+                workspace,
+                V5.MigrationTuple.Build(
+                    static (ref b) => b.CreateTuple(
+                        item1: "hello",
+                        item2: 42,
+                        item3: true)));
+
+        V5.MigrationTuple result = builder.RootElement;
+        Assert.True(result.Item1.TryGetValue(out string? s));
+        Assert.Equal("hello", s);
+        Assert.Equal(42, (int)result.Item2);
+        Assert.True((bool)result.Item3);
+    }
+
+    [Fact]
+    public void V4_TupleToValueTuple()
+    {
+        // V4: implicit conversion to C# ValueTuple — explicit cast then deconstruct.
+        V4.MigrationTuple v4 = V4.MigrationTuple.Parse(TupleJson);
+        (Corvus.Json.JsonString first, V4.MigrationTuple.PrefixItems1Entity second, Corvus.Json.JsonBoolean third) =
+            ((Corvus.Json.JsonString, V4.MigrationTuple.PrefixItems1Entity, Corvus.Json.JsonBoolean))v4;
+        Assert.Equal("hello", (string)first);
+        Assert.Equal(42, (int)second);
+        Assert.True((bool)third);
+    }
+
+    [Fact]
+    public void V5_TupleDestructure_ViaIndexer()
+    {
+        // V5 has no ValueTuple operator — access via typed properties instead.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
+        V5.MigrationTuple v5 = parsedV5.RootElement;
+        Assert.Equal("hello", (string)v5.Item1);
+        Assert.Equal(42, (int)v5.Item2);
+        Assert.True((bool)v5.Item3);
+    }
 }

@@ -537,4 +537,261 @@ public class UnionEquivalenceTests
         Assert.True(v5.TryGetValue(out string? stringResult));
         Assert.Equal("hello", stringResult);
     }
+
+    [Fact]
+    public void V4_IsJsonString()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("\"hello\"");
+        Assert.True(v4.IsJsonString);
+        Assert.False(v4.IsJsonBoolean);
+    }
+
+    [Fact]
+    public void V4_IsJsonString_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.IsJsonString);
+        Assert.False(v4.IsJsonBoolean);
+    }
+
+    [Fact]
+    public void V5_IsStringVariant_ViaValueKind()
+    {
+        // V5 does not have IsJsonString — use ValueKind check instead.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.Equal(Corvus.Text.Json.JsonValueKind.String, v5.ValueKind);
+    }
+
+    [Fact]
+    public void V4_IsJsonBoolean()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("true");
+        Assert.True(v4.IsJsonBoolean);
+        Assert.False(v4.IsJsonString);
+    }
+
+    [Fact]
+    public void V4_IsJsonBoolean_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.IsJsonBoolean);
+        Assert.False(v4.IsJsonString);
+    }
+
+    [Fact]
+    public void V5_IsBoolVariant_ViaValueKind()
+    {
+        // V5 does not have IsJsonBoolean — use ValueKind check instead.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.Equal(Corvus.Text.Json.JsonValueKind.True, v5.ValueKind);
+    }
+
+    [Fact]
+    public void V4_TryGetAsJsonString()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("\"hello\"");
+        Assert.True(v4.TryGetAsJsonString(out Corvus.Json.JsonString result));
+        Assert.Equal("hello", (string)result);
+    }
+
+    [Fact]
+    public void V4_TryGetAsJsonString_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetAsJsonString(out Corvus.Json.JsonString result));
+        Assert.Equal("hello", (string)result);
+    }
+
+    [Fact]
+    public void V5_TryGetAsOneOf0Entity_StringResult()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetAsOneOf0Entity(out V5.MigrationUnion.OneOf0Entity result));
+        Assert.Equal("hello", (string)result);
+    }
+
+    [Fact]
+    public void V4_TryGetAsJsonBoolean()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("true");
+        Assert.True(v4.TryGetAsJsonBoolean(out Corvus.Json.JsonBoolean result));
+        Assert.True((bool)result);
+    }
+
+    [Fact]
+    public void V4_TryGetAsJsonBoolean_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetAsJsonBoolean(out Corvus.Json.JsonBoolean result));
+        Assert.True((bool)result);
+    }
+
+    [Fact]
+    public void V5_TryGetAsOneOf2Entity_BooleanResult()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetAsOneOf2Entity(out V5.MigrationUnion.OneOf2Entity result));
+        Assert.True((bool)result);
+    }
+
+    [Fact]
+    public void V4_TryGetAsOneOf1Entity()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("42");
+        Assert.True(v4.TryGetAsOneOf1Entity(out V4.MigrationUnion.OneOf1Entity result));
+        Assert.Equal(System.Text.Json.JsonValueKind.Number, result.ValueKind);
+    }
+
+    [Fact]
+    public void V4_TryGetAsOneOf1Entity_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("42");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetAsOneOf1Entity(out V4.MigrationUnion.OneOf1Entity result));
+        Assert.Equal(System.Text.Json.JsonValueKind.Number, result.ValueKind);
+    }
+
+    [Fact]
+    public void V5_TryGetAsOneOf1Entity_NumberResult()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetAsOneOf1Entity(out V5.MigrationUnion.OneOf1Entity result));
+        Assert.Equal(Corvus.Text.Json.JsonValueKind.Number, result.ValueKind);
+    }
+
+    [Fact]
+    public void V4_GetString()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("\"hello\"");
+        string? value = v4.GetString();
+        Assert.Equal("hello", value);
+    }
+
+    [Fact]
+    public void V4_GetString_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        string? value = v4.GetString();
+        Assert.Equal("hello", value);
+    }
+
+    [Fact]
+    public void V5_GetString_ViaExplicitCast()
+    {
+        // V5: use explicit cast to extract string — equivalent to V4 GetString().
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        string value = (string)v5;
+        Assert.Equal("hello", value);
+    }
+
+    [Fact]
+    public void V4_GetBoolean()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("true");
+        bool? value = v4.GetBoolean();
+        Assert.True(value);
+    }
+
+    [Fact]
+    public void V4_GetBoolean_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        bool? value = v4.GetBoolean();
+        Assert.True(value);
+    }
+
+    [Fact]
+    public void V5_GetBoolean_ViaExplicitCast()
+    {
+        // V5: use explicit cast to extract bool — equivalent to V4 GetBoolean().
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        bool value = (bool)v5;
+        Assert.True(value);
+    }
+
+    [Fact]
+    public void V4_TryGetString()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("\"hello\"");
+        Assert.True(v4.TryGetString(out string? value));
+        Assert.Equal("hello", value);
+    }
+
+    [Fact]
+    public void V4_TryGetString_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetString(out string? value));
+        Assert.Equal("hello", value);
+    }
+
+    [Fact]
+    public void V4_TryGetBoolean()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("true");
+        Assert.True(v4.TryGetBoolean(out bool result));
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void V4_TryGetBoolean_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetBoolean(out bool result));
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void V4_EqualsString()
+    {
+        V4.MigrationUnion v4 = V4.MigrationUnion.Parse("\"hello\"");
+        Assert.True(v4.EqualsString("hello"));
+        Assert.False(v4.EqualsString("world"));
+    }
+
+    [Fact]
+    public void V4_EqualsString_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.EqualsString("hello"));
+        Assert.False(v4.EqualsString("world"));
+    }
+
+    [Fact]
+    public void V5_EqualsString_ViaEquals()
+    {
+        // V5: use Equals<T>() for string comparison — equivalent to V4 EqualsString().
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5A = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5B = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5C = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"world\"");
+
+        Assert.True(parsedV5A.RootElement.Equals(parsedV5B.RootElement));
+        Assert.False(parsedV5A.RootElement.Equals(parsedV5C.RootElement));
+    }
 }

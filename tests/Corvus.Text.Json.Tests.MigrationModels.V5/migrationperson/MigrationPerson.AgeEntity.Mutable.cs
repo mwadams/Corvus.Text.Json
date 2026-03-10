@@ -68,6 +68,21 @@ public readonly partial struct MigrationPerson
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static implicit operator int(Mutable value) => value._parent.TryGetValue(value._idx, out int result) ? result : throw new FormatException();
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static explicit operator long(Mutable value) => value._parent.TryGetValue(value._idx, out long result) ? result : throw new FormatException();
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static explicit operator double(Mutable value) => value._parent.TryGetValue(value._idx, out double result) ? result : throw new FormatException();
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static explicit operator Corvus.Numerics.BigNumber(Mutable value) => value._parent.TryGetValue(value._idx, out Corvus.Numerics.BigNumber result) ? result : throw new FormatException();
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static explicit operator System.Numerics.BigInteger(Mutable value) => value._parent.TryGetValue(value._idx, out System.Numerics.BigInteger result) ? result : throw new FormatException();
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static explicit operator decimal(Mutable value) => value._parent.TryGetValue(value._idx, out decimal result) ? result : throw new FormatException();
+
             /// <summary>
             /// Operator ==.
             /// </summary>

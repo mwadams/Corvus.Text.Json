@@ -98,7 +98,7 @@ public class MutationEquivalenceTests
         using JsonDocumentBuilder<V5.MigrationPerson.Mutable> builder =
             V5.MigrationPerson.CreateBuilder(
                 workspace,
-                (ref V5.MigrationPerson.Builder b) => b.Create(
+                (ref b) => b.Create(
                     name: "Alice",
                     age: 30,
                     email: "alice@test.com"));
@@ -123,7 +123,7 @@ public class MutationEquivalenceTests
         using JsonDocumentBuilder<V5.MigrationPerson.Mutable> builder =
             V5.MigrationPerson.CreateBuilder(
                 workspace,
-                (ref V5.MigrationPerson.Builder b) => b.Create(
+                (ref b) => b.Create(
                     name: "Alice",
                     age: 30,
                     email: "alice@test.com"));
@@ -203,7 +203,7 @@ public class MutationEquivalenceTests
         using JsonDocumentBuilder<V5.MigrationPerson.Mutable> builder =
             V5.MigrationPerson.CreateBuilder(
                 workspace,
-                static (ref V5.MigrationPerson.Builder b) => b.Create(
+                static (ref b) => b.Create(
                     name: "Jo",
                     age: 30));
 
@@ -303,7 +303,7 @@ public class MutationEquivalenceTests
         using JsonDocumentBuilder<V5.MigrationPerson.Mutable> builder =
             V5.MigrationPerson.CreateBuilder(
                 workspace,
-                static (ref V5.MigrationPerson.Builder b) => b.Create(
+                static (ref b) => b.Create(
                     name: "Alice",
                     age: 30));
 
@@ -398,5 +398,73 @@ public class MutationEquivalenceTests
         Assert.Equal((string)v4Updated.Name, (string)root.Name);
         Assert.Equal((string)v4Updated.Address.City, (string)root.Address.City);
         Assert.Equal((string)v4Updated.Address.Street, (string)root.Address.Street);
+    }
+
+    [Fact]
+    public void V4_RemovePropertyByName()
+    {
+        // V4: functional RemoveProperty(string) returns new object without that property.
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse(PersonJson);
+        V4.MigrationPerson updated = v4.RemoveProperty("email");
+        Assert.Equal(System.Text.Json.JsonValueKind.Undefined, updated.Email.ValueKind);
+        Assert.Equal("Jo", (string)updated.Name);
+    }
+
+    [Fact]
+    public void V4_RemovePropertyByName_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        V4.MigrationPerson updated = v4.RemoveProperty("email");
+        Assert.Equal(System.Text.Json.JsonValueKind.Undefined, updated.Email.ValueKind);
+        Assert.Equal("Jo", (string)updated.Name);
+    }
+
+    [Fact]
+    public void V5_RemovePropertyByName()
+    {
+        // V5: imperative RemoveProperty(string) on the mutable type.
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using ParsedJsonDocument<V5.MigrationPerson> doc = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using JsonDocumentBuilder<V5.MigrationPerson.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+        V5.MigrationPerson.Mutable root = builder.RootElement;
+
+        bool removed = root.RemoveProperty("email");
+        Assert.True(removed);
+        Assert.True(root.Email.IsUndefined());
+        Assert.Equal("Jo", (string)root.Name);
+    }
+
+    [Fact]
+    public void V4_SetPropertyByName()
+    {
+        // V4: functional SetProperty<TValue>(name, value) — sets or adds a property by name.
+        V4.MigrationPerson v4 = V4.MigrationPerson.Parse(PersonJson);
+        V4.MigrationPerson updated = v4.SetProperty("email", Corvus.Json.JsonAny.Parse("\"new@test.com\""));
+        Assert.Equal("new@test.com", (string)updated.Email);
+    }
+
+    [Fact]
+    public void V4_SetPropertyByName_ParsedValue()
+    {
+        // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        V4.MigrationPerson updated = v4.SetProperty("email", Corvus.Json.JsonAny.Parse("\"new@test.com\""));
+        Assert.Equal("new@test.com", (string)updated.Email);
+    }
+
+    [Fact]
+    public void V5_SetPropertyByName()
+    {
+        // V5: imperative SetProperty(string, value) on the mutable type.
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using ParsedJsonDocument<V5.MigrationPerson> doc = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using JsonDocumentBuilder<V5.MigrationPerson.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+        V5.MigrationPerson.Mutable root = builder.RootElement;
+
+        root.SetProperty("email", "new@test.com");
+        Assert.Equal("new@test.com", (string)root.Email);
     }
 }

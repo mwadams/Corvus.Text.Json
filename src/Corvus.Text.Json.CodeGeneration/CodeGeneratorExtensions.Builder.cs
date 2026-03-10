@@ -1273,6 +1273,35 @@ internal static partial class CodeGeneratorExtensions
         bool isArray = (core & CoreTypes.Array) != 0;
         bool isObject = (core & CoreTypes.Object) != 0;
 
+        // Emit parameterless CreateBuilder / CreateArrayBuilder / CreateObjectBuilder
+        // that creates an empty array or object builder.
+        // We do not emit this for tuple types (which have fixed prefix items)
+        // or for object types with required properties, as an empty instance
+        // would not be valid.
+        bool isTuple = typeDeclaration.IsTuple();
+        bool hasRequiredProperties = typeDeclaration.PropertyDeclarations
+            .Any(p => p.RequiredOrOptional != RequiredOrOptional.Optional);
+
+        if (isArray && isObject)
+        {
+            if (!isTuple)
+            {
+                AppendEmptyCreateBuilder(generator, initialCapacity, "CreateArrayBuilder", "StartArray", "EndArray");
+            }
+            if (!hasRequiredProperties)
+            {
+                AppendEmptyCreateBuilder(generator, initialCapacity, "CreateObjectBuilder", "StartObject", "EndObject");
+            }
+        }
+        else if (isArray && !isTuple)
+        {
+            AppendEmptyCreateBuilder(generator, initialCapacity, "CreateBuilder", "StartArray", "EndArray");
+        }
+        else if (isObject && !hasRequiredProperties)
+        {
+            AppendEmptyCreateBuilder(generator, initialCapacity, "CreateBuilder", "StartObject", "EndObject");
+        }
+
         bool hasFallbackArrayType =
             typeDeclaration.ExplicitArrayItemsType() is not null;
 
@@ -1391,6 +1420,31 @@ internal static partial class CodeGeneratorExtensions
                         var source = new {{sourceClassName}}<TContext>(context, value);
                         source.AddAsItem(ref cvb);
                         Debug.Assert(cvb.MemberCount == 1);
+                        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+                        return documentBuilder;
+                    }
+                    """);
+        }
+
+        static void AppendEmptyCreateBuilder(CodeGenerator generator, int initialCapacity, string methodName, string startMethod, string endMethod)
+        {
+            generator
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    $$"""
+                    /// <summary>
+                    /// Creates an empty mutable document builder.
+                    /// </summary>
+                    /// <param name="workspace">The JSON workspace.</param>
+                    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+                    /// <returns>An empty mutable document builder.</returns>
+                    public static JsonDocumentBuilder<{{generator.MutableClassName()}}> {{methodName}}(
+                        JsonWorkspace workspace, int initialCapacity = {{initialCapacity}})
+                    {
+                        JsonDocumentBuilder<{{generator.MutableClassName()}}> documentBuilder = workspace.CreateBuilder<{{generator.MutableClassName()}}>(-1);
+                        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+                        cvb.{{startMethod}}();
+                        cvb.{{endMethod}}();
                         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
                         return documentBuilder;
                     }
