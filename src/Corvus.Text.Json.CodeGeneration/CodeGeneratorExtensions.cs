@@ -1718,7 +1718,7 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
-        return generator
+        generator
             .AppendSeparatorLine()
             .AppendBlockIndent(
                 """
@@ -1735,6 +1735,29 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("return JsonElement.From(instance);")
             .PopIndent()
             .AppendLineIndent("}");
+
+        if (!forMutable)
+        {
+            generator
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    """
+                /// <summary>
+                /// Converts the instance from a JsonElement.
+                /// </summary>
+                /// <param name="value">The instance of this type as a JsonElement.</param>
+                /// <returns>An instance of the type, initialized from the <see cref="JsonElement"/>.</returns>
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                """)
+                .AppendLineIndent("public static implicit operator ", typeDeclaration.DotnetTypeName(), "(JsonElement instance)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("return ", typeDeclaration.DotnetTypeName(), ".From(instance);")
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
+
+        return generator;
     }
 
     /// <summary>

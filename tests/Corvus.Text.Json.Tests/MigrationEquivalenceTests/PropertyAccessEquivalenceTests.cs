@@ -487,4 +487,66 @@ public class PropertyAccessEquivalenceTests
         Assert.Equal(Corvus.Text.Json.JsonValueKind.String, nameEl.ValueKind);
     }
 #endif
+
+    [Fact]
+    public void V4_GetString_OnStringProperty()
+    {
+        // V4: GetString() returns the string value from a string-typed property.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        V4.MigrationPerson v4 = parsedV4.Instance;
+        string? name = v4.Name.GetString();
+        Assert.Equal("Jo", name);
+    }
+
+    [Fact]
+    public void V5_GetString_OnStringProperty()
+    {
+        // V5: GetString() is also available directly on the string-typed property.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        string? name = v5.Name.GetString();
+        Assert.Equal("Jo", name);
+    }
+
+    [Fact]
+    public void V5_GetUtf8String_OnStringProperty()
+    {
+        // V5: GetUtf8String() returns the unescaped UTF-8 bytes without allocating a string.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        using Corvus.Text.Json.UnescapedUtf8JsonString utf8 = v5.Name.GetUtf8String();
+        Assert.True(utf8.Span.SequenceEqual("Jo"u8));
+    }
+
+    [Fact]
+    public void V5_GetUtf8String_MatchesGetString()
+    {
+        // V5: GetUtf8String().Span transcoded to string matches GetString().
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        string? fromGetString = v5.Name.GetString();
+        using Corvus.Text.Json.UnescapedUtf8JsonString utf8 = v5.Name.GetUtf8String();
+        string fromUtf8 = JsonReaderHelper.TranscodeHelper(utf8.Span);
+        Assert.Equal(fromGetString, fromUtf8);
+    }
+
+    [Fact]
+    public void BothEngines_GetString_SameResult()
+    {
+        // Both V4 and V5 GetString() on a string property produce the same value.
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        Assert.Equal(parsedV4.Instance.Name.GetString(), parsedV5.RootElement.Name.GetString());
+    }
+
+    [Fact]
+    public void V5_GetUtf8String_WithEscapedCharacters()
+    {
+        // Verifies that GetUtf8String() correctly unescapes JSON string escapes.
+        string json = """{"name":"Jo\u0026Co","age":30}""";
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(json);
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+        using Corvus.Text.Json.UnescapedUtf8JsonString utf8 = v5.Name.GetUtf8String();
+        Assert.True(utf8.Span.SequenceEqual("Jo&Co"u8));
+    }
 }

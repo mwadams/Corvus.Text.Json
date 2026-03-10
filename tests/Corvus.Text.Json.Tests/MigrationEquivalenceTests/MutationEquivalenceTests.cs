@@ -79,11 +79,11 @@ public class MutationEquivalenceTests
     [Fact]
     public void V4_CreateFromScratch()
     {
-        // V4: Create from scratch using typed entity parameters.
+        // V4: Create from scratch using implicit conversions from primitives.
         V4.MigrationPerson v4 = V4.MigrationPerson.Create(
             name: "Alice",
             age: 30,
-            email: Corvus.Json.JsonEmail.Parse("\"alice@test.com\""));
+            email: "alice@test.com");
 
         Assert.Equal("Alice", (string)v4.Name);
         Assert.Equal(30, (int)v4.Age);
@@ -112,11 +112,11 @@ public class MutationEquivalenceTests
     [Fact]
     public void BothEngines_CreateFromScratch_SameResult()
     {
-        // V4: Create from scratch with typed entity parameters
+        // V4: Create from scratch with implicit conversions from primitives
         V4.MigrationPerson v4 = V4.MigrationPerson.Create(
             name: "Alice",
             age: 30,
-            email: Corvus.Json.JsonEmail.Parse("\"alice@test.com\""));
+            email: "alice@test.com");
 
         // V5: Create from scratch using builder with implicit conversions
         using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
@@ -217,7 +217,7 @@ public class MutationEquivalenceTests
     {
         V4.MigrationPerson v4 = V4.MigrationPerson.Parse("""{"name":"Jo","age":30}""");
         // V4: WithEmail() sets the optional property — equivalent to V5 SetEmail().
-        V4.MigrationPerson updated = v4.WithEmail(Corvus.Json.JsonEmail.Parse("\"test@test.com\""));
+        V4.MigrationPerson updated = v4.WithEmail("test@test.com");
 
         Assert.Equal(System.Text.Json.JsonValueKind.String, updated.Email.ValueKind);
     }
@@ -229,7 +229,7 @@ public class MutationEquivalenceTests
         using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"name":"Jo","age":30}""");
         V4.MigrationPerson v4 = parsedV4.Instance;
         // V4: WithEmail() sets the optional property — equivalent to V5 SetEmail().
-        V4.MigrationPerson updated = v4.WithEmail(Corvus.Json.JsonEmail.Parse("\"test@test.com\""));
+        V4.MigrationPerson updated = v4.WithEmail("test@test.com");
 
         Assert.Equal(System.Text.Json.JsonValueKind.String, updated.Email.ValueKind);
     }

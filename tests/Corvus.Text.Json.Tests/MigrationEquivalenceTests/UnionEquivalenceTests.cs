@@ -794,4 +794,122 @@ public class UnionEquivalenceTests
         Assert.True(parsedV5A.RootElement.Equals(parsedV5B.RootElement));
         Assert.False(parsedV5A.RootElement.Equals(parsedV5C.RootElement));
     }
+
+    [Fact]
+    public void V4_CompositionAccessor_AsString()
+    {
+        // V4: composition accessor returns an intermediate well-known type, then cast to primitive.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Corvus.Json.JsonString asString = v4.AsString;
+        Assert.Equal("hello", (string)asString);
+    }
+
+    [Fact]
+    public void V4_CompositionAccessor_AsNumber()
+    {
+        // V4: AsNumber returns a JsonNumber; cast to int for the primitive value.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("42");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Corvus.Json.JsonNumber asNumber = v4.AsNumber;
+        Assert.Equal(42, (int)asNumber);
+    }
+
+    [Fact]
+    public void V4_CompositionAccessor_AsBoolean()
+    {
+        // V4: AsBoolean returns a JsonBoolean; cast to bool for the primitive value.
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Corvus.Json.JsonBoolean asBool = v4.AsBoolean;
+        Assert.True((bool)asBool);
+    }
+
+    [Fact]
+    public void V5_DirectValueAccess_String_TryGetValue()
+    {
+        // V5: TryGetValue(out string?) directly on the union type — no intermediate type needed.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetValue(out string? value));
+        Assert.Equal("hello", value);
+    }
+
+    [Fact]
+    public void V5_DirectValueAccess_String_GetString()
+    {
+        // V5: GetString() directly on the union type.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.Equal("hello", v5.GetString());
+    }
+
+    [Fact]
+    public void V5_DirectValueAccess_String_ExplicitCast()
+    {
+        // V5: explicit cast (string)v5 directly on the union type.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.Equal("hello", (string)v5);
+    }
+
+    [Fact]
+    public void V5_DirectValueAccess_Number_TryGetValue()
+    {
+        // V5: TryGetValue(out long) directly on the union type — no intermediate type needed.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetValue(out long value));
+        Assert.Equal(42L, value);
+    }
+
+    [Fact]
+    public void V5_DirectValueAccess_Number_ExplicitCastInt()
+    {
+        // V5: explicit cast (int)v5 directly on the union type.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.Equal(42, (int)v5);
+    }
+
+    [Fact]
+    public void V5_DirectValueAccess_Boolean_TryGetValue()
+    {
+        // V5: TryGetValue(out bool) directly on the union type — no intermediate type needed.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetValue(out bool value));
+        Assert.True(value);
+    }
+
+    [Fact]
+    public void V5_DirectValueAccess_Boolean_ExplicitCast()
+    {
+        // V5: explicit cast (bool)v5 directly on the union type.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
+        V5.MigrationUnion v5 = parsedV5.RootElement;
+        Assert.True((bool)v5);
+    }
+
+    [Fact]
+    public void BothEngines_DirectValueAccess_SameResults()
+    {
+        // V4 uses composition accessors (AsString/AsNumber/AsBoolean), V5 accesses values directly.
+        // Both produce the same primitive results.
+
+        // String
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4Str = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5Str = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
+        Assert.Equal((string)parsedV4Str.Instance.AsString, (string)parsedV5Str.RootElement);
+
+        // Number
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4Num = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("42");
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5Num = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
+        Assert.Equal((int)parsedV4Num.Instance.AsNumber, (int)parsedV5Num.RootElement);
+
+        // Boolean
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4Bool = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5Bool = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
+        Assert.Equal((bool)parsedV4Bool.Instance.AsBoolean, (bool)parsedV5Bool.RootElement);
+    }
 }

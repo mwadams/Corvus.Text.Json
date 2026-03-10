@@ -6,6 +6,15 @@ This folder contains documentation and examples for using the Corvus.Text.Json l
 
 ### Documentation
 
+- **[MigratingFromV4ToV5.md](./MigratingFromV4ToV5.md)** - Guide for migrating from Corvus.Json (V4) to Corvus.Text.Json (V5):
+  - Overview of architectural changes
+  - Package and namespace mapping
+  - Parsing, property access, serialization, equality, validation
+  - Creating and mutating objects (functional → imperative)
+  - Arrays, numeric arrays, tuples, unions, enums
+  - Memory management (ParsedJsonDocument, JsonWorkspace)
+  - Quick reference table and migration checklist
+
 - **[ParsedJsonDocument.md](./ParsedJsonDocument.md)** - Guide for parsing and reading JSON documents:
   - Overview and key features
   - Basic usage examples
