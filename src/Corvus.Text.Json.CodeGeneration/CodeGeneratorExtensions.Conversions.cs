@@ -2,10 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 

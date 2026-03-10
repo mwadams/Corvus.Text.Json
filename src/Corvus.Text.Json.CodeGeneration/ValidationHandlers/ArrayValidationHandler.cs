@@ -7,7 +7,6 @@ using System.Linq;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.ValidationHandlers.ArrayChildHandlers;
 using Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 

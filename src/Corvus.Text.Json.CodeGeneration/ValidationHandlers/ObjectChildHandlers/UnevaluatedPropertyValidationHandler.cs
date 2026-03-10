@@ -1,14 +1,8 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Text.Json;
-using Corvus.Json;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
-using static System.Text.Json.JsonElement;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers;
 

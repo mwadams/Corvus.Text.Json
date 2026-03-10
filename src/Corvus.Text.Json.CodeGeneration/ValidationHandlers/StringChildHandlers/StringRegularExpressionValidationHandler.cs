@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 

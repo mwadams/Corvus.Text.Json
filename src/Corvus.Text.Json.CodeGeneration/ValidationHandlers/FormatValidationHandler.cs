@@ -2,14 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
-using Corvus.Json.CodeGeneration.Keywords;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;

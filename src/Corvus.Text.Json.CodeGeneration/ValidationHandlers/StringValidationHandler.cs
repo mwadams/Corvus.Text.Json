@@ -3,10 +3,8 @@
 // </copyright>
 
 using System.Collections.Generic;
-using System.Linq;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.ValidationHandlers.StringChildHandlers;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 

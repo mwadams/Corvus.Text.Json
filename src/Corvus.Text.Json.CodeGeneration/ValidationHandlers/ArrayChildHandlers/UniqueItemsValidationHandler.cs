@@ -2,9 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.ValidationHandlers.ArrayChildHandlers;
 using Microsoft.CodeAnalysis.CSharp;

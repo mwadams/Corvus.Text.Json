@@ -3,10 +3,8 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
-using Corvus.Text.Json.CodeGeneration.Internal;
 
 namespace Corvus.Text.Json.CodeGeneration;
 
