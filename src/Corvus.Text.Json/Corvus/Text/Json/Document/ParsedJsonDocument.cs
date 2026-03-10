@@ -422,7 +422,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         }
         else
         {
-            if (tokenType is not JsonTokenType.String or JsonTokenType.PropertyName)
+            if (tokenType is not (JsonTokenType.String or JsonTokenType.PropertyName))
             {
                 ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.String, tokenType);
             }
@@ -461,7 +461,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         }
         else
         {
-            if (tokenType is not JsonTokenType.String or JsonTokenType.PropertyName)
+            if (tokenType is not (JsonTokenType.String or JsonTokenType.PropertyName))
             {
                 ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.String, tokenType);
             }
