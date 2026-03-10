@@ -196,16 +196,51 @@ public class EnumConstEquivalenceTests
     [Fact]
     public void V5_NamedEnumValues()
     {
-        // V5: enum values are not exposed as named static properties.
-        // Verify by parsing and extracting the string value.
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedActive = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
-        Assert.Equal("active", (string)parsedActive.RootElement);
+        // V5: named static properties for each enum value in the EnumValues nested class.
+        Assert.Equal("active", (string)V5.MigrationStatusEnum.EnumValues.Active);
+        Assert.Equal("inactive", (string)V5.MigrationStatusEnum.EnumValues.Inactive);
+        Assert.Equal("pending", (string)V5.MigrationStatusEnum.EnumValues.Pending);
+    }
 
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedInactive = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"inactive\"");
-        Assert.Equal("inactive", (string)parsedInactive.RootElement);
+    [Fact]
+    public void BothEngines_NamedEnumValues_SameResult()
+    {
+        Assert.Equal(
+            (string)V4.MigrationStatusEnum.EnumValues.Active,
+            (string)V5.MigrationStatusEnum.EnumValues.Active);
+        Assert.Equal(
+            (string)V4.MigrationStatusEnum.EnumValues.Inactive,
+            (string)V5.MigrationStatusEnum.EnumValues.Inactive);
+        Assert.Equal(
+            (string)V4.MigrationStatusEnum.EnumValues.Pending,
+            (string)V5.MigrationStatusEnum.EnumValues.Pending);
+    }
 
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedPending = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"pending\"");
-        Assert.Equal("pending", (string)parsedPending.RootElement);
+    [Fact]
+    public void V4_EnumValuesUtf8()
+    {
+        // V4 Utf8 values include the JSON quotes.
+        Assert.True(V4.MigrationStatusEnum.EnumValues.ActiveUtf8.SequenceEqual("\"active\""u8));
+        Assert.True(V4.MigrationStatusEnum.EnumValues.InactiveUtf8.SequenceEqual("\"inactive\""u8));
+        Assert.True(V4.MigrationStatusEnum.EnumValues.PendingUtf8.SequenceEqual("\"pending\""u8));
+    }
+
+    [Fact]
+    public void V5_EnumValuesUtf8()
+    {
+        // V5 Utf8 values are the raw unquoted bytes.
+        Assert.True(V5.MigrationStatusEnum.EnumValues.ActiveUtf8.SequenceEqual("active"u8));
+        Assert.True(V5.MigrationStatusEnum.EnumValues.InactiveUtf8.SequenceEqual("inactive"u8));
+        Assert.True(V5.MigrationStatusEnum.EnumValues.PendingUtf8.SequenceEqual("pending"u8));
+    }
+
+    [Fact]
+    public void V5_EnumValues_AreValid()
+    {
+        // Each named enum value should pass schema validation.
+        Assert.True(V5.MigrationStatusEnum.EnumValues.Active.EvaluateSchema());
+        Assert.True(V5.MigrationStatusEnum.EnumValues.Inactive.EvaluateSchema());
+        Assert.True(V5.MigrationStatusEnum.EnumValues.Pending.EvaluateSchema());
     }
 
     [Fact]
@@ -305,6 +340,7 @@ public class EnumConstEquivalenceTests
     public void V5_ConstructFromString()
     {
         // V5: use Parse() to construct from a JSON string literal.
+        // Alternatively, use the named EnumValues constants.
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
         V5.MigrationStatusEnum v5 = parsedV5.RootElement;
         Assert.Equal("active", (string)v5);
@@ -338,5 +374,205 @@ public class EnumConstEquivalenceTests
 
         Assert.True(parsedV5A.RootElement.Equals(parsedV5B.RootElement));
         Assert.False(parsedV5A.RootElement.Equals(parsedV5C.RootElement));
+    }
+
+    [Fact]
+    public void V4_EnumMatchWithContext()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationStatusEnum> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationStatusEnum>.Parse("\"inactive\"");
+        V4.MigrationStatusEnum v4 = parsedV4.Instance;
+        string result = v4.Match(
+            42,
+            ctx => $"active-{ctx}",
+            ctx => $"inactive-{ctx}",
+            ctx => $"pending-{ctx}",
+            ctx => $"unknown-{ctx}");
+        Assert.Equal("inactive-42", result);
+    }
+
+    [Fact]
+    public void V5_EnumMatchWithContext()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"inactive\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+        string result = v5.Match(
+            42,
+            ctx => $"inactive-{ctx}",
+            ctx => $"inactive-{ctx}",
+            ctx => $"pending-{ctx}",
+            ctx => $"unknown-{ctx}");
+        Assert.Equal("inactive-42", result);
+    }
+
+    [Fact]
+    public void BothEngines_EnumMatchWithContext_SameResult()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationStatusEnum> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationStatusEnum>.Parse("\"pending\"");
+        V4.MigrationStatusEnum v4 = parsedV4.Instance;
+
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"pending\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+
+        string v4Result = v4.Match(
+            "ctx",
+            ctx => $"active-{ctx}",
+            ctx => $"inactive-{ctx}",
+            ctx => $"pending-{ctx}",
+            ctx => $"unknown-{ctx}");
+
+        string v5Result = v5.Match(
+            "ctx",
+            ctx => $"active-{ctx}",
+            ctx => $"inactive-{ctx}",
+            ctx => $"pending-{ctx}",
+            ctx => $"unknown-{ctx}");
+
+        Assert.Equal(v4Result, v5Result);
+    }
+
+    [Fact]
+    public void V5_EnumMatchDefault()
+    {
+        // An invalid enum value falls through to the default handler.
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"unknown\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+        string result = v5.Match(
+            () => "is-active",
+            () => "is-inactive",
+            () => "is-pending",
+            () => "default");
+        Assert.Equal("default", result);
+    }
+
+    [Fact]
+    public void V5_EnumValueEquals_WithNamedConstants()
+    {
+        // ValueEquals compares the raw byte value against a named enum constant.
+        V5.MigrationStatusEnum active = V5.MigrationStatusEnum.EnumValues.Active;
+        Assert.True(active.ValueEquals("active"u8));
+        Assert.False(active.ValueEquals("inactive"u8));
+    }
+
+    [Fact]
+    public void V5_EqualityOperator()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedA = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedB = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedC = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"inactive\"");
+
+        Assert.True(parsedA.RootElement == parsedB.RootElement);
+        Assert.False(parsedA.RootElement == parsedC.RootElement);
+        Assert.True(parsedA.RootElement != parsedC.RootElement);
+        Assert.False(parsedA.RootElement != parsedB.RootElement);
+    }
+
+    [Fact]
+    public void V5_EqualityOperator_WithNamedConstant()
+    {
+        V5.MigrationStatusEnum active = V5.MigrationStatusEnum.EnumValues.Active;
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsed = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
+
+        Assert.True(active == parsed.RootElement);
+        Assert.False(active != parsed.RootElement);
+    }
+
+    [Fact]
+    public void V5_WriteTo()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+
+        var buffer = new System.Buffers.ArrayBufferWriter<byte>();
+        using (Corvus.Text.Json.Utf8JsonWriter writer = Corvus.Text.Json.Utf8JsonWriterCache.RentWriter(default, buffer))
+        {
+            v5.WriteTo(writer);
+        }
+
+        string json = System.Text.Encoding.UTF8.GetString(buffer.WrittenMemory.ToArray());
+        Assert.Equal("\"active\"", json);
+    }
+
+    [Fact]
+    public void V5_ToString()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+        Assert.Equal("active", v5.ToString());
+    }
+
+    [Fact]
+    public void V5_From_JsonElement()
+    {
+        // V5: construct from another IJsonElement<T> using From<T>.
+        using Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement> parsedJson = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse("\"active\"");
+        V5.MigrationStatusEnum v5 = V5.MigrationStatusEnum.From(parsedJson.RootElement);
+        Assert.Equal("active", (string)v5);
+    }
+
+    [Fact]
+    public void BothEngines_ConstructFromString_SameResult()
+    {
+        // V4: implicit operator from string.
+        V4.MigrationStatusEnum v4 = (V4.MigrationStatusEnum)"active";
+
+        // V5: use named constant or parse.
+        V5.MigrationStatusEnum v5 = V5.MigrationStatusEnum.EnumValues.Active;
+
+        Assert.Equal((string)v4, (string)v5);
+    }
+
+    [Fact]
+    public void V5_TryGetValue_String()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetValue(out string? value));
+        Assert.Equal("active", value);
+    }
+
+    [Fact]
+    public void BothEngines_TryGetString_SameResult()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationStatusEnum> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationStatusEnum>.Parse("\"active\"");
+        V4.MigrationStatusEnum v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetString(out string? v4Value));
+
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"active\"");
+        V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+        Assert.True(v5.TryGetValue(out string? v5Value));
+
+        Assert.Equal(v4Value, v5Value);
+    }
+
+    [Fact]
+    public void V5_EnumMatch_AllValues()
+    {
+        // Verify Match routes correctly for each enum value.
+        string[] values = ["active", "inactive", "pending"];
+        string[] expected = ["is-active", "is-inactive", "is-pending"];
+
+        for (int i = 0; i < values.Length; i++)
+        {
+            using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse($"\"{values[i]}\"");
+            V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+            string result = v5.Match(
+                () => "is-active",
+                () => "is-inactive",
+                () => "is-pending",
+                () => "unknown");
+            Assert.Equal(expected[i], result);
+        }
+    }
+
+    [Fact]
+    public void V5_NamedEnumValues_MatchRoundTrip()
+    {
+        // Named enum values should match correctly through the Match method.
+        string result = V5.MigrationStatusEnum.EnumValues.Active.Match(
+            () => "is-active",
+            () => "is-inactive",
+            () => "is-pending",
+            () => "unknown");
+        Assert.Equal("is-active", result);
     }
 }

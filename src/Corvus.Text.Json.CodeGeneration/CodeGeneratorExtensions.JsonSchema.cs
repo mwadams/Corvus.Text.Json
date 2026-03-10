@@ -28,6 +28,8 @@ internal static partial class CodeGenerationExtensions
     private const string SourceClassNameKey = "CSharp_JsonSchema_SourceClassNameKey";
     private const string ConstantsClassBaseName = "Constants";
     private const string ConstantsClassNameKey = "CSharp_JsonSchema_ConstantsClassNameKey";
+    private const string EnumValuesClassBaseName = "EnumValues";
+    private const string EnumValuesClassNameKey = "CSharp_JsonSchema_EnumValuesClassNameKey";
     private const string MutableClassBaseName = "Mutable";
     private const string MutableClassNameKey = "CSharp_JsonSchema_MutableClassNameKey";
 
@@ -799,6 +801,17 @@ internal static partial class CodeGenerationExtensions
     }
 
     /// <summary>
+    /// Remove the EnumValues class name.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator PopEnumValuesClassNameAndScope(this CodeGenerator generator)
+    {
+        return generator
+            .PopMetadata(EnumValuesClassNameKey);
+    }
+
+    /// <summary>
     /// Remove the Mutable class name.
     /// </summary>
     /// <param name="generator">The code generator.</param>
@@ -959,6 +972,31 @@ internal static partial class CodeGenerationExtensions
     }
 
     /// <summary>
+    /// Make the EnumValues class name available.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    /// <remarks>
+    /// This is safe to call multiple times.
+    /// </remarks>
+    public static CodeGenerator PushEnumValuesClassNameAndScope(this CodeGenerator generator)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (generator.TryPeekMetadata(EnumValuesClassNameKey, out (string, string) _))
+        {
+            return generator;
+        }
+
+        string enumValuesClass = generator.GetTypeNameInScope(EnumValuesClassBaseName);
+        return generator
+            .PushMetadata(EnumValuesClassNameKey, (enumValuesClass, generator.GetChildScope(enumValuesClass, null)));
+    }
+
+    /// <summary>
     /// Make the Source class name available.
     /// </summary>
     /// <param name="generator">The code generator.</param>
@@ -1100,5 +1138,37 @@ internal static partial class CodeGenerationExtensions
         }
 
         throw new InvalidOperationException("The Constants class scope  has not been created.");
+    }
+
+    /// <summary>
+    /// Gets the ambient EnumValues class name.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <returns>The class name.</returns>
+    public static string EnumValuesClassName(this CodeGenerator generator)
+    {
+        if (generator.TryPeekMetadata(EnumValuesClassNameKey, out (string, string)? value) &&
+            value is (string className, string _))
+        {
+            return className;
+        }
+
+        throw new InvalidOperationException("The EnumValues class name has not been created.");
+    }
+
+    /// <summary>
+    /// Gets the EnumValues class scope.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <returns>The fully-qualified class scope.</returns>
+    public static string EnumValuesScope(this CodeGenerator generator)
+    {
+        if (generator.TryPeekMetadata(EnumValuesClassNameKey, out (string, string)? value) &&
+            value is (string _, string scope))
+        {
+            return scope;
+        }
+
+        throw new InvalidOperationException("The EnumValues class scope has not been created.");
     }
 }

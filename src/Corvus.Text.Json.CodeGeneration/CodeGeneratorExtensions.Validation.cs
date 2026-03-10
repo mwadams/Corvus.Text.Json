@@ -523,6 +523,247 @@ internal static partial class CodeGenerationExtensions
             .EndClassStructOrEnumDeclaration();
     }
 
+    /// <summary>
+    /// Appends a public <c>EnumValues</c> class containing named properties for each constant
+    /// defined by any-of constant validation keywords (e.g. <c>enum</c>).
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendEnumValuesClass(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (typeDeclaration.AnyOfConstantValues() is not IReadOnlyDictionary<IAnyOfConstantValidationKeyword, JsonElement[]> anyOfConstants
+            || anyOfConstants.Count == 0)
+        {
+            return generator;
+        }
+
+        // Only emit if we actually have values with derivable names.
+        bool hasNameableValues = false;
+        foreach (KeyValuePair<IAnyOfConstantValidationKeyword, JsonElement[]> kvp in anyOfConstants)
+        {
+            if (kvp.Value.Length > 0)
+            {
+                hasNameableValues = true;
+                break;
+            }
+        }
+
+        if (!hasNameableValues)
+        {
+            return generator;
+        }
+
+        string constantsClassName = generator.ConstantsClassName();
+        string constantsScope = generator.ConstantsScope();
+        string enumValuesScope = generator.EnumValuesScope();
+        string dotnetTypeName = typeDeclaration.DotnetTypeName();
+
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("/// <summary>")
+            .AppendLineIndent("/// Provides named constants for enum values.")
+            .AppendLineIndent("/// </summary>")
+            .BeginPublicStaticClassDeclaration(generator.EnumValuesClassName());
+
+        foreach (KeyValuePair<IAnyOfConstantValidationKeyword, JsonElement[]> kvp in anyOfConstants.OrderBy(k => k.Key.Keyword))
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            JsonElement[] values = kvp.Value;
+            int count = values.Length;
+            if (count == 0)
+            {
+                continue;
+            }
+
+            string keywordName = kvp.Key.Keyword;
+            bool addSuffix = count > 1;
+
+            int elementIndex = 1;
+            foreach (JsonElement value in values)
+            {
+                if (generator.IsCancellationRequested)
+                {
+                    return generator;
+                }
+
+                string? suffix = addSuffix ? elementIndex.ToString() : null;
+
+                AppendEnumValueProperty(generator, typeDeclaration, value, keywordName, suffix, constantsClassName, constantsScope, enumValuesScope, dotnetTypeName);
+
+                elementIndex++;
+            }
+        }
+
+        return generator
+            .EndClassStructOrEnumDeclaration();
+
+        static void AppendEnumValueProperty(
+            CodeGenerator generator,
+            TypeDeclaration typeDeclaration,
+            JsonElement value,
+            string keywordName,
+            string? suffix,
+            string constantsClassName,
+            string constantsScope,
+            string enumValuesScope,
+            string dotnetTypeName)
+        {
+            // Compute the Constants field names by looking up names in the Constants scope.
+            string utf8FieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
+
+            switch (value.ValueKind)
+            {
+                case JsonValueKind.String:
+                    {
+                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                        string propertyBaseName = value.GetString()!;
+                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope);
+                        string utf8PropertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: "Utf8");
+
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("/// <summary>")
+                            .AppendLineIndent("/// Gets the string ", SymbolDisplay.FormatLiteral(propertyBaseName, true))
+                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                            .AppendLineIndent("/// </summary>")
+                            .AppendIndent("public static ")
+                            .Append(dotnetTypeName)
+                            .Append(" ")
+                            .Append(propertyName)
+                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+
+                        generator
+                            .AppendLineIndent("/// <summary>")
+                            .AppendLineIndent("/// Gets the string ", SymbolDisplay.FormatLiteral(propertyBaseName, true))
+                            .AppendLineIndent("/// as a UTF8 byte array.")
+                            .AppendLineIndent("/// </summary>")
+                            .AppendIndent("public static ReadOnlySpan<byte> ")
+                            .Append(utf8PropertyName)
+                            .AppendLine(" => ", constantsClassName, ".", utf8FieldName, ";");
+                    }
+
+                    break;
+
+                case JsonValueKind.Number:
+                    {
+                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                        string rawText = value.GetRawText();
+                        string propertyBaseName = rawText.Replace(".", "Point").Replace("-", "Minus");
+                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, prefix: "Number");
+
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("/// <summary>")
+                            .AppendLineIndent("/// Gets the number ", rawText)
+                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                            .AppendLineIndent("/// </summary>")
+                            .AppendIndent("public static ")
+                            .Append(dotnetTypeName)
+                            .Append(" ")
+                            .Append(propertyName)
+                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                    }
+
+                    break;
+
+                case JsonValueKind.True:
+                    {
+                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("True", rootScope: enumValuesScope);
+
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("/// <summary>")
+                            .AppendLineIndent("/// Gets the boolean <c>true</c>")
+                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                            .AppendLineIndent("/// </summary>")
+                            .AppendIndent("public static ")
+                            .Append(dotnetTypeName)
+                            .Append(" ")
+                            .Append(propertyName)
+                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                    }
+
+                    break;
+
+                case JsonValueKind.False:
+                    {
+                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("False", rootScope: enumValuesScope);
+
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("/// <summary>")
+                            .AppendLineIndent("/// Gets the boolean <c>false</c>")
+                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                            .AppendLineIndent("/// </summary>")
+                            .AppendIndent("public static ")
+                            .Append(dotnetTypeName)
+                            .Append(" ")
+                            .Append(propertyName)
+                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                    }
+
+                    break;
+
+                case JsonValueKind.Null:
+                    {
+                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("Null", rootScope: enumValuesScope);
+
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("/// <summary>")
+                            .AppendLineIndent("/// Gets the <c>null</c> value")
+                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                            .AppendLineIndent("/// </summary>")
+                            .AppendIndent("public static ")
+                            .Append(dotnetTypeName)
+                            .Append(" ")
+                            .Append(propertyName)
+                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                    }
+
+                    break;
+
+                case JsonValueKind.Array:
+                case JsonValueKind.Object:
+                    {
+                        string constPropertyName = generator.GetPropertyNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
+                        string propertyBaseName = value.ValueKind == JsonValueKind.Array ? "ArrayValue" : "ObjectValue";
+                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: suffix);
+
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendLineIndent("/// <summary>")
+                            .AppendLineIndent("/// Gets the ", value.ValueKind == JsonValueKind.Array ? "array" : "object", " value")
+                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                            .AppendLineIndent("/// </summary>")
+                            .AppendIndent("public static ")
+                            .Append(dotnetTypeName)
+                            .Append(" ")
+                            .Append(propertyName)
+                            .AppendLine(" { get; } = ", constantsClassName, ".", constPropertyName, ";");
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
     private static bool IsNotRequiredInConstantsClass(IValidationConstantProviderKeyword key)
     {
         // We do not require the various numeric constants for validation.

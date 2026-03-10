@@ -57,6 +57,45 @@ public readonly partial struct MigrationStatusEnum
         public static readonly MigrationStatusEnum EnumJson3 = ParsedJsonDocument<MigrationStatusEnum>.StringConstant([.."\"pending\""u8]);
     }
 
+    /// <summary>
+    /// Provides named constants for enum values.
+    /// </summary>
+    public static class EnumValues
+    {
+        /// <summary>
+        /// Gets the string "active"
+        /// as a <see cref="MigrationStatusEnum"/>.
+        /// </summary>
+        public static MigrationStatusEnum Active { get; } = Constants.EnumJson1;
+        /// <summary>
+        /// Gets the string "active"
+        /// as a UTF8 byte array.
+        /// </summary>
+        public static ReadOnlySpan<byte> ActiveUtf8 => Constants.Enum1;
+
+        /// <summary>
+        /// Gets the string "inactive"
+        /// as a <see cref="MigrationStatusEnum"/>.
+        /// </summary>
+        public static MigrationStatusEnum Inactive { get; } = Constants.EnumJson2;
+        /// <summary>
+        /// Gets the string "inactive"
+        /// as a UTF8 byte array.
+        /// </summary>
+        public static ReadOnlySpan<byte> InactiveUtf8 => Constants.Enum2;
+
+        /// <summary>
+        /// Gets the string "pending"
+        /// as a <see cref="MigrationStatusEnum"/>.
+        /// </summary>
+        public static MigrationStatusEnum Pending { get; } = Constants.EnumJson3;
+        /// <summary>
+        /// Gets the string "pending"
+        /// as a UTF8 byte array.
+        /// </summary>
+        public static ReadOnlySpan<byte> PendingUtf8 => Constants.Enum3;
+    }
+
     public static partial class JsonSchema
     {
         /// <summary>
