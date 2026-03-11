@@ -1,23 +1,23 @@
 using Corvus.Text.Json;
 using NumericEnumerations.Models;
 
-// Parse numeric enum values
-string statusActiveJson = "1";
-string statusInactiveJson = "2";
-string statusPendingJson = "3";
+// Use static const instances instead of parsing
+Status pending = Status.Pending.ConstInstance;    // value: 1
+Status active = Status.Active.ConstInstance;      // value: 2
+Status complete = Status.Complete.ConstInstance;  // value: 3
 
-using var parsedActive = ParsedJsonDocument<Status>.Parse(statusActiveJson);
-using var parsedInactive = ParsedJsonDocument<Status>.Parse(statusInactiveJson);
-using var parsedPending = ParsedJsonDocument<Status>.Parse(statusPendingJson);
-
-Status active = parsedActive.RootElement;
-Status inactive = parsedInactive.RootElement;
-Status pending = parsedPending.RootElement;
-
-Console.WriteLine("Status values:");
-Console.WriteLine($"  {active}: {DescribeStatus(active)}");
-Console.WriteLine($"  {inactive}: {DescribeStatus(inactive)}");
+Console.WriteLine("Status values using const instances:");
 Console.WriteLine($"  {pending}: {DescribeStatus(pending)}");
+Console.WriteLine($"  {active}: {DescribeStatus(active)}");
+Console.WriteLine($"  {complete}: {DescribeStatus(complete)}");
+Console.WriteLine();
+
+// Demonstrate parsing from JSON
+Console.WriteLine("Parsing status values from JSON:");
+string pendingJson = "1";
+using var parsedPending = ParsedJsonDocument<Status>.Parse(pendingJson);
+Status parsedPendingStatus = parsedPending.RootElement;
+Console.WriteLine($"  Parsed '{pendingJson}': {DescribeStatus(parsedPendingStatus)}");
 Console.WriteLine();
 
 // Demonstrate handling invalid values
@@ -30,9 +30,9 @@ Console.WriteLine();
 // Pattern matching with context (state parameter)
 Console.WriteLine("Pattern matching with context:");
 int requestCount = 5;
-Console.WriteLine($"  {active} with {requestCount} requests: {ProcessStatus(active, requestCount)}");
-Console.WriteLine($"  {inactive} with {requestCount} requests: {ProcessStatus(inactive, requestCount)}");
 Console.WriteLine($"  {pending} with {requestCount} requests: {ProcessStatus(pending, requestCount)}");
+Console.WriteLine($"  {active} with {requestCount} requests: {ProcessStatus(active, requestCount)}");
+Console.WriteLine($"  {complete} with {requestCount} requests: {ProcessStatus(complete, requestCount)}");
 
 // Try to process invalid status - will hit default match
 try
@@ -48,10 +48,10 @@ catch (InvalidOperationException ex)
 string DescribeStatus(in Status status)
 {
     return status.Match(
-        matchNumberOne: static () => "Active - system is running",
-        matchNumberTwo: static () => "Inactive - system is stopped",
-        matchNumberThree: static () => "Pending - system is starting",
-        defaultMatch: static () => "Unknown status");
+        matchPending: static (in Status.Pending _) => "Pending - waiting to start",
+        matchActive: static (in Status.Active _) => "Active - currently running",
+        matchComplete: static (in Status.Complete _) => "Complete - finished",
+        defaultMatch: static (in Status _) => "Unknown status");
 }
 
 // Pattern matching function WITH context parameter
@@ -59,8 +59,8 @@ string ProcessStatus(in Status status, int requestCount)
 {
     return status.Match(
         requestCount,  // context parameter passed to all match functions
-        matchNumberOne: static (count) => $"Processing {count} requests on active system",
-        matchNumberTwo: static (count) => $"Cannot process {count} requests - system inactive",
-        matchNumberThree: static (count) => $"Queued {count} requests - system pending",
-        defaultMatch: static (count) => throw new InvalidOperationException($"Unknown status cannot process {count} requests"));
+        matchPending: static (in Status.Pending _, in int count) => $"Queued {count} requests - system pending",
+        matchActive: static (in Status.Active _, in int count) => $"Processing {count} requests on active system",
+        matchComplete: static (in Status.Complete _, in int count) => $"Cannot process {count} requests - system complete",
+        defaultMatch: static (in Status _, in int count) => throw new InvalidOperationException($"Unknown status cannot process {count} requests"));
 }

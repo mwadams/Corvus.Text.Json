@@ -11,38 +11,69 @@ While string enumerations are common, sometimes you need numeric enumerations - 
 
 JSON Schema supports numeric `enum` values just like string values.
 
+## The Pattern
+
+Using `oneOf` with `const` to create documented numeric enumerations.
+
+While you could use a simple `enum` array (`{"enum": [1, 2, 3]}`), that approach loses documentation context. The `oneOf` + `const` pattern provides:
+- Named definitions for each value
+- Title and description for each option
+- Better IDE support and documentation generation
+
 ## The Schema
 
 File: `status.json`
 
 ```json
 {
-  "enum": [1, 2, 3]
+  "oneOf": [
+    { "$ref": "#/$defs/Pending" },
+    { "$ref": "#/$defs/Active" },
+    { "$ref": "#/$defs/Complete" }
+  ],
+
+  "$defs": {
+    "Pending": {
+      "title": "Pending status",
+      "description": "The operation is waiting to start",
+      "const": 1
+    },
+    "Active": {
+      "title": "Active status",  
+      "description": "The operation is currently running",
+      "const": 2
+    },
+    "Complete": {
+      "title": "Complete status",
+      "description": "The operation has finished",
+      "const": 3
+    }
+  }
 }
 ```
 
-This constrains values to exactly one of the three numbers: `1`, `2`, or `3`.
+This creates a numeric enumeration with three documented values. Each `const` defines a specific numeric value (1, 2, or 3), and the `title` and `description` provide context that will appear in generated documentation.
 
 ## Generated Code Usage
 
 ### Using static const instances
 
-The generator creates static const instances for each enum value, accessible via the `EnumValues` class:
+The generator creates a static const instance for each `oneOf` variant:
 
 ```csharp
-// Use predefined const instances instead of parsing JSON
-Status active = Status.EnumValues.NumberOne;     // value: 1
-Status inactive = Status.EnumValues.NumberTwo;   // value: 2  
-Status pending = Status.EnumValues.NumberThree;  // value: 3
+// Use predefined const instances - zero allocation
+Status pending = Status.Pending.ConstInstance;      // value: 1
+Status active = Status.Active.ConstInstance;        // value: 2
+Status complete = Status.Complete.ConstInstance;    // value: 3
 
 Console.WriteLine($"Active status: {active}");
-// Output: Active status: 1
+// Output: Active status: 2
 ```
 
 **Benefits of const instances:**
 - Zero allocation - reuses the same immutable instance
-- Type-safe - no need to parse or validate
-- Compile-time correctness - impossible to create invalid enum values
+- Type-safe - compile-time correctness prevents invalid values
+- Self-documenting - named instances (Pending, Active, Complete) instead of magic numbers
 - Performance - no parsing overhead
 
 ### Parsing numeric enumeration values
@@ -68,56 +99,70 @@ if (status.TryGetValue(out int value))
 }
 ```
 
-### Pattern matching with numeric enums
+### Pattern matching with documented variants
 
-Like string enumerations, you can use pattern matching:
+With the `oneOf` + `const` pattern, you get named pattern matching based on the variant types:
 
 ```csharp
 string DescribeStatus(in Status status)
 {
     return status.Match(
-        matchNumberOne: static () => "Active - system is running",
-        matchNumberTwo: static () => "Inactive - system is stopped",
-        matchNumberThree: static () => "Pending - system is starting",
-        defaultMatch: static () => throw new InvalidOperationException("Unknown status"));
+        matchPending: static (in Status.Pending _) => "Pending - waiting to start",
+        matchActive: static (in Status.Active _) => "Active - currently running",
+        matchComplete: static (in Status.Complete _) => "Complete - finished",
+        defaultMatch: static (in Status _) => "Unknown status");
 }
 ```
 
-## Documented Numeric Enumerations (Advanced Pattern)
+The match parameters use the names from your `$defs` (Pending, Active, Complete), making the code self-documenting. Each variant is a distinct type, providing full type safety.
 
-The simple `enum` approach above doesn't provide documentation for each value. For better documentation, consider using `oneOf` with `const`:
+### Pattern matching with context
+
+You can pass additional state through the match:
+
+```csharp
+string ProcessStatus(in Status status, int requestCount)
+{
+    return status.Match(
+        requestCount,  // context parameter
+        matchPending: static (in Status.Pending _, in int count) => 
+            $"Queued {count} requests - system pending",
+        matchActive: static (in Status.Active _, in int count) => 
+            $"Processing {count} requests on active system",
+        matchComplete: static (in Status.Complete _, in int count) => 
+            $"Cannot process {count} requests - system complete",
+        defaultMatch: static (in Status _, in int count) => 
+            throw new InvalidOperationException($"Unknown status cannot process {count} requests"));
+}
+```
+
+## Why Use oneOf + const Instead of enum?
+
+The simple `enum` approach (`{"enum": [1, 2, 3]}`) works but has limitations:
 
 ```json
 {
-    "oneOf": [
-        { "$ref": "#/$defs/Pending" },
-        { "$ref": "#/$defs/Active" },
-        { "$ref": "#/$defs/Complete" }
-    ],
-    "$defs": {
-        "Pending": {
-            "title": "Pending status",
-            "description": "The operation is waiting to start",
-            "const": 1
-        },
-        "Active": {
-            "title": "Active status",
-            "description": "The operation is currently processing",
-            "const": 2
-        },
-        "Complete": {
-            "title": "Complete status",
-            "description": "The operation has finished",
-            "const": 3
-        }
-    }
+    "enum": [1, 2, 3]
 }
 ```
 
-This pattern:
-- Provides meaningful names for each numeric value (`Pending`, `Active`, `Complete`)
-- Allows rich documentation via `title` and `description`
-- Generates separate types for each value instead of generic `EnumNEntity` types
+**Limitations:**
+- No documentation for each value
+- Generic generated names (EnumValues.NumberOne, NumberTwo, NumberThree)
+- No semantic meaning attached to the numbers
+
+The `oneOf` + `const` pattern shown in this recipe provides:
+
+**Limitations:**
+- No documentation for each value
+- Generic generated names (EnumValues.NumberOne, NumberTwo, NumberThree)
+- No semantic meaning attached to the numbers
+
+The `oneOf` + `const` pattern shown in this recipe provides:
+- Meaningful names for each numeric value (`Pending`, `Active`, `Complete`)
+- Rich documentation via `title` and `description`
+- Separate types for each value (Status.Pending, Status.Active, Status.Complete)
+- Type-safe pattern matching with named parameters
 - Prevents implicit numeric conversions, improving type safety
 
 For more details on this pattern, see the [blog post](https://endjin.com/blog/2024/05/json-schema-patterns-dotnet-numeric-enumerations-and-pattern-matching).
