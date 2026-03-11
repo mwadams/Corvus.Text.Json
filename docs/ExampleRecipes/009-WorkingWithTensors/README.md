@@ -80,7 +80,7 @@ TensorRank3 updatedTensor = mutableDoc.RootElement;
 
 // Fill a Span<double> with the tensor values
 Span<double> tensorAsSpan = stackalloc double[TensorRank3.ValueBufferSize];
-if (updatedTensor.TryGetNumericValues(tensorAsSpan, out int written))
+if (tensor.TryGetNumericValues(tensorAsSpan, out int written))
 {
     // Manually format the output
     Console.Write("All tensor values (flat): [");

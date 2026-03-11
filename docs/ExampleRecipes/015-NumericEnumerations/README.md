@@ -193,16 +193,17 @@ if (status.TryGetValue(out int value))
 
 // Pattern matching with named parameters
 string desc = status.Match(
-    matchNumberOne: static () => "Pending",
-    matchNumberTwo: static () => "Active",
-    matchNumberThree: static () => "Complete");
+    matchPending: static (in Status.Pending _) => "Pending",
+    matchActive: static (in Status.Active _) => "Active",
+    matchComplete: static (in Status.Complete _) => "Complete",
+    defaultMatch: static (in Status _) => "Unknown");
 ```
 
 **Key differences:**
 - V5 uses `ParsedJsonDocument<T>` for parsing
 - V5 uses `TryGetValue(out int)` to extract numeric values
-- V5 pattern matching uses named parameters based on enum values (`matchNumberOne`, `matchNumberTwo`, `matchNumberThree`)
-- V4's `ConstInstance` pattern (for documented enums with `oneOf`+`const`) is not shown in this simple V5 example
+- V5 pattern matching uses named parameters based on schema definition names (`matchPending`, `matchActive`, `matchComplete`)
+- V5's `oneOf`+`const` pattern generates `ConstInstance` properties on each variant type
 
 ## Running the Example
 

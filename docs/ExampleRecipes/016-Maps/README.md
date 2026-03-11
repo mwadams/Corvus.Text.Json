@@ -214,7 +214,7 @@ if (map.TryGetProperty("foo"u8, out var fooValue))
 // Enumerate with EnumerateObject()
 foreach (var property in map.EnumerateObject())
 {
-    Console.WriteLine($"{property.Name.GetString()} = {property.Value.GetInt32()}");
+    Console.WriteLine($"  {property.Name} = {property.Value}");
 }
 ```
 

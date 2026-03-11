@@ -146,7 +146,7 @@ root.SetItem(14, PersonClosed.Build(
 
 // Replace the first instance of a person by value
 root.Replace(personAtIndex0, PersonClosed.Build(
-    (ref PersonClosed.Builder b) => b.Create(
+    static (ref PersonClosed.Builder b) => b.Create(
         birthDate: new LocalDate(1820, 1, 17),
         familyName: "Brontë",
         givenName: "Anne",

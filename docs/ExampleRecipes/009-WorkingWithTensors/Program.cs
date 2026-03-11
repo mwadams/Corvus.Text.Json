@@ -77,7 +77,7 @@ else
     Console.WriteLine("Unable to get values.");
 }
 
-// Find the rank of each array (note that the sub arrays of diminishing rank)
+// Find the rank of each array (note the sub arrays of diminishing rank)
 Console.WriteLine($"Rank: {TensorRank3.Rank}, {TensorRank3.SecondRank.Rank}, {TensorRank3.ThirdRank.Rank}");
 
 // Find the dimension (extent) of each particular rank of the array

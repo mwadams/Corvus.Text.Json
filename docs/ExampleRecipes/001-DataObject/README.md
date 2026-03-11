@@ -113,12 +113,18 @@ if (person.OtherNames.IsUndefined())
 {
     Console.WriteLine("otherNames is not present.");
 }
+else
+{
+    Console.WriteLine("otherNames is present.");
+}
 
 // Implicit conversion to NodaTime LocalDate (does not allocate)
 LocalDate date = person.BirthDate;
+Console.WriteLine($"Birth date: {date}");
 
 // Explicit conversion to double
 double heightValue = (double)person.Height;
+Console.WriteLine($"Height: {heightValue}");
 
 // ------------------------------------------------------------------
 // Mutation — create a modified copy via builder
@@ -142,11 +148,20 @@ else
     Console.WriteLine("Different people.");
 }
 
+if (person == parsedFromUtf8.RootElement)
+{
+    Console.WriteLine("The same person.");
+}
+else
+{
+    Console.WriteLine("Different people.");
+}
+
 // ------------------------------------------------------------------
 // String comparison — zero-allocation
 // ------------------------------------------------------------------
-person.GivenName.ValueEquals("Hello");
-person.GivenName.ValueEquals("Anne"u8);
+Console.WriteLine($"GivenName ValueEquals \"Hello\": {person.GivenName.ValueEquals("Hello")}");
+Console.WriteLine($"GivenName ValueEquals \"Anne\"u8: {person.GivenName.ValueEquals("Anne"u8)}");
 
 // ------------------------------------------------------------------
 // Low-allocation access to character data via GetUtf16String()
@@ -154,6 +169,8 @@ person.GivenName.ValueEquals("Anne"u8);
 using UnescapedUtf16JsonString utf16 = person.GivenName.GetUtf16String();
 ReadOnlySpan<char> chars = utf16.Span;
 int countA = chars.Count('A');
+int countB = chars.Count('B');
+Console.WriteLine($"Character counts in GivenName: A={countA}, B={countB}");
 
 // ------------------------------------------------------------------
 // Low-allocation access to UTF-8 byte data via GetUtf8String()
@@ -161,4 +178,6 @@ int countA = chars.Count('A');
 using UnescapedUtf8JsonString utf8 = person.GivenName.GetUtf8String();
 ReadOnlySpan<byte> bytes = utf8.Span;
 int countUtf8A = bytes.Count((byte)'A');
+int countUtf8B = bytes.Count((byte)'B');
+Console.WriteLine($"UTF-8 byte counts in GivenName: A={countUtf8A}, B={countUtf8B}");
 ```

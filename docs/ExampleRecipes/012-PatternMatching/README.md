@@ -158,31 +158,21 @@ DiscriminatedUnionByType union1 = DiscriminatedUnionByType.From(person);
 
 Console.WriteLine(ProcessDiscriminatedUnion(union1));
 // Output: It was a person. Brontë, Anne
-```
 
-Or parse other types:
-
-```csharp
-// Parse a string
-using var parsedString = ParsedJsonDocument<DiscriminatedUnionByType>.Parse("\"Hello\"");
-DiscriminatedUnionByType union2 = parsedString.RootElement;
-
-Console.WriteLine(ProcessDiscriminatedUnion(union2));
-// Output: It was a string: Hello
-
-// Parse an integer
-using var parsedInt = ParsedJsonDocument<DiscriminatedUnionByType>.Parse("42");
-DiscriminatedUnionByType union3 = parsedInt.RootElement;
-
-Console.WriteLine(ProcessDiscriminatedUnion(union3));
-// Output: It was an int32: 42
-
-// Parse an array
-string arrayJson = """[{"familyName": "Brontë", "givenName": "Anne", "birthDate": "1820-01-17"}]""";
+// Parse an array directly as the union type
+string arrayJson = """
+    [
+      {
+        "familyName": "Brontë",
+        "givenName": "Anne",
+        "birthDate": "1820-01-17",
+        "height": 1.57
+      }
+    ]
+    """;
 using var parsedArray = ParsedJsonDocument<DiscriminatedUnionByType>.Parse(arrayJson);
-DiscriminatedUnionByType union4 = parsedArray.RootElement;
 
-Console.WriteLine(ProcessDiscriminatedUnion(union4));
+Console.WriteLine(ProcessDiscriminatedUnion(parsedArray.RootElement));
 // Output: It was an array of people. 1
 ```
 

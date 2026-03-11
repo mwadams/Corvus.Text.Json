@@ -116,17 +116,15 @@ Countable countable = composite;
 
 // Access properties from each "interface"
 Console.WriteLine($"Title: {documentation.Title}");
-Console.WriteLine($"Count: {countable.Count}");
-Console.WriteLine($"Budget: {composite.Budget}");
-```
 
-### Working with optional properties
-
-```csharp
+// Description is an optional property - check IsUndefined() before use
 if (!documentation.Description.IsUndefined())
 {
     Console.WriteLine($"Description: {documentation.Description}");
 }
+
+Console.WriteLine($"Count: {countable.Count}");
+Console.WriteLine($"Budget: {composite.Budget}");
 ```
 
 The generated types handle optional properties through entity types that can be checked with `IsUndefined()`. This avoids the need for dictionary-style property access.

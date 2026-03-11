@@ -72,7 +72,7 @@ Console.WriteLine(threeTuple);
 ```csharp
 Console.WriteLine($"Item1: {threeTuple.Item1}");  // Output: Item1: 3
 Console.WriteLine($"Item2: {threeTuple.Item2}");  // Output: Item2: Hello
-Console.WriteLine($"Item3: {threeTuple.Item3}");  // Output: Item3: false
+Console.WriteLine($"Item3: {threeTuple.Item3}");  // Output: Item3: False
 ```
 
 ### Creating a tuple with the builder
