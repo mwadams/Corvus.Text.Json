@@ -2748,6 +2748,33 @@ internal static partial class CodeGeneratorExtensions
                     hasSimpleTypeBacking = true;
                 }
             }
+
+            // Also check composed builders for string formats that require SimpleTypesBacking
+            if (!hasSimpleTypeBacking)
+            {
+                foreach (ComposedBuilder composedBuilder in builders)
+                {
+                    if (composedBuilder.StringFormat is string cf &&
+                        FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(cf, out bool cr) &&
+                        cr)
+                    {
+                        generator
+                            .ReserveNameIfNotReserved("_simpleTypeBacking")
+                            .AppendLineIndent("private readonly SimpleTypesBacking _simpleTypeBacking;");
+                        hasSimpleTypeBacking = true;
+                        break;
+                    }
+
+                    if ((composedBuilder.TypeDeclaration.ImpliedCoreTypesOrAny() & (CoreTypes.Number | CoreTypes.Integer)) != 0)
+                    {
+                        generator
+                            .ReserveNameIfNotReserved("_simpleTypeBacking")
+                            .AppendLineIndent("private readonly SimpleTypesBacking _simpleTypeBacking;");
+                        hasSimpleTypeBacking = true;
+                        break;
+                    }
+                }
+            }
         }
         else
         {

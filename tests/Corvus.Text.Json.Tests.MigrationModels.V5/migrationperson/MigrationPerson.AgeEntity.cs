@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -149,6 +148,17 @@ public readonly partial struct MigrationPerson
         public static implicit operator JsonElement(AgeEntity instance)
         {
             return JsonElement.From(instance);
+        }
+
+        /// <summary>
+        /// Converts the instance from a JsonElement.
+        /// </summary>
+        /// <param name="value">The instance of this type as a JsonElement.</param>
+        /// <returns>An instance of the type, initialized from the <see cref="JsonElement"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator AgeEntity(JsonElement instance)
+        {
+            return AgeEntity.From(instance);
         }
 
         /// <summary>

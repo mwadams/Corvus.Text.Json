@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -184,6 +183,9 @@ public readonly partial struct MigrationPerson
             public UnescapedUtf8JsonString GetUtf8String() { CheckValidInstance(); return _parent.GetUtf8JsonString(_idx, JsonTokenType.String); }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public UnescapedUtf16JsonString GetUtf16String() { CheckValidInstance(); return _parent.GetUtf16JsonString(_idx, JsonTokenType.String); }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public string? GetString() { CheckValidInstance(); return _parent.GetString(_idx, JsonTokenType.String); }
 
             /// <inheritdoc/>
@@ -284,7 +286,9 @@ public readonly partial struct MigrationPerson
             /// <para>
             /// On netstandard2.0, when a non-empty <paramref name="format"/> is provided, this delegates to
             /// <c>NodaTime.LocalDate.ToString</c>, which uses NodaTime pattern syntax
-            /// (e.g. <c>"uuuu-MM-dd"</c>, <c>"d MMMM uuuu"</c>).
+            /// (e.g. <c>"uuuu-MM-dd"</c>, <c>"d MMMM uuuu"</c>). The standard .NET round-trip
+            /// format specifiers <c>"o"</c> and <c>"O"</c> are automatically translated to the
+            /// equivalent NodaTime pattern <c>"uuuu-MM-dd"</c>.
             /// </para>
             /// <para>
             /// When <paramref name="format"/> is <see langword="null"/> or empty, the canonical
@@ -299,7 +303,11 @@ public readonly partial struct MigrationPerson
                     return value.ToString(format, formatProvider);
             #else
                 if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.LocalDate value))
+                {
+                    if (format is "o" or "O")
+                        return value.ToString("uuuu-MM-dd", formatProvider);
                     return value.ToString(format, formatProvider);
+                }
             #endif
                 return _parent.ToString(_idx, format, formatProvider);
             }

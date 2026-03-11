@@ -754,7 +754,9 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         /// <para>
                         /// On netstandard2.0, when a non-empty <paramref name="format"/> is provided, this delegates to
                         /// <c>NodaTime.LocalDate.ToString</c>, which uses NodaTime pattern syntax
-                        /// (e.g. <c>"uuuu-MM-dd"</c>, <c>"d MMMM uuuu"</c>).
+                        /// (e.g. <c>"uuuu-MM-dd"</c>, <c>"d MMMM uuuu"</c>). The standard .NET round-trip
+                        /// format specifiers <c>"o"</c> and <c>"O"</c> are automatically translated to the
+                        /// equivalent NodaTime pattern <c>"uuuu-MM-dd"</c>.
                         /// </para>
                         /// <para>
                         /// When <paramref name="format"/> is <see langword="null"/> or empty, the canonical
@@ -769,7 +771,11 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                                 return value.ToString(format, formatProvider);
                         #else
                             if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.LocalDate value))
+                            {
+                                if (format is "o" or "O")
+                                    return value.ToString("uuuu-MM-dd", formatProvider);
                                 return value.ToString(format, formatProvider);
+                            }
                         #endif
                             return _parent.ToString(_idx, format, formatProvider);
                         }
@@ -841,7 +847,9 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         /// <para>
                         /// On netstandard2.0, when a non-empty <paramref name="format"/> is provided, this delegates to
                         /// <c>NodaTime.OffsetDateTime.ToString</c>, which uses NodaTime pattern syntax
-                        /// (e.g. <c>"uuuu'/'MM'/'dd HH:mm:ss"</c>).
+                        /// (e.g. <c>"uuuu'/'MM'/'dd HH:mm:ss"</c>). The standard .NET round-trip
+                        /// format specifiers <c>"o"</c> and <c>"O"</c> are automatically translated to the
+                        /// equivalent NodaTime pattern.
                         /// </para>
                         /// <para>
                         /// When <paramref name="format"/> is <see langword="null"/> or empty, the canonical
@@ -856,7 +864,11 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                                 return value.ToString(format, formatProvider);
                         #else
                             if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.OffsetDateTime value))
+                            {
+                                if (format is "o" or "O")
+                                    return value.ToString("uuuu-MM-ddTHH:mm:ss.fffffffo<+HH:mm>", formatProvider);
                                 return value.ToString(format, formatProvider);
+                            }
                         #endif
                             return _parent.ToString(_idx, format, formatProvider);
                         }
@@ -928,7 +940,9 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         /// <para>
                         /// On netstandard2.0, when a non-empty <paramref name="format"/> is provided, this delegates to
                         /// <c>NodaTime.OffsetTime.ToString</c>, which uses NodaTime pattern syntax
-                        /// (e.g. <c>"HH:mm:ss"</c>, <c>"HH'.'mm'.'ss"</c>).
+                        /// (e.g. <c>"HH:mm:ss"</c>, <c>"HH'.'mm'.'ss"</c>). The standard .NET round-trip
+                        /// format specifiers <c>"o"</c> and <c>"O"</c> are automatically translated to the
+                        /// equivalent NodaTime pattern.
                         /// </para>
                         /// <para>
                         /// When <paramref name="format"/> is <see langword="null"/> or empty, the canonical
@@ -943,7 +957,11 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                                 return value.ToString(format, formatProvider);
                         #else
                             if (!string.IsNullOrEmpty(format) && TryGetValue(out NodaTime.OffsetTime value))
+                            {
+                                if (format is "o" or "O")
+                                    return value.ToString("HH:mm:ss.fffffff", formatProvider);
                                 return value.ToString(format, formatProvider);
+                            }
                         #endif
                             return _parent.ToString(_idx, format, formatProvider);
                         }
