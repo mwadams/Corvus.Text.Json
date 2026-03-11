@@ -2337,38 +2337,6 @@ internal static partial class CodeGeneratorExtensions
         return generator;
     }
 
-    private static void AppendNumericArrayFactoryMethod(this CodeGenerator generator, TypeDeclaration typeDeclaration, HashSet<string> seenArrayValues)
-    {
-        NumericTypeName? arrayType = typeDeclaration.ArrayItemsType()?.ReducedType.PreferredDotnetNumericTypeName();
-        if (arrayType is NumericTypeName at)
-        {
-            if (at.IsNetOnly)
-            {
-                if (seenArrayValues.Add($"[{at.Name}]"))
-                {
-                    generator
-                        .ReserveNameIfNotReserved("FromArray")
-                        .AppendSeparatorLine()
-                        .AppendLine("#if NET")
-                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static ", generator.SourceClassName(), " FromArray(ReadOnlySpan<", at.Name, "> value) => new(value);")
-                        .AppendLine("#endif");
-                }
-            }
-            else
-            {
-                if (seenArrayValues.Add($"[{at.Name}]"))
-                {
-                    generator
-                        .ReserveNameIfNotReserved("FromArray")
-                        .AppendSeparatorLine()
-                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent("public static ", generator.SourceClassName(), " FromArray(ReadOnlySpan<", at.Name, "> value) => new(value);");
-                }
-            }
-        }
-    }
-
     private static void AppendNumericArrayTypeFields(this CodeGenerator generator, TypeDeclaration typeDeclaration, HashSet<string> seenArrayValues)
     {
         if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple() && !typeDeclaration.IsFixedSizeNumericArray())
@@ -3042,41 +3010,6 @@ internal static partial class CodeGeneratorExtensions
                 .AppendSeparatorLine()
                 .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                 .AppendLineIndent("public static ", generator.SourceClassName(), " Null() => new(Kind.Null);");
-        }
-
-        HashSet<string> seenArrayTypes = [];
-        if ((core & CoreTypes.Array) != 0)
-        {
-            if (typeDeclaration.IsNumericArray())
-            {
-                if (!typeDeclaration.IsFixedSizeArray() && !typeDeclaration.IsTuple())
-                {
-                    generator
-                        .AppendNumericArrayFactoryMethod(typeDeclaration, seenArrayTypes);
-                }
-            }
-        }
-
-        foreach (ComposedBuilder composedBuilder in builders)
-        {
-            if (generator.IsCancellationRequested)
-            {
-                return generator;
-            }
-
-            core = composedBuilder.TypeDeclaration.ImpliedCoreTypesOrAny();
-            TypeDeclaration t = composedBuilder.TypeDeclaration;
-            if ((core & CoreTypes.Array) != 0)
-            {
-                if (t.IsNumericArray())
-                {
-                    if (!t.IsFixedSizeArray() && !t.IsTuple())
-                    {
-                        generator
-                            .AppendNumericArrayFactoryMethod(t, seenArrayTypes);
-                    }
-                }
-            }
         }
 
         return generator;

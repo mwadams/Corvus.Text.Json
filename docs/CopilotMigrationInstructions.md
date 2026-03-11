@@ -305,9 +305,16 @@ using var builder = MyArray.CreateBuilder(
 // V4
 MyTuple v4 = MyTuple.Create("hello", 42, true);
 
-// V5
+// V5 — CreateBuilder convenience (preferred for closed tuples)
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var builder = MyTuple.CreateBuilder(
+using var builder = MyTuple.CreateBuilder(workspace, "hello", 42, true);
+
+// V5 — Build + CreateBuilder (two-step)
+MyTuple.Source source = MyTuple.Build("hello", 42, true);
+using var builder2 = MyTuple.CreateBuilder(workspace, source);
+
+// V5 — delegate (required for open tuples with additional items)
+using var builder3 = MyTuple.CreateBuilder(
     workspace,
     MyTuple.Build(
         static (ref MyTuple.Builder b) => b.CreateTuple(
@@ -315,6 +322,28 @@ using var builder = MyTuple.CreateBuilder(
             item2: 42,
             item3: true)));
 ```
+
+### Numeric array creation from span
+```csharp
+// V4 (fixed-size tensor)
+MyVector v4 = MyVector.FromValues([1, 2, 3]);
+
+// V5 — CreateBuilder convenience (preferred)
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using var builder = MyVector.CreateBuilder(workspace, [1, 2, 3]);
+
+// V5 — Build + CreateBuilder (two-step)
+MyVector.Source source = MyVector.Build([1, 2, 3]);
+using var builder2 = MyVector.CreateBuilder(workspace, source);
+
+// V5 — delegate route (for combining with other builder operations)
+using var builder3 = MyVector.CreateBuilder(
+    workspace,
+    MyVector.Build(
+        static (ref MyVector.Builder b) => b.CreateTensor([1, 2, 3])));
+```
+
+> **Note:** `Build(ReadOnlySpan<T>)` and `CreateBuilder(workspace, ReadOnlySpan<T>)` work on **all** numeric array types — both fixed-size tensors and variable-length arrays. For fixed-size tensors, the span must contain exactly `ValueBufferSize` elements. For variable-length arrays, any length is accepted.
 
 ---
 
@@ -694,11 +723,13 @@ When migrating a file:
 9. [ ] Replace `With*()` chains with `JsonWorkspace` + `CreateBuilder()` + `Set*()` calls
 10. [ ] Replace `MyType.Create(...)` with `CreateBuilder(workspace, Build(...))`
 11. [ ] Replace `FromItems(...)` with `CreateBuilder(workspace, Build(b => { b.AddItem(...); }))`
-12. [ ] Replace `.Add()`, `.Insert()`, `.RemoveAt()` with `.AddItem()`, `.InsertItem()`, `.RemoveAt()` on Mutable
-13. [ ] Replace `TryGetValue(state, delegate)` span patterns with `GetUtf8String().Span` or `GetUtf16String().Span`
-14. [ ] Update Match() entity types: `JsonString` → `OneOf0Entity`, etc.
-15. [ ] Add `static` keyword to builder delegates and Match lambdas where possible
-16. [ ] Update package references in .csproj
+12. [ ] Replace `MyTuple.Create(a,b,c)` with `MyTuple.CreateBuilder(workspace, a, b, c)` (closed tuples) or delegate pattern (open tuples)
+13. [ ] Replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)` or `MyVector.Build(span)`
+14. [ ] Replace `.Add()`, `.Insert()`, `.RemoveAt()` with `.AddItem()`, `.InsertItem()`, `.RemoveAt()` on Mutable
+15. [ ] Replace `TryGetValue(state, delegate)` span patterns with `GetUtf8String().Span` or `GetUtf16String().Span`
+16. [ ] Update Match() entity types: `JsonString` → `OneOf0Entity`, etc.
+17. [ ] Add `static` keyword to builder delegates and Match lambdas where possible
+18. [ ] Update package references in .csproj
 
 ---
 
@@ -724,3 +755,9 @@ When migrating a file:
 
 ### Error: "Cannot convert lambda to delegate because it captures variables"
 **Fix**: Remove `static` keyword if the lambda genuinely captures outer variables, OR refactor to use the context parameter overload of Match/Build.
+
+### Error: "'MyType' does not contain a definition for 'Create'" (tuple)
+**Fix**: Replace `MyTuple.Create(a, b, c)` with `MyTuple.CreateBuilder(workspace, a, b, c)` for closed tuples, or `CreateBuilder(workspace, Build((ref b) => b.CreateTuple(a, b, c)))` for open tuples.
+
+### Error: "'MyType' does not contain a definition for 'FromValues'" (numeric array)
+**Fix**: Replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)` or `MyVector.Build(span)` + `CreateBuilder(workspace, source)`.

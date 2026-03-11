@@ -32,7 +32,7 @@ dotnet run
 | [006](006-ConstrainingABaseType/) | Constraining a Base Type | Tighter constraints on a base, validation differences |
 | [007](007-CreatingAStronglyTypedArray/) | Strongly Typed Array | Array mutation via builder, indexing, enumeration |
 | [008](008-CreatingAnArrayOfHigherRank/) | Higher Rank Array | 2D arrays, multi-index access |
-| [009](009-WorkingWithTensors/) | Working with Tensors | 3D tensors, `TryGetNumericValues`, `FromArray`, `Rank`, `Dimension` |
+| [009](009-WorkingWithTensors/) | Working with Tensors | 3D tensors, `TryGetNumericValues`, `Build`, `CreateBuilder`, `Rank`, `Dimension` |
 | [010](010-CreatingTuples/) | Creating Tuples | `CreateTuple` via builder, `Item1`/`Item2`/`Item3` access |
 | [011](011-InterfacesAndMixInTypes/) | Interfaces and Mix-In Types | `allOf` composition, `From()` conversion |
 | [012](012-PatternMatchingAndDiscriminatedUnions/) | Pattern Matching | `oneOf`, `Match` with named parameters |

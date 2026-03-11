@@ -1210,6 +1210,24 @@ Additional generation options are controlled via MSBuild properties (e.g., `Corv
 
 ## Best Practices and Patterns
 
+### Prefer convenience overloads for tuples and numeric arrays
+
+For **closed tuples** and **numeric arrays**, prefer the convenience `CreateBuilder` overloads that accept values directly, avoiding the delegate indirection:
+
+```csharp
+// ✅ Preferred — convenience overload
+using var builder = MyTuple.CreateBuilder(workspace, "hello", 42, true);
+using var vecBuilder = MyVector.CreateBuilder(workspace, [1, 2, 3]);
+
+// ✅ Also good — two-step Build + CreateBuilder (when you need the Source separately)
+MyTuple.Source source = MyTuple.Build("hello", 42, true);
+using var builder = MyTuple.CreateBuilder(workspace, source);
+
+// ⚠️ Verbose — use the delegate pattern only when required (open tuples, combining operations)
+using var builder = MyTuple.CreateBuilder(workspace,
+    MyTuple.Build(static (ref MyTuple.Builder b) => b.CreateTuple("hello", 42, true)));
+```
+
 ### Use `static` lambdas where possible
 
 When creating builder delegates or pattern matching lambdas that don't capture variables, mark them `static` for better performance:
@@ -1414,4 +1432,6 @@ string rgb = color.Match(
 5. **Update validation calls** — replace `Validate(ctx, level)` with `EvaluateSchema()`
 6. **Update union access** — replace `v4.AsString`, `v4.AsNumber`, `v4.AsBoolean` with direct value access: `(string)v5`, `v5.TryGetValue(out int)`, `(bool)v5`, etc. Use `v5.TryGetAsOneOfNEntity()` or `v5.Match()` when you need the strongly-typed composition entity.
 7. **Update writer types** — use `Corvus.Text.Json.Utf8JsonWriter` instead of `System.Text.Json.Utf8JsonWriter`
-8. **Regenerate types** — run the V5 code generator against your JSON Schema files
+8. **Update tuple creation** — replace `MyTuple.Create(a, b, c)` with `MyTuple.CreateBuilder(workspace, a, b, c)` for closed tuples, or the delegate pattern for open tuples
+9. **Update numeric array construction** — replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)`; for variable-length arrays, use `MyArray.CreateBuilder(workspace, span)` or `MyArray.Build(span)`
+10. **Regenerate types** — run the V5 code generator against your JSON Schema files

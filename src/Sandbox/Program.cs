@@ -470,7 +470,7 @@ using JsonDocumentBuilder<Person.Mutable> testPersonDocBuilder = Person.CreateBu
                     lastName: "Adams"u8,
                     otherNames: "Francis James"u8);
             }),
-            competedInYears: CompetedInYears.Source.FromArray([2012, 2020, 2024])));
+            competedInYears: CompetedInYears.Build([2012, 2020, 2024])));
 
 Console.WriteLine(testPersonDocBuilder.RootElement);
 
