@@ -96,10 +96,9 @@ for (int i = 0; i < newValues.Length; i++)
     newValues[i] = i * 0.5;
 }
 
-// Build creates a Source directly from the span — no delegate needed
-TensorRank3.Source tensorSource = TensorRank3.Build(newValues);
+// CreateBuilder convenience: span → mutable document in a single call
 using JsonWorkspace workspace2 = JsonWorkspace.Create();
-using var builtTensor = TensorRank3.CreateBuilder(workspace2, tensorSource);
+using var builtTensor = TensorRank3.CreateBuilder(workspace2, newValues);
 TensorRank3 constructed = builtTensor.RootElement;
 
 Console.WriteLine("Tensor constructed from flat span via Build:");

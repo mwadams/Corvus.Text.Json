@@ -32,14 +32,13 @@ Console.WriteLine("Built tuple (via Build + CreateTuple):");
 Console.WriteLine(threeTuple2);
 Console.WriteLine();
 
-// Create a tuple directly with Build(sources)
-// This Build overload is available for fixed-size tuples (items: false / unevaluatedItems: false)
-// It avoids the delegate indirection and is the recommended approach for simple tuple construction.
-ThreeTuple.Source tupleSource = ThreeTuple.Build(99, "Direct", false);
-using var directDoc = ThreeTuple.CreateBuilder(workspace, tupleSource);
+// Create a tuple directly with CreateBuilder convenience overload
+// This is available for fixed-size tuples (items: false / unevaluatedItems: false)
+// It avoids the Source and delegate indirection and is the recommended approach.
+using var directDoc = ThreeTuple.CreateBuilder(workspace, 99, "Direct", false);
 ThreeTuple threeTuple3 = directDoc.RootElement;
 
-Console.WriteLine("Built tuple (via Build from sources):");
+Console.WriteLine("Built tuple (via CreateBuilder convenience):");
 Console.WriteLine(threeTuple3);
 Console.WriteLine();
 

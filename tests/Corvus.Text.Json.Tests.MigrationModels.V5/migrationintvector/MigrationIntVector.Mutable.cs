@@ -990,6 +990,18 @@ int item in tensor)                {
     }
 
     /// <summary>
+    /// Creates and initializes a mutable document from a flat numeric span.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    public static JsonDocumentBuilder<Mutable> CreateBuilder(
+        JsonWorkspace workspace, ReadOnlySpan<int> tensor, int initialCapacity = 5)
+    {
+        return CreateBuilder(workspace, Build(tensor), initialCapacity);
+    }
+
+    /// <summary>
     /// Creates an empty mutable document builder.
     /// </summary>
     /// <param name="workspace">The JSON workspace.</param>

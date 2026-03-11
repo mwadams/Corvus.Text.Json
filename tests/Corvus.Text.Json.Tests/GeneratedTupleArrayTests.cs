@@ -506,5 +506,47 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region Pure tuple — CreateBuilder convenience
+
+        [Fact]
+        public void PureTuple_CreateBuilderFromSources()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            using JsonDocumentBuilder<PureTuple.Mutable> builder =
+                PureTuple.CreateBuilder(workspace, "world", 99, false);
+            PureTuple.Mutable root = builder.RootElement;
+
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("world", root[0].ToString());
+            Assert.Equal("99", root[1].ToString());
+            Assert.Equal("False", root[2].ToString());
+        }
+
+        [Fact]
+        public void PureTuple_CreateBuilderFromSources_RoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            using JsonDocumentBuilder<PureTuple.Mutable> builder =
+                PureTuple.CreateBuilder(workspace, "hello", 42, true);
+
+            string json = builder.RootElement.ToString();
+
+            using ParsedJsonDocument<PureTuple> reparsed = ParsedJsonDocument<PureTuple>.Parse(json);
+            Assert.Equal(3, reparsed.RootElement.GetArrayLength());
+
+            PureTuple.PrefixItems0Entity item0 = PureTuple.PrefixItems0Entity.From(reparsed.RootElement[0]);
+            Assert.Equal("hello", (string)item0);
+
+            PureTuple.PrefixItems1Entity item1 = PureTuple.PrefixItems1Entity.From(reparsed.RootElement[1]);
+            Assert.Equal(42, (int)item1);
+
+            PureTuple.PrefixItems2Entity item2 = PureTuple.PrefixItems2Entity.From(reparsed.RootElement[2]);
+            Assert.True((bool)item2);
+        }
+
+        #endregion
     }
 }

@@ -732,5 +732,49 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region CreateBuilder from span (tensor convenience)
+
+        [Fact]
+        public void Rank1Int32Vector_CreateBuilderFromSpan()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<int> values = [1, 2, 3, 4];
+            using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
+                Rank1Int32Vector.CreateBuilder(workspace, values);
+            Rank1Int32Vector.Mutable root = doc.RootElement;
+
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal(1, (int)root[0]);
+            Assert.Equal(2, (int)root[1]);
+            Assert.Equal(3, (int)root[2]);
+            Assert.Equal(4, (int)root[3]);
+        }
+
+        [Fact]
+        public void Rank3Int32Cube_CreateBuilderFromSpan_RoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
+                Rank3Int32Cube.CreateBuilder(workspace, values);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<Rank3Int32Cube> reparsed =
+                ParsedJsonDocument<Rank3Int32Cube>.Parse(json);
+            Assert.Equal(2, reparsed.RootElement.GetArrayLength());
+
+            // Verify first element of first row of first plane
+            Span<int> roundTripped = stackalloc int[Rank3Int32Cube.ValueBufferSize];
+            Assert.True(reparsed.RootElement.TryGetNumericValues(roundTripped, out int written));
+            Assert.Equal(12, written);
+            Assert.Equal(1, roundTripped[0]);
+            Assert.Equal(12, roundTripped[11]);
+        }
+
+        #endregion
     }
 }

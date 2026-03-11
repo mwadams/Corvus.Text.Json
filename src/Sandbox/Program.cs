@@ -303,13 +303,7 @@ using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateBuilder(
                     otherNames.AddItem("James"u8);
                 }));
         }),
-        competedInYears: CompetedInYears.Build(years, static (in years, ref competedInYears) =>
-        {
-            foreach (int year in years)
-            {
-                competedInYears.AddItem(year);
-            }
-        })));
+        competedInYears: CompetedInYears.Build(years)));
 
 docBuilder.RootElement.Name.SetOtherNames(OtherNames.Build((ref b) => b.AddItem("Leo"u8)));
 docBuilder.RootElement.Name.SetOtherNames("William"u8);

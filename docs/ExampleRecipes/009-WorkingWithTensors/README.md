@@ -102,23 +102,29 @@ Console.WriteLine($"Dimension: {TensorRank3.Dimension}, {TensorRank3.SecondRank.
 
 ### Constructing a tensor from a flat numeric span
 
-The preferred way to create a tensor from raw numeric data is `Build()`. It takes a `ReadOnlySpan<T>` and returns a `Source` that can be passed directly to `CreateBuilder()`:
+The simplest way to create a tensor from raw numeric data is `CreateBuilder(workspace, span)` — a single call that goes directly from a `ReadOnlySpan<T>` to a mutable document:
 
 ```csharp
-// Build — the direct route: span → Source → builder
 Span<double> flatValues = stackalloc double[TensorRank3.ValueBufferSize];
 // ... populate flatValues ...
 
 using JsonWorkspace workspace = JsonWorkspace.Create();
-TensorRank3.Source source = TensorRank3.Build(flatValues);
-using var builder = TensorRank3.CreateBuilder(workspace, source);
+using var builder = TensorRank3.CreateBuilder(workspace, flatValues);
 TensorRank3 result = builder.RootElement;
 ```
 
-If you need more control (e.g., building the tensor alongside other mutations in a single delegate), you can still use the `Build` + `CreateTensor` pattern:
+If you prefer to separate construction from materialisation (e.g., to pass the source to another method), use `Build()` + `CreateBuilder()`:
 
 ```csharp
-// Build + CreateTensor — the delegate route
+// Two-step: span → Source → builder
+TensorRank3.Source source = TensorRank3.Build(flatValues);
+using var builder = TensorRank3.CreateBuilder(workspace, source);
+```
+
+If you need more control (e.g., building the tensor alongside other mutations in a single delegate), use the `Build` + `CreateTensor` pattern:
+
+```csharp
+// Delegate route
 using var builder = TensorRank3.CreateBuilder(
     workspace,
     TensorRank3.Build(

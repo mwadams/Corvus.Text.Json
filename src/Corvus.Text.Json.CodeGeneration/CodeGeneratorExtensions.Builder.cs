@@ -1503,6 +1503,102 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
+        // Add CreateBuilder(workspace, ReadOnlySpan<T>) overload for fixed-size numeric arrays
+        if (typeDeclaration.IsFixedSizeNumericArray())
+        {
+            NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+
+            if (numericTypeName.IsNetOnly)
+            {
+                generator
+                    .AppendLine("#if NET");
+            }
+
+            generator
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    $$"""
+                    /// <summary>
+                    /// Creates and initializes a mutable document from a flat numeric span.
+                    /// </summary>
+                    /// <param name="workspace">The JSON workspace.</param>
+                    /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
+                    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+                    /// <returns>An instance of a mutable document initialized with the given tensor values.</returns>
+                    public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateBuilder(
+                        JsonWorkspace workspace, ReadOnlySpan<{{numericTypeName.Name}}> tensor, int initialCapacity = {{initialCapacity}})
+                    {
+                        return CreateBuilder(workspace, Build(tensor), initialCapacity);
+                    }
+                    """);
+
+            if (numericTypeName.IsNetOnly)
+            {
+                generator
+                    .AppendLine("#endif");
+            }
+        }
+
+        // Add CreateBuilder(workspace, in Source...) overload for pure tuple types
+        if (typeDeclaration.IsTuple() && GetTupleType(typeDeclaration) is TupleTypeDeclaration tupleTypeForCreateBuilder && !HasNotAnyTupleItem(tupleTypeForCreateBuilder))
+        {
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Creates and initializes a mutable document from positional tuple item sources.")
+                .AppendLineIndent("/// </summary>")
+                .AppendLineIndent("/// <param name=\"workspace\">The JSON workspace.</param>");
+
+            int cbDocIndex = 0;
+            foreach (ReducedTypeDeclaration item in tupleTypeForCreateBuilder.ItemsTypes)
+            {
+                cbDocIndex++;
+                generator
+                    .AppendLineIndent("/// <param name=\"item", cbDocIndex.ToString(), "\">The source for tuple item ", cbDocIndex.ToString(), ".</param>");
+            }
+
+            generator
+                .AppendLineIndent("/// <param name=\"initialCapacity\">The (optional) estimate of the capacity to reserve for the document.</param>")
+                .AppendLineIndent("/// <returns>An instance of a mutable document initialized with the given tuple values.</returns>")
+                .AppendIndent("public static JsonDocumentBuilder<", generator.MutableClassName(), "> CreateBuilder(")
+                .Append("JsonWorkspace workspace, ");
+
+            int cbParamIndex = 0;
+            foreach (ReducedTypeDeclaration item in tupleTypeForCreateBuilder.ItemsTypes)
+            {
+                if (cbParamIndex > 0)
+                {
+                    generator.Append(", ");
+                }
+
+                cbParamIndex++;
+                string fqdtn = item.ReducedType.FullyQualifiedDotnetTypeName();
+                generator
+                    .Append("in ").Append(fqdtn).Append(".").Append(generator.SourceClassName(fqdtn)).Append(" item").Append(cbParamIndex);
+            }
+
+            generator
+                .AppendLine(", int initialCapacity = ", initialCapacity.ToString(), ")")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendIndent("return CreateBuilder(workspace, Build(");
+
+            for (int i = 1; i <= tupleTypeForCreateBuilder.ItemsTypes.Length; i++)
+            {
+                if (i > 1)
+                {
+                    generator.Append(", ");
+                }
+
+                generator.Append("item").Append(i);
+            }
+
+            generator
+                    .AppendLine("), initialCapacity);")
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
+
         return generator
             .AppendSeparatorLine()
             .AppendLineIndent("/// <summary>")
