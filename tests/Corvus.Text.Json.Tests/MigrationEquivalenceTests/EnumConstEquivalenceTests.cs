@@ -391,13 +391,26 @@ public class EnumConstEquivalenceTests
     }
 
     [Fact]
+    public void V4_EnumMatchWithoutContext()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationStatusEnum> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationStatusEnum>.Parse("\"active\"");
+        V4.MigrationStatusEnum v4 = parsedV4.Instance;
+        string result = v4.Match(
+            () => "is-active",
+            () => "is-inactive",
+            () => "is-pending",
+            () => "unknown");
+        Assert.Equal("is-active", result);
+    }
+
+    [Fact]
     public void V5_EnumMatchWithContext()
     {
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse("\"inactive\"");
         V5.MigrationStatusEnum v5 = parsedV5.RootElement;
         string result = v5.Match(
             42,
-            ctx => $"inactive-{ctx}",
+            ctx => $"active-{ctx}",
             ctx => $"inactive-{ctx}",
             ctx => $"pending-{ctx}",
             ctx => $"unknown-{ctx}");
@@ -428,6 +441,35 @@ public class EnumConstEquivalenceTests
             ctx => $"unknown-{ctx}");
 
         Assert.Equal(v4Result, v5Result);
+    }
+
+    [Fact]
+    public void BothEngines_EnumMatchWithoutContext_SameResult()
+    {
+        string[] values = ["active", "inactive", "pending"];
+        string[] expected = ["is-active", "is-inactive", "is-pending"];
+
+        for (int i = 0; i < values.Length; i++)
+        {
+            using Corvus.Json.ParsedValue<V4.MigrationStatusEnum> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationStatusEnum>.Parse($"\"{values[i]}\"");
+            V4.MigrationStatusEnum v4 = parsedV4.Instance;
+            string v4Result = v4.Match(
+                () => "is-active",
+                () => "is-inactive",
+                () => "is-pending",
+                () => "unknown");
+
+            using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationStatusEnum>.Parse($"\"{values[i]}\"");
+            V5.MigrationStatusEnum v5 = parsedV5.RootElement;
+            string v5Result = v5.Match(
+                () => "is-active",
+                () => "is-inactive",
+                () => "is-pending",
+                () => "unknown");
+
+            Assert.Equal(expected[i], v4Result);
+            Assert.Equal(v4Result, v5Result);
+        }
     }
 
     [Fact]

@@ -23,17 +23,13 @@ This folder contains documentation and examples for using the Corvus.Text.Json l
   - Memory management best practices
   - Performance tips
 
-- **[JsonSchemaSourceGenerator.md](./JsonSchemaSourceGenerator.md)** - Guide for generating strongly-typed C# from JSON Schema:
-  - Source generator setup and configuration
-  - Working with generated types (properties, arrays, enums)
-  - **Mutating generated types** (SetProperty, array mutators)
-  - **Default property values** (schema defaults, DefaultInstance)
-  - **Property indexers** (string, UTF-8, UTF-16 access)
-  - **Composition patterns** (Match discrimination, Apply merging)
-  - **RemoveProperty** on generated mutable types
-  - Schema references ($ref, $defs)
-  - Advanced scenarios (oneOf/anyOf/allOf, pattern properties, formats)
-  - Serialization and validation
+- **[GettingStartedWithCodeGeneration.md](./GettingStartedWithCodeGeneration.md)** - Getting started guide for generating strongly-typed C# from JSON Schema:
+  - Source generator and CLI tool setup
+  - Parsing, property access, serialization, formatting, validation
+  - Creating objects with the builder pattern
+  - Mutation (SetProperty, RemoveProperty, array operations)
+  - Default property values, composition types (Match, Apply), enum types
+  - Schema references, configuration, memory management
 
 - **[JsonDocumentBuilder.md](./JsonDocumentBuilder.md)** - Guide for creating and modifying JSON documents:
   - Creating `JsonWorkspace` instances

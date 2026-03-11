@@ -281,6 +281,74 @@ public class UnionEquivalenceTests
     }
 
     [Fact]
+    public void V4_MatchPattern_String()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        string result = v4.Match(
+            static (in Corvus.Json.JsonString s) => $"string:{(string)s}",
+            static (in V4.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
+            static (in Corvus.Json.JsonBoolean b) => $"bool:{(bool)b}",
+            static (in V4.MigrationUnion v) => "none");
+        Assert.Equal("string:hello", result);
+    }
+
+    [Fact]
+    public void V4_MatchPattern_Number()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("42");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        string result = v4.Match(
+            static (in Corvus.Json.JsonString s) => $"string:{(string)s}",
+            static (in V4.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
+            static (in Corvus.Json.JsonBoolean b) => $"bool:{(bool)b}",
+            static (in V4.MigrationUnion v) => "none");
+        Assert.Equal("number:42", result);
+    }
+
+    [Fact]
+    public void V4_MatchPattern_Boolean()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        string result = v4.Match(
+            static (in Corvus.Json.JsonString s) => $"string:{(string)s}",
+            static (in V4.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
+            static (in Corvus.Json.JsonBoolean b) => $"bool:{(bool)b}",
+            static (in V4.MigrationUnion v) => "none");
+        Assert.Equal("bool:True", result);
+    }
+
+    [Fact]
+    public void BothEngines_MatchWithoutContext_SameResult()
+    {
+        string[] jsons = ["\"hello\"", "42", "true"];
+        string[] expected = ["string:hello", "number:42", "bool:True"];
+
+        for (int i = 0; i < jsons.Length; i++)
+        {
+            using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse(jsons[i]);
+            V4.MigrationUnion v4 = parsedV4.Instance;
+            string v4Result = v4.Match(
+                static (in Corvus.Json.JsonString s) => $"string:{(string)s}",
+                static (in V4.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
+                static (in Corvus.Json.JsonBoolean b) => $"bool:{(bool)b}",
+                static (in V4.MigrationUnion v) => "none");
+
+            using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse(jsons[i]);
+            V5.MigrationUnion v5 = parsedV5.RootElement;
+            string v5Result = v5.Match(
+                static (in V5.MigrationUnion.OneOf0Entity s) => $"string:{(string)s}",
+                static (in V5.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
+                static (in V5.MigrationUnion.OneOf2Entity b) => $"bool:{(bool)b}",
+                static (in V5.MigrationUnion v) => "none");
+
+            Assert.Equal(expected[i], v4Result);
+            Assert.Equal(v4Result, v5Result);
+        }
+    }
+
+    [Fact]
     public void V4_MatchPatternWithContext_String()
     {
         using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");

@@ -467,4 +467,156 @@ public class MutationEquivalenceTests
         root.SetProperty("email", "new@test.com");
         Assert.Equal("new@test.com", (string)root.Email);
     }
+
+    [Fact]
+    public void V4_BuildNestedObject()
+    {
+        // V4: compose nested values with Create()
+        V4.MigrationNested v4 = V4.MigrationNested.Create(
+            address: V4.MigrationNested.RequiredCityAndStreet.Create(
+                city: "London",
+                street: "221B Baker Street",
+                zipCode: "12345"),
+            name: "Sherlock");
+
+        Assert.Equal("Sherlock", (string)v4.Name);
+        Assert.Equal("London", (string)v4.Address.City);
+        Assert.Equal("221B Baker Street", (string)v4.Address.Street);
+        Assert.Equal("12345", (string)v4.Address.ZipCode);
+    }
+
+    [Fact]
+    public void V5_BuildNestedObject()
+    {
+        // V5: compose nested values with Build() and CreateBuilder()
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using JsonDocumentBuilder<V5.MigrationNested.Mutable> builder =
+            V5.MigrationNested.CreateBuilder(
+                workspace,
+                (ref b) => b.Create(
+                    address: V5.MigrationNested.RequiredCityAndStreet.Build(
+                        (ref ab) => ab.Create(
+                            city: "London",
+                            street: "221B Baker Street",
+                            zipCode: "12345")),
+                    name: "Sherlock"));
+
+        V5.MigrationNested.Mutable root = builder.RootElement;
+        Assert.Equal("Sherlock", (string)root.Name);
+        Assert.Equal("London", (string)root.Address.City);
+        Assert.Equal("221B Baker Street", (string)root.Address.Street);
+        Assert.Equal("12345", (string)root.Address.ZipCode);
+    }
+
+    [Fact]
+    public void BothEngines_BuildNestedObject_SameResult()
+    {
+        // V4
+        V4.MigrationNested v4 = V4.MigrationNested.Create(
+            address: V4.MigrationNested.RequiredCityAndStreet.Create(
+                city: "London",
+                street: "221B Baker Street",
+                zipCode: "12345"),
+            name: "Sherlock");
+
+        // V5
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using JsonDocumentBuilder<V5.MigrationNested.Mutable> builder =
+            V5.MigrationNested.CreateBuilder(
+                workspace,
+                (ref b) => b.Create(
+                    address: V5.MigrationNested.RequiredCityAndStreet.Build(
+                        (ref ab) => ab.Create(
+                            city: "London",
+                            street: "221B Baker Street",
+                            zipCode: "12345")),
+                    name: "Sherlock"));
+        V5.MigrationNested.Mutable root = builder.RootElement;
+
+        Assert.Equal((string)v4.Name, (string)root.Name);
+        Assert.Equal((string)v4.Address.City, (string)root.Address.City);
+        Assert.Equal((string)v4.Address.Street, (string)root.Address.Street);
+        Assert.Equal((string)v4.Address.ZipCode, (string)root.Address.ZipCode);
+    }
+
+    [Fact]
+    public void V4_BuildArrayOfObjects()
+    {
+        // V4: build array with FromItems()
+        V4.MigrationItemArray v4 = V4.MigrationItemArray.FromItems(
+            V4.MigrationItemArray.RequiredId.Create(id: 1, label: "First"),
+            V4.MigrationItemArray.RequiredId.Create(id: 2, label: "Second"),
+            V4.MigrationItemArray.RequiredId.Create(id: 3));
+
+        Assert.Equal(3, v4.GetArrayLength());
+        Assert.Equal(1, (int)v4[0].Id);
+        Assert.Equal("First", (string)v4[0].Label);
+        Assert.Equal(2, (int)v4[1].Id);
+        Assert.Equal("Second", (string)v4[1].Label);
+        Assert.Equal(3, (int)v4[2].Id);
+    }
+
+    [Fact]
+    public void V5_BuildArrayOfObjects()
+    {
+        // V5: build array with AddItem() inside Build() callback, then CreateBuilder()
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using JsonDocumentBuilder<V5.MigrationItemArray.Mutable> builder =
+            V5.MigrationItemArray.CreateBuilder(
+                workspace,
+                V5.MigrationItemArray.Build(
+                    (ref b) =>
+                    {
+                        b.AddItem(V5.MigrationItemArray.RequiredId.Build(
+                            (ref ib) => ib.Create(id: 1, label: "First")));
+                        b.AddItem(V5.MigrationItemArray.RequiredId.Build(
+                            (ref ib) => ib.Create(id: 2, label: "Second")));
+                        b.AddItem(V5.MigrationItemArray.RequiredId.Build(
+                            (ref ib) => ib.Create(id: 3)));
+                    }));
+
+        V5.MigrationItemArray.Mutable root = builder.RootElement;
+        Assert.Equal(3, root.GetArrayLength());
+        Assert.Equal(1, (int)root[0].Id);
+        Assert.Equal("First", (string)root[0].Label);
+        Assert.Equal(2, (int)root[1].Id);
+        Assert.Equal("Second", (string)root[1].Label);
+        Assert.Equal(3, (int)root[2].Id);
+    }
+
+    [Fact]
+    public void BothEngines_BuildArrayOfObjects_SameResult()
+    {
+        // V4
+        V4.MigrationItemArray v4 = V4.MigrationItemArray.FromItems(
+            V4.MigrationItemArray.RequiredId.Create(id: 1, label: "First"),
+            V4.MigrationItemArray.RequiredId.Create(id: 2, label: "Second"),
+            V4.MigrationItemArray.RequiredId.Create(id: 3));
+
+        // V5
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using JsonDocumentBuilder<V5.MigrationItemArray.Mutable> builder =
+            V5.MigrationItemArray.CreateBuilder(
+                workspace,
+                V5.MigrationItemArray.Build(
+                    (ref b) =>
+                    {
+                        b.AddItem(V5.MigrationItemArray.RequiredId.Build(
+                            (ref ib) => ib.Create(id: 1, label: "First")));
+                        b.AddItem(V5.MigrationItemArray.RequiredId.Build(
+                            (ref ib) => ib.Create(id: 2, label: "Second")));
+                        b.AddItem(V5.MigrationItemArray.RequiredId.Build(
+                            (ref ib) => ib.Create(id: 3)));
+                    }));
+        V5.MigrationItemArray.Mutable root = builder.RootElement;
+
+        Assert.Equal(v4.GetArrayLength(), root.GetArrayLength());
+        for (int i = 0; i < v4.GetArrayLength(); i++)
+        {
+            Assert.Equal((int)v4[i].Id, (int)root[i].Id);
+        }
+
+        Assert.Equal((string)v4[0].Label, (string)root[0].Label);
+        Assert.Equal((string)v4[1].Label, (string)root[1].Label);
+    }
 }

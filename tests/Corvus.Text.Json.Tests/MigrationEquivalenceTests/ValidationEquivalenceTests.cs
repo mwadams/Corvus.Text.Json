@@ -333,4 +333,136 @@ public class ValidationEquivalenceTests
         ValidationContext v4Result = v4.Validate(ValidationContext.ValidContext, ValidationLevel.Flag);
         Assert.Equal(v4Result.IsValid, v5.EvaluateSchema());
     }
+
+    [Fact]
+    public void V4_DetailedValidation_HasResults()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 =
+            Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"age":200}""");
+        V4.MigrationPerson v4 = parsedV4.Instance;
+
+        ValidationContext result = v4.Validate(
+            ValidationContext.ValidContext,
+            ValidationLevel.Detailed);
+
+        Assert.False(result.IsValid);
+        Assert.NotEmpty(result.Results);
+
+        // All reported failures should be non-valid
+        foreach (ValidationResult r in result.Results)
+        {
+            if (!r.Valid)
+            {
+                Assert.NotNull(r.Message);
+                Assert.NotEmpty(r.Message);
+            }
+        }
+    }
+
+    [Fact]
+    public void V5_DetailedValidation_HasResults()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 =
+            Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse("""{"age":200}""");
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+
+        using JsonSchemaResultsCollector collector =
+            JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
+
+        bool isValid = v5.EvaluateSchema(collector);
+
+        Assert.False(isValid);
+        Assert.True(collector.GetResultCount() > 0);
+
+        // All reported failures should have a message
+        foreach (JsonSchemaResultsCollector.Result r in collector.EnumerateResults())
+        {
+            if (!r.IsMatch)
+            {
+                Assert.False(r.Message.IsEmpty);
+            }
+        }
+    }
+
+    [Fact]
+    public void V4_DetailedValidation_ValidInstance_NoFailures()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 =
+            Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"name":"Jo","age":30}""");
+        V4.MigrationPerson v4 = parsedV4.Instance;
+
+        ValidationContext result = v4.Validate(
+            ValidationContext.ValidContext,
+            ValidationLevel.Detailed);
+
+        Assert.True(result.IsValid);
+
+        // No failure results
+        foreach (ValidationResult r in result.Results)
+        {
+            Assert.True(r.Valid);
+        }
+    }
+
+    [Fact]
+    public void V5_DetailedValidation_ValidInstance_NoFailures()
+    {
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 =
+            Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse("""{"name":"Jo","age":30}""");
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+
+        using JsonSchemaResultsCollector collector =
+            JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
+
+        bool isValid = v5.EvaluateSchema(collector);
+
+        Assert.True(isValid);
+
+        // No failure results
+        foreach (JsonSchemaResultsCollector.Result r in collector.EnumerateResults())
+        {
+            Assert.True(r.IsMatch);
+        }
+    }
+
+    [Fact]
+    public void BothEngines_DetailedValidation_BothHaveFailureResults()
+    {
+        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 =
+            Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse("""{"age":200}""");
+        V4.MigrationPerson v4 = parsedV4.Instance;
+
+        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 =
+            Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse("""{"age":200}""");
+        V5.MigrationPerson v5 = parsedV5.RootElement;
+
+        // V4
+        ValidationContext v4Result = v4.Validate(
+            ValidationContext.ValidContext,
+            ValidationLevel.Detailed);
+
+        // V5
+        using JsonSchemaResultsCollector collector =
+            JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
+        bool v5IsValid = v5.EvaluateSchema(collector);
+
+        // Both should be invalid
+        Assert.False(v4Result.IsValid);
+        Assert.False(v5IsValid);
+
+        // Both should have failure results
+        Assert.Contains(v4Result.Results, r => !r.Valid);
+
+        bool v5HasFailure = false;
+        foreach (JsonSchemaResultsCollector.Result r in collector.EnumerateResults())
+        {
+            if (!r.IsMatch)
+            {
+                v5HasFailure = true;
+                break;
+            }
+        }
+
+        Assert.True(v5HasFailure);
+    }
 }
