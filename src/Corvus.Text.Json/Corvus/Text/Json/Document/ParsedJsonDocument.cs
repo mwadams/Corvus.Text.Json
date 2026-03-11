@@ -389,6 +389,13 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return GetUtf8JsonStringUnsafe(index, expectedType);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    UnescapedJsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType)
+    {
+        CheckNotDisposed();
+        return GetUtf16JsonStringUnsafe(index, expectedType);
+    }
+
     private string? GetStringUnsafe(int index, JsonTokenType expectedType)
     {
         DbRow row = _parsedData.Get(index);
@@ -446,6 +453,79 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         }
 
         return new UnescapedUtf8JsonString(segment);
+    }
+
+    private UnescapedJsonString GetUtf16JsonStringUnsafe(int index, JsonTokenType expectedType)
+    {
+        DbRow row = _parsedData.Get(index);
+
+        JsonTokenType tokenType = row.TokenType;
+
+        if (expectedType != JsonTokenType.None)
+        {
+            CheckExpectedType(expectedType, tokenType);
+        }
+        else
+        {
+            if (tokenType is not (JsonTokenType.String or JsonTokenType.PropertyName))
+            {
+                ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.String, tokenType);
+            }
+        }
+
+        ReadOnlySpan<byte> data = _utf8Json.Span;
+        ReadOnlySpan<byte> segment = data.Slice(row.LocationOrIndex, row.SizeOrLengthOrPropertyMapIndex);
+
+        if (row.HasComplexChildren)
+        {
+            // Unescape from the escaped UTF-8 source first.
+            int utf8Length = segment.Length;
+            byte[]? rentedUtf8 = null;
+
+            Span<byte> utf8Unescaped = utf8Length <= JsonConstants.StackallocByteThreshold
+                ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+                : (rentedUtf8 = ArrayPool<byte>.Shared.Rent(utf8Length));
+
+            try
+            {
+                JsonReaderHelper.Unescape(segment, utf8Unescaped, out int utf8Written);
+                utf8Unescaped = utf8Unescaped.Slice(0, utf8Written);
+
+                // Transcode the unescaped UTF-8 to UTF-16 chars.
+                char[] rentedChars = ArrayPool<char>.Shared.Rent(utf8Written);
+                try
+                {
+                    int charsWritten = JsonReaderHelper.TranscodeHelper(utf8Unescaped, rentedChars);
+                    return new UnescapedJsonString(rentedChars.AsMemory(0, charsWritten), rentedChars);
+                }
+                catch
+                {
+                    ArrayPool<char>.Shared.Return(rentedChars);
+                    throw;
+                }
+            }
+            finally
+            {
+                if (rentedUtf8 != null)
+                {
+                    utf8Unescaped.Clear();
+                    ArrayPool<byte>.Shared.Return(rentedUtf8);
+                }
+            }
+        }
+
+        // No escaping needed — just transcode UTF-8 to UTF-16.
+        char[] rentedTranscoded = ArrayPool<char>.Shared.Rent(segment.Length);
+        try
+        {
+            int charsWritten = JsonReaderHelper.TranscodeHelper(segment, rentedTranscoded);
+            return new UnescapedJsonString(rentedTranscoded.AsMemory(0, charsWritten), rentedTranscoded);
+        }
+        catch
+        {
+            ArrayPool<char>.Shared.Return(rentedTranscoded);
+            throw;
+        }
     }
 
 

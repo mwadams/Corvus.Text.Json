@@ -599,6 +599,29 @@ public readonly partial struct JsonElement
     }
 
     /// <summary>
+    /// Gets the value of the element as a <see cref="UnescapedJsonString"/>.
+    /// </summary>
+    /// <returns>The value of the element as an <see cref="UnescapedJsonString"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    ///   This value's <see cref="ValueKind"/> is neither <see cref="JsonValueKind.String"/> nor <see cref="JsonValueKind.Null"/>.
+    /// </exception>
+    /// <exception cref="ObjectDisposedException">
+    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// </exception>
+    /// <seealso cref="ToString"/>
+    /// <remarks>
+    /// The <see cref="UnescapedJsonString"/> should be disposed when it is finished with, as it may have rented
+    /// storage to provide the unescaped value. It is only valid for as long as the source <see cref="JsonElement"/>
+    /// is valid.
+    /// </remarks>
+    public UnescapedJsonString GetUtf16String()
+    {
+        CheckValidInstance();
+
+        return _parent.GetUtf16JsonString(_idx, JsonTokenType.String);
+    }
+
+    /// <summary>
     ///   Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
     /// </summary>
     /// <param name="value">Receives the value.</param>

@@ -233,13 +233,15 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
     {
         Debug.Assert(index == 0 && expectedType == JsonTokenType.String);
 
+        ReadOnlyMemory<byte> segment = _rawJsonStringValue[1..^1];
+
         if (_requiresUnescaping)
         {
-            int segmentLength = _rawJsonStringValue.Length;
+            int segmentLength = segment.Length;
             byte[] rentedBytes = ArrayPool<byte>.Shared.Rent(segmentLength);
             try
             {
-                JsonReaderHelper.Unescape(_rawJsonStringValue.Span, rentedBytes, out int written);
+                JsonReaderHelper.Unescape(segment.Span, rentedBytes, out int written);
                 return new UnescapedUtf8JsonString(rentedBytes.AsMemory(0, written), rentedBytes);
             }
             catch
@@ -248,7 +250,62 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
             }
         }
 
-        return new UnescapedUtf8JsonString(_rawJsonStringValue);
+        return new UnescapedUtf8JsonString(segment);
+    }
+
+    UnescapedJsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType)
+    {
+        Debug.Assert(index == 0 && expectedType == JsonTokenType.String);
+
+        ReadOnlySpan<byte> utf8Source = _rawJsonStringValue.Span[1..^1];
+
+        if (_requiresUnescaping)
+        {
+            int utf8Length = utf8Source.Length;
+            byte[]? rentedUtf8 = null;
+
+            Span<byte> utf8Unescaped = utf8Length <= JsonConstants.StackallocByteThreshold
+                ? stackalloc byte[JsonConstants.StackallocByteThreshold]
+                : (rentedUtf8 = ArrayPool<byte>.Shared.Rent(utf8Length));
+
+            try
+            {
+                JsonReaderHelper.Unescape(utf8Source, utf8Unescaped, out int utf8Written);
+                utf8Unescaped = utf8Unescaped.Slice(0, utf8Written);
+
+                char[] rentedChars = ArrayPool<char>.Shared.Rent(utf8Written);
+                try
+                {
+                    int charsWritten = JsonReaderHelper.TranscodeHelper(utf8Unescaped, rentedChars);
+                    return new UnescapedJsonString(rentedChars.AsMemory(0, charsWritten), rentedChars);
+                }
+                catch
+                {
+                    ArrayPool<char>.Shared.Return(rentedChars);
+                    throw;
+                }
+            }
+            finally
+            {
+                if (rentedUtf8 != null)
+                {
+                    utf8Unescaped.Clear();
+                    ArrayPool<byte>.Shared.Return(rentedUtf8);
+                }
+            }
+        }
+
+        char[] rentedTranscoded = ArrayPool<char>.Shared.Rent(utf8Source.Length);
+        try
+        {
+            int charsWritten = JsonReaderHelper.TranscodeHelper(utf8Source, rentedTranscoded);
+            return new UnescapedJsonString(rentedTranscoded.AsMemory(0, charsWritten), rentedTranscoded);
+        }
+        catch
+        {
+            ArrayPool<char>.Shared.Return(rentedTranscoded);
+            throw;
+        }
     }
 
     bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
@@ -613,7 +670,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
     {
         if (jsonPointer.Length > 2 ||
             (jsonPointer.Length > 1 && jsonPointer[1] != (byte)'/') ||
-            (jsonPointer.Length == 1 && jsonPointer[0] is not (byte)'#' or (byte)'/'))
+            (jsonPointer.Length == 1 && jsonPointer[0] is not ((byte)'#' or (byte)'/')))
         {
             value = default;
             return false;

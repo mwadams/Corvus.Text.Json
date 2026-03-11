@@ -2565,6 +2565,23 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        /// Gets the value of the element as an unescaped UTF-16 JSON string.
+        /// </summary>
+        /// <returns>The value of the element as an unescaped UTF-16 JSON string.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        /// The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        public readonly UnescapedJsonString GetUtf16String()
+        {
+            CheckValidInstance();
+
+            return _parent.GetUtf16JsonString(_idx, JsonTokenType.String);
+        }
+
+        /// <summary>
         ///   Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
         /// </summary>
         /// <param name="value">Receives the value.</param>

@@ -241,6 +241,7 @@
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexValidator.cs" />
     <Compile Include="Corvus\Text\Json\Regex\JsonRegexReplacement.cs" />
     <Compile Include="Corvus\Text\Json\UnescapedUtf8JsonString.cs" />
+    <Compile Include="Corvus\Text\Json\UnescapedJsonString.cs" />
     <Compile Include="Corvus\Text\Json\RawUtf8JsonString.cs" />
     <Compile Include="Corvus\Text\Json\JsonConstants.cs" />
     <Compile Include="Corvus\Text\Json\JsonEncodedText.cs" />

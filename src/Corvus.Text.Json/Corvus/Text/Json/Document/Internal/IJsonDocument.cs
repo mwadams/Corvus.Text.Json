@@ -190,6 +190,19 @@ public interface IJsonDocument : IDisposable
     UnescapedUtf8JsonString GetUtf8JsonString(int index, JsonTokenType expectedType);
 
     /// <summary>
+    /// Gets the UTF-16 JSON string value of the element at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="expectedType">The expected JSON token type.</param>
+    /// <returns>The UTF-16 JSON string value.</returns>
+    /// <remarks>
+    /// You are permitted to pass <see cref="JsonTokenType.None"/> as the
+    /// <paramref name="expectedType"/> which will check both
+    /// String and PropertyName as valid types.
+    /// </remarks>
+    UnescapedJsonString GetUtf16JsonString(int index, JsonTokenType expectedType);
+
+    /// <summary>
     /// Tries to get the value of the element at the specified index as a byte array.
     /// </summary>
     /// <param name="index">The index of the element.</param>
