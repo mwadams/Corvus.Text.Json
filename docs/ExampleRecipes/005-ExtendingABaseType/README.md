@@ -8,7 +8,7 @@ If you have no experience of JSON Schema at all, I would recommend you read [the
 
 ## Adding properties
 
-When you have an open type, you can extend it with additional properties. This is rather like deriving from an (unsealed) base type in an object-oriented language, and adding additional properties in the derived type.
+When you have an open type, you can extend it with additional properties. This is rather like deriving from an (unsealed) base type in an object-oriented language, and adding additional properties in the derived type. If you are coming from an OOP background, think of `$ref` as the schema-world equivalent of inheritance: the base schema (`person-open.json`) defines a set of properties and constraints, and the extending schema adds its own on top, without modifying the original.
 
 In this case we use `$ref` to declare that we are basing a new schema on the `person-open.json` schema.
 
@@ -68,9 +68,9 @@ In draft 6 and draft 7, `$ref` cannot be used in this way. It acts as a referenc
 `{ "allOf": [{"$ref": "./person-closed.json"}]}`
 :::
 
-The code generator generates types for both `PersonOpen` and `PersonWealthy`.
+The code generator generates types for both `PersonOpen` and `PersonWealthy`. When it encounters the `$ref` in `person-wealthy.json`, it follows the reference to `person-open.json`, resolves all the properties defined there, and composes them into the `PersonWealthy` type alongside its own declared properties.
 
-`PersonWealthy` includes all of the properties defined both on `person` and `personWealthy`:
+`PersonWealthy` includes all of the properties defined both on `PersonOpen` and `PersonWealthy`:
 
 - `BirthDate`
 - `FamilyName`
@@ -78,6 +78,16 @@ The code generator generates types for both `PersonOpen` and `PersonWealthy`.
 - `OtherNames`
 - `Height`
 - `Wealth`
+
+### Accessing properties
+
+There are three ways to access properties on a JSON element:
+
+1. **Strongly-typed property** (e.g. `wealthyPerson.Wealth`) — use this when you have an instance of the type that declares the property. This is the most natural and efficient approach.
+2. **`TryGetProperty` with a UTF-8 byte literal** (e.g. `"wealth"u8`) — use this when the property is present in the underlying JSON but not declared on the .NET type you are working with, such as when you have converted to a base type like `PersonOpen`.
+3. **`TryGetProperty` with a string** (e.g. `"wealth"`) — another dynamic option, convenient when you already have a string property name.
+
+The `TryGetProperty` approach is especially useful when working with open base types. After converting a `PersonWealthy` to `PersonOpen` with `PersonOpen.From()`, the `wealth` property still exists in the underlying JSON data — it is just not surfaced as a strongly-typed .NET property on `PersonOpen`.
 
 [Example code](./Program.cs)
 
