@@ -759,15 +759,15 @@ int bufSize = MigrationIntVector.ValueBufferSize; // 3
 
 ### Constructing a tensor from a flat span
 
-V4 provided `FromValues(span)` to construct a tensor directly from numeric data. V5 provides `BuildTensor(span)` as the direct replacement — it takes a `ReadOnlySpan<T>` and returns a `Source` without requiring a delegate:
+V4 provided `FromValues(span)` to construct a tensor directly from numeric data. V5 provides a `Build(ReadOnlySpan<T>)` overload as the direct replacement — it takes a span and returns a `Source` without requiring a delegate:
 
 ```csharp
 // V4
 MigrationIntVector v4 = MigrationIntVector.FromValues([1, 2, 3]);
 
-// V5 — BuildTensor (preferred: direct span → Source)
+// V5 — Build from span (preferred: direct span → Source)
 using JsonWorkspace workspace = JsonWorkspace.Create();
-MigrationIntVector.Source source = MigrationIntVector.BuildTensor([1, 2, 3]);
+MigrationIntVector.Source source = MigrationIntVector.Build([1, 2, 3]);
 using var builder = MigrationIntVector.CreateBuilder(workspace, source);
 MigrationIntVector v5 = builder.RootElement;
 ```
@@ -782,7 +782,7 @@ using var builder = MigrationIntVector.CreateBuilder(
         static (ref MigrationIntVector.Builder b) => b.CreateTensor([1, 2, 3])));
 ```
 
-Use `BuildTensor` when you already have the data in a span. Use the delegate pattern when you need to combine tensor creation with other builder operations.
+Use the span overload when you already have the data in a span. Use the delegate pattern when you need to combine tensor creation with other builder operations.
 
 ---
 
@@ -820,17 +820,23 @@ MigrationTuple v4 = MigrationTuple.Create(
     42,
     true);
 
-// V5 — workspace builder
-using JsonWorkspace workspace = JsonWorkspace.Create();
-using var builder = MigrationTuple.CreateBuilder(
+// V5 — Build from sources (preferred for fixed-size tuples)
+MigrationTuple.Source source = MigrationTuple.Build("hello", 42, true);
+using var builder = MigrationTuple.CreateBuilder(workspace, source);
+MigrationTuple result = builder.RootElement;
+
+// V5 — Build delegate + CreateTuple (required for open tuples)
+using var builder2 = MigrationTuple.CreateBuilder(
     workspace,
     MigrationTuple.Build(
         static (ref b) => b.CreateTuple(
             item1: "hello",
             item2: 42,
             item3: true)));
-MigrationTuple result = builder.RootElement;
+MigrationTuple result2 = builder2.RootElement;
 ```
+
+The `Build` overload taking positional sources is the direct V5 replacement for `Create` — it takes positional `Source` parameters (with implicit conversions from the underlying .NET types) and returns a `Source` without delegate indirection. It is only available on **pure tuple** types (closed with `items: false` or `unevaluatedItems: false`).
 
 ### ValueTuple decomposition
 
@@ -1356,7 +1362,7 @@ string rgb = color.Match(
 | `v4.EnumerateObject()` | `v5.EnumerateObject()` (same) |
 | `v4.TryGetNumericValues(span, out written)` | `v5.TryGetNumericValues(span, out written)` (same) |
 | `v4.Item1` (tuple) | `v5.Item1` (same) |
-| `MigrationTuple.Create(a,b,c)` | `MigrationTuple.CreateBuilder(workspace, Build((ref b) => b.CreateTuple(a,b,c)))` |
+| `MigrationTuple.Create(a,b,c)` | `MigrationTuple.Build(a,b,c)` or `Build((ref b) => b.CreateTuple(a,b,c))` |
 | `v4.Match(...)` (composition) | `v5.Match(...)` (similar — entity types differ) |
 | `v4.Match(...)` (enum) | `v5.Match(...)` (same) |
 | `MyType.EnumValues.Active` | `MyType.EnumValues.Active` (same) |

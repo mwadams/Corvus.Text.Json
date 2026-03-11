@@ -426,5 +426,85 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region Pure tuple — Build from positional sources
+
+        [Fact]
+        public void PureTuple_BuildFromSources_CreatesValidSource()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            PureTuple.Source source = PureTuple.Build("world", 99, false);
+
+            using JsonDocumentBuilder<PureTuple.Mutable> builder = PureTuple.CreateBuilder(workspace, source);
+            PureTuple.Mutable root = builder.RootElement;
+
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("world", root[0].ToString());
+            Assert.Equal("99", root[1].ToString());
+            Assert.Equal("False", root[2].ToString());
+        }
+
+        [Fact]
+        public void PureTuple_BuildFromSources_RoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            PureTuple.Source source = PureTuple.Build("hello", 42, true);
+
+            using JsonDocumentBuilder<PureTuple.Mutable> builder = PureTuple.CreateBuilder(workspace, source);
+            string json = builder.RootElement.ToString();
+
+            using ParsedJsonDocument<PureTuple> reparsed = ParsedJsonDocument<PureTuple>.Parse(json);
+            Assert.Equal(3, reparsed.RootElement.GetArrayLength());
+
+            PureTuple.PrefixItems0Entity item0 = PureTuple.PrefixItems0Entity.From(reparsed.RootElement[0]);
+            Assert.Equal("hello", (string)item0);
+
+            PureTuple.PrefixItems1Entity item1 = PureTuple.PrefixItems1Entity.From(reparsed.RootElement[1]);
+            Assert.Equal(42, (int)item1);
+
+            PureTuple.PrefixItems2Entity item2 = PureTuple.PrefixItems2Entity.From(reparsed.RootElement[2]);
+            Assert.True((bool)item2);
+        }
+
+        [Fact]
+        public void PureTuple_BuildFromSources_MatchesBuildCreateTuple()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            // Build using Build(sources)
+            PureTuple.Source tupleSource = PureTuple.Build("test", 123, false);
+            using JsonDocumentBuilder<PureTuple.Mutable> tupleBuilder = PureTuple.CreateBuilder(workspace, tupleSource);
+            string tupleJson = tupleBuilder.RootElement.ToString();
+
+            // Build using Build + CreateTuple
+            PureTuple.Source buildSource = PureTuple.Build(
+                static (ref PureTuple.Builder b) =>
+                {
+                    b.CreateTuple("test", 123, false);
+                });
+            using JsonDocumentBuilder<PureTuple.Mutable> buildBuilder = PureTuple.CreateBuilder(workspace, buildSource);
+            string buildJson = buildBuilder.RootElement.ToString();
+
+            Assert.Equal(buildJson, tupleJson);
+        }
+
+        [Fact]
+        public void PureTuple_BuildFromSources_UsedAsPropertyValue()
+        {
+            // Verify that a Build(sources) Source can be used as a property in an object builder
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            PureTuple.Source tupleSource = PureTuple.Build("nested", 7, true);
+
+            // Build an ObjectWithMixedProperties containing a PureTuple as one of its values
+            // We can verify the Source is usable by materializing it in isolation
+            using JsonDocumentBuilder<PureTuple.Mutable> builder = PureTuple.CreateBuilder(workspace, tupleSource);
+            string json = builder.RootElement.ToString();
+            Assert.Equal("""["nested",7,true]""", json);
+        }
+
+        #endregion
     }
 }

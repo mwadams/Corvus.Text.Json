@@ -965,7 +965,7 @@ int item in tensor)                {
     /// </summary>
     /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
     /// <returns>The source from which to build the value.</returns>
-    public static Source BuildTensor(ReadOnlySpan<int> tensor)
+    public static Source Build(ReadOnlySpan<int> tensor)
     {
         return new Source(tensor);
     }

@@ -302,6 +302,38 @@ internal static partial class CodeGeneratorExtensions
                         .AppendLine("#endif");
                 }
             }
+
+            // Handle tuple kind for pure tuple types
+            if (!forContext && typeDeclaration.IsTuple() && GetTupleType(typeDeclaration) is TupleTypeDeclaration tupleTypeForAddItem && !HasNotAnyTupleItem(tupleTypeForAddItem))
+            {
+                string tupleBuilderClassName = isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName();
+
+                generator
+                    .AppendLineIndent("case Kind.Tuple:")
+                    .PushIndent()
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartItem();")
+                        .AppendIndent(tupleBuilderClassName, ".BuildTupleValue(");
+
+                for (int i = 1; i <= tupleTypeForAddItem.ItemsTypes.Length; i++)
+                {
+                    if (i > 1)
+                    {
+                        generator.Append(", ");
+                    }
+
+                    generator.Append("_tupleItem").Append(i);
+                }
+
+                generator
+                        .AppendLine(", ref valueBuilder);")
+                        .AppendLineIndent("valueBuilder.EndItem(handle);")
+                        .AppendLineIndent("break;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .PopIndent();
+            }
         }
 
         foreach (ComposedBuilder composedBuilder in builders)
@@ -699,6 +731,50 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendLine("#endif");
                 }
+            }
+
+            // Handle tuple kind for pure tuple types
+            if (!forContext && typeDeclaration.IsTuple() && GetTupleType(typeDeclaration) is TupleTypeDeclaration tupleTypeForAddProp && !HasNotAnyTupleItem(tupleTypeForAddProp))
+            {
+                string tupleBuilderClassName = isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName();
+
+                generator
+                    .AppendLineIndent("case Kind.Tuple:")
+                    .PushIndent()
+                    .AppendLineIndent("{")
+                    .PushIndent();
+
+                if (includeEscaping)
+                {
+                    generator
+                        .AppendLineIndent("ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(", nameName, ", escapeName, nameRequiresUnescaping);");
+                }
+                else
+                {
+                    generator
+                        .AppendLineIndent("ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(", nameName, ");");
+                }
+
+                generator
+                        .AppendIndent(tupleBuilderClassName, ".BuildTupleValue(");
+
+                for (int i = 1; i <= tupleTypeForAddProp.ItemsTypes.Length; i++)
+                {
+                    if (i > 1)
+                    {
+                        generator.Append(", ");
+                    }
+
+                    generator.Append("_tupleItem").Append(i);
+                }
+
+                generator
+                        .AppendLine(", ref valueBuilder);")
+                        .AppendLineIndent("valueBuilder.EndProperty(handle);")
+                        .AppendLineIndent("break;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .PopIndent();
             }
         }
 
@@ -1584,7 +1660,7 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
-        // Add BuildTensor factory method for fixed-size numeric arrays
+        // Add Build(ReadOnlySpan<T>) factory method for fixed-size numeric arrays
         if (typeDeclaration.IsFixedSizeNumericArray())
         {
             NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
@@ -1605,7 +1681,7 @@ internal static partial class CodeGeneratorExtensions
                     /// </summary>
                     /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
                     /// <returns>The source from which to build the value.</returns>
-                    public static {{sourceClassName}} BuildTensor(ReadOnlySpan<{{numericTypeName.Name}}> tensor)
+                    public static {{sourceClassName}} Build(ReadOnlySpan<{{numericTypeName.Name}}> tensor)
                     {
                         return new {{sourceClassName}}(tensor);
                     }
@@ -1616,6 +1692,65 @@ internal static partial class CodeGeneratorExtensions
                 generator
                     .AppendLine("#endif");
             }
+        }
+
+        // Add Build(in Source...) factory method for pure tuple types
+        if (typeDeclaration.IsTuple() && GetTupleType(typeDeclaration) is TupleTypeDeclaration tupleTypeForFactory && !HasNotAnyTupleItem(tupleTypeForFactory))
+        {
+            string sourceClassName = generator.SourceClassName();
+
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Build a tuple value directly from its positional item sources.")
+                .AppendLineIndent("/// </summary>");
+
+            int docIndex = 0;
+            foreach (ReducedTypeDeclaration item in tupleTypeForFactory.ItemsTypes)
+            {
+                docIndex++;
+                generator
+                    .AppendLineIndent("/// <param name=\"item", docIndex.ToString(), "\">The source for tuple item ", docIndex.ToString(), ".</param>");
+            }
+
+            generator
+                .AppendLineIndent("/// <returns>The source from which to build the value.</returns>")
+                .AppendIndent("public static ", sourceClassName, " Build(");
+
+            int paramIndex = 0;
+            foreach (ReducedTypeDeclaration item in tupleTypeForFactory.ItemsTypes)
+            {
+                if (paramIndex > 0)
+                {
+                    generator.Append(", ");
+                }
+
+                paramIndex++;
+                string fqdtn = item.ReducedType.FullyQualifiedDotnetTypeName();
+                generator
+                    .Append("in ").Append(fqdtn).Append(".").Append(generator.SourceClassName(fqdtn)).Append(" item").Append(paramIndex);
+            }
+
+            generator
+                .AppendLine(")")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendIndent("return new ", sourceClassName, "(");
+
+            for (int i = 1; i <= tupleTypeForFactory.ItemsTypes.Length; i++)
+            {
+                if (i > 1)
+                {
+                    generator.Append(", ");
+                }
+
+                generator.Append("item").Append(i);
+            }
+
+            generator
+                    .AppendLine(");")
+                .PopIndent()
+                .AppendLineIndent("}");
         }
 
         return generator;
@@ -1707,6 +1842,14 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return false;
+    }
+
+    private static TupleTypeDeclaration? GetTupleType(TypeDeclaration typeDeclaration)
+    {
+        return
+            typeDeclaration.TupleType() ??
+            typeDeclaration.ExplicitTupleType() ??
+            typeDeclaration.ImplicitTupleType();
     }
 
     private static CodeGenerator AppendCreateTuple(this CodeGenerator generator, TypeDeclaration typeDeclaration, TupleTypeDeclaration tupleType, bool allowsNonPrefixItems)
@@ -1935,6 +2078,75 @@ internal static partial class CodeGeneratorExtensions
                 generator
                     .AppendLine("#endif");
             }
+        }
+
+        // Add BuildTupleValue static method for pure tuple types
+        if (typeDeclaration.IsTuple() && GetTupleType(typeDeclaration) is TupleTypeDeclaration tupleTypeForBTV && !HasNotAnyTupleItem(tupleTypeForBTV))
+        {
+            string currentBuilderClassName = isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName();
+
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Builds the tuple value directly into the given complex value builder.")
+                .AppendLineIndent("/// </summary>");
+
+            int btDocIndex = 0;
+            foreach (ReducedTypeDeclaration item in tupleTypeForBTV.ItemsTypes)
+            {
+                btDocIndex++;
+                string fqdtn = item.ReducedType.FullyQualifiedDotnetTypeName();
+                generator
+                    .AppendLineIndent("/// <param name=\"item", btDocIndex.ToString(), "\">The source for tuple item ", btDocIndex.ToString(), ".</param>");
+            }
+
+            generator
+                .AppendLineIndent("/// <param name=\"o\">The complex value builder into which to write the tuple.</param>")
+                .AppendIndent("internal static void BuildTupleValue(");
+
+            int btParamIndex = 0;
+            foreach (ReducedTypeDeclaration item in tupleTypeForBTV.ItemsTypes)
+            {
+                if (btParamIndex > 0)
+                {
+                    generator.Append(", ");
+                }
+
+                btParamIndex++;
+                string fqdtn = item.ReducedType.FullyQualifiedDotnetTypeName();
+                generator
+                    .Append("in ").Append(fqdtn).Append(".").Append(generator.SourceClassName(fqdtn)).Append(" item").Append(btParamIndex);
+            }
+
+            generator
+                .AppendLine(", ref ComplexValueBuilder o)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("o.StartArray();")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent(currentBuilderClassName, " b = new(o);");
+
+            // Call CreateTuple with all item Sources
+            generator
+                    .AppendIndent("b.CreateTuple(");
+
+            for (int i = 1; i <= tupleTypeForBTV.ItemsTypes.Length; i++)
+            {
+                if (i > 1)
+                {
+                    generator.Append(", ");
+                }
+
+                generator.Append("item").Append(i);
+            }
+
+            generator
+                    .AppendLine(");")
+                    .AppendLineIndent("o = b._builder;")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("o.EndArray();")
+                .PopIndent()
+                .AppendLineIndent("}");
         }
 
         return generator;
@@ -2380,6 +2592,44 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendLine("#endif");
                 }
+            }
+
+            // Add tuple constructor for pure tuple types
+            if (typeDeclaration.IsTuple() && GetTupleType(typeDeclaration) is TupleTypeDeclaration tupleTypeForCtor && !HasNotAnyTupleItem(tupleTypeForCtor))
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendIndent("internal ", generator.SourceClassName(), "(");
+
+                int ctorIndex = 0;
+                foreach (ReducedTypeDeclaration item in tupleTypeForCtor.ItemsTypes)
+                {
+                    if (ctorIndex > 0)
+                    {
+                        generator.Append(", ");
+                    }
+
+                    ctorIndex++;
+                    string fqdtn = item.ReducedType.FullyQualifiedDotnetTypeName();
+                    generator
+                        .Append("in ").Append(fqdtn).Append(".").Append(generator.SourceClassName(fqdtn)).Append(" item").Append(ctorIndex);
+                }
+
+                generator
+                    .AppendLine(")")
+                    .AppendLineIndent("{")
+                    .PushIndent();
+
+                for (int i = 1; i <= tupleTypeForCtor.ItemsTypes.Length; i++)
+                {
+                    generator
+                        .AppendLineIndent("_tupleItem", i.ToString(), " = item", i.ToString(), ";");
+                }
+
+                generator
+                        .AppendLineIndent("_kind = Kind.Tuple;")
+                    .PopIndent()
+                    .AppendLineIndent("}");
             }
         }
         else
@@ -2833,6 +3083,20 @@ internal static partial class CodeGeneratorExtensions
                             .AppendLine("#endif");
                     }
                 }
+
+                // Add tuple item Source fields for pure tuple types
+                if (typeDeclaration.IsTuple() && GetTupleType(typeDeclaration) is TupleTypeDeclaration tupleTypeForFields && !HasNotAnyTupleItem(tupleTypeForFields))
+                {
+                    int fieldIndex = 0;
+                    foreach (ReducedTypeDeclaration item in tupleTypeForFields.ItemsTypes)
+                    {
+                        fieldIndex++;
+                        string fqdtn = item.ReducedType.FullyQualifiedDotnetTypeName();
+                        generator
+                            .ReserveNameIfNotReserved($"_tupleItem{fieldIndex}")
+                            .AppendLineIndent("private readonly ", fqdtn, ".", generator.SourceClassName(fqdtn), " _tupleItem", fieldIndex.ToString(), ";");
+                    }
+                }
             }
         }
 
@@ -3145,6 +3409,14 @@ internal static partial class CodeGeneratorExtensions
                 generator
                     .AppendLine("#endif");
             }
+        }
+
+        // Add tuple kind for pure tuple types
+        if (typeDeclaration.IsTuple() && GetTupleType(typeDeclaration) is TupleTypeDeclaration tupleTypeForKind && !HasNotAnyTupleItem(tupleTypeForKind))
+        {
+            generator
+                .ReserveName("Tuple")
+                .AppendLineIndent("Tuple,");
         }
 
         CoreTypes rootCore = typeDeclaration.ImpliedCoreTypesOrAny();

@@ -87,7 +87,7 @@ Console.WriteLine($"Dimension: {TensorRank3.Dimension}, {TensorRank3.SecondRank.
 Console.WriteLine($"Value buffer size: {TensorRank3.ValueBufferSize}");
 Console.WriteLine();
 
-// ---- BuildTensor: construct a tensor directly from a flat span ----
+// ---- Build from span: construct a tensor directly from a flat span ----
 
 // Fill a span with sequential values
 Span<double> newValues = stackalloc double[TensorRank3.ValueBufferSize];
@@ -96,13 +96,13 @@ for (int i = 0; i < newValues.Length; i++)
     newValues[i] = i * 0.5;
 }
 
-// BuildTensor creates a Source directly from the span — no delegate needed
-TensorRank3.Source tensorSource = TensorRank3.BuildTensor(newValues);
+// Build creates a Source directly from the span — no delegate needed
+TensorRank3.Source tensorSource = TensorRank3.Build(newValues);
 using JsonWorkspace workspace2 = JsonWorkspace.Create();
 using var builtTensor = TensorRank3.CreateBuilder(workspace2, tensorSource);
 TensorRank3 constructed = builtTensor.RootElement;
 
-Console.WriteLine("Tensor constructed from flat span via BuildTensor:");
+Console.WriteLine("Tensor constructed from flat span via Build:");
 Console.WriteLine(constructed);
 Console.WriteLine();
 

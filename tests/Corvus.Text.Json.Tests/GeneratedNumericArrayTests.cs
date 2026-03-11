@@ -565,15 +565,15 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
-        #region BuildTensor
+        #region Build from span (tensor)
 
         [Fact]
-        public void Rank1Int32Vector_BuildTensor()
+        public void Rank1Int32Vector_BuildFromSpan()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<int> values = [1, 2, 3, 4];
-            Rank1Int32Vector.Source source = Rank1Int32Vector.BuildTensor(values);
+            Rank1Int32Vector.Source source = Rank1Int32Vector.Build(values);
 
             using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
                 Rank1Int32Vector.CreateBuilder(workspace, source);
@@ -587,12 +587,12 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void Rank1DoubleVector_BuildTensor()
+        public void Rank1DoubleVector_BuildFromSpan()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
-            Rank1DoubleVector.Source source = Rank1DoubleVector.BuildTensor(values);
+            Rank1DoubleVector.Source source = Rank1DoubleVector.Build(values);
 
             using JsonDocumentBuilder<Rank1DoubleVector.Mutable> doc =
                 Rank1DoubleVector.CreateBuilder(workspace, source);
@@ -605,12 +605,12 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void Rank2DoubleMatrix_BuildTensor()
+        public void Rank2DoubleMatrix_BuildFromSpan()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<double> values = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
-            Rank2DoubleMatrix.Source source = Rank2DoubleMatrix.BuildTensor(values);
+            Rank2DoubleMatrix.Source source = Rank2DoubleMatrix.Build(values);
 
             using JsonDocumentBuilder<Rank2DoubleMatrix.Mutable> doc =
                 Rank2DoubleMatrix.CreateBuilder(workspace, source);
@@ -632,12 +632,12 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void Rank3Int32Cube_BuildTensor()
+        public void Rank3Int32Cube_BuildFromSpan()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-            Rank3Int32Cube.Source source = Rank3Int32Cube.BuildTensor(values);
+            Rank3Int32Cube.Source source = Rank3Int32Cube.Build(values);
 
             using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
                 Rank3Int32Cube.CreateBuilder(workspace, source);
@@ -673,12 +673,12 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void Rank1Int32Vector_BuildTensor_RoundTrip()
+        public void Rank1Int32Vector_BuildFromSpan_RoundTrip()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<int> values = [10, 20, 30, 40];
-            Rank1Int32Vector.Source source = Rank1Int32Vector.BuildTensor(values);
+            Rank1Int32Vector.Source source = Rank1Int32Vector.Build(values);
 
             using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
                 Rank1Int32Vector.CreateBuilder(workspace, source);
@@ -695,12 +695,12 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void Rank3Int32Cube_BuildTensor_RoundTrip()
+        public void Rank3Int32Cube_BuildFromSpan_RoundTrip()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-            Rank3Int32Cube.Source source = Rank3Int32Cube.BuildTensor(values);
+            Rank3Int32Cube.Source source = Rank3Int32Cube.Build(values);
 
             using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
                 Rank3Int32Cube.CreateBuilder(workspace, source);
@@ -713,12 +713,12 @@ namespace Corvus.Text.Json.Tests
         }
 
         [Fact]
-        public void Rank1Int32Vector_BuildTensor_WrongSize_ThrowsArgumentException()
+        public void Rank1Int32Vector_BuildFromSpan_WrongSize_ThrowsArgumentException()
         {
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<int> values = [1, 2, 3, 4, 5]; // Wrong size: 5 instead of 4
-            Rank1Int32Vector.Source source = Rank1Int32Vector.BuildTensor(values);
+            Rank1Int32Vector.Source source = Rank1Int32Vector.Build(values);
 
             try
             {

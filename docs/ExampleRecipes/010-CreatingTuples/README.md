@@ -89,6 +89,23 @@ Console.WriteLine(threeTuple2);
 // Output: [42,"World",true]
 ```
 
+### Creating a tuple directly from positional sources
+
+For **fixed-size tuples** (those defined with `unevaluatedItems: false` or `items: false`), you can use the `Build` overload that takes positional `Source` values directly, without the delegate indirection:
+
+```csharp
+ThreeTuple.Source tupleSource = ThreeTuple.Build(99, "Direct", false);
+using var directDoc = ThreeTuple.CreateBuilder(workspace, tupleSource);
+ThreeTuple threeTuple3 = directDoc.RootElement;
+
+Console.WriteLine(threeTuple3);
+// Output: [99,"Direct",false]
+```
+
+Each parameter corresponds to a tuple item position, and accepts the `Source` type for that position (with implicit conversions from the underlying .NET type, e.g. `int`, `string`, `bool`).
+
+> **Note:** This `Build` overload is only available on **pure tuple** types (closed with `unevaluatedItems: false` or `items: false`). Tuples that allow additional items must still use the `Build` delegate + `CreateTuple` pattern.
+
 ### Comparing tuples
 
 ```csharp
@@ -119,13 +136,17 @@ ThreeTuple threeTuple2 = ThreeTuple.Create(3, "Hello", false);
 
 ### V5 (Corvus.Text.Json)
 ```csharp
-// Create via builder
+// Create via Build (preferred for fixed-size tuples)
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var doc = ThreeTuple.CreateBuilder(workspace, ThreeTuple.Build(static (ref ThreeTuple.Builder b) =>
+ThreeTuple.Source source = ThreeTuple.Build(42, "World", true);
+using var doc = ThreeTuple.CreateBuilder(workspace, source);
+ThreeTuple threeTuple = doc.RootElement;
+
+// Or create via Build delegate + CreateTuple (required for tuples with additional items)
+using var doc2 = ThreeTuple.CreateBuilder(workspace, ThreeTuple.Build(static (ref ThreeTuple.Builder b) =>
 {
     b.CreateTuple(42, "World", true);
 }));
-ThreeTuple threeTuple = doc.RootElement;
 
 // Access items (same as V4)
 int item1 = threeTuple.Item1;

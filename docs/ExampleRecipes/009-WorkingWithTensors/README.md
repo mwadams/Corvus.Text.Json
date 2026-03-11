@@ -52,7 +52,7 @@ The code generator produces:
 
 Fixed-size numeric arrays gain **tensor operations**:
 - `TryGetNumericValues(Span<double>, out int)` — extract all values into a flat buffer
-- `BuildTensor(ReadOnlySpan<double>)` — create a `Source` directly from a flat numeric span (preferred for construction from raw data)
+- `Build(ReadOnlySpan<double>)` — create a `Source` directly from a flat numeric span (preferred for construction from raw data)
 - `CreateTensor(ReadOnlySpan<double>)` on the mutable builder — reconstruct from a flat buffer inside a `Build` delegate
 - `Rank`, `Dimension`, `ValueBufferSize` — static metadata about the tensor structure
 
@@ -102,15 +102,15 @@ Console.WriteLine($"Dimension: {TensorRank3.Dimension}, {TensorRank3.SecondRank.
 
 ### Constructing a tensor from a flat numeric span
 
-The preferred way to create a tensor from raw numeric data is `BuildTensor()`. It takes a `ReadOnlySpan<T>` and returns a `Source` that can be passed directly to `CreateBuilder()`:
+The preferred way to create a tensor from raw numeric data is `Build()`. It takes a `ReadOnlySpan<T>` and returns a `Source` that can be passed directly to `CreateBuilder()`:
 
 ```csharp
-// BuildTensor — the direct route: span → Source → builder
+// Build — the direct route: span → Source → builder
 Span<double> flatValues = stackalloc double[TensorRank3.ValueBufferSize];
 // ... populate flatValues ...
 
 using JsonWorkspace workspace = JsonWorkspace.Create();
-TensorRank3.Source source = TensorRank3.BuildTensor(flatValues);
+TensorRank3.Source source = TensorRank3.Build(flatValues);
 using var builder = TensorRank3.CreateBuilder(workspace, source);
 TensorRank3 result = builder.RootElement;
 ```
@@ -130,5 +130,5 @@ The span must contain exactly `ValueBufferSize` elements; passing the wrong numb
 ## Key differences from V4
 
 - **Collection expressions are not supported** — V5 generated types cannot be initialized via `[[1.0, 2.0], ...]`. Parse from JSON instead.
-- **Tensor reconstruction** — V4's `FromValues(span)` becomes `BuildTensor(span)` for direct construction, or `CreateBuilder(workspace, Build((ref b) => b.CreateTensor(values)))` for the delegate pattern.
+- **Tensor reconstruction** — V4's `FromValues(span)` becomes `Build(span)` for direct construction, or `CreateBuilder(workspace, Build((ref b) => b.CreateTensor(values)))` for the delegate pattern.
 - **Nested mutation** — Chain indexers naturally: `root[3][0].SetItem(1, value)` mutates tensor[3][0][1].
