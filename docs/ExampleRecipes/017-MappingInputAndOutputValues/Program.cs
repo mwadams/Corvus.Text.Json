@@ -16,19 +16,15 @@ Console.WriteLine($"  id: {source.Id}");
 Console.WriteLine($"  name: {source.Name}");
 Console.WriteLine();
 
-// Transform source to target using builder pattern
+// Transform source to target using builder
 Console.WriteLine("Transforming source to target...");
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-// Create target using CreateBuilder with a delegate
+// Create target using CreateBuilder
+// Property entities are compatible - use From() to explicitly convert between them
 using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
 {
-    // Extract values from source entities and create target
-    // Since Source/Target are different schemas, we work with the underlying values
-    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue))
-    {
-        b.Create(nameValue, idValue);  // parameters: fullName, identifier (alphabetical)
-    }
+    b.Create(TargetType.FullNameEntity.From(source.Name), TargetType.IdentifierEntity.From(source.Id));
 });
 
 TargetType target = targetBuilder.RootElement;
@@ -42,14 +38,11 @@ Console.WriteLine();
 
 // Demonstrate reverse transformation (target -> source)
 Console.WriteLine("Reverse transformation (target -> source)...");
+
+// Property entities are compatible in both directions
 using var sourceBuilder = SourceType.CreateBuilder(workspace, (ref SourceType.Builder b) =>
 {
-    // Extract from target entities and create source
-    if (target.Identifier.TryGetValue(out long identifierValue) && 
-        target.FullName.TryGetValue(out string? fullNameValue))
-    {
-        b.Create(identifierValue, fullNameValue);  // parameters: id, name (alphabetical)
-    }
+    b.Create(SourceType.IdEntity.From(target.Identifier), SourceType.NameEntity.From(target.FullName));
 });
 
 SourceType reversedSource = sourceBuilder.RootElement;
@@ -57,12 +50,14 @@ Console.WriteLine("Reversed source JSON:");
 Console.WriteLine(reversedSource);
 Console.WriteLine();
 
-// Demonstrate transformation with modification
+// Demonstrate transformation WITH value modification
 Console.WriteLine("Transformation with modification...");
+
+// Only extract to primitives when you need to transform the values
 using var modifiedBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
 {
-    // Extract, transform, then create - shows working with generated types
-    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue))
+    // Extract values when transforming them
+    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue) && nameValue is not null)
     {
         b.Create(nameValue.ToUpperInvariant(), idValue + 1000);  // fullName, identifier
     }

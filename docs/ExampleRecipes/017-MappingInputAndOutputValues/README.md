@@ -64,21 +64,19 @@ Console.WriteLine($"Source - id: {source.Id}, name: {source.Name}");
 // Output: Source - id: 123, name: John Doe
 ```
 
-### Mapping to target schema
+### Mapping between schemas
 
-Use the builder pattern to construct the target type from source data:
+Use `From()` to convert property entities between compatible schemas:
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
+using var parsedSource = ParsedJsonDocument<SourceType>.Parse(sourceJson);
+SourceType source = parsedSource.RootElement;
 
-// Map to target type using builder
-using var targetBuilder = TargetType.CreateBuilder(workspace, static (ref TargetType.Builder b) =>
+// Map to target type - use From() to convert property entities (no allocation)
+using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
 {
-    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue))
-    {
-        // Create() parameters are in alphabetical order: fullName, identifier
-        b.Create(nameValue, idValue);
-    }
+    b.Create(TargetType.FullNameEntity.From(source.Name), TargetType.IdentifierEntity.From(source.Id));
 });
 
 TargetType target = targetBuilder.RootElement;
@@ -87,10 +85,25 @@ Console.WriteLine($"Target - identifier: {target.Identifier}, fullName: {target.
 ```
 
 **Key points:**
-- Work with generated types directly
-- Only extract to primitives when needed for cross-schema operations
-- Use `TryGetValue()` to safely extract primitive values
-- The `Create()` method parameters are ordered alphabetically by property name
+- Property entity types are compatible when their schemas match (both are strings, both are integers, etc.)
+- Use `TargetEntityType.From(sourceProperty)` to explicitly convert between compatible entity types
+- `From()` creates a zero-allocation view over the same underlying JSON data
+- Only extract with `TryGetValue()` when you need to **transform** values (arithmetic, string operations)
+
+### When to extract values
+
+Only use `TryGetValue()` when you need to modify the actual values:
+
+```csharp
+using var modifiedBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
+{
+    // Extract ONLY when transforming values
+    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue))
+    {
+        b.Create(nameValue.ToUpperInvariant(), idValue + 1000);
+    }
+});
+```
 
 ### Multi-stage transformation pipelines
 
