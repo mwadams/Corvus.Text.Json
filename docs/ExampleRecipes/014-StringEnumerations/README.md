@@ -125,19 +125,18 @@ if (red.TryGetValue(out string? redStr) && redStr == "red")
     Console.WriteLine("It's red!");
 }
 
-// Pattern matching with entity types
+// Pattern matching with named parameters
 string desc = red.Match(
-    (in Color.Enum0Entity r) => "The color of fire",
-    (in Color.Enum1Entity g) => "The color of grass",
-    (in Color.Enum2Entity b) => "The color of sky",
-    (in Color unknown) => throw new InvalidOperationException());
+    matchRed: static () => "The color of fire",
+    matchGreen: static () => "The color of grass",
+    matchBlue: static () => "The color of sky");
 ```
 
 **Key differences:**
 - V5 uses `ParsedJsonDocument<T>` for parsing with proper resource management
 - V5 uses `TryGetValue(out string?)` to extract the underlying string value
-- V5 generates entity types (`Enum0Entity`, `Enum1Entity`, etc.) for type-safe matching
-- V5 requires explicit entity conversion with `From()` method
+- V5 pattern matching uses named parameters based on enum values (`matchRed`, `matchGreen`, `matchBlue`)
+- V5 provides better performance through workspace-pooled allocations
 - V5 pattern matching uses entity types instead of string literals
 
 ## Running the Example

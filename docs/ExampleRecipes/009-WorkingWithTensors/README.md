@@ -85,14 +85,6 @@ if (updatedTensor.TryGetNumericValues(tensorAsSpan, out int written))
     Console.WriteLine($"All {written} values: {string.Join(", ", tensorAsSpan.ToArray())}");
 }
 
-// Construct a tensor from a ReadOnlySpan<double>
-double[] values = tensorAsSpan.ToArray();
-using var fromSpanDoc = TensorRank3.CreateBuilder(workspace, TensorRank3.Build((ref b) =>
-{
-    b.CreateTensor(values);
-}));
-TensorRank3 fromSpan = fromSpanDoc.RootElement;
-
 // Find the rank of each array (note the sub arrays of diminishing rank)
 Console.WriteLine($"Rank: {TensorRank3.Rank}, {TensorRank3.SecondRank.Rank}, {TensorRank3.ThirdRank.Rank}");
 

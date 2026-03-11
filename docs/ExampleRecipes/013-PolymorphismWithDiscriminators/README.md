@@ -69,35 +69,20 @@ Console.WriteLine($"Circle: {circle}");
 
 ### Accessing discriminated variant properties
 
-Once you have a `Shape`, convert it to the specific variant type to access its properties:
+Once you have a `Shape`, you can access its properties using the pattern matching API shown below, or by converting to the specific variant type:
 
 ```csharp
-// Access circle properties
+// Alternative: Direct variant access (not shown in Program.cs)
+// This requires knowing the discriminator value upfront
 Shape.OneOf0Entity circleEntity = Shape.OneOf0Entity.From(circle);
 Console.WriteLine($"Circle radius: {circleEntity.Radius}");
-// Output: Circle radius: 5
-
-// Parse a rectangle
-string rectangleJson = """
-    {
-      "type": "rectangle",
-      "width": 10.0,
-      "height": 20.0
-    }
-    """;
-
-using var parsedRectangle = ParsedJsonDocument<Shape>.Parse(rectangleJson);
-Shape rectangle = parsedRectangle.RootElement;
-
-// Access rectangle properties
-Shape.OneOf1Entity rectangleEntity = Shape.OneOf1Entity.From(rectangle);
-Console.WriteLine($"Rectangle width: {rectangleEntity.Width}, height: {rectangleEntity.Height}");
-// Output: Rectangle width: 10, height: 20
 ```
+
+**Note:** The primary recommended pattern is to use `Match()` (demonstrated below) as it provides exhaustive pattern matching and handles all variants safely. Direct variant access with `OneOf0Entity.From()` can be used when you already know which variant you have, but requires manual validation of the discriminator.
 
 ### Pattern matching with discriminators
 
-While this recipe demonstrates direct variant access, you can also use the `Match()` method for exhaustive pattern matching:
+The `Match()` method provides type-safe exhaustive pattern matching using named parameters based on the required properties of each variant:
 
 ```csharp
 string DescribeShape(in Shape shape)

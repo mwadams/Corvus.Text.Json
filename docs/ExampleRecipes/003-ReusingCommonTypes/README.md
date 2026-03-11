@@ -53,7 +53,25 @@ The generated types are:
 - `PersonCommonSchema.ConstrainedString` — the shared string type with length constraints (1–256)
 - `PersonCommonSchema.HeightEntity` — the constrained height type (`double`, `exclusiveMinimum: 0`, `maximum: 3.0`)
 
-The `GivenName`, `FamilyName`, and `OtherNames` properties all return the *same* `ConstrainedString` type, enabling direct comparison and shared operations.
+The `GivenName`, `FamilyName`, and `OtherNames` properties all return the *same* `ConstrainedString` type.
+
+## Benefits of Shared Schema
+
+Using `$ref` to share schema definitions provides two key advantages:
+
+### 1. Code Size Reduction
+
+Instead of generating three separate entity types (`GivenNameEntity`, `FamilyNameEntity`, `OtherNamesEntity`), the generator produces a single `ConstrainedString` type. This reduces the overall size of the generated assembly and simplifies the API surface.
+
+### 2. Type Compatibility and Interoperability
+
+**Shared schemas mean the generated value types are compatible.** Because `GivenName`, `FamilyName`, and `OtherNames` all use the same `$ref`, they return the same `ConstrainedString` type. This enables:
+
+- **Zero-allocation comparisons**: `givenName.Equals(familyName)` compares the underlying JSON data directly
+- **Zero-allocation conversions**: If you have multiple schemas using the same `$ref`, their property entity types are compatible and can be converted using `.From()` without extracting to primitives
+- **Shared operations**: All the same methods, formatting, and validation logic apply uniformly
+
+This compatibility is essential for mapping between different schemas that share common sub-schemas, as demonstrated in [Recipe 017 - Mapping Input and Output Values](../017-MappingInputAndOutputValues/).
 
 [Example code](./Program.cs)
 

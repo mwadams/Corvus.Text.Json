@@ -123,35 +123,13 @@ Console.WriteLine($"Budget: {composite.Budget}");
 ### Working with optional properties
 
 ```csharp
-if (documentation.TryGetProperty("description"u8, out var description))
+if (!documentation.Description.IsUndefined())
 {
-    Console.WriteLine($"Description: {description.GetString()}");
+    Console.WriteLine($"Description: {documentation.Description}");
 }
 ```
 
-### Functions operating on composed types
-
-You can write functions that accept any type conforming to a particular schema, similar to working with interfaces:
-
-```csharp
-void ProcessDocumentation(in Documentation doc)
-{
-    Console.WriteLine($"Title: {doc.Title}");
-    if (doc.TryGetProperty("description"u8, out var desc))
-    {
-        Console.WriteLine($"Description: {desc.GetString()}");
-    }
-}
-
-void ProcessCountable(in Countable c)
-{
-    Console.WriteLine($"Count: {c.Count}");
-}
-
-// Call with composite type
-ProcessDocumentation(documentation);
-ProcessCountable(countable);
-```
+The generated types handle optional properties through entity types that can be checked with `IsUndefined()`. This avoids the need for dictionary-style property access.
 
 Note the use of the `in` modifier to avoid unnecessary copying of the struct values.
 

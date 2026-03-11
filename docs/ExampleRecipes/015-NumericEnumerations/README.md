@@ -25,7 +25,29 @@ This constrains values to exactly one of the three numbers: `1`, `2`, or `3`.
 
 ## Generated Code Usage
 
+### Using static const instances
+
+The generator creates static const instances for each enum value, accessible via the `EnumValues` class:
+
+```csharp
+// Use predefined const instances instead of parsing JSON
+Status active = Status.EnumValues.NumberOne;     // value: 1
+Status inactive = Status.EnumValues.NumberTwo;   // value: 2  
+Status pending = Status.EnumValues.NumberThree;  // value: 3
+
+Console.WriteLine($"Active status: {active}");
+// Output: Active status: 1
+```
+
+**Benefits of const instances:**
+- Zero allocation - reuses the same immutable instance
+- Type-safe - no need to parse or validate
+- Compile-time correctness - impossible to create invalid enum values
+- Performance - no parsing overhead
+
 ### Parsing numeric enumeration values
+
+You can also parse from JSON:
 
 ```csharp
 string json = "1";
@@ -131,18 +153,17 @@ if (status.TryGetValue(out int value))
     Console.WriteLine($"Value: {value}");
 }
 
-// Pattern matching with entity types
+// Pattern matching with named parameters
 string desc = status.Match(
-    (in Status.Enum0Entity s) => "Pending",
-    (in Status.Enum1Entity s) => "Active",
-    (in Status.Enum2Entity s) => "Complete",
-    (in Status unknown) => throw new InvalidOperationException());
+    matchNumberOne: static () => "Pending",
+    matchNumberTwo: static () => "Active",
+    matchNumberThree: static () => "Complete");
 ```
 
 **Key differences:**
 - V5 uses `ParsedJsonDocument<T>` for parsing
 - V5 uses `TryGetValue(out int)` to extract numeric values
-- V5 generates entity types (`Enum0Entity`, etc.) for pattern matching
+- V5 pattern matching uses named parameters based on enum values (`matchNumberOne`, `matchNumberTwo`, `matchNumberThree`)
 - V4's `ConstInstance` pattern (for documented enums with `oneOf`+`const`) is not shown in this simple V5 example
 
 ## Running the Example

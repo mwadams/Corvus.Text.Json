@@ -93,7 +93,7 @@ if (map.TryGetProperty("baz"u8, out var bazValue))
 Console.WriteLine("All entries:");
 foreach (var property in map.EnumerateObject())
 {
-    Console.WriteLine($"{property.Name.GetString()} = {property.Value.GetInt32()}");
+    Console.WriteLine($"  {property.Name} = {property.Value}");
 }
 // Output:
 // All entries:
@@ -116,12 +116,33 @@ newMap.SetProperty("alpha"u8, 10);
 newMap.SetProperty("beta"u8, 20);
 newMap.SetProperty("gamma"u8, 30);
 
-StringToIntMap result = newMap.AsImmutable();
-Console.WriteLine(result);
+Console.WriteLine(newMap);
 // Output: {"alpha":10,"beta":20,"gamma":30}
 ```
 
-The mutable map allows you to dynamically add properties with `SetProperty()`, providing a flexible way to construct maps at runtime.
+### Mutating an existing map
+
+You can also create a mutable builder from an existing map to modify its properties:
+
+```csharp
+// Create a builder from the parsed map
+using var mutatedBuilder = map.CreateBuilder(workspace);
+StringToIntMap.Mutable mutableMap = mutatedBuilder.RootElement;
+
+// Update an existing property
+mutableMap.SetProperty("foo"u8, 100);
+
+// Add a new property
+mutableMap.SetProperty("qux"u8, 4);
+
+// Remove a property
+mutableMap.RemoveProperty("bar"u8);
+
+Console.WriteLine(mutableMap);
+// Output: {"foo":100,"baz":3,"qux":4}
+```
+
+The mutable map allows you to dynamically add, update, and remove properties with `SetProperty()` and `RemoveProperty()`, providing a flexible way to construct and modify maps at runtime.
 
 ## UTF-8 String Literals for Performance
 

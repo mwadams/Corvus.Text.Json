@@ -64,9 +64,13 @@ Console.WriteLine($"Source - id: {source.Id}, name: {source.Name}");
 // Output: Source - id: 123, name: John Doe
 ```
 
-### Mapping between schemas
+## Three Levels of Transformation
 
-Use `From()` to convert property entities between compatible schemas:
+This recipe demonstrates three transformation patterns with increasing complexity:
+
+### Level 1: Zero-Allocation Property Mapping
+
+Use `From()` to convert property entities between compatible schemas without extracting primitive values:
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
@@ -88,9 +92,27 @@ Console.WriteLine($"Target - identifier: {target.Identifier}, fullName: {target.
 - Property entity types are compatible when their schemas match (both are strings, both are integers, etc.)
 - Use `TargetEntityType.From(sourceProperty)` to explicitly convert between compatible entity types
 - `From()` creates a zero-allocation view over the same underlying JSON data
-- Only extract with `TryGetValue()` when you need to **transform** values (arithmetic, string operations)
+- No string allocation occurs - both source and target reference the same parsed data
 
-### When to extract values
+### Level 2: Bidirectional Mapping
+
+The same pattern works in reverse to map target back to source:
+
+```csharp
+// Reverse transformation (target -> source)
+using var sourceBuilder = SourceType.CreateBuilder(workspace, (ref SourceType.Builder b) =>
+{
+    b.Create(SourceType.IdEntity.From(target.Identifier), SourceType.NameEntity.From(target.FullName));
+});
+
+SourceType reversedSource = sourceBuilder.RootElement;
+Console.WriteLine(reversedSource);
+// Output: {"id":123,"name":"John Doe"}
+```
+
+This demonstrates that compatibility works bidirectionally - you can map from source to target and back again using the same zero-allocation pattern.
+
+### Level 3: Transformation with Value Modification
 
 Only use `TryGetValue()` when you need to modify the actual values:
 
@@ -98,12 +120,20 @@ Only use `TryGetValue()` when you need to modify the actual values:
 using var modifiedBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
 {
     // Extract ONLY when transforming values
-    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue))
+    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue) && nameValue is not null)
     {
         b.Create(nameValue.ToUpperInvariant(), idValue + 1000);
     }
 });
+
+TargetType modified = modifiedBuilder.RootElement;
+Console.WriteLine(modified);
+// Output: {"fullName":"JOHN DOE","identifier":1123}
 ```
+
+**When to extract:**
+- Use `TryGetValue()` only when performing arithmetic operations, string transformations, or other value modifications
+- For simple remapping (like Levels 1 and 2), use `From()` to avoid allocation
 
 ### Multi-stage transformation pipelines
 

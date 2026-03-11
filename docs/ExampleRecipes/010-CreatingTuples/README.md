@@ -79,7 +79,7 @@ Console.WriteLine($"Item3: {threeTuple.Item3}");  // Output: Item3: false
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var builtDoc = ThreeTuple.CreateBuilder(workspace, static ThreeTuple.Build((ref ThreeTuple.Builder b) =>
+using var builtDoc = ThreeTuple.CreateBuilder(workspace, ThreeTuple.Build(static (ref ThreeTuple.Builder b) =>
 {
     b.CreateTuple(42, "World", true);
 }));
@@ -121,7 +121,7 @@ ThreeTuple threeTuple2 = ThreeTuple.Create(3, "Hello", false);
 ```csharp
 // Create via builder
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var doc = ThreeTuple.CreateBuilder(workspace, static ThreeTuple.Build((ref ThreeTuple.Builder b) =>
+using var doc = ThreeTuple.CreateBuilder(workspace, ThreeTuple.Build(static (ref ThreeTuple.Builder b) =>
 {
     b.CreateTuple(42, "World", true);
 }));
