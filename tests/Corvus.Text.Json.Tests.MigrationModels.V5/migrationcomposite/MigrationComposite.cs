@@ -693,6 +693,9 @@ public readonly partial struct MigrationComposite
         Matcher<Corvus.Text.Json.Tests.MigrationModels.V5.MigrationComposite.RequiredName, TContext, TResult> matchRequiredName,
         Matcher<Corvus.Text.Json.Tests.MigrationModels.V5.MigrationComposite.RequiredCount, TContext, TResult> matchRequiredCount,
         Matcher<Corvus.Text.Json.Tests.MigrationModels.V5.MigrationComposite, TContext, TResult> defaultMatch)
+#if NET9_0_OR_GREATER
+    where TContext : allows ref struct
+#endif
     {
         if (Corvus.Text.Json.Tests.MigrationModels.V5.MigrationComposite.RequiredName.JsonSchema.Evaluate(_parent, _idx))
         {

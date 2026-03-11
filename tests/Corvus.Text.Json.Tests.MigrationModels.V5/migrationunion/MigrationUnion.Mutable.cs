@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -258,6 +257,9 @@ public readonly partial struct MigrationUnion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UnescapedUtf8JsonString GetUtf8String() { CheckValidInstance(); return _parent.GetUtf8JsonString(_idx, JsonTokenType.String); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public UnescapedUtf16JsonString GetUtf16String() { CheckValidInstance(); return _parent.GetUtf16JsonString(_idx, JsonTokenType.String); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string? GetString() { CheckValidInstance(); return _parent.GetString(_idx, JsonTokenType.String); }
@@ -557,6 +559,9 @@ public readonly partial struct MigrationUnion
             Matcher<Corvus.Text.Json.Tests.MigrationModels.V5.MigrationUnion.OneOf1Entity, TContext, TResult> matchOneOf1Entity,
             Matcher<Corvus.Text.Json.Tests.MigrationModels.V5.MigrationUnion.OneOf2Entity, TContext, TResult> matchOneOf2Entity,
             Matcher<Corvus.Text.Json.Tests.MigrationModels.V5.MigrationUnion.Mutable, TContext, TResult> defaultMatch)
+#if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+#endif
         {
             if (Corvus.Text.Json.Tests.MigrationModels.V5.MigrationUnion.OneOf0Entity.JsonSchema.Evaluate(_parent, _idx))
             {

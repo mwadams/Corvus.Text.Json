@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -181,6 +180,9 @@ public readonly partial struct MigrationItemArray
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public UnescapedUtf8JsonString GetUtf8String() { CheckValidInstance(); return _parent.GetUtf8JsonString(_idx, JsonTokenType.String); }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public UnescapedUtf16JsonString GetUtf16String() { CheckValidInstance(); return _parent.GetUtf16JsonString(_idx, JsonTokenType.String); }
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public string? GetString() { CheckValidInstance(); return _parent.GetString(_idx, JsonTokenType.String); }

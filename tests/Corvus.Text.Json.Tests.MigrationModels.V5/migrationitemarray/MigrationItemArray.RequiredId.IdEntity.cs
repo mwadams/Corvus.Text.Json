@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -154,6 +153,17 @@ public readonly partial struct MigrationItemArray
             public static implicit operator JsonElement(IdEntity instance)
             {
                 return JsonElement.From(instance);
+            }
+
+            /// <summary>
+            /// Converts the instance from a JsonElement.
+            /// </summary>
+            /// <param name="value">The instance of this type as a JsonElement.</param>
+            /// <returns>An instance of the type, initialized from the <see cref="JsonElement"/>.</returns>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator IdEntity(JsonElement instance)
+            {
+                return IdEntity.From(instance);
             }
 
             /// <summary>

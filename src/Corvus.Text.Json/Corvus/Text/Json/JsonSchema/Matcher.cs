@@ -16,7 +16,11 @@ namespace Corvus.Text.Json;
 /// <returns>The result of processing the match.</returns>
 [CLSCompliant(false)]
 public delegate TResult Matcher<TMatch, TContext, TResult>(in TMatch match, in TContext context)
-    where TMatch : struct, IJsonElement<TMatch>;
+    where TMatch : struct, IJsonElement<TMatch>
+#if NET9_0_OR_GREATER
+    where TContext : allows ref struct
+#endif
+    ;
 
 /// <summary>
 /// A callback for a pattern match method.

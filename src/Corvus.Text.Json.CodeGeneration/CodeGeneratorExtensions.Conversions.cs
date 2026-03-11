@@ -927,7 +927,17 @@ internal static partial class CodeGeneratorExtensions
                     forMutable ? ".Mutable" : "",
                     includeContext ? ", TContext" : string.Empty,
                     ", TResult> defaultMatch)")
-                .PopIndent()
+                .PopIndent();
+
+            if (includeContext)
+            {
+                generator
+                    .AppendLine("#if NET9_0_OR_GREATER")
+                    .AppendLineIndent("where TContext : allows ref struct")
+                    .AppendLine("#endif");
+            }
+
+            generator
                 .AppendLineIndent("{")
                 .PushIndent();
 
@@ -1076,7 +1086,17 @@ internal static partial class CodeGeneratorExtensions
                     "Func<",
                     includeContext ? "TContext, " : string.Empty,
                     "TResult> defaultMatch)")
-                .PopIndent()
+                .PopIndent();
+
+            if (includeContext)
+            {
+                generator
+                    .AppendLine("#if NET9_0_OR_GREATER")
+                    .AppendLineIndent("where TContext : allows ref struct")
+                    .AppendLine("#endif");
+            }
+
+            generator
                 .AppendLineIndent("{")
                 .PushIndent();
 
@@ -1328,7 +1348,17 @@ internal static partial class CodeGeneratorExtensions
 
             generator
                 .AppendLine(")")
-                .PopIndent()
+                .PopIndent();
+
+            if (includeContext)
+            {
+                generator
+                    .AppendLine("#if NET9_0_OR_GREATER")
+                    .AppendLineIndent("where TContext : allows ref struct")
+                    .AppendLine("#endif");
+            }
+
+            generator
                 .AppendLineIndent("{")
                 .PushIndent();
 

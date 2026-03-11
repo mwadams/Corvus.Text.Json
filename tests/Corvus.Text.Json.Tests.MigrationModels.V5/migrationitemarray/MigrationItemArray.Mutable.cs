@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -501,6 +500,50 @@ public readonly partial struct MigrationItemArray
             CheckValidInstance();
             JsonElementHelpers.RemoveWhereUnsafe<Mutable, Corvus.Text.Json.Tests.MigrationModels.V5.MigrationItemArray.RequiredId>(this, predicate);
             _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Replaces the first array element that equals the specified item with a new value.
+        /// </summary>
+        /// <param name="oldItem">The item to find.</param>
+        /// <param name="newItem">The value to replace it with.</param>
+        /// <returns><see langword="true"/> if an element was found and replaced; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        public bool Replace(in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationItemArray.RequiredId oldItem, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationItemArray.RequiredId.Source newItem)
+        {
+            CheckValidInstance();
+
+            if (newItem.IsUndefined)
+            {
+                return Remove(in oldItem);
+            }
+
+            var enumerator = EnumeratorCreator.CreateArrayEnumerator<Corvus.Text.Json.Tests.MigrationModels.V5.MigrationItemArray.RequiredId>(_parent, _idx);
+
+            while (enumerator.MoveNext())
+            {
+                Corvus.Text.Json.Tests.MigrationModels.V5.MigrationItemArray.RequiredId current = enumerator.Current;
+                if (JsonElementHelpers.DeepEquals(in current, in oldItem))
+                {
+                    ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);
+                    newItem.AddAsItem(ref cvb);
+
+                    int elementStart = ((IJsonElement)current).ParentDocumentIndex;
+                    int elementEnd = elementStart + ((IJsonElement)current).ParentDocument.GetDbSize(elementStart, true);
+                    _parent.OverwriteAndDispose(_idx, elementStart, elementEnd, 1, ref cvb);
+
+                    _documentVersion = _parent.Version;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -76,6 +75,9 @@ public readonly partial struct MigrationWithDefaults
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UnescapedUtf8JsonString GetUtf8String() { CheckValidInstance(); return _parent.GetUtf8JsonString(_idx, JsonTokenType.String); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public UnescapedUtf16JsonString GetUtf16String() { CheckValidInstance(); return _parent.GetUtf16JsonString(_idx, JsonTokenType.String); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string? GetString() { CheckValidInstance(); return _parent.GetString(_idx, JsonTokenType.String); }
@@ -150,6 +152,17 @@ public readonly partial struct MigrationWithDefaults
         public static implicit operator JsonElement(StatusEntity instance)
         {
             return JsonElement.From(instance);
+        }
+
+        /// <summary>
+        /// Converts the instance from a JsonElement.
+        /// </summary>
+        /// <param name="value">The instance of this type as a JsonElement.</param>
+        /// <returns>An instance of the type, initialized from the <see cref="JsonElement"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator StatusEntity(JsonElement instance)
+        {
+            return StatusEntity.From(instance);
         }
 
         /// <summary>

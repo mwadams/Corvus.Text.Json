@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -364,12 +363,16 @@ public readonly partial struct MigrationTuple
         {
             Unknown,
             JsonElement,
+            Tuple,
             Builder,
         }
 
         private readonly Kind _kind;
         private readonly JsonElement _jsonElement;
         private readonly Builder.Build? _arrayBuilder;
+        private readonly Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems0Entity.Source _tupleItem1;
+        private readonly Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems1Entity.Source _tupleItem2;
+        private readonly Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems2Entity.Source _tupleItem3;
 
         /// <summary>
         /// Gets a value indicating whether this Source is undefined (uninitialized).
@@ -380,6 +383,14 @@ public readonly partial struct MigrationTuple
         {
             _jsonElement = jsonElement;
             _kind = jsonElement.ValueKind == JsonValueKind.Undefined ? Kind.Unknown : Kind.JsonElement;
+        }
+
+        internal Source(in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems0Entity.Source item1, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems1Entity.Source item2, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems2Entity.Source item3)
+        {
+            _tupleItem1 = item1;
+            _tupleItem2 = item2;
+            _tupleItem3 = item3;
+            _kind = Kind.Tuple;
         }
 
         internal Source(Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.Builder.Build value) {_arrayBuilder = value; _kind = Kind.Builder; }
@@ -398,6 +409,13 @@ public readonly partial struct MigrationTuple
                 case Kind.Builder:
                     valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (in b, ref o) => Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
+                case Kind.Tuple:
+                    {
+                        ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(utf8Name, escapeName, nameRequiresUnescaping);
+                        Builder.BuildTupleValue(_tupleItem1, _tupleItem2, _tupleItem3, ref valueBuilder);
+                        valueBuilder.EndProperty(handle);
+                        break;
+                    }
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
@@ -416,6 +434,13 @@ public readonly partial struct MigrationTuple
                 case Kind.Builder:
                     valueBuilder.AddProperty(name, _arrayBuilder!, static (in b, ref o) => Builder.BuildValue(b, ref o));
                     break;
+                case Kind.Tuple:
+                    {
+                        ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(name);
+                        Builder.BuildTupleValue(_tupleItem1, _tupleItem2, _tupleItem3, ref valueBuilder);
+                        valueBuilder.EndProperty(handle);
+                        break;
+                    }
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
@@ -434,6 +459,13 @@ public readonly partial struct MigrationTuple
                 case Kind.Builder:
                     valueBuilder.AddProperty(name, _arrayBuilder!, static (in b, ref o) => Builder.BuildValue(b, ref o));
                     break;
+                case Kind.Tuple:
+                    {
+                        ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(name);
+                        Builder.BuildTupleValue(_tupleItem1, _tupleItem2, _tupleItem3, ref valueBuilder);
+                        valueBuilder.EndProperty(handle);
+                        break;
+                    }
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
@@ -452,6 +484,13 @@ public readonly partial struct MigrationTuple
                 case Kind.Builder:
                     valueBuilder.AddItem(_arrayBuilder!, static (in b, ref o) => Builder.BuildValue(b, ref o));
                     break;
+                case Kind.Tuple:
+                    {
+                        ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartItem();
+                        Builder.BuildTupleValue(_tupleItem1, _tupleItem2, _tupleItem3, ref valueBuilder);
+                        valueBuilder.EndItem(handle);
+                        break;
+                    }
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
@@ -578,6 +617,24 @@ public readonly partial struct MigrationTuple
             _builder = builder;
         }
 
+        /// <summary>
+        /// Builds the tuple value directly into the given complex value builder.
+        /// </summary>
+        /// <param name="item1">The source for tuple item 1.</param>
+        /// <param name="item2">The source for tuple item 2.</param>
+        /// <param name="item3">The source for tuple item 3.</param>
+        /// <param name="o">The complex value builder into which to write the tuple.</param>
+        internal static void BuildTupleValue(in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems0Entity.Source item1, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems1Entity.Source item2, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems2Entity.Source item3, ref ComplexValueBuilder o)
+        {
+            o.StartArray();
+
+            Builder b = new(o);
+            b.CreateTuple(item1, item2, item3);
+            o = b._builder;
+
+            o.EndArray();
+        }
+
         public void CreateTuple(in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems0Entity.Source item1, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems1Entity.Source item2, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems2Entity.Source item3)
         {
             item1.AddAsItem(ref _builder);
@@ -639,6 +696,18 @@ public readonly partial struct MigrationTuple
     }
 
     /// <summary>
+    /// Build a tuple value directly from its positional item sources.
+    /// </summary>
+    /// <param name="item1">The source for tuple item 1.</param>
+    /// <param name="item2">The source for tuple item 2.</param>
+    /// <param name="item3">The source for tuple item 3.</param>
+    /// <returns>The source from which to build the value.</returns>
+    public static Source Build(in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems0Entity.Source item1, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems1Entity.Source item2, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems2Entity.Source item3)
+    {
+        return new Source(item1, item2, item3);
+    }
+
+    /// <summary>
     /// Creates and initializes a mutable document from a value.
     /// </summary>
     /// <param name="workspace">The JSON workspace.</param>
@@ -655,6 +724,20 @@ public readonly partial struct MigrationTuple
         Debug.Assert(cvb.MemberCount == 1);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from positional tuple item sources.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="item1">The source for tuple item 1.</param>
+    /// <param name="item2">The source for tuple item 2.</param>
+    /// <param name="item3">The source for tuple item 3.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given tuple values.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateBuilder(JsonWorkspace workspace, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems0Entity.Source item1, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems1Entity.Source item2, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationTuple.PrefixItems2Entity.Source item3, int initialCapacity = 30)
+    {
+        return CreateBuilder(workspace, Build(item1, item2, item3), initialCapacity);
     }
 
     /// <summary>
