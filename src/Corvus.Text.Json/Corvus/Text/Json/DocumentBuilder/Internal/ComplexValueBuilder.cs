@@ -3357,6 +3357,30 @@ public ref struct ComplexValueBuilder
     }
 
     /// <summary>
+    /// Add a property name to the current object.
+    /// </summary>
+    /// <param name="propertyName">The property name as a character span.</param>
+    /// <returns>The handle for the property.</returns>
+    public ComplexValueHandle StartProperty(ReadOnlySpan<char> propertyName)
+    {
+        var result = new ComplexValueHandle(_memberCount, _rowCount);
+        _memberCount = 0;
+        _rowCount = 0;
+        AddStringValue(JsonTokenType.PropertyName, propertyName);
+        return result;
+    }
+
+    /// <summary>
+    /// Add a property name to the current object.
+    /// </summary>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>The handle for the property.</returns>
+    public ComplexValueHandle StartProperty(string propertyName)
+    {
+        return StartProperty(propertyName.AsSpan());
+    }
+
+    /// <summary>
     /// Ends the property with the given property handle.
     /// </summary>
     /// <param name="handle">The handle of the property to end.</param>

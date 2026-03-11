@@ -9,7 +9,6 @@
 
 #nullable enable
 
-using global::System;
 using global::System.Diagnostics;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
@@ -531,6 +530,50 @@ public readonly partial struct MigrationIntVector
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Replaces the first array element that equals the specified item with a new value.
+        /// </summary>
+        /// <param name="oldItem">The item to find.</param>
+        /// <param name="newItem">The value to replace it with.</param>
+        /// <returns><see langword="true"/> if an element was found and replaced; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        public bool Replace(in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationIntVector.ItemsEntity oldItem, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationIntVector.ItemsEntity.Source newItem)
+        {
+            CheckValidInstance();
+
+            if (newItem.IsUndefined)
+            {
+                return Remove(in oldItem);
+            }
+
+            var enumerator = EnumeratorCreator.CreateArrayEnumerator<Corvus.Text.Json.Tests.MigrationModels.V5.MigrationIntVector.ItemsEntity>(_parent, _idx);
+
+            while (enumerator.MoveNext())
+            {
+                Corvus.Text.Json.Tests.MigrationModels.V5.MigrationIntVector.ItemsEntity current = enumerator.Current;
+                if (JsonElementHelpers.DeepEquals(in current, in oldItem))
+                {
+                    ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);
+                    newItem.AddAsItem(ref cvb);
+
+                    int elementStart = ((IJsonElement)current).ParentDocumentIndex;
+                    int elementEnd = elementStart + ((IJsonElement)current).ParentDocument.GetDbSize(elementStart, true);
+                    _parent.OverwriteAndDispose(_idx, elementStart, elementEnd, 1, ref cvb);
+
+                    _documentVersion = _parent.Version;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IJsonDocument IJsonElement.ParentDocument => _parent;
 
@@ -550,12 +593,14 @@ public readonly partial struct MigrationIntVector
         {
             Unknown,
             JsonElement,
+            Tensor,
             Builder,
         }
 
         private readonly Kind _kind;
         private readonly JsonElement _jsonElement;
         private readonly Builder.Build? _arrayBuilder;
+        private readonly ReadOnlySpan<int> _intTensor;
 
         /// <summary>
         /// Gets a value indicating whether this Source is undefined (uninitialized).
@@ -566,6 +611,12 @@ public readonly partial struct MigrationIntVector
         {
             _jsonElement = jsonElement;
             _kind = jsonElement.ValueKind == JsonValueKind.Undefined ? Kind.Unknown : Kind.JsonElement;
+        }
+
+        internal Source(ReadOnlySpan<int> value)
+        {
+            _intTensor = value;
+            _kind = Kind.Tensor;
         }
 
         internal Source(Corvus.Text.Json.Tests.MigrationModels.V5.MigrationIntVector.Builder.Build value) {_arrayBuilder = value; _kind = Kind.Builder; }
@@ -584,6 +635,13 @@ public readonly partial struct MigrationIntVector
                 case Kind.Builder:
                     valueBuilder.AddProperty(utf8Name, _arrayBuilder!, static (in b, ref o) => Builder.BuildValue(b, ref o), escapeName, nameRequiresUnescaping);
                     break;
+                case Kind.Tensor:
+                    {
+                        ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(utf8Name, escapeName, nameRequiresUnescaping);
+                        Builder.BuildTensorValue(_intTensor, ref valueBuilder);
+                        valueBuilder.EndProperty(handle);
+                        break;
+                    }
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
@@ -602,6 +660,13 @@ public readonly partial struct MigrationIntVector
                 case Kind.Builder:
                     valueBuilder.AddProperty(name, _arrayBuilder!, static (in b, ref o) => Builder.BuildValue(b, ref o));
                     break;
+                case Kind.Tensor:
+                    {
+                        ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(name);
+                        Builder.BuildTensorValue(_intTensor, ref valueBuilder);
+                        valueBuilder.EndProperty(handle);
+                        break;
+                    }
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
@@ -620,6 +685,13 @@ public readonly partial struct MigrationIntVector
                 case Kind.Builder:
                     valueBuilder.AddProperty(name, _arrayBuilder!, static (in b, ref o) => Builder.BuildValue(b, ref o));
                     break;
+                case Kind.Tensor:
+                    {
+                        ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(name);
+                        Builder.BuildTensorValue(_intTensor, ref valueBuilder);
+                        valueBuilder.EndProperty(handle);
+                        break;
+                    }
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
@@ -638,6 +710,13 @@ public readonly partial struct MigrationIntVector
                 case Kind.Builder:
                     valueBuilder.AddItem(_arrayBuilder!, static (in b, ref o) => Builder.BuildValue(b, ref o));
                     break;
+                case Kind.Tensor:
+                    {
+                        ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartItem();
+                        Builder.BuildTensorValue(_intTensor, ref valueBuilder);
+                        valueBuilder.EndItem(handle);
+                        break;
+                    }
                 default:
                     Debug.Fail("Unexpected Kind");
                     break;
@@ -805,6 +884,22 @@ int item in tensor)                {
         }
 
         /// <summary>
+        /// Builds the tensor value directly into the given complex value builder.
+        /// </summary>
+        /// <param name="tensor">The data from which to create the tensor.</param>
+        /// <param name="o">The complex value builder into which to write the tensor.</param>
+        internal static void BuildTensorValue(ReadOnlySpan<int> tensor, ref ComplexValueBuilder o)
+        {
+            o.StartArray();
+
+            Builder b = new(o);
+            b.CreateTensor(tensor);
+            o = b._builder;
+
+            o.EndArray();
+        }
+
+        /// <summary>
         /// Add an item to the array.
         /// </summary>
         public void AddItem(in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationIntVector.ItemsEntity.Source value)
@@ -863,6 +958,16 @@ int item in tensor)                {
         #endif
     {
         return new Source<TContext>(context, buildValue);
+    }
+
+    /// <summary>
+    /// Build a tensor value from the given numeric span.
+    /// </summary>
+    /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
+    /// <returns>The source from which to build the value.</returns>
+    public static Source BuildTensor(ReadOnlySpan<int> tensor)
+    {
+        return new Source(tensor);
     }
 
     /// <summary>

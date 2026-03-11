@@ -757,6 +757,33 @@ int dim = MigrationIntVector.Dimension;   // 3
 int bufSize = MigrationIntVector.ValueBufferSize; // 3
 ```
 
+### Constructing a tensor from a flat span
+
+V4 provided `FromValues(span)` to construct a tensor directly from numeric data. V5 provides `BuildTensor(span)` as the direct replacement — it takes a `ReadOnlySpan<T>` and returns a `Source` without requiring a delegate:
+
+```csharp
+// V4
+MigrationIntVector v4 = MigrationIntVector.FromValues([1, 2, 3]);
+
+// V5 — BuildTensor (preferred: direct span → Source)
+using JsonWorkspace workspace = JsonWorkspace.Create();
+MigrationIntVector.Source source = MigrationIntVector.BuildTensor([1, 2, 3]);
+using var builder = MigrationIntVector.CreateBuilder(workspace, source);
+MigrationIntVector v5 = builder.RootElement;
+```
+
+The delegate-based `Build` + `CreateTensor` pattern also works:
+
+```csharp
+// V5 — Build + CreateTensor (delegate route)
+using var builder = MigrationIntVector.CreateBuilder(
+    workspace,
+    MigrationIntVector.Build(
+        static (ref MigrationIntVector.Builder b) => b.CreateTensor([1, 2, 3])));
+```
+
+Use `BuildTensor` when you already have the data in a span. Use the delegate pattern when you need to combine tensor creation with other builder operations.
+
 ---
 
 ## Tuples

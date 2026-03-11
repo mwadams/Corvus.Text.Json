@@ -270,6 +270,38 @@ internal static partial class CodeGeneratorExtensions
                     }
                 }
             }
+
+            // Handle tensor kind for fixed-size numeric arrays
+            if (!forContext && typeDeclaration.IsFixedSizeNumericArray())
+            {
+                NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+                string tensorBuilderClassName = isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName();
+
+                if (numericTypeName.IsNetOnly)
+                {
+                    generator
+                        .AppendLine("#if NET");
+                }
+
+                generator
+                    .AppendLineIndent("case Kind.Tensor:")
+                    .PushIndent()
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartItem();")
+                        .AppendLineIndent(tensorBuilderClassName, ".BuildTensorValue(_", numericTypeName.Name, "Tensor, ref valueBuilder);")
+                        .AppendLineIndent("valueBuilder.EndItem(handle);")
+                        .AppendLineIndent("break;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .PopIndent();
+
+                if (numericTypeName.IsNetOnly)
+                {
+                    generator
+                        .AppendLine("#endif");
+                }
+            }
         }
 
         foreach (ComposedBuilder composedBuilder in builders)
@@ -622,6 +654,50 @@ internal static partial class CodeGeneratorExtensions
                         generator
                             .AppendLine("#endif");
                     }
+                }
+            }
+
+            // Handle tensor kind for fixed-size numeric arrays
+            if (!forContext && typeDeclaration.IsFixedSizeNumericArray())
+            {
+                NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+                string tensorBuilderClassName = isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName();
+
+                if (numericTypeName.IsNetOnly)
+                {
+                    generator
+                        .AppendLine("#if NET");
+                }
+
+                generator
+                    .AppendLineIndent("case Kind.Tensor:")
+                    .PushIndent()
+                    .AppendLineIndent("{")
+                    .PushIndent();
+
+                if (includeEscaping)
+                {
+                    generator
+                        .AppendLineIndent("ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(", nameName, ", escapeName, nameRequiresUnescaping);");
+                }
+                else
+                {
+                    generator
+                        .AppendLineIndent("ComplexValueBuilder.ComplexValueHandle handle = valueBuilder.StartProperty(", nameName, ");");
+                }
+
+                generator
+                        .AppendLineIndent(tensorBuilderClassName, ".BuildTensorValue(_", numericTypeName.Name, "Tensor, ref valueBuilder);")
+                        .AppendLineIndent("valueBuilder.EndProperty(handle);")
+                        .AppendLineIndent("break;")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .PopIndent();
+
+                if (numericTypeName.IsNetOnly)
+                {
+                    generator
+                        .AppendLine("#endif");
                 }
             }
         }
@@ -1508,6 +1584,40 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
+        // Add BuildTensor factory method for fixed-size numeric arrays
+        if (typeDeclaration.IsFixedSizeNumericArray())
+        {
+            NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+            string sourceClassName = generator.SourceClassName();
+
+            if (numericTypeName.IsNetOnly)
+            {
+                generator
+                    .AppendLine("#if NET");
+            }
+
+            generator
+                .AppendSeparatorLine()
+                .AppendBlockIndent(
+                    $$"""
+                    /// <summary>
+                    /// Build a tensor value from the given numeric span.
+                    /// </summary>
+                    /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
+                    /// <returns>The source from which to build the value.</returns>
+                    public static {{sourceClassName}} BuildTensor(ReadOnlySpan<{{numericTypeName.Name}}> tensor)
+                    {
+                        return new {{sourceClassName}}(tensor);
+                    }
+                    """);
+
+            if (numericTypeName.IsNetOnly)
+            {
+                generator
+                    .AppendLine("#endif");
+            }
+        }
+
         return generator;
 
         static void AppendCreateBuild(CodeGenerator generator, int initialCapacity, string sourceClassName, string builderClassName)
@@ -1785,6 +1895,40 @@ internal static partial class CodeGeneratorExtensions
                     .PopIndent()
                     .AppendLineIndent("}");
             }
+
+            if (numericTypeName.IsNetOnly)
+            {
+                generator
+                    .AppendLine("#endif");
+            }
+
+            // Add BuildTensorValue static method for use by Source.AddAsItem/AddAsProperty
+            if (numericTypeName.IsNetOnly)
+            {
+                generator
+                    .AppendLine("#if NET");
+            }
+
+            string currentBuilderClassName = isObject ? generator.ArrayBuilderClassName() : generator.BuilderClassName();
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Builds the tensor value directly into the given complex value builder.")
+                .AppendLineIndent("/// </summary>")
+                .AppendLineIndent("/// <param name=\"tensor\">The data from which to create the tensor.</param>")
+                .AppendLineIndent("/// <param name=\"o\">The complex value builder into which to write the tensor.</param>")
+                .AppendLineIndent("internal static void BuildTensorValue(ReadOnlySpan<", numericTypeName.Name, "> tensor, ref ComplexValueBuilder o)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("o.StartArray();")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent(currentBuilderClassName, " b = new(o);")
+                    .AppendLineIndent("b.CreateTensor(tensor);")
+                    .AppendLineIndent("o = b._builder;")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("o.EndArray();")
+                .PopIndent()
+                .AppendLineIndent("}");
 
             if (numericTypeName.IsNetOnly)
             {
@@ -2210,6 +2354,33 @@ internal static partial class CodeGeneratorExtensions
 
             generator
                 .AppendNumericArrayConstructors(typeDeclaration, seenNumericArrayTypes);
+
+            // Add tensor constructor for fixed-size numeric arrays
+            if (typeDeclaration.IsFixedSizeNumericArray())
+            {
+                NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+                if (numericTypeName.IsNetOnly)
+                {
+                    generator
+                        .AppendLine("#if NET");
+                }
+
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("internal ", generator.SourceClassName(), "(ReadOnlySpan<", numericTypeName.Name, "> value)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("_", numericTypeName.Name, "Tensor = value;")
+                        .AppendLineIndent("_kind = Kind.Tensor;")
+                    .PopIndent()
+                    .AppendLineIndent("}");
+
+                if (numericTypeName.IsNetOnly)
+                {
+                    generator
+                        .AppendLine("#endif");
+                }
+            }
         }
         else
         {
@@ -2614,6 +2785,27 @@ internal static partial class CodeGeneratorExtensions
             {
                 generator
                     .AppendNumericArrayTypeFields(typeDeclaration, seenArrayValues);
+
+                // Add tensor span field for fixed-size numeric arrays
+                if (typeDeclaration.IsFixedSizeNumericArray())
+                {
+                    NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+                    if (numericTypeName.IsNetOnly)
+                    {
+                        generator
+                            .AppendLine("#if NET");
+                    }
+
+                    generator
+                        .ReserveNameIfNotReserved($"_{numericTypeName.Name}Tensor")
+                        .AppendLineIndent("private readonly ReadOnlySpan<", numericTypeName.Name, "> _", numericTypeName.Name, "Tensor;");
+
+                    if (numericTypeName.IsNetOnly)
+                    {
+                        generator
+                            .AppendLine("#endif");
+                    }
+                }
             }
         }
 
@@ -2904,6 +3096,27 @@ internal static partial class CodeGeneratorExtensions
                     generator
                         .AppendLine("#endif");
                 }
+            }
+        }
+
+        // Add tensor kind for fixed-size numeric arrays
+        if (typeDeclaration.IsFixedSizeNumericArray())
+        {
+            NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+            if (numericTypeName.IsNetOnly)
+            {
+                generator
+                    .AppendLine("#if NET");
+            }
+
+            generator
+                .ReserveName("Tensor")
+                .AppendLineIndent("Tensor,");
+
+            if (numericTypeName.IsNetOnly)
+            {
+                generator
+                    .AppendLine("#endif");
             }
         }
 

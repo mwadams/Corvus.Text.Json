@@ -564,5 +564,173 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region BuildTensor
+
+        [Fact]
+        public void Rank1Int32Vector_BuildTensor()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<int> values = [1, 2, 3, 4];
+            Rank1Int32Vector.Source source = Rank1Int32Vector.BuildTensor(values);
+
+            using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
+                Rank1Int32Vector.CreateBuilder(workspace, source);
+            Rank1Int32Vector.Mutable root = doc.RootElement;
+
+            Assert.Equal(4, root.GetArrayLength());
+            Assert.Equal(1, (int)root[0]);
+            Assert.Equal(2, (int)root[1]);
+            Assert.Equal(3, (int)root[2]);
+            Assert.Equal(4, (int)root[3]);
+        }
+
+        [Fact]
+        public void Rank1DoubleVector_BuildTensor()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
+            Rank1DoubleVector.Source source = Rank1DoubleVector.BuildTensor(values);
+
+            using JsonDocumentBuilder<Rank1DoubleVector.Mutable> doc =
+                Rank1DoubleVector.CreateBuilder(workspace, source);
+            Rank1DoubleVector.Mutable root = doc.RootElement;
+
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(1.5, (double)root[0]);
+            Assert.Equal(2.5, (double)root[1]);
+            Assert.Equal(3.5, (double)root[2]);
+        }
+
+        [Fact]
+        public void Rank2DoubleMatrix_BuildTensor()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<double> values = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
+            Rank2DoubleMatrix.Source source = Rank2DoubleMatrix.BuildTensor(values);
+
+            using JsonDocumentBuilder<Rank2DoubleMatrix.Mutable> doc =
+                Rank2DoubleMatrix.CreateBuilder(workspace, source);
+            Rank2DoubleMatrix.Mutable root = doc.RootElement;
+
+            Assert.Equal(2, root.GetArrayLength());
+
+            Rank2DoubleMatrix.ItemsEntityArray.Mutable row0 = root[0];
+            Assert.Equal(3, row0.GetArrayLength());
+            Assert.Equal(1.0, (double)row0[0]);
+            Assert.Equal(2.0, (double)row0[1]);
+            Assert.Equal(3.0, (double)row0[2]);
+
+            Rank2DoubleMatrix.ItemsEntityArray.Mutable row1 = root[1];
+            Assert.Equal(3, row1.GetArrayLength());
+            Assert.Equal(4.0, (double)row1[0]);
+            Assert.Equal(5.0, (double)row1[1]);
+            Assert.Equal(6.0, (double)row1[2]);
+        }
+
+        [Fact]
+        public void Rank3Int32Cube_BuildTensor()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            Rank3Int32Cube.Source source = Rank3Int32Cube.BuildTensor(values);
+
+            using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
+                Rank3Int32Cube.CreateBuilder(workspace, source);
+            Rank3Int32Cube.Mutable root = doc.RootElement;
+
+            Assert.Equal(2, root.GetArrayLength());
+
+            // First plane: [[1,2,3],[4,5,6]]
+            Rank3Int32Cube.ItemsArray2Array.Mutable plane0 = root[0];
+            Assert.Equal(2, plane0.GetArrayLength());
+            Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Mutable row00 = plane0[0];
+            Assert.Equal(3, row00.GetArrayLength());
+            Assert.Equal(1, (int)row00[0]);
+            Assert.Equal(2, (int)row00[1]);
+            Assert.Equal(3, (int)row00[2]);
+
+            Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Mutable row01 = plane0[1];
+            Assert.Equal(4, (int)row01[0]);
+            Assert.Equal(5, (int)row01[1]);
+            Assert.Equal(6, (int)row01[2]);
+
+            // Second plane: [[7,8,9],[10,11,12]]
+            Rank3Int32Cube.ItemsArray2Array.Mutable plane1 = root[1];
+            Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Mutable row10 = plane1[0];
+            Assert.Equal(7, (int)row10[0]);
+            Assert.Equal(8, (int)row10[1]);
+            Assert.Equal(9, (int)row10[2]);
+
+            Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Mutable row11 = plane1[1];
+            Assert.Equal(10, (int)row11[0]);
+            Assert.Equal(11, (int)row11[1]);
+            Assert.Equal(12, (int)row11[2]);
+        }
+
+        [Fact]
+        public void Rank1Int32Vector_BuildTensor_RoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<int> values = [10, 20, 30, 40];
+            Rank1Int32Vector.Source source = Rank1Int32Vector.BuildTensor(values);
+
+            using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
+                Rank1Int32Vector.CreateBuilder(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<Rank1Int32Vector> reparsed =
+                ParsedJsonDocument<Rank1Int32Vector>.Parse(json);
+            Assert.Equal(4, reparsed.RootElement.GetArrayLength());
+            Assert.Equal(10, (int)reparsed.RootElement[0]);
+            Assert.Equal(20, (int)reparsed.RootElement[1]);
+            Assert.Equal(30, (int)reparsed.RootElement[2]);
+            Assert.Equal(40, (int)reparsed.RootElement[3]);
+        }
+
+        [Fact]
+        public void Rank3Int32Cube_BuildTensor_RoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            Rank3Int32Cube.Source source = Rank3Int32Cube.BuildTensor(values);
+
+            using JsonDocumentBuilder<Rank3Int32Cube.Mutable> doc =
+                Rank3Int32Cube.CreateBuilder(workspace, source);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<Rank3Int32Cube> reparsed =
+                ParsedJsonDocument<Rank3Int32Cube>.Parse(json);
+            Assert.Equal(2, reparsed.RootElement.GetArrayLength());
+        }
+
+        [Fact]
+        public void Rank1Int32Vector_BuildTensor_WrongSize_ThrowsArgumentException()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<int> values = [1, 2, 3, 4, 5]; // Wrong size: 5 instead of 4
+            Rank1Int32Vector.Source source = Rank1Int32Vector.BuildTensor(values);
+
+            try
+            {
+                Rank1Int32Vector.CreateBuilder(workspace, source).Dispose();
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+                // Expected
+            }
+        }
+
+        #endregion
     }
 }
