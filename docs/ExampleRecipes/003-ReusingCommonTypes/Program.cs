@@ -9,7 +9,7 @@ using JsonWorkspace workspace = JsonWorkspace.Create();
 using var personDoc = PersonCommonSchema.CreateBuilder(
     workspace,
     PersonCommonSchema.Build(
-        (ref PersonCommonSchema.Builder b) => b.Create(
+        static (ref PersonCommonSchema.Builder b) => b.Create(
             birthDate: new LocalDate(1820, 1, 17),
             familyName: "Brontë",
             givenName: "Anne",

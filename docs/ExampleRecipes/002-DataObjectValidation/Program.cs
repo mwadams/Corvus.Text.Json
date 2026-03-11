@@ -10,7 +10,7 @@ using JsonWorkspace workspace = JsonWorkspace.Create();
 using var personDoc = PersonConstraints.CreateBuilder(
     workspace,
     PersonConstraints.Build(
-        (ref PersonConstraints.Builder b) => b.Create(
+        static (ref PersonConstraints.Builder b) => b.Create(
             birthDate: new LocalDate(1820, 1, 17),
             familyName: "Brontë",
             givenName: "Anne",

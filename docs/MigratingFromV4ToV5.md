@@ -862,6 +862,52 @@ string? str = v5.GetString();
 
 ## Composition Types (`oneOf`, `anyOf`, `allOf`)
 
+### `allOf` — Composition (Multiple Interface Pattern)
+
+`allOf` represents composition — a type that satisfies *all* of the constituent schemas simultaneously (like implementing multiple interfaces in C#).
+
+Both V4 and V5 support **implicit conversion** from the composite type to any of its `allOf` constituents:
+
+```csharp
+// Schema: CompositeType = allOf [Documentation, Countable] + additional properties
+// V4
+V4.CompositeType v4Composite = V4.CompositeType.Parse(json);
+V4.Documentation v4Doc = v4Composite;  // implicit
+V4.Countable v4Count = v4Composite;    // implicit
+
+// Access properties - note V4's "Value" suffix
+int count = (int)v4Count.CountValue;   // V4: property name + "Value"
+
+// V5
+using var v5Doc = ParsedJsonDocument<V5.CompositeType>.Parse(json);
+V5.CompositeType v5Composite = v5Doc.RootElement;
+V5.Documentation v5Documentation = v5Composite;  // implicit
+V5.Countable v5Countable = v5Composite;          // implicit
+
+// Access properties - V5 uses property name directly
+long count = v5Countable.Count;  // V5: property name without suffix
+```
+
+**V4 property naming note:**
+- V4 adds a **"Value" suffix** when property names conflict with interface members: `CountValue`, `NameValue`
+- For example, V4's `IJsonObject.Count` returns the **number of object properties**, so the JSON "count" property becomes `CountValue`
+- V5 uses the JSON property name directly: `Count`, `Name`, `Description`
+- This is a **naming conflict resolution**, not a general V4 convention — non-conflicting properties don't get the suffix
+
+Both also support **explicit conversion** in the reverse direction (from constituent to composite):
+
+```csharp
+// V4
+V4.CompositeType v4Composite = (V4.CompositeType)v4Doc;  // explicit
+
+// V5
+V5.CompositeType v5Composite = (V5.CompositeType)v5Documentation;  // explicit
+```
+
+### `oneOf` / `anyOf` — Discriminated Unions
+
+For `oneOf` and `anyOf`, the conversion operators are **opposite**: implicit *from* constituent types, explicit *to* constituent types.
+
 ### Pattern matching with `TryGetAs*()`
 
 Both V4 and V5 provide `TryGetAs*()` methods to test and extract a specific composition variant. The entity types are named by composition keyword and index (`OneOf0Entity`, `OneOf1Entity`, etc.):
@@ -877,6 +923,8 @@ if (v5.TryGetAsOneOf0Entity(out MigrationUnion.OneOf0Entity stringEntity)) { ...
 if (v5.TryGetAsOneOf1Entity(out MigrationUnion.OneOf1Entity numberEntity)) { ... }
 if (v5.TryGetAsOneOf2Entity(out MigrationUnion.OneOf2Entity boolEntity)) { ... }
 ```
+
+> **Note**: `allOf` types typically don't generate `TryGetAsAllOf*Entity()` methods because the composite type inherently *is* all constituents simultaneously. Use implicit conversion instead.
 
 ### Exhaustive matching with `Match`
 
@@ -1093,6 +1141,140 @@ To set up the source generator, add the generator NuGet package and include your
 ```
 
 Additional generation options are controlled via MSBuild properties (e.g., `CorvusTextJsonOptionalAsNullable`, `CorvusTextJsonFallbackVocabulary`).
+
+---
+
+## Best Practices and Patterns
+
+### Use `static` lambdas where possible
+
+When creating builder delegates or pattern matching lambdas that don't capture variables, mark them `static` for better performance:
+
+```csharp
+// Builder delegates with literals — use static
+using var doc = Person.CreateBuilder(
+    workspace,
+    Person.Build(
+        static (ref Person.Builder b) => b.Create(
+            familyName: "Brontë",
+            givenName: "Anne",
+            height: 1.57)));
+
+// Pattern matching without captured variables — use static
+string result = color.Match(
+    matchRed: static () => "The color of fire",
+    matchGreen: static () => "The color of grass",
+    matchBlue: static () => "The color of sky",
+    defaultMatch: static () => "Unknown color");
+
+// Pattern matching WITH context parameter — use static (context is a parameter, not captured)
+string result = status.Match(
+    requestCount,  // context parameter
+    matchActive: static (count) => $"Processing {count} requests",
+    matchInactive: static (count) => $"Cannot process {count} requests",
+    defaultMatch: static (count) => throw new InvalidOperationException());
+```
+
+Only omit `static` when the lambda genuinely captures variables from the enclosing scope:
+
+```csharp
+// Captures 'source' variable from outer scope — cannot be static
+using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
+{
+    if (source.Id.TryGetValue(out long idValue))
+    {
+        b.WithIdentifier(idValue);
+    }
+});
+```
+
+### Work with generated types directly
+
+Prefer working with generated entity types throughout your code, only extracting to .NET primitives when necessary for operations:
+
+```csharp
+// ✅ Good — work with generated types
+Person person = parsedDoc.RootElement;
+string familyName = person.FamilyName;  // Generated type, supports formatting
+double height = person.Height;  // Implicit conversion where supported
+
+// ❌ Avoid unnecessary extraction
+string familyName = person.FamilyName.GetString();  // Unnecessary when not doing string operations
+```
+
+Extract to primitives only when you need to:
+- Perform arithmetic: `id.TryGetValue(out long value); value + 1000`
+- Manipulate strings: `name.TryGetValue(out string? str); str.ToUpperInvariant()`
+- Map between different schemas (see below)
+
+### Cross-schema mapping requires value extraction
+
+When mapping between generated types from **different schemas**, entity types don't implicitly convert. Extract values using `TryGetValue()` and pass them to the target builder:
+
+```csharp
+// SourceType and TargetType are from different schemas
+using var sourceDoc = ParsedJsonDocument<SourceType>.Parse(json);
+SourceType source = sourceDoc.RootElement;
+
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
+{
+    // Extract primitives from source, then pass to target builder
+    if (source.Id.TryGetValue(out long idValue) && 
+        source.Name.TryGetValue(out string? nameValue))
+    {
+        b.Create(nameValue, idValue);
+    }
+});
+```
+
+This extraction is **necessary** because `SourceType.IdEntity` and `TargetType.IdentifierEntity` are different types even though they both represent integers.
+
+### Pattern matching uses named parameters
+
+V5's `Match()` methods use named parameters for each variant, making the code more self-documenting:
+
+```csharp
+// Enum matching
+string desc = color.Match(
+    matchRed: static () => "Fire",
+    matchGreen: static () => "Grass",
+    matchBlue: static () => "Sky",
+    defaultMatch: static () => "Unknown");
+
+// Discriminated union matching (named by required properties)
+string result = shape.Match(
+    matchRequiredRadiusAndType: static (in Shape.RequiredRadiusAndType circle) => 
+        $"Circle r={circle.Radius}",
+    matchRequiredHeightAndTypeAndWidth: static (in Shape.RequiredHeightAndTypeAndWidth rect) => 
+        $"Rectangle {rect.Width}x{rect.Height}",
+    defaultMatch: static (in Shape unknown) => "Unknown shape");
+```
+
+The parameter names (`matchRed`, `matchRequiredRadiusAndType`) are generated from the schema and can be found in IntelliSense.
+
+### Use context parameters to avoid closures
+
+When pattern matching needs external state, pass it as a context parameter rather than capturing it:
+
+```csharp
+// ✅ Good — context parameter (no closure, can be static)
+double brightness = 0.8;
+string rgb = color.Match(
+    brightness,
+    matchRed: static (ctx) => $"RGB({(int)(255 * ctx)}, 0, 0)",
+    matchGreen: static (ctx) => $"RGB(0, {(int)(255 * ctx)}, 0)",
+    matchBlue: static (ctx) => $"RGB(0, 0, {(int)(255 * ctx)})",
+    defaultMatch: static (ctx) => "RGB(0, 0, 0)");
+
+// ❌ Avoid — capturing closure (cannot be static, allocates)
+double brightness = 0.8;
+string rgb = color.Match(
+    matchRed: () => $"RGB({(int)(255 * brightness)}, 0, 0)",  // captures 'brightness'
+    matchGreen: () => $"RGB(0, {(int)(255 * brightness)}, 0)",
+    matchBlue: () => $"RGB(0, 0, {(int)(255 * brightness)})",
+    defaultMatch: () => "RGB(0, 0, 0)");
+```
 
 ---
 

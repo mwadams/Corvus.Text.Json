@@ -9,7 +9,7 @@ using JsonWorkspace workspace = JsonWorkspace.Create();
 using var wealthyDoc = PersonWealthy.CreateBuilder(
     workspace,
     PersonWealthy.Build(
-        (ref PersonWealthy.Builder b) => b.Create(
+        static (ref PersonWealthy.Builder b) => b.Create(
             birthDate: new LocalDate(1820, 1, 17),
             familyName: "Brontë",
             givenName: "Anne",

@@ -10,7 +10,7 @@ using JsonWorkspace workspace = JsonWorkspace.Create();
 using var tallDoc = PersonTall.CreateBuilder(
     workspace,
     PersonTall.Build(
-        (ref PersonTall.Builder b) => b.Create(
+        static (ref PersonTall.Builder b) => b.Create(
             birthDate: new LocalDate(1820, 1, 17),
             familyName: "Brontë",
             givenName: "Anne",

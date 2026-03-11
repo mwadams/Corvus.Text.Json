@@ -2282,7 +2282,8 @@ internal static partial class CodeGeneratorExtensions
             generator
                 .AppendNumericArrayConstructors(composedBuilder.TypeDeclaration, seenNumericArrayTypes);
 
-            if (composedBuilder.TypeDeclaration.Format() is string format)
+            // Format-specific constructors are only for the non-context Source struct
+            if (!forContext && composedBuilder.TypeDeclaration.Format() is string format)
             {
                 CoreTypes composedCore = composedBuilder.TypeDeclaration.ImpliedCoreTypesOrAny();
                 if ((composedCore & (CoreTypes.Number | CoreTypes.Integer)) != 0)
@@ -2660,20 +2661,6 @@ internal static partial class CodeGeneratorExtensions
                     ain,
                     ";")
                    .AppendNumericArrayTypeFields(builder.TypeDeclaration, seenArrayValues);
-            }
-
-            if (!forContext)
-            {
-                if (!hasSimpleTypeBacking &&
-                    builder.StringFormat is string format &&
-                    FormatHandlerRegistry.Instance.StringFormatHandlers.RequiresSimpleTypesBacking(format, out bool requiresSimpleType) &&
-                    requiresSimpleType)
-                {
-                    generator
-                        .ReserveNameIfNotReserved("_simpleTypeBacking")
-                        .AppendLineIndent("private readonly SimpleTypesBacking _simpleTypeBacking;");
-                    hasSimpleTypeBacking = true;
-                }
             }
         }
 
