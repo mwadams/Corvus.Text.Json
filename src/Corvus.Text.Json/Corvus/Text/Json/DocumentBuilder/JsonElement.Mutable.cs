@@ -2574,7 +2574,7 @@ public readonly partial struct JsonElement
         /// <exception cref="ObjectDisposedException">
         /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public readonly UnescapedJsonString GetUtf16String()
+        public readonly UnescapedUtf16JsonString GetUtf16String()
         {
             CheckValidInstance();
 

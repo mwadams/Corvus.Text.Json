@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Buffers;
@@ -253,7 +253,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         return new UnescapedUtf8JsonString(segment);
     }
 
-    UnescapedJsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType)
+    UnescapedUtf16JsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType)
     {
         Debug.Assert(index == 0 && expectedType == JsonTokenType.String);
 
@@ -277,7 +277,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
                 try
                 {
                     int charsWritten = JsonReaderHelper.TranscodeHelper(utf8Unescaped, rentedChars);
-                    return new UnescapedJsonString(rentedChars.AsMemory(0, charsWritten), rentedChars);
+                    return new UnescapedUtf16JsonString(rentedChars.AsMemory(0, charsWritten), rentedChars);
                 }
                 catch
                 {
@@ -299,7 +299,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         try
         {
             int charsWritten = JsonReaderHelper.TranscodeHelper(utf8Source, rentedTranscoded);
-            return new UnescapedJsonString(rentedTranscoded.AsMemory(0, charsWritten), rentedTranscoded);
+            return new UnescapedUtf16JsonString(rentedTranscoded.AsMemory(0, charsWritten), rentedTranscoded);
         }
         catch
         {

@@ -599,9 +599,9 @@ public readonly partial struct JsonElement
     }
 
     /// <summary>
-    /// Gets the value of the element as a <see cref="UnescapedJsonString"/>.
+    /// Gets the value of the element as a <see cref="UnescapedUtf16JsonString"/>.
     /// </summary>
-    /// <returns>The value of the element as an <see cref="UnescapedJsonString"/>.</returns>
+    /// <returns>The value of the element as an <see cref="UnescapedUtf16JsonString"/>.</returns>
     /// <exception cref="InvalidOperationException">
     ///   This value's <see cref="ValueKind"/> is neither <see cref="JsonValueKind.String"/> nor <see cref="JsonValueKind.Null"/>.
     /// </exception>
@@ -610,11 +610,11 @@ public readonly partial struct JsonElement
     /// </exception>
     /// <seealso cref="ToString"/>
     /// <remarks>
-    /// The <see cref="UnescapedJsonString"/> should be disposed when it is finished with, as it may have rented
+    /// The <see cref="UnescapedUtf16JsonString"/> should be disposed when it is finished with, as it may have rented
     /// storage to provide the unescaped value. It is only valid for as long as the source <see cref="JsonElement"/>
     /// is valid.
     /// </remarks>
-    public UnescapedJsonString GetUtf16String()
+    public UnescapedUtf16JsonString GetUtf16String()
     {
         CheckValidInstance();
 

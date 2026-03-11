@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Collections.Generic;
@@ -338,7 +338,7 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLineIndent("public UnescapedUtf8JsonString GetUtf8String() { CheckValidInstance(); return _parent.GetUtf8JsonString(_idx, JsonTokenType.String); }")
                     .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                    .AppendLineIndent("public UnescapedJsonString GetUtf16String() { CheckValidInstance(); return _parent.GetUtf16JsonString(_idx, JsonTokenType.String); }")
+                    .AppendLineIndent("public UnescapedUtf16JsonString GetUtf16String() { CheckValidInstance(); return _parent.GetUtf16JsonString(_idx, JsonTokenType.String); }")
                     .AppendSeparatorLine()
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public string? GetString() { CheckValidInstance(); return _parent.GetString(_idx, JsonTokenType.String); }");

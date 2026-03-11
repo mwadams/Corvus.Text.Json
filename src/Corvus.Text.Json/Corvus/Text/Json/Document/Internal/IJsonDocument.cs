@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Diagnostics.CodeAnalysis;
@@ -200,7 +200,7 @@ public interface IJsonDocument : IDisposable
     /// <paramref name="expectedType"/> which will check both
     /// String and PropertyName as valid types.
     /// </remarks>
-    UnescapedJsonString GetUtf16JsonString(int index, JsonTokenType expectedType);
+    UnescapedUtf16JsonString GetUtf16JsonString(int index, JsonTokenType expectedType);
 
     /// <summary>
     /// Tries to get the value of the element at the specified index as a byte array.

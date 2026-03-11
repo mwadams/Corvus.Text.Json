@@ -12,7 +12,7 @@ namespace Corvus.Text.Json;
 /// <remarks>
 /// This uses a rented buffer to back the string, so it is disposable.
 /// </remarks>
-public ref struct UnescapedJsonString
+public ref struct UnescapedUtf16JsonString
 #if NET
     : IDisposable
 #endif
@@ -31,11 +31,11 @@ public ref struct UnescapedJsonString
     public readonly ReadOnlySpan<char> Span => _chars.Span;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UnescapedJsonString"/> struct.
+    /// Initializes a new instance of the <see cref="UnescapedUtf16JsonString"/> struct.
     /// </summary>
     /// <param name="chars">The UTF-16 characters representing the JSON string.</param>
     /// <param name="extraRentedArrayPoolChars">Optional rented array pool characters.</param>
-    public UnescapedJsonString(ReadOnlyMemory<char> chars, char[]? extraRentedArrayPoolChars = null)
+    public UnescapedUtf16JsonString(ReadOnlyMemory<char> chars, char[]? extraRentedArrayPoolChars = null)
     {
         _chars = chars;
         _extraRentedArrayPoolChars = extraRentedArrayPoolChars;

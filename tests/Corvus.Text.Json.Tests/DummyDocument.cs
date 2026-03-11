@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Diagnostics.CodeAnalysis;
@@ -96,7 +96,7 @@ internal class DummyDocument : IJsonDocument
     public UnescapedUtf8JsonString GetUtf8JsonString(int index, JsonTokenType expectedType)
     { return default; }
 
-    public UnescapedJsonString GetUtf16JsonString(int index, JsonTokenType expectedType)
+    public UnescapedUtf16JsonString GetUtf16JsonString(int index, JsonTokenType expectedType)
     { return default; }
 
     public bool TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
@@ -238,7 +238,7 @@ internal class DummyDocument : IJsonDocument
     string IJsonDocument.GetString(int index, JsonTokenType expectedType) => throw new NotImplementedException();
     bool IJsonDocument.TryGetString(int index, JsonTokenType expectedType, [NotNullWhen(true)] out string result) => throw new NotImplementedException();
     UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType) => throw new NotImplementedException();
-    UnescapedJsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType) => throw new NotImplementedException();
+    UnescapedUtf16JsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType) => throw new NotImplementedException();
     bool IJsonDocument.TryGetValue(int index, out byte[] value) => throw new NotImplementedException();
     bool IJsonDocument.TryGetValue(int index, out sbyte value) => throw new NotImplementedException();
     bool IJsonDocument.TryGetValue(int index, out byte value) => throw new NotImplementedException();

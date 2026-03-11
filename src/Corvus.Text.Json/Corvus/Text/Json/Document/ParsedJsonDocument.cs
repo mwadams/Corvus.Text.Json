@@ -390,7 +390,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    UnescapedJsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType)
+    UnescapedUtf16JsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType)
     {
         CheckNotDisposed();
         return GetUtf16JsonStringUnsafe(index, expectedType);
@@ -455,7 +455,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return new UnescapedUtf8JsonString(segment);
     }
 
-    private UnescapedJsonString GetUtf16JsonStringUnsafe(int index, JsonTokenType expectedType)
+    private UnescapedUtf16JsonString GetUtf16JsonStringUnsafe(int index, JsonTokenType expectedType)
     {
         DbRow row = _parsedData.Get(index);
 
@@ -496,7 +496,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
                 try
                 {
                     int charsWritten = JsonReaderHelper.TranscodeHelper(utf8Unescaped, rentedChars);
-                    return new UnescapedJsonString(rentedChars.AsMemory(0, charsWritten), rentedChars);
+                    return new UnescapedUtf16JsonString(rentedChars.AsMemory(0, charsWritten), rentedChars);
                 }
                 catch
                 {
@@ -519,7 +519,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         try
         {
             int charsWritten = JsonReaderHelper.TranscodeHelper(segment, rentedTranscoded);
-            return new UnescapedJsonString(rentedTranscoded.AsMemory(0, charsWritten), rentedTranscoded);
+            return new UnescapedUtf16JsonString(rentedTranscoded.AsMemory(0, charsWritten), rentedTranscoded);
         }
         catch
         {

@@ -133,6 +133,7 @@
     <Compile Include="JsonElementNumberTest.cs" />
     <Compile Include="JsonElement.MutableWriteTests.cs" />
     <Compile Include="JsonElementSourceCoverageTests.cs" />
+    <Compile Include="UnescapedUtf16JsonStringTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderDynamicTests.cs" />
     <Compile Include="JsonPropertyDocumentBuilderTests.cs" />
     <Compile Include="JsonSchemaAdditionalTests\draft2019-09\typeAndFormat.cs" />
