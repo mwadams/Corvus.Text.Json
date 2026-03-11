@@ -623,6 +623,9 @@ public readonly partial struct MigrationIntVector
 
         public static implicit operator Source(MigrationIntVector instance) => new(JsonElement.From(instance));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Source(ReadOnlySpan<int> value) => new(value);
+
         internal void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
             switch(_kind)

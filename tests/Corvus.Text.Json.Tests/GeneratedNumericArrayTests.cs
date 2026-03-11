@@ -776,5 +776,62 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region Implicit conversion from ReadOnlySpan<T>
+
+        [Fact]
+        public void Rank1Int32Vector_ImplicitConversion_FromSpan()
+        {
+            ReadOnlySpan<int> values = [10, 20, 30, 40];
+            Rank1Int32Vector.Source source = values;
+
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
+                Rank1Int32Vector.CreateBuilder(workspace, source);
+
+            string json = doc.RootElement.ToString();
+            using ParsedJsonDocument<Rank1Int32Vector> reparsed =
+                ParsedJsonDocument<Rank1Int32Vector>.Parse(json);
+            Span<int> roundTripped = stackalloc int[Rank1Int32Vector.ValueBufferSize];
+            Assert.True(reparsed.RootElement.TryGetNumericValues(roundTripped, out int written));
+            Assert.Equal(4, written);
+            Assert.Equal(10, roundTripped[0]);
+            Assert.Equal(40, roundTripped[3]);
+        }
+
+        [Fact]
+        public void Rank1DoubleVector_ImplicitConversion_FromSpan()
+        {
+            ReadOnlySpan<double> values = [1.1, 2.2, 3.3];
+            Rank1DoubleVector.Source source = values;
+
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<Rank1DoubleVector.Mutable> doc =
+                Rank1DoubleVector.CreateBuilder(workspace, source);
+
+            string json = doc.RootElement.ToString();
+            using ParsedJsonDocument<Rank1DoubleVector> reparsed =
+                ParsedJsonDocument<Rank1DoubleVector>.Parse(json);
+            Span<double> roundTripped = stackalloc double[Rank1DoubleVector.ValueBufferSize];
+            Assert.True(reparsed.RootElement.TryGetNumericValues(roundTripped, out int written));
+            Assert.Equal(3, written);
+            Assert.Equal(1.1, roundTripped[0]);
+            Assert.Equal(3.3, roundTripped[2]);
+        }
+
+        [Fact]
+        public void Rank1Int32Vector_ImplicitConversion_InCreateBuilder()
+        {
+            // Verify the implicit conversion works inline in CreateBuilder
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            ReadOnlySpan<int> values = [5, 6, 7, 8];
+            using JsonDocumentBuilder<Rank1Int32Vector.Mutable> doc =
+                Rank1Int32Vector.CreateBuilder(workspace, values);
+
+            string json = doc.RootElement.ToString();
+            Assert.Equal("[5,6,7,8]", json);
+        }
+
+        #endregion
     }
 }

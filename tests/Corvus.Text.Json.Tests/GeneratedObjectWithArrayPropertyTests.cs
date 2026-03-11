@@ -161,6 +161,20 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal("[]", json);
         }
 
+        [Fact]
+        public void ScoresArray_ImplicitConversion_FromSpan()
+        {
+            ReadOnlySpan<double> values = [9.0, 8.5, 7.0];
+            ObjectWithArrayProperty.ScoresEntityArray.Source source = values;
+
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
+                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, source);
+
+            string json = doc.RootElement.ToString();
+            Assert.Equal("[9,8.5,7]", json);
+        }
+
         #endregion
     }
 }

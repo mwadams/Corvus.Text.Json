@@ -2941,6 +2941,14 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
+        // Implicit conversion from ReadOnlySpan<T> for numeric array types
+        HashSet<string> seenArrayConversions = [];
+        generator.AppendNumericArrayImplicitOperator(typeDeclaration, seenArrayConversions);
+        foreach (ComposedBuilder cb in builders)
+        {
+            generator.AppendNumericArrayImplicitOperator(cb.TypeDeclaration, seenArrayConversions);
+        }
+
         foreach (ComposedBuilder composedBuilder in builders)
         {
             if (generator.IsCancellationRequested)
@@ -2982,6 +2990,35 @@ internal static partial class CodeGeneratorExtensions
         }
 
         return generator;
+    }
+
+    private static void AppendNumericArrayImplicitOperator(this CodeGenerator generator, TypeDeclaration typeDeclaration, HashSet<string> seenConversions)
+    {
+        if (!typeDeclaration.IsNumericArray() || typeDeclaration.IsTuple())
+        {
+            return;
+        }
+
+        NumericTypeName? arrayType = typeDeclaration.ArrayItemsType()?.ReducedType.PreferredDotnetNumericTypeName();
+        if (arrayType is NumericTypeName at && seenConversions.Add($"ReadOnlySpan<{at.Name}>"))
+        {
+            if (at.IsNetOnly)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLine("#if NET")
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator ", generator.SourceClassName(), "(ReadOnlySpan<", at.Name, "> value) => new(value);")
+                    .AppendLine("#endif");
+            }
+            else
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                    .AppendLineIndent("public static implicit operator ", generator.SourceClassName(), "(ReadOnlySpan<", at.Name, "> value) => new(value);");
+            }
+        }
     }
 
     private static CodeGenerator AppendSourceFactoryMethods(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
