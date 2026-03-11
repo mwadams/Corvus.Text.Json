@@ -198,6 +198,69 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
+        #region Replace
+
+        [Fact]
+        public void Replace_FindsAndReplacesFirstMatchingItem()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+
+            using ParsedJsonDocument<ArrayOfItems.RequiredId> oldDoc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":2,"label":"second"}""");
+            ArrayOfItems.RequiredId oldItem = oldDoc.RootElement;
+            using ParsedJsonDocument<ArrayOfItems.RequiredId> newDoc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":99,"label":"replaced"}""");
+            ArrayOfItems.RequiredId newItem = newDoc.RootElement;
+            bool replaced = root.Replace(oldItem, newItem);
+
+            Assert.True(replaced);
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(99, (int)root[1].Id);
+            Assert.Equal("replaced", (string)root[1].Label);
+        }
+
+        [Fact]
+        public void Replace_ReturnsFalse_WhenItemNotFound()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+
+            using ParsedJsonDocument<ArrayOfItems.RequiredId> oldDoc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":99,"label":"missing"}""");
+            ArrayOfItems.RequiredId oldItem = oldDoc.RootElement;
+            using ParsedJsonDocument<ArrayOfItems.RequiredId> newDoc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":100,"label":"new"}""");
+            ArrayOfItems.RequiredId newItem = newDoc.RootElement;
+            bool replaced = root.Replace(oldItem, newItem);
+
+            Assert.False(replaced);
+            Assert.Equal(3, root.GetArrayLength());
+        }
+
+        [Fact]
+        public void Replace_WithUndefinedSource_RemovesMatch()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+
+            using ParsedJsonDocument<ArrayOfItems.RequiredId> oldDoc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":2,"label":"second"}""");
+            ArrayOfItems.RequiredId oldItem = oldDoc.RootElement;
+            bool replaced = root.Replace(oldItem, default(ArrayOfItems.RequiredId.Source));
+
+            Assert.True(replaced);
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal(1, (int)root[0].Id);
+            Assert.Equal(3, (int)root[1].Id);
+        }
+
+        #endregion
+
         #region GetArrayLength and EnumerateArray
 
         [Fact]

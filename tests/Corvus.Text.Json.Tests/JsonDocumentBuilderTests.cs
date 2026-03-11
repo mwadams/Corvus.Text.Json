@@ -8242,6 +8242,166 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
+        #region Replace Tests
+
+        [Fact]
+        public static void Replace_FindsAndReplacesFirstMatchingElement()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3, 2, 5]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            using var oldDoc = ParsedJsonDocument<JsonElement>.Parse("2");
+            JsonElement oldItem = oldDoc.RootElement;
+            using var newDoc = ParsedJsonDocument<JsonElement>.Parse("99");
+            JsonElement newItem = newDoc.RootElement;
+
+            // Act
+            bool replaced = root.Replace(oldItem, newItem);
+
+            // Assert — only the first '2' is replaced
+            Assert.True(replaced);
+            Assert.Equal(5, root.GetArrayLength());
+            Assert.Equal("[1,99,3,2,5]", root.ToString());
+        }
+
+        [Fact]
+        public static void Replace_ReturnsFalse_WhenElementNotFound()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            using var oldDoc = ParsedJsonDocument<JsonElement>.Parse("99");
+            JsonElement oldItem = oldDoc.RootElement;
+            using var newDoc = ParsedJsonDocument<JsonElement>.Parse("100");
+            JsonElement newItem = newDoc.RootElement;
+
+            // Act
+            bool replaced = root.Replace(oldItem, newItem);
+
+            // Assert
+            Assert.False(replaced);
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("[1, 2, 3]", root.ToString());
+        }
+
+        [Fact]
+        public static void Replace_EmptyArray_ReturnsFalse()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            using var oldDoc = ParsedJsonDocument<JsonElement>.Parse("1");
+            JsonElement oldItem = oldDoc.RootElement;
+            using var newDoc = ParsedJsonDocument<JsonElement>.Parse("2");
+            JsonElement newItem = newDoc.RootElement;
+
+            // Act
+            bool replaced = root.Replace(oldItem, newItem);
+
+            // Assert
+            Assert.False(replaced);
+            Assert.Equal(0, root.GetArrayLength());
+        }
+
+        [Fact]
+        public static void Replace_MatchesComplexObjects()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("""[{"id":1},{"id":2},{"id":3}]""");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            using var oldDoc = ParsedJsonDocument<JsonElement>.Parse("""{"id":2}""");
+            JsonElement oldItem = oldDoc.RootElement;
+            using var newDoc = ParsedJsonDocument<JsonElement>.Parse("""{"id":99}""");
+            JsonElement newItem = newDoc.RootElement;
+
+            // Act
+            bool replaced = root.Replace(oldItem, newItem);
+
+            // Assert
+            Assert.True(replaced);
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("""[{"id":1},{"id":99},{"id":3}]""", root.ToString());
+        }
+
+        [Fact]
+        public static void Replace_OnlyReplacesFirstOccurrence()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("""[{"a":1},{"a":1},{"a":1}]""");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            using var oldDoc = ParsedJsonDocument<JsonElement>.Parse("""{"a":1}""");
+            JsonElement oldItem = oldDoc.RootElement;
+            using var newDoc = ParsedJsonDocument<JsonElement>.Parse("""{"a":2}""");
+            JsonElement newItem = newDoc.RootElement;
+
+            // Act
+            bool replaced = root.Replace(oldItem, newItem);
+
+            // Assert
+            Assert.True(replaced);
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("""[{"a":2},{"a":1},{"a":1}]""", root.ToString());
+        }
+
+        [Fact]
+        public static void Replace_WithUndefinedSource_RemovesMatch()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2, 3]");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            using var oldDoc = ParsedJsonDocument<JsonElement>.Parse("2");
+            JsonElement oldItem = oldDoc.RootElement;
+
+            // Act — passing undefined Source should remove the match
+            bool replaced = root.Replace(oldItem, default(JsonElement.Source));
+
+            // Assert
+            Assert.True(replaced);
+            Assert.Equal(2, root.GetArrayLength());
+            Assert.Equal("[1,3]", root.ToString());
+        }
+
+        [Fact]
+        public static void Replace_WithStringValue()
+        {
+            // Arrange
+            using var doc = ParsedJsonDocument<JsonElement>.Parse("""["alpha","beta","gamma"]""");
+            using var workspace = JsonWorkspace.Create();
+            using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
+            JsonElement.Mutable root = builderDoc.RootElement;
+
+            using var oldDoc = ParsedJsonDocument<JsonElement>.Parse("\"beta\"");
+            JsonElement oldItem = oldDoc.RootElement;
+
+            // Act
+            bool replaced = root.Replace(oldItem, "delta");
+
+            // Assert
+            Assert.True(replaced);
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal("""["alpha","delta","gamma"]""", root.ToString());
+        }
+
+        #endregion
+
         #region RemoveProperty Tests
 
         [Fact]

@@ -5665,6 +5665,58 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        ///   Replaces the first array element that deeply equals the specified item
+        ///   with a new value.
+        /// </summary>
+        /// <param name="oldItem">The item to find.</param>
+        /// <param name="newItem">The value to replace it with.</param>
+        /// <returns><see langword="true"/> if an element was found and replaced; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     This method iterates forward through the array and replaces the first element
+        ///     whose value deeply equals the specified <paramref name="oldItem"/>.
+        ///   </para>
+        /// </remarks>
+        [CLSCompliant(false)]
+        public bool Replace(in JsonElement oldItem, in Source newItem)
+        {
+            CheckValidInstance();
+
+            if (newItem.IsUndefined)
+            {
+                return Remove(in oldItem);
+            }
+
+            ArrayEnumerator<JsonElement> enumerator = new(_parent, _idx);
+
+            while (enumerator.MoveNext())
+            {
+                JsonElement current = enumerator.Current;
+                if (JsonElementHelpers.DeepEquals(in current, in oldItem))
+                {
+                    ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);
+                    newItem.AddAsItem(ref cvb);
+
+                    int elementStart = ((IJsonElement)current).ParentDocumentIndex;
+                    int elementEnd = elementStart + ((IJsonElement)current).ParentDocument.GetDbSize(elementStart, true);
+                    _parent.OverwriteAndDispose(_idx, elementStart, elementEnd, 1, ref cvb);
+
+                    _documentVersion = _parent.Version;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         ///   Removes all array elements that match the specified predicate.
         /// </summary>
         /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
