@@ -323,7 +323,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         DbRow row = parsedData.Get(index);
         Debug.Assert(row.IsSimpleValue);
 
-        if (includeQuotes && row.TokenType == JsonTokenType.String)
+        if (includeQuotes && row.TokenType is JsonTokenType.String or JsonTokenType.PropertyName)
         {
             // Start one character earlier than the value (the open quote)
             // End one character after the value (the close quote)
