@@ -80,7 +80,15 @@ using CreatingAStronglyTypedArray.Models;
 using NodaTime;
 
 // Parse an array of 30 people from JSON
-string peopleArrayJson = "[...30 person objects...]";
+string peopleArrayJson =
+    """
+    [
+      {"familyName":"Smith","givenName":"John","otherNames":"Edward,Michael","birthDate":"2004-01-01","height":1.8},
+      {"familyName":"Johnson","givenName":"Alice","birthDate":"2000-02-02","height":1.6},
+      {"familyName":"Williams","givenName":"Robert","otherNames":"James,Thomas","birthDate":"1995-03-03","height":1.7}
+      // ... 27 more person objects (see Program.cs for full array)
+    ]
+    """;
 
 using var parsedArray = ParsedJsonDocument<Person1dArray>.Parse(peopleArrayJson);
 Person1dArray peopleArray = parsedArray.RootElement;
@@ -130,7 +138,7 @@ if (updatedArray.EvaluateSchema())
 
 // Set item at a specific index
 root.SetItem(14, PersonClosed.Build(
-    (ref PersonClosed.Builder b) => b.Create(
+    static (ref PersonClosed.Builder b) => b.Create(
         birthDate: new LocalDate(1820, 1, 17),
         familyName: "Brontë",
         givenName: "Anne",

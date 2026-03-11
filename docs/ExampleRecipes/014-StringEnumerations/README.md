@@ -62,14 +62,6 @@ using var parsedBlue = ParsedJsonDocument<Color>.Parse("\"blue\"");
 Color red = parsedRed.RootElement;
 Color green = parsedGreen.RootElement;
 Color blue = parsedBlue.RootElement;
-
-// Convert to specific entity types
-Color.Enum0Entity redEntity = Color.Enum0Entity.From(red);
-Color.Enum1Entity greenEntity = Color.Enum1Entity.From(green);
-Color.Enum2Entity blueEntity = Color.Enum2Entity.From(blue);
-
-Console.WriteLine($"Enum entities: {redEntity}, {greenEntity}, {blueEntity}");
-// Output: Enum entities: "red", "green", "blue"
 ```
 
 ### Pattern matching over enum values

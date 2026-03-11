@@ -82,7 +82,14 @@ TensorRank3 updatedTensor = mutableDoc.RootElement;
 Span<double> tensorAsSpan = stackalloc double[TensorRank3.ValueBufferSize];
 if (updatedTensor.TryGetNumericValues(tensorAsSpan, out int written))
 {
-    Console.WriteLine($"All {written} values: {string.Join(", ", tensorAsSpan.ToArray())}");
+    // Manually format the output
+    Console.Write("All tensor values (flat): [");
+    for (int i = 0; i < written; i++)
+    {
+        if (i > 0) Console.Write(", ");
+        Console.Write(tensorAsSpan[i]);
+    }
+    Console.WriteLine("]");
 }
 
 // Find the rank of each array (note the sub arrays of diminishing rank)

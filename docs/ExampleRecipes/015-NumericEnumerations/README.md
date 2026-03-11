@@ -152,13 +152,6 @@ The simple `enum` approach (`{"enum": [1, 2, 3]}`) works but has limitations:
 - No semantic meaning attached to the numbers
 
 The `oneOf` + `const` pattern shown in this recipe provides:
-
-**Limitations:**
-- No documentation for each value
-- Generic generated names (EnumValues.NumberOne, NumberTwo, NumberThree)
-- No semantic meaning attached to the numbers
-
-The `oneOf` + `const` pattern shown in this recipe provides:
 - Meaningful names for each numeric value (`Pending`, `Active`, `Complete`)
 - Rich documentation via `title` and `description`
 - Separate types for each value (Status.Pending, Status.Active, Status.Complete)

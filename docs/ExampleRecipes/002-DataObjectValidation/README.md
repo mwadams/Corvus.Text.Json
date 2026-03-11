@@ -86,7 +86,7 @@ using JsonWorkspace workspace = JsonWorkspace.Create();
 using var personDoc = PersonConstraints.CreateBuilder(
     workspace,
     PersonConstraints.Build(
-        (ref PersonConstraints.Builder b) => b.Create(
+        static (ref PersonConstraints.Builder b) => b.Create(
             birthDate: new LocalDate(1820, 1, 17),
             familyName: "Brontë",
             givenName: "Anne",
@@ -118,30 +118,6 @@ if (!personConstraints.EvaluateSchema())
 // Height has format: "double", so implicit conversion to double is available
 double heightValue = personConstraints.Height;
 ```
-
-### Direct formatting without extraction
-
-V5 generated types support formatting operations directly without needing to extract to primitive types:
-
-```csharp
-// Property entities can be used directly in string interpolation
-Console.WriteLine($"Family name: {personConstraints.FamilyName}");
-Console.WriteLine($"Height: {personConstraints.Height}");
-
-// Or in string formatting operations
-string formatted = string.Format("Person: {0}, {1}", personConstraints.FamilyName, personConstraints.GivenName);
-
-// This works because the generated property types implement formatting interfaces
-// No need to call (string)familyName or heightValue.ToString()
-```
-
-**Why this matters:**
-- **Zero allocation**: The types format directly from the underlying JSON data without creating intermediate string objects
-- **API ergonomics**: You can use property entities anywhere a formattable value is expected (logging, string interpolation, etc.)
-- **Type safety**: The compiler ensures you're using the property correctly without manual extraction
-- **Performance**: Avoids allocation churn from repeated `TryGetValue()` or explicit cast operations
-
-Only extract to primitives when you need to **transform** the values (arithmetic, comparisons, etc.), not just for display or logging.
 
 ### Verbosity levels
 
