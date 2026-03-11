@@ -103,11 +103,16 @@ While this recipe demonstrates direct variant access, you can also use the `Matc
 string DescribeShape(in Shape shape)
 {
     return shape.Match(
-        (in Shape.OneOf0Entity circle) => $"A circle with radius {circle.Radius}",
-        (in Shape.OneOf1Entity rectangle) => $"A rectangle {rectangle.Width}x{rectangle.Height}",
-        (in Shape unknownShape) => throw new InvalidOperationException($"Unknown shape: {unknownShape}"));
+        matchRequiredRadiusAndType: static (in Shape.RequiredRadiusAndType circle) => 
+            $"A circle with radius {circle.Radius}",
+        matchRequiredHeightAndTypeAndWidth: static (in Shape.RequiredHeightAndTypeAndWidth rectangle) => 
+            $"A rectangle {rectangle.Width}x{rectangle.Height}",
+        defaultMatch: static (in Shape unknownShape) => 
+            throw new InvalidOperationException($"Unknown shape: {unknownShape}"));
 }
 ```
+
+Note that the match handlers use named parameters (`matchRequiredRadiusAndType`, `matchRequiredHeightAndTypeAndWidth`) generated from the required properties in each discriminated variant.
 
 ## Key Differences from V4
 

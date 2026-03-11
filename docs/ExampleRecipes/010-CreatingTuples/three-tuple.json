@@ -1,5 +1,5 @@
 {
-  "$title": "A tuple of int32, string, boolean",
+  "title": "A tuple of int32, string, boolean",
   "type": "array",
   "prefixItems": [
     {

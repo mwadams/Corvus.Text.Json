@@ -54,10 +54,10 @@ Like string enumerations, you can use pattern matching:
 string DescribeStatus(in Status status)
 {
     return status.Match(
-        (in Status.Enum0Entity pending) => "Waiting to start",
-        (in Status.Enum1Entity active) => "Currently processing",
-        (in Status.Enum2Entity complete) => "Finished",
-        (in Status unknownStatus) => throw new InvalidOperationException($"Unknown status: {unknownStatus}"));
+        matchNumberOne: static () => "Active - system is running",
+        matchNumberTwo: static () => "Inactive - system is stopped",
+        matchNumberThree: static () => "Pending - system is starting",
+        defaultMatch: static () => throw new InvalidOperationException("Unknown status"));
 }
 ```
 

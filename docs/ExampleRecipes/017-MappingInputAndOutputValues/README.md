@@ -71,24 +71,26 @@ Use the builder pattern to construct the target type from source data:
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-// Create a builder source that maps properties
-TargetType.Mutable.Source targetSource = TargetType.Mutable.Build((ref TargetType.Mutable.Builder builder) =>
+// Map to target type using builder
+using var targetBuilder = TargetType.CreateBuilder(workspace, static (ref TargetType.Builder b) =>
 {
-    // Map id → identifier
-    builder.SetIdentifier(source.Id);
-    
-    // Map name → fullName
-    builder.SetFullName(source.Name);
+    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue))
+    {
+        // Create() parameters are in alphabetical order: fullName, identifier
+        b.Create(nameValue, idValue);
+    }
 });
 
-// Build the document
-using JsonDocumentBuilder<TargetType.Mutable> targetBuilder = 
-    TargetType.Mutable.CreateBuilder(workspace, in targetSource);
-
-TargetType.Mutable target = targetBuilder.RootElement;
+TargetType target = targetBuilder.RootElement;
 Console.WriteLine($"Target - identifier: {target.Identifier}, fullName: {target.FullName}");
 // Output: Target - identifier: 123, fullName: John Doe
 ```
+
+**Key points:**
+- Work with generated types directly
+- Only extract to primitives when needed for cross-schema operations
+- Use `TryGetValue()` to safely extract primitive values
+- The `Create()` method parameters are ordered alphabetically by property name
 
 ### Multi-stage transformation pipelines
 

@@ -1,5 +1,5 @@
 {
-  "$title": "A composition of multiple different schema",
+  "title": "A composition of multiple different schema",
   "type": "object",
   "allOf": [
     { "$ref": "./countable.json" },

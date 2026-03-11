@@ -83,7 +83,7 @@ The code generator produces three types:
 - **`Countable`** - has `count` (required) property
 - **`CompositeType`** - combines both via `allOf` and adds `budget` (required)
 
-Note that `CurrencyValue` is not generated. The code generator detected that the final definition reduces to a built-in type (`decimal`), avoiding unnecessary code.
+The code generator creates `CurrencyValue` as a nested type within `CompositeType` for the `budget` property, which provides type-safe access to the decimal value via `TryGetValue(out decimal)` and implicit conversions.
 
 ## Usage Examples
 

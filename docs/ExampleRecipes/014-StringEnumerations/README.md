@@ -80,15 +80,15 @@ Use the `Match()` method for exhaustive pattern matching:
 string DescribeColor(in Color color)
 {
     return color.Match(
-        (in Color.Enum0Entity red) => "The color of fire",
-        (in Color.Enum1Entity green) => "The color of grass",
-        (in Color.Enum2Entity blue) => "The color of sky",
-        (in Color unknownColor) => throw new InvalidOperationException($"Unknown color: {unknownColor}"));
+        matchRed: static () => "The color of fire and passion",
+        matchGreen: static () => "The color of nature and growth",
+        matchBlue: static () => "The color of sky and ocean",
+        defaultMatch: static () => throw new InvalidOperationException("Unknown color"));
 }
 
-Console.WriteLine(DescribeColor(red));    // Output: The color of fire
-Console.WriteLine(DescribeColor(green));  // Output: The color of grass
-Console.WriteLine(DescribeColor(blue));   // Output: The color of sky
+Console.WriteLine(DescribeColor(red));    // Output: The color of fire and passion
+Console.WriteLine(DescribeColor(green));  // Output: The color of nature and growth
+Console.WriteLine(DescribeColor(blue));   // Output: The color of sky and ocean
 ```
 
 The compiler ensures you handle all possible enum values. If you add a new value to the schema and regenerate the code, any incomplete pattern matching will be caught at compile time.

@@ -872,7 +872,7 @@ Both V4 and V5 support **implicit conversion** from the composite type to any of
 // Schema: CompositeType = allOf [Documentation, Countable] + additional properties
 // V4
 V4.CompositeType v4Composite = V4.CompositeType.Parse(json);
-V4.Documentation v4Doc = v4Composite;  // implicit
+V4.Documentation v4Documentation = v4Composite;  // implicit
 V4.Countable v4Count = v4Composite;    // implicit
 
 // Access properties - note V4's "Value" suffix
@@ -898,7 +898,7 @@ Both also support **explicit conversion** in the reverse direction (from constit
 
 ```csharp
 // V4
-V4.CompositeType v4Composite = (V4.CompositeType)v4Doc;  // explicit
+V4.CompositeType v4Composite = (V4.CompositeType)v4Documentation;  // explicit
 
 // V5
 V5.CompositeType v5Composite = (V5.CompositeType)v5Documentation;  // explicit

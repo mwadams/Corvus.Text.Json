@@ -108,16 +108,20 @@ While this simple example shows readonly access, you can create maps using the m
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var doc = StringToIntMap.CreateBuilder(workspace, StringToIntMap.Build((ref StringToIntMap.Builder b) =>
-{
-    b.SetProperty("alpha"u8, 10);
-    b.SetProperty("beta"u8, 20);
-    b.SetProperty("gamma"u8, 30);
-}));
-StringToIntMap newMap = doc.RootElement;
-Console.WriteLine(newMap);
+using var builder = StringToIntMap.CreateBuilder(workspace);
+StringToIntMap.Mutable newMap = builder.RootElement;
+
+// Add properties to the map
+newMap.SetProperty("alpha"u8, 10);
+newMap.SetProperty("beta"u8, 20);
+newMap.SetProperty("gamma"u8, 30);
+
+StringToIntMap result = newMap.AsImmutable();
+Console.WriteLine(result);
 // Output: {"alpha":10,"beta":20,"gamma":30}
 ```
+
+The mutable map allows you to dynamically add properties with `SetProperty()`, providing a flexible way to construct maps at runtime.
 
 ## UTF-8 String Literals for Performance
 
