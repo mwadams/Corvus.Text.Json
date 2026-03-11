@@ -4,6 +4,8 @@
     <File Path="JsonSchemaSourceGenerator.md" />
     <File Path="ParsedJsonDocument.md" />
     <File Path="README.md" />
+    <File Path="MigratingFromV4ToV5.md" />
+    <File Path="GettingStartedWithCodeGeneration.md" />
   </Folder>
   <Project Path="JsonDocumentBuilderExample\JsonDocumentBuilderExample.csproj" />
   <Project Path="JsonSchemaSourceGeneratorExample/JsonSchemaSourceGeneratorExample.csproj" />

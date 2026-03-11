@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Docs/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="001-DataObject\DataObject.csproj" />
+  <Project Path="002-DataObjectValidation\DataObjectValidation.csproj" />
+  <Project Path="003-ReusingCommonTypes\ReusingCommonTypes.csproj" />
+  <Project Path="004-OpenVersusClosedTypes\OpenVersusClosedTypes.csproj" />
+  <Project Path="005-ExtendingABaseType\ExtendingABaseType.csproj" />
+  <Project Path="006-ConstrainingABaseType\ConstrainingABaseType.csproj" />
+</Solution>
