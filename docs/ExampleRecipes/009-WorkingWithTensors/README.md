@@ -53,8 +53,11 @@ The code generator produces:
 Fixed-size numeric arrays gain **tensor operations**:
 - `TryGetNumericValues(Span<double>, out int)` — extract all values into a flat buffer
 - `Build(ReadOnlySpan<double>)` — create a `Source` directly from a flat numeric span (preferred for construction from raw data)
+- `CreateBuilder(workspace, ReadOnlySpan<double>)` — single-call convenience that creates a mutable document from a span
 - `CreateTensor(ReadOnlySpan<double>)` on the mutable builder — reconstruct from a flat buffer inside a `Build` delegate
 - `Rank`, `Dimension`, `ValueBufferSize` — static metadata about the tensor structure
+
+> **Note:** `Build(ReadOnlySpan<T>)` and `CreateBuilder(workspace, ReadOnlySpan<T>)` are also available on variable-length numeric arrays — see [Variable-length numeric arrays](#variable-length-numeric-arrays) below.
 
 We can use this in the same way, and also convert it directly to and from `Span<TNumeric>` for use in APIs such as [System.Numerics.Tensors](https://learn.microsoft.com/en-us/dotnet/api/system.numerics.tensors).
 
@@ -132,6 +135,20 @@ using var builder = TensorRank3.CreateBuilder(
 ```
 
 The span must contain exactly `ValueBufferSize` elements; passing the wrong number throws `ArgumentException`.
+
+### Variable-length numeric arrays
+
+The `Build(ReadOnlySpan<T>)` and `CreateBuilder(workspace, ReadOnlySpan<T>)` overloads are not limited to fixed-size tensors — they work on **any** numeric array type (i.e. an array whose items have a numeric type and format). For variable-length arrays, the span can contain any number of elements:
+
+```csharp
+// Given a schema with no minItems/maxItems:
+// { "type": "array", "items": { "type": "number", "format": "double" } }
+
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using var builder = ScoresArray.CreateBuilder(workspace, [1.5, 2.5, 3.5]);
+ScoresArray scores = builder.RootElement;
+// scores is [1.5, 2.5, 3.5]
+```
 
 ## Key differences from V4
 

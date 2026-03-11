@@ -13,7 +13,8 @@ using V5 = MigrationModels.V5;
 /// </summary>
 /// <remarks>
 /// <para>Both V4 and V5: <c>vector.TryGetNumericValues(Span&lt;int&gt;, out int written)</c></para>
-/// <para>V4: <c>Vector.FromValues(ReadOnlySpan&lt;int&gt;)</c> — no V5 equivalent</para>
+/// <para>V4: <c>Vector.FromValues(ReadOnlySpan&lt;int&gt;)</c></para>
+/// <para>V5: <c>Vector.Build(ReadOnlySpan&lt;int&gt;)</c> or <c>Vector.CreateBuilder(workspace, ReadOnlySpan&lt;int&gt;)</c></para>
 /// </remarks>
 public class NumericArrayEquivalenceTests
 {
@@ -149,4 +150,75 @@ public class NumericArrayEquivalenceTests
             Assert.Equal(v4Values[i], v5Values[i]);
         }
     }
+
+    #region Construct from span — V4 FromValues vs V5 Build / CreateBuilder
+
+    [Fact]
+    public void V4_FromValues()
+    {
+        // V4: static FromValues(ReadOnlySpan<int>) creates a vector directly.
+        V4.MigrationIntVector v4 = V4.MigrationIntVector.FromValues([10, 20, 30]);
+        Assert.Equal(3, v4.GetArrayLength());
+        Assert.Equal(10, (int)v4[0]);
+        Assert.Equal(20, (int)v4[1]);
+        Assert.Equal(30, (int)v4[2]);
+    }
+
+    [Fact]
+    public void V5_BuildFromSpan()
+    {
+        // V5: Build(ReadOnlySpan<int>) returns a Source; pass to CreateBuilder.
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        V5.MigrationIntVector.Source source = V5.MigrationIntVector.Build([10, 20, 30]);
+        using JsonDocumentBuilder<V5.MigrationIntVector.Mutable> builder =
+            V5.MigrationIntVector.CreateBuilder(workspace, source);
+        V5.MigrationIntVector v5 = builder.RootElement;
+
+        Assert.Equal(3, v5.GetArrayLength());
+        Assert.Equal(10, (int)v5[0]);
+        Assert.Equal(20, (int)v5[1]);
+        Assert.Equal(30, (int)v5[2]);
+    }
+
+    [Fact]
+    public void V5_CreateBuilderFromSpan()
+    {
+        // V5: CreateBuilder(workspace, ReadOnlySpan<int>) — single-call convenience.
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using JsonDocumentBuilder<V5.MigrationIntVector.Mutable> builder =
+            V5.MigrationIntVector.CreateBuilder(workspace, [10, 20, 30]);
+        V5.MigrationIntVector v5 = builder.RootElement;
+
+        Assert.Equal(3, v5.GetArrayLength());
+        Assert.Equal(10, (int)v5[0]);
+        Assert.Equal(20, (int)v5[1]);
+        Assert.Equal(30, (int)v5[2]);
+    }
+
+    [Fact]
+    public void BothEngines_ConstructFromSpan_SameValues()
+    {
+        // V4: FromValues
+        V4.MigrationIntVector v4 = V4.MigrationIntVector.FromValues([10, 20, 30]);
+
+        // V5: CreateBuilder from span
+        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using JsonDocumentBuilder<V5.MigrationIntVector.Mutable> builder =
+            V5.MigrationIntVector.CreateBuilder(workspace, [10, 20, 30]);
+        V5.MigrationIntVector v5 = builder.RootElement;
+
+        // Extract and compare numeric values
+        Span<int> v4Values = stackalloc int[3];
+        Span<int> v5Values = stackalloc int[3];
+        Assert.True(v4.TryGetNumericValues(v4Values, out int v4Written));
+        Assert.True(v5.TryGetNumericValues(v5Values, out int v5Written));
+
+        Assert.Equal(v4Written, v5Written);
+        for (int i = 0; i < v4Written; i++)
+        {
+            Assert.Equal(v4Values[i], v5Values[i]);
+        }
+    }
+
+    #endregion
 }

@@ -1503,10 +1503,11 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
-        // Add CreateBuilder(workspace, ReadOnlySpan<T>) overload for fixed-size numeric arrays
-        if (typeDeclaration.IsFixedSizeNumericArray())
+        // Add CreateBuilder(workspace, ReadOnlySpan<T>) overload for numeric arrays (non-tuple)
+        if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
         {
             NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
+            bool isFixedSize = typeDeclaration.IsFixedSizeNumericArray();
 
             if (numericTypeName.IsNetOnly)
             {
@@ -1514,23 +1515,46 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLine("#if NET");
             }
 
-            generator
-                .AppendSeparatorLine()
-                .AppendBlockIndent(
-                    $$"""
-                    /// <summary>
-                    /// Creates and initializes a mutable document from a flat numeric span.
-                    /// </summary>
-                    /// <param name="workspace">The JSON workspace.</param>
-                    /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
-                    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
-                    /// <returns>An instance of a mutable document initialized with the given tensor values.</returns>
-                    public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateBuilder(
-                        JsonWorkspace workspace, ReadOnlySpan<{{numericTypeName.Name}}> tensor, int initialCapacity = {{initialCapacity}})
-                    {
-                        return CreateBuilder(workspace, Build(tensor), initialCapacity);
-                    }
-                    """);
+            if (isFixedSize)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        $$"""
+                        /// <summary>
+                        /// Creates and initializes a mutable document from a flat numeric span.
+                        /// </summary>
+                        /// <param name="workspace">The JSON workspace.</param>
+                        /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
+                        /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+                        /// <returns>An instance of a mutable document initialized with the given tensor values.</returns>
+                        public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateBuilder(
+                            JsonWorkspace workspace, ReadOnlySpan<{{numericTypeName.Name}}> tensor, int initialCapacity = {{initialCapacity}})
+                        {
+                            return CreateBuilder(workspace, Build(tensor), initialCapacity);
+                        }
+                        """);
+            }
+            else
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        $$"""
+                        /// <summary>
+                        /// Creates and initializes a mutable document from a numeric span.
+                        /// </summary>
+                        /// <param name="workspace">The JSON workspace.</param>
+                        /// <param name="values">The numeric values from which to create the array.</param>
+                        /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+                        /// <returns>An instance of a mutable document initialized with the given values.</returns>
+                        public static JsonDocumentBuilder<{{generator.MutableClassName()}}> CreateBuilder(
+                            JsonWorkspace workspace, ReadOnlySpan<{{numericTypeName.Name}}> values, int initialCapacity = {{initialCapacity}})
+                        {
+                            return CreateBuilder(workspace, Build(values), initialCapacity);
+                        }
+                        """);
+            }
 
             if (numericTypeName.IsNetOnly)
             {
@@ -1756,11 +1780,12 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
-        // Add Build(ReadOnlySpan<T>) factory method for fixed-size numeric arrays
-        if (typeDeclaration.IsFixedSizeNumericArray())
+        // Add Build(ReadOnlySpan<T>) factory method for numeric arrays (non-tuple)
+        if (typeDeclaration.IsNumericArray() && !typeDeclaration.IsTuple())
         {
             NumericTypeName numericTypeName = typeDeclaration.PreferredDotnetNumericTypeName() ?? throw new InvalidOperationException("Expected numeric type name");
             string sourceClassName = generator.SourceClassName();
+            bool isFixedSize = typeDeclaration.IsFixedSizeNumericArray();
 
             if (numericTypeName.IsNetOnly)
             {
@@ -1768,20 +1793,40 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLine("#if NET");
             }
 
-            generator
-                .AppendSeparatorLine()
-                .AppendBlockIndent(
-                    $$"""
-                    /// <summary>
-                    /// Build a tensor value from the given numeric span.
-                    /// </summary>
-                    /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
-                    /// <returns>The source from which to build the value.</returns>
-                    public static {{sourceClassName}} Build(ReadOnlySpan<{{numericTypeName.Name}}> tensor)
-                    {
-                        return new {{sourceClassName}}(tensor);
-                    }
-                    """);
+            if (isFixedSize)
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        $$"""
+                        /// <summary>
+                        /// Build a tensor value from the given numeric span.
+                        /// </summary>
+                        /// <param name="tensor">The data from which to create the tensor. It must contain exactly <see cref="ValueBufferSize"/> elements.</param>
+                        /// <returns>The source from which to build the value.</returns>
+                        public static {{sourceClassName}} Build(ReadOnlySpan<{{numericTypeName.Name}}> tensor)
+                        {
+                            return new {{sourceClassName}}(tensor);
+                        }
+                        """);
+            }
+            else
+            {
+                generator
+                    .AppendSeparatorLine()
+                    .AppendBlockIndent(
+                        $$"""
+                        /// <summary>
+                        /// Build an array value from the given numeric span.
+                        /// </summary>
+                        /// <param name="values">The numeric values from which to create the array.</param>
+                        /// <returns>The source from which to build the value.</returns>
+                        public static {{sourceClassName}} Build(ReadOnlySpan<{{numericTypeName.Name}}> values)
+                        {
+                            return new {{sourceClassName}}(values);
+                        }
+                        """);
+            }
 
             if (numericTypeName.IsNetOnly)
             {
@@ -2262,7 +2307,7 @@ internal static partial class CodeGeneratorExtensions
                     {
                         generator
                             .AppendLine("#if NET")
-                            .AppendLineIndent("private ", generator.SourceClassName(), "(ReadOnlySpan<", at.Name, "> value)")
+                            .AppendLineIndent("internal ", generator.SourceClassName(), "(ReadOnlySpan<", at.Name, "> value)")
                             .AppendLineIndent("{")
                             .PushIndent()
                                 .AppendLineIndent("_", at.Name, "Array = value;")
@@ -2277,7 +2322,7 @@ internal static partial class CodeGeneratorExtensions
                     if (seenArrayValues.Add($"[{at.Name}]"))
                     {
                         generator
-                            .AppendLineIndent("private ", generator.SourceClassName(), "(ReadOnlySpan<", at.Name, "> value)")
+                            .AppendLineIndent("internal ", generator.SourceClassName(), "(ReadOnlySpan<", at.Name, "> value)")
                             .AppendLineIndent("{")
                             .PushIndent()
                                 .AppendLineIndent("_", at.Name, "Array = value;")

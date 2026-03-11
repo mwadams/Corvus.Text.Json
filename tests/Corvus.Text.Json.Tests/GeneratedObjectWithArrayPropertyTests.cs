@@ -92,5 +92,75 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region Build and CreateBuilder from span (variable-length numeric array)
+
+        [Fact]
+        public void ScoresArray_BuildFromSpan()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<double> values = [1.1, 2.2, 3.3];
+            ObjectWithArrayProperty.ScoresEntityArray.Source source =
+                ObjectWithArrayProperty.ScoresEntityArray.Build(values);
+
+            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
+                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, source);
+            ObjectWithArrayProperty.ScoresEntityArray.Mutable root = doc.RootElement;
+
+            Assert.Equal(3, root.GetArrayLength());
+            Assert.Equal(1.1, (double)root[0]);
+            Assert.Equal(2.2, (double)root[1]);
+            Assert.Equal(3.3, (double)root[2]);
+        }
+
+        [Fact]
+        public void ScoresArray_CreateBuilderFromSpan()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<double> values = [10.0, 20.0, 30.0, 40.0, 50.0];
+            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
+                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, values);
+            ObjectWithArrayProperty.ScoresEntityArray.Mutable root = doc.RootElement;
+
+            Assert.Equal(5, root.GetArrayLength());
+            Assert.Equal(10.0, (double)root[0]);
+            Assert.Equal(50.0, (double)root[4]);
+        }
+
+        [Fact]
+        public void ScoresArray_BuildFromSpan_RoundTrip()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
+            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
+                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, values);
+
+            string json = doc.RootElement.ToString();
+
+            using ParsedJsonDocument<ObjectWithArrayProperty.ScoresEntityArray> reparsed =
+                ParsedJsonDocument<ObjectWithArrayProperty.ScoresEntityArray>.Parse(json);
+            Assert.Equal(3, reparsed.RootElement.GetArrayLength());
+            Assert.Equal(1.5, (double)reparsed.RootElement[0]);
+            Assert.Equal(2.5, (double)reparsed.RootElement[1]);
+            Assert.Equal(3.5, (double)reparsed.RootElement[2]);
+        }
+
+        [Fact]
+        public void ScoresArray_BuildFromEmptySpan()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+
+            ReadOnlySpan<double> values = [];
+            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
+                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, values);
+
+            string json = doc.RootElement.ToString();
+            Assert.Equal("[]", json);
+        }
+
+        #endregion
     }
 }

@@ -791,6 +791,27 @@ using var builder = MigrationIntVector.CreateBuilder(
 
 Use the convenience overload when you already have the data in a span. Use the delegate pattern when you need to combine tensor creation with other builder operations.
 
+### Variable-length numeric arrays
+
+The `Build(ReadOnlySpan<T>)` and `CreateBuilder(workspace, ReadOnlySpan<T>)` overloads are also available on **variable-length** numeric arrays (those without `minItems`/`maxItems` constraints, or with different min and max). The span can contain any number of elements:
+
+```csharp
+// Given a schema: { "type": "array", "items": { "type": "number", "format": "double" } }
+// The generated ScoresArray type gets Build and CreateBuilder overloads:
+
+using JsonWorkspace workspace = JsonWorkspace.Create();
+
+// CreateBuilder convenience — any length span
+using var builder = ScoresArray.CreateBuilder(workspace, [1.5, 2.5, 3.5, 4.5, 5.5]);
+ScoresArray scores = builder.RootElement;
+
+// Or two-step: Build + CreateBuilder
+ScoresArray.Source source = ScoresArray.Build([1.5, 2.5]);
+using var builder2 = ScoresArray.CreateBuilder(workspace, source);
+```
+
+> **Note:** For fixed-size tensors, the span must contain exactly `ValueBufferSize` elements. For variable-length arrays, any span length is accepted — including empty spans which produce `[]`.
+
 ---
 
 ## Tuples
@@ -1372,6 +1393,7 @@ string rgb = color.Match(
 | `v4.EnumerateObject()` | `v5.EnumerateObject()` (same) |
 | `v4.TryGetNumericValues(span, out written)` | `v5.TryGetNumericValues(span, out written)` (same) |
 | `MyTensor.FromValues(span)` | `MyTensor.CreateBuilder(ws, span)`, `Build(span)`, or `Build((ref b) => b.CreateTensor(span))` |
+| N/A | `MyNumericArray.CreateBuilder(ws, span)` or `Build(span)` (V5 only — variable-length numeric arrays) |
 | `v4.Item1` (tuple) | `v5.Item1` (same) |
 | `MigrationTuple.Create(a,b,c)` | `MigrationTuple.CreateBuilder(ws,a,b,c)`, `Build(a,b,c)`, or `Build((ref b) => b.CreateTuple(a,b,c))` |
 | `v4.Match(...)` (composition) | `v5.Match(...)` (similar — entity types differ) |
