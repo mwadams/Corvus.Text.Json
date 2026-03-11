@@ -97,7 +97,8 @@ V4 provided a fixed set of well-known types for common JSON values. V5 replaces 
 
 | V4 (Corvus.Json) | V5 (Corvus.Text.Json) |
 |---|---|
-| `JsonString` | `GetString()`, `GetUtf8String()`, `TryGetValue(out string?)` |
+| `JsonString` | `GetString()`, `GetUtf8String()`, `GetUtf16String()`, `TryGetValue(out string?)` |
+| `v4.TryGetValue<TState>(state, callback)` (delegate with `ReadOnlySpan<byte>` or `ReadOnlySpan<char>`) | `GetUtf8String()` → `.Span` or `GetUtf16String()` → `.Span` |
 | `JsonUri` | `TryGetValue(out Utf8UriValue)` |
 | `JsonUriReference` | `TryGetValue(out Utf8UriReferenceValue)` |
 | `JsonIri` | `TryGetValue(out Utf8IriValue)` |
@@ -202,12 +203,16 @@ if (v5.TryGetProperty("name"u8, out JsonElement value)) { ... }
 
 ### Getting the unescaped UTF-8 string
 
-V5 string-valued properties provide `GetUtf8String()`, which returns an `UnescapedUtf8JsonString` — a disposable `ref struct` giving you direct access to the unescaped UTF-8 bytes without allocating a `string`. This is useful for high-performance scenarios where you want to compare or process the raw bytes:
+V4 provided `TryGetValue` delegate overloads that gave you access to the underlying bytes or characters without allocating a `string` — one for `ReadOnlySpan<byte>` (UTF-8) and one for `ReadOnlySpan<char>` (UTF-16). V5 replaces the UTF-8 delegate with `GetUtf8String()`, which returns an `UnescapedUtf8JsonString` — a disposable `ref struct` giving you direct access to the unescaped UTF-8 bytes:
 
 ```csharp
-// V5 — zero-allocation access to the unescaped UTF-8 bytes
+// V4 — delegate-based access to the UTF-8 bytes
+bool found = v4.Name.TryGetValue(searchTerm, (term, span) => span.SequenceEqual(term));
+
+// V5 — direct span access (replaces the delegate pattern)
 using UnescapedUtf8JsonString utf8 = v5.Name.GetUtf8String();
 ReadOnlySpan<byte> bytes = utf8.Span;
+bool found = bytes.SequenceEqual(searchTerm);
 ```
 
 V4 string properties also have `GetString()` and `TryGetString()`, which return a `string?`. V5 has these too, but `GetUtf8String()` avoids the UTF-8 → UTF-16 transcoding cost:
@@ -222,6 +227,24 @@ using UnescapedUtf8JsonString utf8 = v5.Name.GetUtf8String();
 ```
 
 > **Note**: `UnescapedUtf8JsonString` is a `ref struct` that may hold a rented buffer, so always use a `using` declaration to ensure the buffer is returned to the pool.
+
+### Getting the unescaped UTF-16 string
+
+Similarly, V5 provides `GetUtf16String()`, which returns an `UnescapedUtf16JsonString` — a disposable `ref struct` giving you access to the unescaped UTF-16 characters without allocating a managed `string`. This replaces the V4 `TryGetValue` delegate overload that provided `ReadOnlySpan<char>`:
+
+```csharp
+// V4 — delegate-based access to the UTF-16 chars
+bool found = v4.Name.TryGetValue(searchTerm, (term, span) => span.SequenceEqual(term));
+
+// V5 — direct UTF-16 span access
+using UnescapedUtf16JsonString utf16 = v5.Name.GetUtf16String();
+ReadOnlySpan<char> chars = utf16.Span;
+bool found = chars.SequenceEqual(searchTerm);
+```
+
+You can also access the data as `ReadOnlyMemory<char>` via `utf16.Memory`, or take ownership of the underlying rented array with `utf16.TakeOwnership(out char[]? rentedChars)` for scenarios where you need the data to outlive the `using` scope.
+
+> **Note**: Like `UnescapedUtf8JsonString`, `UnescapedUtf16JsonString` is a `ref struct` that may hold a rented buffer. Always use a `using` declaration to ensure cleanup.
 
 ---
 
@@ -668,12 +691,17 @@ root.InsertItem(1, newItem);
 ### Replacing items
 
 ```csharp
-// V4 — functional
+// V4 — functional, by index
 MigrationItemArray updated = v4.SetItem(1, newItem);
 
-// V5 — imperative (same name)
+// V5 — imperative, by index
 root.SetItem(1, newItem);
+
+// V5 — imperative, by value (replaces the first matching item)
+bool replaced = root.Replace(oldItem, newItem);
 ```
+
+> **Note**: `Replace()` uses deep equality to find the first matching element and replaces it in a single pass. If the replacement `Source` is undefined, the matched item is removed instead. Returns `false` if no match is found.
 
 ### Removing items
 
@@ -681,10 +709,15 @@ root.SetItem(1, newItem);
 // V4 — by index
 MigrationItemArray updated = v4.RemoveAt(1);
 
-// V5 — by predicate (RemoveWhere) or by index (RemoveAt)
-int removed = root.RemoveWhere(
-    (in MigrationItemArray.RequiredId.Mutable item) => (int)item.Id == 2);
+// V5 — by index
 root.RemoveAt(1);
+
+// V5 — by value (removes the first matching item)
+bool removed = root.Remove(oldItem);
+
+// V5 — by predicate (removes all matching items)
+int removedCount = root.RemoveWhere(
+    (in MigrationItemArray.RequiredId.Mutable item) => (int)item.Id == 2);
 ```
 
 ### Creating empty arrays
@@ -1077,6 +1110,8 @@ Additional generation options are controlled via MSBuild properties (e.g., `Corv
 | `v4.GetString()` | `v5.GetString()` (same) |
 | `v4.TryGetString(out string?)` | `v5.TryGetValue(out string?)` |
 | N/A | `v5.GetUtf8String()` (V5 only — returns `UnescapedUtf8JsonString`) |
+| N/A | `v5.GetUtf16String()` (V5 only — returns `UnescapedUtf16JsonString`) |
+| `v4.TryGetValue(state, (s, span) => ...)` | `v5.GetUtf8String().Span` or `v5.GetUtf16String().Span` |
 | `v4.AsJsonElement` | `(JsonElement)v5` (implicit operator) |
 | `v4.AsAny` | N/A — implicitly cast to `JsonElement` |
 | `v4.AsObject` | N/A — use typed properties and `TryGetProperty()` |
@@ -1102,7 +1137,10 @@ Additional generation options are controlled via MSBuild properties (e.g., `Corv
 | `v4.Add(item)` | `mutable.AddItem(item)` |
 | `v4.Insert(idx, item)` | `mutable.InsertItem(idx, item)` |
 | `v4.SetItem(idx, item)` | `mutable.SetItem(idx, item)` |
+| N/A | `mutable.Replace(oldItem, newItem)` (V5 only — by value, first match) |
 | `v4.RemoveAt(idx)` | `mutable.RemoveAt(idx)` |
+| N/A | `mutable.Remove(item)` (V5 only — by value, first match) |
+| N/A | `mutable.RemoveWhere(predicate)` (V5 only — by predicate, all matches) |
 | `v4.GetArrayLength()` | `v5.GetArrayLength()` (same) |
 | `v4[0]` (array index) | `v5[0]` (same) |
 | `v4.EnumerateArray()` | `v5.EnumerateArray()` (same) |
