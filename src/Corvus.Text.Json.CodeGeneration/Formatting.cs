@@ -233,7 +233,7 @@ public static class Formatting
     /// Format a composite name into the type name buffer.
     /// </summary>
     /// <param name="typeDeclaration">The type declaration.</param>
-    /// <param name="typeNameBuffer">The bfufer into which to format the name.</param>
+    /// <param name="typeNameBuffer">The buffer into which to format the name.</param>
     /// <param name="first">The first part of the name.</param>
     /// <param name="second">The second part of the name.</param>
     /// <returns>The length of the name.</returns>

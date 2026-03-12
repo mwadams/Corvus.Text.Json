@@ -276,6 +276,14 @@ public readonly partial struct JsonElement
                 nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds a property with a JSON element value to the current object.
+        /// </summary>
+        /// <typeparam name="T">The type of the JSON element value.</typeparam>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The JSON element value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName = true, bool nameRequiresUnescaping = false)
             where T : struct, IJsonElement<T>
@@ -458,6 +466,13 @@ public readonly partial struct JsonElement
                 nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="sbyte"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="sbyte"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -503,6 +518,13 @@ public readonly partial struct JsonElement
                 nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="uint"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="uint"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, uint value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -531,6 +553,13 @@ public readonly partial struct JsonElement
                 nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ulong"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="ulong"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -559,6 +588,13 @@ public readonly partial struct JsonElement
                 nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ushort"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="ushort"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -759,6 +795,12 @@ public readonly partial struct JsonElement
                 value);
         }
 
+        /// <summary>
+        /// Adds a property with a JSON element value to the current object.
+        /// </summary>
+        /// <typeparam name="T">The type of the JSON element value.</typeparam>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The JSON element value.</param>
         [CLSCompliant(false)]
         public void AddProperty<T>(ReadOnlySpan<char> propertyName, T value)
             where T : struct, IJsonElement<T>
@@ -864,6 +906,11 @@ public readonly partial struct JsonElement
                 value);
         }
 
+        /// <summary>
+        /// Adds a property with an <see cref="sbyte"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="sbyte"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, sbyte value)
         {
@@ -896,6 +943,11 @@ public readonly partial struct JsonElement
                 value);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="uint"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="uint"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, uint value)
         {
@@ -916,6 +968,11 @@ public readonly partial struct JsonElement
                 value);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ulong"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="ulong"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, ulong value)
         {
@@ -936,6 +993,11 @@ public readonly partial struct JsonElement
                 value);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="ushort"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="ushort"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, ushort value)
         {
@@ -1024,6 +1086,13 @@ public readonly partial struct JsonElement
                 nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="UInt128"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="value">The <see cref="UInt128"/> value.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -1064,6 +1133,11 @@ public readonly partial struct JsonElement
                 value);
         }
 
+        /// <summary>
+        /// Adds a property with a <see cref="UInt128"/> value to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="value">The <see cref="UInt128"/> value.</param>
         [CLSCompliant(false)]
         public void AddProperty(ReadOnlySpan<char> propertyName, UInt128 value)
         {
@@ -1116,24 +1190,44 @@ public readonly partial struct JsonElement
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="sbyte"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="array">The array of <see cref="sbyte"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(string propertyName, ReadOnlySpan<sbyte> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="ulong"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="array">The array of <see cref="ulong"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(string propertyName, ReadOnlySpan<ulong> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="uint"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="array">The array of <see cref="uint"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(string propertyName, ReadOnlySpan<uint> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="ushort"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="array">The array of <see cref="ushort"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(string propertyName, ReadOnlySpan<ushort> array)
         {
@@ -1182,18 +1276,33 @@ public readonly partial struct JsonElement
 
 #if NET
 
+        /// <summary>
+        /// Adds an array property with <see cref="Int128"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="array">The array of <see cref="Int128"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(string propertyName, ReadOnlySpan<Int128> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="UInt128"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="array">The array of <see cref="UInt128"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(string propertyName, ReadOnlySpan<UInt128> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="Half"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a string.</param>
+        /// <param name="array">The array of <see cref="Half"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(string propertyName, ReadOnlySpan<Half> array)
         {
@@ -1232,24 +1341,44 @@ public readonly partial struct JsonElement
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="sbyte"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="sbyte"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<sbyte> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="ulong"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="ulong"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ulong> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="uint"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="uint"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<uint> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="ushort"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="ushort"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ushort> array)
         {
@@ -1298,18 +1427,33 @@ public readonly partial struct JsonElement
 
 #if NET
 
+        /// <summary>
+        /// Adds an array property with <see cref="Int128"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="Int128"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Int128> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="UInt128"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="UInt128"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<UInt128> array)
         {
             _builder.AddPropertyArrayValue(propertyName, array);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="Half"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a character span.</param>
+        /// <param name="array">The array of <see cref="Half"/> values.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Half> array)
         {
@@ -1357,6 +1501,13 @@ public readonly partial struct JsonElement
             _builder.AddPropertyArrayValue(propertyName, array, escapeName, nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="sbyte"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="sbyte"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<sbyte> array, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -1364,6 +1515,13 @@ public readonly partial struct JsonElement
             _builder.AddPropertyArrayValue(propertyName, array, escapeName, nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="ulong"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="ulong"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ulong> array, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -1371,6 +1529,13 @@ public readonly partial struct JsonElement
             _builder.AddPropertyArrayValue(propertyName, array, escapeName, nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="uint"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="uint"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<uint> array, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -1378,6 +1543,13 @@ public readonly partial struct JsonElement
             _builder.AddPropertyArrayValue(propertyName, array, escapeName, nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="ushort"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="ushort"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ushort> array, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -1491,6 +1663,13 @@ public readonly partial struct JsonElement
 
 #if NET
 
+        /// <summary>
+        /// Adds an array property with <see cref="Int128"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="Int128"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Int128> array, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -1498,6 +1677,13 @@ public readonly partial struct JsonElement
             _builder.AddPropertyArrayValue(propertyName, array, escapeName, nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="UInt128"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="UInt128"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<UInt128> array, bool escapeName = true, bool nameRequiresUnescaping = false)
         {
@@ -1505,6 +1691,13 @@ public readonly partial struct JsonElement
             _builder.AddPropertyArrayValue(propertyName, array, escapeName, nameRequiresUnescaping);
         }
 
+        /// <summary>
+        /// Adds an array property with <see cref="Half"/> values to the current object.
+        /// </summary>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="array">The array of <see cref="Half"/> values.</param>
+        /// <param name="escapeName">Whether to escape the property name.</param>
+        /// <param name="nameRequiresUnescaping">Whether the property name requires unescaping.</param>
         [CLSCompliant(false)]
         public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Half> array, bool escapeName = true, bool nameRequiresUnescaping = false)
         {

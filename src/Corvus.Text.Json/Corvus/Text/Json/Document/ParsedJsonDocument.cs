@@ -105,7 +105,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     /// <summary>
     ///  Write the document into the provided writer as a JSON value.
     /// </summary>
-    /// <param name="writer"></param>
+    /// <param name="writer">The writer.</param>
     /// <exception cref="ArgumentNullException">
     ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
     /// </exception>

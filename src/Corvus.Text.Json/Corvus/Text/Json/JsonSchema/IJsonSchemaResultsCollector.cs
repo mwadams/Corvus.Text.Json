@@ -338,5 +338,5 @@ public interface IJsonSchemaResultsCollector : IDisposable
     /// <remarks>
     /// This will not update the match state, and allows the collector to release any resources associated with the child context.
     /// </remarks>
-    void PopChildContext(int sequenceNUmber);
+    void PopChildContext(int sequenceNumber);
 }

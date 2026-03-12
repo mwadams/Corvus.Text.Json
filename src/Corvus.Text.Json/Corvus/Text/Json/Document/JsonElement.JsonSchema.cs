@@ -12,6 +12,11 @@ namespace Corvus.Text.Json;
 /// </summary>
 public readonly partial struct JsonElement
 {
+    /// <summary>
+    /// Evaluates the JSON Schema for this element.
+    /// </summary>
+    /// <param name="resultsCollector">The (optional) results collector for schema validation.</param>
+    /// <returns><see langword="true"/> if the element is valid according to its schema; otherwise, <see langword="false"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null)
     {
@@ -23,8 +28,19 @@ public readonly partial struct JsonElement
     /// </summary>
     public static class JsonSchema
     {
+        /// <summary>
+        /// Gets the schema location provider for this element type.
+        /// </summary>
         public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => { written = 0; return true; };
+
+        /// <summary>
+        /// Gets the schema location for this element type.
+        /// </summary>
         public const string SchemaLocation = "";
+
+        /// <summary>
+        /// Gets the schema location for this element type as a UTF-8 byte span.
+        /// </summary>
         public static ReadOnlySpan<byte> SchemaLocationUtf8 => ""u8;
 
         /// <summary>
@@ -85,6 +101,15 @@ public readonly partial struct JsonElement
                     providerContext: providerContext);
         }
 
+        /// <summary>
+        /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation, navigating to a property.
+        /// </summary>
+        /// <param name="parentDocument">The parent document for the instance.</param>
+        /// <param name="parentDocumentIndex">The index in the parent document for the instance.</param>
+        /// <param name="context">The current evaluation context.</param>
+        /// <param name="propertyName">The property name as a UTF-8 byte span.</param>
+        /// <param name="evaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
+        /// <returns>The child context.</returns>
         [CLSCompliant(false)]
         public static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
@@ -104,6 +129,15 @@ public readonly partial struct JsonElement
                     schemaEvaluationPath: SchemaLocationProvider);
         }
 
+        /// <summary>
+        /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation, navigating to an array item.
+        /// </summary>
+        /// <param name="parentDocument">The parent document for the instance.</param>
+        /// <param name="parentDocumentIndex">The index in the parent document for the instance.</param>
+        /// <param name="context">The current evaluation context.</param>
+        /// <param name="itemIndex">The array item index.</param>
+        /// <param name="evaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
+        /// <returns>The child context.</returns>
         [CLSCompliant(false)]
         public static JsonSchemaContext PushChildContext(
             IJsonDocument parentDocument,
@@ -123,6 +157,15 @@ public readonly partial struct JsonElement
                     schemaEvaluationPath: SchemaLocationProvider);
         }
 
+        /// <summary>
+        /// Push the current context as a child context for the <see cref="JsonElement"/> schema evaluation, navigating to a property using an unescaped property name.
+        /// </summary>
+        /// <param name="parentDocument">The parent document for the instance.</param>
+        /// <param name="parentDocumentIndex">The index in the parent document for the instance.</param>
+        /// <param name="context">The current evaluation context.</param>
+        /// <param name="propertyName">The unescaped property name as a UTF-8 byte span.</param>
+        /// <param name="evaluationPath">The (optional) path to the schema being evaluated in the child context.</param>
+        /// <returns>The child context.</returns>
         [CLSCompliant(false)]
         public static JsonSchemaContext PushChildContextUnescaped(
             IJsonDocument parentDocument,
@@ -142,6 +185,12 @@ public readonly partial struct JsonElement
                     schemaEvaluationPath: SchemaLocationProvider);
         }
 
+        /// <summary>
+        /// Evaluates the element against this schema type.
+        /// </summary>
+        /// <param name="parentDocument">The parent document for the instance.</param>
+        /// <param name="parentIndex">The index of the element in the parent document.</param>
+        /// <param name="context">The schema evaluation context.</param>
         [CLSCompliant(false)]
         public static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
         {
@@ -155,6 +204,13 @@ public readonly partial struct JsonElement
             context.EvaluatedBooleanSchema(true);
         }
 
+        /// <summary>
+        /// Evaluates the element against this schema type.
+        /// </summary>
+        /// <param name="parentDocument">The parent document for the instance.</param>
+        /// <param name="parentIndex">The index of the element in the parent document.</param>
+        /// <param name="resultsCollector">The (optional) results collector for schema validation.</param>
+        /// <returns><see langword="true"/> if the value is valid according to this schema; otherwise, <see langword="false"/>.</returns>
         [CLSCompliant(false)]
         public static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector? resultsCollector)
         {

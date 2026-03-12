@@ -87,7 +87,7 @@ When we validate, the `Height` property on `PersonTall` will be constrained *bot
 
 This "composition" behaviour is often surprising to people familiar with OO languages. You can't "turn off" the base constraints in the way you can with, say, C# virtual methods that do not call the base from the derived type, because they are composed together.
 
-You may also be surprised to learn that it is not even necessary to include this `$ref` to the base "height" schema to get the desired validation behaviour! If you just added the `minimum` constraint to the new `height` property, it would validate as desired.
+You may also be surprised to learn that it is not even necessary to include this `$ref` to the base "height" schema to get the desired validation behaviour! If you just added the `minimum` constraint to the new `height` property, it would validate as desired. This is because the constraints are _composed_ and all are applied. In fact, it is slightly more efficient *not* to include the $ref as it could cause those constraints to be evaluated twice.
 
 However, `$ref` is the way we describe to the code generator that we are basing this new `HeightEntity` type on the one from the base schema, rather than merely defining an isolated constraint. In that way, the generated type inherits all the other characteristics from the one on which it is based.
 

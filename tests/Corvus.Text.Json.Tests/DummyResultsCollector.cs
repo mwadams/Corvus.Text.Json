@@ -61,5 +61,5 @@ internal class DummyResultsCollector : IJsonSchemaResultsCollector
     public void IgnoredKeyword<TProviderContext>(TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> encodedKeyword)
     { }
 
-    public void PopChildContext(int sequenceNUmber) => _childContextCount--;
+    public void PopChildContext(int sequenceNumber) => _childContextCount--;
 }

@@ -36,6 +36,7 @@ public readonly struct SimpleTypeAndFormatterAndKind
     /// </summary>
     /// <param name="dotnetTypeName">The appropriately qualified .NET type name.</param>
     /// <param name="formatterExpression">The expression that will format an instance of <paramref name="dotnetTypeName"/>.</param>
+    /// <param name="kind">The expression that specifies the kind to apply when the value is formatted.</param>
     public SimpleTypeAndFormatterAndKind(string dotnetTypeName, string formatterExpression, string kind)
     {
         DotnetTypeName = dotnetTypeName;

@@ -947,10 +947,10 @@ public readonly partial struct BigNumber :
     }
 
     /// <inheritdoc/>
-    public bool TryFormat(Span<byte> destination, out int bytesWriuttern)
+    public bool TryFormat(Span<byte> destination, out int bytesWritten)
     {
         // Use the optimized zero-allocation implementation
-        return this.TryFormatUtf8Optimized(destination, out bytesWriuttern, default, null);
+        return this.TryFormatUtf8Optimized(destination, out bytesWritten, default, null);
     }
 
     /// <summary>

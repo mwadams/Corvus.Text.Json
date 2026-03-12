@@ -904,10 +904,6 @@ public static class TypeDeclarationExtensions
     /// </summary>
     /// <param name="typeDeclaration">The type declaration.</param>
     /// <returns><see langword="true"/> if the type has pattern properties locally or in any subschema.</returns>
-    /// <summary>
-    /// Gets a value indicating whether the type declaration has pattern properties
-    /// either locally or via any allOf/anyOf/oneOf subschema reduced type declarations.
-    /// </summary>
     /// <remarks>
     /// Use this for <c>LocalAndAppliedEvaluatedPropertyType</c> (unevaluatedProperties) checks,
     /// where composed pattern properties are visible to the evaluation.

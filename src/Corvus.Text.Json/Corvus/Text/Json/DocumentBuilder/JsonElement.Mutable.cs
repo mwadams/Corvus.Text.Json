@@ -157,6 +157,9 @@ public readonly partial struct JsonElement
         private readonly ArrayBuilder.Build? _arrayBuilder;
         private readonly ObjectBuilder.Build? _objectBuilder;
 
+        /// <summary>
+        /// Gets a value indicating whether the source value is undefined (not set).
+        /// </summary>
         public bool IsUndefined => _kind == Kind.Unknown;
 
         private Source(JsonElement jsonElement)
@@ -5287,6 +5290,12 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
+        /// <summary>
+        ///   Inserts an array element at the specified index from a <see cref="Source"/> value.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
+        /// <param name="source">The source value to insert.</param>
+        /// <param name="estimatedMemberCount">The estimated number of members in the value for capacity optimization.</param>
         public void InsertItem(int itemIndex, in Source source, int estimatedMemberCount = 30)
         {
             CheckValidInstance();

@@ -204,6 +204,17 @@ internal static class FormatHandlerExtensions
         return false;
     }
 
+    /// <summary>
+    /// Appends a format assertion for a string value using the first matching handler.
+    /// </summary>
+    /// <typeparam name="T">The type of the string format handler.</typeparam>
+    /// <param name="handlers">The collection of format handlers to try.</param>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="format">The format string.</param>
+    /// <param name="formatKeywordProviderExpression">The expression that provides the format keyword.</param>
+    /// <param name="valueIdentifier">The identifier for the string value to validate.</param>
+    /// <param name="validationContextIdentifier">The identifier for the validation context.</param>
+    /// <returns><see langword="true"/> if a handler was found and emitted code; otherwise, <see langword="false"/>.</returns>
     public static bool AppendFormatAssertion<T>(
         this IEnumerable<T> handlers,
         CodeGenerator generator,
@@ -224,6 +235,20 @@ internal static class FormatHandlerExtensions
         return false;
     }
 
+    /// <summary>
+    /// Appends a format assertion for a numeric value using the first matching handler.
+    /// </summary>
+    /// <typeparam name="T">The type of the number format handler.</typeparam>
+    /// <param name="handlers">The collection of format handlers to try.</param>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="format">The format string.</param>
+    /// <param name="formatKeywordProviderExpression">The expression that provides the format keyword.</param>
+    /// <param name="isNegativeIdentifier">The identifier for the sign flag.</param>
+    /// <param name="integralIdentifier">The identifier for the integral component.</param>
+    /// <param name="fractionalIdentifier">The identifier for the fractional component.</param>
+    /// <param name="exponentIdentifier">The identifier for the exponent component.</param>
+    /// <param name="validationContextIdentifier">The identifier for the validation context.</param>
+    /// <returns><see langword="true"/> if a handler was found and emitted code; otherwise, <see langword="false"/>.</returns>
     public static bool AppendFormatAssertion<T>(
         this IEnumerable<T> handlers,
         CodeGenerator generator,

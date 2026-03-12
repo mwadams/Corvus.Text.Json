@@ -10,7 +10,7 @@ internal interface IChildObjectPropertyValidationHandler2 : IChildObjectProperty
     /// <summary>
     /// Indicates whether the object property handler will emit code for the given type declaration.
     /// </summary>
-    /// <param name="typeDeclaration"></param>
-    /// <returns></returns>
+    /// <param name="typeDeclaration">The type declaration to check.</param>
+    /// <returns><see langword="true"/> if this handler will emit code for the given type declaration; otherwise, <see langword="false"/>.</returns>
     bool WillEmitCodeFor(TypeDeclaration typeDeclaration);
 }
