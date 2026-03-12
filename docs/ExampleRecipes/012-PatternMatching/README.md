@@ -146,7 +146,8 @@ string personJson = """
     {
       "familyName": "Brontë",
       "givenName": "Anne",
-      "birthDate": "1820-01-17"
+      "birthDate": "1820-01-17",
+      "height": 1.57
     }
     """;
 
@@ -220,6 +221,8 @@ return value.Match(
 cd docs/ExampleRecipes/012-PatternMatching
 dotnet run
 ```
+
+See [Recipe 013](../013-PolymorphismWithDiscriminators/) for pattern matching with discriminator properties, which is the more common approach in real APIs.
 
 ## Related Patterns
 

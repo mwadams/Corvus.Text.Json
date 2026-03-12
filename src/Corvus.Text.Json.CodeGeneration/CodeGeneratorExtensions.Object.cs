@@ -495,28 +495,52 @@ internal static partial class CodeGeneratorExtensions
         {
             if (objectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
             {
-                return generator;
-            }
+                // additionalProperties: only local pattern properties are visible
+                if (!typeDeclaration.HasLocalPatternProperties())
+                {
+                    return generator;
+                }
 
-            fqdtn = objectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+                fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+            }
+            else
+            {
+                fqdtn = objectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
         }
         else if (typeDeclaration.LocalEvaluatedPropertyType() is FallbackObjectPropertyType localObjectPropertyType)
         {
             if (localObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
             {
-                return generator;
-            }
+                // additionalProperties with local evaluation: only local pattern properties are visible
+                if (!typeDeclaration.HasLocalPatternProperties())
+                {
+                    return generator;
+                }
 
-            fqdtn = localObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+                fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+            }
+            else
+            {
+                fqdtn = localObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
         }
         else if (typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is FallbackObjectPropertyType localAndAppliedObjectPropertyType)
         {
             if (localAndAppliedObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
             {
-                return generator;
-            }
+                // unevaluatedProperties: composed pattern properties are also visible
+                if (!typeDeclaration.ImpliedPatternProperties())
+                {
+                    return generator;
+                }
 
-            fqdtn = localAndAppliedObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+                fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+            }
+            else
+            {
+                fqdtn = localAndAppliedObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
         }
         else
         {
@@ -804,28 +828,52 @@ internal static partial class CodeGeneratorExtensions
         {
             if (objectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
             {
-                return generator;
-            }
+                // additionalProperties: only local pattern properties are visible
+                if (!typeDeclaration.HasLocalPatternProperties())
+                {
+                    return generator;
+                }
 
-            fqdtn = objectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+                fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+            }
+            else
+            {
+                fqdtn = objectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
         }
         else if (typeDeclaration.LocalEvaluatedPropertyType() is FallbackObjectPropertyType localObjectPropertyType)
         {
             if (localObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
             {
-                return generator;
-            }
+                // additionalProperties with local evaluation: only local pattern properties are visible
+                if (!typeDeclaration.HasLocalPatternProperties())
+                {
+                    return generator;
+                }
 
-            fqdtn = localObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+                fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+            }
+            else
+            {
+                fqdtn = localObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
         }
         else if (typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is FallbackObjectPropertyType localAndAppliedObjectPropertyType)
         {
             if (localAndAppliedObjectPropertyType.ReducedType == WellKnownTypeDeclarations.JsonNotAny)
             {
-                return generator;
-            }
+                // unevaluatedProperties: composed pattern properties are also visible
+                if (!typeDeclaration.ImpliedPatternProperties())
+                {
+                    return generator;
+                }
 
-            fqdtn = localAndAppliedObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+                fqdtn = WellKnownTypeDeclarations.JsonAny.DotnetTypeName();
+            }
+            else
+            {
+                fqdtn = localAndAppliedObjectPropertyType.ReducedType.FullyQualifiedDotnetTypeName();
+            }
         }
         else
         {

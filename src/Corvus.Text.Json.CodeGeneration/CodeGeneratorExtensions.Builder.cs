@@ -907,6 +907,7 @@ internal static partial class CodeGeneratorExtensions
         HashSet<string> seenTypes = [];
 
         bool seenFallback = false;
+        bool seenLocalAndAppliedJsonNotAny = false;
 
         if (typeDeclaration.FallbackObjectPropertyType() is FallbackObjectPropertyType fallbackType)
         {
@@ -946,11 +947,26 @@ internal static partial class CodeGeneratorExtensions
                     AppendAddPropertyMethods(generator, fqdtn, isAlsoArray);
                 }
             }
+            else
+            {
+                seenLocalAndAppliedJsonNotAny = true;
+            }
         }
 
-        if (!seenFallback)
+        // Emit JsonElement fallback if no fallback was seen (no restriction), or if all
+        // fallback types were JsonNotAny and there are pattern properties.
+        // For LocalAndAppliedEvaluatedPropertyType (unevaluatedProperties), composed pattern
+        // properties are also visible. For the other fallback types (additionalProperties),
+        // only local pattern properties are visible.
+        if (!seenFallback ||
+            (seenTypes.Count == 0 &&
+             (typeDeclaration.HasLocalPatternProperties() ||
+              (seenLocalAndAppliedJsonNotAny && typeDeclaration.ImpliedPatternProperties()))))
         {
-            AppendAddPropertyMethods(generator, "JsonElement", isAlsoArray);
+            if (seenTypes.Add("JsonElement"))
+            {
+                AppendAddPropertyMethods(generator, "JsonElement", isAlsoArray);
+            }
         }
 
         return generator;

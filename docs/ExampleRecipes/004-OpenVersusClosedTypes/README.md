@@ -28,9 +28,7 @@ This means that the object can only contain properties that are explicitly defin
 
 This is commonly used in "parallel versioning" where old consumers do *not* support new versions of schema, and typically new versions have new names to avoid confusion.
 
-:::aside
-Prior to draft 2020-12, `unevaluatedProperties` was not available and you would use `additionalProperties`. The semantics are slightly different (and a little complex!), and you would generally prefer `unevaluatedProperties` today.
-:::
+> **Note:** Prior to draft 2020-12, `unevaluatedProperties` was not available and you would use `additionalProperties`. The semantics are slightly different (and a little complex!), and you would generally prefer `unevaluatedProperties` today.
 
 File: `person-open.json`
 

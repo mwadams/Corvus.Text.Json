@@ -897,4 +897,80 @@ public static class TypeDeclarationExtensions
                     .Any();
         }
     }
+
+    /// <summary>
+    /// Gets a value indicating whether the type declaration has pattern properties,
+    /// either locally or via any allOf/anyOf/oneOf subschema reduced type declarations.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <returns><see langword="true"/> if the type has pattern properties locally or in any subschema.</returns>
+    /// <summary>
+    /// Gets a value indicating whether the type declaration has pattern properties
+    /// either locally or via any allOf/anyOf/oneOf subschema reduced type declarations.
+    /// </summary>
+    /// <remarks>
+    /// Use this for <c>LocalAndAppliedEvaluatedPropertyType</c> (unevaluatedProperties) checks,
+    /// where composed pattern properties are visible to the evaluation.
+    /// For <c>LocalEvaluatedPropertyType</c> (additionalProperties) checks, use
+    /// <see cref="HasLocalPatternProperties"/> instead, since composed pattern properties
+    /// use LocalEvaluatedProperties and are not visible to the root type's additionalProperties evaluation.
+    /// </remarks>
+    public static bool ImpliedPatternProperties(this TypeDeclaration typeDeclaration)
+    {
+        if (!typeDeclaration.TryGetMetadata(nameof(ImpliedPatternProperties), out bool result))
+        {
+            result = GetImpliedPatternProperties(typeDeclaration);
+            typeDeclaration.SetMetadata(nameof(ImpliedPatternProperties), result);
+        }
+
+        return result;
+
+        static bool GetImpliedPatternProperties(TypeDeclaration typeDeclaration)
+        {
+            if (typeDeclaration.PatternProperties() is not null)
+            {
+                return true;
+            }
+
+            foreach (TypeDeclaration? type in typeDeclaration.AllOfCompositionTypes().Values.SelectMany(t => t).Select(t => t.ReducedTypeDeclaration().ReducedType))
+            {
+                if (type is TypeDeclaration t && t.PatternProperties() is not null)
+                {
+                    return true;
+                }
+            }
+
+            foreach (TypeDeclaration? type in typeDeclaration.AnyOfCompositionTypes().Values.SelectMany(t => t).Select(t => t.ReducedTypeDeclaration().ReducedType))
+            {
+                if (type is TypeDeclaration t && t.PatternProperties() is not null)
+                {
+                    return true;
+                }
+            }
+
+            foreach (TypeDeclaration? type in typeDeclaration.OneOfCompositionTypes().Values.SelectMany(t => t).Select(t => t.ReducedTypeDeclaration().ReducedType))
+            {
+                if (type is TypeDeclaration t && t.PatternProperties() is not null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the type declaration has pattern properties
+    /// declared directly on it (not via composition).
+    /// </summary>
+    /// <remarks>
+    /// Use this for <c>FallbackObjectPropertyType</c> and <c>LocalEvaluatedPropertyType</c>
+    /// (additionalProperties) checks, where only locally declared pattern properties
+    /// are considered by the evaluation.
+    /// </remarks>
+    public static bool HasLocalPatternProperties(this TypeDeclaration typeDeclaration)
+    {
+        return typeDeclaration.PatternProperties() is not null;
+    }
 }

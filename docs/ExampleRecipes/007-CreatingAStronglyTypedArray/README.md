@@ -68,7 +68,7 @@ File: `person-closed.json`
 
 In this case we are defining an array which must contain exactly 30 `PersonClosed` instances.
 
-The code generator recognizes this array pattern and generates strongly typed accessors and enumerators.
+The code generator recognizes this array pattern and generates strongly typed accessors and enumerators. This gives you compile-time type safety when accessing array elements — no casting from a generic `JsonElement` — and full IntelliSense support for the item type's properties.
 
 In addition, it implements `IEnumerable<T>` so that you can take advantage of standard LINQ operators if required.
 
@@ -103,7 +103,10 @@ if (peopleArray.EvaluateSchema())
     Console.WriteLine("original array is valid.");
 }
 
-// Mutable array operations via the builder pattern
+// Mutable array operations via the builder pattern.
+// The builder uses a JsonWorkspace to manage pooled memory, so a sequence of
+// mutations operates in-place rather than allocating a new document for every
+// change — much more memory-efficient than returning immutable copies.
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var mutableDoc = peopleArray.CreateBuilder(workspace);
 Person1dArray.Mutable root = mutableDoc.RootElement;

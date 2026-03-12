@@ -58,7 +58,8 @@
 
   <ItemGroup>
     <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.3" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.4" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
@@ -124,6 +125,11 @@
     <Compile Include="GeneratedRefNumericArrayTests.cs" />
     <Compile Include="GeneratedIndexerTests.cs" />
     <Compile Include="GeneratedDefaultPropertyTests.cs" />
+    <Compile Include="GeneratedPatternPropertiesTests.cs" />
+    <Compile Include="GeneratedRefPatternPropertiesTests.cs" />
+    <Compile Include="GeneratedAllOfPatternPropertiesTests.cs" />
+    <Compile Include="GeneratedUnevaluatedPatternPropertiesTests.cs" />
+    <Compile Include="PatternPropertyMethodPresenceTests.cs" />
     <Compile Include="JsonElementPropertyIndexerTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralTests.cs" />
     <Compile Include="JsonElementHelpersTryFormatGeneralUtf8Tests.cs" />
@@ -281,13 +287,13 @@
 
   <!-- Only include System.Text.Json for net481 as it's included in .NET 6+ runtime -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Text.Json" Version="10.0.3" />
+    <PackageReference Include="System.Text.Json" Version="10.0.4" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="System.Collections.Immutable" Version="10.0.3" />
-    <PackageReference Include="System.IO.Pipelines" Version="10.0.3" />
-    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.3" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.4" />
+    <PackageReference Include="System.IO.Pipelines" Version="10.0.4" />
+    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.4" />
     <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>

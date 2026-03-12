@@ -44,6 +44,12 @@
     <AdditionalFiles Include="allof-double-vector-2020-12.json" />
     <AdditionalFiles Include="allof-int32-matrix-2020-12.json" />
     <AdditionalFiles Include="object-with-default-properties-2020-12.json" />
+    <AdditionalFiles Include="object-with-pattern-properties-2020-12.json" />
+    <AdditionalFiles Include="object-with-ref-pattern-properties-2020-12.json" />
+    <AdditionalFiles Include="object-with-allof-pattern-properties-2020-12.json" />
+    <AdditionalFiles Include="object-with-unevaluated-pattern-properties-2020-12.json" />
+    <AdditionalFiles Include="closed-object-no-patterns-2020-12.json" />
+    <AdditionalFiles Include="unevaluated-closed-object-no-patterns-2020-12.json" />
   </ItemGroup>
 
   <ItemGroup>

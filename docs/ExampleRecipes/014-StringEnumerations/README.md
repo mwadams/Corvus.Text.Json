@@ -85,6 +85,28 @@ Console.WriteLine(DescribeColor(blue));   // Output: The color of sky and ocean
 
 The compiler ensures you handle all possible enum values. If you add a new value to the schema and regenerate the code, any incomplete pattern matching will be caught at compile time.
 
+### Pattern matching with a context parameter
+
+When you need to pass state into your match functions, use the context parameter overload. This lets you use `static` lambdas (avoiding closure allocations) while still threading external state through to each handler:
+
+```csharp
+string ConvertToRgb(in Color color, double brightness)
+{
+    return color.Match(
+        brightness,  // context parameter passed to all match functions
+        matchRed: static (ctx) => $"RGB({(int)(255 * ctx)}, 0, 0)",
+        matchGreen: static (ctx) => $"RGB(0, {(int)(255 * ctx)}, 0)",
+        matchBlue: static (ctx) => $"RGB(0, 0, {(int)(255 * ctx)})",
+        defaultMatch: static (ctx) => "RGB(0, 0, 0)");
+}
+
+double brightnessFactor = 0.8;
+Console.WriteLine(ConvertToRgb(red, brightnessFactor));
+// Output: RGB(204, 0, 0)
+```
+
+> **Tip:** JSON Schema `enum` with all-string values is the simplest way to model string enumerations. For richer semantics (titles, descriptions per value), use the `oneOf`+`const` pattern shown in [Recipe 015](../015-NumericEnumerations/).
+
 ## Key Differences from V4
 
 ### V4 (Corvus.Json)
@@ -121,7 +143,8 @@ if (red.TryGetValue(out string? redStr) && redStr == "red")
 string desc = red.Match(
     matchRed: static () => "The color of fire",
     matchGreen: static () => "The color of grass",
-    matchBlue: static () => "The color of sky");
+    matchBlue: static () => "The color of sky",
+    defaultMatch: static () => "Unknown");
 ```
 
 **Key differences:**

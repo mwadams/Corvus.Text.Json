@@ -125,9 +125,6 @@ string json = tallDoc.RootElement.ToString();
 using var parsedTall = ParsedJsonDocument<PersonTall>.Parse(json);
 PersonTall personTall = parsedTall.RootElement;
 
-// Convert to the base type
-PersonClosed personClosedFromTall = PersonClosed.From(personTall);
-
 // personTall is not valid because of the additional constraint.
 if (personTall.EvaluateSchema())
 {
@@ -137,6 +134,9 @@ else
 {
     Console.WriteLine("personTall is not valid");
 }
+
+// Convert to the base type
+PersonClosed personClosedFromTall = PersonClosed.From(personTall);
 
 // But personClosedFromTall is valid because it does not have the
 // additional constraint.

@@ -69,20 +69,14 @@ Use `TryGetProperty()` with UTF-8 byte literals for zero-allocation property acc
 // Access values using UTF-8 property names (zero allocation)
 if (map.TryGetProperty("foo"u8, out var fooValue))
 {
-    Console.WriteLine($"foo = {fooValue.GetInt32()}");
+    Console.WriteLine($"foo = {fooValue}");
     // Output: foo = 1
 }
 
 if (map.TryGetProperty("bar"u8, out var barValue))
 {
-    Console.WriteLine($"bar = {barValue.GetInt32()}");
+    Console.WriteLine($"bar = {barValue}");
     // Output: bar = 2
-}
-
-if (map.TryGetProperty("baz"u8, out var bazValue))
-{
-    Console.WriteLine($"baz = {bazValue.GetInt32()}");
-    // Output: baz = 3
 }
 ```
 

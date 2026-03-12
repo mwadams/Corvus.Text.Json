@@ -35,11 +35,11 @@ dotnet run
 | [009](009-WorkingWithTensors/) | Working with Tensors | 3D tensors, `TryGetNumericValues`, `Build`, `CreateBuilder`, `Rank`, `Dimension` |
 | [010](010-CreatingTuples/) | Creating Tuples | `CreateTuple` via builder, `Item1`/`Item2`/`Item3` access |
 | [011](011-InterfacesAndMixInTypes/) | Interfaces and Mix-In Types | `allOf` composition, `From()` conversion |
-| [012](012-PatternMatchingAndDiscriminatedUnions/) | Pattern Matching | `oneOf`, `Match` with named parameters |
-| [013](013-PolymorphismWithDiscriminatorProperties/) | Polymorphism with Discriminators | `const` discriminator properties, `Match` |
-| [014](014-EnumerationsAndPatternMatching/) | String Enumerations | String `enum`, `Match` with state |
-| [015](015-NumericEnumerationsAndPatternMatching/) | Numeric Enumerations | Numeric `const`, `ConstInstance`, explicit conversion |
-| [016](016-MapsOfStringsToStronglyTypedValues/) | Maps | Typed map (object with `additionalProperties`), builder construction |
+| [012](012-PatternMatching/) | Pattern Matching | `oneOf`, `Match` with named parameters |
+| [013](013-PolymorphismWithDiscriminators/) | Polymorphism with Discriminators | `const` discriminator properties, `Match` |
+| [014](014-StringEnumerations/) | String Enumerations | String `enum`, `Match` with state |
+| [015](015-NumericEnumerations/) | Numeric Enumerations | Numeric `const`, `ConstInstance`, explicit conversion |
+| [016](016-Maps/) | Maps | Typed map (object with `additionalProperties`), builder construction |
 | [017](017-MappingInputAndOutputValues/) | Mapping Input/Output | Cross-model mapping, `From()`, mutable pipeline |
 
 ## Related documentation

@@ -99,6 +99,17 @@ if (status.TryGetValue(out int value))
 }
 ```
 
+### Validating enumeration values
+
+You can use `EvaluateSchema()` to check whether a parsed value matches one of the defined enum constants:
+
+```csharp
+using var invalidDoc = ParsedJsonDocument<Status>.Parse("99");
+Status invalid = invalidDoc.RootElement;
+Console.WriteLine($"Status {invalid} is valid: {invalid.EvaluateSchema()}");
+// Output: Status 99 is valid: False
+```
+
 ### Pattern matching with documented variants
 
 With the `oneOf` + `const` pattern, you get named pattern matching based on the variant types:

@@ -4,11 +4,10 @@ This recipe demonstrates how to use JSON Schema `oneOf` with `const` properties 
 
 ## The Pattern
 
-In the [previous recipe (012-PatternMatching)](../012-PatternMatching/), we looked at discriminated unions where types were discriminated by their fundamental structure (string vs. integer vs. object vs. array).
+In the [previous recipe (012-PatternMatching)](../012-PatternMatching/), we looked at *untagged* discriminated unions — types discriminated by their fundamental structure (string vs. integer vs. object vs. array). That works well when the variants differ in JSON type, but most real-world APIs use *tagged* unions where all variants are objects and a specific property value identifies which variant you have. This recipe shows that more common pattern.
 
-In this recipe, we examine a more specific pattern: a discriminated union where all variants are objects, but each has a discriminator property with a unique constant value that identifies its type.
-
-This is the pattern used by:
+Here, each variant in a `oneOf` extends a common base and constrains a shared property (the discriminator) to a unique `const` value. This is the approach used by:
+- [JSON Patch (RFC 6902)](https://jsonpatch.com/) — each patch operation (`add`, `remove`, `replace`, `move`, `copy`, `test`) has an `op` property constrained to a unique `const` value
 - [OpenAPI's discriminator](https://swagger.io/docs/specification/data-models/inheritance-and-polymorphism/)
 - [System.Text.Json's polymorphic serialization](https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism)
 - Many API design patterns where a `type` field indicates which variant you're dealing with
@@ -46,7 +45,13 @@ Each variant in the `oneOf`:
 - Has a `type` property with a `const` value unique to that variant
 - Has additional properties specific to that variant
 
-The discriminator (`type` property) ensures that exactly one schema in the `oneOf` matches any given instance.
+### Why `const` is essential
+
+The `const` constraint on the discriminator property is what makes this pattern work with `oneOf`. Remember that `oneOf` requires *exactly one* of its sub-schemas to match a given input — if two or more match, validation fails.
+
+Without `const`, two variants that share the same structure would both match the same input. Consider the JSON Patch specification: `MoveOperation` and `CopyOperation` are structurally identical — both extend a common base and add a `from` property with the same schema. Without `const` constraining the `op` property to `"move"` and `"copy"` respectively, any document valid against one would also be valid against the other, and `oneOf` would *always* be invalid (because two schemas match).
+
+By giving each variant a unique `const` value on the discriminator, we guarantee that at most one schema in the `oneOf` array can match any given input, making the union well-discriminated.
 
 ## Generated Code Usage
 

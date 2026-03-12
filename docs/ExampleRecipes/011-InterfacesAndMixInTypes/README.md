@@ -83,7 +83,7 @@ The code generator produces three types:
 - **`Countable`** - has `count` (required) property
 - **`CompositeType`** - combines both via `allOf` and adds `budget` (required)
 
-The code generator creates `CurrencyValue` as a nested type within `CompositeType` for the `budget` property, which provides type-safe access to the decimal value via `TryGetValue(out decimal)` and implicit conversions.
+Note that `CurrencyValue` is *not* generated as a separate type — the code generator detects that the `currencyValue` definition in `$defs` reduces to a built-in type (`JsonDecimal`), so it avoids generating unnecessary code. The `Budget` property on `CompositeType` uses `JsonDecimal` directly.
 
 ## Usage Examples
 

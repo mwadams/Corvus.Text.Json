@@ -44,6 +44,8 @@ These can be used in much the same way as primitive .NET types like `string`, `d
 
 (Note that we use [NodaTime](https://nodatime.org/) for our basic date/time types.)
 
+Each generated property type is more than just a raw primitive wrapper. For example, `Person.FamilyNameEntity` wraps a JSON string value with type-safe operations: `ValueEquals()` for zero-allocation comparison against `string` or `ReadOnlySpan<byte>`, `TryGetValue()` for safe extraction, `IsUndefined()`/`IsNull()` for presence checks, format validation (e.g. `BirthDateEntity` validates the `date` format), and implicit/explicit conversions to .NET primitives. These entity types give you a rich, validated API over the underlying JSON data while keeping allocations to a minimum.
+
 In the generated code, most of the "JSON-like" behaviours follow the patterns in `System.Text.Json` (e.g. parsing and writing JSON). But we try to make the accessors and usage patterns as .NET-like as possible, with implicit conversions to .NET primitives (where they do not allocate) so, by and large, everything "just works".
 
 [Example code](./Program.cs)

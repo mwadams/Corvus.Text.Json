@@ -2,6 +2,12 @@
 
 This recipe demonstrates how to efficiently convert between different schema representations of similar entities - a common pattern in layered architectures where data transforms between API, domain, and persistence layers.
 
+## The Problem
+
+A common problem in API-driven applications is the need to map data from one schema to another as information moves between the layers in your solution. The representation of an entity in your API is often similar, but not identical, to the representation of the same entity in your data store — or to the same entity in a third-party API on which you depend to provide your service.
+
+In .NET applications it is common to use tools like [AutoMapper](https://docs.automapper.org/en/stable/) to help with this process. Corvus.Text.Json offers a schema-first alternative: because the generated types share a common set of property-entity interfaces, you can convert between arbitrary types using `From()` — even if they are compiled into different assemblies with no inheritance relationship of any kind between them. This works with zero (or near-zero) allocation, because `From()` creates a view over the same underlying JSON data rather than extracting to .NET primitives and re-serializing.
+
 ## The Pattern
 
 In real-world applications, you often need to map data between different representations:
@@ -13,6 +19,8 @@ While these representations often contain similar data, property names and struc
 - API uses `id` and `name`
 - Database uses `identifier` and `fullName`
 - CRM uses `customerId` and `displayName`
+
+In a real system you might have three or more representations of the same entity — one for your public API, one for a corporate CRM, and one for your database — each with its own naming conventions, additional constraints, or extra fields. The pattern shown here scales naturally to those multi-system scenarios.
 
 Corvus.Text.Json provides efficient builder patterns for zero-allocation transformations between these formats.
 
@@ -89,10 +97,11 @@ Console.WriteLine($"Target - identifier: {target.Identifier}, fullName: {target.
 ```
 
 **Key points:**
-- Property entity types are compatible when their schemas match (both are strings, both are integers, etc.)
+- Property entity types are compatible when their underlying schemas match (both are strings, both are integers, etc.)
 - Use `TargetEntityType.From(sourceProperty)` to explicitly convert between compatible entity types
-- `From()` creates a zero-allocation view over the same underlying JSON data
-- No string allocation occurs - both source and target reference the same parsed data
+- `From()` creates a zero-allocation view over the same underlying JSON data — no primitive extraction, no string copy, no re-serialization
+- This works even if the source and target types are defined in different assemblies with no inheritance relationship between them; schema compatibility is what matters
+- Only fall back to `TryGetValue()` when you actually need to transform the value (see Level 3 below)
 
 ### Level 2: Bidirectional Mapping
 
@@ -137,38 +146,9 @@ Console.WriteLine(modified);
 
 ### Multi-stage transformation pipelines
 
-You can chain multiple transformations efficiently using the same workspace:
+The `From()` and builder patterns chain naturally across multiple stages. Because all transformations share the same `JsonWorkspace`, you can build a pipeline — for example, API → Domain → Database — without extra allocation between stages. Each stage creates its builder from the previous stage's output, reusing the same workspace memory pool.
 
-```csharp
-using JsonWorkspace workspace = JsonWorkspace.Create();
-
-// Stage 1: API → Domain
-using var apiDoc = ParsedJsonDocument<ApiSchema>.Parse(apiJson);
-ApiSchema api = apiDoc.RootElement;
-
-DomainModel.Mutable.Source domainSource = DomainModel.Mutable.Build((ref DomainModel.Mutable.Builder b) =>
-{
-    b.SetEntityId(api.Id);
-    b.SetEntityName(api.Name);
-    // ... additional transformations
-});
-
-using var domainBuilder = DomainModel.Mutable.CreateBuilder(workspace, in domainSource);
-DomainModel.Mutable domain = domainBuilder.RootElement;
-
-// Stage 2: Domain → Database
-DatabaseRecord.Mutable.Source dbSource = DatabaseRecord.Mutable.Build((ref DatabaseRecord.Mutable.Builder b) =>
-{
-    b.SetPrimaryKey(domain.EntityId);
-    b.SetDisplayName(domain.EntityName);
-    // ... additional transformations
-});
-
-using var dbBuilder = DatabaseRecord.Mutable.CreateBuilder(workspace, in dbSource);
-DatabaseRecord.Mutable db = dbBuilder.RootElement;
-
-// All transformations share the same workspace memory pool
-```
+In a real system with three or more representations (see [the blog post](https://endjin.com/blog/json-schema-patterns-dotnet-mapping-input-and-output-values) for a worked example with API, CRM, and database customer schemas), you would apply the same `From()` pattern at each boundary, falling back to `TryGetValue()` only at stages that genuinely transform values.
 
 ## Performance Characteristics
 
