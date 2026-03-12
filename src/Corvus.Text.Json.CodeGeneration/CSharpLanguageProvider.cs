@@ -244,7 +244,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         return rootNamespaceGenerator is not null
             ? [
                 .. generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), this.options.FileExtension)),
-                new GeneratedCodeFile($"GlobalDeclarations_{Guid.NewGuid()}{this.options.FileExtension}", rootNamespaceGenerator.ToString())
+                new GeneratedCodeFile($"{Formatting.GlobalDeclarationsFileName}{this.options.FileExtension}", rootNamespaceGenerator.ToString())
               ]
             : generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), this.options.FileExtension));
     }

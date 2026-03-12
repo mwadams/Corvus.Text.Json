@@ -15,6 +15,15 @@ public static class Formatting
     /// </summary>
     public const int MaxIdentifierLength = 512;
 
+    /// <summary>
+    /// The reserved name used for the global declarations file.
+    /// </summary>
+    /// <remarks>
+    /// This name is included in <see cref="ReservedNames"/> so no generated type
+    /// can collide with it.
+    /// </remarks>
+    public const string GlobalDeclarationsFileName = "Corvus__GlobalDeclarations";
+
     private static readonly string[] Keywords =
     [
         "abstract", "as", "base", "bool",
@@ -54,6 +63,7 @@ public static class Formatting
         "Assert",
         "CheckValidInstance",
         "ConstInstance",
+        "Corvus__GlobalDeclarations",
         "CreateInstance",
         "Debug",
         "DebuggerDisplay",
