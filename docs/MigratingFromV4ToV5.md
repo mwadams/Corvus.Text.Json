@@ -939,8 +939,8 @@ V4.CompositeType v4Composite = V4.CompositeType.Parse(json);
 V4.Documentation v4Documentation = v4Composite;  // implicit
 V4.Countable v4Count = v4Composite;    // implicit
 
-// Access properties - note V4's "Value" suffix
-int count = (int)v4Count.CountValue;   // V4: property name + "Value"
+// Access properties - note V4's "Value" suffix for "count"
+int count = (int)v4Count.CountValue;   // V4: disambiguated with "Value" suffix
 
 // V5
 using var v5Doc = ParsedJsonDocument<V5.CompositeType>.Parse(json);
@@ -948,15 +948,14 @@ V5.CompositeType v5Composite = v5Doc.RootElement;
 V5.Documentation v5Documentation = v5Composite;  // implicit
 V5.Countable v5Countable = v5Composite;          // implicit
 
-// Access properties - V5 uses property name directly
-long count = v5Countable.Count;  // V5: property name without suffix
+// Access properties - V5 may not need the suffix here
+long count = v5Countable.Count;  // V5: "count" no longer conflicts
 ```
 
-**V4 property naming note:**
-- V4 adds a **"Value" suffix** when property names conflict with interface members: `CountValue`, `NameValue`
-- For example, V4's `IJsonObject.Count` returns the **number of object properties**, so the JSON "count" property becomes `CountValue`
-- V5 uses the JSON property name directly: `Count`, `Name`, `Description`
-- This is a **naming conflict resolution**, not a general V4 convention — non-conflicting properties don't get the suffix
+**Property naming note:**
+- Both V4 and V5 use **"Value" and "Entity" suffixes** in their naming heuristics to disambiguate generated property and type names from reserved names (interface members, language keywords, etc.)
+- V5 has **different name reservations** than V4, so some names that were previously disambiguated may now be available without a suffix (e.g. `Count` instead of `CountValue`), and vice versa
+- This may cause some property or type renaming when migrating from V4 to V5
 
 Both also support **explicit conversion** in the reverse direction (from constituent to composite):
 
@@ -1379,11 +1378,11 @@ string rgb = color.Match(
 | `v4.TryGetValue(state, (s, span) => ...)` | `v5.GetUtf8String().Span` or `v5.GetUtf16String().Span` |
 | `v4.AsJsonElement` | `(JsonElement)v5` (implicit operator) |
 | `v4.AsAny` | N/A — implicitly cast to `JsonElement` |
-| `v4.AsObject` | N/A — use typed properties and `TryGetProperty()` |
+| `v4.AsObject` | N/A — V5 emits object accessors directly: typed properties, `TryGetProperty()`, `EnumerateObject()` |
 | `v4.AsString` | N/A — V5 emits value accessors directly: `(string)v5`, `v5.GetString()`, `v5.TryGetValue(out string?)` |
 | `v4.AsNumber` | N/A — V5 emits value accessors directly: `(int)v5`, `(long)v5`, `v5.TryGetValue(out int)` |
 | `v4.AsBoolean` | N/A — V5 emits value accessors directly: `(bool)v5`, `v5.TryGetValue(out bool)` |
-| `v4.AsArray` | N/A — use typed array methods: `v5.GetArrayLength()`, `v5[0]`, `v5.EnumerateArray()` |
+| `v4.AsArray` | N/A — V5 emits array accessors directly: `v5.GetArrayLength()`, `v5[0]`, `v5.EnumerateArray()` |
 | `v4.As<TargetType>()` | `TargetType.From(v5)` |
 | `v4.Equals(v4b)` | `v5.Equals(v5b)` (same) |
 | `v4 == v4b` | `v5 == v5b` (same) |
@@ -1436,3 +1435,4 @@ string rgb = color.Match(
 8. **Update tuple creation** — replace `MyTuple.Create(a, b, c)` with `MyTuple.CreateBuilder(workspace, a, b, c)` for closed tuples, or the delegate pattern for open tuples
 9. **Update numeric array construction** — replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)`; for variable-length arrays, use `MyArray.CreateBuilder(workspace, span)` or `MyArray.Build(span)`
 10. **Regenerate types** — run the V5 code generator against your JSON Schema files
+11. **Review generated names** — V5 has different name reservations than V4, so some property and type names may change (e.g. `CountValue` → `Count`). Check for renamed properties and types after regenerating.
