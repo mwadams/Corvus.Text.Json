@@ -973,15 +973,15 @@ For `oneOf` and `anyOf`, the conversion operators are **opposite**: implicit *fr
 
 ### Pattern matching with `TryGetAs*()`
 
-Both V4 and V5 emit `TryGetAs*()` methods for any union variant type — whether local or global. The method name is derived from whatever type the variant resolved to. V4 had truly global framework types in `Corvus.Json.ExtendedTypes` for all simple types (`Corvus.Json.JsonString`, `Corvus.Json.JsonInt32`, `Corvus.Json.JsonBoolean`, etc.). V5 generates equivalent project-local global types (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.). The type names are the same — the change is provenance (framework package → project-local):
+Both V4 and V5 emit `TryGetAs*()` methods for any union variant type — whether local or global. The method name is derived from whatever type the variant resolved to. V4 reduced unformatted simple types to framework globals from `Corvus.Json.ExtendedTypes` (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`, `Corvus.Json.JsonInteger`, etc.) and `"type": "number"` with a numeric format to globals (`Corvus.Json.JsonInt32`, `Corvus.Json.JsonDouble`, etc.). However, V4 did **not** reduce `"type": "integer"` with a format — those became custom entity types (e.g. `OneOf1Entity`). V4 also had no equivalent of V5's `Json<Format>NotAsserted` global types. V5 reduces **all** simple and format-typed variants to project-local global types:
 
 ```csharp
-// V4 — framework global types from Corvus.Json.ExtendedTypes
+// V4 — string and boolean reduce to framework globals; integer+format does NOT
 if (v4.TryGetAsJsonString(out JsonString stringEntity)) { ... }
-if (v4.TryGetAsJsonInt32(out JsonInt32 numberEntity)) { ... }
+if (v4.TryGetAsOneOf1Entity(out MigrationUnion.OneOf1Entity numberEntity)) { ... }
 if (v4.TryGetAsJsonBoolean(out JsonBoolean boolEntity)) { ... }
 
-// V5 — same type names, but project-local global types
+// V5 — all variants reduce to project-local global types
 if (v5.TryGetAsJsonString(out JsonString stringEntity)) { ... }
 if (v5.TryGetAsJsonInt32(out JsonInt32 numberEntity)) { ... }
 if (v5.TryGetAsJsonBoolean(out JsonBoolean boolEntity)) { ... }
@@ -994,14 +994,14 @@ if (v5.TryGetAsJsonBoolean(out JsonBoolean boolEntity)) { ... }
 Both V4 and V5 support `Match` without a context parameter:
 
 ```csharp
-// V4 — framework global types
+// V4 — string/boolean are framework globals; integer+format is custom entity
 string result = v4.Match(
     static (in JsonString s) => $"string:{(string)s}",
-    static (in JsonInt32 n) => $"number:{(int)n}",
+    static (in MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
     static (in JsonBoolean b) => $"bool:{(bool)b}",
     static (in MigrationUnion v) => "none");
 
-// V5 — same type names, project-local global types
+// V5 — all variants are project-local global types
 string result = v5.Match(
     static (in JsonString s) => $"string:{(string)s}",
     static (in JsonInt32 n) => $"number:{(int)n}",
@@ -1012,15 +1012,15 @@ string result = v5.Match(
 Both also support `Match` with a context parameter to avoid closures:
 
 ```csharp
-// V4 — framework global types
+// V4 — string/boolean are framework globals; integer+format is custom entity
 string result = v4.Match(
     "prefix",
     static (in JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-    static (in JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
+    static (in MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
     static (in JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
     static (in MigrationUnion v, in string ctx) => $"{ctx}:none");
 
-// V5 — same type names, project-local global types
+// V5 — all variants are project-local global types
 string result = v5.Match(
     "prefix",
     static (in JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
@@ -1413,7 +1413,7 @@ string rgb = color.Match(
 | N/A | `MyNumericArray.CreateBuilder(ws, span)` or `Build(span)` (V5 only — variable-length numeric arrays) |
 | `v4.Item1` (tuple) | `v5.Item1` (same) |
 | `MigrationTuple.Create(a,b,c)` | `MigrationTuple.CreateBuilder(ws,a,b,c)`, `Build(a,b,c)`, or `Build((ref b) => b.CreateTuple(a,b,c))` |
-| `v4.Match(...)` (composition) | `v5.Match(...)` (same — simple types use global names like `JsonString`, `JsonInt32`) |
+| `v4.Match(...)` (composition) | `v5.Match(...)` (same for unformatted types; `"type":"integer"` + format entity types become global names like `JsonInt32`) |
 | `v4.Match(...)` (enum) | `v5.Match(...)` (same) |
 | `MyType.EnumValues.Active` | `MyType.EnumValues.Active` (same) |
 | `MyType.DefaultInstance` | `MyType.DefaultInstance` (same) |
@@ -1429,7 +1429,7 @@ string rgb = color.Match(
 3. **Update parsing** — replace `ParsedValue<T>.Parse()` and `JsonDocument`/`T.FromJson(doc.RootElement)` patterns with `ParsedJsonDocument<T>.Parse()`
 4. **Convert `With*()` to `Set*()`** — create a `JsonWorkspace` and `JsonDocumentBuilder`, then use imperative `Set*()` methods
 5. **Update validation calls** — replace `Validate(ctx, level)` with `EvaluateSchema()`
-6. **Update union access** — V4's `AsString`, `AsNumber`, `AsBoolean` existed because multi-core-type types didn't emit value accessors directly. V5 emits all value accessors on the type itself: `(string)v5`, `v5.TryGetValue(out int)`, `(bool)v5`, etc. The `TryGetAs*()` pattern is the same in both V4 and V5; in V5 the variant type names may change to global simple types: `TryGetAsJsonString()`, `TryGetAsJsonInt32()`, `TryGetAsJsonBoolean()`. Use `v5.Match()` for exhaustive union matching.
+6. **Update union access** — V4's `AsString`, `AsNumber`, `AsBoolean` existed because multi-core-type types didn't emit value accessors directly. V5 emits all value accessors on the type itself: `(string)v5`, `v5.TryGetValue(out int)`, `(bool)v5`, etc. The `TryGetAs*()` pattern is the same in both V4 and V5; for unformatted types the names match (e.g. `TryGetAsJsonString()`). For `"type":"integer"` + format variants, V4 produced custom entity types (e.g. `OneOf1Entity`) while V5 reduces them to globals (e.g. `TryGetAsJsonInt32()`). Use `v5.Match()` for exhaustive union matching.
 7. **Update writer types** — use `Corvus.Text.Json.Utf8JsonWriter` instead of `System.Text.Json.Utf8JsonWriter`
 8. **Update tuple creation** — replace `MyTuple.Create(a, b, c)` with `MyTuple.CreateBuilder(workspace, a, b, c)` for closed tuples, or the delegate pattern for open tuples
 9. **Update numeric array construction** — replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)`; for variable-length arrays, use `MyArray.CreateBuilder(workspace, span)` or `MyArray.Build(span)`

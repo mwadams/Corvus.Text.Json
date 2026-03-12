@@ -25,7 +25,7 @@ generatejsonschematypes --rootNamespace MyApp.Models --outputPath generated/ sch
 dotnet build
 ```
 
-This matters because V5 may rename types. V4 had truly global framework types (`Corvus.Json.JsonString`, `Corvus.Json.JsonInt32`, `Corvus.Json.JsonBoolean`, etc.) from the `Corvus.Json.ExtendedTypes` package. V5 generates equivalent project-local global types (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.) — the names are the same but the provenance changes from a framework package to project-generated code. Namespace references will need updating. Copilot can only suggest the right names if it can see the generated output.
+This matters because V5 may rename types. V4 reduced unformatted simple types to framework globals from `Corvus.Json.ExtendedTypes` (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`, etc.) and `"type": "number"` + format to globals (`Corvus.Json.JsonInt32`, etc.). However, V4 did **not** reduce `"type": "integer"` + format — those became custom entity types (e.g. `OneOf1Entity`). V5 generates project-local global types for **all** of these cases (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.). So unformatted types keep the same name (different provenance), while `"type":"integer"` + format variants get renamed from entity types to globals. Namespace references will need updating. Copilot can only suggest the right names if it can see the generated output.
 
 ---
 
@@ -175,8 +175,8 @@ V5's code generator uses different naming heuristics than V4. Both versions use 
 
 Common changes:
 - `CountValue` → `Count` (V5 doesn't reserve "Count")
-- `Corvus.Json.JsonString` → project-local `JsonString` (same name, but now generated with your project instead of coming from the framework)
-- `Corvus.Json.JsonInt32` → project-local `JsonInt32` (same name change — framework global to project-local global)
+- `Corvus.Json.JsonString` → project-local `JsonString` (same name, different provenance — unformatted types keep their names)
+- V4 `OneOf1Entity` (for `"type":"integer","format":"int32"`) → project-local `JsonInt32` (V5 reduces integer + format to globals; V4 did not)
 
 ### AsString / AsNumber / AsBoolean
 
@@ -319,7 +319,8 @@ Show it the generated types:
 
 Use the actual type names from this generated file. For example, V4's
 framework type Corvus.Json.JsonString is now a project-local JsonString,
-and Corvus.Json.JsonInt32 is now a project-local JsonInt32.
+and V4 custom entity types like OneOf1Entity (for "type":"integer" + format)
+become project-local globals like JsonInt32.
 ```
 
 ### Copilot doesn't add disposal

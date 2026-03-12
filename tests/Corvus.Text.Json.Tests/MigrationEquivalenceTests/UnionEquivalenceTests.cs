@@ -14,20 +14,16 @@ using V5 = MigrationModels.V5;
 /// <remarks>
 /// <para>
 /// Both V4 and V5 emit <c>TryGetAs*()</c> methods for union variants. The type used in the method
-/// name comes from whatever type the variant resolved to — whether that's a framework built-in
-/// (V4's <c>Corvus.Json.JsonString</c>, <c>Corvus.Json.JsonInt32</c>) or a project-local global
-/// simple type (V5's <c>JsonString</c>, <c>JsonInt32</c>). This mechanism is identical in both
-/// versions.
+/// name comes from whatever type the variant resolved to. V4 reduced unformatted simple types to
+/// framework globals from <c>Corvus.Json.ExtendedTypes</c> (e.g. <c>JsonString</c>,
+/// <c>JsonBoolean</c>, <c>JsonInteger</c>) and <c>"type":"number"</c> with a numeric format to
+/// globals (e.g. <c>JsonInt32</c>, <c>JsonDouble</c>). However, V4 did <em>not</em> reduce
+/// <c>"type":"integer"</c> with a format — those became custom entity types like
+/// <c>OneOf1Entity</c>. V4 also had no equivalent for V5's <c>Json&lt;Format&gt;NotAsserted</c>
+/// globals. V5 reduces all of these cases to project-local global types.
 /// </para>
 /// <para>
-/// <b>Note:</b> The V4 test models in this repo were generated with a codegen version that
-/// produced <c>OneOf1Entity</c> for the int32 variant rather than reducing to V4's framework
-/// <c>JsonInt32</c>. The V4 framework (<c>Corvus.Json.ExtendedTypes</c>) did have <c>JsonInt32</c>
-/// and the full set of global simple types. The tests reference <c>OneOf1Entity</c> because that
-/// is what the generated model contains, not because V4 lacked the type.
-/// </para>
-/// <para>
-/// The real difference is in how multi-core-type types handle value accessors. In V4, when a type
+/// The other difference is in how multi-core-type types handle value accessors. In V4, when a type
 /// composed multiple core types (e.g. a union of string and boolean), V4 would <em>not</em> emit
 /// value accessors (casts, <c>GetString()</c>, indexers, etc.) directly on the union type. You had
 /// to go through <c>AsString</c>, <c>AsBoolean</c>, etc. to reach a single-core-type that did have
@@ -259,9 +255,10 @@ public class UnionEquivalenceTests
     public void BothEngines_TryGetAs_Number_DifferentNames()
     {
         // TryGetAs*() uses whatever type the variant resolved to.
-        // V4: generated model has OneOf1Entity for int32 (V4's framework had JsonInt32 but
-        //     the codegen version used for these models didn't reduce to it)
-        // V5: {"type":"integer","format":"int32"} reduces to global simple type JsonInt32
+        // V4: {"type":"integer","format":"int32"} is NOT reduced to a framework global
+        //     (V4 only reduces "type":"number" + format, not "type":"integer" + format)
+        //     so the variant becomes a custom OneOf1Entity.
+        // V5: reduces to project-local global simple type JsonInt32
         using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("42");
         V4.MigrationUnion v4 = parsedV4.Instance;
         Assert.True(v4.TryGetAsOneOf1Entity(out V4.MigrationUnion.OneOf1Entity v4Result));
