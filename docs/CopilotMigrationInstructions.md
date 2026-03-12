@@ -537,15 +537,15 @@ long count = v5Countable.Count;  // "count" property → Count
 
 Both V4 and V5 emit `TryGetAs*()` methods for any union variant type. The method name is derived from whatever type the variant resolved to.
 
-Where a variant is a simple core type (like `{"type": "string"}`), V4 resolves some to framework built-in types from `Corvus.Json.ExtendedTypes` (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`), but V4 lacked globals for all types — for example, int32 variants became local `OneOf1Entity`. V5 generates project-local global types for all simple types (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.), so variants that were local entities in V4 may become global types in V5.
+Where a variant is a simple core type (like `{"type": "string"}` or `{"type": "integer", "format": "int32"}`), V4 resolves these to framework global types from `Corvus.Json.ExtendedTypes` (`Corvus.Json.JsonString`, `Corvus.Json.JsonInt32`, `Corvus.Json.JsonBoolean`, etc.). V5 generates equivalent project-local global types with the same names (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.). The type names are the same — the change is provenance (framework package → project-local).
 
 ```csharp
-// V4
+// V4 — framework global types
 if (v4.TryGetAsJsonString(out JsonString s)) { }         // framework built-in
-if (v4.TryGetAsOneOf1Entity(out MyType.OneOf1Entity n)) { } // custom entity (V4 had no JsonInt32)
+if (v4.TryGetAsJsonInt32(out JsonInt32 n)) { }            // framework built-in
 if (v4.TryGetAsJsonBoolean(out JsonBoolean b)) { }       // framework built-in
 
-// V5 - simple types resolve to global simple types
+// V5 - same type names, project-local global types
 if (v5.TryGetAsJsonString(out JsonString s)) { }         // project-local global type
 if (v5.TryGetAsJsonInt32(out JsonInt32 n)) { }            // project-local global type
 if (v5.TryGetAsJsonBoolean(out JsonBoolean b)) { }       // project-local global type
@@ -553,15 +553,14 @@ if (v5.TryGetAsJsonBoolean(out JsonBoolean b)) { }       // project-local global
 
 ### Match without context
 ```csharp
-// V4
+// V4 — framework global types
 string result = v4.Match(
     static (in JsonString s) => $"string:{(string)s}",
-    static (in MyType.OneOf1Entity n) => $"number:{(int)n}",
+    static (in JsonInt32 n) => $"number:{(int)n}",
     static (in JsonBoolean b) => $"bool:{(bool)b}",
     static (in MyType v) => "fallback");
 
-// V5 - variant type names come from whatever the variant resolved to
-// Simple types become global simple types (JsonString, JsonInt32, JsonBoolean);
+// V5 — same type names, project-local global types;
 // complex variants remain nested entities (e.g. RequiredRadiusAndType)
 string result = v5.Match(
     static (in JsonString s) => $"string:{(string)s}",
@@ -572,14 +571,14 @@ string result = v5.Match(
 
 ### Match with context
 ```csharp
-// V4
+// V4 — framework global types
 string result = v4.Match(
     context,
     static (in JsonString s, in TContext ctx) => ...,
-    static (in MyType.OneOf1Entity n, in TContext ctx) => ...,
+    static (in JsonInt32 n, in TContext ctx) => ...,
     static (in MyType v, in TContext ctx) => ...);
 
-// V5
+// V5 — same type names, project-local global types
 string result = v5.Match(
     context,
     static (in JsonString s, in TContext ctx) => ...,
@@ -738,7 +737,7 @@ When migrating a file:
 13. [ ] Replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)` or `MyVector.Build(span)`
 14. [ ] Replace `.Add()`, `.Insert()`, `.RemoveAt()` with `.AddItem()`, `.InsertItem()`, `.RemoveAt()` on Mutable
 15. [ ] Replace `TryGetValue(state, delegate)` span patterns with `GetUtf8String().Span` or `GetUtf16String().Span`
-16. [ ] Update Match() and TryGetAs() type names: V4 framework globals (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`) become project-local globals (`JsonString`, `JsonBoolean`); V4 local entities for types without globals (e.g. `OneOf1Entity` for int32) become project-local globals too (e.g. `JsonInt32`). Check generated output for actual names.
+16. [ ] Update Match() and TryGetAs() type names: V4 framework globals (`Corvus.Json.JsonString`, `Corvus.Json.JsonInt32`, `Corvus.Json.JsonBoolean`) become project-local globals (`JsonString`, `JsonInt32`, `JsonBoolean`). The type names are the same — only the namespace/provenance changes. Check generated output for actual names.
 17. [ ] Add `static` keyword to builder delegates and Match lambdas where possible
 18. [ ] Update package references in .csproj
 19. [ ] Review generated type/property names — V5 has different name reservations, so some names that previously needed "Value" or "Entity" suffixes may now be available without them (and vice versa)

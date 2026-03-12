@@ -973,16 +973,15 @@ For `oneOf` and `anyOf`, the conversion operators are **opposite**: implicit *fr
 
 ### Pattern matching with `TryGetAs*()`
 
-Both V4 and V5 emit `TryGetAs*()` methods for any union variant type — whether local or global. The method name is derived from whatever type the variant resolved to. V4 had truly global framework types in `Corvus.Json.ExtendedTypes` for some simple types (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`) but not all — for example, int32 variants became local `OneOf1Entity` because V4 had no `JsonInt32` global. V5 generates project-local global types for all simple types (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.):
+Both V4 and V5 emit `TryGetAs*()` methods for any union variant type — whether local or global. The method name is derived from whatever type the variant resolved to. V4 had truly global framework types in `Corvus.Json.ExtendedTypes` for all simple types (`Corvus.Json.JsonString`, `Corvus.Json.JsonInt32`, `Corvus.Json.JsonBoolean`, etc.). V5 generates equivalent project-local global types (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.). The type names are the same — the change is provenance (framework package → project-local):
 
 ```csharp
-// V4
+// V4 — framework global types from Corvus.Json.ExtendedTypes
 if (v4.TryGetAsJsonString(out JsonString stringEntity)) { ... }
-if (v4.TryGetAsOneOf1Entity(out MigrationUnion.OneOf1Entity numberEntity)) { ... }
+if (v4.TryGetAsJsonInt32(out JsonInt32 numberEntity)) { ... }
 if (v4.TryGetAsJsonBoolean(out JsonBoolean boolEntity)) { ... }
 
-// V5 — note: string and boolean follow the same naming pattern as V4;
-// the int32 variant is now JsonInt32 instead of a custom OneOf1Entity.
+// V5 — same type names, but project-local global types
 if (v5.TryGetAsJsonString(out JsonString stringEntity)) { ... }
 if (v5.TryGetAsJsonInt32(out JsonInt32 numberEntity)) { ... }
 if (v5.TryGetAsJsonBoolean(out JsonBoolean boolEntity)) { ... }
@@ -995,14 +994,14 @@ if (v5.TryGetAsJsonBoolean(out JsonBoolean boolEntity)) { ... }
 Both V4 and V5 support `Match` without a context parameter:
 
 ```csharp
-// V4
+// V4 — framework global types
 string result = v4.Match(
     static (in JsonString s) => $"string:{(string)s}",
-    static (in MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
+    static (in JsonInt32 n) => $"number:{(int)n}",
     static (in JsonBoolean b) => $"bool:{(bool)b}",
     static (in MigrationUnion v) => "none");
 
-// V5 — global simple types replace the custom nested entities
+// V5 — same type names, project-local global types
 string result = v5.Match(
     static (in JsonString s) => $"string:{(string)s}",
     static (in JsonInt32 n) => $"number:{(int)n}",
@@ -1013,15 +1012,15 @@ string result = v5.Match(
 Both also support `Match` with a context parameter to avoid closures:
 
 ```csharp
-// V4
+// V4 — framework global types
 string result = v4.Match(
     "prefix",
     static (in JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-    static (in MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
+    static (in JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
     static (in JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
     static (in MigrationUnion v, in string ctx) => $"{ctx}:none");
 
-// V5 — global simple types replace the custom nested entities
+// V5 — same type names, project-local global types
 string result = v5.Match(
     "prefix",
     static (in JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
