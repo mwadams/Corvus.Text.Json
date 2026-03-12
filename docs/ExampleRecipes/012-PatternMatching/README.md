@@ -211,7 +211,7 @@ return value.Match(
 ```
 
 **Key differences:**
-- V5 wraps simple types (string, integer) in entity types (`OneOf0Entity`, `OneOf1Entity`) instead of using `JsonString`, `JsonInt32`
+- The source generator wraps these simple types in entity types (`OneOf0Entity`, `OneOf1Entity`); the CLI code generator reduces them to global types (`JsonString`, `JsonInt32`). Both approaches produce equivalent code.
 - V5 uses explicit `From()` conversion instead of implicit conversion
 - V5 entity types support formatting directly in string templates (no need to extract values)
 

@@ -25,7 +25,7 @@ generatejsonschematypes --rootNamespace MyApp.Models --outputPath generated/ sch
 dotnet build
 ```
 
-This matters because V5 may rename types. For example, a union variant that was `OneOf1Entity` in V4 might become a global simple type like `JsonInt32` in V5. Copilot can only suggest the right names if it can see the generated output.
+This matters because V5 may rename types. V4 had truly global framework types (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`) from the `Corvus.Json.ExtendedTypes` package, but lacked globals for some types (e.g. there was no `JsonInt32`, so int32 variants became local `OneOf1Entity`). V5 generates a broader set of project-local global types (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.), so type names may shift. Copilot can only suggest the right names if it can see the generated output.
 
 ---
 
@@ -175,8 +175,8 @@ V5's code generator uses different naming heuristics than V4. Both versions use 
 
 Common changes:
 - `CountValue` → `Count` (V5 doesn't reserve "Count")
-- `OneOf0Entity` / `OneOf1Entity` → `JsonString` / `JsonInt32` (simple types become global)
-- Framework types like `Corvus.Json.JsonString` → project-local `JsonString`
+- `Corvus.Json.JsonString` → project-local `JsonString` (same name, but now generated with your project instead of coming from the framework)
+- `OneOf1Entity` → `JsonInt32` (V4 lacked a `JsonInt32` global, so int32 variants were local entities; V5 has a project-local global for all simple types)
 
 ### AsString / AsNumber / AsBoolean
 
@@ -317,8 +317,9 @@ Show it the generated types:
 ```
 #file:generated/Person.g.cs
 
-Use the actual type names from this generated file. The union
-variants are JsonString and JsonInt32, NOT OneOf0Entity and OneOf1Entity.
+Use the actual type names from this generated file. For example, V4's
+OneOf1Entity for int32 is now JsonInt32 in V5, and the V4 framework
+type Corvus.Json.JsonString is now a project-local JsonString.
 ```
 
 ### Copilot doesn't add disposal

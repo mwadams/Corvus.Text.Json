@@ -973,7 +973,7 @@ For `oneOf` and `anyOf`, the conversion operators are **opposite**: implicit *fr
 
 ### Pattern matching with `TryGetAs*()`
 
-Both V4 and V5 emit `TryGetAs*()` methods for any union variant type — whether local or global. The method name is derived from whatever type the variant resolved to. V4 resolves string and boolean variants to framework built-in types (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`), while V5 resolves all simple types to locally generated global types (`JsonString`, `JsonInt32`, `JsonBoolean`):
+Both V4 and V5 emit `TryGetAs*()` methods for any union variant type — whether local or global. The method name is derived from whatever type the variant resolved to. V4 had truly global framework types in `Corvus.Json.ExtendedTypes` for some simple types (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`) but not all — for example, int32 variants became local `OneOf1Entity` because V4 had no `JsonInt32` global. V5 generates project-local global types for all simple types (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.):
 
 ```csharp
 // V4

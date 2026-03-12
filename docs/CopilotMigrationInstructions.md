@@ -537,7 +537,7 @@ long count = v5Countable.Count;  // "count" property → Count
 
 Both V4 and V5 emit `TryGetAs*()` methods for any union variant type. The method name is derived from whatever type the variant resolved to.
 
-Where a variant is a simple core type (like `{"type": "string"}`), V4 resolves string and boolean to framework built-in types (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`), while V5 resolves all simple types to locally generated global types (`JsonString`, `JsonInt32`, `JsonBoolean`). Custom nested entities (like `OneOf1Entity`) are used for variants that are not simple core types.
+Where a variant is a simple core type (like `{"type": "string"}`), V4 resolves some to framework built-in types from `Corvus.Json.ExtendedTypes` (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`), but V4 lacked globals for all types — for example, int32 variants became local `OneOf1Entity`. V5 generates project-local global types for all simple types (`JsonString`, `JsonInt32`, `JsonBoolean`, etc.), so variants that were local entities in V4 may become global types in V5.
 
 ```csharp
 // V4
@@ -738,7 +738,7 @@ When migrating a file:
 13. [ ] Replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)` or `MyVector.Build(span)`
 14. [ ] Replace `.Add()`, `.Insert()`, `.RemoveAt()` with `.AddItem()`, `.InsertItem()`, `.RemoveAt()` on Mutable
 15. [ ] Replace `TryGetValue(state, delegate)` span patterns with `GetUtf8String().Span` or `GetUtf16String().Span`
-16. [ ] Update Match() and TryGetAs() type names: simple core-type variants may change from `OneOf0Entity` → `JsonString`, `OneOf1Entity` → `JsonInt32`, etc. Check generated output for actual names.
+16. [ ] Update Match() and TryGetAs() type names: V4 framework globals (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`) become project-local globals (`JsonString`, `JsonBoolean`); V4 local entities for types without globals (e.g. `OneOf1Entity` for int32) become project-local globals too (e.g. `JsonInt32`). Check generated output for actual names.
 17. [ ] Add `static` keyword to builder delegates and Match lambdas where possible
 18. [ ] Update package references in .csproj
 19. [ ] Review generated type/property names — V5 has different name reservations, so some names that previously needed "Value" or "Entity" suffixes may now be available without them (and vice versa)
