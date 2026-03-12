@@ -1265,11 +1265,12 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
-        string schemaLocation = typeDeclaration.IsGlobalSimpleType()
+        bool isGlobalSimpleType = typeDeclaration.IsGlobalSimpleType();
+        string schemaLocation = isGlobalSimpleType
             ? string.Empty
             : typeDeclaration.RelativeSchemaLocation;
 
-        return generator
+        generator
             .ReserveName("SchemaLocationProvider")
             .ReserveName("SchemaLocation")
             .ReserveName("SchemaLocationUtf8")
@@ -1279,10 +1280,24 @@ internal static partial class CodeGeneratorExtensions
             /// <summary>
             /// Gets a provider for the schema location from which this type was generated.
             /// </summary>
-            """)
-            .AppendLineIndent(
-                "public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
-                SymbolDisplay.FormatLiteral(schemaLocation, true), "u8, buffer, out written);")
+            """);
+
+        if (isGlobalSimpleType)
+        {
+            // Global simple types use null so that the parent's schema evaluation path is preserved
+            // when pushing child contexts during validation.
+            generator
+                .AppendLineIndent("public static readonly JsonSchemaPathProvider? SchemaLocationProvider = null;");
+        }
+        else
+        {
+            generator
+                .AppendLineIndent(
+                    "public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
+                    SymbolDisplay.FormatLiteral(schemaLocation, true), "u8, buffer, out written);");
+        }
+
+        return generator
             .AppendSeparatorLine()
             .AppendBlockIndent(
             """
