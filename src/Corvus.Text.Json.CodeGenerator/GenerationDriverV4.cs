@@ -78,7 +78,26 @@ public static class GenerationDriverV4
 
                 try
                 {
-                    documentResolver.AddDocument((string)fileSpec.CanonicalUri, await JsonDocument.ParseAsync(processedStream));
+                    JsonDocument document = await JsonDocument.ParseAsync(processedStream);
+                    string canonicalUri = (string)fileSpec.CanonicalUri;
+
+                    documentResolver.AddDocument(canonicalUri, document);
+
+                    // Also register by $id if present and different from the canonical URI
+                    if (document.RootElement.TryGetProperty("$id", out JsonElement idElement) &&
+                        idElement.ValueKind == JsonValueKind.String &&
+                        idElement.GetString() is string id &&
+                        !string.Equals(id, canonicalUri, StringComparison.Ordinal))
+                    {
+                        documentResolver.AddDocument(id, document);
+                    }
+
+                    // Also register by the resolved file path if different
+                    string resolvedPath = Path.GetFullPath((string)fileSpec.ContentPath);
+                    if (!string.Equals(resolvedPath, canonicalUri, StringComparison.Ordinal))
+                    {
+                        documentResolver.AddDocument(resolvedPath, document);
+                    }
                 }
                 finally
                 {
