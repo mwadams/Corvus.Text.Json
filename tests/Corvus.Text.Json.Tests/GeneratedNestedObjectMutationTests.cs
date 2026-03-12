@@ -66,7 +66,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             NestedObject.Mutable root = builder.RootElement;
-            root.SetNotes(default(NestedObject.NotesEntity.Source));
+            root.SetNotes(default(JsonString.Source));
             Assert.True(root.Notes.IsUndefined());
         }
 

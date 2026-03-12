@@ -2995,13 +2995,16 @@ internal static partial class CodeGeneratorExtensions
             {
                 string fqdtn = composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName();
 
-                generator
-                    .AppendSeparatorLine()
-                    .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
-                        .AppendLineIndent(
-                            "public static implicit operator ", generator.SourceClassName(), "(",
-                            fqdtn,
-                            " instance) => new(JsonElement.From(instance));");
+                if (seenConversionOperators.Add(fqdtn))
+                {
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                            .AppendLineIndent(
+                                "public static implicit operator ", generator.SourceClassName(), "(",
+                                fqdtn,
+                                " instance) => new(JsonElement.From(instance));");
+                }
             }
         }
 

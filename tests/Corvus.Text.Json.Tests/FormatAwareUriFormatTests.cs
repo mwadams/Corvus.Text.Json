@@ -51,7 +51,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriEntity_ToString_NullOrEmptyFormat_ReturnsRawValue(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             Assert.Equal(CanonicalUri, doc.RootElement.ToString(format, null));
         }
 
@@ -60,7 +60,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("G")]
         public void UriEntity_ToString_DisplayFormat_NormalisesSchemeToLowercase(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             string result = doc.RootElement.ToString(format, null);
             // Both display and canonical normalise scheme to lowercase
             Assert.StartsWith("https://", result);
@@ -72,7 +72,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("C")]
         public void UriEntity_ToString_CanonicalFormat_NormalisesSchemeToLowercase(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             string result = doc.RootElement.ToString(format, null);
             Assert.StartsWith("https://", result);
             Assert.NotEqual(CanonicalUri, result);
@@ -83,7 +83,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("Z")]
         public void UriEntity_ToString_UnrecognisedFormat_ReturnsRawValue(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             Assert.Equal(CanonicalUri, doc.RootElement.ToString(format, null));
         }
 
@@ -99,7 +99,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriEntity_TryFormatChar_MatchesToString(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             string expected = doc.RootElement.ToString(format, null);
             Span<char> dest = stackalloc char[512];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
@@ -118,7 +118,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriEntity_TryFormatByte_MatchesToString(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             string expected = doc.RootElement.ToString(format, null);
             Span<byte> dest = stackalloc byte[512];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
@@ -135,7 +135,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriEntity_Mutable_ToString_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
@@ -148,7 +148,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriEntity_Mutable_TryFormatChar_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
@@ -163,7 +163,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriEntity_Mutable_TryFormatByte_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriEntity>.Parse(UriJson);
+            using var doc = ParsedJsonDocument<JsonUri>.Parse(UriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
@@ -181,7 +181,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriReferenceEntity_ToString_NullOrEmptyFormat_ReturnsRawValue(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriReferenceEntity>.Parse(UriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonUriReference>.Parse(UriReferenceJson);
             Assert.Equal(CanonicalUriReference, doc.RootElement.ToString(format, null));
         }
 
@@ -190,7 +190,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("G")]
         public void UriReferenceEntity_ToString_DisplayFormat_NormalisesPath(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriReferenceEntity>.Parse(UriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonUriReference>.Parse(UriReferenceJson);
             string result = doc.RootElement.ToString(format, null);
             // Both display and canonical produce a normalised (non-identical) result from the raw uppercase path
             Assert.NotNull(result);
@@ -202,7 +202,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("C")]
         public void UriReferenceEntity_ToString_CanonicalFormat_NormalisesPath(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriReferenceEntity>.Parse(UriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonUriReference>.Parse(UriReferenceJson);
             string result = doc.RootElement.ToString(format, null);
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -216,7 +216,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriReferenceEntity_TryFormatChar_MatchesToString(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriReferenceEntity>.Parse(UriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonUriReference>.Parse(UriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             Span<char> dest = stackalloc char[512];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
@@ -231,7 +231,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UriReferenceEntity_TryFormatByte_MatchesToString(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UriReferenceEntity>.Parse(UriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonUriReference>.Parse(UriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             Span<byte> dest = stackalloc byte[512];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
@@ -247,7 +247,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriEntity_ToString_NullOrEmptyFormat_ReturnsRawValue(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
+            using var doc = ParsedJsonDocument<JsonIri>.Parse(IriJson);
             Assert.Equal(CanonicalIri, doc.RootElement.ToString(format, null));
         }
 
@@ -256,7 +256,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("G")]
         public void IriEntity_ToString_DisplayFormat_DecodesUtf8PercentEncoding(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
+            using var doc = ParsedJsonDocument<JsonIri>.Parse(IriJson);
             string result = doc.RootElement.ToString(format, null);
             // Display form decodes %C3%A9 to é (literal Unicode character valid in IRIs)
             Assert.Contains("é", result);
@@ -268,7 +268,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("C")]
         public void IriEntity_ToString_CanonicalFormat_NormalisesIri(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
+            using var doc = ParsedJsonDocument<JsonIri>.Parse(IriJson);
             string result = doc.RootElement.ToString(format, null);
             // IRI canonical form also decodes non-ASCII percent-encoding since é is valid in IRIs;
             // the result should at minimum be non-empty and differ from the raw value
@@ -284,7 +284,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriEntity_TryFormatChar_MatchesToString(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
+            using var doc = ParsedJsonDocument<JsonIri>.Parse(IriJson);
             string expected = doc.RootElement.ToString(format, null);
             Span<char> dest = stackalloc char[512];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
@@ -299,7 +299,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriEntity_TryFormatByte_MatchesToString(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
+            using var doc = ParsedJsonDocument<JsonIri>.Parse(IriJson);
             string expected = doc.RootElement.ToString(format, null);
             Span<byte> dest = stackalloc byte[512];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
@@ -312,7 +312,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriEntity_Mutable_ToString_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
+            using var doc = ParsedJsonDocument<JsonIri>.Parse(IriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
@@ -325,7 +325,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriEntity_Mutable_TryFormatChar_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
+            using var doc = ParsedJsonDocument<JsonIri>.Parse(IriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
@@ -340,7 +340,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriEntity_Mutable_TryFormatByte_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriEntity>.Parse(IriJson);
+            using var doc = ParsedJsonDocument<JsonIri>.Parse(IriJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
@@ -358,7 +358,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriReferenceEntity_ToString_NullOrEmptyFormat_ReturnsRawValue(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonIriReference>.Parse(IriReferenceJson);
             Assert.Equal(CanonicalIriReference, doc.RootElement.ToString(format, null));
         }
 
@@ -367,7 +367,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("G")]
         public void IriReferenceEntity_ToString_DisplayFormat_DecodesUtf8PercentEncoding(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonIriReference>.Parse(IriReferenceJson);
             string result = doc.RootElement.ToString(format, null);
             Assert.Contains("é", result);
             Assert.DoesNotContain("%C3%A9", result);
@@ -378,7 +378,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("C")]
         public void IriReferenceEntity_ToString_CanonicalFormat_NormalisesIri(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonIriReference>.Parse(IriReferenceJson);
             string result = doc.RootElement.ToString(format, null);
             // IRI-reference canonical also allows decoded Unicode; result must be non-empty
             Assert.NotNull(result);
@@ -393,7 +393,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriReferenceEntity_TryFormatChar_MatchesToString(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonIriReference>.Parse(IriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             Span<char> dest = stackalloc char[512];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
@@ -408,7 +408,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriReferenceEntity_TryFormatByte_MatchesToString(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonIriReference>.Parse(IriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             Span<byte> dest = stackalloc byte[512];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
@@ -421,7 +421,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriReferenceEntity_Mutable_ToString_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonIriReference>.Parse(IriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
@@ -434,7 +434,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriReferenceEntity_Mutable_TryFormatChar_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonIriReference>.Parse(IriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
@@ -449,7 +449,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void IriReferenceEntity_Mutable_TryFormatByte_MatchesImmutable(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.IriReferenceEntity>.Parse(IriReferenceJson);
+            using var doc = ParsedJsonDocument<JsonIriReference>.Parse(IriReferenceJson);
             string expected = doc.RootElement.ToString(format, null);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);

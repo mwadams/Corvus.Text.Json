@@ -93,6 +93,7 @@
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\DocumentationNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\PathNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\RequiredPropertyNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
+    <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\SimpleCoreTypeNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\SingleTypeArrayNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\SubschemaNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\WellKnownTypeNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />

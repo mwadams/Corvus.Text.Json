@@ -53,7 +53,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("MMMM uuuu",      "March 2024")]       // month year only
         public void DateEntity_ToString_NodaTimePattern_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Assert.Equal(expected, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #endif
@@ -63,7 +63,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void DateEntity_ToString_NullOrEmptyFormat_ReturnsCanonical(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Assert.Equal(CanonicalDate, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 
@@ -80,7 +80,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("Y", "2024 March")]
         public void DateEntity_ToString_StandardFormats_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Assert.Equal(expected, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 
@@ -90,7 +90,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("D", "Friday, 15 March 2024")]
         public void DateEntity_Mutable_ToString_FormatsCorrectly(string? format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
@@ -101,7 +101,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData(null,             "2024-03-15")]
         public void DateEntity_Mutable_ToString_FormatsCorrectly(string? format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
@@ -121,7 +121,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("Y", "2024 March")]
         public void DateEntity_TryFormatChar_InvariantCulture_StandardFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Span<char> dest = stackalloc char[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -134,7 +134,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("Y", "2024 March")]
         public void DateEntity_TryFormatByte_InvariantCulture_StandardFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Span<byte> dest = stackalloc byte[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -156,7 +156,7 @@ namespace Corvus.Text.Json.Tests
             var culture = new CultureInfo(cultureName);
             string expected = new DateOnly(2024, 3, 15).ToString(format, culture);
 
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Span<char> dest = stackalloc char[200];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, culture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -166,7 +166,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void DateEntity_TryFormatChar_EmptyFormat_ReturnsCanonical(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Span<char> dest = stackalloc char[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(CanonicalDate, dest[..n].ToString());
@@ -178,7 +178,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("D", "Friday, 15 March 2024")]
         public void DateEntity_Mutable_TryFormatChar_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[100];
@@ -191,7 +191,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("o", "2024-03-15")]
         public void DateEntity_Mutable_TryFormatByte_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<byte> dest = stackalloc byte[100];
@@ -212,7 +212,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("HH:mm:ss",                  "10:20:30")]             // time portion only
         public void DateTimeEntity_ToString_NodaTimePattern_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             Assert.Equal(expected, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #endif
@@ -222,7 +222,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void DateTimeEntity_ToString_NullOrEmptyFormat_ReturnsCanonical(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             Assert.Equal(CanonicalDateTime, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 
@@ -249,7 +249,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("Y", "2024 March")]
         public void DateTimeEntity_ToString_StandardFormats_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             Assert.Equal(expected, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 
@@ -259,7 +259,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("o", "2024-03-15T10:20:30.0000000+00:00")]
         public void DateTimeEntity_Mutable_ToString_FormatsCorrectly(string? format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
@@ -270,7 +270,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData(null,                        "2024-03-15T10:20:30Z")]
         public void DateTimeEntity_Mutable_ToString_FormatsCorrectly(string? format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
@@ -300,7 +300,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("Y", "2024 March")]
         public void DateTimeEntity_TryFormatChar_InvariantCulture_StandardFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             Span<char> dest = stackalloc char[200];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -316,7 +316,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("u", "2024-03-15 10:20:30Z")]
         public void DateTimeEntity_TryFormatChar_CultureInvariantFormats_SameForAllCultures(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             Span<char> dest = stackalloc char[200];
             foreach (var culture in new[] { CultureInfo.InvariantCulture, new CultureInfo("en-US"), new CultureInfo("fr-FR"), new CultureInfo("de-DE") })
             {
@@ -341,7 +341,7 @@ namespace Corvus.Text.Json.Tests
             var dto = new DateTimeOffset(2024, 3, 15, 10, 20, 30, TimeSpan.Zero);
             string expected = dto.ToString(format, culture);
 
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             Span<char> dest = stackalloc char[300];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, culture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -354,7 +354,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("d",  "03/15/2024")]
         public void DateTimeEntity_TryFormatByte_InvariantCulture_StandardFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             Span<byte> dest = stackalloc byte[200];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -364,7 +364,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void DateTimeEntity_TryFormatChar_EmptyFormat_ReturnsCanonical(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             Span<char> dest = stackalloc char[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(CanonicalDateTime, dest[..n].ToString());
@@ -377,7 +377,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("G",  "03/15/2024 10:20:30")]
         public void DateTimeEntity_Mutable_TryFormatChar_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DateTimeEntity>.Parse(DateTimeJson);
+            using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[200];
@@ -399,7 +399,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("HH",          "10")]          // hours only
         public void TimeEntity_ToString_NodaTimePattern_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             Assert.Equal(expected, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 #endif
@@ -409,7 +409,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void TimeEntity_ToString_NullOrEmptyFormat_ReturnsCanonical(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             Assert.Equal(CanonicalTime, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 
@@ -424,7 +424,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("R", "10:20:30")]
         public void TimeEntity_ToString_StandardFormats_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             Assert.Equal(expected, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 
@@ -433,7 +433,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("o", "10:20:30.0000000")]
         public void TimeEntity_Mutable_ToString_FormatsCorrectly(string? format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
@@ -444,7 +444,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData(null,            "10:20:30Z")]
         public void TimeEntity_Mutable_ToString_FormatsCorrectly(string? format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
@@ -462,7 +462,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("R", "10:20:30")]
         public void TimeEntity_TryFormatChar_InvariantCulture_StandardFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             Span<char> dest = stackalloc char[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -476,7 +476,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("R", "10:20:30")]
         public void TimeEntity_TryFormatChar_CultureInvariantFormats_SameForAllCultures(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             Span<char> dest = stackalloc char[100];
             foreach (var culture in new[] { CultureInfo.InvariantCulture, new CultureInfo("en-US"), new CultureInfo("fr-FR"), new CultureInfo("de-DE") })
             {
@@ -498,7 +498,7 @@ namespace Corvus.Text.Json.Tests
             var culture = new CultureInfo(cultureName);
             string expected = new TimeOnly(10, 20, 30).ToString(format, culture);
 
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             Span<char> dest = stackalloc char[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, culture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -510,7 +510,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("T", "10:20:30")]
         public void TimeEntity_TryFormatByte_InvariantCulture_StandardFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             Span<byte> dest = stackalloc byte[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -520,7 +520,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void TimeEntity_TryFormatChar_EmptyFormat_ReturnsCanonical(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             Span<char> dest = stackalloc char[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
             Assert.Equal(CanonicalTime, dest[..n].ToString());
@@ -531,7 +531,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("o", "10:20:30.0000000")]
         public void TimeEntity_Mutable_TryFormatChar_InvariantCulture(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.TimeEntity>.Parse(TimeJson);
+            using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[100];
@@ -553,7 +553,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("X", "{0x12345678,0x1234,0x5678,{0x12,0x34,0x56,0x78,0x12,0x34,0x56,0x78}}")] // hex
         public void UuidEntity_ToString_AllGuidFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
+            using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
             Assert.Equal(expected, doc.RootElement.ToString(format, null));
         }
 
@@ -562,7 +562,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UuidEntity_ToString_NullOrEmptyFormat_ReturnsCanonical(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
+            using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
             Assert.Equal(CanonicalUuid, doc.RootElement.ToString(format, null));
         }
 
@@ -574,7 +574,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("X", "{0x12345678,0x1234,0x5678,{0x12,0x34,0x56,0x78,0x12,0x34,0x56,0x78}}")]
         public void UuidEntity_Mutable_ToString_AllGuidFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
+            using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(expected, mutableDoc.RootElement.ToString(format, null));
@@ -589,7 +589,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("X", "{0x12345678,0x1234,0x5678,{0x12,0x34,0x56,0x78,0x12,0x34,0x56,0x78}}")]
         public void UuidEntity_TryFormatChar_AllGuidFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
+            using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
             Span<char> dest = stackalloc char[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, dest[..n].ToString());
@@ -603,7 +603,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("X", "{0x12345678,0x1234,0x5678,{0x12,0x34,0x56,0x78,0x12,0x34,0x56,0x78}}")]
         public void UuidEntity_TryFormatByte_AllGuidFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
+            using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
             Span<byte> dest = stackalloc byte[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -613,7 +613,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("")]
         public void UuidEntity_TryFormatChar_EmptyFormat_ReturnsCanonical(string format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
+            using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
             Span<char> dest = stackalloc char[100];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, null));
             Assert.Equal(CanonicalUuid, dest[..n].ToString());
@@ -625,7 +625,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("X", "{0x12345678,0x1234,0x5678,{0x12,0x34,0x56,0x78,0x12,0x34,0x56,0x78}}")]
         public void UuidEntity_Mutable_TryFormatChar_AllGuidFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
+            using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[100];
@@ -638,7 +638,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("N", "12345678123456781234567812345678")]
         public void UuidEntity_Mutable_TryFormatByte_GuidFormats(string format, string expected)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.UuidEntity>.Parse(UuidJson);
+            using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<byte> dest = stackalloc byte[100];
@@ -673,7 +673,7 @@ namespace Corvus.Text.Json.Tests
             // Expected computed via BCL directly — output is complex Hebrew text
             string expected = new DateOnly(2024, 3, 15).ToString(format, heIL);
 
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Span<char> dest = stackalloc char[200];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, heIL));
             Assert.Equal(expected, dest[..n].ToString());
@@ -696,7 +696,7 @@ namespace Corvus.Text.Json.Tests
             Assert.True(refDate.TryFormat(refDest.AsSpan(), out int refN, format, heIL));
             string expected = System.Text.Encoding.UTF8.GetString(refDest, 0, refN);
 
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             Span<byte> dest = stackalloc byte[200];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, heIL));
             Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -709,7 +709,7 @@ namespace Corvus.Text.Json.Tests
             heIL.DateTimeFormat.Calendar = new System.Globalization.HebrewCalendar();
             string expected = new DateOnly(2024, 3, 15).ToString("d", heIL);
 
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse(DateJson);
+            using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Span<char> dest = stackalloc char[200];
@@ -735,7 +735,7 @@ namespace Corvus.Text.Json.Tests
             var expected = DateOnly.ParseExact(isoDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
                                    .ToString(format, jaJP);
 
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse($"\"{isoDate}\"");
+            using var doc = ParsedJsonDocument<JsonDate>.Parse($"\"{isoDate}\"");
             Span<char> dest = stackalloc char[200];
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, jaJP));
             Assert.Equal(expected, dest[..n].ToString());
@@ -751,7 +751,7 @@ namespace Corvus.Text.Json.Tests
             var jaJP = new CultureInfo("ja-JP");
             jaJP.DateTimeFormat.Calendar = new System.Globalization.JapaneseCalendar();
 
-            using var doc = ParsedJsonDocument<FormatTypes.DateEntity>.Parse("\"1200-06-15\"");
+            using var doc = ParsedJsonDocument<JsonDate>.Parse("\"1200-06-15\"");
             var entity = doc.RootElement;
 
             // Span<char> cannot be captured in a lambda, so we use try/catch directly.
@@ -781,7 +781,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("g")]
         public void DurationEntity_ToString_AnyFormat_AlwaysReturnsCanonical(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DurationEntity>.Parse(DurationJson);
+            using var doc = ParsedJsonDocument<JsonDuration>.Parse(DurationJson);
             Assert.Equal(CanonicalDuration, doc.RootElement.ToString(format, CultureInfo.InvariantCulture));
         }
 
@@ -790,7 +790,7 @@ namespace Corvus.Text.Json.Tests
         [InlineData("G")]
         public void DurationEntity_Mutable_ToString_AnyFormat_AlwaysReturnsCanonical(string? format)
         {
-            using var doc = ParsedJsonDocument<FormatTypes.DurationEntity>.Parse(DurationJson);
+            using var doc = ParsedJsonDocument<JsonDuration>.Parse(DurationJson);
             using var workspace = JsonWorkspace.Create();
             using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
             Assert.Equal(CanonicalDuration, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));

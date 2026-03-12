@@ -1265,6 +1265,10 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
+        string schemaLocation = typeDeclaration.IsGlobalSimpleType()
+            ? string.Empty
+            : typeDeclaration.RelativeSchemaLocation;
+
         return generator
             .ReserveName("SchemaLocationProvider")
             .ReserveName("SchemaLocation")
@@ -1278,7 +1282,7 @@ internal static partial class CodeGeneratorExtensions
             """)
             .AppendLineIndent(
                 "public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath(",
-                SymbolDisplay.FormatLiteral(typeDeclaration.RelativeSchemaLocation, true), "u8, buffer, out written);")
+                SymbolDisplay.FormatLiteral(schemaLocation, true), "u8, buffer, out written);")
             .AppendSeparatorLine()
             .AppendBlockIndent(
             """
@@ -1287,7 +1291,7 @@ internal static partial class CodeGeneratorExtensions
             /// </summary>
             """)
             .AppendLineIndent(
-                "public const string SchemaLocation = ", SymbolDisplay.FormatLiteral(typeDeclaration.RelativeSchemaLocation, true), ";")
+                "public const string SchemaLocation = ", SymbolDisplay.FormatLiteral(schemaLocation, true), ";")
             .AppendSeparatorLine()
             .AppendBlockIndent(
             """
@@ -1297,7 +1301,7 @@ internal static partial class CodeGeneratorExtensions
             """)
             .AppendLineIndent(
                 "public static ReadOnlySpan<byte> SchemaLocationUtf8 => ",
-                SymbolDisplay.FormatLiteral(typeDeclaration.RelativeSchemaLocation, true), "u8;");
+                SymbolDisplay.FormatLiteral(schemaLocation, true), "u8;");
 
 
     }

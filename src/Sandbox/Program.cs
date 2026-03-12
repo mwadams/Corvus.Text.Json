@@ -492,7 +492,7 @@ Console.WriteLine($"Added first: {addedFirst}");
 bool addedSecond = hashSet.AddItemIfNotExists(((IJsonElement)doc.RootElement.GetProperty("2")).ParentDocumentIndex);
 Console.WriteLine($"Added second: {addedSecond}");
 
-Year year = testPersonDocBuilder.RootElement.CompetedInYears[0];
+JsonInt32 year = testPersonDocBuilder.RootElement.CompetedInYears[0];
 int yearAsInt = year;
 long yearAsLong = year;
 byte yearAsByte = (byte)year;

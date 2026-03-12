@@ -74,7 +74,7 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.LabelEntity label = instance.Label;
+        JsonString label = instance.Label;
 
         Assert.True(label.IsUndefined());
     }
@@ -86,7 +86,7 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test","label":"hello"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.LabelEntity label = instance.Label;
+        JsonString label = instance.Label;
 
         Assert.True(label.IsNotUndefined());
         Assert.Equal("hello", (string)label);
@@ -99,7 +99,7 @@ public class GeneratedDefaultPropertyTests
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
-        ObjectWithDefaultProperties.NameEntity name = instance.Name;
+        JsonString name = instance.Name;
 
         Assert.Equal(JsonValueKind.String, name.ValueKind);
         Assert.Equal("test", (string)name);

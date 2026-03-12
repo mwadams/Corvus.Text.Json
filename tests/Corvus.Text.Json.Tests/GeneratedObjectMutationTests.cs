@@ -85,7 +85,7 @@ namespace Corvus.Text.Json.Tests
             bool threw = false;
             try
             {
-                root.SetName(default(ObjectWithMixedProperties.NameEntity.Source));
+                root.SetName(default(JsonString.Source));
             }
             catch (InvalidOperationException)
             {
@@ -107,7 +107,7 @@ namespace Corvus.Text.Json.Tests
             bool threw = false;
             try
             {
-                root.SetAge(default(ObjectWithMixedProperties.AgeEntity.Source));
+                root.SetAge(default(JsonInt32.Source));
             }
             catch (InvalidOperationException)
             {
@@ -129,7 +129,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
-            root.SetEmail(default(ObjectWithMixedProperties.EmailEntity.Source));
+            root.SetEmail(default(JsonEmail.Source));
             Assert.True(root.Email.IsUndefined());
         }
 
@@ -141,7 +141,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithMixedProperties.Mutable root = builder.RootElement;
-            root.SetIsActive(default(ObjectWithMixedProperties.IsActiveEntity.Source));
+            root.SetIsActive(default(JsonBoolean.Source));
             Assert.True(root.IsActive.IsUndefined());
         }
 

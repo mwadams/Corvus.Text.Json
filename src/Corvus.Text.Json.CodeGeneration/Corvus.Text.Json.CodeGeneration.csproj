@@ -60,6 +60,7 @@
     <Compile Include="NameHeuristics\DocumentationNameHeuristic.cs" />
     <Compile Include="NameHeuristics\PathNameHeuristic.cs" />
     <Compile Include="NameHeuristics\RequiredPropertyNameHeuristic.cs" />
+    <Compile Include="NameHeuristics\SimpleCoreTypeNameHeuristic.cs" />
     <Compile Include="NameHeuristics\SingleTypeArrayNameHeuristic.cs" />
     <Compile Include="NameHeuristics\SubschemaNameHeuristic.cs" />
     <Compile Include="NameHeuristics\WellKnownTypeNameHeuristic.cs" />

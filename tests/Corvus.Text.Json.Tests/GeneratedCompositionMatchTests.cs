@@ -83,9 +83,9 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<CompositionOneOf>.Parse("\"hello\"");
 
             string result = doc.RootElement.Match(
-                matchOneOf0Entity: static (in CompositionOneOf.OneOf0Entity v) => "string:" + v.ToString(),
-                matchOneOf1Entity: static (in CompositionOneOf.OneOf1Entity _) => "number",
-                matchOneOf2Entity: static (in CompositionOneOf.OneOf2Entity _) => "boolean",
+                matchJsonString: static (in JsonString v) => "string:" + v.ToString(),
+                matchJsonInt32: static (in JsonInt32 _) => "number",
+                matchJsonBoolean: static (in JsonBoolean _) => "boolean",
                 defaultMatch: static (in CompositionOneOf _) => "default");
 
             Assert.Equal("string:hello", result);
@@ -98,9 +98,9 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<CompositionOneOf>.Parse("42");
 
             string result = doc.RootElement.Match(
-                matchOneOf0Entity: static (in CompositionOneOf.OneOf0Entity _) => "string",
-                matchOneOf1Entity: static (in CompositionOneOf.OneOf1Entity v) => "number:" + ((int)v).ToString(),
-                matchOneOf2Entity: static (in CompositionOneOf.OneOf2Entity _) => "boolean",
+                matchJsonString: static (in JsonString _) => "string",
+                matchJsonInt32: static (in JsonInt32 v) => "number:" + ((int)v).ToString(),
+                matchJsonBoolean: static (in JsonBoolean _) => "boolean",
                 defaultMatch: static (in CompositionOneOf _) => "default");
 
             Assert.Equal("number:42", result);
@@ -113,9 +113,9 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<CompositionOneOf>.Parse("true");
 
             string result = doc.RootElement.Match(
-                matchOneOf0Entity: static (in CompositionOneOf.OneOf0Entity _) => "string",
-                matchOneOf1Entity: static (in CompositionOneOf.OneOf1Entity _) => "number",
-                matchOneOf2Entity: static (in CompositionOneOf.OneOf2Entity v) => "boolean:" + ((bool)v).ToString(),
+                matchJsonString: static (in JsonString _) => "string",
+                matchJsonInt32: static (in JsonInt32 _) => "number",
+                matchJsonBoolean: static (in JsonBoolean v) => "boolean:" + ((bool)v).ToString(),
                 defaultMatch: static (in CompositionOneOf _) => "default");
 
             Assert.StartsWith("boolean:", result);

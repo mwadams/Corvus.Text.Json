@@ -29,8 +29,8 @@ namespace Corvus.Text.Json.Tests
 
             ObjectWithArrayProperty.Mutable root = builder.RootElement;
 
-            using ParsedJsonDocument<ObjectWithArrayProperty.TagsEntityArray> tagsDoc =
-                ParsedJsonDocument<ObjectWithArrayProperty.TagsEntityArray>.Parse("""["x","y"]""");
+            using ParsedJsonDocument<ObjectWithArrayProperty.JsonStringArray> tagsDoc =
+                ParsedJsonDocument<ObjectWithArrayProperty.JsonStringArray>.Parse("""["x","y"]""");
             root.SetTags(tagsDoc.RootElement);
             Assert.Equal(2, root.Tags.GetArrayLength());
         }
@@ -51,7 +51,7 @@ namespace Corvus.Text.Json.Tests
             bool threw = false;
             try
             {
-                root.SetTags(default(ObjectWithArrayProperty.TagsEntityArray.Source));
+                root.SetTags(default(ObjectWithArrayProperty.JsonStringArray.Source));
             }
             catch (InvalidOperationException)
             {
@@ -69,7 +69,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             ObjectWithArrayProperty.Mutable root = builder.RootElement;
-            root.SetScores(default(ObjectWithArrayProperty.ScoresEntityArray.Source));
+            root.SetScores(default(ObjectWithArrayProperty.JsonDoubleArray.Source));
             Assert.True(root.Scores.IsUndefined());
         }
 
@@ -101,12 +101,12 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<double> values = [1.1, 2.2, 3.3];
-            ObjectWithArrayProperty.ScoresEntityArray.Source source =
-                ObjectWithArrayProperty.ScoresEntityArray.Build(values);
+            ObjectWithArrayProperty.JsonDoubleArray.Source source =
+                ObjectWithArrayProperty.JsonDoubleArray.Build(values);
 
-            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
-                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, source);
-            ObjectWithArrayProperty.ScoresEntityArray.Mutable root = doc.RootElement;
+            using JsonDocumentBuilder<ObjectWithArrayProperty.JsonDoubleArray.Mutable> doc =
+                ObjectWithArrayProperty.JsonDoubleArray.CreateBuilder(workspace, source);
+            ObjectWithArrayProperty.JsonDoubleArray.Mutable root = doc.RootElement;
 
             Assert.Equal(3, root.GetArrayLength());
             Assert.Equal(1.1, (double)root[0]);
@@ -120,9 +120,9 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<double> values = [10.0, 20.0, 30.0, 40.0, 50.0];
-            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
-                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, values);
-            ObjectWithArrayProperty.ScoresEntityArray.Mutable root = doc.RootElement;
+            using JsonDocumentBuilder<ObjectWithArrayProperty.JsonDoubleArray.Mutable> doc =
+                ObjectWithArrayProperty.JsonDoubleArray.CreateBuilder(workspace, values);
+            ObjectWithArrayProperty.JsonDoubleArray.Mutable root = doc.RootElement;
 
             Assert.Equal(5, root.GetArrayLength());
             Assert.Equal(10.0, (double)root[0]);
@@ -135,13 +135,13 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
-            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
-                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, values);
+            using JsonDocumentBuilder<ObjectWithArrayProperty.JsonDoubleArray.Mutable> doc =
+                ObjectWithArrayProperty.JsonDoubleArray.CreateBuilder(workspace, values);
 
             string json = doc.RootElement.ToString();
 
-            using ParsedJsonDocument<ObjectWithArrayProperty.ScoresEntityArray> reparsed =
-                ParsedJsonDocument<ObjectWithArrayProperty.ScoresEntityArray>.Parse(json);
+            using ParsedJsonDocument<ObjectWithArrayProperty.JsonDoubleArray> reparsed =
+                ParsedJsonDocument<ObjectWithArrayProperty.JsonDoubleArray>.Parse(json);
             Assert.Equal(3, reparsed.RootElement.GetArrayLength());
             Assert.Equal(1.5, (double)reparsed.RootElement[0]);
             Assert.Equal(2.5, (double)reparsed.RootElement[1]);
@@ -154,8 +154,8 @@ namespace Corvus.Text.Json.Tests
             using JsonWorkspace workspace = JsonWorkspace.Create();
 
             ReadOnlySpan<double> values = [];
-            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
-                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, values);
+            using JsonDocumentBuilder<ObjectWithArrayProperty.JsonDoubleArray.Mutable> doc =
+                ObjectWithArrayProperty.JsonDoubleArray.CreateBuilder(workspace, values);
 
             string json = doc.RootElement.ToString();
             Assert.Equal("[]", json);
@@ -165,11 +165,11 @@ namespace Corvus.Text.Json.Tests
         public void ScoresArray_ImplicitConversion_FromSpan()
         {
             ReadOnlySpan<double> values = [9.0, 8.5, 7.0];
-            ObjectWithArrayProperty.ScoresEntityArray.Source source = values;
+            ObjectWithArrayProperty.JsonDoubleArray.Source source = values;
 
             using JsonWorkspace workspace = JsonWorkspace.Create();
-            using JsonDocumentBuilder<ObjectWithArrayProperty.ScoresEntityArray.Mutable> doc =
-                ObjectWithArrayProperty.ScoresEntityArray.CreateBuilder(workspace, source);
+            using JsonDocumentBuilder<ObjectWithArrayProperty.JsonDoubleArray.Mutable> doc =
+                ObjectWithArrayProperty.JsonDoubleArray.CreateBuilder(workspace, source);
 
             string json = doc.RootElement.ToString();
             Assert.Equal("[9,8.5,7]", json);

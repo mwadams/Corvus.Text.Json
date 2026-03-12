@@ -587,7 +587,7 @@ namespace Corvus.Text.Json.Tests
 
             RefArrayWithItems.Mutable root = builderDoc.RootElement;
             root.RemoveWhere(
-                static (in RefArrayWithItems.BaseArray.BaseArrayEntity item) =>
+                static (in JsonString item) =>
                     item.ToString() == "world");
 
             Assert.Equal(2, root.GetArrayLength());
@@ -608,8 +608,8 @@ namespace Corvus.Text.Json.Tests
                 static (ref ObjectWithArrayProperty.Builder builder) =>
                 {
                     builder.Create(
-                        tags: ObjectWithArrayProperty.TagsEntityArray.Build(
-                            static (ref ObjectWithArrayProperty.TagsEntityArray.Builder b) =>
+                        tags: ObjectWithArrayProperty.JsonStringArray.Build(
+                            static (ref ObjectWithArrayProperty.JsonStringArray.Builder b) =>
                             {
                                 b.AddItem("tag1");
                                 b.AddItem("tag2");

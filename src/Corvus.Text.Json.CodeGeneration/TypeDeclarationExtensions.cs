@@ -64,6 +64,7 @@ public static class TypeDeclarationExtensions
     private const string PreferredDotnetNumericTypeNameKey = "CSharp_LanguageProvider_PreferredDotnetNumericTypeName";
     private const string UseImplicitOperatorStringKey = "CSharp_LanguageProvider_UseImplicitOperatorString";
     private const string ExecutedValidationHandlersKey = "CSharp_LanguageProvider_ExecutedValidationHandlers";
+    private const string GlobalSimpleTypeKey = "CSharp_LanguageProvider_GlobalSimpleType";
     private const string IgnoredKeywordsKey = "CSharp_LanguageProvider_IgnoredKeywords";
 
     /// <summary>
@@ -97,6 +98,35 @@ public static class TypeDeclarationExtensions
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether this type declaration is a global simple type
+    /// (a shared type generated once for a simple core-type-only schema).
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration to test.</param>
+    /// <returns><see langword="true"/> if the type is a global simple type.</returns>
+    public static bool IsGlobalSimpleType(this TypeDeclaration typeDeclaration)
+    {
+        if (typeDeclaration.TryGetMetadata(GlobalSimpleTypeKey, out bool? isGlobal) &&
+            isGlobal is bool value)
+        {
+            return value;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Sets a value indicating whether this type declaration is a global simple type.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="isGlobal">Whether the type is a global simple type.</param>
+    /// <returns>A reference to the type declaration after the operation has completed.</returns>
+    public static TypeDeclaration SetIsGlobalSimpleType(this TypeDeclaration typeDeclaration, bool isGlobal)
+    {
+        typeDeclaration.SetMetadata(GlobalSimpleTypeKey, isGlobal);
+        return typeDeclaration;
     }
 
     /// <summary>
@@ -579,6 +609,17 @@ public static class TypeDeclarationExtensions
             typeDeclaration.SetParent(null);
         }
 
+        return typeDeclaration;
+    }
+
+    /// <summary>
+    /// Clears the "do not generate" flag, allowing this type to be generated.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <returns>A reference to the type declaration after the operation has completed.</returns>
+    public static TypeDeclaration ClearDoNotGenerate(this TypeDeclaration typeDeclaration)
+    {
+        typeDeclaration.SetMetadata(DoNotGenerateKey, false);
         return typeDeclaration;
     }
 

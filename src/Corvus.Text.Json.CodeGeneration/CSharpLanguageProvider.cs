@@ -33,6 +33,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     private readonly NameCollisionResolverRegistry nameCollisionResolverRegistry = new();
     private readonly Options options;
     private readonly Dictionary<string, NamedTypes> namedTypesInRootNamespace = [];
+    private SimpleCoreTypeNameHeuristic? simpleCoreTypeHeuristic;
     private CodeGenerator? rootNamespaceGenerator = null;
 
     CSharpLanguageProvider(Options? options = null)
@@ -154,12 +155,60 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 #endif
         CodeGenerator generator = new(this, cancellationToken, lineEndSequence: this.options.LineEndSequence);
 
+        // Generate global simple types first. These have DoNotGenerate=true (so
+        // ShouldGenerate returns false and the framework sets their parent to null),
+        // but the first-seen instance for each canonical name needs to be generated.
+        if (this.simpleCoreTypeHeuristic is { } heuristic)
+        {
+            foreach (TypeDeclaration globalType in heuristic.GetFirstSeenTypes())
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return [];
+                }
+
+#if DEBUG
+                string fqn = globalType.FullyQualifiedDotnetTypeName();
+                if (namesSeen.ContainsKey(fqn))
+                {
+                    System.Diagnostics.Debug.Fail($"Duplicate global simple type: {fqn}");
+                    continue;
+                }
+                else
+                {
+                    namesSeen[fqn] = globalType;
+                }
+#endif
+
+                if (generator.TryBeginTypeDeclaration(globalType))
+                {
+                    foreach (ICodeFileBuilder codeFileBuilder in this.codeFileBuilderRegistry.RegisteredBuilders)
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return [];
+                        }
+
+                        codeFileBuilder.EmitFile(generator, globalType);
+                    }
+
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return [];
+                    }
+
+                    generator.EndTypeDeclaration(globalType);
+                }
+            }
+        }
+
         foreach (TypeDeclaration typeDeclaration in typeDeclarations)
         {
             if (cancellationToken.IsCancellationRequested)
             {
                 return [];
             }
+
 #if DEBUG
             if (namesSeen.ContainsKey(typeDeclaration.FullyQualifiedDotnetTypeName()))
             {
@@ -411,7 +460,8 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 
     private static CSharpLanguageProvider CreateDefaultCSharpLanguageProvider(Options? options)
     {
-        CSharpLanguageProvider languageProvider = new(options);
+        Options resolvedOptions = options ?? Options.Default;
+        CSharpLanguageProvider languageProvider = new(resolvedOptions);
 
         languageProvider.RegisterCodeFileBuilders(
             CorePartial.Instance,
@@ -434,8 +484,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             ArrayValidationHandler.Instance
             );
 
+        SimpleCoreTypeNameHeuristic simpleCoreTypeHeuristic = new(resolvedOptions);
+        languageProvider.simpleCoreTypeHeuristic = simpleCoreTypeHeuristic;
+
         languageProvider.RegisterNameHeuristics(
             WellKnownTypeNameHeuristic.Instance,
+            simpleCoreTypeHeuristic,
             RequiredPropertyNameHeuristic.Instance,
             DefaultValueNameHeuristic.Instance,
             ConstPropertyNameHeuristic.Instance,

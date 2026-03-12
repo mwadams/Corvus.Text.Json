@@ -22,7 +22,7 @@ public class GeneratedNullableOptionalTests
         using ParsedJsonDocument<ObjectWithMixedProperties> doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30,"email":"a@b.com"}""");
 
-        ObjectWithMixedProperties.EmailEntity? email = doc.RootElement.Email;
+        JsonEmail? email = doc.RootElement.Email;
         Assert.NotNull(email);
         Assert.Equal("a@b.com", email.Value.ToString());
     }
@@ -33,7 +33,7 @@ public class GeneratedNullableOptionalTests
         using ParsedJsonDocument<ObjectWithMixedProperties> doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30,"isActive":true}""");
 
-        ObjectWithMixedProperties.IsActiveEntity? isActive = doc.RootElement.IsActive;
+        JsonBoolean? isActive = doc.RootElement.IsActive;
         Assert.NotNull(isActive);
         Assert.True((bool)isActive.Value);
     }
@@ -91,7 +91,7 @@ public class GeneratedNullableOptionalTests
         using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithMixedProperties.Mutable root = builder.RootElement;
-        root.SetIsActive(default(ObjectWithMixedProperties.IsActiveEntity.Source));
+        root.SetIsActive(default(JsonBoolean.Source));
         Assert.Null(root.IsActive);
     }
 
@@ -116,7 +116,7 @@ public class GeneratedNullableOptionalTests
         using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
-        ObjectWithDefaultProperties.LabelEntity? label = doc.RootElement.Label;
+        JsonString? label = doc.RootElement.Label;
         Assert.Null(label);
     }
 
