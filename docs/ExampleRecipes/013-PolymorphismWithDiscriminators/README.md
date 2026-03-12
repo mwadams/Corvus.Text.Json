@@ -79,11 +79,11 @@ Once you have a `Shape`, you can access its properties using the pattern matchin
 ```csharp
 // Alternative: Direct variant access (not shown in Program.cs)
 // This requires knowing the discriminator value upfront
-Shape.OneOf0Entity circleEntity = Shape.OneOf0Entity.From(circle);
+Shape.RequiredRadiusAndType circleEntity = Shape.RequiredRadiusAndType.From(circle);
 Console.WriteLine($"Circle radius: {circleEntity.Radius}");
 ```
 
-**Note:** The primary recommended pattern is to use `Match()` (demonstrated below) as it provides exhaustive pattern matching and handles all variants safely. Direct variant access with `OneOf0Entity.From()` can be used when you already know which variant you have, but requires manual validation of the discriminator.
+**Note:** The primary recommended pattern is to use `Match()` (demonstrated below) as it provides exhaustive pattern matching and handles all variants safely. Direct variant access with `RequiredRadiusAndType.From()` can be used when you already know which variant you have, but requires manual validation of the discriminator.
 
 ### Pattern matching with discriminators
 
@@ -129,21 +129,21 @@ using var parsedCircle = ParsedJsonDocument<Shape>.Parse(circleJson);
 Shape circle = parsedCircle.RootElement;
 
 // Explicit conversion to variant entity
-Shape.OneOf0Entity circleEntity = Shape.OneOf0Entity.From(circle);
+Shape.RequiredRadiusAndType circleEntity = Shape.RequiredRadiusAndType.From(circle);
 double radius = circleEntity.Radius;
 
-// Pattern matching with entity types
+// Pattern matching with entity types (named by required properties)
 string desc = shape.Match(
-    (in Shape.OneOf0Entity c) => $"Circle with radius {c.Radius}",
-    (in Shape.OneOf1Entity r) => $"Rectangle {r.Width}x{r.Height}",
-    (in Shape unknown) => throw new InvalidOperationException());
+    matchRequiredRadiusAndType: (in Shape.RequiredRadiusAndType c) => $"Circle with radius {c.Radius}",
+    matchRequiredHeightAndTypeAndWidth: (in Shape.RequiredHeightAndTypeAndWidth r) => $"Rectangle {r.Width}x{r.Height}",
+    defaultMatch: (in Shape unknown) => throw new InvalidOperationException());
 ```
 
 **Key differences:**
 - V5 parses from JSON rather than providing `Create()` methods for discriminated types
-- V5 uses entity wrappers (`OneOf0Entity`, `OneOf1Entity`) to represent variants
+- V5 names variant types by their required properties (e.g., `RequiredRadiusAndType`, `RequiredHeightAndTypeAndWidth`) instead of using ordinal `OneOfNEntity` names
 - V5 requires explicit `From()` conversion to access variant-specific properties
-- V5 pattern matching uses entity types instead of the original schema types
+- V5 pattern matching uses named parameters based on the variant type names
 
 ## Running the Example
 

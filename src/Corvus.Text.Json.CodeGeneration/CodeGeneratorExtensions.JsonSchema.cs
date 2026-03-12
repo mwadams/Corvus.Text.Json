@@ -453,9 +453,9 @@ internal static partial class CodeGenerationExtensions
                 .AppendLineIndent("// You're not allowed to ask about non-value-like entities")
                 .AppendLineIndent("Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not")
                 .PushIndent()
-                    .AppendLineIndent("JsonTokenType.None or")
+                    .AppendLineIndent("(JsonTokenType.None or")
                     .AppendLineIndent("JsonTokenType.EndObject or")
-                    .AppendLineIndent("JsonTokenType.EndArray);")
+                    .AppendLineIndent("JsonTokenType.EndArray));")
                 .PopIndent();
 
         // Append any setup code for each handler at the top of the method

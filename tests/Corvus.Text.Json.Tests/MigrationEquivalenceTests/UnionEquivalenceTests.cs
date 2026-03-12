@@ -12,8 +12,22 @@ using V5 = MigrationModels.V5;
 /// Verifies that V4 and V5 union type (oneOf) checking produces equivalent results.
 /// </summary>
 /// <remarks>
-/// <para>V4: <c>entity.AsString</c>, <c>entity.AsNumber</c>, <c>entity.AsBoolean</c> — composition accessors.</para>
-/// <para>V5: <c>entity.TryGetAsOneOf0Entity()</c>, explicit casts to composition types, <c>Match&lt;TResult&gt;</c>.</para>
+/// <para>
+/// Both V4 and V5 emit <c>TryGetAs*()</c> methods for union variants. The type used in the method
+/// name comes from whatever type the variant resolved to — whether that's a framework built-in
+/// (V4's <c>Corvus.Json.JsonString</c>), a project-local global simple type (V5's <c>JsonString</c>,
+/// <c>JsonInt32</c>), or a custom nested entity (<c>OneOf1Entity</c>). This mechanism is identical
+/// in both versions.
+/// </para>
+/// <para>
+/// The real difference is in how multi-core-type types handle value accessors. In V4, when a type
+/// composed multiple core types (e.g. a union of string and boolean), V4 would <em>not</em> emit
+/// value accessors (casts, <c>GetString()</c>, indexers, etc.) directly on the union type. You had
+/// to go through <c>AsString</c>, <c>AsBoolean</c>, etc. to reach a single-core-type that did have
+/// those accessors. In V5, value accessors are emitted for all composed core types directly on the
+/// type, so you can use <c>(string)v5</c>, <c>(int)v5</c>, <c>(bool)v5</c>, <c>TryGetValue()</c>,
+/// etc. without the <c>As*</c> indirection.
+/// </para>
 /// </remarks>
 public class UnionEquivalenceTests
 {
@@ -128,7 +142,8 @@ public class UnionEquivalenceTests
     [Fact]
     public void V4_AsStringAccessor()
     {
-        // V4: AsString composition accessor returns JsonString
+        // V4: Multi-core-type types didn't emit value accessors directly.
+        // AsString returns a single-core-type (JsonString) that does have them.
         V4.MigrationUnion v4 = V4.MigrationUnion.Parse("\"hello\"");
         Corvus.Json.JsonString asString = v4.AsString;
         Assert.Equal("hello", (string)asString);
@@ -145,19 +160,20 @@ public class UnionEquivalenceTests
     }
 
     [Fact]
-    public void V5_TryGetAsOneOf0Entity_String()
+    public void V5_DirectValueAccess_String_EquivalentToAsString()
     {
-        // V5: TryGetAsOneOf0Entity() — the equivalent of V4's AsString for typed composition access
+        // V5: Value accessors are emitted for all composed core types directly on the type,
+        // so you no longer need AsString — just use the cast, GetString(), or TryGetValue().
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        Assert.True(v5.TryGetAsOneOf0Entity(out V5.MigrationUnion.OneOf0Entity stringEntity));
-        Assert.Equal("hello", (string)stringEntity);
+        Assert.Equal("hello", (string)v5);
     }
 
     [Fact]
     public void V4_AsNumberAccessor()
     {
-        // V4: AsNumber composition accessor returns JsonNumber
+        // V4: Multi-core-type types didn't emit value accessors directly.
+        // AsNumber returns a single-core-type (JsonNumber) that does have them.
         V4.MigrationUnion v4 = V4.MigrationUnion.Parse("42");
         Corvus.Json.JsonNumber asNumber = v4.AsNumber;
         Assert.Equal(42, (int)asNumber);
@@ -174,19 +190,20 @@ public class UnionEquivalenceTests
     }
 
     [Fact]
-    public void V5_TryGetAsOneOf1Entity_Number()
+    public void V5_DirectValueAccess_Number_EquivalentToAsNumber()
     {
-        // V5: TryGetAsOneOf1Entity() — the equivalent of V4's AsNumber
+        // V5: Value accessors are emitted for all composed core types directly on the type,
+        // so you no longer need AsNumber — just use the cast or TryGetValue().
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        Assert.True(v5.TryGetAsOneOf1Entity(out V5.MigrationUnion.OneOf1Entity numberEntity));
-        Assert.Equal(42, (int)numberEntity);
+        Assert.Equal(42, (int)v5);
     }
 
     [Fact]
     public void V4_AsBooleanAccessor()
     {
-        // V4: AsBoolean composition accessor returns JsonBoolean
+        // V4: Multi-core-type types didn't emit value accessors directly.
+        // AsBoolean returns a single-core-type (JsonBoolean) that does have them.
         V4.MigrationUnion v4 = V4.MigrationUnion.Parse("true");
         Corvus.Json.JsonBoolean asBoolean = v4.AsBoolean;
         Assert.True((bool)asBoolean);
@@ -203,41 +220,70 @@ public class UnionEquivalenceTests
     }
 
     [Fact]
-    public void V5_TryGetAsOneOf2Entity_Boolean()
+    public void V5_DirectValueAccess_Boolean_EquivalentToAsBoolean()
     {
-        // V5: TryGetAsOneOf2Entity() — the equivalent of V4's AsBoolean
+        // V5: Value accessors are emitted for all composed core types directly on the type,
+        // so you no longer need AsBoolean — just use the cast or TryGetValue().
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        Assert.True(v5.TryGetAsOneOf2Entity(out V5.MigrationUnion.OneOf2Entity boolEntity));
-        Assert.True((bool)boolEntity);
+        Assert.True((bool)v5);
     }
 
     [Fact]
-    public void V5_ExplicitCastToCompositionType_String()
+    public void BothEngines_TryGetAs_String_SamePattern()
     {
-        // V5: explicit cast from union to composition type
+        // TryGetAs*() is emitted for any variant type — local or global — in both V4 and V5.
+        // V4: variant resolved to framework built-in Corvus.Json.JsonString
+        // V5: variant resolved to project-local global simple type V5.JsonString
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetAsJsonString(out Corvus.Json.JsonString v4Result));
+        Assert.Equal("hello", (string)v4Result);
+
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        V5.MigrationUnion.OneOf0Entity stringEntity = (V5.MigrationUnion.OneOf0Entity)v5;
-        Assert.Equal("hello", (string)stringEntity);
+        Assert.True(v5.TryGetAsJsonString(out V5.JsonString v5Result));
+        Assert.Equal("hello", (string)v5Result);
+
+        Assert.Equal((string)v4Result, (string)v5Result);
     }
 
     [Fact]
-    public void V5_ExplicitCastToCompositionType_Number()
+    public void BothEngines_TryGetAs_Number_DifferentNames()
     {
+        // TryGetAs*() uses whatever type the variant resolved to.
+        // V4: no built-in JsonInt32, so variant became custom OneOf1Entity
+        // V5: {"type":"integer","format":"int32"} reduces to global simple type JsonInt32
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("42");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetAsOneOf1Entity(out V4.MigrationUnion.OneOf1Entity v4Result));
+        Assert.Equal(42, (int)v4Result);
+
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        V5.MigrationUnion.OneOf1Entity numberEntity = (V5.MigrationUnion.OneOf1Entity)v5;
-        Assert.Equal(42, (int)numberEntity);
+        Assert.True(v5.TryGetAsJsonInt32(out V5.JsonInt32 v5Result));
+        Assert.Equal(42, (int)v5Result);
+
+        Assert.Equal((int)v4Result, (int)v5Result);
     }
 
     [Fact]
-    public void V5_ExplicitCastToCompositionType_Boolean()
+    public void BothEngines_TryGetAs_Boolean_SamePattern()
     {
+        // TryGetAs*() is emitted for any variant type — local or global — in both V4 and V5.
+        // V4: variant resolved to framework built-in Corvus.Json.JsonBoolean
+        // V5: variant resolved to project-local global simple type V5.JsonBoolean
+        using Corvus.Json.ParsedValue<V4.MigrationUnion> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
+        V4.MigrationUnion v4 = parsedV4.Instance;
+        Assert.True(v4.TryGetAsJsonBoolean(out Corvus.Json.JsonBoolean v4Result));
+        Assert.True((bool)v4Result);
+
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        V5.MigrationUnion.OneOf2Entity boolEntity = (V5.MigrationUnion.OneOf2Entity)v5;
-        Assert.True((bool)boolEntity);
+        Assert.True(v5.TryGetAsJsonBoolean(out V5.JsonBoolean v5Result));
+        Assert.True((bool)v5Result);
+
+        Assert.Equal((bool)v4Result, (bool)v5Result);
     }
 
     [Fact]
@@ -247,9 +293,9 @@ public class UnionEquivalenceTests
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
-            static (in V5.MigrationUnion.OneOf0Entity s) => $"string:{(string)s}",
-            static (in V5.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-            static (in V5.MigrationUnion.OneOf2Entity b) => $"bool:{(bool)b}",
+            static (in V5.JsonString s) => $"string:{(string)s}",
+            static (in V5.JsonInt32 n) => $"number:{(int)n}",
+            static (in V5.JsonBoolean b) => $"bool:{(bool)b}",
             static (in V5.MigrationUnion v) => "none");
         Assert.Equal("string:hello", result);
     }
@@ -260,9 +306,9 @@ public class UnionEquivalenceTests
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
-            static (in V5.MigrationUnion.OneOf0Entity s) => $"string:{(string)s}",
-            static (in V5.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-            static (in V5.MigrationUnion.OneOf2Entity b) => $"bool:{(bool)b}",
+            static (in V5.JsonString s) => $"string:{(string)s}",
+            static (in V5.JsonInt32 n) => $"number:{(int)n}",
+            static (in V5.JsonBoolean b) => $"bool:{(bool)b}",
             static (in V5.MigrationUnion v) => "none");
         Assert.Equal("number:42", result);
     }
@@ -273,9 +319,9 @@ public class UnionEquivalenceTests
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
-            static (in V5.MigrationUnion.OneOf0Entity s) => $"string:{(string)s}",
-            static (in V5.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-            static (in V5.MigrationUnion.OneOf2Entity b) => $"bool:{(bool)b}",
+            static (in V5.JsonString s) => $"string:{(string)s}",
+            static (in V5.JsonInt32 n) => $"number:{(int)n}",
+            static (in V5.JsonBoolean b) => $"bool:{(bool)b}",
             static (in V5.MigrationUnion v) => "none");
         Assert.Equal("bool:True", result);
     }
@@ -338,9 +384,9 @@ public class UnionEquivalenceTests
             using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse(jsons[i]);
             V5.MigrationUnion v5 = parsedV5.RootElement;
             string v5Result = v5.Match(
-                static (in V5.MigrationUnion.OneOf0Entity s) => $"string:{(string)s}",
-                static (in V5.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-                static (in V5.MigrationUnion.OneOf2Entity b) => $"bool:{(bool)b}",
+                static (in V5.JsonString s) => $"string:{(string)s}",
+                static (in V5.JsonInt32 n) => $"number:{(int)n}",
+                static (in V5.JsonBoolean b) => $"bool:{(bool)b}",
                 static (in V5.MigrationUnion v) => "none");
 
             Assert.Equal(expected[i], v4Result);
@@ -397,9 +443,9 @@ public class UnionEquivalenceTests
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
             "prefix",
-            static (in V5.MigrationUnion.OneOf0Entity s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V5.MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in V5.MigrationUnion.OneOf2Entity b, in string ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in V5.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
+            static (in V5.JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
+            static (in V5.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
             static (in V5.MigrationUnion v, in string ctx) => $"{ctx}:none");
         Assert.Equal("prefix:string:hello", result);
     }
@@ -411,9 +457,9 @@ public class UnionEquivalenceTests
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
             "prefix",
-            static (in V5.MigrationUnion.OneOf0Entity s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V5.MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in V5.MigrationUnion.OneOf2Entity b, in string ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in V5.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
+            static (in V5.JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
+            static (in V5.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
             static (in V5.MigrationUnion v, in string ctx) => $"{ctx}:none");
         Assert.Equal("prefix:number:42", result);
     }
@@ -425,9 +471,9 @@ public class UnionEquivalenceTests
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
             "prefix",
-            static (in V5.MigrationUnion.OneOf0Entity s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V5.MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in V5.MigrationUnion.OneOf2Entity b, in string ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in V5.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
+            static (in V5.JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
+            static (in V5.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
             static (in V5.MigrationUnion v, in string ctx) => $"{ctx}:none");
         Assert.Equal("prefix:bool:True", result);
     }
@@ -454,9 +500,9 @@ public class UnionEquivalenceTests
             V5.MigrationUnion v5 = parsedV5.RootElement;
             string v5Result = v5.Match(
                 "prefix",
-                static (in V5.MigrationUnion.OneOf0Entity s, in string ctx) => $"{ctx}:string:{(string)s}",
-                static (in V5.MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-                static (in V5.MigrationUnion.OneOf2Entity b, in string ctx) => $"{ctx}:bool:{(bool)b}",
+                static (in V5.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
+                static (in V5.JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
+                static (in V5.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
                 static (in V5.MigrationUnion v, in string ctx) => $"{ctx}:none");
 
             Assert.Equal(expected[i], v4Result);
@@ -679,11 +725,11 @@ public class UnionEquivalenceTests
     }
 
     [Fact]
-    public void V5_TryGetAsOneOf0Entity_StringResult()
+    public void V5_TryGetAsJsonString_StringResult()
     {
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        Assert.True(v5.TryGetAsOneOf0Entity(out V5.MigrationUnion.OneOf0Entity result));
+        Assert.True(v5.TryGetAsJsonString(out V5.JsonString result));
         Assert.Equal("hello", (string)result);
     }
 
@@ -706,11 +752,11 @@ public class UnionEquivalenceTests
     }
 
     [Fact]
-    public void V5_TryGetAsOneOf2Entity_BooleanResult()
+    public void V5_TryGetAsJsonBoolean_BooleanResult()
     {
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        Assert.True(v5.TryGetAsOneOf2Entity(out V5.MigrationUnion.OneOf2Entity result));
+        Assert.True(v5.TryGetAsJsonBoolean(out V5.JsonBoolean result));
         Assert.True((bool)result);
     }
 
@@ -733,11 +779,11 @@ public class UnionEquivalenceTests
     }
 
     [Fact]
-    public void V5_TryGetAsOneOf1Entity_NumberResult()
+    public void V5_TryGetAsJsonInt32_NumberResult()
     {
         using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
         V5.MigrationUnion v5 = parsedV5.RootElement;
-        Assert.True(v5.TryGetAsOneOf1Entity(out V5.MigrationUnion.OneOf1Entity result));
+        Assert.True(v5.TryGetAsJsonInt32(out V5.JsonInt32 result));
         Assert.Equal(Corvus.Text.Json.JsonValueKind.Number, result.ValueKind);
     }
 

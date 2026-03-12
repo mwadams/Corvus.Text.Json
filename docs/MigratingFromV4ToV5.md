@@ -888,10 +888,10 @@ bool third = (bool)v5.Item3;
 
 ### V4: `AsString`, `AsNumber`, `AsBoolean`, `AsObject`, `AsArray`
 
-In V4, every generated type provided core type accessors that returned an intermediate well-known type (`JsonString`, `JsonNumber`, `JsonBoolean`, `JsonObject`, `JsonArray`), which you then cast to a primitive:
+In V4, when a type composed multiple core types (e.g. a union of string and boolean), V4 would *not* emit value accessors (casts, `GetString()`, indexers, etc.) directly on that type. Instead, you used `AsString`, `AsNumber`, `AsBoolean`, etc. to reach a single-core-type that did have those accessors:
 
 ```csharp
-// V4 — two-step: get the intermediate type, then cast to the primitive
+// V4 — two-step: go via the core type accessor, then cast to the primitive
 JsonString asString = v4.AsString;
 string value = (string)asString;
 
@@ -907,10 +907,10 @@ JsonArray asArray = v4.AsArray;
 
 ### V5: Direct value access
 
-V5 avoids the need for these intermediate core type accessors. The type itself provides `GetString()`, `TryGetValue()`, and explicit cast operators:
+V5 emits value accessors for all composed core types directly on the type, so the `As*` indirection is no longer needed:
 
 ```csharp
-// V5 — direct access: no intermediate types needed
+// V5 — direct access: value accessors are on the type itself
 string value = (string)v5;                   // explicit operator string
 int number = (int)v5;                        // explicit operator int
 bool flag = (bool)v5;                        // explicit operator bool
@@ -974,7 +974,7 @@ For `oneOf` and `anyOf`, the conversion operators are **opposite**: implicit *fr
 
 ### Pattern matching with `TryGetAs*()`
 
-Both V4 and V5 provide `TryGetAs*()` methods to test and extract a specific composition variant. The entity types are named by composition keyword and index (`OneOf0Entity`, `OneOf1Entity`, etc.):
+Both V4 and V5 emit `TryGetAs*()` methods for any union variant type — whether local or global. The method name is derived from whatever type the variant resolved to. V4 resolves string and boolean variants to framework built-in types (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`), while V5 resolves all simple types to locally generated global types (`JsonString`, `JsonInt32`, `JsonBoolean`):
 
 ```csharp
 // V4
@@ -982,10 +982,11 @@ if (v4.TryGetAsJsonString(out JsonString stringEntity)) { ... }
 if (v4.TryGetAsOneOf1Entity(out MigrationUnion.OneOf1Entity numberEntity)) { ... }
 if (v4.TryGetAsJsonBoolean(out JsonBoolean boolEntity)) { ... }
 
-// V5
-if (v5.TryGetAsOneOf0Entity(out MigrationUnion.OneOf0Entity stringEntity)) { ... }
-if (v5.TryGetAsOneOf1Entity(out MigrationUnion.OneOf1Entity numberEntity)) { ... }
-if (v5.TryGetAsOneOf2Entity(out MigrationUnion.OneOf2Entity boolEntity)) { ... }
+// V5 — note: string and boolean follow the same naming pattern as V4;
+// the int32 variant is now JsonInt32 instead of a custom OneOf1Entity.
+if (v5.TryGetAsJsonString(out JsonString stringEntity)) { ... }
+if (v5.TryGetAsJsonInt32(out JsonInt32 numberEntity)) { ... }
+if (v5.TryGetAsJsonBoolean(out JsonBoolean boolEntity)) { ... }
 ```
 
 > **Note**: `allOf` types typically don't generate `TryGetAsAllOf*Entity()` methods because the composite type inherently *is* all constituents simultaneously. Use implicit conversion instead.
@@ -1002,11 +1003,11 @@ string result = v4.Match(
     static (in JsonBoolean b) => $"bool:{(bool)b}",
     static (in MigrationUnion v) => "none");
 
-// V5
+// V5 — global simple types replace the custom nested entities
 string result = v5.Match(
-    static (in MigrationUnion.OneOf0Entity s) => $"string:{(string)s}",
-    static (in MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-    static (in MigrationUnion.OneOf2Entity b) => $"bool:{(bool)b}",
+    static (in JsonString s) => $"string:{(string)s}",
+    static (in JsonInt32 n) => $"number:{(int)n}",
+    static (in JsonBoolean b) => $"bool:{(bool)b}",
     static (in MigrationUnion v) => "none");
 ```
 
@@ -1021,12 +1022,12 @@ string result = v4.Match(
     static (in JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
     static (in MigrationUnion v, in string ctx) => $"{ctx}:none");
 
-// V5
+// V5 — global simple types replace the custom nested entities
 string result = v5.Match(
     "prefix",
-    static (in MigrationUnion.OneOf0Entity s, in string ctx) => $"{ctx}:string:{(string)s}",
-    static (in MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-    static (in MigrationUnion.OneOf2Entity b, in string ctx) => $"{ctx}:bool:{(bool)b}",
+    static (in JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
+    static (in JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
+    static (in JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
     static (in MigrationUnion v, in string ctx) => $"{ctx}:none");
 ```
 
@@ -1379,9 +1380,9 @@ string rgb = color.Match(
 | `v4.AsJsonElement` | `(JsonElement)v5` (implicit operator) |
 | `v4.AsAny` | N/A — implicitly cast to `JsonElement` |
 | `v4.AsObject` | N/A — use typed properties and `TryGetProperty()` |
-| `v4.AsString` | N/A — use `(string)v5`, `v5.GetString()`, or `v5.TryGetValue(out string?)` |
-| `v4.AsNumber` | N/A — use `(int)v5`, `(long)v5`, or `v5.TryGetValue(out int)` |
-| `v4.AsBoolean` | N/A — use `(bool)v5` or `v5.TryGetValue(out bool)` |
+| `v4.AsString` | N/A — V5 emits value accessors directly: `(string)v5`, `v5.GetString()`, `v5.TryGetValue(out string?)` |
+| `v4.AsNumber` | N/A — V5 emits value accessors directly: `(int)v5`, `(long)v5`, `v5.TryGetValue(out int)` |
+| `v4.AsBoolean` | N/A — V5 emits value accessors directly: `(bool)v5`, `v5.TryGetValue(out bool)` |
 | `v4.AsArray` | N/A — use typed array methods: `v5.GetArrayLength()`, `v5[0]`, `v5.EnumerateArray()` |
 | `v4.As<TargetType>()` | `TargetType.From(v5)` |
 | `v4.Equals(v4b)` | `v5.Equals(v5b)` (same) |
@@ -1414,7 +1415,7 @@ string rgb = color.Match(
 | N/A | `MyNumericArray.CreateBuilder(ws, span)` or `Build(span)` (V5 only — variable-length numeric arrays) |
 | `v4.Item1` (tuple) | `v5.Item1` (same) |
 | `MigrationTuple.Create(a,b,c)` | `MigrationTuple.CreateBuilder(ws,a,b,c)`, `Build(a,b,c)`, or `Build((ref b) => b.CreateTuple(a,b,c))` |
-| `v4.Match(...)` (composition) | `v5.Match(...)` (similar — entity types differ) |
+| `v4.Match(...)` (composition) | `v5.Match(...)` (same — simple types use global names like `JsonString`, `JsonInt32`) |
 | `v4.Match(...)` (enum) | `v5.Match(...)` (same) |
 | `MyType.EnumValues.Active` | `MyType.EnumValues.Active` (same) |
 | `MyType.DefaultInstance` | `MyType.DefaultInstance` (same) |
@@ -1430,7 +1431,7 @@ string rgb = color.Match(
 3. **Update parsing** — replace `ParsedValue<T>.Parse()` and `JsonDocument`/`T.FromJson(doc.RootElement)` patterns with `ParsedJsonDocument<T>.Parse()`
 4. **Convert `With*()` to `Set*()`** — create a `JsonWorkspace` and `JsonDocumentBuilder`, then use imperative `Set*()` methods
 5. **Update validation calls** — replace `Validate(ctx, level)` with `EvaluateSchema()`
-6. **Update union access** — replace `v4.AsString`, `v4.AsNumber`, `v4.AsBoolean` with direct value access: `(string)v5`, `v5.TryGetValue(out int)`, `(bool)v5`, etc. Use `v5.TryGetAsOneOfNEntity()` or `v5.Match()` when you need the strongly-typed composition entity.
+6. **Update union access** — V4's `AsString`, `AsNumber`, `AsBoolean` existed because multi-core-type types didn't emit value accessors directly. V5 emits all value accessors on the type itself: `(string)v5`, `v5.TryGetValue(out int)`, `(bool)v5`, etc. The `TryGetAs*()` pattern is the same in both V4 and V5; in V5 the variant type names may change to global simple types: `TryGetAsJsonString()`, `TryGetAsJsonInt32()`, `TryGetAsJsonBoolean()`. Use `v5.Match()` for exhaustive union matching.
 7. **Update writer types** — use `Corvus.Text.Json.Utf8JsonWriter` instead of `System.Text.Json.Utf8JsonWriter`
 8. **Update tuple creation** — replace `MyTuple.Create(a, b, c)` with `MyTuple.CreateBuilder(workspace, a, b, c)` for closed tuples, or the delegate pattern for open tuples
 9. **Update numeric array construction** — replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)`; for variable-length arrays, use `MyArray.CreateBuilder(workspace, span)` or `MyArray.Build(span)`

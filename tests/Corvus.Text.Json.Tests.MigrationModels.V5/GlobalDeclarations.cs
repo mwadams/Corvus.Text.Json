@@ -6,9 +6,6 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using global::System;
-using global::System.Diagnostics;
-using global::System.Diagnostics.CodeAnalysis;
 using global::System.Buffers;
 using global::System.Buffers.Text;
 using global::System.Runtime.CompilerServices;

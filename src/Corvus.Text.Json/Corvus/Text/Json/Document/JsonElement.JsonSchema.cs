@@ -196,10 +196,10 @@ public readonly partial struct JsonElement
         {
             // You're not allowed to ask about non-value-like entities
             Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not
-                JsonTokenType.None or
+                (JsonTokenType.None or
                 JsonTokenType.EndObject or
                 JsonTokenType.EndArray or
-                JsonTokenType.PropertyName);
+                JsonTokenType.PropertyName));
 
             context.EvaluatedBooleanSchema(true);
         }
