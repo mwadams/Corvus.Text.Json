@@ -116,7 +116,7 @@ JsonElement value = v5["propertyName"u8];
 
 ## CORE TYPE ACCESSOR TRANSFORMATIONS
 
-V4 uses intermediate types (`AsString`, `AsNumber`, etc.). V5 uses direct access.
+In V4, when a type composed multiple core types (e.g. a union of string and boolean), V4 would not emit value accessors (casts, `GetString()`, indexers, etc.) directly on that type. You had to use `AsString`, `AsNumber`, etc. to reach a single-core-type that did have those accessors. V5 emits value accessors for all composed core types directly on the type, so the `As*` indirection is no longer needed.
 
 ### String access
 ```csharp
@@ -169,10 +169,10 @@ JsonAny any = v4.AsAny;
 JsonObject obj = v4.AsObject;
 JsonArray arr = v4.AsArray;
 
-// V5 - these don't exist; use implicit conversions or typed access
+// V5 - value accessors are emitted directly on the type
 JsonElement element = v5;  // implicit
-// For objects: use v5.EnumerateObject(), v5.TryGetProperty(), typed properties
-// For arrays: use v5.EnumerateArray(), v5[index], v5.GetArrayLength()
+// Objects: v5.EnumerateObject(), v5.TryGetProperty(), typed properties, v5.GetPropertyCount()
+// Arrays: v5.EnumerateArray(), v5[index], v5.GetArrayLength()
 ```
 
 ---
@@ -522,24 +522,33 @@ DocumentationType doc = composite;  // implicit
 CountableType count = composite;    // implicit
 ```
 
-### allOf property access - V4 "Value" suffix
+### allOf property access - naming heuristics
 ```csharp
 // V4 - property names may have "Value" suffix to avoid conflicts
 int count = (int)v4Countable.CountValue;  // "count" property → CountValue
 
-// V5 - uses JSON property name directly
+// V5 - different name reservations, so "count" may no longer need the suffix
 long count = v5Countable.Count;  // "count" property → Count
 ```
 
+> **Note:** Both V4 and V5 use "Value" and "Entity" suffixes in their naming heuristics to disambiguate generated names from reserved names (interface members, language keywords, etc.). V5 has different name reservations than V4, so some names that were previously disambiguated may now be available without a suffix, and vice versa. This may cause some property or type renaming when migrating.
+
 ### TryGetAs* methods
+
+Both V4 and V5 emit `TryGetAs*()` methods for any union variant type. The method name is derived from whatever type the variant resolved to.
+
+Where a variant is a simple core type (like `{"type": "string"}`), V4 resolves string and boolean to framework built-in types (`Corvus.Json.JsonString`, `Corvus.Json.JsonBoolean`), while V5 resolves all simple types to locally generated global types (`JsonString`, `JsonInt32`, `JsonBoolean`). Custom nested entities (like `OneOf1Entity`) are used for variants that are not simple core types.
+
 ```csharp
 // V4
-if (v4.TryGetAsJsonString(out JsonString s)) { }
-if (v4.TryGetAsOneOf1Entity(out MyType.OneOf1Entity e)) { }
+if (v4.TryGetAsJsonString(out JsonString s)) { }         // framework built-in
+if (v4.TryGetAsOneOf1Entity(out MyType.OneOf1Entity n)) { } // custom entity (V4 had no JsonInt32)
+if (v4.TryGetAsJsonBoolean(out JsonBoolean b)) { }       // framework built-in
 
-// V5 - entity types are always indexed
-if (v5.TryGetAsOneOf0Entity(out MyType.OneOf0Entity s)) { }
-if (v5.TryGetAsOneOf1Entity(out MyType.OneOf1Entity e)) { }
+// V5 - simple types resolve to global simple types
+if (v5.TryGetAsJsonString(out JsonString s)) { }         // project-local global type
+if (v5.TryGetAsJsonInt32(out JsonInt32 n)) { }            // project-local global type
+if (v5.TryGetAsJsonBoolean(out JsonBoolean b)) { }       // project-local global type
 ```
 
 ### Match without context
@@ -551,11 +560,13 @@ string result = v4.Match(
     static (in JsonBoolean b) => $"bool:{(bool)b}",
     static (in MyType v) => "fallback");
 
-// V5 - entity types are always indexed (OneOf0Entity, OneOf1Entity, etc.)
+// V5 - variant type names come from whatever the variant resolved to
+// Simple types become global simple types (JsonString, JsonInt32, JsonBoolean);
+// complex variants remain nested entities (e.g. RequiredRadiusAndType)
 string result = v5.Match(
-    static (in MyType.OneOf0Entity s) => $"string:{(string)s}",
-    static (in MyType.OneOf1Entity n) => $"number:{(int)n}",
-    static (in MyType.OneOf2Entity b) => $"bool:{(bool)b}",
+    static (in JsonString s) => $"string:{(string)s}",
+    static (in JsonInt32 n) => $"number:{(int)n}",
+    static (in JsonBoolean b) => $"bool:{(bool)b}",
     static (in MyType v) => "fallback");
 ```
 
@@ -571,8 +582,8 @@ string result = v4.Match(
 // V5
 string result = v5.Match(
     context,
-    static (in MyType.OneOf0Entity s, in TContext ctx) => ...,
-    static (in MyType.OneOf1Entity n, in TContext ctx) => ...,
+    static (in JsonString s, in TContext ctx) => ...,
+    static (in JsonInt32 n, in TContext ctx) => ...,
     static (in MyType v, in TContext ctx) => ...);
 ```
 
@@ -717,7 +728,7 @@ When migrating a file:
 3. [ ] Replace `.Instance` with `.RootElement`
 4. [ ] Replace `T.Parse(json)` with `ParsedJsonDocument<T>.Parse(json)`
 5. [ ] Replace `.Count` with `.GetPropertyCount()` for object property count
-6. [ ] Replace `.AsString`, `.AsNumber`, `.AsBoolean` with direct casts or `TryGetValue()`
+6. [ ] Replace `.AsString`, `.AsNumber`, `.AsBoolean`, `.AsObject`, `.AsArray` — V5 emits value accessors directly on multi-core-type types, so use direct casts, `TryGetValue()`, typed properties, indexers, etc.
 7. [ ] Replace `.As<T>()` with `T.From(source)`
 8. [ ] Replace `Validate(ctx, level)` with `EvaluateSchema()` or `EvaluateSchema(collector)`
 9. [ ] Replace `With*()` chains with `JsonWorkspace` + `CreateBuilder()` + `Set*()` calls
@@ -727,9 +738,10 @@ When migrating a file:
 13. [ ] Replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)` or `MyVector.Build(span)`
 14. [ ] Replace `.Add()`, `.Insert()`, `.RemoveAt()` with `.AddItem()`, `.InsertItem()`, `.RemoveAt()` on Mutable
 15. [ ] Replace `TryGetValue(state, delegate)` span patterns with `GetUtf8String().Span` or `GetUtf16String().Span`
-16. [ ] Update Match() entity types: `JsonString` → `OneOf0Entity`, etc.
+16. [ ] Update Match() and TryGetAs() type names: simple core-type variants may change from `OneOf0Entity` → `JsonString`, `OneOf1Entity` → `JsonInt32`, etc. Check generated output for actual names.
 17. [ ] Add `static` keyword to builder delegates and Match lambdas where possible
 18. [ ] Update package references in .csproj
+19. [ ] Review generated type/property names — V5 has different name reservations, so some names that previously needed "Value" or "Entity" suffixes may now be available without them (and vice versa)
 
 ---
 
@@ -751,7 +763,7 @@ When migrating a file:
 **Fix**: Replace with `GetPropertyCount()` for property count
 
 ### Error: "'JsonString' could not be found"
-**Fix**: V5 doesn't have well-known types. Use entity types (`OneOf0Entity`) or direct value access.
+**Fix**: V5 generates global simple types (e.g., `JsonString`, `JsonBoolean`) locally in the project namespace rather than providing them as framework types. Add a `using` directive for the project namespace that contains the generated types.
 
 ### Error: "Cannot convert lambda to delegate because it captures variables"
 **Fix**: Remove `static` keyword if the lambda genuinely captures outer variables, OR refactor to use the context parameter overload of Match/Build.
