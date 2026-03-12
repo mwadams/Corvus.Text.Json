@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

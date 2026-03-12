@@ -31,6 +31,7 @@
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="JsonSchemaTestSuite\test-schema.json" />
