@@ -42,12 +42,12 @@ namespace Corvus.Text.Json.Tests
 
             Assert.True(doc.RootElement.TryGetAsAllOf0Array(out RefTupleWithContains.AllOf0Array allOf0));
 
-            RefTupleWithContains.AllOf0Array.PrefixItems0Entity item0 =
-                RefTupleWithContains.AllOf0Array.PrefixItems0Entity.From(allOf0[0]);
+            JsonString item0 =
+                JsonString.From(allOf0[0]);
             Assert.Equal("hello", (string)item0);
 
-            RefTupleWithContains.AllOf0Array.PrefixItems1Entity item1 =
-                RefTupleWithContains.AllOf0Array.PrefixItems1Entity.From(allOf0[1]);
+            JsonInt32 item1 =
+                JsonInt32.From(allOf0[1]);
             Assert.Equal(42, (int)item1);
         }
 
@@ -157,12 +157,12 @@ namespace Corvus.Text.Json.Tests
 
             Assert.True(doc.RootElement.TryGetAsAllOf0Array(out AllOfOpenTupleClosedLocally.AllOf0Array allOf0));
 
-            AllOfOpenTupleClosedLocally.AllOf0Array.PrefixItems0Entity item0 =
-                AllOfOpenTupleClosedLocally.AllOf0Array.PrefixItems0Entity.From(allOf0[0]);
+            JsonString item0 =
+                JsonString.From(allOf0[0]);
             Assert.Equal("hello", (string)item0);
 
-            AllOfOpenTupleClosedLocally.AllOf0Array.PrefixItems1Entity item1 =
-                AllOfOpenTupleClosedLocally.AllOf0Array.PrefixItems1Entity.From(allOf0[1]);
+            JsonNumber item1 =
+                JsonNumber.From(allOf0[1]);
             Assert.Equal(3.14, (double)item1, 2);
         }
 
@@ -257,12 +257,12 @@ namespace Corvus.Text.Json.Tests
 
             Assert.True(doc.RootElement.TryGetAsAllOf0Array(out RefTupleWithAdditionalItems.AllOf0Array allOf0));
 
-            RefTupleWithAdditionalItems.AllOf0Array.PrefixItems0Entity item0 =
-                RefTupleWithAdditionalItems.AllOf0Array.PrefixItems0Entity.From(allOf0[0]);
+            JsonString item0 =
+                JsonString.From(allOf0[0]);
             Assert.Equal("hello", (string)item0);
 
-            RefTupleWithAdditionalItems.AllOf0Array.PrefixItems1Entity item1 =
-                RefTupleWithAdditionalItems.AllOf0Array.PrefixItems1Entity.From(allOf0[1]);
+            JsonInt32 item1 =
+                JsonInt32.From(allOf0[1]);
             Assert.Equal(42, (int)item1);
         }
 
@@ -273,7 +273,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<RefTupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
 
             int count = 0;
-            foreach (RefTupleWithAdditionalItems.ItemsEntity item in doc.RootElement.EnumerateArray())
+            foreach (JsonBoolean item in doc.RootElement.EnumerateArray())
             {
                 count++;
             }
@@ -432,7 +432,7 @@ namespace Corvus.Text.Json.Tests
                 doc.RootElement.CreateBuilder(workspace);
 
             RefTupleWithAdditionalItems.Mutable root = builderDoc.RootElement;
-            root.SetItem(3, default(RefTupleWithAdditionalItems.ItemsEntity.Source));
+            root.SetItem(3, default(JsonBoolean.Source));
 
             Assert.Equal(3, root.GetArrayLength());
         }
@@ -487,12 +487,12 @@ namespace Corvus.Text.Json.Tests
 
             Assert.True(doc.RootElement.TryGetAsAllOf0Entity(out AllOfInlineTupleWithUnevaluated.AllOf0Entity entity));
 
-            AllOfInlineTupleWithUnevaluated.AllOf0Entity.PrefixItems0Entity item0 =
-                AllOfInlineTupleWithUnevaluated.AllOf0Entity.PrefixItems0Entity.From(entity[0]);
+            JsonString item0 =
+                JsonString.From(entity[0]);
             Assert.Equal("hello", (string)item0);
 
-            AllOfInlineTupleWithUnevaluated.AllOf0Entity.PrefixItems1Entity item1 =
-                AllOfInlineTupleWithUnevaluated.AllOf0Entity.PrefixItems1Entity.From(entity[1]);
+            JsonNumber item1 =
+                JsonNumber.From(entity[1]);
             Assert.Equal(3.14, (double)item1, 2);
         }
 
@@ -503,7 +503,7 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<AllOfInlineTupleWithUnevaluated>.Parse("""["hello",3.14,true,false]""");
 
             int count = 0;
-            foreach (AllOfInlineTupleWithUnevaluated.UnevaluatedItemsEntity item in doc.RootElement.EnumerateArray())
+            foreach (JsonBoolean item in doc.RootElement.EnumerateArray())
             {
                 count++;
             }
@@ -660,7 +660,7 @@ namespace Corvus.Text.Json.Tests
                 doc.RootElement.CreateBuilder(workspace);
 
             AllOfInlineTupleWithUnevaluated.Mutable root = builderDoc.RootElement;
-            root.RemoveWhere(static (in AllOfInlineTupleWithUnevaluated.UnevaluatedItemsEntity item) =>
+            root.RemoveWhere(static (in JsonBoolean item) =>
                 item.ToString() == "True");
 
             Assert.Equal(3, root.GetArrayLength());
@@ -714,12 +714,12 @@ namespace Corvus.Text.Json.Tests
 
             Assert.True(doc.RootElement.TryGetAsBaseTuple(out RefClosedTupleWithContains.BaseTuple baseTuple));
 
-            RefClosedTupleWithContains.BaseTuple.PrefixItems0Entity item0 =
-                RefClosedTupleWithContains.BaseTuple.PrefixItems0Entity.From(baseTuple[0]);
+            JsonString item0 =
+                JsonString.From(baseTuple[0]);
             Assert.Equal("hello", (string)item0);
 
-            RefClosedTupleWithContains.BaseTuple.PrefixItems1Entity item1 =
-                RefClosedTupleWithContains.BaseTuple.PrefixItems1Entity.From(baseTuple[1]);
+            JsonInt32 item1 =
+                JsonInt32.From(baseTuple[1]);
             Assert.Equal(42, (int)item1);
         }
 
@@ -814,12 +814,12 @@ namespace Corvus.Text.Json.Tests
 
             Assert.True(doc.RootElement.TryGetAsBaseTuple(out RefOpenTupleWithItems.BaseTuple baseTuple));
 
-            RefOpenTupleWithItems.BaseTuple.PrefixItems0Entity item0 =
-                RefOpenTupleWithItems.BaseTuple.PrefixItems0Entity.From(baseTuple[0]);
+            JsonString item0 =
+                JsonString.From(baseTuple[0]);
             Assert.Equal("hello", (string)item0);
 
-            RefOpenTupleWithItems.BaseTuple.PrefixItems1Entity item1 =
-                RefOpenTupleWithItems.BaseTuple.PrefixItems1Entity.From(baseTuple[1]);
+            JsonInt32 item1 =
+                JsonInt32.From(baseTuple[1]);
             Assert.Equal(42, (int)item1);
         }
 

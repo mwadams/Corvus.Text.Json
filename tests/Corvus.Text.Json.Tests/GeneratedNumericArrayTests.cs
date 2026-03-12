@@ -215,14 +215,14 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(2, root.GetArrayLength());
 
             // First row: [1.0, 2.0, 3.0]
-            Rank2DoubleMatrix.ItemsEntityArray.Mutable row0 = root[0];
+            Rank2DoubleMatrix.JsonDoubleArray.Mutable row0 = root[0];
             Assert.Equal(3, row0.GetArrayLength());
             Assert.Equal(1.0, (double)row0[0]);
             Assert.Equal(2.0, (double)row0[1]);
             Assert.Equal(3.0, (double)row0[2]);
 
             // Second row: [4.0, 5.0, 6.0]
-            Rank2DoubleMatrix.ItemsEntityArray.Mutable row1 = root[1];
+            Rank2DoubleMatrix.JsonDoubleArray.Mutable row1 = root[1];
             Assert.Equal(3, row1.GetArrayLength());
             Assert.Equal(4.0, (double)row1[0]);
             Assert.Equal(5.0, (double)row1[1]);
@@ -250,13 +250,13 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<Rank2DoubleMatrix>.Parse(json);
             Assert.Equal(2, reparsed.RootElement.GetArrayLength());
 
-            Rank2DoubleMatrix.ItemsEntityArray row0 = reparsed.RootElement[0];
+            Rank2DoubleMatrix.JsonDoubleArray row0 = reparsed.RootElement[0];
             Assert.Equal(3, row0.GetArrayLength());
             Assert.Equal(1.0, (double)row0[0]);
             Assert.Equal(2.0, (double)row0[1]);
             Assert.Equal(3.0, (double)row0[2]);
 
-            Rank2DoubleMatrix.ItemsEntityArray row1 = reparsed.RootElement[1];
+            Rank2DoubleMatrix.JsonDoubleArray row1 = reparsed.RootElement[1];
             Assert.Equal(3, row1.GetArrayLength());
             Assert.Equal(4.0, (double)row1[0]);
             Assert.Equal(5.0, (double)row1[1]);
@@ -288,9 +288,9 @@ namespace Corvus.Text.Json.Tests
         [Fact]
         public void Rank2DoubleMatrix_InnerType_StaticProperties()
         {
-            Assert.Equal(1, Rank2DoubleMatrix.ItemsEntityArray.Rank);
-            Assert.Equal(3, Rank2DoubleMatrix.ItemsEntityArray.Dimension);
-            Assert.Equal(3, Rank2DoubleMatrix.ItemsEntityArray.ValueBufferSize);
+            Assert.Equal(1, Rank2DoubleMatrix.JsonDoubleArray.Rank);
+            Assert.Equal(3, Rank2DoubleMatrix.JsonDoubleArray.Dimension);
+            Assert.Equal(3, Rank2DoubleMatrix.JsonDoubleArray.ValueBufferSize);
         }
 
         #endregion
@@ -413,9 +413,9 @@ namespace Corvus.Text.Json.Tests
             Assert.Equal(6, Rank3Int32Cube.ItemsArray2Array.ValueBufferSize);
 
             // Innermost rank: 3-element vector
-            Assert.Equal(1, Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Rank);
-            Assert.Equal(3, Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Dimension);
-            Assert.Equal(3, Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.ValueBufferSize);
+            Assert.Equal(1, Rank3Int32Cube.ItemsArray2Array.JsonInt32Array.Rank);
+            Assert.Equal(3, Rank3Int32Cube.ItemsArray2Array.JsonInt32Array.Dimension);
+            Assert.Equal(3, Rank3Int32Cube.ItemsArray2Array.JsonInt32Array.ValueBufferSize);
         }
 
         #endregion
@@ -618,13 +618,13 @@ namespace Corvus.Text.Json.Tests
 
             Assert.Equal(2, root.GetArrayLength());
 
-            Rank2DoubleMatrix.ItemsEntityArray.Mutable row0 = root[0];
+            Rank2DoubleMatrix.JsonDoubleArray.Mutable row0 = root[0];
             Assert.Equal(3, row0.GetArrayLength());
             Assert.Equal(1.0, (double)row0[0]);
             Assert.Equal(2.0, (double)row0[1]);
             Assert.Equal(3.0, (double)row0[2]);
 
-            Rank2DoubleMatrix.ItemsEntityArray.Mutable row1 = root[1];
+            Rank2DoubleMatrix.JsonDoubleArray.Mutable row1 = root[1];
             Assert.Equal(3, row1.GetArrayLength());
             Assert.Equal(4.0, (double)row1[0]);
             Assert.Equal(5.0, (double)row1[1]);
@@ -648,25 +648,25 @@ namespace Corvus.Text.Json.Tests
             // First plane: [[1,2,3],[4,5,6]]
             Rank3Int32Cube.ItemsArray2Array.Mutable plane0 = root[0];
             Assert.Equal(2, plane0.GetArrayLength());
-            Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Mutable row00 = plane0[0];
+            Rank3Int32Cube.ItemsArray2Array.JsonInt32Array.Mutable row00 = plane0[0];
             Assert.Equal(3, row00.GetArrayLength());
             Assert.Equal(1, (int)row00[0]);
             Assert.Equal(2, (int)row00[1]);
             Assert.Equal(3, (int)row00[2]);
 
-            Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Mutable row01 = plane0[1];
+            Rank3Int32Cube.ItemsArray2Array.JsonInt32Array.Mutable row01 = plane0[1];
             Assert.Equal(4, (int)row01[0]);
             Assert.Equal(5, (int)row01[1]);
             Assert.Equal(6, (int)row01[2]);
 
             // Second plane: [[7,8,9],[10,11,12]]
             Rank3Int32Cube.ItemsArray2Array.Mutable plane1 = root[1];
-            Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Mutable row10 = plane1[0];
+            Rank3Int32Cube.ItemsArray2Array.JsonInt32Array.Mutable row10 = plane1[0];
             Assert.Equal(7, (int)row10[0]);
             Assert.Equal(8, (int)row10[1]);
             Assert.Equal(9, (int)row10[2]);
 
-            Rank3Int32Cube.ItemsArray2Array.ItemsEntityArray.Mutable row11 = plane1[1];
+            Rank3Int32Cube.ItemsArray2Array.JsonInt32Array.Mutable row11 = plane1[1];
             Assert.Equal(10, (int)row11[0]);
             Assert.Equal(11, (int)row11[1]);
             Assert.Equal(12, (int)row11[2]);

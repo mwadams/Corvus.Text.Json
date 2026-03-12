@@ -494,15 +494,15 @@ namespace Corvus.Text.Json.Tests
             AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
                 static (ref AllOfInt32Matrix.Builder builder) =>
                 {
-                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
-                        static (ref AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Builder inner) =>
+                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Build(
+                        static (ref AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Builder inner) =>
                         {
                             inner.AddItem(1);
                             inner.AddItem(2);
                             inner.AddItem(3);
                         }));
-                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
-                        static (ref AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Builder inner) =>
+                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Build(
+                        static (ref AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Builder inner) =>
                         {
                             inner.AddItem(4);
                             inner.AddItem(5);
@@ -537,15 +537,15 @@ namespace Corvus.Text.Json.Tests
             AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
                 static (ref AllOfInt32Matrix.Builder builder) =>
                 {
-                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
-                        static (ref AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Builder inner) =>
+                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Build(
+                        static (ref AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Builder inner) =>
                         {
                             inner.AddItem(1);
                             inner.AddItem(2);
                             inner.AddItem(3);
                         }));
-                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Build(
-                        static (ref AllOfInt32Matrix.BaseMatrix.ItemsEntityArray.Builder inner) =>
+                    builder.AddItem(AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Build(
+                        static (ref AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Builder inner) =>
                         {
                             inner.AddItem(4);
                             inner.AddItem(5);

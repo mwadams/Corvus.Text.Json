@@ -42,7 +42,7 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<PureTuple> doc =
                 ParsedJsonDocument<PureTuple>.Parse("""["hello",42,true]""");
 
-            PureTuple.PrefixItems0Entity item0 = PureTuple.PrefixItems0Entity.From(doc.RootElement[0]);
+            JsonString item0 = JsonString.From(doc.RootElement[0]);
             Assert.Equal("hello", (string)item0);
         }
 
@@ -52,7 +52,7 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<PureTuple> doc =
                 ParsedJsonDocument<PureTuple>.Parse("""["hello",42,true]""");
 
-            PureTuple.PrefixItems1Entity item1 = PureTuple.PrefixItems1Entity.From(doc.RootElement[1]);
+            JsonInt32 item1 = JsonInt32.From(doc.RootElement[1]);
             Assert.Equal(42, (int)item1);
         }
 
@@ -62,7 +62,7 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<PureTuple> doc =
                 ParsedJsonDocument<PureTuple>.Parse("""["hello",42,true]""");
 
-            PureTuple.PrefixItems2Entity item2 = PureTuple.PrefixItems2Entity.From(doc.RootElement[2]);
+            JsonBoolean item2 = JsonBoolean.From(doc.RootElement[2]);
             Assert.True((bool)item2);
         }
 
@@ -155,12 +155,12 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<TupleWithAdditionalItems> doc =
                 ParsedJsonDocument<TupleWithAdditionalItems>.Parse("""["hello",42,true]""");
 
-            TupleWithAdditionalItems.PrefixItems0Entity item0 =
-                TupleWithAdditionalItems.PrefixItems0Entity.From(doc.RootElement[0]);
+            JsonString item0 =
+                JsonString.From(doc.RootElement[0]);
             Assert.Equal("hello", (string)item0);
 
-            TupleWithAdditionalItems.PrefixItems1Entity item1 =
-                TupleWithAdditionalItems.PrefixItems1Entity.From(doc.RootElement[1]);
+            JsonInt32 item1 =
+                JsonInt32.From(doc.RootElement[1]);
             Assert.Equal(42, (int)item1);
         }
 
@@ -171,12 +171,12 @@ namespace Corvus.Text.Json.Tests
                 ParsedJsonDocument<TupleWithAdditionalItems>.Parse("""["hello",42,true,false]""");
 
             // Index 2 and 3 are additional items (boolean type)
-            TupleWithAdditionalItems.ItemsEntity item2 =
-                TupleWithAdditionalItems.ItemsEntity.From(doc.RootElement[2]);
+            JsonBoolean item2 =
+                JsonBoolean.From(doc.RootElement[2]);
             Assert.True((bool)item2);
 
-            TupleWithAdditionalItems.ItemsEntity item3 =
-                TupleWithAdditionalItems.ItemsEntity.From(doc.RootElement[3]);
+            JsonBoolean item3 =
+                JsonBoolean.From(doc.RootElement[3]);
             Assert.False((bool)item3);
         }
 
@@ -220,7 +220,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
-            root.SetItem(3, default(TupleWithAdditionalItems.ItemsEntity.Source));
+            root.SetItem(3, default(JsonBoolean.Source));
             Assert.Equal(3, root.GetArrayLength());
         }
 
@@ -233,7 +233,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
-            root.InsertItem(3, default(TupleWithAdditionalItems.ItemsEntity.Source));
+            root.InsertItem(3, default(JsonBoolean.Source));
             Assert.Equal(3, root.GetArrayLength());
         }
 
@@ -259,7 +259,7 @@ namespace Corvus.Text.Json.Tests
             using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
             TupleWithAdditionalItems.Mutable root = builder.RootElement;
-            root.RemoveWhere(static (in TupleWithAdditionalItems.ItemsEntity item) => item.ToString() == "False");
+            root.RemoveWhere(static (in JsonBoolean item) => item.ToString() == "False");
             // Original: ["hello", 42, true, false, true]
             // After removing false items: ["hello", 42, true, true]
             Assert.Equal(4, root.GetArrayLength());
@@ -458,13 +458,13 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<PureTuple> reparsed = ParsedJsonDocument<PureTuple>.Parse(json);
             Assert.Equal(3, reparsed.RootElement.GetArrayLength());
 
-            PureTuple.PrefixItems0Entity item0 = PureTuple.PrefixItems0Entity.From(reparsed.RootElement[0]);
+            JsonString item0 = JsonString.From(reparsed.RootElement[0]);
             Assert.Equal("hello", (string)item0);
 
-            PureTuple.PrefixItems1Entity item1 = PureTuple.PrefixItems1Entity.From(reparsed.RootElement[1]);
+            JsonInt32 item1 = JsonInt32.From(reparsed.RootElement[1]);
             Assert.Equal(42, (int)item1);
 
-            PureTuple.PrefixItems2Entity item2 = PureTuple.PrefixItems2Entity.From(reparsed.RootElement[2]);
+            JsonBoolean item2 = JsonBoolean.From(reparsed.RootElement[2]);
             Assert.True((bool)item2);
         }
 
@@ -537,13 +537,13 @@ namespace Corvus.Text.Json.Tests
             using ParsedJsonDocument<PureTuple> reparsed = ParsedJsonDocument<PureTuple>.Parse(json);
             Assert.Equal(3, reparsed.RootElement.GetArrayLength());
 
-            PureTuple.PrefixItems0Entity item0 = PureTuple.PrefixItems0Entity.From(reparsed.RootElement[0]);
+            JsonString item0 = JsonString.From(reparsed.RootElement[0]);
             Assert.Equal("hello", (string)item0);
 
-            PureTuple.PrefixItems1Entity item1 = PureTuple.PrefixItems1Entity.From(reparsed.RootElement[1]);
+            JsonInt32 item1 = JsonInt32.From(reparsed.RootElement[1]);
             Assert.Equal(42, (int)item1);
 
-            PureTuple.PrefixItems2Entity item2 = PureTuple.PrefixItems2Entity.From(reparsed.RootElement[2]);
+            JsonBoolean item2 = JsonBoolean.From(reparsed.RootElement[2]);
             Assert.True((bool)item2);
         }
 
