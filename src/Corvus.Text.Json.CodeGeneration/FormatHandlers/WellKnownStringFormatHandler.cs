@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 
@@ -1289,5 +1290,35 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
             "corvus-json-content-pre201909" => true,
             _ => false,
         };
+    }
+
+    /// <inheritdoc/>
+    public bool TryGetSimpleTypeNameSuffix(string format, [NotNullWhen(true)] out string? suffix)
+    {
+        suffix = format switch
+        {
+            "date" => "Date",
+            "date-time" => "DateTime",
+            "time" => "Time",
+            "duration" => "Duration",
+            "email" => "Email",
+            "idn-email" => "IdnEmail",
+            "hostname" => "Hostname",
+            "idn-hostname" => "IdnHostname",
+            "ipv4" => "IpV4",
+            "ipv6" => "IpV6",
+            "uuid" => "Uuid",
+            "uri" => "Uri",
+            "uri-template" => "UriTemplate",
+            "uri-reference" => "UriReference",
+            "iri" => "Iri",
+            "iri-reference" => "IriReference",
+            "json-pointer" => "Pointer",
+            "relative-json-pointer" => "RelativePointer",
+            "regex" => "Regex",
+            _ => null,
+        };
+
+        return suffix is not null;
     }
 }

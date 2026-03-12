@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 
@@ -75,4 +76,16 @@ public interface IFormatHandler
     /// <returns>The expected <see cref="JsonTokenType"/>, or <see langword="null"/>
     /// if the format was not handled by this instance.</returns>
     JsonTokenType? GetExpectedTokenType(string format);
+
+    /// <summary>
+    /// Tries to get the PascalCase suffix for a global simple type name
+    /// for the given format (e.g., <c>"uuid"</c> → <c>"Uuid"</c>,
+    /// <c>"int32"</c> → <c>"Int32"</c>).
+    /// </summary>
+    /// <param name="format">The format string.</param>
+    /// <param name="suffix">When this method returns <see langword="true"/>, contains the
+    /// PascalCase suffix to use after <c>Json</c> in the type name.</param>
+    /// <returns><see langword="true"/> if this handler recognizes the format and can provide
+    /// a simple type name suffix; otherwise, <see langword="false"/>.</returns>
+    bool TryGetSimpleTypeNameSuffix(string format, [NotNullWhen(true)] out string? suffix);
 }

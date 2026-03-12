@@ -951,4 +951,29 @@ public class WellKnownNumericFormatHandler : INumberFormatHandler
                 return false;
         }
     }
+
+    /// <inheritdoc/>
+    public bool TryGetSimpleTypeNameSuffix(string format, [NotNullWhen(true)] out string? suffix)
+    {
+        suffix = format switch
+        {
+            "byte" => "Byte",
+            "sbyte" => "SByte",
+            "int16" => "Int16",
+            "int32" => "Int32",
+            "int64" => "Int64",
+            "int128" => "Int128",
+            "uint16" => "UInt16",
+            "uint32" => "UInt32",
+            "uint64" => "UInt64",
+            "uint128" => "UInt128",
+            "half" => "Half",
+            "single" => "Single",
+            "double" => "Double",
+            "decimal" => "Decimal",
+            _ => null,
+        };
+
+        return suffix is not null;
+    }
 }

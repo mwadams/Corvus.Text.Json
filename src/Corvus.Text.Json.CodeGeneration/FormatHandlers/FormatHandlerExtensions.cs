@@ -302,4 +302,30 @@ internal static class FormatHandlerExtensions
 
         return null;
     }
+
+    /// <summary>
+    /// Tries to get the PascalCase suffix for a global simple type name from the first
+    /// matching handler.
+    /// </summary>
+    /// <typeparam name="T">The type of the format handler.</typeparam>
+    /// <param name="handlers">The handlers to query.</param>
+    /// <param name="format">The format string.</param>
+    /// <param name="suffix">When this method returns <see langword="true"/>, contains the
+    /// PascalCase suffix to use after <c>Json</c> in the type name.</param>
+    /// <returns><see langword="true"/> if a handler recognized the format; otherwise,
+    /// <see langword="false"/>.</returns>
+    public static bool TryGetSimpleTypeNameSuffix<T>(this IEnumerable<T> handlers, string format, [NotNullWhen(true)] out string? suffix)
+        where T : notnull, IFormatHandler
+    {
+        foreach (T handler in handlers)
+        {
+            if (handler.TryGetSimpleTypeNameSuffix(format, out suffix))
+            {
+                return true;
+            }
+        }
+
+        suffix = null;
+        return false;
+    }
 }

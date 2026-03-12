@@ -27,49 +27,14 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// nor vocabulary-level assertion), the suffix <c>NotAsserted</c> is appended to the name
 /// (e.g., <c>JsonUuidNotAsserted</c>).
 /// </para>
+/// <para>
+/// Format-to-type-name mappings are delegated to the registered
+/// <see cref="IFormatHandler"/> implementations via
+/// <see cref="IFormatHandler.TryGetSimpleTypeNameSuffix"/>.
+/// </para>
 /// </remarks>
 internal sealed class SimpleCoreTypeNameHeuristic : IBuiltInTypeNameHeuristic
 {
-    private static readonly Dictionary<string, string> WellKnownFormatNames = new()
-    {
-        // String formats
-        ["uuid"] = "Uuid",
-        ["date"] = "Date",
-        ["date-time"] = "DateTime",
-        ["time"] = "Time",
-        ["duration"] = "Duration",
-        ["uri"] = "Uri",
-        ["uri-reference"] = "UriReference",
-        ["iri"] = "Iri",
-        ["iri-reference"] = "IriReference",
-        ["uri-template"] = "UriTemplate",
-        ["email"] = "Email",
-        ["idn-email"] = "IdnEmail",
-        ["hostname"] = "Hostname",
-        ["idn-hostname"] = "IdnHostname",
-        ["ipv4"] = "IpV4",
-        ["ipv6"] = "IpV6",
-        ["json-pointer"] = "Pointer",
-        ["relative-json-pointer"] = "RelativePointer",
-        ["regex"] = "Regex",
-
-        // Numeric formats
-        ["byte"] = "Byte",
-        ["sbyte"] = "SByte",
-        ["int16"] = "Int16",
-        ["int32"] = "Int32",
-        ["int64"] = "Int64",
-        ["int128"] = "Int128",
-        ["uint16"] = "UInt16",
-        ["uint32"] = "UInt32",
-        ["uint64"] = "UInt64",
-        ["uint128"] = "UInt128",
-        ["single"] = "Single",
-        ["double"] = "Double",
-        ["half"] = "Half",
-        ["decimal"] = "Decimal",
-    };
-
     private static readonly Dictionary<CoreTypes, string> CoreTypeNames = new()
     {
         [CoreTypes.String] = "String",
@@ -202,15 +167,16 @@ internal sealed class SimpleCoreTypeNameHeuristic : IBuiltInTypeNameHeuristic
     }
 
     /// <summary>
-    /// Gets the PascalCase suffix for the given format string.
+    /// Gets the PascalCase suffix for the given format string, delegating to
+    /// the registered format handlers.
     /// </summary>
     /// <param name="format">The format string.</param>
     /// <returns>The PascalCase suffix.</returns>
     private static string GetFormatSuffix(string format)
     {
-        if (WellKnownFormatNames.TryGetValue(format, out string? name))
+        if (FormatHandlerRegistry.Instance.FormatHandlers.TryGetSimpleTypeNameSuffix(format, out string? suffix))
         {
-            return name;
+            return suffix;
         }
 
         // Fall back to PascalCase conversion for unknown formats.
