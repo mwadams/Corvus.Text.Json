@@ -83,13 +83,112 @@ public static class DynamicCompiler
         BuildMetadataReferencesAndDefines(Assembly hostAssembly)
     {
         DependencyContext? ctx = DependencyContext.Load(hostAssembly) ?? DependencyContext.Default;
-        return ctx is null
-            ? throw new InvalidOperationException("Unable to find compilation context.")
-            : ((IEnumerable<MetadataReference> MetadataReferences, IEnumerable<string?> Defines))(
+
+        if (ctx is not null)
+        {
+            return (
                 from l in ctx.CompileLibraries
                 from r in l.ResolveReferencePaths()
                 select MetadataReference.CreateFromFile(r),
                 ctx.CompilationOptions.Defines.AsEnumerable().Union(["DYNAMIC_BUILD"]));
+        }
+
+        // Fallback for .NET Framework where DependencyContext is not available.
+        // Scan all DLLs in the host assembly's directory to pick up transitive dependencies.
+        return (BuildMetadataReferencesFromDirectory(hostAssembly), new[] { "DYNAMIC_BUILD" });
+    }
+
+    private static IEnumerable<MetadataReference> BuildMetadataReferencesFromDirectory(Assembly hostAssembly)
+    {
+        // On .NET Framework, assemblies may be shadow-copied to a temp directory,
+        // so hostAssembly.Location may not be in the original output directory.
+        // Use AppDomain.CurrentDomain.BaseDirectory which points to the original output directory.
+        string? directory = AppDomain.CurrentDomain.BaseDirectory;
+
+        // Fall back to the host assembly's directory if BaseDirectory is not available
+        if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory))
+        {
+            string? assemblyLocation = hostAssembly.Location;
+            directory = !string.IsNullOrEmpty(assemblyLocation) ? Path.GetDirectoryName(assemblyLocation) : null;
+        }
+
+        // Track by assembly simple name (filename without extension) to avoid CS1704
+        // "An assembly with the same simple name has already been imported" when the
+        // same assembly exists at different paths (e.g. output dir vs NuGet packages).
+        HashSet<string> seenNames = new(StringComparer.OrdinalIgnoreCase);
+        List<MetadataReference> references = [];
+
+        if (directory is not null && Directory.Exists(directory))
+        {
+            foreach (string dll in Directory.EnumerateFiles(directory, "*.dll"))
+            {
+                string simpleName = Path.GetFileNameWithoutExtension(dll);
+                if (seenNames.Add(simpleName))
+                {
+                    try
+                    {
+                        references.Add(MetadataReference.CreateFromFile(dll));
+                    }
+                    catch
+                    {
+                        // Skip DLLs that can't be loaded as metadata references (e.g. native DLLs)
+                        seenNames.Remove(simpleName);
+                    }
+                }
+            }
+        }
+
+        // Also include assemblies loaded in the AppDomain that may be from the GAC or
+        // other locations not in the output directory.
+        foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            if (!a.IsDynamic && !string.IsNullOrEmpty(a.Location) && seenNames.Add(a.GetName().Name ?? Path.GetFileNameWithoutExtension(a.Location)))
+            {
+                references.Add(MetadataReference.CreateFromFile(a.Location));
+            }
+        }
+
+        // On .NET Framework, resolve referenced assemblies that may be in the GAC or
+        // reference assembly directories but not in the output directory or loaded AppDomain.
+        // This catches assemblies like System.Numerics that are transitively referenced.
+        ResolveTransitiveReferences(references, seenNames);
+
+        return references;
+    }
+
+    private static void ResolveTransitiveReferences(List<MetadataReference> references, HashSet<string> seenNames)
+    {
+        Queue<AssemblyName> toResolve = new();
+
+        // Gather referenced assemblies from all assemblies in the output directory
+        foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            if (!a.IsDynamic)
+            {
+                foreach (AssemblyName refName in a.GetReferencedAssemblies())
+                {
+                    toResolve.Enqueue(refName);
+                }
+            }
+        }
+
+        while (toResolve.Count > 0)
+        {
+            AssemblyName name = toResolve.Dequeue();
+
+            try
+            {
+                Assembly resolved = Assembly.Load(name);
+                if (!resolved.IsDynamic && !string.IsNullOrEmpty(resolved.Location) && seenNames.Add(resolved.GetName().Name ?? Path.GetFileNameWithoutExtension(resolved.Location)))
+                {
+                    references.Add(MetadataReference.CreateFromFile(resolved.Location));
+                }
+            }
+            catch
+            {
+                // Assembly could not be loaded — skip it
+            }
+        }
     }
 
     private static IEnumerable<SyntaxTree> ParseSyntaxTrees(
