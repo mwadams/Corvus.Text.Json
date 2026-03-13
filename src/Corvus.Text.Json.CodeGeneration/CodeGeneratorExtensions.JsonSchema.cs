@@ -518,6 +518,7 @@ internal static partial class CodeGenerationExtensions
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("Evaluate(parentDocument, parentIndex, ref context);")
+                    .AppendLineIndent("context.EndContext();")
                     .AppendLineIndent("return context.IsMatch;")
                 .PopIndent()
                 .AppendLineIndent("}")

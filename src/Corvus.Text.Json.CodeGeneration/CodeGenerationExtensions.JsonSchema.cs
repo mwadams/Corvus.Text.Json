@@ -516,6 +516,7 @@ namespace Corvus.Text.Json.CodeGeneration
                         try
                         {
                             Evaluate(parentDocument, parentIndex, ref context);
+                            context.EndContext();
                             return context.IsMatch;
                         }
                         finally

@@ -547,6 +547,24 @@ public struct JsonSchemaContext
     }
 
     /// <summary>
+    /// Ends the root evaluation context, committing any pending results to the results collector.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This method must be called after the root <c>Evaluate</c> completes to ensure that
+    /// results written directly at the root level (e.g., <c>required</c> keyword failures)
+    /// are committed to the results collector. Without this call, such results are orphaned
+    /// because <see cref="BeginContext{T}"/> opens a child context on the collector that
+    /// is never otherwise committed.
+    /// </para>
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void EndContext()
+    {
+        _resultsCollector?.CommitChildContext(_sequenceNumber, parentIsMatch: false, childIsMatch: IsMatch, JsonSchemaEvaluation.EvaluatedSubschema);
+    }
+
+    /// <summary>
     /// Records the evaluation of a boolean schema.
     /// </summary>
     /// <param name="isMatch">A value indicating whether the boolean schema matched.</param>
