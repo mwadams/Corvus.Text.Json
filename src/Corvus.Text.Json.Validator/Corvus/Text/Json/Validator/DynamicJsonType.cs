@@ -22,6 +22,7 @@ public readonly struct DynamicJsonType
     private readonly MethodInfo parseMemoryChar;
     private readonly MethodInfo parseStream;
     private readonly MethodInfo parseSequenceByte;
+    private readonly MethodInfo fromJsonElement;
     private readonly PropertyInfo rootElementProperty;
 
     /// <summary>
@@ -38,6 +39,10 @@ public readonly struct DynamicJsonType
         this.parseMemoryChar = GetParseMethod(this.documentType, typeof(ReadOnlyMemory<char>));
         this.parseStream = GetParseMethod(this.documentType, typeof(Stream));
         this.parseSequenceByte = GetParseMethod(this.documentType, typeof(ReadOnlySequence<byte>));
+
+        MethodInfo fromGeneric = type.GetMethod("From", BindingFlags.Static | BindingFlags.Public)
+            ?? throw new InvalidOperationException($"Cannot find static From<T>() on {type.FullName}");
+        this.fromJsonElement = fromGeneric.MakeGenericMethod(typeof(JsonElement));
 
         this.rootElementProperty = this.documentType.GetProperty(
             "RootElement",
@@ -103,6 +108,19 @@ public readonly struct DynamicJsonType
     public DynamicJsonElement ParseInstance(ReadOnlySequence<byte> utf8Json, JsonDocumentOptions options = default)
     {
         return this.ParseCore(this.parseSequenceByte, utf8Json, options);
+    }
+
+    /// <summary>
+    /// Create an instance of the generated type from a <see cref="JsonElement"/>.
+    /// </summary>
+    /// <param name="element">The JSON element.</param>
+    /// <returns>A <see cref="DynamicJsonElement"/> wrapping the generated type instance. The caller must not dispose this value
+    /// as it does not own the underlying document.</returns>
+    public DynamicJsonElement FromElement(in JsonElement element)
+    {
+        object result = this.fromJsonElement.Invoke(null, [element])
+            ?? throw new InvalidOperationException("From<JsonElement> returned null.");
+        return new DynamicJsonElement(this.Type, (IJsonElement)result);
     }
 
     private static MethodInfo GetParseMethod(Type documentType, Type inputType)

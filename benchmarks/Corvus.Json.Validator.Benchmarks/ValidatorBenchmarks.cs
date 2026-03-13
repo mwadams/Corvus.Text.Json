@@ -109,31 +109,39 @@ public abstract class ValidatorBenchmarksBase
 [MemoryDiagnoser]
 public class ValidDocumentBenchmarks : ValidatorBenchmarksBase
 {
-    private JsonElement element;
+    private string json = null!;
 
     [GlobalSetup]
     public void Setup()
     {
         this.SetupSchema();
-        this.element = JsonDocument.Parse(ValidJsonBySchema[this.Schema]).RootElement;
+        this.json = ValidJsonBySchema[this.Schema];
     }
 
     [Benchmark]
-    public bool Validate() => this.schema.Validate(this.element).IsValid;
+    public bool Validate()
+    {
+        using JsonDocument doc = JsonDocument.Parse(this.json);
+        return this.schema.Validate(doc.RootElement).IsValid;
+    }
 }
 
 [MemoryDiagnoser]
 public class InvalidDocumentBenchmarks : ValidatorBenchmarksBase
 {
-    private JsonElement element;
+    private string json = null!;
 
     [GlobalSetup]
     public void Setup()
     {
         this.SetupSchema();
-        this.element = JsonDocument.Parse(InvalidJsonBySchema[this.Schema]).RootElement;
+        this.json = InvalidJsonBySchema[this.Schema];
     }
 
     [Benchmark]
-    public bool Validate() => this.schema.Validate(this.element).IsValid;
+    public bool Validate()
+    {
+        using JsonDocument doc = JsonDocument.Parse(this.json);
+        return this.schema.Validate(doc.RootElement).IsValid;
+    }
 }

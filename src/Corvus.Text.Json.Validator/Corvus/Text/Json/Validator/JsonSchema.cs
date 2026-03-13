@@ -230,6 +230,17 @@ public readonly struct JsonSchema
         return this.pipeline.Validate(utf8Json, resultsCollector);
     }
 
+    /// <summary>
+    /// Validate a pre-parsed <see cref="JsonElement"/> against this schema.
+    /// </summary>
+    /// <param name="element">The JSON element to validate.</param>
+    /// <param name="resultsCollector">An optional results collector for detailed validation results.</param>
+    /// <returns><see langword="true"/> if the document is valid; otherwise <see langword="false"/>.</returns>
+    public bool Validate(in JsonElement element, IJsonSchemaResultsCollector? resultsCollector = null)
+    {
+        return this.pipeline.Validate(element, resultsCollector);
+    }
+
     private static string BuildCacheKey(string uri, bool alwaysAssertFormat)
     {
         return $"{uri}__{alwaysAssertFormat}";

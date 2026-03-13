@@ -63,6 +63,11 @@ internal abstract class ValidatorPipeline
     /// </summary>
     public abstract bool Validate(ReadOnlySequence<byte> utf8Json, IJsonSchemaResultsCollector? resultsCollector);
 
+    /// <summary>
+    /// Validate a pre-parsed <see cref="JsonElement"/>.
+    /// </summary>
+    public abstract bool Validate(in JsonElement element, IJsonSchemaResultsCollector? resultsCollector);
+
     private sealed class AlwaysTruePipeline : ValidatorPipeline
     {
         public static readonly AlwaysTruePipeline Instance = new();
@@ -76,6 +81,8 @@ internal abstract class ValidatorPipeline
         public override bool Validate(Stream utf8Json, IJsonSchemaResultsCollector? resultsCollector) => true;
 
         public override bool Validate(ReadOnlySequence<byte> utf8Json, IJsonSchemaResultsCollector? resultsCollector) => true;
+
+        public override bool Validate(in JsonElement element, IJsonSchemaResultsCollector? resultsCollector) => true;
     }
 
     private sealed class AlwaysFalsePipeline : ValidatorPipeline
@@ -91,6 +98,8 @@ internal abstract class ValidatorPipeline
         public override bool Validate(Stream utf8Json, IJsonSchemaResultsCollector? resultsCollector) => false;
 
         public override bool Validate(ReadOnlySequence<byte> utf8Json, IJsonSchemaResultsCollector? resultsCollector) => false;
+
+        public override bool Validate(in JsonElement element, IJsonSchemaResultsCollector? resultsCollector) => false;
     }
 
     private sealed class DynamicTypePipeline(DynamicJsonType dynamicType) : ValidatorPipeline
@@ -123,6 +132,12 @@ internal abstract class ValidatorPipeline
         {
             using DynamicJsonElement element = dynamicType.ParseInstance(utf8Json);
             return element.EvaluateSchema(resultsCollector);
+        }
+
+        public override bool Validate(in JsonElement element, IJsonSchemaResultsCollector? resultsCollector)
+        {
+            DynamicJsonElement dynamicElement = dynamicType.FromElement(element);
+            return dynamicElement.EvaluateSchema(resultsCollector);
         }
     }
 }

@@ -118,7 +118,11 @@ public class ValidDocumentBenchmarks : ValidatorBenchmarksBase
     }
 
     [Benchmark]
-    public bool Validate() => this.schema.Validate(this.json);
+    public bool Validate()
+    {
+        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(this.json);
+        return this.schema.Validate(doc.RootElement);
+    }
 }
 
 [MemoryDiagnoser]
@@ -134,5 +138,9 @@ public class InvalidDocumentBenchmarks : ValidatorBenchmarksBase
     }
 
     [Benchmark]
-    public bool Validate() => this.schema.Validate(this.json);
+    public bool Validate()
+    {
+        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(this.json);
+        return this.schema.Validate(doc.RootElement);
+    }
 }
