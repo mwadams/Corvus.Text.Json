@@ -6,10 +6,9 @@ using BenchmarkDotNet.Attributes;
 
 namespace Corvus.Text.Json.Validator.Benchmarks;
 
-[MemoryDiagnoser]
-public class ValidatorBenchmarks
+public abstract class ValidatorBenchmarksBase
 {
-    private static readonly Dictionary<string, string> ValidJsonBySchema = new()
+    protected static readonly Dictionary<string, string> ValidJsonBySchema = new()
     {
         ["Person"] =
             """
@@ -60,7 +59,7 @@ public class ValidatorBenchmarks
             """,
     };
 
-    private static readonly Dictionary<string, string> InvalidJsonBySchema = new()
+    protected static readonly Dictionary<string, string> InvalidJsonBySchema = new()
     {
         ["Person"] =
             """
@@ -86,18 +85,13 @@ public class ValidatorBenchmarks
             """,
     };
 
-    private Text.Json.Validator.JsonSchema v5Schema;
-    private Corvus.Json.Validator.JsonSchema v4Schema;
-    private System.Text.Json.JsonElement v4ValidElement;
-    private System.Text.Json.JsonElement v4InvalidElement;
-    private string validJson = null!;
-    private string invalidJson = null!;
+    protected Text.Json.Validator.JsonSchema v5Schema;
+    protected Corvus.Json.Validator.JsonSchema v4Schema;
 
     [Params("Person", "ProductCatalog")]
     public string Schema { get; set; } = null!;
 
-    [GlobalSetup]
-    public void Setup()
+    protected void SetupSchemas()
     {
         string schemaFile = this.Schema switch
         {
@@ -110,23 +104,47 @@ public class ValidatorBenchmarks
 
         this.v5Schema = Text.Json.Validator.JsonSchema.FromFile(schemaPath);
         this.v4Schema = Corvus.Json.Validator.JsonSchema.FromFile(schemaPath);
+    }
+}
 
-        this.validJson = ValidJsonBySchema[this.Schema];
-        this.invalidJson = InvalidJsonBySchema[this.Schema];
+[MemoryDiagnoser]
+public class ValidDocumentBenchmarks : ValidatorBenchmarksBase
+{
+    private System.Text.Json.JsonElement v4Element;
+    private string json = null!;
 
-        this.v4ValidElement = System.Text.Json.JsonDocument.Parse(this.validJson).RootElement;
-        this.v4InvalidElement = System.Text.Json.JsonDocument.Parse(this.invalidJson).RootElement;
+    [GlobalSetup]
+    public void Setup()
+    {
+        this.SetupSchemas();
+        this.json = ValidJsonBySchema[this.Schema];
+        this.v4Element = System.Text.Json.JsonDocument.Parse(this.json).RootElement;
     }
 
-    [Benchmark(Baseline = true, Description = "V4 Valid")]
-    public bool V4_Valid() => this.v4Schema.Validate(this.v4ValidElement).IsValid;
+    [Benchmark(Baseline = true)]
+    public bool V4() => this.v4Schema.Validate(this.v4Element).IsValid;
 
-    [Benchmark(Description = "V5 Valid")]
-    public bool V5_Valid() => this.v5Schema.Validate(this.validJson);
+    [Benchmark]
+    public bool V5() => this.v5Schema.Validate(this.json);
+}
 
-    [Benchmark(Description = "V4 Invalid")]
-    public bool V4_Invalid() => this.v4Schema.Validate(this.v4InvalidElement).IsValid;
+[MemoryDiagnoser]
+public class InvalidDocumentBenchmarks : ValidatorBenchmarksBase
+{
+    private System.Text.Json.JsonElement v4Element;
+    private string json = null!;
 
-    [Benchmark(Description = "V5 Invalid")]
-    public bool V5_Invalid() => this.v5Schema.Validate(this.invalidJson);
+    [GlobalSetup]
+    public void Setup()
+    {
+        this.SetupSchemas();
+        this.json = InvalidJsonBySchema[this.Schema];
+        this.v4Element = System.Text.Json.JsonDocument.Parse(this.json).RootElement;
+    }
+
+    [Benchmark(Baseline = true)]
+    public bool V4() => this.v4Schema.Validate(this.v4Element).IsValid;
+
+    [Benchmark]
+    public bool V5() => this.v5Schema.Validate(this.json);
 }

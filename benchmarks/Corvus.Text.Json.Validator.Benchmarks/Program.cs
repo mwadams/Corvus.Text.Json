@@ -5,4 +5,4 @@
 using BenchmarkDotNet.Running;
 using Corvus.Text.Json.Validator.Benchmarks;
 
-BenchmarkRunner.Run<ValidatorBenchmarks>();
+BenchmarkRunner.Run([typeof(ValidDocumentBenchmarks), typeof(InvalidDocumentBenchmarks)]);
