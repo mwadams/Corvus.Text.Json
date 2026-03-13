@@ -84,8 +84,8 @@ public static class GenerationDriverV4
                     documentResolver.AddDocument(canonicalUri, document);
 
                     // Also register by $id if present and different from the canonical URI
-                    if (document.RootElement.TryGetProperty("$id", out JsonElement idElement) &&
-                        idElement.ValueKind == JsonValueKind.String &&
+                    if (document.RootElement.TryGetProperty("$id", out System.Text.Json.JsonElement idElement) &&
+                        idElement.ValueKind == System.Text.Json.JsonValueKind.String &&
                         idElement.GetString() is string id &&
                         !string.Equals(id, canonicalUri, StringComparison.Ordinal))
                     {

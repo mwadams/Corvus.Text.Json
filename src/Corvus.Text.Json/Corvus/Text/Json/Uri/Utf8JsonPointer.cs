@@ -55,4 +55,31 @@ public readonly ref struct Utf8JsonPointer
 
         return jsonElement.ParentDocument.TryResolveJsonPointer(_jsonPointer, jsonElement.ParentDocumentIndex, out value);
     }
+
+    /// <summary>
+    /// Try to resolve the path specified by this JSON Pointer against the provided JSON element,
+    /// returning the 1-based line number and character offset of the target element in the original source document.
+    /// </summary>
+    /// <typeparam name="T">The type of the element at the root of the path.</typeparam>
+    /// <param name="jsonElement">The element at the root of the path.</param>
+    /// <param name="line">When this method returns, contains the 1-based line number if successful.</param>
+    /// <param name="charOffset">When this method returns, contains the 1-based character offset within the line if successful.</param>
+    /// <param name="lineByteOffset">When this method returns, contains the byte offset of the start of the line if successful.</param>
+    /// <returns><see langword="true"/> if the pointer was resolved and the line and offset were determined; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public bool TryGetLineAndOffset<T>(in T jsonElement, out int line, out int charOffset, out long lineByteOffset)
+        where T : struct, IJsonElement<T>
+    {
+        if (!IsValid)
+        {
+            line = 0;
+            charOffset = 0;
+            lineByteOffset = 0;
+            return false;
+        }
+
+        jsonElement.CheckValidInstance();
+
+        return jsonElement.ParentDocument.TryGetLineAndOffsetForPointer(_jsonPointer, jsonElement.ParentDocumentIndex, out line, out charOffset, out lineByteOffset);
+    }
 }

@@ -362,6 +362,31 @@ internal static partial class JsonReaderHelper
         }
     }
 
+    /// <summary>
+    /// Gets the number of UTF-16 characters that would result from transcoding the specified UTF-8 bytes.
+    /// </summary>
+    /// <param name="utf8Bytes">The UTF-8 encoded bytes.</param>
+    /// <returns>The number of UTF-16 characters.</returns>
+    public static int GetUtf16CharCount(ReadOnlySpan<byte> utf8Bytes)
+    {
+        if (utf8Bytes.IsEmpty)
+        {
+            return 0;
+        }
+
+#if NET
+        return s_utf8Encoding.GetCharCount(utf8Bytes);
+#else
+        unsafe
+        {
+            fixed (byte* ptr = utf8Bytes)
+            {
+                return s_utf8Encoding.GetCharCount(ptr, utf8Bytes.Length);
+            }
+        }
+#endif
+    }
+
     public static void ValidateUtf8(ReadOnlySpan<byte> utf8Buffer)
     {
 #if NET8_0_OR_GREATER

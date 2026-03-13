@@ -34,11 +34,12 @@
 	  <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.6.3" />
 	  <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.6.3" />
 	  <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.6.3" />
-	  <PackageReference Include="Corvus.Json.Validator" Version="4.6.3" />
+	  <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.3" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Corvus.Text.Json.CodeGeneration\Corvus.Text.Json.CodeGeneration.csproj" />
+	  <ProjectReference Include="..\Corvus.Text.Json.Validator\Corvus.Text.Json.Validator.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

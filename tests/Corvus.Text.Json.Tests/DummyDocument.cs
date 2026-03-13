@@ -299,4 +299,16 @@ internal class DummyDocument : IJsonDocument
     bool IJsonDocument.TryFormat(int index, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider) => throw new NotImplementedException();
     bool IJsonDocument.TryFormat(int index, Span<byte> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider) => throw new NotImplementedException();
     string IJsonDocument.ToString(int index, string format, IFormatProvider formatProvider) => throw new NotImplementedException();
+
+    bool IJsonDocument.TryGetLineAndOffset(int index, out int line, out int charOffset, out long lineByteOffset)
+    { line = 0; charOffset = 0; lineByteOffset = 0; return false; }
+
+    bool IJsonDocument.TryGetLineAndOffsetForPointer(ReadOnlySpan<byte> jsonPointer, int index, out int line, out int charOffset, out long lineByteOffset)
+    { line = 0; charOffset = 0; lineByteOffset = 0; return false; }
+
+    bool IJsonDocument.TryGetLine(int lineNumber, out ReadOnlyMemory<byte> line)
+    { line = default; return false; }
+
+    bool IJsonDocument.TryGetLine(int lineNumber, [NotNullWhen(true)] out string? line)
+    { line = null; return false; }
 }

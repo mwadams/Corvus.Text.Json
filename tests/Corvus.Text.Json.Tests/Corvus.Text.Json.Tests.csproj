@@ -228,6 +228,7 @@
     <Compile Include="JsonBase64TestData.cs" />
     <Compile Include="JsonDateTimeTestData.cs" />
     <Compile Include="ParsedJsonDocumentTests.cs" />
+    <Compile Include="SourceLocationTests.cs" />
     <Compile Include="JsonElementCloneTests.cs" />
     <Compile Include="JsonElementGetMethodEdgeCaseTests.cs" />
     <Compile Include="JsonElementGetMethodExceptionTests.cs" />

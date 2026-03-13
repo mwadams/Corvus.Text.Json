@@ -685,6 +685,34 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         return true;
     }
 
+    bool IJsonDocument.TryGetLineAndOffset(int index, out int line, out int charOffset, out long lineByteOffset)
+    {
+        line = 0;
+        charOffset = 0;
+        lineByteOffset = 0;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetLineAndOffsetForPointer(ReadOnlySpan<byte> jsonPointer, int index, out int line, out int charOffset, out long lineByteOffset)
+    {
+        line = 0;
+        charOffset = 0;
+        lineByteOffset = 0;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetLine(int lineNumber, out ReadOnlyMemory<byte> line)
+    {
+        line = default;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetLine(int lineNumber, [NotNullWhen(true)] out string? line)
+    {
+        line = null;
+        return false;
+    }
+
     public bool TryFormat(int index, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
     {
         Debug.Assert(index == 0);

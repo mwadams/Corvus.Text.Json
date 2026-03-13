@@ -631,4 +631,43 @@ public interface IJsonDocument : IDisposable
     /// <param name="formatProvider">The format provider.</param>
     /// <returns>The display string representation of the element.</returns>
     string ToString(int index, string? format, IFormatProvider? formatProvider);
+
+    /// <summary>
+    /// Tries to get the line number and character offset in the original source document
+    /// for the element at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the element.</param>
+    /// <param name="line">When this method returns, contains the 1-based line number if successful.</param>
+    /// <param name="charOffset">When this method returns, contains the 1-based character offset within the line if successful.</param>
+    /// <param name="lineByteOffset">When this method returns, contains the byte offset of the start of the line if successful.</param>
+    /// <returns><see langword="true"/> if the line and offset were successfully determined; otherwise, <see langword="false"/>.</returns>
+    bool TryGetLineAndOffset(int index, out int line, out int charOffset, out long lineByteOffset);
+
+    /// <summary>
+    /// Resolves a JSON pointer against the element at the specified index and gets the line number
+    /// and character offset of the target element in the original source document.
+    /// </summary>
+    /// <param name="jsonPointer">The JSON pointer to resolve.</param>
+    /// <param name="index">The index of the element at the root of the pointer resolution.</param>
+    /// <param name="line">When this method returns, contains the 1-based line number if successful.</param>
+    /// <param name="charOffset">When this method returns, contains the 1-based character offset within the line if successful.</param>
+    /// <param name="lineByteOffset">When this method returns, contains the byte offset of the start of the line if successful.</param>
+    /// <returns><see langword="true"/> if the pointer was resolved and the line and offset were successfully determined; otherwise, <see langword="false"/>.</returns>
+    bool TryGetLineAndOffsetForPointer(ReadOnlySpan<byte> jsonPointer, int index, out int line, out int charOffset, out long lineByteOffset);
+
+    /// <summary>
+    /// Tries to get the specified line from the original source document as UTF-8 bytes.
+    /// </summary>
+    /// <param name="lineNumber">The 1-based line number to retrieve.</param>
+    /// <param name="line">When this method returns, contains the UTF-8 bytes of the line if successful.</param>
+    /// <returns><see langword="true"/> if the line was successfully retrieved; otherwise, <see langword="false"/>.</returns>
+    bool TryGetLine(int lineNumber, out ReadOnlyMemory<byte> line);
+
+    /// <summary>
+    /// Tries to get the specified line from the original source document as a string.
+    /// </summary>
+    /// <param name="lineNumber">The 1-based line number to retrieve.</param>
+    /// <param name="line">When this method returns, contains the line text if successful.</param>
+    /// <returns><see langword="true"/> if the line was successfully retrieved; otherwise, <see langword="false"/>.</returns>
+    bool TryGetLine(int lineNumber, [NotNullWhen(true)] out string? line);
 }

@@ -199,6 +199,7 @@
     <Compile Include="Corvus\Text\Json\Document\Internal\ObjectEnumerator.cs" />
     <Compile Include="Corvus\Text\Json\Document\ParsedJsonDocument.cs" />
     <Compile Include="Corvus\Text\Json\Document\ParsedJsonDocument.Parse.cs" />
+    <Compile Include="Corvus\Text\Json\Document\ParsedJsonDocument.SourceLocation.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\JsonDocument.StackRow.cs" />
     <Compile Include="Corvus\Text\Json\Document\Internal\JsonDocument.StackRowStack.cs" />
     <Compile Include="Corvus\Text\Json\Document\ParsedJsonDocument.TryGetProperty.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.DeepEquals.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElement.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonElement.Parse.cs" />
+    <Compile Include="Corvus\Text\Json\Document\JsonElement.SourceLocation.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonProperty.cs" />
     <Compile Include="Corvus\Text\Json\Document\JsonValueKind.cs" />
     <Compile Include="Corvus\Text\Json\Internal\JsonElementHelpers.DateTime.cs" />

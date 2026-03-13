@@ -1792,6 +1792,34 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    bool IJsonDocument.TryGetLineAndOffset(int index, out int line, out int charOffset, out long lineByteOffset)
+    {
+        line = 0;
+        charOffset = 0;
+        lineByteOffset = 0;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetLineAndOffsetForPointer(ReadOnlySpan<byte> jsonPointer, int index, out int line, out int charOffset, out long lineByteOffset)
+    {
+        line = 0;
+        charOffset = 0;
+        lineByteOffset = 0;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetLine(int lineNumber, out ReadOnlyMemory<byte> line)
+    {
+        line = default;
+        return false;
+    }
+
+    bool IJsonDocument.TryGetLine(int lineNumber, [NotNullWhen(true)] out string? line)
+    {
+        line = null;
+        return false;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void CheckNotDisposed()
     {
