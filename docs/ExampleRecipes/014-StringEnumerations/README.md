@@ -25,17 +25,20 @@ This simple schema constrains values to exactly one of the three strings: `"red"
 
 ## Generated Code Usage
 
-### Parsing enumeration values
+### Constant values
+
+The generated code creates an `EnumValues` class with pre-built constants for each enum value:
 
 ```csharp
-// Parse red color
-string redJson = """
-    "red"
-    """;
-using var parsedRed = ParsedJsonDocument<Color>.Parse(redJson);
-Color red = parsedRed.RootElement;
-Console.WriteLine($"Color: {red}");
-// Output: Color: "red"
+Color red = Color.EnumValues.Red;
+Color green = Color.EnumValues.Green;
+Color blue = Color.EnumValues.Blue;
+```
+
+UTF-8 byte representations are also available:
+
+```csharp
+ReadOnlySpan<byte> redUtf8 = Color.EnumValues.RedUtf8;
 ```
 
 ### Extracting string values
@@ -47,21 +50,6 @@ if (red.TryGetValue(out string? redStr))
     Console.WriteLine($"String value: {redStr}");
     // Output: String value: red
 }
-```
-
-### Converting to specific enum entities
-
-The generated code creates entity types for each enum value, allowing type-safe pattern matching:
-
-```csharp
-// Parse each color
-using var parsedRed = ParsedJsonDocument<Color>.Parse("\"red\"");
-using var parsedGreen = ParsedJsonDocument<Color>.Parse("\"green\"");
-using var parsedBlue = ParsedJsonDocument<Color>.Parse("\"blue\"");
-
-Color red = parsedRed.RootElement;
-Color green = parsedGreen.RootElement;
-Color blue = parsedBlue.RootElement;
 ```
 
 ### Pattern matching over enum values
@@ -109,37 +97,27 @@ Console.WriteLine(ConvertToRgb(red, brightnessFactor));
 
 ## Key Differences from V4
 
+The `Match()` API for string enumerations is essentially the same between V4 and V5 — both use named parameters (`matchRed:`, `matchGreen:`, etc.) with exhaustive handling.
+
 ### V4 (Corvus.Json)
 ```csharp
-// Parse enum
-Color red = Color.Parse("\"red\"");
+// Constant values
+Color red = Color.EnumValues.Red;
 
-// Direct string comparison
-if (red == "red")
-{
-    Console.WriteLine("It's red!");
-}
-
-// Pattern matching with string literals
+// Pattern matching
 string desc = red.Match(
-    "red" => "The color of fire",
-    "green" => "The color of grass",
-    "blue" => "The color of sky");
+    matchRed: static () => "The color of fire",
+    matchGreen: static () => "The color of grass",
+    matchBlue: static () => "The color of sky",
+    defaultMatch: static () => "Unknown");
 ```
 
 ### V5 (Corvus.Text.Json)
 ```csharp
-// Parse with document wrapper
-using var parsedRed = ParsedJsonDocument<Color>.Parse("\"red\"");
-Color red = parsedRed.RootElement;
+// Constant values (same pattern)
+Color red = Color.EnumValues.Red;
 
-// Extract string value
-if (red.TryGetValue(out string? redStr) && redStr == "red")
-{
-    Console.WriteLine("It's red!");
-}
-
-// Pattern matching with named parameters
+// Pattern matching (same pattern)
 string desc = red.Match(
     matchRed: static () => "The color of fire",
     matchGreen: static () => "The color of grass",
@@ -148,11 +126,8 @@ string desc = red.Match(
 ```
 
 **Key differences:**
-- V5 uses `ParsedJsonDocument<T>` for parsing with proper resource management
-- V5 uses `TryGetValue(out string?)` to extract the underlying string value
-- V5 pattern matching uses named parameters based on enum values (`matchRed`, `matchGreen`, `matchBlue`)
-- V5 provides better performance through workspace-pooled allocations
-- V5 pattern matching uses entity types instead of string literals
+- The `Match()` API (including the context parameter overload), `EnumValues` constants, and exhaustive handling work the same way in both versions
+- V5 uses `ParsedJsonDocument<T>` for parsing from external JSON input
 
 ## Running the Example
 
@@ -166,3 +141,21 @@ dotnet run
 - [012-PatternMatching](../012-PatternMatching/) - Discriminated unions with `oneOf`
 - [013-PolymorphismWithDiscriminators](../013-PolymorphismWithDiscriminators/) - Using `const` for discrimination
 - [015-NumericEnumerations](../015-NumericEnumerations/) - Enumerations with numeric values and documentation
+
+## Frequently Asked Questions
+
+### Q: What happens if I parse a value not in the enum?
+
+**A:** Parsing succeeds — the value is still a valid JSON string. However, schema validation via `EvaluateSchema()` will report it as invalid. The `Match()` method will route non-matching values to the `defaultMatch` handler. This design lets you handle unexpected values gracefully rather than throwing exceptions during parsing.
+
+### Q: Can I use `enum` with mixed types (strings and numbers)?
+
+**A:** JSON Schema's `enum` keyword accepts an array of any JSON values, so mixed types are technically valid. However, homogeneous enum arrays are easier to understand and work with. For heterogeneous enumerations, `oneOf` with `const` values is a better approach — it lets you document each variant individually and provides clearer discrimination (see [Recipe 012](../012-PatternMatching/)).
+
+### Q: When should I use `enum` vs `oneOf` + `const`?
+
+**A:** Use `enum` for simple value lists where you just need to constrain a property to a known set of values — it's more concise and produces cleaner schemas. Use `oneOf` + `const` when you need per-value documentation, named constant instances, or when your enum values are numeric (see [Recipe 015](../015-NumericEnumerations/)).
+
+### Q: Is pattern matching over enums exhaustive at compile time?
+
+**A:** The generated `Match()` method requires a handler for every enum value plus a `defaultMatch` fallback, so you won't miss a case at compile time. However, if you add new values to the schema and regenerate, existing code will get a compile error for the missing handler — which is exactly the safety net you want.

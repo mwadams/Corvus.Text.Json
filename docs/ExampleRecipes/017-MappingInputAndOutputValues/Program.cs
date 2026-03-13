@@ -20,12 +20,12 @@ Console.WriteLine();
 Console.WriteLine("Transforming source to target...");
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-// Create target using CreateBuilder
-// Property entities are compatible - pass values directly when types match
-using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
-{
-    b.Create(source.Name, source.Id);
-});
+// Create target using CreateBuilder convenience overload with named parameters
+// Property entities are compatible - pass values directly (zero-allocation view)
+using var targetBuilder = TargetType.CreateBuilder(
+    workspace,
+    fullName: source.Name,
+    identifier: source.Id);
 
 TargetType target = targetBuilder.RootElement;
 Console.WriteLine("Target data:");
@@ -40,29 +40,48 @@ Console.WriteLine();
 Console.WriteLine("Reverse transformation (target -> source)...");
 
 // Property entities are compatible in both directions
-using var sourceBuilder = SourceType.CreateBuilder(workspace, (ref SourceType.Builder b) =>
-{
-    b.Create(target.Identifier, target.FullName);
-});
+using var sourceBuilder = SourceType.CreateBuilder(
+    workspace,
+    id: target.Identifier,
+    name: target.FullName);
 
 SourceType reversedSource = sourceBuilder.RootElement;
 Console.WriteLine("Reversed source JSON:");
 Console.WriteLine(reversedSource);
 Console.WriteLine();
 
+// Demonstrate mapping to CRM type (constrained properties require From())
+Console.WriteLine("Mapping source to CRM type (using From())...");
+
+// CRM properties have additional constraints (minimum, minLength, maxLength),
+// so the entity types are NOT reduced to JsonInteger/JsonString.
+// We must use From() to convert between compatible but distinct entity types.
+using var crmBuilder = CrmType.CreateBuilder(
+    workspace,
+    customerId: CrmType.CustomerIdEntity.From(source.Id),
+    displayName: CrmType.DisplayNameEntity.From(source.Name));
+
+CrmType crm = crmBuilder.RootElement;
+Console.WriteLine("CRM data:");
+Console.WriteLine($"  customerId: {crm.CustomerId}");
+Console.WriteLine($"  displayName: {crm.DisplayName}");
+Console.WriteLine();
+Console.WriteLine("CRM JSON:");
+Console.WriteLine(crm);
+Console.WriteLine();
+
 // Demonstrate transformation WITH value modification
 Console.WriteLine("Transformation with modification...");
 
 // Only extract to primitives when you need to transform the values
-using var modifiedBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
+if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue) && nameValue is not null)
 {
-    // Extract values when transforming them
-    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue) && nameValue is not null)
-    {
-        b.Create(nameValue.ToUpperInvariant(), idValue + 1000);  // fullName, identifier
-    }
-});
+    using var modifiedBuilder = TargetType.CreateBuilder(
+        workspace,
+        fullName: nameValue.ToUpperInvariant(),
+        identifier: idValue + 1000);
 
-TargetType modified = modifiedBuilder.RootElement;
-Console.WriteLine("Modified target JSON:");
-Console.WriteLine(modified);
+    TargetType modified = modifiedBuilder.RootElement;
+    Console.WriteLine("Modified target JSON:");
+    Console.WriteLine(modified);
+}

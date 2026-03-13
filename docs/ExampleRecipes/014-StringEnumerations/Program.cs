@@ -1,18 +1,10 @@
 using Corvus.Text.Json;
 using StringEnumerations.Models;
 
-// Parse color enum values
-string redJson = "\"red\"";
-string greenJson = "\"green\"";
-string blueJson = "\"blue\"";
-
-using var parsedRed = ParsedJsonDocument<Color>.Parse(redJson);
-using var parsedGreen = ParsedJsonDocument<Color>.Parse(greenJson);
-using var parsedBlue = ParsedJsonDocument<Color>.Parse(blueJson);
-
-Color red = parsedRed.RootElement;
-Color green = parsedGreen.RootElement;
-Color blue = parsedBlue.RootElement;
+// Use the generated constant values directly
+Color red = Color.EnumValues.Red;
+Color green = Color.EnumValues.Green;
+Color blue = Color.EnumValues.Blue;
 
 // Pattern matching without context
 Console.WriteLine("Color descriptions:");

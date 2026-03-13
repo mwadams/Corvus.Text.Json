@@ -1,4 +1,4 @@
-# JSON Schema Patterns in .NET - Creating tuples
+# JSON Schema Patterns in .NET - Creating Tuples
 
 This recipe demonstrates how to use JSON Schema `prefixItems` and `unevaluatedItems` to create strongly-typed tuple representations in .NET.
 
@@ -177,3 +177,21 @@ dotnet run
 - [007-CreatingAStronglyTypedArray](../007-CreatingAStronglyTypedArray/) - Arrays with uniform item types
 - [008-CreatingAnArrayOfHigherRank](../008-CreatingAnArrayOfHigherRank/) - Multi-dimensional arrays
 - [011-InterfacesAndMixInTypes](../011-InterfacesAndMixInTypes/) - Composing types with `allOf`
+
+## Frequently Asked Questions
+
+### Q: What's the difference between a tuple and a fixed-size array?
+
+**A:** A tuple uses `prefixItems` to define a specific type for each positional element (e.g., `[int, string, bool]`), while a fixed-size array uses `items` to constrain all elements to a single type. Tuples give you strongly-typed access to each item via `Item1`, `Item2`, etc., whereas arrays provide uniform element access through indexing.
+
+### Q: Can I create open tuples that allow additional items?
+
+**A:** Yes. By default, JSON Schema arrays allow additional items beyond those listed in `prefixItems`. To create a closed tuple that rejects extra items, add `"unevaluatedItems": false` to your schema. Without that constraint, additional items of any type are permitted after the defined prefix items.
+
+### Q: Why doesn't V5 support implicit conversion to/from ValueTuple?
+
+**A:** This is by design. V5 generated types support direct formatting and strongly-typed property access (`Item1`, `Item2`, etc.), which eliminates the need for `ValueTuple` conversions in most scenarios. Removing implicit conversions avoids hidden allocations and keeps the API surface explicit about when data copying occurs.
+
+### Q: Can tuple items be complex types (objects, arrays)?
+
+**A:** Absolutely. Each position in `prefixItems` can reference any valid JSON Schema, including objects with properties, nested arrays, `$ref` references to shared definitions, or even other tuples. The generated code will provide strongly-typed access to each item using the appropriate generated type.

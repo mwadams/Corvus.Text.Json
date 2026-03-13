@@ -157,3 +157,28 @@ dotnet run
 - [012-PatternMatching](../012-PatternMatching/) - Discriminated unions with heterogeneous types
 - [014-StringEnumerations](../014-StringEnumerations/) - Enumerations and pattern matching
 - [015-NumericEnumerations](../015-NumericEnumerations/) - Documented numeric enums with `const`
+
+## Frequently Asked Questions
+
+### Q: Why are variant types named by required properties (e.g. `RequiredRadiusAndType`)?
+
+**A:** The code generator applies a `RequiredPropertyNameHeuristic` that builds a name from up to three `required` properties: `Required[Prop1]And[Prop2]And[Prop3]`. For example, a subschema with `"required": ["radius", "type"]` becomes `RequiredRadiusAndType`. If the subschema has more than three required properties, or the name collides with the parent type, the heuristic falls back to ordinal names like `OneOf0Entity`.
+
+You can disable this behaviour using the `disabledNamingHeuristics` configuration option (e.g. `["RequiredPropertyNameHeuristic"]`), or set `useOptionalNameHeuristics: false` to disable all optional naming heuristics. You can also override individual type names using the CLI generator's `namedTypes` configuration or by adding an explicit model type:
+
+```csharp
+[JsonSchemaTypeGenerator("my-schema.json#/oneOf/0")]
+public readonly partial struct Circle;
+```
+
+### Q: What if I forget the `const` on the discriminator property?
+
+**A:** Without a `const` value, the discriminator property doesn't uniquely identify the variant, and more than one `oneOf` subschema could match the same input. This causes `oneOf` validation to fail because it requires exactly one match. Always pair your discriminator property with a `const` to ensure unambiguous variant selection.
+
+### Q: Can I use a non-string discriminator?
+
+**A:** Yes. The `const` keyword works with any JSON type — strings, numbers, booleans, or even `null`. However, string discriminators are the most common convention and align with OpenAPI's `discriminator` object. Non-string discriminators work identically in the generated code; the variant is still identified by matching the `const` value.
+
+### Q: How does this relate to OpenAPI's discriminator?
+
+**A:** This pattern is the JSON Schema equivalent of OpenAPI's `discriminator` object. Both use a property with a fixed value to identify which variant applies. The key difference is that JSON Schema uses `oneOf` + `const` for structural validation, while OpenAPI's discriminator is a hint for code generators. The Corvus.Text.Json generator recognizes the `oneOf` + `const` pattern and produces idiomatic match methods.

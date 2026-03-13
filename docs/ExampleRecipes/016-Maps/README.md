@@ -66,19 +66,26 @@ Console.WriteLine($"Map: {map}");
 Use `TryGetProperty()` with UTF-8 byte literals for zero-allocation property access:
 
 ```csharp
-// Access values using UTF-8 property names (zero allocation)
 if (map.TryGetProperty("foo"u8, out var fooValue))
 {
     Console.WriteLine($"foo = {fooValue}");
     // Output: foo = 1
 }
-
-if (map.TryGetProperty("bar"u8, out var barValue))
-{
-    Console.WriteLine($"bar = {barValue}");
-    // Output: bar = 2
-}
 ```
+
+You can also use the indexer, which returns an `Undefined` value rather than throwing when the key doesn't exist:
+
+```csharp
+var barValue = map["bar"u8];
+Console.WriteLine($"bar = {barValue}");
+// Output: bar = 2
+
+var missing = map["noSuchKey"u8];
+Console.WriteLine($"missing is undefined: {missing.IsUndefined()}");
+// Output: missing is undefined: True
+```
+
+Both support UTF-8 byte literals (`"foo"u8`) for zero-allocation access, and string overloads for convenience.
 
 ### Enumerating all entries
 
@@ -160,6 +167,8 @@ But be aware this will allocate and transcode the string.
 
 ## Key Differences from V4
 
+Property access (`TryGetProperty()`, indexer), `EnumerateObject()`, and UTF-8 key overloads are available in both V4 and V5. The main difference is how maps are constructed.
+
 ### V4 (Corvus.Json)
 ```csharp
 // Create from property collection
@@ -167,29 +176,11 @@ StringToIntMap map = StringToIntMap.FromProperties(
     ("foo", 1),
     ("bar", 2),
     ("baz", 3));
-
-// Access with indexer
-int fooValue = map["foo"];
-
-// LINQ support
-var keys = map.Keys;
-var values = map.Values;
-int sum = map.Values.Sum();
-
-// IReadOnlyDictionary interface
-foreach (var kvp in map)
-{
-    Console.WriteLine($"{kvp.Key} = {kvp.Value}");
-}
 ```
 
 ### V5 (Corvus.Text.Json)
 ```csharp
-// Parse from JSON or build with mutable pattern
-using var parsed = ParsedJsonDocument<StringToIntMap>.Parse(json);
-StringToIntMap map = parsed.RootElement;
-
-// Or build with workspace
+// Build with workspace
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var doc = StringToIntMap.CreateBuilder(workspace, 
     StringToIntMap.Build((ref StringToIntMap.Builder b) =>
@@ -198,26 +189,11 @@ using var doc = StringToIntMap.CreateBuilder(workspace,
         b.SetProperty("bar"u8, 2);
         b.SetProperty("baz"u8, 3);
     }));
-
-// Access with TryGetProperty (UTF-8 preferred)
-if (map.TryGetProperty("foo"u8, out var fooValue))
-{
-    int value = fooValue.GetInt32();
-}
-
-// Enumerate with EnumerateObject()
-foreach (var property in map.EnumerateObject())
-{
-    Console.WriteLine($"  {property.Name} = {property.Value}");
-}
 ```
 
 **Key differences:**
-- V5 uses builder pattern instead of `FromProperties()` static method
-- V5 uses `TryGetProperty()` instead of indexer access
-- V5 emphasizes UTF-8 byte spans (`"foo"u8`) for performance
-- V5 uses `EnumerateObject()` instead of implementing `IReadOnlyDictionary<,>`
-- V5 provides lower-level control with better performance characteristics
+- V5 uses the builder pattern instead of `FromProperties()` for constructing maps
+- V5 uses `ParsedJsonDocument<T>` for parsing from external JSON input
 
 ## Running the Example
 
@@ -231,3 +207,21 @@ dotnet run
 - [004-OpenVersusClosedTypes](../004-OpenVersusClosedTypes/) - Objects with `unevaluatedProperties: false`
 - [011-InterfacesAndMixInTypes](../011-InterfacesAndMixInTypes/) - Composing object types
 - [017-MappingInputAndOutputValues](../017-MappingInputAndOutputValues/) - Converting between different schemas
+
+## Frequently Asked Questions
+
+### Q: Can map values be complex types (objects, arrays)?
+
+**A:** Yes. The `additionalProperties` keyword accepts any valid JSON Schema, so values can be objects, arrays, nested maps, or any other type. The generated code provides strongly-typed access to each value through `TryGetProperty()`, returning the value as the appropriate generated type.
+
+### Q: How do I validate map keys against a pattern?
+
+**A:** Use `patternProperties` instead of (or alongside) `additionalProperties`. With `patternProperties`, you define a regex pattern for the keys and a schema for the corresponding values. For example, `"^[a-z]+$": { "type": "integer" }` requires all matching keys to have integer values.
+
+### Q: What's the difference between `additionalProperties` and `patternProperties`?
+
+**A:** `additionalProperties` applies to all properties not explicitly defined by `properties` or matched by `patternProperties`. `patternProperties` applies only to keys matching specific regex patterns. You can combine both — use `patternProperties` for keys with known patterns and `additionalProperties` for everything else (or set it to `false` to disallow unmatched keys).
+
+### Q: Can I use maps with known and unknown property combinations?
+
+**A:** Yes. Define your known properties in the `properties` keyword and use `additionalProperties` to constrain the type of any extra properties. This gives you strongly-typed accessors for known properties while still allowing dynamic key-value entries. See [Recipe 004](../004-OpenVersusClosedTypes/) for more on open versus closed types.

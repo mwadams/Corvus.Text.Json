@@ -11,11 +11,7 @@ While string enumerations are common, sometimes you need numeric enumerations - 
 
 JSON Schema supports numeric `enum` values just like string values.
 
-## The Pattern
-
-Using `oneOf` with `const` to create documented numeric enumerations.
-
-While you could use a simple `enum` array (`{"enum": [1, 2, 3]}`), that approach loses documentation context. The `oneOf` + `const` pattern provides:
+Using `oneOf` with `const` to create documented numeric enumerations provides several advantages over a simple `enum` array (`{"enum": [1, 2, 3]}`), which loses documentation context. The `oneOf` + `const` pattern provides:
 - Named definitions for each value
 - Title and description for each option
 - Better IDE support and documentation generation
@@ -173,36 +169,27 @@ For more details on this pattern, see the [blog post](https://endjin.com/blog/20
 
 ## Key Differences from V4
 
+The `oneOf` + `const` pattern and its `Match()` API are essentially the same between V4 and V5. Both generate variant types with `ConstInstance` properties and exhaustive pattern matching.
+
 ### V4 (Corvus.Json)
 ```csharp
-// With the documented pattern (oneOf + const):
-// Access constant instances directly
-NumericOptions status = NumericOptions.Pending.ConstInstance;
+// Access constant instances
+Status pending = Status.Pending.ConstInstance;
 
-// No implicit numeric conversions (type safe)
-// NumericOptions status = 1; // Does not compile
-
-// Explicit conversion allowed but may create invalid values
-NumericOptions maybeInvalid = (NumericOptions)19;
-if (!maybeInvalid.IsValid())
-{
-    Console.WriteLine("Invalid!");
-}
+// Pattern matching
+string desc = status.Match(
+    matchPending: static (in Status.Pending _) => "Pending",
+    matchActive: static (in Status.Active _) => "Active",
+    matchComplete: static (in Status.Complete _) => "Complete",
+    defaultMatch: static (in Status _) => "Unknown");
 ```
 
 ### V5 (Corvus.Text.Json)
 ```csharp
-// Parse from JSON
-using var parsed = ParsedJsonDocument<Status>.Parse("1");
-Status status = parsed.RootElement;
+// Access constant instances (same pattern)
+Status pending = Status.Pending.ConstInstance;
 
-// Extract numeric value
-if (status.TryGetValue(out int value))
-{
-    Console.WriteLine($"Value: {value}");
-}
-
-// Pattern matching with named parameters
+// Pattern matching (same pattern)
 string desc = status.Match(
     matchPending: static (in Status.Pending _) => "Pending",
     matchActive: static (in Status.Active _) => "Active",
@@ -211,10 +198,8 @@ string desc = status.Match(
 ```
 
 **Key differences:**
-- V5 uses `ParsedJsonDocument<T>` for parsing
-- V5 uses `TryGetValue(out int)` to extract numeric values
-- V5 pattern matching uses named parameters based on schema definition names (`matchPending`, `matchActive`, `matchComplete`)
-- V5's `oneOf`+`const` pattern generates `ConstInstance` properties on each variant type
+- The `Match()` API (including the context parameter overload), `ConstInstance` properties, and exhaustive handling work the same way in both versions
+- V5 uses `ParsedJsonDocument<T>` for parsing from external JSON input
 
 ## Running the Example
 
@@ -228,3 +213,21 @@ dotnet run
 - [014-StringEnumerations](../014-StringEnumerations/) - String-based enumerations
 - [013-PolymorphismWithDiscriminators](../013-PolymorphismWithDiscriminators/) - Using `const` for discrimination
 - [012-PatternMatching](../012-PatternMatching/) - Discriminated unions with `oneOf`
+
+## Frequently Asked Questions
+
+### Q: Why use `oneOf` + `const` instead of a simple `enum` array?
+
+**A:** The `oneOf` + `const` pattern gives each numeric value a name, a `title`, and a `description` in the schema. This produces named constant instances (e.g., `Status.Pending.ConstInstance`) and descriptive match handler parameters in the generated code. A simple `enum` array like `[0, 1, 2]` provides no documentation or named access.
+
+### Q: Can I combine numeric and string enumerations?
+
+**A:** Each `oneOf` variant can use any `const` type, so you could technically mix them. In practice, it's better to keep enumerations homogeneous — use numeric values for status codes and bitfields, and string values for human-readable identifiers. Mixing types makes pattern matching and `TryGetValue()` extraction more complex.
+
+### Q: How do I add a new enum value without breaking existing code?
+
+**A:** Add a new entry to the `oneOf` array in your schema and regenerate the types. The generated `Match()` method will gain a new handler parameter, causing a compile error in every call site that hasn't been updated. This is intentional — it ensures you handle the new value everywhere rather than silently ignoring it.
+
+### Q: Are `ConstInstance` values allocated on the heap?
+
+**A:** No. `ConstInstance` properties return a struct-based JSON element backed by a static, pre-parsed byte buffer. There is no heap allocation when accessing them. This makes them ideal for comparisons and for constructing new instances from known values without any runtime parsing cost.

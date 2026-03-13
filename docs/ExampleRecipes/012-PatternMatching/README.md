@@ -1,4 +1,4 @@
-# JSON Schema Patterns in .NET - Pattern matching and discriminated unions
+# JSON Schema Patterns in .NET - Pattern Matching and Discriminated Unions
 
 This recipe demonstrates how to use JSON Schema `oneOf` to create discriminated unions that support pattern matching in .NET.
 
@@ -179,41 +179,29 @@ Console.WriteLine(ProcessDiscriminatedUnion(parsedArray.RootElement));
 
 ## Key Differences from V4
 
+The `Match()` API and pattern matching experience are essentially the same between V4 and V5. Both versions support implicit conversion from constituent entity types:
+
 ### V4 (Corvus.Json)
 ```csharp
-// Implicit conversion from constituent types
+// Implicit conversion from constituent types, including built-in types
 Console.WriteLine(ProcessDiscriminatedUnion(personForDiscriminatedUnion));
 Console.WriteLine(ProcessDiscriminatedUnion("Hello from the pattern matching"));
 Console.WriteLine(ProcessDiscriminatedUnion(32));
-
-// Match with built-in types (JsonString, JsonInt32)
-return value.Match(
-    (in JsonString value) => $"It was a string. {value}",
-    (in JsonInt32 value) => $"It was an int32. {value}",
-    (in PersonOpen value) => $"It was a person. {value.FamilyName}, {value.GivenName}",
-    (in People value) => $"It was an array of people. {value.GetArrayLength()}",
-    (in DiscriminatedUnionByType unknownValue) => throw new InvalidOperationException($"Unexpected instance {unknownValue}"));
 ```
 
 ### V5 (Corvus.Text.Json)
 ```csharp
-// Explicit conversion using From()
-DiscriminatedUnionByType union = DiscriminatedUnionByType.From(person);
-Console.WriteLine(ProcessDiscriminatedUnion(union));
+// Implicit conversion from constituent entity types
+Console.WriteLine(ProcessDiscriminatedUnion(person));
 
-// Match with entity wrappers (OneOf0Entity, OneOf1Entity)
-return value.Match(
-    (in DiscriminatedUnionByType.OneOf0Entity value) => $"It was a string: {value}",
-    (in DiscriminatedUnionByType.OneOf1Entity value) => $"It was an int32: {value}",
-    (in PersonOpen value) => $"It was a person. {value.FamilyName}, {value.GivenName}",
-    (in DiscriminatedUnionByType.People value) => $"It was an array of people. {value.GetArrayLength()}",
-    (in DiscriminatedUnionByType unknownValue) => throw new InvalidOperationException($"Unexpected instance {unknownValue}"));
+// For non-entity types, use From()
+DiscriminatedUnionByType union = DiscriminatedUnionByType.From(JsonAny.Parse("\"Hello\""));
 ```
 
 **Key differences:**
-- The source generator wraps these simple types in entity types (`OneOf0Entity`, `OneOf1Entity`); the CLI code generator reduces them to global types (`JsonString`, `JsonInt32`). Both approaches produce equivalent code.
-- V5 uses explicit `From()` conversion instead of implicit conversion
-- V5 entity types support formatting directly in string templates (no need to extract values)
+- V5 provides implicit conversion from constituent entity types (e.g., `PersonOpen`, `People`) just as V4 did
+- V4 additionally supported implicit conversion from .NET built-in literals (strings, integers); in V5 you use `From()` or parse for those cases
+- The `Match()` method, handler signatures, and exhaustive matching behaviour are unchanged
 
 ## Running the Example
 
@@ -229,3 +217,28 @@ See [Recipe 013](../013-PolymorphismWithDiscriminators/) for pattern matching wi
 - [011-InterfacesAndMixInTypes](../011-InterfacesAndMixInTypes/) - Composition with `allOf`
 - [013-PolymorphismWithDiscriminators](../013-PolymorphismWithDiscriminators/) - Discriminated unions with type properties
 - [014-StringEnumerations](../014-StringEnumerations/) - Pattern matching over string enums
+
+## Frequently Asked Questions
+
+### Q: What happens if more than one `oneOf` variant matches?
+
+**A:** Validation fails. The `oneOf` keyword requires that exactly one of the subschemas matches. If zero or more than one match, the value is invalid according to the schema. This is what makes `oneOf` suitable for discriminated unions — each value must belong to precisely one variant.
+
+### Q: Can I use `oneOf` with variants of the same JSON type?
+
+**A:** Yes, but you need a way to distinguish them. If multiple variants are objects, add a discriminator property with a `const` value to each variant (see [Recipe 013](../013-PolymorphismWithDiscriminators/)). Without a discriminator, variants of the same JSON type risk ambiguous matching, which would cause validation failures.
+
+### Q: Why does the code generator use `OneOf0Entity`/`OneOf1Entity` names?
+
+**A:** The `oneOf` subschemas don't have inherent names — they are anonymous entries in an array, so the code generator assigns ordinal names. With discriminator properties, variants are named by their required properties instead (e.g., `RequiredRadiusAndType`). You can always provide explicit names, either via CLI generator configuration or by adding a model type for the schema location:
+
+```csharp
+[JsonSchemaTypeGenerator("some-union-type.json#/oneOf/0")]
+public readonly partial struct MySpeciallyNamedType;
+```
+
+Note that simple types may be reduced to global types like `JsonString` or `JsonInt32`, in which case the explicit name will not be used.
+
+### Q: What is the `defaultMatch` handler for?
+
+**A:** The `defaultMatch` handler is called when no other variant matches. In a well-validated schema this shouldn't happen, but it provides a safety net for cases where the JSON data hasn't been validated against the schema. It follows the same pattern as a `default` case in a C# `switch` expression, ensuring exhaustive handling.

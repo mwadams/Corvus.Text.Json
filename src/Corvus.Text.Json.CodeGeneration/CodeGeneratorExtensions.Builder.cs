@@ -1445,10 +1445,29 @@ internal static partial class CodeGeneratorExtensions
         // that creates an empty array or object builder.
         // We do not emit this for tuple types (which have fixed prefix items)
         // or for object types with required properties, as an empty instance
-        // would not be valid.
+        // would not be valid — unless the type has composition types (allOf/anyOf/oneOf)
+        // which generate Apply() methods, allowing incremental construction.
+        // We also skip the empty CreateBuilder for object types where the convenience
+        // overload (AppendCreateBuilderFromProperties) would have all-default parameters,
+        // as calling CreateBuilder(workspace) would be ambiguous between the two.
+        // The convenience overload subsumes the empty case in that scenario.
+        // We only know the convenience overload is definitely emitted when there is
+        // more than one non-filtered optional property (the self-referencing guard in
+        // AppendCreateBuilderFromProperties suppresses the overload for single-property
+        // types that reference themselves).
         bool isTuple = typeDeclaration.IsTuple();
         bool hasRequiredProperties = typeDeclaration.PropertyDeclarations
             .Any(p => p.RequiredOrOptional != RequiredOrOptional.Optional);
+        bool hasCompositionTypes =
+            typeDeclaration.AllOfCompositionTypes().Values.SelectMany(t => t).Any(t => t.ReducedTypeDeclaration().ReducedType is not null) ||
+            typeDeclaration.AnyOfCompositionTypes().Values.SelectMany(t => t).Any(t => t.ReducedTypeDeclaration().ReducedType is not null) ||
+            typeDeclaration.OneOfCompositionTypes().Values.SelectMany(t => t).Any(t => t.ReducedTypeDeclaration().ReducedType is not null);
+        int nonFilteredOptionalPropertyCount = typeDeclaration.PropertyDeclarations
+            .Count(p => p.RequiredOrOptional == RequiredOrOptional.Optional &&
+                        !p.ReducedPropertyType.IsBuiltInJsonNotAnyType());
+        bool convenienceOverloadSubsumesEmpty =
+            typeDeclaration.HasPropertyDeclarations && !hasRequiredProperties &&
+            nonFilteredOptionalPropertyCount > 1;
 
         if (isArray && isObject)
         {
@@ -1456,8 +1475,10 @@ internal static partial class CodeGeneratorExtensions
             {
                 AppendEmptyCreateBuilder(generator, initialCapacity, "CreateArrayBuilder", "StartArray", "EndArray");
             }
-            if (!hasRequiredProperties)
+            if (!hasRequiredProperties || hasCompositionTypes)
             {
+                // CreateObjectBuilder uses a distinct method name, so no ambiguity
+                // with AppendCreateBuilderFromProperties which emits CreateBuilder.
                 AppendEmptyCreateBuilder(generator, initialCapacity, "CreateObjectBuilder", "StartObject", "EndObject");
             }
         }
@@ -1465,7 +1486,7 @@ internal static partial class CodeGeneratorExtensions
         {
             AppendEmptyCreateBuilder(generator, initialCapacity, "CreateBuilder", "StartArray", "EndArray");
         }
-        else if (isObject && !hasRequiredProperties)
+        else if (isObject && (!hasRequiredProperties || hasCompositionTypes) && !convenienceOverloadSubsumesEmpty)
         {
             AppendEmptyCreateBuilder(generator, initialCapacity, "CreateBuilder", "StartObject", "EndObject");
         }

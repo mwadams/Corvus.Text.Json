@@ -52,7 +52,29 @@ Corvus.Text.Json provides efficient builder patterns for zero-allocation transfo
 }
 ```
 
+### crm.json (CRM format — constrained properties)
+
+```json
+{
+  "type": "object",
+  "required": ["customerId", "displayName"],
+  "properties": {
+    "customerId": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    }
+  }
+}
+```
+
 These are independent schemas that could be defined in different assemblies or namespaces. The generated types don't need to know about each other.
+
+Notice that `source.json` and `target.json` have simple, unconstrained properties (`{ "type": "integer" }`, `{ "type": "string" }`), while `crm.json` adds validation constraints (`minimum`, `minLength`, `maxLength`). This distinction matters for how the code generator handles entity types — see [Using `From()` for constrained types](#level-1b-using-from-for-constrained-types) below.
 
 ## Generated Code Usage
 
@@ -72,24 +94,24 @@ Console.WriteLine($"Source - id: {source.Id}, name: {source.Name}");
 // Output: Source - id: 123, name: John Doe
 ```
 
-## Three Levels of Transformation
+## Transformation Patterns
 
-This recipe demonstrates three transformation patterns with increasing complexity:
+This recipe demonstrates four transformation patterns with increasing complexity:
 
 ### Level 1: Zero-Allocation Property Mapping
 
-Use `From()` to convert property entities between compatible schemas without extracting primitive values:
+Use the `CreateBuilder()` convenience overload to map properties directly with named parameters:
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var parsedSource = ParsedJsonDocument<SourceType>.Parse(sourceJson);
 SourceType source = parsedSource.RootElement;
 
-// Map to target type - use From() to convert property entities (no allocation)
-using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
-{
-    b.Create(TargetType.FullNameEntity.From(source.Name), TargetType.IdentifierEntity.From(source.Id));
-});
+// Map to target type - property entities are compatible (zero-allocation view)
+using var targetBuilder = TargetType.CreateBuilder(
+    workspace,
+    fullName: source.Name,
+    identifier: source.Id);
 
 TargetType target = targetBuilder.RootElement;
 Console.WriteLine($"Target - identifier: {target.Identifier}, fullName: {target.FullName}");
@@ -98,10 +120,34 @@ Console.WriteLine($"Target - identifier: {target.Identifier}, fullName: {target.
 
 **Key points:**
 - Property entity types are compatible when their underlying schemas match (both are strings, both are integers, etc.)
-- Use `TargetEntityType.From(sourceProperty)` to explicitly convert between compatible entity types
+- When the types are reduced (e.g., a `{ "type": "string" }` property becomes `JsonString`), you can pass source properties directly as named parameters
+- When types are not reduced (e.g., they have additional constraints), use `TargetEntityType.From(sourceProperty)` to convert between compatible entity types
 - `From()` creates a zero-allocation view over the same underlying JSON data — no primitive extraction, no string copy, no re-serialization
 - This works even if the source and target types are defined in different assemblies with no inheritance relationship between them; schema compatibility is what matters
 - Only fall back to `TryGetValue()` when you actually need to transform the value (see Level 3 below)
+
+### Level 1b: Using `From()` for Constrained Types
+
+When the target schema adds constraints beyond the basic type (e.g., `minimum`, `minLength`, `maxLength`), the code generator produces distinct entity types instead of reducing them to `JsonInteger`/`JsonString`. In that case, you need `From()` to convert between the compatible but distinct entity types:
+
+```csharp
+// CRM properties have constraints, so entity types are NOT reduced.
+// Use From() to convert between compatible entity types (still zero-allocation).
+using var crmBuilder = CrmType.CreateBuilder(
+    workspace,
+    customerId: CrmType.CustomerIdEntity.From(source.Id),
+    displayName: CrmType.DisplayNameEntity.From(source.Name));
+
+CrmType crm = crmBuilder.RootElement;
+Console.WriteLine($"CRM - customerId: {crm.CustomerId}, displayName: {crm.DisplayName}");
+// Output: CRM - customerId: 123, displayName: John Doe
+```
+
+**Why is `From()` needed here?**
+- `source.Id` is a `JsonInteger` (reduced — no constraints on the source schema)
+- `CrmType.CustomerIdEntity` is a distinct type (not reduced — the schema specifies `minimum: 1`)
+- There's no implicit conversion between these types, so you call `CrmType.CustomerIdEntity.From(source.Id)` to create a zero-allocation view
+- `From()` does **not** validate the constraints — it creates a reinterpretation of the same underlying JSON. Validation happens separately via the schema validation API
 
 ### Level 2: Bidirectional Mapping
 
@@ -109,10 +155,10 @@ The same pattern works in reverse to map target back to source:
 
 ```csharp
 // Reverse transformation (target -> source)
-using var sourceBuilder = SourceType.CreateBuilder(workspace, (ref SourceType.Builder b) =>
-{
-    b.Create(SourceType.IdEntity.From(target.Identifier), SourceType.NameEntity.From(target.FullName));
-});
+using var sourceBuilder = SourceType.CreateBuilder(
+    workspace,
+    id: target.Identifier,
+    name: target.FullName);
 
 SourceType reversedSource = sourceBuilder.RootElement;
 Console.WriteLine(reversedSource);
@@ -126,18 +172,18 @@ This demonstrates that compatibility works bidirectionally - you can map from so
 Only use `TryGetValue()` when you need to modify the actual values:
 
 ```csharp
-using var modifiedBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
+// Extract ONLY when transforming values
+if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue) && nameValue is not null)
 {
-    // Extract ONLY when transforming values
-    if (source.Id.TryGetValue(out long idValue) && source.Name.TryGetValue(out string? nameValue) && nameValue is not null)
-    {
-        b.Create(nameValue.ToUpperInvariant(), idValue + 1000);
-    }
-});
+    using var modifiedBuilder = TargetType.CreateBuilder(
+        workspace,
+        fullName: nameValue.ToUpperInvariant(),
+        identifier: idValue + 1000);
 
-TargetType modified = modifiedBuilder.RootElement;
-Console.WriteLine(modified);
-// Output: {"fullName":"JOHN DOE","identifier":1123}
+    TargetType modified = modifiedBuilder.RootElement;
+    Console.WriteLine(modified);
+    // Output: {"fullName":"JOHN DOE","identifier":1123}
+}
 ```
 
 **When to extract:**
@@ -179,22 +225,21 @@ TargetType target = source.As<TargetType>();
 
 ### V5 (Corvus.Text.Json)
 ```csharp
-// Use workspace and builder pattern
+// Use workspace and convenience overload with named parameters
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-// Map to target type - use From() to convert property entities (no allocation)
-using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
-{
-    b.Create(TargetType.FullNameEntity.From(source.Name), TargetType.IdentifierEntity.From(source.Id));
-});
+// Map to target type - property entities are compatible (zero-allocation view)
+using var targetBuilder = TargetType.CreateBuilder(
+    workspace,
+    fullName: source.Name,
+    identifier: source.Id);
 
 TargetType target = targetBuilder.RootElement;
 ```
 
 **Key differences:**
 - V5 requires explicit `JsonWorkspace` for memory management
-- V5 uses a delegate with `Builder.Create()` and `From()` for zero-allocation mapping
-- For simple objects without `From()` conversions, use the convenience overload: `MyType.CreateBuilder(workspace, name: "Alice", age: 30)`
+- V5 uses `CreateBuilder()` with named parameters for zero-allocation mapping
 - V5 makes allocation lifetime explicit through `using` declarations
 
 ## Running the Example
@@ -220,3 +265,21 @@ This pattern is especially useful for:
 3. **Event Transformation** - Reshape events between microservices
 4. **Legacy Integration** - Adapt old formats to new schemas
 5. **Multi-tenant Systems** - Transform data for different tenant schemas
+
+## Frequently Asked Questions
+
+### Q: Does `From()` copy the underlying JSON data?
+
+**A:** No. `From()` performs a zero-copy type conversion — it reinterprets the same underlying JSON buffer as the target type. No data is duplicated or re-serialized. This is what makes `From()` so efficient for mapping between types that share structural compatibility. Actual data copying only happens when you mutate values through a `JsonDocumentBuilder`.
+
+### Q: Can I map between types in different assemblies?
+
+**A:** Yes, as long as both types are generated from schemas with compatible structures. The `From()` method works on the underlying JSON representation, not on .NET type identity. You can reference generated types from separate projects and convert between them using the same `From()` pattern.
+
+### Q: When should I use `From()` vs `TryGetValue()`?
+
+**A:** Use `From()` when you're converting an entire entity to a different schema representation without modifying values — it's zero-allocation and zero-copy. Use `TryGetValue()` when you need to extract a primitive value for transformation (e.g., converting a string to uppercase or reformatting a date) before building the output.
+
+### Q: How does this compare to AutoMapper?
+
+**A:** Unlike AutoMapper, which uses reflection and creates intermediate objects, the `From()` pattern operates directly on the JSON buffer with no reflection, no intermediate allocations, and no runtime configuration. The mapping is determined at compile time by the schema structure. This makes it significantly faster but limited to structural conversions — complex business logic transformations still require explicit code.

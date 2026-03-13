@@ -1,4 +1,4 @@
-# JSON Schema Patterns in .NET - Interfaces and mix-in types
+# JSON Schema Patterns in .NET - Interfaces and Mix-In Types
 
 This recipe demonstrates how to compose multiple JSON Schema definitions using `allOf`, creating types that behave like .NET interfaces or mix-ins.
 
@@ -129,7 +129,32 @@ Console.WriteLine($"Budget: {composite.Budget}");
 
 The generated types handle optional properties through entity types that can be checked with `IsUndefined()`. This avoids the need for dictionary-style property access.
 
-Note the use of the `in` modifier to avoid unnecessary copying of the struct values.
+### Building a composite from its parts with `Apply()`
+
+When you have instances of the constituent types from different sources, you can compose them into a composite using `Apply()` on the mutable builder. This merges the properties from each constituent into the composite:
+
+```csharp
+// Suppose we have Countable and Documentation instances from different sources
+using var parsedCountable = ParsedJsonDocument<Countable>.Parse("""{"count": 10}""");
+using var parsedDocumentation = ParsedJsonDocument<Documentation>.Parse(
+    """{"title": "Composed", "description": "Built from parts"}""");
+
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using var builder = CompositeType.CreateBuilder(workspace);
+CompositeType.Mutable mutableComposite = builder.RootElement;
+
+// Apply each constituent - merges its properties into the composite
+mutableComposite.Apply(parsedCountable.RootElement);
+mutableComposite.Apply(parsedDocumentation.RootElement);
+
+// Set the composite's own property
+mutableComposite.SetBudget(456.78m);
+
+Console.WriteLine(mutableComposite);
+// Output: {"count":10,"title":"Composed","description":"Built from parts","budget":456.78}
+```
+
+`Apply()` is generated for each `allOf` constituent type. It enumerates the properties of the provided value and adds or updates them in the mutable composite. This lets you assemble a composite from independently-sourced parts without having to extract and re-set each property individually.
 
 ## Key Differences from V4
 
@@ -190,3 +215,21 @@ dotnet run
 - [003-ReusingCommonTypes](../003-ReusingCommonTypes/) - Using `$ref` and `$defs` for shared types
 - [005-ExtendingABaseType](../005-ExtendingABaseType/) - Inheritance via `allOf` with a single base
 - [012-PatternMatching](../012-PatternMatching/) - Discriminated unions with `oneOf`
+
+## Frequently Asked Questions
+
+### Q: Is `allOf` composition the same as multiple inheritance?
+
+**A:** Not exactly. `allOf` is structural composition — the generated type must satisfy all of the composed schemas simultaneously, similar to implementing multiple interfaces in C#. Unlike class inheritance, there is no method resolution order or diamond problem. Each constituent schema contributes its properties and constraints, and the generated type provides implicit conversions to access each "facet."
+
+### Q: What happens if two composed schemas define the same property?
+
+**A:** Both constraints apply. If two `allOf` constituents define a property with the same name, the value must satisfy both schemas simultaneously during validation. In the generated code, each constituent type provides its own accessor for the property, but they operate on the same underlying JSON data.
+
+### Q: Can I add constraints when composing schemas?
+
+**A:** Yes. You can add additional properties and constraints alongside the `allOf` keyword in the composite schema. These extra constraints apply on top of whatever the composed schemas require. This is how you create a type that combines existing schemas while adding its own unique requirements.
+
+### Q: How does `allOf` differ from `$ref` for type extension?
+
+**A:** A `$ref` imports a single schema definition, effectively creating a type alias or base type reference. `allOf` combines multiple schemas together, requiring the value to satisfy all of them. Use `$ref` when you want to extend one base type with additional properties (see [Recipe 005](../005-ExtendingABaseType/)), and `allOf` when you want to mix in capabilities from multiple independent schemas.

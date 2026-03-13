@@ -181,4 +181,71 @@ public class GeneratedCompositionApplyTests
     }
 
     #endregion
+
+    #region CompositionAllOf Empty CreateBuilder Tests (all-optional properties ambiguity check)
+
+    [Fact]
+    public void AllOf_AllOptionalProperties_ConvenienceOverloadAsEmpty_CreatesEmptyObject()
+    {
+        // CompositionAllOf has allOf with two object schemas, both with only optional properties.
+        // When all properties are optional, the convenience overload with all-default params
+        // subsumes the empty CreateBuilder — calling CreateBuilder(workspace) routes to it
+        // with all properties undefined, producing an empty object.
+        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<CompositionAllOf.Mutable> builder =
+            CompositionAllOf.CreateBuilder(workspace);
+
+        CompositionAllOf.Mutable mutable = builder.RootElement;
+
+        using var parsedFirst = ParsedJsonDocument<CompositionAllOf.AllOf0Entity>.Parse("""{"firstName":"Alice"}""");
+        mutable.Apply(parsedFirst.RootElement);
+
+        using var parsedSecond = ParsedJsonDocument<CompositionAllOf.AllOf1Entity>.Parse("""{"lastName":"Smith"}""");
+        mutable.Apply(parsedSecond.RootElement);
+
+        Assert.Equal("""{"firstName":"Alice","lastName":"Smith"}""", mutable.ToString());
+    }
+
+    [Fact]
+    public void AllOf_AllOptionalProperties_ConvenienceOverloadAsEmpty_ThenApplySingle()
+    {
+        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<CompositionAllOf.Mutable> builder =
+            CompositionAllOf.CreateBuilder(workspace);
+
+        CompositionAllOf.Mutable mutable = builder.RootElement;
+
+        using var parsedFirst = ParsedJsonDocument<CompositionAllOf.AllOf0Entity>.Parse("""{"firstName":"Bob"}""");
+        mutable.Apply(parsedFirst.RootElement);
+
+        Assert.Equal("""{"firstName":"Bob"}""", mutable.ToString());
+    }
+
+    [Fact]
+    public void AllOf_ConvenienceOverload_StillCallableWithNamedParameters()
+    {
+        // Verify the convenience overload with named parameters is also callable.
+        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<CompositionAllOf.Mutable> builder =
+            CompositionAllOf.CreateBuilder(workspace, firstName: "Carol", lastName: "Jones");
+
+        Assert.Equal("""{"firstName":"Carol","lastName":"Jones"}""", builder.RootElement.ToString());
+    }
+
+    [Fact]
+    public void AllOf_ConvenienceOverloadPartialParams_ThenApply_OverwritesExistingProperties()
+    {
+        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<CompositionAllOf.Mutable> builder =
+            CompositionAllOf.CreateBuilder(workspace, firstName: "Original");
+
+        CompositionAllOf.Mutable mutable = builder.RootElement;
+
+        using var updated = ParsedJsonDocument<CompositionAllOf.AllOf0Entity>.Parse("""{"firstName":"Updated"}""");
+        mutable.Apply(updated.RootElement);
+
+        Assert.Equal("""{"firstName":"Updated"}""", mutable.ToString());
+    }
+
+    #endregion
 }
