@@ -82,7 +82,7 @@ public static class DynamicCompiler
     private static (IEnumerable<MetadataReference> MetadataReferences, IEnumerable<string?> Defines)
         BuildMetadataReferencesAndDefines(Assembly hostAssembly)
     {
-        DependencyContext? ctx = DependencyContext.Default ?? DependencyContext.Load(hostAssembly);
+        DependencyContext? ctx = DependencyContext.Load(hostAssembly) ?? DependencyContext.Default;
         return ctx is null
             ? throw new InvalidOperationException("Unable to find compilation context.")
             : ((IEnumerable<MetadataReference> MetadataReferences, IEnumerable<string?> Defines))(

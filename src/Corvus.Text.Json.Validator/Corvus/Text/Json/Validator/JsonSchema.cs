@@ -263,7 +263,7 @@ public readonly struct JsonSchema
             typeBuilder.GenerateCodeUsing(
                 CSharpLanguageProvider.DefaultWithOptions(
                     new CSharpLanguageProvider.Options(
-                        "GeneratedCode",
+                        "Corvus.Text.Json.Validator.GeneratedTypes",
                         alwaysAssertFormat: options.AlwaysAssertFormat)),
                 CancellationToken.None,
                 rootType);

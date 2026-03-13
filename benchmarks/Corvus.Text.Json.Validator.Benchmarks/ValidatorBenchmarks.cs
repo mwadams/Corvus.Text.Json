@@ -3,6 +3,7 @@
 // </copyright>
 
 using BenchmarkDotNet.Attributes;
+using Corvus.Text.Json.Validator;
 
 namespace Corvus.Text.Json.Validator.Benchmarks;
 
@@ -85,13 +86,12 @@ public abstract class ValidatorBenchmarksBase
             """,
     };
 
-    protected Text.Json.Validator.JsonSchema v5Schema;
-    protected Corvus.Json.Validator.JsonSchema v4Schema;
+    protected JsonSchema schema;
 
     [Params("Person", "ProductCatalog")]
     public string Schema { get; set; } = null!;
 
-    protected void SetupSchemas()
+    protected void SetupSchema()
     {
         string schemaFile = this.Schema switch
         {
@@ -101,50 +101,38 @@ public abstract class ValidatorBenchmarksBase
         };
 
         string schemaPath = Path.Combine(AppContext.BaseDirectory, "Schemas", schemaFile);
-
-        this.v5Schema = Text.Json.Validator.JsonSchema.FromFile(schemaPath);
-        this.v4Schema = Corvus.Json.Validator.JsonSchema.FromFile(schemaPath);
+        this.schema = JsonSchema.FromFile(schemaPath);
     }
 }
 
 [MemoryDiagnoser]
 public class ValidDocumentBenchmarks : ValidatorBenchmarksBase
 {
-    private System.Text.Json.JsonElement v4Element;
     private string json = null!;
 
     [GlobalSetup]
     public void Setup()
     {
-        this.SetupSchemas();
+        this.SetupSchema();
         this.json = ValidJsonBySchema[this.Schema];
-        this.v4Element = System.Text.Json.JsonDocument.Parse(this.json).RootElement;
     }
 
-    [Benchmark(Baseline = true)]
-    public bool V4() => this.v4Schema.Validate(this.v4Element).IsValid;
-
     [Benchmark]
-    public bool V5() => this.v5Schema.Validate(this.json);
+    public bool Validate() => this.schema.Validate(this.json);
 }
 
 [MemoryDiagnoser]
 public class InvalidDocumentBenchmarks : ValidatorBenchmarksBase
 {
-    private System.Text.Json.JsonElement v4Element;
     private string json = null!;
 
     [GlobalSetup]
     public void Setup()
     {
-        this.SetupSchemas();
+        this.SetupSchema();
         this.json = InvalidJsonBySchema[this.Schema];
-        this.v4Element = System.Text.Json.JsonDocument.Parse(this.json).RootElement;
     }
 
-    [Benchmark(Baseline = true)]
-    public bool V4() => this.v4Schema.Validate(this.v4Element).IsValid;
-
     [Benchmark]
-    public bool V5() => this.v5Schema.Validate(this.json);
+    public bool Validate() => this.schema.Validate(this.json);
 }
