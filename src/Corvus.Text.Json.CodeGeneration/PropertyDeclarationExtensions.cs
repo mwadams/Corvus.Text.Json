@@ -2,7 +2,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Corvus.Json.CodeGeneration;
 
 namespace Corvus.Text.Json.CodeGeneration;
@@ -50,9 +49,11 @@ public static class PropertyDeclarationExtensions
             currentName = buffer[..written];
         }
 
+        // Build a HashSet of already-assigned sibling names once for O(1) collision checks
+        HashSet<string> assignedSiblingNames = BuildAssignedSiblingNames(that);
         int index = 1;
 
-        while (HasMatchingProperty(that, currentName, out string? match))
+        while (assignedSiblingNames.Contains(currentName.ToString()))
         {
             int writtenSuffix = Formatting.ApplySuffix(index++, appendBuffer);
             currentName = buffer[..(written + writtenSuffix)];
@@ -64,8 +65,9 @@ public static class PropertyDeclarationExtensions
         return name;
     }
 
-    private static bool HasMatchingProperty(PropertyDeclaration property, ReadOnlySpan<char> buffer, [NotNullWhen(true)] out string? match)
+    private static HashSet<string> BuildAssignedSiblingNames(PropertyDeclaration property)
     {
+        HashSet<string> names = new(StringComparer.Ordinal);
         foreach (PropertyDeclaration sibling in property.Owner.PropertyDeclarations)
         {
             if (property == sibling)
@@ -73,18 +75,13 @@ public static class PropertyDeclarationExtensions
                 continue;
             }
 
-            if (sibling.TryGetMetadata(nameof(DotnetPropertyName), out string? siblingName))
+            if (sibling.TryGetMetadata(nameof(DotnetPropertyName), out string? siblingName) && siblingName is not null)
             {
-                if (siblingName is string sn && sn.AsSpan().Equals(buffer, StringComparison.Ordinal))
-                {
-                    match = siblingName;
-                    return true;
-                }
+                names.Add(siblingName);
             }
         }
 
-        match = null;
-        return false;
+        return names;
     }
 
     private static bool OwnerHasMatchingChild(IReadOnlyCollection<TypeDeclaration> typeDeclarations, ReadOnlySpan<char> writtenBuffer, string currentNamespace)

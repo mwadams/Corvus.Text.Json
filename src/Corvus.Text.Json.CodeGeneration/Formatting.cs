@@ -2,6 +2,9 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using Corvus.Json.CodeGeneration;
+#if NET9_0_OR_GREATER
+using System.Collections.Frozen;
+#endif
 
 namespace Corvus.Text.Json.CodeGeneration;
 
@@ -91,6 +94,11 @@ public static class Formatting
         "TokenType",
         "WriteTo",
     ];
+
+#if NET9_0_OR_GREATER
+    private static readonly FrozenSet<string> KeywordFrozenSet = Keywords.ToFrozenSet(StringComparer.Ordinal);
+    private static readonly FrozenSet<string> ReservedNameFrozenSet = ReservedNames.ToFrozenSet(StringComparer.Ordinal);
+#endif
 
     private static ReadOnlySpan<char> EntitySuffix => "Entity".AsSpan();
 
@@ -324,7 +332,11 @@ public static class Formatting
     /// </remarks>
     public static int FixReservedWords(Span<char> buffer, int length, ReadOnlySpan<char> leadingDigitPrefix, ReadOnlySpan<char> collisionSuffix)
     {
+#if NET9_0_OR_GREATER
+        return FixReservedWordsUsingSet(KeywordFrozenSet, buffer, length, leadingDigitPrefix, collisionSuffix);
+#else
         return FixReservedWords(Keywords, buffer, length, leadingDigitPrefix, collisionSuffix);
+#endif
     }
 
     /// <summary>
@@ -342,6 +354,13 @@ public static class Formatting
     /// </remarks>
     public static int FixReservedWords(string[] keywords, Span<char> buffer, int length, ReadOnlySpan<char> leadingDigitPrefix, ReadOnlySpan<char> collisionSuffix)
     {
+#if NET9_0_OR_GREATER
+        if (ReferenceEquals(keywords, ReservedNames))
+        {
+            return FixReservedWordsUsingSet(ReservedNameFrozenSet, buffer, length, leadingDigitPrefix, collisionSuffix);
+        }
+#endif
+
         if (length == 0)
         {
             return 0;
@@ -372,6 +391,39 @@ public static class Formatting
 
         return length;
     }
+
+#if NET9_0_OR_GREATER
+    private static int FixReservedWordsUsingSet(FrozenSet<string> keywordSet, Span<char> buffer, int length, ReadOnlySpan<char> leadingDigitPrefix, ReadOnlySpan<char> collisionSuffix)
+    {
+        if (length == 0)
+        {
+            return 0;
+        }
+
+        ReadOnlySpan<char> v = buffer[..length];
+        var lookup = keywordSet.GetAlternateLookup<ReadOnlySpan<char>>();
+
+        if (lookup.Contains(v))
+        {
+            if (collisionSuffix.IsEmpty)
+            {
+                collisionSuffix = EntitySuffix;
+            }
+
+            collisionSuffix.CopyTo(buffer[length..]);
+            return length + collisionSuffix.Length;
+        }
+
+        if (char.IsDigit(v[0]))
+        {
+            v.CopyTo(buffer[leadingDigitPrefix.Length..]);
+            leadingDigitPrefix.CopyTo(buffer);
+            return length + leadingDigitPrefix.Length;
+        }
+
+        return length;
+    }
+#endif
 
     /// <summary>
     /// Apply the array suffix to the span.

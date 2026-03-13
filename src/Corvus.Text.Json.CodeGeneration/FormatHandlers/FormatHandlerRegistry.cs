@@ -12,6 +12,9 @@ namespace Corvus.Text.Json.CodeGeneration;
 public sealed class FormatHandlerRegistry
 {
     private readonly HashSet<IFormatHandler> handlers = [];
+    private IReadOnlyList<IFormatHandler>? cachedFormatHandlers;
+    private IReadOnlyList<INumberFormatHandler>? cachedNumberFormatHandlers;
+    private IReadOnlyList<IStringFormatHandler>? cachedStringFormatHandlers;
 
     private FormatHandlerRegistry()
     {
@@ -25,17 +28,17 @@ public sealed class FormatHandlerRegistry
     /// <summary>
     /// Gets all format handlers.
     /// </summary>
-    public IEnumerable<IFormatHandler> FormatHandlers => this.handlers.OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name);
+    public IReadOnlyList<IFormatHandler> FormatHandlers => this.cachedFormatHandlers ??= this.handlers.OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
 
     /// <summary>
     /// Gets all numeric type format handlers.
     /// </summary>
-    public IEnumerable<INumberFormatHandler> NumberFormatHandlers => this.handlers.OfType<INumberFormatHandler>().OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name);
+    public IReadOnlyList<INumberFormatHandler> NumberFormatHandlers => this.cachedNumberFormatHandlers ??= this.handlers.OfType<INumberFormatHandler>().OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
 
     /// <summary>
     /// Gets all string type format handlers.
     /// </summary>
-    public IEnumerable<IStringFormatHandler> StringFormatHandlers => this.handlers.OfType<IStringFormatHandler>().OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name);
+    public IReadOnlyList<IStringFormatHandler> StringFormatHandlers => this.cachedStringFormatHandlers ??= this.handlers.OfType<IStringFormatHandler>().OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
 
     /// <summary>
     /// Register a type format handler.
@@ -48,6 +51,11 @@ public sealed class FormatHandlerRegistry
         {
             this.handlers.Add(handler);
         }
+
+        // Invalidate cached lists when handlers change
+        this.cachedFormatHandlers = null;
+        this.cachedNumberFormatHandlers = null;
+        this.cachedStringFormatHandlers = null;
 
         return this;
     }
