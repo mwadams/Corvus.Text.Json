@@ -4,6 +4,7 @@
     <Project Path="benchmarks/Corvus.Text.Json.BenchmarkModels/Corvus.Text.Json.BenchmarkModels.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.Benchmarks/Corvus.Text.Json.Benchmarks.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.ClassicBenchmarkModels/Corvus.Text.Json.ClassicBenchmarkModels.csproj" />
+    <Project Path="benchmarks/Corvus.Text.Json.Validator.Benchmarks/Corvus.Text.Json.Validator.Benchmarks.csproj" />
     <Project Path="BenchmarkSandbox/BenchmarkSandbox.csproj" />
   </Folder>
   <Folder Name="/.sandbox/">
@@ -18,10 +19,12 @@
     <Project Path="tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj" />
     <Project Path="tests/Corvus.Text.Json.Tests.MigrationModels.V4/Corvus.Text.Json.Tests.MigrationModels.V4.csproj" />
     <Project Path="tests/Corvus.Text.Json.Tests.MigrationModels.V5/Corvus.Text.Json.Tests.MigrationModels.V5.csproj" />
+    <Project Path="tests/Corvus.Text.Json.Validator.Tests/Corvus.Text.Json.Validator.Tests.csproj" />
   </Folder>
   <Project Path="src/Corvus.Text.Json.CodeGeneration/Corvus.Text.Json.CodeGeneration.csproj" />
   <Project Path="src/Corvus.Text.Json.CodeGenerator/Corvus.Text.Json.CodeGenerator.csproj" />
   <Project Path="src/Corvus.Text.Json.Compatibility/Corvus.Text.Json.Compatibility.csproj" />
   <Project Path="src/Corvus.Text.Json.SourceGenerator/Corvus.Text.Json.SourceGenerator.csproj" />
   <Project Path="src/Corvus.Text.Json/Corvus.Text.Json.csproj" />
+  <Project Path="src/Corvus.Text.Json.Validator/Corvus.Text.Json.Validator.csproj" />
 </Solution>

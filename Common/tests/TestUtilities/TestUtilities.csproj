@@ -193,6 +193,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Corvus.Text.Json.CodeGeneration\Corvus.Text.Json.CodeGeneration.csproj" />
+    <ProjectReference Include="..\..\..\src\Corvus.Text.Json.Validator\Corvus.Text.Json.Validator.csproj" />
     <ProjectReference Include="..\..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 

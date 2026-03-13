@@ -75,6 +75,7 @@ internal static class TestCaseGenerator
                 builder
                     .AppendLine("using System.Reflection;")
                     .AppendLine("using System.Threading.Tasks;")
+                    .AppendLine("using Corvus.Text.Json.Validator;")
                     .AppendLine("using TestUtilities;")
                     .AppendLine("using Xunit;")
                     .AppendLine()
