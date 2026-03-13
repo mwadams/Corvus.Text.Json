@@ -151,9 +151,15 @@ if (documentation.Description.IsNotUndefined())
 
 ### V5 (Corvus.Text.Json)
 ```csharp
-// Parse from JSON (no direct Create method)
-using var parsedComposite = ParsedJsonDocument<CompositeType>.Parse(compositeJson);
-CompositeType composite = parsedComposite.RootElement;
+// Create using the convenience overload with named parameters
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using var compositeBuilder = CompositeType.CreateBuilder(
+    workspace,
+    budget: 123.7m,
+    count: 4,
+    title: "Greeting",
+    description: "Hello world");
+CompositeType composite = compositeBuilder.RootElement;
 
 // Implicit conversion to composed types (same as V4)
 Documentation documentation = composite;
@@ -167,8 +173,9 @@ if (!documentation.Description.IsUndefined())
 ```
 
 **Key differences:**
-- V5 uses the generated `Description` property with `IsUndefined()` instead of V4's `IsNotUndefined()`
-- V5 doesn't generate static `Create()` methods for complex compositions (use `CreateBuilder()` instead)
+- V5 uses `CreateBuilder(workspace, prop: value, ...)` convenience method — similar ergonomics to V4's `Create()`
+- V5 requires a `JsonWorkspace` for mutable operations
+- V5 uses `IsUndefined()` instead of V4's `IsNotUndefined()`
 - Implicit conversion to `allOf` constituents works the same in both versions
 
 ## Running the Example

@@ -169,20 +169,19 @@ class Program
         // Create a workspace for building documents
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        // Build a person with nested name object
-        using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
+        // Build a person with nested name object using convenience overload
+        using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateBuilder(
             workspace,
-            (ref b) => b.Create(
-                age: 45,
-                email: "eve.martinez@example.com",
-                // Use Person.PersonName.Build to create nested object
-                name: Person.PersonName.Build((ref nameBuilder) =>
-                {
-                    nameBuilder.Create(
-                        firstName: "Eve",
-                        lastName: "Martinez",
-                        middleName: "Sofia");
-                })));
+            age: 45,
+            email: "eve.martinez@example.com",
+            // Use Person.PersonName.Build to create nested object
+            name: Person.PersonName.Build((ref nameBuilder) =>
+            {
+                nameBuilder.Create(
+                    firstName: "Eve",
+                    lastName: "Martinez",
+                    middleName: "Sofia");
+            }));
 
         Person.Mutable mutablePerson = docBuilder.RootElement;
         Console.WriteLine("Built person with nested name:");
@@ -196,24 +195,23 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        // Build a person with hobbies array
-        using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
+        // Build a person with hobbies array using convenience overload
+        using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateBuilder(
             workspace,
-            (ref b) => b.Create(
-                age: 28,
-                name: Person.PersonName.Build((ref nameBuilder) =>
-                {
-                    nameBuilder.Create(
-                        firstName: "Frank",
-                        lastName: "Wilson");
-                }),
-                // Build array using callback - HobbiesEntityArray is nested within Person
-                hobbies: Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
-                {
-                    hobbiesBuilder.Add("guitar");
-                    hobbiesBuilder.Add("gaming");
-                    hobbiesBuilder.Add("travel");
-                })));
+            age: 28,
+            name: Person.PersonName.Build((ref nameBuilder) =>
+            {
+                nameBuilder.Create(
+                    firstName: "Frank",
+                    lastName: "Wilson");
+            }),
+            // Build array using callback - HobbiesEntityArray is nested within Person
+            hobbies: Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
+            {
+                hobbiesBuilder.AddItem("guitar");
+                hobbiesBuilder.AddItem("gaming");
+                hobbiesBuilder.AddItem("travel");
+            }));
 
         Console.WriteLine("Built person with hobbies array:");
         Console.WriteLine(docBuilder.RootElement.ToString());
@@ -226,40 +224,39 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        // Build a complete person with all properties - without capturing
-        using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
+        // Build a complete person with all properties using convenience overload
+        using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateBuilder(
             workspace,
-            (ref b) => b.Create(
-                age: 42,
-                email: "grace.hopper@navy.mil",
-                phoneNumber: "+15555551234",
-                isActive: true,
-                // Build nested name
-                name: Person.PersonName.Build((ref nameBuilder) =>
-                {
-                    nameBuilder.Create(
-                        firstName: "Grace",
-                        lastName: "Hopper",
-                        middleName: "Brewster");
-                }),
-                // Build nested address
-                address: Person.Address.Build((ref addressBuilder) =>
-                {
-                    addressBuilder.Create(
-                        street: "123 Navy Yard",
-                        city: "Washington",
-                        state: "DC",
-                        zipCode: "20001",
-                        country: "USA");
-                }),
-                // Build hobbies array inline
-                hobbies: Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
-                {
-                    hobbiesBuilder.Add("reading");
-                    hobbiesBuilder.Add("writing");
-                    hobbiesBuilder.Add("coding");
-                    hobbiesBuilder.Add("teaching");
-                })));
+            age: 42,
+            email: "grace.hopper@navy.mil",
+            phoneNumber: "+15555551234",
+            isActive: true,
+            // Build nested name
+            name: Person.PersonName.Build((ref nameBuilder) =>
+            {
+                nameBuilder.Create(
+                    firstName: "Grace",
+                    lastName: "Hopper",
+                    middleName: "Brewster");
+            }),
+            // Build nested address
+            address: Person.Address.Build((ref addressBuilder) =>
+            {
+                addressBuilder.Create(
+                    street: "123 Navy Yard",
+                    city: "Washington",
+                    state: "DC",
+                    zipCode: "20001",
+                    country: "USA");
+            }),
+            // Build hobbies array inline
+            hobbies: Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
+            {
+                hobbiesBuilder.AddItem("reading");
+                hobbiesBuilder.AddItem("writing");
+                hobbiesBuilder.AddItem("coding");
+                hobbiesBuilder.AddItem("teaching");
+            }));
 
         Console.WriteLine("Built complete person:");
         Console.WriteLine(docBuilder.RootElement.ToString());
@@ -285,7 +282,7 @@ class Program
         
         // Create a workspace and make the document mutable
         using JsonWorkspace workspace = JsonWorkspace.Create();
-        using JsonDocumentBuilder<Person.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<Person.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         Person.Mutable mutablePerson = builder.RootElement;
         
@@ -318,7 +315,7 @@ class Program
 
         using ParsedJsonDocument<Person> doc = ParsedJsonDocument<Person>.Parse(json);
         using JsonWorkspace workspace = JsonWorkspace.Create();
-        using JsonDocumentBuilder<Person.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<Person.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         Person.Mutable mutablePerson = builder.RootElement;
         
@@ -337,9 +334,9 @@ class Program
         // Replace hobbies array
         mutablePerson.SetHobbies(Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
         {
-            hobbiesBuilder.Add("journalism");
-            hobbiesBuilder.Add("activism");
-            hobbiesBuilder.Add("writing");  // Added new hobby
+            hobbiesBuilder.AddItem("journalism");
+            hobbiesBuilder.AddItem("activism");
+            hobbiesBuilder.AddItem("writing");  // Added new hobby
         }));
 
         Console.WriteLine("\nAfter modification:");
@@ -435,7 +432,7 @@ class Program
 
         using ParsedJsonDocument<Person> doc = ParsedJsonDocument<Person>.Parse(json);
         using JsonWorkspace workspace = JsonWorkspace.Create();
-        using JsonDocumentBuilder<Person.Mutable> builder = doc.RootElement.BuildDocument(workspace);
+        using JsonDocumentBuilder<Person.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         Person.Mutable mutablePerson = builder.RootElement;
 

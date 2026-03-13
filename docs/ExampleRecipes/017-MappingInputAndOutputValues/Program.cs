@@ -21,10 +21,10 @@ Console.WriteLine("Transforming source to target...");
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
 // Create target using CreateBuilder
-// Property entities are compatible - use From() to explicitly convert between them
+// Property entities are compatible - pass values directly when types match
 using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
 {
-    b.Create(TargetType.FullNameEntity.From(source.Name), TargetType.IdentifierEntity.From(source.Id));
+    b.Create(source.Name, source.Id);
 });
 
 TargetType target = targetBuilder.RootElement;
@@ -42,7 +42,7 @@ Console.WriteLine("Reverse transformation (target -> source)...");
 // Property entities are compatible in both directions
 using var sourceBuilder = SourceType.CreateBuilder(workspace, (ref SourceType.Builder b) =>
 {
-    b.Create(SourceType.IdEntity.From(target.Identifier), SourceType.NameEntity.From(target.FullName));
+    b.Create(target.Identifier, target.FullName);
 });
 
 SourceType reversedSource = sourceBuilder.RootElement;

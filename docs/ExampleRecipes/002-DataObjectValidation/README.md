@@ -87,13 +87,11 @@ using NodaTime;
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var personDoc = PersonConstraints.CreateBuilder(
     workspace,
-    PersonConstraints.Build(
-        static (ref PersonConstraints.Builder b) => b.Create(
-            birthDate: new LocalDate(1820, 1, 17),
-            familyName: "Brontë",
-            givenName: "Anne",
-            height: 1.52,
-            otherNames: string.Empty)));
+    birthDate: new LocalDate(1820, 1, 17),
+    familyName: "Brontë",
+    givenName: "Anne",
+    height: 1.52,
+    otherNames: string.Empty);
 PersonConstraints personConstraints = personDoc.RootElement;
 
 // Fast, zero-allocation boolean-only validation

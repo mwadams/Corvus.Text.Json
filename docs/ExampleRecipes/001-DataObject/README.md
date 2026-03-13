@@ -57,17 +57,15 @@ using DataObject.Models;
 using NodaTime;
 
 // ------------------------------------------------------------------
-// Creating a Person from .NET values using the builder pattern
+// Creating a Person from .NET values using the convenience overload
 // ------------------------------------------------------------------
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var personDoc = Person.CreateBuilder(
     workspace,
-    Person.Build(
-        static (ref Person.Builder b) => b.Create(
-            birthDate: new LocalDate(1820, 1, 17),
-            familyName: "Brontë",
-            givenName: "Anne",
-            height: 1.52)));
+    birthDate: new LocalDate(1820, 1, 17),
+    familyName: "Brontë",
+    givenName: "Anne",
+    height: 1.52);
 
 // ------------------------------------------------------------------
 // Serialization — convert to JSON string (allocates)

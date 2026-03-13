@@ -1639,6 +1639,9 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("}");
         }
 
+        // Add CreateBuilder(workspace, sourceParams...) overload for object types with property declarations
+        AppendCreateBuilderFromProperties(generator, typeDeclaration, initialCapacity);
+
         return generator
             .AppendSeparatorLine()
             .AppendLineIndent("/// <summary>")
@@ -1737,6 +1740,222 @@ internal static partial class CodeGeneratorExtensions
                         return documentBuilder;
                     }
                     """);
+        }
+
+        static void AppendCreateBuilderFromProperties(CodeGenerator generator, TypeDeclaration typeDeclaration, int initialCapacity)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return;
+            }
+
+            if (!typeDeclaration.HasPropertyDeclarations)
+            {
+                return;
+            }
+
+            CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
+            bool isArray = (core & CoreTypes.Array) != 0;
+            bool isObject = (core & CoreTypes.Object) != 0;
+
+            if (!isObject)
+            {
+                return;
+            }
+
+            // Determine the builder class name that contains the static Create method.
+            // Builder is a peer of Mutable at the entity type level, not nested inside Mutable.
+            string? builderClassName;
+            if (isArray)
+            {
+                builderClassName = generator.ObjectBuilderClassName();
+            }
+            else
+            {
+                builderClassName = generator.BuilderClassName();
+            }
+
+            if (builderClassName is null)
+            {
+                return;
+            }
+
+            // Build the same method parameters as the Builder.Create method
+            MethodParameter[] staticMethodParameters = BuildMethodParameters(generator, typeDeclaration);
+
+            if (generator.IsCancellationRequested || staticMethodParameters.Length == 0)
+            {
+                return;
+            }
+
+            // Skip the first parameter (ref ComplexValueBuilder) to get the Source parameters
+            MethodParameter[] sourceParameters = [.. staticMethodParameters.Skip(1)];
+
+            if (sourceParameters.Length == 0)
+            {
+                return;
+            }
+
+            // If there's exactly one source parameter whose type is the containing type's own Source,
+            // the convenience overload would collide with the existing CreateBuilder(workspace, Source, int).
+            if (sourceParameters.Length == 1)
+            {
+                string containingTypeSource = typeDeclaration.FullyQualifiedDotnetTypeName() + "." + generator.SourceClassName();
+                if (sourceParameters[0].Type == containingTypeSource)
+                {
+                    return;
+                }
+            }
+
+            // Non-generic variant
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("/// <summary>")
+                .AppendLineIndent("/// Creates and initializes a mutable document from the given property values.")
+                .AppendLineIndent("/// </summary>")
+                .AppendLineIndent("/// <param name=\"workspace\">The JSON workspace.</param>");
+
+            foreach (MethodParameter p in sourceParameters)
+            {
+                generator.AppendLineIndent("/// <param name=\"", p.GetName(generator), "\">The value of the property.</param>");
+            }
+
+            generator
+                .AppendLineIndent("/// <param name=\"initialCapacity\">The (optional) estimate of the capacity to reserve for the document.</param>")
+                .AppendLineIndent("/// <returns>An instance of a mutable document initialized with the given property values.</returns>")
+                .AppendIndent("public static JsonDocumentBuilder<", generator.MutableClassName(), "> CreateBuilder(JsonWorkspace workspace, ");
+
+            for (int i = 0; i < sourceParameters.Length; i++)
+            {
+                if (i > 0)
+                {
+                    generator.Append(", ");
+                }
+
+                AppendParameterDeclaration(generator, sourceParameters[i]);
+            }
+
+            generator
+                .AppendLine(", int initialCapacity = ", initialCapacity.ToString(), ")")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("JsonDocumentBuilder<", generator.MutableClassName(), "> documentBuilder = workspace.CreateBuilder<", generator.MutableClassName(), ">(-1);")
+                    .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);")
+                    .AppendLineIndent("cvb.StartObject();")
+                    .AppendLineIndent(builderClassName, " ovb = new(cvb);")
+                    .AppendIndent("ovb.Create(");
+
+            for (int i = 0; i < sourceParameters.Length; i++)
+            {
+                if (i > 0)
+                {
+                    generator.Append(", ");
+                }
+
+                generator.Append(sourceParameters[i].GetName(generator));
+            }
+
+            generator
+                    .AppendLine(");")
+                    .AppendLineIndent("cvb = ovb._builder;")
+                    .AppendLineIndent("cvb.EndObject();")
+                    .AppendLineIndent("((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);")
+                    .AppendLineIndent("return documentBuilder;")
+                .PopIndent()
+                .AppendLineIndent("}");
+
+            // TContext variant — only emit when there are object/array property types
+            bool hasObjectOrArrayProperty = typeDeclaration.PropertyDeclarations.Any(p =>
+                p.ReducedPropertyType.SingleConstantValue().ValueKind == JsonValueKind.Undefined &&
+                !p.ReducedPropertyType.IsBuiltInJsonNotAnyType() &&
+                (p.ReducedPropertyType.ImpliedCoreTypesOrAny() & (CoreTypes.Object | CoreTypes.Array)) != 0);
+
+            if (hasObjectOrArrayProperty)
+            {
+                MethodParameter[] staticMethodParametersWithContext = BuildMethodParametersWithContext(generator, typeDeclaration);
+
+                // Skip the ComplexValueBuilder parameter (index 1) — keep context (index 0) and Source params (index 2+)
+                MethodParameter[] sourceParametersWithContext = [staticMethodParametersWithContext[0], .. staticMethodParametersWithContext.Skip(2)];
+
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("/// <summary>")
+                    .AppendLineIndent("/// Creates and initializes a mutable document from the given property values.")
+                    .AppendLineIndent("/// </summary>")
+                    .AppendLineIndent("/// <typeparam name=\"TContext\">The type of the context to pass to the builder.</typeparam>")
+                    .AppendLineIndent("/// <param name=\"workspace\">The JSON workspace.</param>");
+
+                foreach (MethodParameter p in sourceParametersWithContext)
+                {
+                    generator.AppendLineIndent("/// <param name=\"", p.GetName(generator), "\">The value of the property.</param>");
+                }
+
+                generator
+                    .AppendLineIndent("/// <param name=\"initialCapacity\">The (optional) estimate of the capacity to reserve for the document.</param>")
+                    .AppendLineIndent("/// <returns>An instance of a mutable document initialized with the given property values.</returns>")
+                    .AppendIndent("public static JsonDocumentBuilder<", generator.MutableClassName(), "> CreateBuilder<TContext>(JsonWorkspace workspace, ");
+
+                for (int i = 0; i < sourceParametersWithContext.Length; i++)
+                {
+                    if (i > 0)
+                    {
+                        generator.Append(", ");
+                    }
+
+                    AppendParameterDeclaration(generator, sourceParametersWithContext[i]);
+                }
+
+                generator
+                    .AppendLine(", int initialCapacity = ", initialCapacity.ToString(), ")")
+                    .PushIndent()
+                        .AppendLineIndent("#if NET9_0_OR_GREATER")
+                        .AppendLineIndent("where TContext : allows ref struct")
+                        .AppendLineIndent("#endif")
+                    .PopIndent()
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("JsonDocumentBuilder<", generator.MutableClassName(), "> documentBuilder = workspace.CreateBuilder<", generator.MutableClassName(), ">(-1);")
+                        .AppendLineIndent("ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);")
+                        .AppendLineIndent("cvb.StartObject();")
+                        .AppendLineIndent(builderClassName, " ovb = new(cvb);")
+                        .AppendIndent("ovb.Create(", sourceParametersWithContext[0].GetName(generator));
+
+                for (int i = 1; i < sourceParametersWithContext.Length; i++)
+                {
+                    generator.Append(", ").Append(sourceParametersWithContext[i].GetName(generator));
+                }
+
+                generator
+                        .AppendLine(");")
+                        .AppendLineIndent("cvb = ovb._builder;")
+                        .AppendLineIndent("cvb.EndObject();")
+                        .AppendLineIndent("((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);")
+                        .AppendLineIndent("return documentBuilder;")
+                    .PopIndent()
+                    .AppendLineIndent("}");
+            }
+        }
+
+        static void AppendParameterDeclaration(CodeGenerator generator, MethodParameter parameter)
+        {
+            if (!string.IsNullOrEmpty(parameter.Modifiers))
+            {
+                generator.Append(parameter.Modifiers).Append(" ");
+            }
+
+            generator.Append(parameter.Type);
+
+            if (parameter.TypeIsNullable)
+            {
+                generator.Append("?");
+            }
+
+            generator.Append(" ").Append(parameter.GetName(generator));
+
+            if (parameter.DefaultValue is string defaultValue)
+            {
+                generator.Append(" = ").Append(defaultValue);
+            }
         }
     }
 

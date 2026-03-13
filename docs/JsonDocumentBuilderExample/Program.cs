@@ -80,27 +80,27 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // Integer
-        using var intDoc = JsonElement.BuildDocument(workspace, 42);
+        using var intDoc = JsonElement.CreateBuilder(workspace, 42);
         Console.WriteLine($"Integer: {intDoc.RootElement.GetInt32()}");
 
         // Double
-        using var doubleDoc = JsonElement.BuildDocument(workspace, 3.14159);
+        using var doubleDoc = JsonElement.CreateBuilder(workspace, 3.14159);
         Console.WriteLine($"Double: {doubleDoc.RootElement.GetDouble():F5}");
 
         // String
-        using var stringDoc = JsonElement.BuildDocument(workspace, "Hello, World!");
+        using var stringDoc = JsonElement.CreateBuilder(workspace, "Hello, World!");
         Console.WriteLine($"String: {stringDoc.RootElement.GetString()}");
 
         // UTF-8
-        using var utf8Doc = JsonElement.BuildDocument(workspace, "Hello"u8);
+        using var utf8Doc = JsonElement.CreateBuilder(workspace, "Hello"u8);
         Console.WriteLine($"UTF-8: {utf8Doc.RootElement.GetString()}");
 
         // Boolean
-        using var boolDoc = JsonElement.BuildDocument(workspace, true);
+        using var boolDoc = JsonElement.CreateBuilder(workspace, true);
         Console.WriteLine($"Boolean: {boolDoc.RootElement.GetBoolean()}");
 
         // Null
-        using var nullDoc = JsonElement.BuildDocument(workspace, JsonElement.Source.Null());
+        using var nullDoc = JsonElement.CreateBuilder(workspace, JsonElement.Source.Null());
         Console.WriteLine($"Null: {nullDoc.RootElement.ValueKind}");
 
         Console.WriteLine();
@@ -112,14 +112,14 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var personDoc = JsonElement.BuildDocument(
+        using var personDoc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("name"u8, "John Smith"u8);
-                objectBuilder.Add("age"u8, 30);
-                objectBuilder.Add("isActive"u8, true);
-                objectBuilder.Add("email"u8, "john@example.com"u8);
+                objectBuilder.AddProperty("name"u8, "John Smith"u8);
+                objectBuilder.AddProperty("age"u8, 30);
+                objectBuilder.AddProperty("isActive"u8, true);
+                objectBuilder.AddProperty("email"u8, "john@example.com"u8);
             }));
 
         Console.WriteLine(personDoc.RootElement.ToString());
@@ -132,28 +132,28 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("user"u8, static (ref userBuilder) =>
+                objectBuilder.AddProperty("user"u8, static (ref userBuilder) =>
                 {
-                    userBuilder.Add("id"u8, 1);
-                    userBuilder.Add("profile"u8, static (ref profileBuilder) =>
+                    userBuilder.AddProperty("id"u8, 1);
+                    userBuilder.AddProperty("profile"u8, static (ref profileBuilder) =>
                     {
-                        profileBuilder.Add("firstName"u8, "Jane"u8);
-                        profileBuilder.Add("lastName"u8, "Doe"u8);
-                        profileBuilder.Add("age"u8, 28);
-                        profileBuilder.Add("contact"u8, static (ref contactBuilder) =>
+                        profileBuilder.AddProperty("firstName"u8, "Jane"u8);
+                        profileBuilder.AddProperty("lastName"u8, "Doe"u8);
+                        profileBuilder.AddProperty("age"u8, 28);
+                        profileBuilder.AddProperty("contact"u8, static (ref contactBuilder) =>
                         {
-                            contactBuilder.Add("email"u8, "jane.doe@example.com"u8);
-                            contactBuilder.Add("phone"u8, "555-0123"u8);
+                            contactBuilder.AddProperty("email"u8, "jane.doe@example.com"u8);
+                            contactBuilder.AddProperty("phone"u8, "555-0123"u8);
                         });
                     });
                 });
 
-                objectBuilder.Add("timestamp"u8, "2026-02-24T11:00:00Z"u8);
-                objectBuilder.Add("active"u8, true);
+                objectBuilder.AddProperty("timestamp"u8, "2026-02-24T11:00:00Z"u8);
+                objectBuilder.AddProperty("active"u8, true);
             }));
 
         // Access nested values
@@ -180,29 +180,29 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // Array of numbers
-        using var numbersDoc = JsonElement.BuildDocument(
+        using var numbersDoc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref arrayBuilder) =>
             {
-                arrayBuilder.Add(10);
-                arrayBuilder.Add(20);
-                arrayBuilder.Add(30);
-                arrayBuilder.Add(40);
-                arrayBuilder.Add(50);
+                arrayBuilder.AddItem(10);
+                arrayBuilder.AddItem(20);
+                arrayBuilder.AddItem(30);
+                arrayBuilder.AddItem(40);
+                arrayBuilder.AddItem(50);
             }));
 
         Console.WriteLine("Numbers:");
         Console.WriteLine(numbersDoc.RootElement.ToString());
 
         // Array of strings
-        using var namesDoc = JsonElement.BuildDocument(
+        using var namesDoc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref arrayBuilder) =>
             {
-                arrayBuilder.Add("Alice"u8);
-                arrayBuilder.Add("Bob"u8);
-                arrayBuilder.Add("Charlie"u8);
-                arrayBuilder.Add("Diana"u8);
+                arrayBuilder.AddItem("Alice"u8);
+                arrayBuilder.AddItem("Bob"u8);
+                arrayBuilder.AddItem("Charlie"u8);
+                arrayBuilder.AddItem("Diana"u8);
             }));
 
         Console.WriteLine("\nNames:");
@@ -220,29 +220,29 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var usersDoc = JsonElement.BuildDocument(
+        using var usersDoc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref arrayBuilder) =>
             {
-                arrayBuilder.Add(static (ref userBuilder) =>
+                arrayBuilder.AddItem(static (ref userBuilder) =>
                 {
-                    userBuilder.Add("id"u8, 1);
-                    userBuilder.Add("name"u8, "Alice"u8);
-                    userBuilder.Add("role"u8, "Admin"u8);
+                    userBuilder.AddProperty("id"u8, 1);
+                    userBuilder.AddProperty("name"u8, "Alice"u8);
+                    userBuilder.AddProperty("role"u8, "Admin"u8);
                 });
 
-                arrayBuilder.Add(static (ref userBuilder) =>
+                arrayBuilder.AddItem(static (ref userBuilder) =>
                 {
-                    userBuilder.Add("id"u8, 2);
-                    userBuilder.Add("name"u8, "Bob"u8);
-                    userBuilder.Add("role"u8, "User"u8);
+                    userBuilder.AddProperty("id"u8, 2);
+                    userBuilder.AddProperty("name"u8, "Bob"u8);
+                    userBuilder.AddProperty("role"u8, "User"u8);
                 });
 
-                arrayBuilder.Add(static (ref userBuilder) =>
+                arrayBuilder.AddItem(static (ref userBuilder) =>
                 {
-                    userBuilder.Add("id"u8, 3);
-                    userBuilder.Add("name"u8, "Charlie"u8);
-                    userBuilder.Add("role"u8, "Moderator"u8);
+                    userBuilder.AddProperty("id"u8, 3);
+                    userBuilder.AddProperty("name"u8, "Charlie"u8);
+                    userBuilder.AddProperty("role"u8, "Moderator"u8);
                 });
             }));
 
@@ -277,7 +277,7 @@ class Program
 
         // Create a mutable builder from the parsed document
         using JsonDocumentBuilder<JsonElement.Mutable> builder =
-            sourceDoc.RootElement.BuildDocument(workspace);
+            sourceDoc.RootElement.CreateBuilder(workspace);
 
         JsonElement.Mutable root = builder.RootElement;
 
@@ -301,15 +301,15 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("counter"u8, 0);
-                objectBuilder.Add("status"u8, "initialized"u8);
-                objectBuilder.Add("items"u8, static (ref arrayBuilder) =>
+                objectBuilder.AddProperty("counter"u8, 0);
+                objectBuilder.AddProperty("status"u8, "initialized"u8);
+                objectBuilder.AddProperty("items"u8, static (ref arrayBuilder) =>
                 {
-                    arrayBuilder.Add("item1"u8);
+                    arrayBuilder.AddItem("item1"u8);
                 });
             }));
 
@@ -339,31 +339,31 @@ class Program
         // Dynamic data to include
         int[] years = [2020, 2021, 2022, 2023, 2024];
 
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("id"u8, "12345"u8);
-                objectBuilder.Add("created"u8, "2026-02-24T11:00:00Z"u8);
+                objectBuilder.AddProperty("id"u8, "12345"u8);
+                objectBuilder.AddProperty("created"u8, "2026-02-24T11:00:00Z"u8);
 
-                objectBuilder.Add("profile"u8, static (ref profileBuilder) =>
+                objectBuilder.AddProperty("profile"u8, static (ref profileBuilder) =>
                 {
-                    profileBuilder.Add("username"u8, "john.doe"u8);
-                    profileBuilder.Add("displayName"u8, "John Doe"u8);
+                    profileBuilder.AddProperty("username"u8, "john.doe"u8);
+                    profileBuilder.AddProperty("displayName"u8, "John Doe"u8);
                 });
 
-                objectBuilder.Add("tags"u8, static (ref tagsBuilder) =>
+                objectBuilder.AddProperty("tags"u8, static (ref tagsBuilder) =>
                 {
-                    tagsBuilder.Add("admin"u8);
-                    tagsBuilder.Add("user"u8);
-                    tagsBuilder.Add("verified"u8);
+                    tagsBuilder.AddItem("admin"u8);
+                    tagsBuilder.AddItem("user"u8);
+                    tagsBuilder.AddItem("verified"u8);
                 });
 
-                objectBuilder.Add("metadata"u8, static (ref metaBuilder) =>
+                objectBuilder.AddProperty("metadata"u8, static (ref metaBuilder) =>
                 {
-                    metaBuilder.Add("version"u8, "1.0.0"u8);
-                    metaBuilder.Add("revision"u8, 42);
-                    metaBuilder.Add("published"u8, true);
+                    metaBuilder.AddProperty("version"u8, "1.0.0"u8);
+                    metaBuilder.AddProperty("revision"u8, 42);
+                    metaBuilder.AddProperty("published"u8, true);
                 });
             }));
 
@@ -377,59 +377,59 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("company"u8, static (ref companyBuilder) =>
+                objectBuilder.AddProperty("company"u8, static (ref companyBuilder) =>
                 {
-                    companyBuilder.Add("name"u8, "Tech Corp"u8);
-                    companyBuilder.Add("founded"u8, 2010);
+                    companyBuilder.AddProperty("name"u8, "Tech Corp"u8);
+                    companyBuilder.AddProperty("founded"u8, 2010);
 
-                    companyBuilder.Add("departments"u8, static (ref deptsBuilder) =>
+                    companyBuilder.AddProperty("departments"u8, static (ref deptsBuilder) =>
                     {
                         // Engineering department
-                        deptsBuilder.Add(static (ref deptBuilder) =>
+                        deptsBuilder.AddItem(static (ref deptBuilder) =>
                         {
-                            deptBuilder.Add("name"u8, "Engineering"u8);
-                            deptBuilder.Add("headCount"u8, 150);
-                            deptBuilder.Add("teams"u8, static (ref teamsBuilder) =>
+                            deptBuilder.AddProperty("name"u8, "Engineering"u8);
+                            deptBuilder.AddProperty("headCount"u8, 150);
+                            deptBuilder.AddProperty("teams"u8, static (ref teamsBuilder) =>
                             {
-                                teamsBuilder.Add("Backend"u8);
-                                teamsBuilder.Add("Frontend"u8);
-                                teamsBuilder.Add("DevOps"u8);
+                                teamsBuilder.AddItem("Backend"u8);
+                                teamsBuilder.AddItem("Frontend"u8);
+                                teamsBuilder.AddItem("DevOps"u8);
                             });
                         });
 
                         // Sales department
-                        deptsBuilder.Add(static (ref deptBuilder) =>
+                        deptsBuilder.AddItem(static (ref deptBuilder) =>
                         {
-                            deptBuilder.Add("name"u8, "Sales"u8);
-                            deptBuilder.Add("headCount"u8, 75);
-                            deptBuilder.Add("teams"u8, static (ref teamsBuilder) =>
+                            deptBuilder.AddProperty("name"u8, "Sales"u8);
+                            deptBuilder.AddProperty("headCount"u8, 75);
+                            deptBuilder.AddProperty("teams"u8, static (ref teamsBuilder) =>
                             {
-                                teamsBuilder.Add("Inside Sales"u8);
-                                teamsBuilder.Add("Field Sales"u8);
+                                teamsBuilder.AddItem("Inside Sales"u8);
+                                teamsBuilder.AddItem("Field Sales"u8);
                             });
                         });
                     });
 
-                    companyBuilder.Add("locations"u8, static (ref locationsBuilder) =>
+                    companyBuilder.AddProperty("locations"u8, static (ref locationsBuilder) =>
                     {
                         // San Francisco location
-                        locationsBuilder.Add(static (ref locationBuilder) =>
+                        locationsBuilder.AddItem(static (ref locationBuilder) =>
                         {
-                            locationBuilder.Add("city"u8, "San Francisco"u8);
-                            locationBuilder.Add("country"u8, "USA"u8);
-                            locationBuilder.Add("headquarters"u8, true);
+                            locationBuilder.AddProperty("city"u8, "San Francisco"u8);
+                            locationBuilder.AddProperty("country"u8, "USA"u8);
+                            locationBuilder.AddProperty("headquarters"u8, true);
                         });
 
                         // London location
-                        locationsBuilder.Add(static (ref locationBuilder) =>
+                        locationsBuilder.AddItem(static (ref locationBuilder) =>
                         {
-                            locationBuilder.Add("city"u8, "London"u8);
-                            locationBuilder.Add("country"u8, "UK"u8);
-                            locationBuilder.Add("headquarters"u8, false);
+                            locationBuilder.AddProperty("city"u8, "London"u8);
+                            locationBuilder.AddProperty("country"u8, "UK"u8);
+                            locationBuilder.AddProperty("headquarters"u8, false);
                         });
                     });
                 });
@@ -447,15 +447,15 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // Create an array document
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref arrayBuilder) =>
             {
-                arrayBuilder.Add(10);
-                arrayBuilder.Add(20);
-                arrayBuilder.Add(30);
-                arrayBuilder.Add(40);
-                arrayBuilder.Add(50);
+                arrayBuilder.AddItem(10);
+                arrayBuilder.AddItem(20);
+                arrayBuilder.AddItem(30);
+                arrayBuilder.AddItem(40);
+                arrayBuilder.AddItem(50);
             }));
 
         JsonElement.Mutable root = doc.RootElement;
@@ -471,15 +471,15 @@ class Program
         Console.WriteLine(root.ToString());
 
         // Create an object with arrays to show nested modification
-        using var doc2 = JsonElement.BuildDocument(
+        using var doc2 = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("tags"u8, static (ref arrayBuilder) =>
+                objectBuilder.AddProperty("tags"u8, static (ref arrayBuilder) =>
                 {
-                    arrayBuilder.Add("alpha"u8);
-                    arrayBuilder.Add("beta"u8);
-                    arrayBuilder.Add("gamma"u8);
+                    arrayBuilder.AddItem("alpha"u8);
+                    arrayBuilder.AddItem("beta"u8);
+                    arrayBuilder.AddItem("gamma"u8);
                 });
             }));
 
@@ -507,18 +507,18 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // RemoveProperty is available during document construction via ObjectBuilder
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
                 // Add initial properties
-                objectBuilder.Add("id"u8, 12345);
-                objectBuilder.Add("name"u8, "John Doe"u8);
-                objectBuilder.Add("email"u8, "john@example.com"u8);
-                objectBuilder.Add("phone"u8, "555-1234"u8);
-                objectBuilder.Add("address"u8, "123 Main St"u8);
-                objectBuilder.Add("temp"u8, "temporary data"u8);
-                objectBuilder.Add("debug"u8, true);
+                objectBuilder.AddProperty("id"u8, 12345);
+                objectBuilder.AddProperty("name"u8, "John Doe"u8);
+                objectBuilder.AddProperty("email"u8, "john@example.com"u8);
+                objectBuilder.AddProperty("phone"u8, "555-1234"u8);
+                objectBuilder.AddProperty("address"u8, "123 Main St"u8);
+                objectBuilder.AddProperty("temp"u8, "temporary data"u8);
+                objectBuilder.AddProperty("debug"u8, true);
 
                 // Remove properties before finalizing
                 objectBuilder.RemoveProperty("temp"u8);
@@ -540,27 +540,27 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
         // Create document with arrays
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("numbers"u8, static (ref arrayBuilder) =>
+                objectBuilder.AddProperty("numbers"u8, static (ref arrayBuilder) =>
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        arrayBuilder.Add(i * 10);
+                        arrayBuilder.AddItem(i * 10);
                     }
                 });
 
-                objectBuilder.Add("colors"u8, static (ref arrayBuilder) =>
+                objectBuilder.AddProperty("colors"u8, static (ref arrayBuilder) =>
                 {
-                    arrayBuilder.Add("red"u8);
-                    arrayBuilder.Add("orange"u8);
-                    arrayBuilder.Add("yellow"u8);
-                    arrayBuilder.Add("green"u8);
-                    arrayBuilder.Add("blue"u8);
-                    arrayBuilder.Add("indigo"u8);
-                    arrayBuilder.Add("violet"u8);
+                    arrayBuilder.AddItem("red"u8);
+                    arrayBuilder.AddItem("orange"u8);
+                    arrayBuilder.AddItem("yellow"u8);
+                    arrayBuilder.AddItem("green"u8);
+                    arrayBuilder.AddItem("blue"u8);
+                    arrayBuilder.AddItem("indigo"u8);
+                    arrayBuilder.AddItem("violet"u8);
                 });
             }));
 
@@ -650,63 +650,63 @@ class Program
         int loginCount = 42;
 
         // Build an enriched document combining API data with additional information
-        using var enrichedDoc = JsonElement.BuildDocument(
+        using var enrichedDoc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
                 // Data from API - use AddRawString and AddFormattedNumber with native properties
                 JsonElement idEl = apiRoot.GetProperty("id");
-                objectBuilder.Add("userId"u8, idEl);
+                objectBuilder.AddProperty("userId"u8, idEl);
 
                 JsonElement usernameEl = apiRoot.GetProperty("username");
-                objectBuilder.Add("username"u8, usernameEl);
+                objectBuilder.AddProperty("username"u8, usernameEl);
 
                 JsonElement emailEl = apiRoot.GetProperty("email");
-                objectBuilder.Add("email"u8, emailEl);
+                objectBuilder.AddProperty("email"u8, emailEl);
 
                 JsonElement createdEl = apiRoot.GetProperty("created");
-                objectBuilder.Add("accountCreated"u8, createdEl);
+                objectBuilder.AddProperty("accountCreated"u8, createdEl);
 
                 // Augmented data from other sources
-                objectBuilder.Add("profile"u8, static (ref profileBuilder) =>
+                objectBuilder.AddProperty("profile"u8, static (ref profileBuilder) =>
                 {
-                    profileBuilder.Add("displayName"u8, "John Doe"u8);
-                    profileBuilder.Add("bio"u8, "Software developer and coffee enthusiast"u8);
-                    profileBuilder.Add("avatar"u8, "https://example.com/avatars/johndoe.jpg"u8);
-                    profileBuilder.Add("verified"u8, true);
+                    profileBuilder.AddProperty("displayName"u8, "John Doe"u8);
+                    profileBuilder.AddProperty("bio"u8, "Software developer and coffee enthusiast"u8);
+                    profileBuilder.AddProperty("avatar"u8, "https://example.com/avatars/johndoe.jpg"u8);
+                    profileBuilder.AddProperty("verified"u8, true);
                 });
 
                 // Permissions array from database
-                objectBuilder.Add("permissions"u8, (ref permBuilder) =>
+                objectBuilder.AddProperty("permissions"u8, (ref permBuilder) =>
                 {
                     foreach (string permission in permissions)
                     {
-                        permBuilder.Add(permission);  // ArrayBuilder has string overload
+                        permBuilder.AddItem(permission);  // ArrayBuilder has string overload
                     }
                 });
 
                 // User preferences
-                objectBuilder.Add("preferences"u8, (ref JsonElement.ObjectBuilder prefBuilder) =>
+                objectBuilder.AddProperty("preferences"u8, (ref JsonElement.ObjectBuilder prefBuilder) =>
                 {
-                    prefBuilder.Add("theme"u8, preferences.theme);  // string overload
-                    prefBuilder.Add("language"u8, preferences.language);
-                    prefBuilder.Add("notifications"u8, preferences.notifications);
+                    prefBuilder.AddProperty("theme"u8, preferences.theme);  // string overload
+                    prefBuilder.AddProperty("language"u8, preferences.language);
+                    prefBuilder.AddProperty("notifications"u8, preferences.notifications);
                 });
 
                 // Activity tracking
-                objectBuilder.Add("activity"u8, (ref activityBuilder) =>
+                objectBuilder.AddProperty("activity"u8, (ref activityBuilder) =>
                 {
-                    activityBuilder.Add("lastLogin"u8, lastLogin);  // DateTime overload
-                    activityBuilder.Add("loginCount"u8, loginCount);
-                    activityBuilder.Add("status"u8, "active"u8);
+                    activityBuilder.AddProperty("lastLogin"u8, lastLogin);  // DateTime overload
+                    activityBuilder.AddProperty("loginCount"u8, loginCount);
+                    activityBuilder.AddProperty("status"u8, "active"u8);
                 });
 
                 // Metadata
-                objectBuilder.Add("metadata"u8, static (ref metaBuilder) =>
+                objectBuilder.AddProperty("metadata"u8, static (ref metaBuilder) =>
                 {
-                    metaBuilder.Add("enrichedAt"u8, DateTime.UtcNow);  // DateTime overload
-                    metaBuilder.Add("version"u8, "2.0"u8);
-                    metaBuilder.Add("source"u8, "user-service"u8);
+                    metaBuilder.AddProperty("enrichedAt"u8, DateTime.UtcNow);  // DateTime overload
+                    metaBuilder.AddProperty("version"u8, "2.0"u8);
+                    metaBuilder.AddProperty("source"u8, "user-service"u8);
                 });
             }));
 
@@ -745,47 +745,47 @@ class Program
         int totalPosts = postsRoot.GetProperty("totalPosts").GetInt32();
 
         // Create a comprehensive document merging user and posts data
-        using var mergedDoc = JsonElement.BuildDocument(
+        using var mergedDoc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
                 // User summary from first API
-                objectBuilder.Add("user", (ref userBuilder) =>
+                objectBuilder.AddProperty("user", (ref userBuilder) =>
                 {
-                    userBuilder.Add("id", apiRoot.GetProperty("id"));
-                    userBuilder.Add("username", apiRoot.GetProperty("username"));
-                    userBuilder.Add("email", apiRoot.GetProperty("email"));
+                    userBuilder.AddProperty("id", apiRoot.GetProperty("id"));
+                    userBuilder.AddProperty("username", apiRoot.GetProperty("username"));
+                    userBuilder.AddProperty("email", apiRoot.GetProperty("email"));
                 });
 
                 // Posts from second API - iterate and use native JsonElement values
-                objectBuilder.Add("posts", (ref postsBuilder) =>
+                objectBuilder.AddProperty("posts", (ref postsBuilder) =>
                 {
                     foreach (JsonElement post in postsArray.EnumerateArray())
                     {
-                        postsBuilder.Add((ref postBuilder) =>
+                        postsBuilder.AddItem((ref postBuilder) =>
                         {
                             // Use native JsonElement directly
-                            postBuilder.Add("id", post.GetProperty("id"));
-                            postBuilder.Add("title", post.GetProperty("title"));
-                            postBuilder.Add("likes", post.GetProperty("likes"));
+                            postBuilder.AddProperty("id", post.GetProperty("id"));
+                            postBuilder.AddProperty("title", post.GetProperty("title"));
+                            postBuilder.AddProperty("likes", post.GetProperty("likes"));
 
                             // Augment with computed data
                             int likes = post.GetProperty("likes").GetInt32();
-                            postBuilder.Add("popular", likes > 100);
+                            postBuilder.AddProperty("popular", likes > 100);
                         });
                     }
                 });
 
                 // Summary statistics
-                objectBuilder.Add("stats"u8, (ref statsBuilder) =>
+                objectBuilder.AddProperty("stats"u8, (ref statsBuilder) =>
                 {
-                    statsBuilder.Add("totalPosts"u8, totalPosts);
-                    statsBuilder.Add("totalLikes"u8, 170);  // Could be computed
-                    statsBuilder.Add("avgLikesPerPost"u8, 85.0);
+                    statsBuilder.AddProperty("totalPosts"u8, totalPosts);
+                    statsBuilder.AddProperty("totalLikes"u8, 170);  // Could be computed
+                    statsBuilder.AddProperty("avgLikesPerPost"u8, 85.0);
                 });
 
                 // Add timestamp
-                objectBuilder.Add("generatedAt"u8, DateTime.UtcNow);
+                objectBuilder.AddProperty("generatedAt"u8, DateTime.UtcNow);
             }));
 
         Console.WriteLine("\nMerged Document from Multiple APIs:");
@@ -808,31 +808,31 @@ class Program
         JsonElement legacyRoot = legacyDoc.RootElement;
 
         // Transform to modern format
-        using var transformedDoc = JsonElement.BuildDocument(
+        using var transformedDoc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
                 // Map old field names to new structure using native JsonElement
-                objectBuilder.Add("id", legacyRoot.GetProperty("user_id"));
+                objectBuilder.AddProperty("id", legacyRoot.GetProperty("user_id"));
 
-                objectBuilder.Add("account", (ref accountBuilder) =>
+                objectBuilder.AddProperty("account", (ref accountBuilder) =>
                 {
-                    accountBuilder.Add("username", legacyRoot.GetProperty("user_name"));
-                    accountBuilder.Add("email", legacyRoot.GetProperty("user_email"));
+                    accountBuilder.AddProperty("username", legacyRoot.GetProperty("user_name"));
+                    accountBuilder.AddProperty("email", legacyRoot.GetProperty("user_email"));
                 });
 
-                objectBuilder.Add("authorization", (ref authBuilder) =>
+                objectBuilder.AddProperty("authorization", (ref authBuilder) =>
                 {
                     JsonElement roleElement = legacyRoot.GetProperty("user_role");
-                    authBuilder.Add("role", roleElement);
-                    authBuilder.Add("isAdmin", roleElement.GetString() == "admin");
+                    authBuilder.AddProperty("role", roleElement);
+                    authBuilder.AddProperty("isAdmin", roleElement.GetString() == "admin");
                 });
 
-                objectBuilder.Add("lastLogin", legacyRoot.GetProperty("last_login_date"));
+                objectBuilder.AddProperty("lastLogin", legacyRoot.GetProperty("last_login_date"));
 
                 // Add modern fields
-                objectBuilder.Add("apiVersion", "v2");
-                objectBuilder.Add("transformed", true);
+                objectBuilder.AddProperty("apiVersion", "v2");
+                objectBuilder.AddProperty("transformed", true);
             }));
 
         Console.WriteLine("\nTransformed from Legacy Format:");
@@ -850,35 +850,35 @@ class Program
 
         using JsonWorkspace workspace = JsonWorkspace.Create();
 
-        using var config = JsonElement.BuildDocument(
+        using var config = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("appName"u8, "JsonDocumentBuilder Demo"u8);
-                objectBuilder.Add("version"u8, "1.0.0"u8);
-                objectBuilder.Add("environment"u8, "development"u8);
+                objectBuilder.AddProperty("appName"u8, "JsonDocumentBuilder Demo"u8);
+                objectBuilder.AddProperty("version"u8, "1.0.0"u8);
+                objectBuilder.AddProperty("environment"u8, "development"u8);
 
-                objectBuilder.Add("database"u8, static (ref dbBuilder) =>
+                objectBuilder.AddProperty("database"u8, static (ref dbBuilder) =>
                 {
-                    dbBuilder.Add("host"u8, "localhost"u8);
-                    dbBuilder.Add("port"u8, 5432);
-                    dbBuilder.Add("name"u8, "demo_db"u8);
-                    dbBuilder.Add("ssl"u8, false);
+                    dbBuilder.AddProperty("host"u8, "localhost"u8);
+                    dbBuilder.AddProperty("port"u8, 5432);
+                    dbBuilder.AddProperty("name"u8, "demo_db"u8);
+                    dbBuilder.AddProperty("ssl"u8, false);
                 });
 
-                objectBuilder.Add("features"u8, static (ref featuresBuilder) =>
+                objectBuilder.AddProperty("features"u8, static (ref featuresBuilder) =>
                 {
-                    featuresBuilder.Add("logging"u8, true);
-                    featuresBuilder.Add("caching"u8, true);
-                    featuresBuilder.Add("compression"u8, false);
-                    featuresBuilder.Add("authentication"u8, true);
+                    featuresBuilder.AddProperty("logging"u8, true);
+                    featuresBuilder.AddProperty("caching"u8, true);
+                    featuresBuilder.AddProperty("compression"u8, false);
+                    featuresBuilder.AddProperty("authentication"u8, true);
                 });
 
-                objectBuilder.Add("logging"u8, static (ref loggingBuilder) =>
+                objectBuilder.AddProperty("logging"u8, static (ref loggingBuilder) =>
                 {
-                    loggingBuilder.Add("level"u8, "Debug"u8);
-                    loggingBuilder.Add("console"u8, true);
-                    loggingBuilder.Add("file"u8, "logs/app.log"u8);
+                    loggingBuilder.AddProperty("level"u8, "Debug"u8);
+                    loggingBuilder.AddProperty("console"u8, true);
+                    loggingBuilder.AddProperty("file"u8, "logs/app.log"u8);
                 });
             }));
 
@@ -921,19 +921,19 @@ class Program
         using JsonWorkspace workspace = JsonWorkspace.Create(options: writerOptions);
 
         // Build a document
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source(static (ref objectBuilder) =>
             {
-                objectBuilder.Add("message"u8, "Hello from rented writer!"u8);
-                objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
-                objectBuilder.Add("success"u8, true);
+                objectBuilder.AddProperty("message"u8, "Hello from rented writer!"u8);
+                objectBuilder.AddProperty("timestamp"u8, DateTime.UtcNow);
+                objectBuilder.AddProperty("success"u8, true);
 
-                objectBuilder.Add("items"u8, static (ref arrayBuilder) =>
+                objectBuilder.AddProperty("items"u8, static (ref arrayBuilder) =>
                 {
-                    arrayBuilder.Add(1);
-                    arrayBuilder.Add(2);
-                    arrayBuilder.Add(3);
+                    arrayBuilder.AddItem(1);
+                    arrayBuilder.AddItem(2);
+                    arrayBuilder.AddItem(3);
                 });
             }));
 
@@ -979,26 +979,26 @@ class Program
                 options: new JsonWriterOptions { Indented = true }))
             {
                 // Build the document
-                using var doc = JsonElement.BuildDocument(
+                using var doc = JsonElement.CreateBuilder(
                     workspace,
                     new JsonElement.Source(static (ref objectBuilder) =>
                     {
-                        objectBuilder.Add("configName"u8, "Production Settings"u8);
-                        objectBuilder.Add("version"u8, "2.0"u8);
-                        objectBuilder.Add("lastModified"u8, DateTime.UtcNow);
+                        objectBuilder.AddProperty("configName"u8, "Production Settings"u8);
+                        objectBuilder.AddProperty("version"u8, "2.0"u8);
+                        objectBuilder.AddProperty("lastModified"u8, DateTime.UtcNow);
 
-                        objectBuilder.Add("database"u8, static (ref dbBuilder) =>
+                        objectBuilder.AddProperty("database"u8, static (ref dbBuilder) =>
                         {
-                            dbBuilder.Add("host"u8, "db.example.com"u8);
-                            dbBuilder.Add("port"u8, 5432);
-                            dbBuilder.Add("name"u8, "production_db"u8);
+                            dbBuilder.AddProperty("host"u8, "db.example.com"u8);
+                            dbBuilder.AddProperty("port"u8, 5432);
+                            dbBuilder.AddProperty("name"u8, "production_db"u8);
                         });
 
-                        objectBuilder.Add("features"u8, static (ref featuresBuilder) =>
+                        objectBuilder.AddProperty("features"u8, static (ref featuresBuilder) =>
                         {
-                            featuresBuilder.Add("logging"u8, true);
-                            featuresBuilder.Add("caching"u8, true);
-                            featuresBuilder.Add("debug"u8, false);
+                            featuresBuilder.AddProperty("logging"u8, true);
+                            featuresBuilder.AddProperty("caching"u8, true);
+                            featuresBuilder.AddProperty("debug"u8, false);
                         });
                     }));
 
@@ -1060,19 +1060,19 @@ class Program
             options: new JsonWriterOptions { Indented = false }))
         {
             // Build the response document
-            using var doc = JsonElement.BuildDocument(
+            using var doc = JsonElement.CreateBuilder(
                 workspace,
                 new JsonElement.Source((ref objectBuilder) =>
                 {
-                    objectBuilder.Add("success"u8, true);
-                    objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
-                    objectBuilder.Add("requestId"u8, Guid.NewGuid().ToString());
+                    objectBuilder.AddProperty("success"u8, true);
+                    objectBuilder.AddProperty("timestamp"u8, DateTime.UtcNow);
+                    objectBuilder.AddProperty("requestId"u8, Guid.NewGuid().ToString());
 
-                    objectBuilder.Add("data"u8, (ref dataBuilder) =>
+                    objectBuilder.AddProperty("data"u8, (ref dataBuilder) =>
                     {
-                        dataBuilder.Add("username"u8, Encoding.UTF8.GetBytes(userData));
-                        dataBuilder.Add("lastLogin"u8, DateTime.UtcNow.AddDays(-2));
-                        dataBuilder.Add("isActive"u8, true);
+                        dataBuilder.AddProperty("username"u8, Encoding.UTF8.GetBytes(userData));
+                        dataBuilder.AddProperty("lastLogin"u8, DateTime.UtcNow.AddDays(-2));
+                        dataBuilder.AddProperty("isActive"u8, true);
                     });
                 }));
 
@@ -1136,43 +1136,43 @@ class Program
         // All async work is done, use regular workspace
         using (JsonWorkspace workspace = JsonWorkspace.Create())
         {
-            using var profileDoc = JsonElement.BuildDocument(
+            using var profileDoc = JsonElement.CreateBuilder(
                 workspace,
                 new JsonElement.Source((ref objectBuilder) =>
                 {
                     // User info from first API
                     JsonElement user = userDoc.RootElement;
-                    objectBuilder.Add("userId"u8, user.GetProperty("id"));
-                    objectBuilder.Add("username"u8, user.GetProperty("username"));
-                    objectBuilder.Add("email"u8, user.GetProperty("email"));
+                    objectBuilder.AddProperty("userId"u8, user.GetProperty("id"));
+                    objectBuilder.AddProperty("username"u8, user.GetProperty("username"));
+                    objectBuilder.AddProperty("email"u8, user.GetProperty("email"));
 
                     // Posts from second API
-                    objectBuilder.Add("recentPosts"u8, (ref postsBuilder) =>
+                    objectBuilder.AddProperty("recentPosts"u8, (ref postsBuilder) =>
                     {
                         JsonElement posts = postsDoc.RootElement.GetProperty("posts");
                         foreach (JsonElement post in posts.EnumerateArray())
                         {
-                            postsBuilder.Add((ref postBuilder) =>
+                            postsBuilder.AddItem((ref postBuilder) =>
                             {
-                                postBuilder.Add("id"u8, post.GetProperty("id"));
-                                postBuilder.Add("title"u8, post.GetProperty("title"));
-                                postBuilder.Add("publishedAt"u8, post.GetProperty("publishedAt"));
+                                postBuilder.AddProperty("id"u8, post.GetProperty("id"));
+                                postBuilder.AddProperty("title"u8, post.GetProperty("title"));
+                                postBuilder.AddProperty("publishedAt"u8, post.GetProperty("publishedAt"));
                             });
                         }
                     });
 
                     // Analytics from third API
-                    objectBuilder.Add("stats"u8, (ref statsBuilder) =>
+                    objectBuilder.AddProperty("stats"u8, (ref statsBuilder) =>
                     {
                         JsonElement analytics = analyticsDoc.RootElement;
-                        statsBuilder.Add("totalViews"u8, analytics.GetProperty("totalViews"));
-                        statsBuilder.Add("totalLikes"u8, analytics.GetProperty("totalLikes"));
-                        statsBuilder.Add("followerCount"u8, analytics.GetProperty("followerCount"));
+                        statsBuilder.AddProperty("totalViews"u8, analytics.GetProperty("totalViews"));
+                        statsBuilder.AddProperty("totalLikes"u8, analytics.GetProperty("totalLikes"));
+                        statsBuilder.AddProperty("followerCount"u8, analytics.GetProperty("followerCount"));
                     });
 
                     // Computed fields
                     DateTime lastLogin = userDoc.RootElement.GetProperty("lastLoginAt").GetDateTime();
-                    objectBuilder.Add("isActive"u8, lastLogin > DateTime.UtcNow.AddDays(-30));
+                    objectBuilder.AddProperty("isActive"u8, lastLogin > DateTime.UtcNow.AddDays(-30));
                 }));
 
             Console.WriteLine("\nComposed User Profile:");
@@ -1256,12 +1256,12 @@ class Program
         using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
         {
             // Start building the document
-            using var doc = JsonElement.BuildDocument(
+            using var doc = JsonElement.CreateBuilder(
                 workspace,
                 new JsonElement.Source((ref objectBuilder) =>
                 {
-                    objectBuilder.Add("initialData"u8, initialDoc.RootElement.GetProperty("value"));
-                    objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
+                    objectBuilder.AddProperty("initialData"u8, initialDoc.RootElement.GetProperty("value"));
+                    objectBuilder.AddProperty("timestamp"u8, DateTime.UtcNow);
                 }));
 
             Console.WriteLine("Making async call in the middle of document building...");

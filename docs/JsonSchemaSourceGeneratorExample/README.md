@@ -98,41 +98,39 @@ if (person.Hobbies is not null)
 
 ### 4. Build Documents with Nested Objects
 
-Use the `Build()` method with callbacks:
+Use the convenience `CreateBuilder()` overload with named property parameters. Nested objects use `Build()`:
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
+using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateBuilder(
     workspace,
-    (ref b) => b.Create(
-        age: 45,
-        // Build nested name object
-        name: Person.PersonName.Build((ref nameBuilder) =>
-        {
-            nameBuilder.Create(
-                firstName: "Eve",
-                lastName: "Martinez",
-                middleName: "Sofia");
-        })));
+    age: 45,
+    // Build nested name object
+    name: Person.PersonName.Build((ref nameBuilder) =>
+    {
+        nameBuilder.Create(
+            firstName: "Eve",
+            lastName: "Martinez",
+            middleName: "Sofia");
+    }));
 ```
 
 ### 5. Build Arrays with Callbacks
 
 ```csharp
-using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.BuildDocument(
+using JsonDocumentBuilder<Person.Mutable> docBuilder = Person.CreateBuilder(
     workspace,
-    (ref b) => b.Create(
-        age: 28,
-        name: Person.PersonName.Build((ref nb) => 
-            nb.Create(firstName: "Frank", lastName: "Wilson")),
-        // Build hobbies array
-        hobbies: Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
-        {
-            hobbiesBuilder.Add("guitar");
-            hobbiesBuilder.Add("gaming");
-            hobbiesBuilder.Add("travel");
-        })));
+    age: 28,
+    name: Person.PersonName.Build((ref nb) => 
+        nb.Create(firstName: "Frank", lastName: "Wilson")),
+    // Build hobbies array
+    hobbies: Person.HobbiesEntityArray.Build((ref hobbiesBuilder) =>
+    {
+        hobbiesBuilder.Add("guitar");
+        hobbiesBuilder.Add("gaming");
+        hobbiesBuilder.Add("travel");
+    }));
 ```
 
 ### 6. Modify Nested Properties

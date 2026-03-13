@@ -9,12 +9,10 @@ using NodaTime;
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var tallDoc = PersonTall.CreateBuilder(
     workspace,
-    PersonTall.Build(
-        static (ref PersonTall.Builder b) => b.Create(
-            birthDate: new LocalDate(1820, 1, 17),
-            familyName: "Brontë",
-            givenName: "Anne",
-            height: 1.57)));
+    birthDate: new LocalDate(1820, 1, 17),
+    familyName: "Brontë",
+    givenName: "Anne",
+    height: 1.57);
 
 string json = tallDoc.RootElement.ToString();
 Console.WriteLine("Created a person with height 1.57:");

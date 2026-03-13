@@ -39,8 +39,8 @@ string ProcessDiscriminatedUnion(in DiscriminatedUnionByType value)
     // Pattern matching against a discriminated union type
     // requires you to deal with all known types and the fallback (failure) case
     return value.Match(
-        static (in DiscriminatedUnionByType.OneOf0Entity value) => $"It was a string: {value}",
-        static (in DiscriminatedUnionByType.OneOf1Entity value) => $"It was an int32: {value}",
+        static (in JsonString value) => $"It was a string: {value}",
+        static (in JsonInt32 value) => $"It was an int32: {value}",
         static (in PersonOpen value) => $"It was a person. {value.FamilyName}, {value.GivenName}",
         static (in DiscriminatedUnionByType.People value) => $"It was an array of people. {value.GetArrayLength()}",
         static (in DiscriminatedUnionByType unknownValue) => throw new InvalidOperationException($"Unexpected instance {unknownValue}"));

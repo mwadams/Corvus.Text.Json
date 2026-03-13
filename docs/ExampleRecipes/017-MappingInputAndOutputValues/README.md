@@ -182,22 +182,19 @@ TargetType target = source.As<TargetType>();
 // Use workspace and builder pattern
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-TargetType.Mutable.Source targetSource = TargetType.Mutable.Build((ref TargetType.Mutable.Builder b) =>
+// Map to target type - use From() to convert property entities (no allocation)
+using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
 {
-    b.SetIdentifier(source.Id);
-    b.SetFullName(source.Name);
+    b.Create(TargetType.FullNameEntity.From(source.Name), TargetType.IdentifierEntity.From(source.Id));
 });
 
-using var targetBuilder = TargetType.Mutable.CreateBuilder(workspace, in targetSource);
-TargetType.Mutable target = targetBuilder.RootElement;
+TargetType target = targetBuilder.RootElement;
 ```
 
 **Key differences:**
 - V5 requires explicit `JsonWorkspace` for memory management
-- V5 uses builder pattern with `Build()` and `CreateBuilder()` instead of `Create()` or `WithProperty()`
-- V5 uses property setters (`SetIdentifier()`, `SetFullName()`) instead of property parameters
-- V5 doesn't provide `.As<T>()` cross-schema conversion (use builder pattern)
-- V5 provides better performance through workspace-pooled allocations
+- V5 uses a delegate with `Builder.Create()` and `From()` for zero-allocation mapping
+- For simple objects without `From()` conversions, use the convenience overload: `MyType.CreateBuilder(workspace, name: "Alice", age: 30)`
 - V5 makes allocation lifetime explicit through `using` declarations
 
 ## Running the Example

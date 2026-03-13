@@ -249,15 +249,20 @@ MyType v4 = MyType.Create(
     name: "Alice",
     age: 30);
 
-// V5 (requires workspace and builder)
+// V5 — convenience overload (preferred)
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var builder = MyType.CreateBuilder(
     workspace,
-    MyType.Build(
-        static (ref MyType.Builder b) => b.Create(
-            name: "Alice",
-            age: 30)));
+    name: "Alice",
+    age: 30);
 MyType v5 = builder.RootElement;
+
+// V5 — delegate overload (for advanced scenarios like From() conversions)
+using var builder2 = MyType.CreateBuilder(
+    workspace,
+    (ref MyType.Builder b) => b.Create(
+        name: "Alice",
+        age: 30));
 ```
 
 ### Nested object creation
@@ -269,17 +274,15 @@ OuterType v4 = OuterType.Create(
         street: "Baker Street"),
     name: "Sherlock");
 
-// V5
+// V5 — convenience overload with Build() for nested objects
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var builder = OuterType.CreateBuilder(
     workspace,
-    OuterType.Build(
-        static (ref OuterType.Builder b) => b.Create(
-            address: OuterType.AddressType.Build(
-                static (ref OuterType.AddressType.Builder ab) => ab.Create(
-                    city: "London",
-                    street: "Baker Street")),
-            name: "Sherlock")));
+    address: OuterType.AddressType.Build(
+        static (ref OuterType.AddressType.Builder ab) => ab.Create(
+            city: "London",
+            street: "Baker Street")),
+    name: "Sherlock");
 ```
 
 ### Array creation with FromItems
@@ -678,7 +681,22 @@ generatejsonschematypes --rootNamespace MyApp --outputPath generated/ schema.jso
 
 ## BEST PRACTICES FOR MIGRATION
 
-### 1. Use `static` lambdas
+### 1. Prefer the `CreateBuilder` convenience overload for object creation
+When creating objects from scratch with known property values, use the convenience overload:
+```csharp
+// ✅ Preferred — convenience overload with named parameters
+using var builder = MyType.CreateBuilder(workspace, name: "Alice", age: 30);
+
+// ✅ Also good — delegate overload for advanced scenarios (From() conversions, conditional logic)
+using var builder2 = MyType.CreateBuilder(workspace, (ref MyType.Builder b) =>
+{
+    b.Create(
+        name: TargetType.NameEntity.From(source.Name),
+        age: source.Age);
+});
+```
+
+### 2. Use `static` lambdas
 Always use `static` on builder delegates and Match lambdas that don't capture variables:
 ```csharp
 // ✅ Good
@@ -690,7 +708,7 @@ var capturedValue = ...;
 (ref MyType.Builder b) => b.Create(capturedValue);  // captures, cannot be static
 ```
 
-### 2. Prefer UTF-8 literals
+### 3. Prefer UTF-8 literals
 Use `"name"u8` for zero-allocation property access:
 ```csharp
 // ✅ Zero allocation
@@ -701,7 +719,7 @@ v5["name"u8];
 v5.TryGetProperty("name", out var value);
 ```
 
-### 3. Dispose documents and workspaces
+### 4. Dispose documents and workspaces
 Always use `using` for ParsedJsonDocument, JsonWorkspace, and JsonDocumentBuilder:
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
@@ -709,7 +727,7 @@ using var doc = ParsedJsonDocument<MyType>.Parse(json);
 using var builder = doc.RootElement.CreateBuilder(workspace);
 ```
 
-### 4. Work with generated types directly
+### 5. Work with generated types directly
 Avoid unnecessary extraction to primitives:
 ```csharp
 // ✅ Good - generated types support formatting
@@ -734,7 +752,7 @@ When migrating a file:
 7. [ ] Replace `.As<T>()` with `T.From(source)`
 8. [ ] Replace `Validate(ctx, level)` with `EvaluateSchema()` or `EvaluateSchema(collector)`
 9. [ ] Replace `With*()` chains with `JsonWorkspace` + `CreateBuilder()` + `Set*()` calls
-10. [ ] Replace `MyType.Create(...)` with `CreateBuilder(workspace, Build(...))`
+10. [ ] Replace `MyType.Create(...)` with `MyType.CreateBuilder(workspace, prop: value, ...)` (convenience overload) or delegate overload for `From()` conversions
 11. [ ] Replace `FromItems(...)` with `CreateBuilder(workspace, Build(b => { b.AddItem(...); }))`
 12. [ ] Replace `MyTuple.Create(a,b,c)` with `MyTuple.CreateBuilder(workspace, a, b, c)` (closed tuples) or delegate pattern (open tuples)
 13. [ ] Replace `MyVector.FromValues(span)` with `MyVector.CreateBuilder(workspace, span)` or `MyVector.Build(span)`
@@ -769,6 +787,9 @@ When migrating a file:
 
 ### Error: "Cannot convert lambda to delegate because it captures variables"
 **Fix**: Remove `static` keyword if the lambda genuinely captures outer variables, OR refactor to use the context parameter overload of Match/Build.
+
+### Error: "'MyType' does not contain a definition for 'Create'" (object)
+**Fix**: Replace `MyType.Create(name: "Alice", age: 30)` with `MyType.CreateBuilder(workspace, name: "Alice", age: 30)`. The convenience overload takes the same named parameters as V4's `Create()`.
 
 ### Error: "'MyType' does not contain a definition for 'Create'" (tuple)
 **Fix**: Replace `MyTuple.Create(a, b, c)` with `MyTuple.CreateBuilder(workspace, a, b, c)` for closed tuples, or `CreateBuilder(workspace, Build((ref b) => b.CreateTuple(a, b, c)))` for open tuples.

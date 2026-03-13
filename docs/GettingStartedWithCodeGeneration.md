@@ -579,39 +579,47 @@ if (!isValid)
 
 ## Creating Objects from Scratch
 
-Use `CreateBuilder()` with `Build()` and `Create()` for zero-allocation construction:
+Use the convenience `CreateBuilder()` overload with named property parameters:
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
 using var builder = Person.CreateBuilder(
     workspace,
-    (ref b) => b.Create(
-        name: Person.PersonNameEntity.Build(
-            (ref nb) => nb.Create(familyName: "Oldroyd"u8, givenName: "Michael"u8)),
-        age: 30,
-        email: "michael@example.com"u8));
+    name: Person.PersonNameEntity.Build(
+        (ref nb) => nb.Create(familyName: "Oldroyd"u8, givenName: "Michael"u8)),
+    age: 30,
+    email: "michael@example.com"u8);
 
 Console.WriteLine(builder.RootElement.ToString());
 // {"name":{"familyName":"Oldroyd","givenName":"Michael"},"age":30,"email":"michael@example.com"}
 ```
 
-Required parameters must be provided; optional ones can be omitted.
+Required parameters must be provided; optional ones can be omitted. Always use named parameters for clarity and resilience to schema evolution.
+
+For objects with only primitive properties (no nested objects or arrays), the syntax is especially concise:
+
+```csharp
+using var builder = SimpleType.CreateBuilder(
+    workspace,
+    name: "Alice",
+    age: 30,
+    email: "alice@test.com"u8);
+```
 
 ### Nested objects
 
-Use `NestedType.Build()` to compose nested values:
+Use `NestedType.Build()` to compose nested values as parameters:
 
 ```csharp
 using var builder = Person.CreateBuilder(
     workspace,
-    (ref b) => b.Create(
-        name: Person.PersonNameEntity.Build(
-            (ref nb) => nb.Create(familyName: "Oldroyd"u8, givenName: "Michael"u8)),
-        age: 30,
-        address: Person.AddressEntity.Build((ref ab) => ab.Create(
-            street: "123 Main St"u8,
-            city: "Springfield"u8))));
+    name: Person.PersonNameEntity.Build(
+        (ref nb) => nb.Create(familyName: "Oldroyd"u8, givenName: "Michael"u8)),
+    age: 30,
+    address: Person.AddressEntity.Build((ref ab) => ab.Create(
+        street: "123 Main St"u8,
+        city: "Springfield"u8)));
 ```
 
 ### Array properties
@@ -629,19 +637,31 @@ hobbies: Person.HobbiesEntity.Build((ref hb) =>
 ```csharp
 using var builder = Person.CreateBuilder(
     workspace,
-    (ref b) => b.Create(
-        name: Person.PersonNameEntity.Build(
-            (ref nb) => nb.Create(familyName: "Hopper"u8, givenName: "Grace"u8)),
-        age: 42,
-        address: Person.AddressEntity.Build((ref ab) => ab.Create(
-            street: "123 Navy Yard"u8,
-            city: "Washington"u8,
-            zipCode: "20001"u8)),
-        hobbies: Person.HobbiesEntity.Build((ref hb) =>
-        {
-            hb.Add("reading"u8);
-            hb.Add("coding"u8);
-        })));
+    name: Person.PersonNameEntity.Build(
+        (ref nb) => nb.Create(familyName: "Hopper"u8, givenName: "Grace"u8)),
+    age: 42,
+    address: Person.AddressEntity.Build((ref ab) => ab.Create(
+        street: "123 Navy Yard"u8,
+        city: "Washington"u8,
+        zipCode: "20001"u8)),
+    hobbies: Person.HobbiesEntity.Build((ref hb) =>
+    {
+        hb.Add("reading"u8);
+        hb.Add("coding"u8);
+    }));
+```
+
+### Advanced: delegate pattern
+
+For scenarios that require logic inside the builder (e.g., conditional properties, `From()` conversions), use the delegate overload:
+
+```csharp
+using var builder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
+{
+    b.Create(
+        fullName: TargetType.FullNameEntity.From(source.Name),
+        identifier: TargetType.IdentifierEntity.From(source.Id));
+});
 ```
 
 ---

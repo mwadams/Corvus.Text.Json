@@ -433,19 +433,30 @@ MigrationPerson v4 = MigrationPerson.Create(
 ### V5: Builder pattern with `CreateBuilder()`
 
 ```csharp
-// V5 — workspace + builder
+// V5 — convenience overload with named parameters (preferred)
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using JsonDocumentBuilder<MigrationPerson.Mutable> builder =
     MigrationPerson.CreateBuilder(
         workspace,
-        (ref b) => b.Create(
-            name: "Alice",
-            age: 30,
-            email: "alice@test.com"));
+        name: "Alice",
+        age: 30,
+        email: "alice@test.com");
 
 MigrationPerson.Mutable root = builder.RootElement;
 // Read values from the mutable instance
 string name = (string)root.Name; // "Alice"
+```
+
+For scenarios that require logic inside the builder (e.g., `From()` conversions, conditional properties), use the delegate overload:
+
+```csharp
+// V5 — delegate overload (for advanced scenarios)
+using var builder = MigrationPerson.CreateBuilder(
+    workspace,
+    (ref b) => b.Create(
+        name: "Alice",
+        age: 30,
+        email: "alice@test.com"));
 ```
 
 If all of an object's properties are optional, you can create an empty builder with no initializer:
@@ -461,7 +472,8 @@ root.Name = "Alice";
 
 > **Key differences**:
 > - V5 requires a `JsonWorkspace` for mutable operations
-> - V5 uses a `ref` delegate with a builder parameter
+> - The convenience `CreateBuilder()` overload takes named property parameters directly — similar ergonomics to V4's `Create()`
+> - The delegate overload is available for advanced scenarios (e.g., `From()` conversions)
 > - The builder returns a `Mutable` nested type, not the immutable type itself
 >
 > Both V4 and V5 support implicit conversions from primitives (e.g., `"Alice"` rather than `(JsonString)"Alice"`).
@@ -501,22 +513,21 @@ MigrationItemArray v4 = MigrationItemArray.FromItems(
     MigrationItemArray.RequiredId.Create(id: 3));
 ```
 
-### V5: Compose nested values with `Build()` and `CreateBuilder()`
+### V5: Compose nested values with `CreateBuilder()`
 
-V5 uses nested `Build()` callbacks to compose the value, then `CreateBuilder()` to materialise it into a mutable document:
+V5 uses the convenience `CreateBuilder()` overload with named parameters. For nested object properties, use `Build()` to compose the value as a parameter:
 
 ```csharp
 // V5 — build a nested object from scratch
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var builder = MigrationNested.CreateBuilder(
     workspace,
-    (ref b) => b.Create(
-        address: MigrationNested.RequiredCityAndStreet.Build(
-            (ref ab) => ab.Create(
-                city: "London",
-                street: "221B Baker Street",
-                zipCode: "12345")),
-        name: "Sherlock"));
+    address: MigrationNested.RequiredCityAndStreet.Build(
+        (ref ab) => ab.Create(
+            city: "London",
+            street: "221B Baker Street",
+            zipCode: "12345")),
+    name: "Sherlock");
 
 MigrationNested.Mutable root = builder.RootElement;
 string city = (string)root.Address.City; // "London"

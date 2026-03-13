@@ -83,13 +83,11 @@ using NodaTime;
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var personDoc = PersonCommonSchema.CreateBuilder(
     workspace,
-    PersonCommonSchema.Build(
-        static (ref PersonCommonSchema.Builder b) => b.Create(
-            birthDate: new LocalDate(1820, 1, 17),
-            familyName: "Brontë",
-            givenName: "Anne",
-            otherNames: string.Empty,
-            height: 1.57)));
+    birthDate: new LocalDate(1820, 1, 17),
+    familyName: "Brontë",
+    givenName: "Anne",
+    otherNames: string.Empty,
+    height: 1.57);
 
 string json = personDoc.RootElement.ToString();
 using var parsedDoc = ParsedJsonDocument<PersonCommonSchema>.Parse(json);

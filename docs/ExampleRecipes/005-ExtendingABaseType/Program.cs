@@ -8,13 +8,11 @@ using NodaTime;
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var wealthyDoc = PersonWealthy.CreateBuilder(
     workspace,
-    PersonWealthy.Build(
-        static (ref PersonWealthy.Builder b) => b.Create(
-            birthDate: new LocalDate(1820, 1, 17),
-            familyName: "Brontë",
-            givenName: "Anne",
-            wealth: 1_000_000,
-            height: 1.57)));
+    birthDate: new LocalDate(1820, 1, 17),
+    familyName: "Brontë",
+    givenName: "Anne",
+    wealth: 1_000_000,
+    height: 1.57);
 
 Console.WriteLine("Created a wealthy person:");
 Console.WriteLine($"  {wealthyDoc.RootElement}");
