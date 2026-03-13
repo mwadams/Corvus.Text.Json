@@ -4,6 +4,7 @@
     <Project Path="benchmarks/Corvus.Text.Json.BenchmarkModels/Corvus.Text.Json.BenchmarkModels.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.Benchmarks/Corvus.Text.Json.Benchmarks.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.ClassicBenchmarkModels/Corvus.Text.Json.ClassicBenchmarkModels.csproj" />
+    <Project Path="benchmarks/Corvus.Json.Validator.Benchmarks/Corvus.Json.Validator.Benchmarks.csproj" />
     <Project Path="benchmarks/Corvus.Text.Json.Validator.Benchmarks/Corvus.Text.Json.Validator.Benchmarks.csproj" />
     <Project Path="BenchmarkSandbox/BenchmarkSandbox.csproj" />
   </Folder>
