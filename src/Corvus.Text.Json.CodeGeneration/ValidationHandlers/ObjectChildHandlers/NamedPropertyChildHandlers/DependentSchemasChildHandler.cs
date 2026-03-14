@@ -126,7 +126,7 @@ internal class DependentSchemasChildHandler : INamedPropertyChildHandler
     /// <inheritdoc/>
     public void BeginJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
-        Dictionary<string, DependentSchemaDeclaration> declarationsByPropertyName = [];
+        Dictionary<string, DependentSchemaDeclaration> declarationsByPropertyName = new(StringComparer.Ordinal);
 
         if (typeDeclaration.DependentSchemasSubschemaTypes()
            is IReadOnlyDictionary<IObjectPropertyDependentSchemasValidationKeyword, IReadOnlyCollection<DependentSchemaDeclaration>> dependentSchemas)

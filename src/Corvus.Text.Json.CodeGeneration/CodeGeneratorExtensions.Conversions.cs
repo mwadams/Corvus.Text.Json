@@ -23,7 +23,7 @@ internal static partial class CodeGeneratorExtensions
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendCoreTypeAndFormatConversionOperators(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool forMutable)
     {
-        HashSet<string> seenConversionOperators = [];
+        HashSet<string> seenConversionOperators = new(StringComparer.Ordinal);
         bool handledNumber = false;
         if (typeDeclaration.Format() is string format)
         {
@@ -252,7 +252,7 @@ internal static partial class CodeGeneratorExtensions
             return;
         }
 
-        HashSet<string> formats = [];
+        HashSet<string> formats = new(StringComparer.Ordinal);
         CollectCompositionFormats(typeDeclaration, formats);
 
         foreach (string format in formats)
@@ -312,7 +312,7 @@ internal static partial class CodeGeneratorExtensions
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendCoreTypeAndFormatValueGetters(this CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
-        HashSet<string> seenConversionOperators = [];
+        HashSet<string> seenConversionOperators = new(StringComparer.Ordinal);
         bool handledNumber = false;
         if (typeDeclaration.Format() is string format)
         {
@@ -586,7 +586,7 @@ internal static partial class CodeGeneratorExtensions
 
             if (sourceType.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> allOf)
             {
-                AppendSubschemaConversions(generator, appliedConversions, typesToProcess, rootType, allOf.SelectMany(k => k.Value).ToList(), isImplicitFrom: false, isImplicitTo: allowsImplicitTo, forMutable: forMutable);
+                AppendSubschemaConversions(generator, appliedConversions, typesToProcess, rootType, allOf.SelectMany(k => k.Value), isImplicitFrom: false, isImplicitTo: allowsImplicitTo, forMutable: forMutable);
             }
 
             if (sourceType.AnyOfCompositionTypes() is IReadOnlyDictionary<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> anyOf)
@@ -623,7 +623,7 @@ internal static partial class CodeGeneratorExtensions
             HashSet<TypeDeclaration> appliedConversions,
             Queue<(TypeDeclaration Target, bool AllowsImplicitFrom, bool AllowsImplicitTo)> typesToProcess,
             TypeDeclaration rootDeclaration,
-            IReadOnlyCollection<TypeDeclaration> subschemas,
+            IEnumerable<TypeDeclaration> subschemas,
             bool isImplicitFrom,
             bool isImplicitTo,
             bool forMutable)
@@ -1460,7 +1460,7 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
-        HashSet<string> visitedTypes = [];
+        HashSet<string> visitedTypes = new(StringComparer.Ordinal);
 
         foreach (TypeDeclaration t in rootDeclaration.CompositionTypeDeclarations())
         {

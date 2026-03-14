@@ -226,7 +226,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
     /// <inheritdoc/>
     public void BeginJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
-        RequirementsAndDependencies requirementsAndDependencies = GatherRequirements(generator, typeDeclaration.DependentRequired(), GetRequiredProperties(typeDeclaration).ToList());
+        RequirementsAndDependencies requirementsAndDependencies = GatherRequirements(generator, typeDeclaration.DependentRequired(), GetRequiredProperties(typeDeclaration));
         typeDeclaration.SetMetadata(RequirementsAndDependenciesKey, requirementsAndDependencies);
     }
 
@@ -256,9 +256,9 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         return typeDeclaration.PropertyDeclarations.Where(p => p.RequiredOrOptional == RequiredOrOptional.Required && p.LocalOrComposed == LocalOrComposed.Local);
     }
 
-    private static RequirementsAndDependencies GatherRequirements(CodeGenerator generator, IReadOnlyDictionary<IObjectDependentRequiredValidationKeyword, IReadOnlyCollection<DependentRequiredDeclaration>>? requiredByKeyword, List<PropertyDeclaration> requiredPropertyDeclarations)
+    private static RequirementsAndDependencies GatherRequirements(CodeGenerator generator, IReadOnlyDictionary<IObjectDependentRequiredValidationKeyword, IReadOnlyCollection<DependentRequiredDeclaration>>? requiredByKeyword, IEnumerable<PropertyDeclaration> requiredPropertyDeclarations)
     {
-        Dictionary<string, Requirement> requirementsByRequirementPropertyName = [];
+        Dictionary<string, Requirement> requirementsByRequirementPropertyName = new(StringComparer.Ordinal);
         List<PropertyDependencies> dependenciesForProperties = [];
 
         int currentOffset = 0;
@@ -292,7 +292,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
 
     private static void AddForRequired(
         CodeGenerator generator,
-        List<PropertyDeclaration> requiredPropertyDeclarations,
+        IEnumerable<PropertyDeclaration> requiredPropertyDeclarations,
         Dictionary<string, Requirement> requirementsByRequirementPropertyName,
         List<PropertyDependencies> dependenciesForProperties,
         ref int currentOffset,

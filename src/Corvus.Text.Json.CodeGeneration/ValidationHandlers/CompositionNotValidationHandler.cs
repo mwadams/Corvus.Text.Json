@@ -89,8 +89,7 @@ file static class CompositionNotValidationHandlerExtensions
 
         var keywords =
             typeDeclaration.Keywords()
-                .OfType<INotValidationKeyword>()
-                .ToList();
+                .OfType<INotValidationKeyword>();
 
         bool requiresShortCut = false;
 

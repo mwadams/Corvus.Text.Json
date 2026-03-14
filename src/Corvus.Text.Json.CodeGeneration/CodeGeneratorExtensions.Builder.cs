@@ -39,7 +39,7 @@ internal static partial class CodeGeneratorExtensions
 
     private static CodeGenerator AppendAddAsItem(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders, bool forContext = false)
     {
-        HashSet<string> seenKinds = [];
+        HashSet<string> seenKinds = new(StringComparer.Ordinal);
         CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
 
         generator
@@ -221,7 +221,7 @@ internal static partial class CodeGeneratorExtensions
                 .PopIndent();
         }
 
-        HashSet<string> numericArrayKinds = [];
+        HashSet<string> numericArrayKinds = new(StringComparer.Ordinal);
 
         if (isArray && (hasFallbackArrayType || !builders.Any(b => b.IsArray)))
         {
@@ -476,7 +476,7 @@ internal static partial class CodeGeneratorExtensions
                     .PopIndent();
         }
 
-        HashSet<string> seenKinds = [];
+        HashSet<string> seenKinds = new(StringComparer.Ordinal);
         CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
 
         if (!forContext)
@@ -637,7 +637,7 @@ internal static partial class CodeGeneratorExtensions
                 .PopIndent();
         }
 
-        HashSet<string> numericArrayKinds = [];
+        HashSet<string> numericArrayKinds = new(StringComparer.Ordinal);
 
         if (isArray && (hasFallbackArrayType || !builders.Any(b => b.IsArray)))
         {
@@ -904,7 +904,7 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
-        HashSet<string> seenTypes = [];
+        HashSet<string> seenTypes = new(StringComparer.Ordinal);
 
         bool seenFallback = false;
         bool seenLocalAndAppliedJsonNotAny = false;
@@ -2286,8 +2286,9 @@ internal static partial class CodeGeneratorExtensions
 
         for (int i = 1; i <= tupleType.ItemsTypes.Length; i++)
         {
+            string indexStr = i.ToString();
             generator
-                .AppendLineIndent("item", i.ToString(), ".AddAsItem(ref _builder);");
+                .AppendLineIndent("item", indexStr, ".AddAsItem(ref _builder);");
         }
 
         if (allowsNonPrefixItems)
@@ -2814,8 +2815,8 @@ internal static partial class CodeGeneratorExtensions
 
     private static CodeGenerator AppendSourceConstructors(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders, bool forContext = false)
     {
-        HashSet<string> seenConstructorParameters = [];
-        HashSet<string> seenNumericArrayTypes = [];
+        HashSet<string> seenConstructorParameters = new(StringComparer.Ordinal);
+        HashSet<string> seenNumericArrayTypes = new(StringComparer.Ordinal);
         CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
 
         if (!forContext)
@@ -2987,8 +2988,9 @@ internal static partial class CodeGeneratorExtensions
 
                 for (int i = 1; i <= tupleTypeForCtor.ItemsTypes.Length; i++)
                 {
+                    string indexStr = i.ToString();
                     generator
-                        .AppendLineIndent("_tupleItem", i.ToString(), " = item", i.ToString(), ";");
+                        .AppendLineIndent("_tupleItem", indexStr, " = item", indexStr, ";");
                 }
 
                 generator
@@ -3128,7 +3130,7 @@ internal static partial class CodeGeneratorExtensions
 
     private static CodeGenerator AppendSourceConversionOperators(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
     {
-        HashSet<string> seenConversionOperators = [];
+        HashSet<string> seenConversionOperators = new(StringComparer.Ordinal);
 
         generator
             .AppendSeparatorLine()
@@ -3198,7 +3200,7 @@ internal static partial class CodeGeneratorExtensions
         }
 
         // Implicit conversion from ReadOnlySpan<T> for numeric array types
-        HashSet<string> seenArrayConversions = [];
+        HashSet<string> seenArrayConversions = new(StringComparer.Ordinal);
         generator.AppendNumericArrayImplicitOperator(typeDeclaration, seenArrayConversions);
         foreach (ComposedBuilder cb in builders)
         {
@@ -3420,7 +3422,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("private readonly ", isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName(), ".", contextBuildType, "? _objectBuilder;");
         }
 
-        HashSet<string> seenArrayValues = [];
+        HashSet<string> seenArrayValues = new(StringComparer.Ordinal);
 
         if (isArray && (hasFallbackArrayType || !builders.Any(b => b.IsArray)))
         {
@@ -3541,12 +3543,10 @@ internal static partial class CodeGeneratorExtensions
                         .Where(p => p.RequiredOrOptional != RequiredOrOptional.Optional &&
                                p.ReducedPropertyType.SingleConstantValue().ValueKind == JsonValueKind.Undefined &&
                                !p.ReducedPropertyType.IsBuiltInJsonNotAnyType())
-                        .OrderBy(p => p.JsonPropertyName)
                         .Select(p => new MethodParameter("in", GetSource(generator, p.ReducedPropertyType.FullyQualifiedDotnetTypeName()), generator.GetUniqueParameterNameInScope(p.JsonPropertyName, childScope: "Create"))),
                 .. typeDeclaration.PropertyDeclarations
                         .Where(p => p.RequiredOrOptional == RequiredOrOptional.Optional &&
                                !p.ReducedPropertyType.IsBuiltInJsonNotAnyType())
-                        .OrderBy(p => p.JsonPropertyName)
                         .Select(p =>
                             new MethodParameter(
                                 "in",
@@ -3577,12 +3577,10 @@ internal static partial class CodeGeneratorExtensions
                         .Where(p => p.RequiredOrOptional != RequiredOrOptional.Optional &&
                                p.ReducedPropertyType.SingleConstantValue().ValueKind == JsonValueKind.Undefined &&
                                !p.ReducedPropertyType.IsBuiltInJsonNotAnyType())
-                        .OrderBy(p => p.JsonPropertyName)
                         .Select(p => new MethodParameter("in", $"{GetSource(generator, p.ReducedPropertyType.FullyQualifiedDotnetTypeName())}{((p.ReducedPropertyType.ImpliedCoreTypesOrAny() & (CoreTypes.Array | CoreTypes.Object)) != 0 ? "<TContext>" : "")}", generator.GetUniqueParameterNameInScope(p.JsonPropertyName, childScope: "Create<TContext>"))),
                 .. typeDeclaration.PropertyDeclarations
                         .Where(p => p.RequiredOrOptional == RequiredOrOptional.Optional &&
                                !p.ReducedPropertyType.IsBuiltInJsonNotAnyType())
-                        .OrderBy(p => p.JsonPropertyName)
                         .Select(p => new MethodParameter("in", $"{GetSource(generator, p.ReducedPropertyType.FullyQualifiedDotnetTypeName())}{((p.ReducedPropertyType.ImpliedCoreTypesOrAny() & (CoreTypes.Array | CoreTypes.Object)) != 0 ? "<TContext>" : "")}", generator.GetUniqueParameterNameInScope(p.JsonPropertyName, childScope: "Create<TContext>"), defaultValue: "default")),
             ];
 
@@ -3597,17 +3595,15 @@ internal static partial class CodeGeneratorExtensions
         return
         [
             .. typeDeclaration.PropertyDeclarations
-                                        .Where(p => p.RequiredOrOptional != RequiredOrOptional.Optional && !p.ReducedPropertyType.IsBuiltInJsonNotAnyType())
-                                        .OrderBy(p => p.JsonPropertyName),
+                                        .Where(p => p.RequiredOrOptional != RequiredOrOptional.Optional && !p.ReducedPropertyType.IsBuiltInJsonNotAnyType()),
                 .. typeDeclaration.PropertyDeclarations
-                                        .Where(p => p.RequiredOrOptional == RequiredOrOptional.Optional && !p.ReducedPropertyType.IsBuiltInJsonNotAnyType())
-                                        .OrderBy(p => p.JsonPropertyName),
+                                        .Where(p => p.RequiredOrOptional == RequiredOrOptional.Optional && !p.ReducedPropertyType.IsBuiltInJsonNotAnyType()),
             ];
     }
 
     private static CodeGenerator CollectBuilderSourcesAndAppendKinds(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
     {
-        HashSet<string> numericArrayKinds = [];
+        HashSet<string> numericArrayKinds = new(StringComparer.Ordinal);
         bool hasStringSimpleType = false;
 
         if (typeDeclaration.Format() is string format &&

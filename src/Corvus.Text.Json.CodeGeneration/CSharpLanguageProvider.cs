@@ -32,9 +32,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     private readonly NameHeuristicRegistry nameHeuristicRegistry = new();
     private readonly NameCollisionResolverRegistry nameCollisionResolverRegistry = new();
     private readonly Options options;
-    private readonly Dictionary<string, NamedTypes> namedTypesInRootNamespace = [];
+    private readonly Dictionary<string, NamedTypes> namedTypesInRootNamespace = new(StringComparer.Ordinal);
     private SimpleCoreTypeNameHeuristic? simpleCoreTypeHeuristic;
     private CodeGenerator? rootNamespaceGenerator = null;
+    private IReadOnlyList<IBuiltInTypeNameHeuristic>? cachedBuiltInTypeNameHeuristics;
+    private IReadOnlyList<INameHeuristic>? cachedNameBeforeSubschemaHeuristics;
+    private IReadOnlyList<INameHeuristic>? cachedNameAfterSubschemaHeuristics;
 
     CSharpLanguageProvider(Options? options = null)
     {
@@ -113,6 +116,9 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     public ILanguageProvider RegisterNameHeuristics(params INameHeuristic[] heuristics)
     {
         this.nameHeuristicRegistry.RegisterNameHeuristics(heuristics);
+        this.cachedBuiltInTypeNameHeuristics = null;
+        this.cachedNameBeforeSubschemaHeuristics = null;
+        this.cachedNameAfterSubschemaHeuristics = null;
         return this;
     }
 
@@ -151,7 +157,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     public IReadOnlyCollection<GeneratedCodeFile> GenerateCodeFor(IEnumerable<TypeDeclaration> typeDeclarations, CancellationToken cancellationToken)
     {
 #if DEBUG
-        Dictionary<string, TypeDeclaration> namesSeen = [];
+        Dictionary<string, TypeDeclaration> namesSeen = new(StringComparer.Ordinal);
 #endif
         CodeGenerator generator = new(this, cancellationToken, lineEndSequence: this.options.LineEndSequence);
 
@@ -660,9 +666,9 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         return written;
     }
 
-    private IEnumerable<IBuiltInTypeNameHeuristic> GetBuiltInTypeNameHeuristics()
+    private IReadOnlyList<IBuiltInTypeNameHeuristic> GetBuiltInTypeNameHeuristics()
     {
-        return
+        return this.cachedBuiltInTypeNameHeuristics ??= (
             this.options.UseOptionalNameHeuristics
                 ? this.nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<IBuiltInTypeNameHeuristic>()
@@ -673,12 +679,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
                     .OfType<IBuiltInTypeNameHeuristic>()
                     .Where(h => !h.IsOptional && !this.options.DisabledNamingHeuristics.Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
-                    .ThenBy(h => h.GetType().Name);
+                    .ThenBy(h => h.GetType().Name)).ToArray();
     }
 
-    private IEnumerable<INameHeuristic> GetOrderedNameBeforeSubschemaHeuristics()
+    private IReadOnlyList<INameHeuristic> GetOrderedNameBeforeSubschemaHeuristics()
     {
-        return
+        return this.cachedNameBeforeSubschemaHeuristics ??= (
             this.options.UseOptionalNameHeuristics
                 ? this.nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<INameHeuristicBeforeSubschema>()
@@ -691,12 +697,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
                     .Where(h => !h.IsOptional && !this.options.DisabledNamingHeuristics
                     .Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
-                    .ThenBy(h => h.GetType().Name);
+                    .ThenBy(h => h.GetType().Name)).ToArray();
     }
 
-    private IEnumerable<INameHeuristic> GetOrderedNameAfterSubschemaHeuristics()
+    private IReadOnlyList<INameHeuristic> GetOrderedNameAfterSubschemaHeuristics()
     {
-        return
+        return this.cachedNameAfterSubschemaHeuristics ??= (
             this.options.UseOptionalNameHeuristics
                 ? this.nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<INameHeuristicAfterSubschema>()
@@ -707,7 +713,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
                     .OfType<INameHeuristicAfterSubschema>()
                     .Where(h => !h.IsOptional && !this.options.DisabledNamingHeuristics.Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
-                    .ThenBy(h => h.GetType().Name);
+                    .ThenBy(h => h.GetType().Name)).ToArray();
     }
 
     /// <summary>
@@ -853,7 +859,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         /// <summary>
         /// Gets the array of disabled naming heuristics.
         /// </summary>
-        internal HashSet<string> DisabledNamingHeuristics { get; } = disabledNamingHeuristics is string[] n ? [.. n] : [];
+        internal HashSet<string> DisabledNamingHeuristics { get; } = disabledNamingHeuristics is string[] n ? new(n, StringComparer.Ordinal) : new(StringComparer.Ordinal);
 
         /// <summary>
         /// Gets a value indicating whether to include using statements for the standard implicit usings.
