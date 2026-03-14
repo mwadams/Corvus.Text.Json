@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.6.5" />
     <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.6.5" />
     <PackageReference Include="Corvus.Json.CodeGeneration.CSharp" Version="4.6.5" />
     <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.6.5" />

@@ -15,6 +15,7 @@ public class CodeGenerationBenchmarks
     private List<TypeDeclaration> simpleTypes = null!;
     private List<TypeDeclaration> complexTypes = null!;
     private List<TypeDeclaration> compositionTypes = null!;
+    private List<TypeDeclaration> krakendTypes = null!;
 
     [GlobalSetup]
     public async Task Setup()
@@ -27,6 +28,7 @@ public class CodeGenerationBenchmarks
 
         VocabularyRegistry vocabularyRegistry = new();
         Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.RegisterAnalyser(documentResolver, vocabularyRegistry);
+        Corvus.Json.CodeGeneration.Draft7.VocabularyAnalyser.RegisterAnalyser(vocabularyRegistry);
 
         typeBuilder = new JsonSchemaTypeBuilder(documentResolver, vocabularyRegistry);
 
@@ -43,6 +45,12 @@ public class CodeGenerationBenchmarks
         compositionTypes = [await typeBuilder.AddTypeDeclarationsAsync(
             new JsonReference(Path.Combine(schemasDir, "composition-type.json")),
             defaultVocabulary)];
+
+        var draft7Vocabulary = Corvus.Json.CodeGeneration.Draft7.VocabularyAnalyser.DefaultVocabulary;
+
+        krakendTypes = [await typeBuilder.AddTypeDeclarationsAsync(
+            new JsonReference(Path.Combine(schemasDir, "krakend.json")),
+            draft7Vocabulary)];
     }
 
     private static CSharpLanguageProvider CreateLanguageProvider()
@@ -72,6 +80,14 @@ public class CodeGenerationBenchmarks
     {
         var languageProvider = CreateLanguageProvider();
         var files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, compositionTypes);
+        return files.Count;
+    }
+
+    [Benchmark]
+    public int KrakenD()
+    {
+        var languageProvider = CreateLanguageProvider();
+        var files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, krakendTypes);
         return files.Count;
     }
 }
