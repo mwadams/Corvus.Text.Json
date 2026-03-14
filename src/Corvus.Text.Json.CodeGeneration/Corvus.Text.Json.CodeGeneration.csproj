@@ -121,7 +121,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.6.3" />
+    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.6.5" />
     <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.4" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" />
   </ItemGroup>

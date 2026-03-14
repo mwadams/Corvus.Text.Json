@@ -12,9 +12,9 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.6.3" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.CSharp" Version="4.6.3" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.6.3" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.6.5" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.CSharp" Version="4.6.5" />
+    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.6.5" />
   </ItemGroup>
 
   <ItemGroup>

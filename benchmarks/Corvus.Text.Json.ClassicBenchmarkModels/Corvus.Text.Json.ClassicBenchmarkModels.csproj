@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.3" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.5" />
     <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.4" />
   </ItemGroup>
 
