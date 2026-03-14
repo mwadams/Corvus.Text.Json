@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.5" />
+    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.6" />
     <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.4" />
   </ItemGroup>
 
