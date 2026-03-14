@@ -93,4 +93,29 @@ public class BenchmarkBuildAndWrite
         workspace.ReturnWriterAndBuffer(writer, bufferWriter);
         return true;
     }
+
+    [Benchmark]
+    public bool BuildPocoAndSerialize()
+    {
+        var bufferWriter = new ArrayPoolBufferWriter<byte>();
+        System.Text.Json.Utf8JsonWriter writer = new(bufferWriter);
+
+        PersonPoco person = new()
+        {
+            Age = 51,
+            Name = new PersonNamePoco
+            {
+                FirstName = "Michael",
+                LastName = "Adams",
+                OtherNames = ["Francis", "James"],
+            },
+            CompetedInYears = [2012, 2016, 2024],
+        };
+
+        System.Text.Json.JsonSerializer.Serialize(writer, person, PersonPocoContext.Default.PersonPoco);
+        writer.Flush();
+        writer.Dispose();
+        bufferWriter.Dispose();
+        return true;
+    }
 }
