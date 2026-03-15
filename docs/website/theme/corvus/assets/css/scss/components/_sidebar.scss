@@ -61,15 +61,12 @@
 
 .sidebar {
   // Mobile: off-screen drawer
-  // Bottom is inset by the height of the Browse/Close button so they never overlap
-  --sidebar-toggle-height: 2.5rem;
   position: fixed;
   top: 0;
   left: 0;
+  bottom: 2.5rem; // stop above the Browse/Close button
   z-index: 100;
   width: var(--sidebar-width);
-  height: calc(100vh - var(--sidebar-toggle-height));
-  max-height: calc(100vh - var(--sidebar-toggle-height));
   overflow: hidden;
   padding: 0;
   background: var(--color-bg);
@@ -94,6 +91,7 @@
   @include breakpoint-md {
     position: sticky;
     top: calc(var(--header-height) + var(--space-md));
+    bottom: auto;
     height: auto;
     max-height: calc(100vh - var(--header-height) - var(--space-lg));
     overflow: visible;
