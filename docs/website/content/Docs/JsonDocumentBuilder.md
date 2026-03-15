@@ -1,10 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Building JSON Documents with JsonWorkspace and JsonDocumentBuilder"
 ---
-
 This guide shows you how to build and modify JSON documents efficiently, with minimal allocations and excellent performance.
 
 We have already looked at [`ParsedJsonDocument`](./ParsedJsonDocument.md) to see how we can parse and use *immutable* documents. Now, we will look at how we can build new documents.

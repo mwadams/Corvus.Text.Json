@@ -1,10 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "ParsedJsonDocument Usage Guide"
 ---
-
 ## Overview
 
 `ParsedJsonDocument<T>` is a lightweight, read-only representation of a JSON value that utilizes pooled memory to minimize garbage collector impact. It provides an efficient way to parse and navigate JSON documents with minimal allocations.

@@ -1,0 +1,27 @@
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Using Copilot to Migrate from V4 to V5"
+Navigation:
+  Title: Copilot Migration
+  Description: "This guide shows you how to use GitHub Copilot (in VS Code, Visual Studio, or the CLI) to assist with migrating code from Corvus.Json (V4) to Corvus.Text.Json (V5)."
+  Parent: /docs/index.html
+  Url: /docs/using-copilot-for-migration.html
+  Rank: 4
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Using Copilot to Migrate from V4 to V5 — Corvus.Text.Json"
+  Description: "This guide shows you how to use GitHub Copilot (in VS Code, Visual Studio, or the CLI) to assist with migrating code from Corvus.Json (V4) to Corvus.Text.Json (V5)."
+  Keywords: [documentation, Corvus.Text.Json]
+OpenGraph:
+  Title: "Using Copilot to Migrate from V4 to V5 — Corvus.Text.Json"
+  Description: "This guide shows you how to use GitHub Copilot (in VS Code, Visual Studio, or the CLI) to assist with migrating code from Corvus.Json (V4) to Corvus.Text.Json (V5)."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: UsingCopilotForMigration
+    Spec:
+      Path: ../../content/Docs/UsingCopilotForMigration.md

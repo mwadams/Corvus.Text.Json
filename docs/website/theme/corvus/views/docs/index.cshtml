@@ -1,26 +1,36 @@
 @model SiteViewModel
 @{
     Layout = "../Shared/_Layout.cshtml";
+    var docsParent = Model.SiteContext.Navigation?.Children?
+        .FirstOrDefault(x => x.Url?.ToString()?.Contains("/docs/") == true);
+    var docPages = docsParent?.Children?.OrderBy(x => x.Rank).ToList();
 }
 <section class="hero hero--compact">
     <div class="hero__content">
         <h1 class="hero__title">Documentation</h1>
-        <p class="hero__subtitle">In-depth guides for core types and migration</p>
+        <p class="hero__subtitle">In-depth guides for core types, migration, and tooling</p>
     </div>
 </section>
 <div class="container section">
+    <div class="doc__content" style="margin-bottom:2rem">
+        <p>
+            These guides cover the core Corvus.Text.Json APIs in depth&mdash;pooled-memory document parsing,
+            mutable document building, and migrating from V4. If you&rsquo;re new to the library, start with
+            <a href="/getting-started/index.html">Getting Started</a> for a hands-on tutorial, or browse the
+            <a href="/examples/index.html">Example Recipes</a> for practical JSON&nbsp;Schema patterns you
+            can use straight away.
+        </p>
+    </div>
     <div class="card-grid">
-        <a class="card card--link" href="/docs/parsed-json-document.html">
-            <h3 class="card__title">ParsedJsonDocument</h3>
-            <p class="card__body">Pooled-memory document parsing with ArrayPool&lt;byte&gt;. The primary way to parse and access JSON data.</p>
-        </a>
-        <a class="card card--link" href="/docs/json-document-builder.html">
-            <h3 class="card__title">JsonDocumentBuilder</h3>
-            <p class="card__body">Mutable JSON documents with workspace-managed pooled memory for building and modifying JSON.</p>
-        </a>
-        <a class="card card--link" href="/docs/migrating-from-v4.html">
-            <h3 class="card__title">Migrating from V4 to V5</h3>
-            <p class="card__body">Step-by-step migration guide covering namespace changes, API differences, and new features.</p>
-        </a>
+        @if (docPages != null)
+        {
+            @foreach (var doc in docPages)
+            {
+                <a class="card card--link" href="@doc.Url">
+                    <h3 class="card__title">@doc.Title</h3>
+                    <p class="card__body">@doc.Description</p>
+                </a>
+            }
+        }
     </div>
 </div>

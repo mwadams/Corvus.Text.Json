@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: JsonDocumentBuilder
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Building JSON Documents with JsonWorkspace and JsonDocumentBuilder"
 Navigation:
   Title: JsonDocumentBuilder
-  Description: "Efficiently build JSON documents in memory using a fluent API."
+  Description: "This guide shows you how to build and modify JSON documents efficiently, with minimal allocations and excellent performance."
   Parent: /docs/index.html
   Url: /docs/json-document-builder.html
   Rank: 2
@@ -13,12 +13,12 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "JsonDocumentBuilder — Corvus.Text.Json"
-  Description: "Learn how to use JsonDocumentBuilder to efficiently construct JSON documents in memory using a fluent, allocation-friendly API."
-  Keywords: [JsonDocumentBuilder, fluent API, JSON construction, builder pattern, System.Text.Json]
+  Title: "Building JSON Documents with JsonWorkspace and JsonDocumentBuilder — Corvus.Text.Json"
+  Description: "This guide shows you how to build and modify JSON documents efficiently, with minimal allocations and excellent performance."
+  Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "JsonDocumentBuilder — Corvus.Text.Json"
-  Description: "Efficiently build JSON documents in memory using a fluent, allocation-friendly API."
+  Title: "Building JSON Documents with JsonWorkspace and JsonDocumentBuilder — Corvus.Text.Json"
+  Description: "This guide shows you how to build and modify JSON documents efficiently, with minimal allocations and excellent performance."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

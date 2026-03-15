@@ -1,10 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Migrating from Corvus.Json (V4) to Corvus.Text.Json (V5)"
 ---
-
 This guide helps you migrate code written against the V4 code generator (`Corvus.Json.CodeGeneration`, known informally as "Corvus.Json") to the V5 code generator (`Corvus.Text.Json.CodeGeneration`, known informally as "Corvus.Text.Json").
 
 V5 is a ground-up rewrite. The generated types are still readonly structs backed by JSON Schema, but the underlying architecture — memory management, mutation, and code generation — is fundamentally different. Most V4 patterns have a direct V5 equivalent, but some require rethinking.

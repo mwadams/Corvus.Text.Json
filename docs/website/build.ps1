@@ -6,11 +6,12 @@
       1. Build Corvus.Text.Json (generates XML doc + assembly)
       2. Generate API namespace markdown & taxonomy from XML docs
       3. Generate recipe content from ExampleRecipes source docs
-      4. Install Vellum SSG (if not present)
-      5. Run Vellum to render the core site
-      6. Compile SCSS to CSS
-      7. Generate standalone per-type API HTML pages
-      8. Build Lunr search index
+      4. Generate docs content from source documentation
+      5. Install Vellum SSG (if not present)
+      6. Run Vellum to render the core site
+      7. Compile SCSS to CSS
+      8. Generate standalone per-type API HTML pages
+      9. Build Lunr search index
 .PARAMETER Preview
     Launches a local preview server after building.
 .PARAMETER Watch
@@ -41,20 +42,20 @@ $toolProject = Join-Path $here "tools\XmlDocToMarkdown"
 
 # ── Helper: PascalCase to kebab-case ────────────────────────────────────────
 function ConvertTo-KebabCase([string]$text) {
-    $result = $text -creplace '([a-z])([A-Z])', '$1-$2'
+    $result = $text -creplace '([a-z0-9])([A-Z])', '$1-$2'
     $result = $result -creplace '([A-Z]+)([A-Z][a-z])', '$1-$2'
     return $result.ToLower()
 }
 
 # ── Step 1: Build Corvus.Text.Json ──────────────────────────────────────────
-Write-Host "`n[1/8] Building Corvus.Text.Json..." -ForegroundColor Cyan
+Write-Host "`n[1/9] Building Corvus.Text.Json..." -ForegroundColor Cyan
 $mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
 & dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
 if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json" }
 Write-Host "  XML documentation generated." -ForegroundColor Green
 
 # ── Step 2: Generate API namespace markdown & taxonomy ──────────────────────
-Write-Host "`n[2/8] Generating API namespace pages & taxonomy..." -ForegroundColor Cyan
+Write-Host "`n[2/9] Generating API namespace pages & taxonomy..." -ForegroundColor Cyan
 & dotnet run --project $toolProject -c Release -- `
     --xml $xmlPath `
     --assembly $assemblyPath `
@@ -64,7 +65,7 @@ if ($LASTEXITCODE -ne 0) { throw "API namespace generation failed" }
 Write-Host "  Namespace markdown & taxonomy generated." -ForegroundColor Green
 
 # ── Step 3: Generate recipe content from ExampleRecipes ─────────────────────
-Write-Host "`n[3/8] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
+Write-Host "`n[3/9] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
 
 $recipesSourceDir = Join-Path $repoRoot "docs\ExampleRecipes"
 $recipesContentDir = Join-Path $here "content\Examples"
@@ -268,13 +269,189 @@ ContentBlocks:
 }
 Write-Host "  $recipeCount recipe(s) generated." -ForegroundColor Green
 
-# ── Step 4: Install Vellum ──────────────────────────────────────────────────
+# ── Step 4: Generate docs content from source docs ──────────────────────────
+Write-Host "`n[4/9] Generating docs content from source documentation..." -ForegroundColor Cyan
+
+$docsSourceDir = Join-Path $repoRoot "docs"
+$docsContentDir = Join-Path $here "content\Docs"
+$docsTaxonomyDir = Join-Path $here "taxonomy\docs"
+$docsViewDir = Join-Path $here "theme\corvus\views\docs"
+
+# Docs to include (order matters — defines sidebar Rank)
+$docsToInclude = @(
+    'ParsedJsonDocument.md',
+    'JsonDocumentBuilder.md',
+    'MigratingFromV4ToV5.md',
+    'UsingCopilotForMigration.md'
+)
+
+# Clean old generated doc files (preserve index.*)
+Get-ChildItem $docsContentDir -Filter "*.md" -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -ne "Overview.md" } | Remove-Item -Force
+Get-ChildItem $docsTaxonomyDir -Filter "*.yml" -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -ne "index.yml" } | Remove-Item -Force
+Get-ChildItem $docsViewDir -Filter "*.cshtml" -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -ne "index.cshtml" } | Remove-Item -Force
+
+# Shared Razor view template for docs (dynamic sidebar with all sections)
+$docViewTemplate = @'
+@model SiteViewModel
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    var docsParent = Model.SiteContext.Navigation?.Children?
+        .FirstOrDefault(x => x.Url?.ToString()?.Contains("/docs/") == true);
+    var docPages = docsParent?.Children?.OrderBy(x => x.Rank).ToList();
+    var gettingStartedParent = Model.SiteContext.Navigation?.Children?
+        .FirstOrDefault(x => x.Url?.ToString()?.Contains("/getting-started/") == true);
+    var examplesParent = Model.SiteContext.Navigation?.Children?
+        .FirstOrDefault(x => x.Url?.ToString()?.Contains("/examples/") == true);
+    var currentUrl = Model.PageContext.Navigation?.Url;
+}
+<div class="layout-docs container">
+    <aside class="sidebar">
+        <div class="sidebar__section">
+            <button class="sidebar__heading">Getting Started</button>
+            <div class="sidebar__body">
+                <ul class="sidebar__list">
+                    <li class="sidebar__item"><a class="sidebar__link" href="/getting-started/index.html">Tutorial</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="sidebar__section">
+            <button class="sidebar__heading">Documentation</button>
+            <div class="sidebar__body">
+                <ul class="sidebar__list">
+                    @if (docPages != null)
+                    {
+                        @foreach (var doc in docPages)
+                        {
+                            var isActive = currentUrl != null && Vellum.Cli.Domain.Url.AreEquivalent(doc.Url, currentUrl);
+                            <li class="sidebar__item">
+                                <a class="sidebar__link @(isActive ? "is-active" : "")" href="@doc.Url">@doc.Title</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="sidebar__section">
+            <button class="sidebar__heading">Examples</button>
+            <div class="sidebar__body">
+                <ul class="sidebar__list">
+                    <li class="sidebar__item"><a class="sidebar__link" href="/examples/index.html">All Recipes</a></li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+    <main id="main-content" class="layout-docs__main">
+        <div class="doc__content">
+            <h1>@Model.PageContext.Title</h1>
+            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
+            {
+                @Html.Raw(contentFragment.Body)
+            }
+        </div>
+    </main>
+</div>
+'@
+
+$docCount = 0
+foreach ($docFile in $docsToInclude) {
+    $sourcePath = Join-Path $docsSourceDir $docFile
+    if (!(Test-Path $sourcePath)) {
+        Write-Warning "  Source doc not found: $docFile — skipping"
+        continue
+    }
+
+    $raw = Get-Content $sourcePath -Raw -Encoding utf8
+    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($docFile)
+    $slug = ConvertTo-KebabCase $baseName
+
+    # Extract title from # heading
+    if ($raw -match '^# (.+?)[\r\n]') {
+        $docTitle = $Matches[1].Trim() -replace '`', ''
+    } else {
+        $docTitle = ($baseName -creplace '([a-z])([A-Z])', '$1 $2')
+    }
+
+    # Strip the # heading line
+    $docBody = ($raw -replace '^#[^\n]+\n\s*', '').TrimStart()
+
+    # Extract first sentence as description
+    if ($docBody -match '^(.+?\.)\s') {
+        $docDescription = $Matches[1] -replace '"', '\"'
+    } else {
+        $docDescription = $docTitle
+    }
+
+    # Short nav title (trim if too long)
+    $navTitle = $docTitle
+    if ($navTitle.Length -gt 30) {
+        # Use a shorter form for sidebar
+        $navTitle = switch -Wildcard ($baseName) {
+            'ParsedJsonDocument'       { 'ParsedJsonDocument' }
+            'JsonDocumentBuilder'      { 'JsonDocumentBuilder' }
+            'MigratingFromV4ToV5'      { 'Migrating from V4' }
+            'UsingCopilotForMigration' { 'Copilot Migration' }
+            default                    { $docTitle.Substring(0, 27) + '...' }
+        }
+    }
+
+    # 1) Content markdown
+    $contentPath = Join-Path $docsContentDir "$baseName.md"
+    $frontmatter = "---`nContentType: `"application/vnd.endjin.ssg.content+md`"`nPublicationStatus: Published`nDate: 2026-03-15T00:00:00.0+00:00`nTitle: `"$($docTitle -replace '"', '\"')`"`n---`n"
+    [System.IO.File]::WriteAllText($contentPath, ($frontmatter + $docBody), [System.Text.Encoding]::UTF8)
+
+    # 2) Taxonomy YAML
+    $docRank = $docCount + 1
+    $docTaxonomyYml = @"
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "$($docTitle -replace '"', '\"')"
+Navigation:
+  Title: $navTitle
+  Description: "$docDescription"
+  Parent: /docs/index.html
+  Url: /docs/$slug.html
+  Rank: $docRank
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "$($docTitle -replace '"', '\"') — Corvus.Text.Json"
+  Description: "$docDescription"
+  Keywords: [documentation, Corvus.Text.Json]
+OpenGraph:
+  Title: "$($docTitle -replace '"', '\"') — Corvus.Text.Json"
+  Description: "$docDescription"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: $baseName
+    Spec:
+      Path: ../../content/Docs/$baseName.md
+"@
+    $docTaxonomyPath = Join-Path $docsTaxonomyDir "$slug.yml"
+    [System.IO.File]::WriteAllText($docTaxonomyPath, $docTaxonomyYml, [System.Text.Encoding]::UTF8)
+
+    # 3) View cshtml
+    $docViewPath = Join-Path $docsViewDir "$slug.cshtml"
+    [System.IO.File]::WriteAllText($docViewPath, $docViewTemplate, [System.Text.Encoding]::UTF8)
+
+    $docCount++
+    Write-Host "  $docTitle -> $slug" -ForegroundColor Gray
+}
+Write-Host "  $docCount doc page(s) generated." -ForegroundColor Green
+
+# ── Step 5: Install Vellum ──────────────────────────────────────────────────
 $vellumVersion = "2.0.9"
 $vellumDir = Join-Path $here ".endjin"
 $vellumCmd = Join-Path $vellumDir "vellum"
 
 if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
-    Write-Host "`n[4/8] Installing Vellum $vellumVersion..." -ForegroundColor Cyan
+    Write-Host "`n[5/9] Installing Vellum $vellumVersion..." -ForegroundColor Cyan
     if (!(Test-Path $vellumDir)) {
         New-Item -ItemType Directory -Path $vellumDir | Out-Null
     }
@@ -283,11 +460,11 @@ if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
     if ($LASTEXITCODE -ne 0) { throw "Failed to install Vellum" }
     Write-Host "  Vellum installed." -ForegroundColor Green
 } else {
-    Write-Host "`n[4/8] Vellum already installed." -ForegroundColor DarkGray
+    Write-Host "`n[5/9] Vellum already installed." -ForegroundColor DarkGray
 }
 
-# ── Step 5: Run Vellum ──────────────────────────────────────────────────────
-Write-Host "`n[5/8] Running Vellum..." -ForegroundColor Cyan
+# ── Step 6: Run Vellum ──────────────────────────────────────────────────────
+Write-Host "`n[6/9] Running Vellum..." -ForegroundColor Cyan
 
 # Prepare output directory
 if (Test-Path $outputDir) { Remove-Item $outputDir -Recurse -Force }
@@ -302,16 +479,16 @@ if ($Watch)   { $vellumArgs += "--watch" }
 if ($LASTEXITCODE -ne 0) { throw "Vellum generation failed" }
 Write-Host "  Site rendered." -ForegroundColor Green
 
-# ── Step 6: Compile SCSS ────────────────────────────────────────────────────
-Write-Host "`n[6/8] Compiling SCSS..." -ForegroundColor Cyan
+# ── Step 7: Compile SCSS ────────────────────────────────────────────────────
+Write-Host "`n[7/9] Compiling SCSS..." -ForegroundColor Cyan
 $scssPath = Join-Path $assetsSource "css\scss\main.scss"
 $cssOutputPath = Join-Path $outputDir "main.css"
 & npx sass $scssPath $cssOutputPath --style=compressed --no-source-map
 if ($LASTEXITCODE -ne 0) { throw "SCSS compilation failed" }
 Write-Host "  CSS written to $cssOutputPath" -ForegroundColor Green
 
-# ── Step 7: Generate per-type API HTML pages ────────────────────────────────
-Write-Host "`n[7/8] Generating per-type API pages..." -ForegroundColor Cyan
+# ── Step 8: Generate per-type API HTML pages ────────────────────────────────
+Write-Host "`n[8/9] Generating per-type API pages..." -ForegroundColor Cyan
 $apiHtmlDir = Join-Path $outputDir "api"
 & dotnet run --project $toolProject -c Release --no-build -- `
     --xml $xmlPath `
@@ -327,8 +504,8 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "  $count per-type API pages generated." -ForegroundColor Green
 }
 
-# ── Step 8: Build search index ──────────────────────────────────────────────
-Write-Host "`n[8/8] Building search index..." -ForegroundColor Cyan
+# ── Step 9: Build search index ──────────────────────────────────────────────
+Write-Host "`n[9/9] Building search index..." -ForegroundColor Cyan
 $searchIndexOutput = Join-Path $outputDir "search-index.json"
 & node (Join-Path $here "tools\build-search-index.js") --output $searchIndexOutput
 if ($LASTEXITCODE -ne 0) {
