@@ -15,7 +15,7 @@ internal static partial class Strings
     private static readonly bool s_usingResourceKeys = GetUsingResourceKeysSwitchValue();
 
     // This method is a target of ILLink substitution.
-    private static bool GetUsingResourceKeysSwitchValue() => AppContext.TryGetSwitch("System.Resources.UseSystemResourceKeys", out bool usingResourceKeys) ? usingResourceKeys : false;
+    private static bool GetUsingResourceKeysSwitchValue() => AppContext.TryGetSwitch("System.Resources.UseSystemResourceKeys", out bool usingResourceKeys) && usingResourceKeys;
 
     // This method is used to decide if we need to append the exception message parameters to the message when calling SR.Format.
     // by default it returns the value of System.Resources.UseSystemResourceKeys AppContext switch or false if not specified.

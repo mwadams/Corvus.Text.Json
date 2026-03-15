@@ -34,9 +34,9 @@ internal ref struct Utf8ValueCursor
     public Utf8ValueCursor(ReadOnlySpan<byte> value)
     {
         // Validated by caller.
-        this.Value = value;
-        this.Length = value.Length;
-        this.Move(-1);
+        Value = value;
+        Length = value.Length;
+        Move(-1);
     }
 
     /// <summary>
@@ -66,9 +66,9 @@ internal ref struct Utf8ValueCursor
     /// A <see cref="string" /> that represents this instance.
     /// </returns>
     public override readonly string ToString() =>
-        this.Index <= 0 ? $"^{JsonReaderHelper.GetTextFromUtf8(this.Value)}"
-            : this.Index >= this.Length ? $"{JsonReaderHelper.GetTextFromUtf8(this.Value)}^"
-            : JsonReaderHelper.GetTextFromUtf8(this.Value).Insert(this.Index, "^");
+        Index <= 0 ? $"^{JsonReaderHelper.GetTextFromUtf8(Value)}"
+            : Index >= Length ? $"{JsonReaderHelper.GetTextFromUtf8(Value)}^"
+            : JsonReaderHelper.GetTextFromUtf8(Value).Insert(Index, "^");
 
     /// <summary>
     /// Moves the specified target index. If the new index is out of range of the valid indices
@@ -83,22 +83,22 @@ internal ref struct Utf8ValueCursor
         {
             if (targetIndex >= 0)
             {
-                if (targetIndex < this.Length)
+                if (targetIndex < Length)
                 {
-                    this.Index = targetIndex;
-                    this.Current = this.Value[this.Index];
+                    Index = targetIndex;
+                    Current = Value[Index];
                     return true;
                 }
                 else
                 {
-                    this.Current = Nul;
-                    this.Index = this.Length;
+                    Current = Nul;
+                    Index = Length;
                     return false;
                 }
             }
 
-            this.Current = Nul;
-            this.Index = -1;
+            Current = Nul;
+            Index = -1;
             return false;
         }
     }
@@ -113,16 +113,16 @@ internal ref struct Utf8ValueCursor
         {
             // Logically this is Move(Index + 1), but it's micro-optimized as we
             // know we'll never hit the lower limit this way.
-            int targetIndex = this.Index + 1;
-            if (targetIndex < this.Length)
+            int targetIndex = Index + 1;
+            if (targetIndex < Length)
             {
-                this.Index = targetIndex;
-                this.Current = this.Value[this.Index];
+                Index = targetIndex;
+                Current = Value[Index];
                 return true;
             }
 
-            this.Current = Nul;
-            this.Index = this.Length;
+            Current = Nul;
+            Index = Length;
             return false;
         }
     }
@@ -141,20 +141,20 @@ internal ref struct Utf8ValueCursor
         unchecked
         {
             result = 0;
-            int localIndex = this.Index;
+            int localIndex = Index;
             int minIndex = localIndex + minimumDigits;
-            if (minIndex > this.Length)
+            if (minIndex > Length)
             {
                 // If we don't have all the digits we're meant to have, we can't possibly succeed.
                 return false;
             }
 
-            int maxIndex = Math.Min(localIndex + maximumDigits, this.Length);
+            int maxIndex = Math.Min(localIndex + maximumDigits, Length);
             for (; localIndex < maxIndex; localIndex++)
             {
                 // Optimized digit handling: rather than checking for the range, returning -1
                 // and then checking whether the result is -1, we can do both checks at once.
-                int digit = this.Value[localIndex] - '0';
+                int digit = Value[localIndex] - '0';
                 if (digit < 0 || digit > 9)
                 {
                     break;
@@ -163,7 +163,7 @@ internal ref struct Utf8ValueCursor
                 result = (result * 10) + digit;
             }
 
-            int count = localIndex - this.Index;
+            int count = localIndex - Index;
 
             // Couldn't parse the minimum number of digits required?
             if (count < minimumDigits)
@@ -172,7 +172,7 @@ internal ref struct Utf8ValueCursor
             }
 
             result = (int)(result * Math.Pow(10.0, scale - count));
-            this.Move(localIndex);
+            Move(localIndex);
             return true;
         }
     }
@@ -190,24 +190,24 @@ internal ref struct Utf8ValueCursor
         unchecked
         {
             result = 0L;
-            int startIndex = this.Index;
-            bool negative = this.Current == '-';
+            int startIndex = Index;
+            bool negative = Current == '-';
             if (negative)
             {
-                if (!this.MoveNext())
+                if (!MoveNext())
                 {
-                    this.Move(startIndex);
+                    Move(startIndex);
                     return false;
                 }
             }
 
             int count = 0;
             int digit;
-            while (result < 922337203685477580 && (digit = this.GetDigit()) != -1)
+            while (result < 922337203685477580 && (digit = GetDigit()) != -1)
             {
                 result = (result * 10) + digit;
                 count++;
-                if (!this.MoveNext())
+                if (!MoveNext())
                 {
                     break;
                 }
@@ -215,11 +215,11 @@ internal ref struct Utf8ValueCursor
 
             if (count == 0)
             {
-                this.Move(startIndex);
+                Move(startIndex);
                 return false;
             }
 
-            if (result >= 922337203685477580 && (digit = this.GetDigit()) != -1)
+            if (result >= 922337203685477580 && (digit = GetDigit()) != -1)
             {
                 if (result > 922337203685477580)
                 {
@@ -228,7 +228,7 @@ internal ref struct Utf8ValueCursor
 
                 if (negative && digit == 8)
                 {
-                    this.MoveNext();
+                    MoveNext();
                     result = long.MinValue;
                     return true;
                 }
@@ -240,8 +240,8 @@ internal ref struct Utf8ValueCursor
 
                 // We know we can cope with this digit...
                 result = (result * 10) + digit;
-                this.MoveNext();
-                if (this.GetDigit() != -1)
+                MoveNext();
+                if (GetDigit() != -1)
                 {
                     // Too many digits. Die.
                     return false;
@@ -267,7 +267,7 @@ internal ref struct Utf8ValueCursor
     {
         unchecked
         {
-            int c = this.Current;
+            int c = Current;
             return c < '0' || c > '9' ? -1 : c - '0';
         }
     }

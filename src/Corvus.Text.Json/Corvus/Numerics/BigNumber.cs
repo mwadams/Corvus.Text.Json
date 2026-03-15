@@ -69,7 +69,7 @@ public readonly partial struct BigNumber :
     /// Lazy-initialized cache for larger powers of 10 (256-1023).
     /// </summary>
     private static readonly Lazy<System.Collections.Concurrent.ConcurrentDictionary<int, BigInteger>> LargePowersOf10 =
-        new Lazy<System.Collections.Concurrent.ConcurrentDictionary<int, BigInteger>>(
+        new(
             () => new System.Collections.Concurrent.ConcurrentDictionary<int, BigInteger>());
 
     private static BigInteger[] InitializePowersOf10()
@@ -139,9 +139,9 @@ public readonly partial struct BigNumber :
 
     private BigNumber(BigInteger significand, int exponent, bool normalized)
     {
-        this.Significand = significand;
-        this.Exponent = exponent;
-        this._normalized = normalized;
+        Significand = significand;
+        Exponent = exponent;
+        _normalized = normalized;
     }
 
     /// <summary>
@@ -151,8 +151,8 @@ public readonly partial struct BigNumber :
     /// <param name="exponent">The exponent (power of 10).</param>
     public BigNumber(BigInteger significand, int exponent)
     {
-        this.Significand = significand;
-        this.Exponent = exponent;
+        Significand = significand;
+        Exponent = exponent;
     }
 
     /// <summary>
@@ -216,13 +216,13 @@ public readonly partial struct BigNumber :
             return this;
         }
 
-        if (this.Significand.IsZero)
+        if (Significand.IsZero)
         {
             return Zero;
         }
 
-        BigInteger significand = this.Significand;
-        int exponent = this.Exponent;
+        BigInteger significand = Significand;
+        int exponent = Exponent;
 
         while (!significand.IsZero && significand % 10 == 0)
         {
@@ -239,12 +239,12 @@ public readonly partial struct BigNumber :
     /// <returns><c>true</c> if the value is an integer; otherwise, <c>false</c>.</returns>
     public bool IsInteger()
     {
-        if (this.Exponent >= 0)
+        if (Exponent >= 0)
         {
             return true;
         }
 
-        BigNumber normalized = this.Normalize();
+        BigNumber normalized = Normalize();
         return normalized.Exponent >= 0;
     }
 
@@ -252,24 +252,24 @@ public readonly partial struct BigNumber :
     public bool Equals(BigNumber other)
     {
         // Fast path: Same exponent - compare significands directly
-        if (this.Exponent == other.Exponent)
+        if (Exponent == other.Exponent)
         {
-            return this.Significand == other.Significand;
+            return Significand == other.Significand;
         }
 
         // Standard path: Normalize and compare
-        BigNumber left = this.Normalize();
+        BigNumber left = Normalize();
         BigNumber right = other.Normalize();
         return left.Significand == right.Significand && left.Exponent == right.Exponent;
     }
 
     /// <inheritdoc/>
-    public override bool Equals([NotNullWhen(true)] object? obj) => obj is BigNumber other && this.Equals(other);
+    public override bool Equals([NotNullWhen(true)] object? obj) => obj is BigNumber other && Equals(other);
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        BigNumber normalized = this.Normalize();
+        BigNumber normalized = Normalize();
 #if NET
         return HashCode.Combine(normalized.Significand, normalized.Exponent);
 #else
@@ -287,22 +287,22 @@ public readonly partial struct BigNumber :
     public int CompareTo(BigNumber other)
     {
         // Fast path: Exact same values (including denormalized)
-        if (this.Significand == other.Significand && this.Exponent == other.Exponent)
+        if (Significand == other.Significand && Exponent == other.Exponent)
             return 0;
 
         // Fast path: Zero checks (don't need normalization)
-        if (this.Significand.IsZero)
+        if (Significand.IsZero)
             return other.Significand.IsZero ? 0 : -other.Significand.Sign;
 
         if (other.Significand.IsZero)
-            return this.Significand.Sign;
+            return Significand.Sign;
 
         // Fast path: Different signs
-        if (this.Significand.Sign != other.Significand.Sign)
-            return this.Significand.Sign.CompareTo(other.Significand.Sign);
+        if (Significand.Sign != other.Significand.Sign)
+            return Significand.Sign.CompareTo(other.Significand.Sign);
 
         // Normalize for accurate comparison
-        BigNumber left = this.Normalize();
+        BigNumber left = Normalize();
         BigNumber right = other.Normalize();
 
         int exponentDiff = left.Exponent - right.Exponent;
@@ -349,19 +349,19 @@ public readonly partial struct BigNumber :
 
         if (obj is BigNumber other)
         {
-            return this.CompareTo(other);
+            return CompareTo(other);
         }
 
         throw new ArgumentException($"Object must be of type {nameof(BigNumber)}.", nameof(obj));
     }
 
     /// <inheritdoc/>
-    public override string ToString() => this.ToString(null, null);
+    public override string ToString() => ToString(null, null);
 
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
-        if (this.Significand.IsZero)
+        if (Significand.IsZero)
         {
             return string.IsNullOrEmpty(format) ? "0" : FormatZero(format, formatProvider);
         }
@@ -369,7 +369,7 @@ public readonly partial struct BigNumber :
         // If no format specified, use raw format (SignificandEExponent)
         if (string.IsNullOrEmpty(format))
         {
-            BigNumber normalized = this.Normalize();
+            BigNumber normalized = Normalize();
             if (normalized.Exponent == 0)
             {
                 return normalized.Significand.ToString(formatProvider);
@@ -474,7 +474,7 @@ public readonly partial struct BigNumber :
 
     private string FormatGeneral(int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
-        BigNumber normalized = this.Normalize();
+        BigNumber normalized = Normalize();
 
         // If precision is specified, we need to round and potentially use exponential
         if (precision > 0)
@@ -658,13 +658,13 @@ public readonly partial struct BigNumber :
 
     private string FormatExponential(int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
-        if (this.Significand.IsZero)
+        if (Significand.IsZero)
         {
             string zeros = precision > 0 ? formatInfo.NumberDecimalSeparator + new string('0', precision) : "";
             return "0" + zeros + exponentChar + "+000";
         }
 
-        BigNumber normalized = this.Normalize();
+        BigNumber normalized = Normalize();
         string sigStr = BigInteger.Abs(normalized.Significand).ToString(formatInfo);
 
         // Calculate the actual exponent (position of first significant digit)
@@ -937,14 +937,14 @@ public readonly partial struct BigNumber :
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         // Use the optimized zero-allocation implementation
-        return this.TryFormatOptimized(destination, out charsWritten, format, provider);
+        return TryFormatOptimized(destination, out charsWritten, format, provider);
     }
 
     /// <inheritdoc/>
     public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         // Use the optimized zero-allocation implementation
-        return this.TryFormatUtf8Optimized(utf8Destination, out bytesWritten, format, provider);
+        return TryFormatUtf8Optimized(utf8Destination, out bytesWritten, format, provider);
     }
 #endif
 
@@ -952,14 +952,14 @@ public readonly partial struct BigNumber :
     public bool TryFormat(Span<char> destination, out int charsWritten)
     {
         // Use the optimized zero-allocation implementation
-        return this.TryFormatOptimized(destination, out charsWritten, default, null);
+        return TryFormatOptimized(destination, out charsWritten, default, null);
     }
 
     /// <inheritdoc/>
     public bool TryFormat(Span<byte> destination, out int bytesWritten)
     {
         // Use the optimized zero-allocation implementation
-        return this.TryFormatUtf8Optimized(destination, out bytesWritten, default, null);
+        return TryFormatUtf8Optimized(destination, out bytesWritten, default, null);
     }
 
     /// <summary>

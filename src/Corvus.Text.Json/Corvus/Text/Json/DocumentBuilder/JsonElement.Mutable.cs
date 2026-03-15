@@ -24,7 +24,7 @@ namespace Corvus.Text.Json;
 
 public readonly partial struct JsonElement
 {
-    private static readonly StandardFormat s_dateTimeStandardFormat = new StandardFormat('O');
+    private static readonly StandardFormat s_dateTimeStandardFormat = new('O');
 
     /// <summary>
     /// Represents a source for creating mutable JSON elements from various value types.

@@ -2154,7 +2154,7 @@ internal static class Utf8UriTools
                         End = info.End
                     };
 
-                return requireAbsolute ? false : true;
+                return !requireAbsolute;
 
                 // Otherwise an absolute file Uri wins when it's of the form "\\something"
             }
@@ -2174,7 +2174,7 @@ internal static class Utf8UriTools
                         End = info.End
                     };
 
-                return requireAbsolute ? false : true;
+                return !requireAbsolute;
 
                 // Otherwise an absolute file Uri wins when it's of the form "c:\something"
             }
@@ -2286,7 +2286,7 @@ internal static class Utf8UriTools
                         flags |= localFlags;
                     }
 
-                    return requireAbsolute ? false : true;
+                    return !requireAbsolute;
 
                     // Otherwise an absolute file Uri wins when it's of the form "\\something"
                 }
@@ -2297,7 +2297,7 @@ internal static class Utf8UriTools
                 {
                     syntax = null!; // make it be relative Uri
                     flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
-                    return requireAbsolute ? false : true;
+                    return !requireAbsolute;
 
                     // Otherwise an absolute file Uri wins when it's of the form "c:\something"
                 }

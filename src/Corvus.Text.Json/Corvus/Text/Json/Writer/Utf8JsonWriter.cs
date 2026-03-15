@@ -376,7 +376,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
         SetOptions(options);
     }
 
-    internal static Utf8JsonWriter CreateEmptyInstanceForCaching() => new Utf8JsonWriter();
+    internal static Utf8JsonWriter CreateEmptyInstanceForCaching() => new();
 
     private void ResetHelper()
     {

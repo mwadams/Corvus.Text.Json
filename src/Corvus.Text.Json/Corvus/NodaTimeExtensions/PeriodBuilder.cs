@@ -102,16 +102,16 @@ public struct PeriodBuilder
     {
         readonly get => unit switch
         {
-            PeriodUnits.Years => this.Years,
-            PeriodUnits.Months => this.Months,
-            PeriodUnits.Weeks => this.Weeks,
-            PeriodUnits.Days => this.Days,
-            PeriodUnits.Hours => this.Hours,
-            PeriodUnits.Minutes => this.Minutes,
-            PeriodUnits.Seconds => this.Seconds,
-            PeriodUnits.Milliseconds => this.Milliseconds,
-            PeriodUnits.Ticks => this.Ticks,
-            PeriodUnits.Nanoseconds => this.Nanoseconds,
+            PeriodUnits.Years => Years,
+            PeriodUnits.Months => Months,
+            PeriodUnits.Weeks => Weeks,
+            PeriodUnits.Days => Days,
+            PeriodUnits.Hours => Hours,
+            PeriodUnits.Minutes => Minutes,
+            PeriodUnits.Seconds => Seconds,
+            PeriodUnits.Milliseconds => Milliseconds,
+            PeriodUnits.Ticks => Ticks,
+            PeriodUnits.Nanoseconds => Nanoseconds,
             _ => throw new ArgumentOutOfRangeException(nameof(unit), "Indexer for PeriodBuilder only takes a single unit"),
         };
 
@@ -119,16 +119,16 @@ public struct PeriodBuilder
         {
             switch (unit)
             {
-                case PeriodUnits.Years: this.Years = (int)value; return;
-                case PeriodUnits.Months: this.Months = (int)value; return;
-                case PeriodUnits.Weeks: this.Weeks = (int)value; return;
-                case PeriodUnits.Days: this.Days = (int)value; return;
-                case PeriodUnits.Hours: this.Hours = value; return;
-                case PeriodUnits.Minutes: this.Minutes = value; return;
-                case PeriodUnits.Seconds: this.Seconds = value; return;
-                case PeriodUnits.Milliseconds: this.Milliseconds = value; return;
-                case PeriodUnits.Ticks: this.Ticks = value; return;
-                case PeriodUnits.Nanoseconds: this.Nanoseconds = value; return;
+                case PeriodUnits.Years: Years = (int)value; return;
+                case PeriodUnits.Months: Months = (int)value; return;
+                case PeriodUnits.Weeks: Weeks = (int)value; return;
+                case PeriodUnits.Days: Days = (int)value; return;
+                case PeriodUnits.Hours: Hours = value; return;
+                case PeriodUnits.Minutes: Minutes = value; return;
+                case PeriodUnits.Seconds: Seconds = value; return;
+                case PeriodUnits.Milliseconds: Milliseconds = value; return;
+                case PeriodUnits.Ticks: Ticks = value; return;
+                case PeriodUnits.Nanoseconds: Nanoseconds = value; return;
                 default: throw new ArgumentOutOfRangeException(nameof(unit), "Indexer for PeriodBuilder only takes a single unit");
             }
         }
@@ -140,7 +140,7 @@ public struct PeriodBuilder
     /// <returns>The total number of nanoseconds in the period.</returns>
     public readonly Period BuildPeriod()
     {
-        long totalNanoseconds = this.Nanoseconds +
+        long totalNanoseconds = Nanoseconds +
             (Ticks * NodaConstants.NanosecondsPerTick) +
             (Milliseconds * NodaConstants.NanosecondsPerMillisecond) +
             (Seconds * NodaConstants.NanosecondsPerSecond) +
@@ -156,6 +156,6 @@ public struct PeriodBuilder
         long milliseconds = (totalNanoseconds / NodaConstants.NanosecondsPerMillisecond) % NodaConstants.MillisecondsPerSecond;
         long nanoseconds = totalNanoseconds % NodaConstants.NanosecondsPerMillisecond;
 
-        return new Period(this.Years, this.Months, 0 /* weeks */, days, hours, minutes, seconds, milliseconds, 0 /* ticks */, nanoseconds);
+        return new Period(Years, Months, 0 /* weeks */, days, hours, minutes, seconds, milliseconds, 0 /* ticks */, nanoseconds);
     }
 }

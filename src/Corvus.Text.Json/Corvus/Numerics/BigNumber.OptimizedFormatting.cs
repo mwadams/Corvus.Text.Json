@@ -30,7 +30,7 @@ public readonly partial struct BigNumber
     /// <returns><c>true</c> if formatting succeeded; otherwise, <c>false</c>.</returns>
     public bool TryFormatOptimized(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
-        BigNumber normalized = this.Normalize();
+        BigNumber normalized = Normalize();
 
         // Handle empty format - output raw JSON format (significand + 'E' + exponent)
         if (format.IsEmpty)
@@ -138,7 +138,7 @@ public readonly partial struct BigNumber
     /// <returns><c>true</c> if formatting succeeded; otherwise, <c>false</c>.</returns>
     public bool TryFormatUtf8Optimized(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
-        BigNumber normalized = this.Normalize();
+        BigNumber normalized = Normalize();
 
         // Handle empty format - output raw JSON format (significand + 'E' + exponent)
         if (format.IsEmpty)

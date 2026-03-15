@@ -173,7 +173,7 @@ public static partial class JsonElementHelpers
     /// <param name="integral">When concatenated with <paramref name="fractional"/> produces the significand of the number without leading or trailing zeros.</param>
     /// <param name="fractional">When concatenated with <paramref name="integral"/> produces the significand of the number without leading or trailing zeros.</param>
     /// <param name="exponent">The exponent of the number.</param>
-    /// <param name="divisor">The significand of the divisor represented as a <see cref="UInt64"/>.</param>
+    /// <param name="divisor">The significand of the divisor represented as a <see cref="ulong"/>.</param>
     /// <param name="divisorExponent">The exponent of the divisor. This will be non-zero if the divisor had a fractional component.</param>
     /// <returns>True if the normalized JSON number is a multiple of the divisor (i.e. <c>n mod D == 0</c>).</returns>
     /// <remarks>We do not need to pass the sign of the JSON number as it is irrelevant to the calculation.</remarks>
@@ -923,7 +923,7 @@ public static partial class JsonElementHelpers
                 // Process trailing zeros
                 if (remainingTrailingZeros > 0)
                 {
-                    remainder = remainder * 10;
+                    remainder *= 10;
                     int quotient = remainder / 16;
                     if (quotient > 0 || newDigitCount > 0)
                     {
@@ -934,7 +934,7 @@ public static partial class JsonElementHelpers
                 }
 
                 // Convert remainder to hex digit and write directly at end of buffer
-                remainder = remainder % 16;
+                remainder %= 16;
                 char hexDigit = remainder < 10
                     ? (char)('0' + remainder)
                     : (lowercase ? (char)('a' + (remainder - 10)) : (char)('A' + (remainder - 10)));
@@ -1072,9 +1072,9 @@ public static partial class JsonElementHelpers
                 // Process trailing zeros
                 if (remainingTrailingZeros > 0)
                 {
-                    remainder = remainder * 10;
+                    remainder *= 10;
                     int quotient = remainder / 2;
-                    remainder = remainder % 2;
+                    remainder %= 2;
                     if (quotient > 0 || newDigitCount > 0)
                     {
                         if (newDigitCount < workingDigits.Length)
@@ -1087,7 +1087,7 @@ public static partial class JsonElementHelpers
                 }
                 else
                 {
-                    remainder = remainder % 2;
+                    remainder %= 2;
                 }
 
                 // Write binary digit directly at end of buffer
@@ -1221,7 +1221,7 @@ public static partial class JsonElementHelpers
                 // Process trailing zeros
                 if (remainingTrailingZeros > 0)
                 {
-                    remainder = remainder * 10;
+                    remainder *= 10;
                     int quotient = remainder / 16;
                     if (quotient > 0 || newDigitCount > 0)
                     {
@@ -1232,7 +1232,7 @@ public static partial class JsonElementHelpers
                 }
 
                 // Convert remainder to hex digit
-                remainder = remainder % 16;
+                remainder %= 16;
                 byte hexDigit = remainder < 10
                     ? (byte)('0' + remainder)
                     : (lowercase ? (byte)('a' + (remainder - 10)) : (byte)('A' + (remainder - 10)));
@@ -1363,9 +1363,9 @@ public static partial class JsonElementHelpers
                 // Process trailing zeros
                 if (remainingTrailingZeros > 0)
                 {
-                    remainder = remainder * 10;
+                    remainder *= 10;
                     int quotient = remainder / 2;
-                    remainder = remainder % 2;
+                    remainder %= 2;
                     if (quotient > 0 || newDigitCount > 0)
                     {
                         if (newDigitCount < workingDigits.Length)
@@ -1378,7 +1378,7 @@ public static partial class JsonElementHelpers
                 }
                 else
                 {
-                    remainder = remainder % 2;
+                    remainder %= 2;
                 }
 
                 // Write binary digit

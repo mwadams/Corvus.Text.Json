@@ -673,7 +673,7 @@ public struct MetadataDb : IDisposable
     /// <param name="propertyMapIndex">The property map index to set.</param>
     internal void SetPropertyMapIndex(int index, int propertyMapIndex)
     {
-        this.AssertValidIndex(index);
+        AssertValidIndex(index);
         uint pmi = (uint)propertyMapIndex | 0x8000_0000U;
 
         Span<byte> destination = _data.AsSpan(index + SizeOrLengthOffset);

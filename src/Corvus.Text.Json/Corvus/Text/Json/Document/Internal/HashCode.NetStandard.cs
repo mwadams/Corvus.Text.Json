@@ -16,7 +16,7 @@ namespace Corvus.Text.Json.Internal;
 /// </summary>
 internal static class StringHashCodePolyfills
 {
-    extension(String)
+    extension(string)
     {
         /// <summary>
         /// Computes the hash code for the specified character span.

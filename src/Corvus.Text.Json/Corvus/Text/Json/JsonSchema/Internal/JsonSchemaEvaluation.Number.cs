@@ -299,7 +299,7 @@ public static partial class JsonSchemaEvaluation
     /// <param name="integral">The integral part of the number.</param>
     /// <param name="fractional">The fractional part of the number.</param>
     /// <param name="exponent">The exponent of the number.</param>
-    /// <param name="divisor">The significand of the divisor represented as a <see cref="UInt64"/>.</param>
+    /// <param name="divisor">The significand of the divisor represented as a <see cref="ulong"/>.</param>
     /// <param name="divisorExponent">The exponent of the divisor. This will be non-zero if the divisor had a fractional component.</param>
     /// <param name="divisorValue">The string representation of the divisor.</param>
     /// <param name="keyword">The keyword being evaluated.</param>
@@ -541,7 +541,7 @@ public static partial class JsonSchemaEvaluation
     /// <param name="integral">The integral part of the number.</param>
     /// <param name="fractional">The fractional part of the number.</param>
     /// <param name="exponent">The exponent of the number.</param>
-    /// <param name="divisor">The significand of the divisor represented as a <see cref="UInt64"/>.</param>
+    /// <param name="divisor">The significand of the divisor represented as a <see cref="ulong"/>.</param>
     /// <param name="divisorExponent">The exponent of the divisor. This will be non-zero if the divisor had a fractional component.</param>
     /// <param name="divisorValue">The string representation of the divisor.</param>
     /// <param name="keyword">The keyword being evaluated.</param>

@@ -77,16 +77,16 @@ public readonly struct Period : IEquatable<Period>
     internal Period(int years, int months, int weeks, int days, long hours, long minutes, long seconds, long milliseconds, long ticks, long nanoseconds)
 #pragma warning restore SA1611
     {
-        this.Years = years;
-        this.Months = months;
-        this.Weeks = weeks;
-        this.Days = days;
-        this.Hours = hours;
-        this.Minutes = minutes;
-        this.Seconds = seconds;
-        this.Milliseconds = milliseconds;
-        this.Ticks = ticks;
-        this.Nanoseconds = nanoseconds;
+        Years = years;
+        Months = months;
+        Weeks = weeks;
+        Days = days;
+        Hours = hours;
+        Minutes = minutes;
+        Seconds = seconds;
+        Milliseconds = milliseconds;
+        Ticks = ticks;
+        Nanoseconds = nanoseconds;
     }
 
     /// <summary>
@@ -94,10 +94,10 @@ public readonly struct Period : IEquatable<Period>
     /// </summary>
     private Period(int years, int months, int weeks, int days)
     {
-        this.Years = years;
-        this.Months = months;
-        this.Weeks = weeks;
-        this.Days = days;
+        Years = years;
+        Months = months;
+        Weeks = weeks;
+        Days = days;
     }
 
     /// <summary>
@@ -105,12 +105,12 @@ public readonly struct Period : IEquatable<Period>
     /// </summary>
     private Period(long hours, long minutes, long seconds, long milliseconds, long ticks, long nanoseconds)
     {
-        this.Hours = hours;
-        this.Minutes = minutes;
-        this.Seconds = seconds;
-        this.Milliseconds = milliseconds;
-        this.Ticks = ticks;
-        this.Nanoseconds = nanoseconds;
+        Hours = hours;
+        Minutes = minutes;
+        Seconds = seconds;
+        Milliseconds = milliseconds;
+        Ticks = ticks;
+        Nanoseconds = nanoseconds;
     }
 
     // General implementation note: operations such as normalization work out the total number of nanoseconds as an Int64
@@ -237,27 +237,27 @@ public readonly struct Period : IEquatable<Period>
     /// Gets a value indicating whether or not this period contains any non-zero-valued time-based properties (hours or lower).
     /// </summary>
     /// <value>true if the period contains any non-zero-valued time-based properties (hours or lower); false otherwise.</value>
-    public bool HasTimeComponent => this.Hours != 0 || this.Minutes != 0 || this.Seconds != 0 || this.Milliseconds != 0 || this.Ticks != 0 || this.Nanoseconds != 0;
+    public bool HasTimeComponent => Hours != 0 || Minutes != 0 || Seconds != 0 || Milliseconds != 0 || Ticks != 0 || Nanoseconds != 0;
 
     /// <summary>
     /// Gets a value indicating whether or not this period contains any non-zero date-based properties (days or higher).
     /// </summary>
     /// <value>true if this period contains any non-zero date-based properties (days or higher); false otherwise.</value>
-    public bool HasDateComponent => this.Years != 0 || this.Months != 0 || this.Weeks != 0 || this.Days != 0;
+    public bool HasDateComponent => Years != 0 || Months != 0 || Weeks != 0 || Days != 0;
 
     /// <summary>
     /// Gets the total number of nanoseconds duration for the 'standard' properties (all bar years and months).
     /// </summary>
     /// <value>The total number of nanoseconds duration for the 'standard' properties (all bar years and months).</value>
     private long TotalNanoseconds =>
-        this.Nanoseconds +
-            (this.Ticks * NanosecondsPerTick) +
-            (this.Milliseconds * NanosecondsPerMillisecond) +
-            (this.Seconds * NanosecondsPerSecond) +
-            (this.Minutes * NanosecondsPerMinute) +
-            (this.Hours * NanosecondsPerHour) +
-            (this.Days * NanosecondsPerDay) +
-            (this.Weeks * NanosecondsPerWeek);
+        Nanoseconds +
+            (Ticks * NanosecondsPerTick) +
+            (Milliseconds * NanosecondsPerMillisecond) +
+            (Seconds * NanosecondsPerSecond) +
+            (Minutes * NanosecondsPerMinute) +
+            (Hours * NanosecondsPerHour) +
+            (Days * NanosecondsPerDay) +
+            (Weeks * NanosecondsPerWeek);
 
     /// <summary>
     /// Convert to a NodaTime.Period.
@@ -660,12 +660,12 @@ public readonly struct Period : IEquatable<Period>
     [Pure]
     public Duration ToDuration()
     {
-        if (this.Months != 0 || this.Years != 0)
+        if (Months != 0 || Years != 0)
         {
             throw new InvalidOperationException("Cannot construct duration of period with non-zero months or years.");
         }
 
-        return Duration.FromNanoseconds(this.TotalNanoseconds);
+        return Duration.FromNanoseconds(TotalNanoseconds);
     }
 
     /// <summary>
@@ -694,7 +694,7 @@ public readonly struct Period : IEquatable<Period>
     {
         // Simplest way to normalize: grab all the fields up to "week" and
         // sum them.
-        long totalNanoseconds = this.TotalNanoseconds;
+        long totalNanoseconds = TotalNanoseconds;
         int days = (int)(totalNanoseconds / NanosecondsPerDay);
         long hours = (totalNanoseconds / NanosecondsPerHour) % HoursPerDay;
         long minutes = (totalNanoseconds / NanosecondsPerMinute) % MinutesPerHour;
@@ -702,7 +702,7 @@ public readonly struct Period : IEquatable<Period>
         long milliseconds = (totalNanoseconds / NanosecondsPerMillisecond) % MillisecondsPerSecond;
         long nanoseconds = totalNanoseconds % NanosecondsPerMillisecond;
 
-        return new Period(this.Years, this.Months, 0 /* weeks */, days, hours, minutes, seconds, milliseconds, 0 /* ticks */, nanoseconds);
+        return new Period(Years, Months, 0 /* weeks */, days, hours, minutes, seconds, milliseconds, 0 /* ticks */, nanoseconds);
     }
 
     /// <summary>
@@ -720,7 +720,7 @@ public readonly struct Period : IEquatable<Period>
     /// </summary>
     /// <param name="other">The value to compare this one with.</param>
     /// <returns>true if the other object is a period equal to this one, consistent with <see cref="Equals(Period)"/>.</returns>
-    public override bool Equals(object? other) => (other is Period p && this.Equals(p)) || (other is NodaTime.Period p1 && this.Equals(p1));
+    public override bool Equals(object? other) => (other is Period p && Equals(p)) || (other is NodaTime.Period p1 && Equals(p1));
 
     /// <summary>
     /// Returns the hash code for this period, consistent with <see cref="Equals(Period)"/>.
@@ -730,16 +730,16 @@ public readonly struct Period : IEquatable<Period>
     public override int GetHashCode()
     {
         HashCode hc = default;
-        hc.Add(this.Years);
-        hc.Add(this.Months);
-        hc.Add(this.Weeks);
-        hc.Add(this.Days);
-        hc.Add(this.Hours);
-        hc.Add(this.Minutes);
-        hc.Add(this.Seconds);
-        hc.Add(this.Milliseconds);
-        hc.Add(this.Ticks);
-        hc.Add(this.Nanoseconds);
+        hc.Add(Years);
+        hc.Add(Months);
+        hc.Add(Weeks);
+        hc.Add(Days);
+        hc.Add(Hours);
+        hc.Add(Minutes);
+        hc.Add(Seconds);
+        hc.Add(Milliseconds);
+        hc.Add(Ticks);
+        hc.Add(Nanoseconds);
         return hc.ToHashCode();
     }
 
@@ -750,16 +750,16 @@ public readonly struct Period : IEquatable<Period>
     /// <param name="other">The period to compare this one with.</param>
     /// <returns>True if this period has the same values for the same properties as the one specified.</returns>
     public bool Equals(Period other) =>
-        this.Years == other.Years &&
-        this.Months == other.Months &&
-        this.Weeks == other.Weeks &&
-        this.Days == other.Days &&
-        this.Hours == other.Hours &&
-        this.Minutes == other.Minutes &&
-        this.Seconds == other.Seconds &&
-        this.Milliseconds == other.Milliseconds &&
-        this.Ticks == other.Ticks &&
-        this.Nanoseconds == other.Nanoseconds;
+        Years == other.Years &&
+        Months == other.Months &&
+        Weeks == other.Weeks &&
+        Days == other.Days &&
+        Hours == other.Hours &&
+        Minutes == other.Minutes &&
+        Seconds == other.Seconds &&
+        Milliseconds == other.Milliseconds &&
+        Ticks == other.Ticks &&
+        Nanoseconds == other.Nanoseconds;
 
     /// <summary>
     /// Compares the given period for equality with this one.
@@ -768,16 +768,16 @@ public readonly struct Period : IEquatable<Period>
     /// <param name="other">The period to compare this one with.</param>
     /// <returns>True if this period has the same values for the same properties as the one specified.</returns>
     public bool Equals(NodaTime.Period other) =>
-        this.Years == other.Years &&
-        this.Months == other.Months &&
-        this.Weeks == other.Weeks &&
-        this.Days == other.Days &&
-        this.Hours == other.Hours &&
-        this.Minutes == other.Minutes &&
-        this.Seconds == other.Seconds &&
-        this.Milliseconds == other.Milliseconds &&
-        this.Ticks == other.Ticks &&
-        this.Nanoseconds == other.Nanoseconds;
+        Years == other.Years &&
+        Months == other.Months &&
+        Weeks == other.Weeks &&
+        Days == other.Days &&
+        Hours == other.Hours &&
+        Minutes == other.Minutes &&
+        Seconds == other.Seconds &&
+        Milliseconds == other.Milliseconds &&
+        Ticks == other.Ticks &&
+        Nanoseconds == other.Nanoseconds;
 
     /// <summary>
     /// Equality comparer which simply normalizes periods before comparing them.
@@ -820,7 +820,7 @@ public readonly struct Period : IEquatable<Period>
 
             // We have no access to the internals of period to let
             // us do this without a bunch of interim steps.
-            return this.baseDateTime
+            return baseDateTime
                     .PlusYears(x.Years)
                     .PlusMonths(x.Months)
                     .PlusWeeks(x.Weeks)
@@ -832,7 +832,7 @@ public readonly struct Period : IEquatable<Period>
                     .PlusTicks(x.Ticks)
                     .PlusNanoseconds(x.Nanoseconds)
                 .CompareTo(
-                   this.baseDateTime
+                   baseDateTime
                     .PlusYears(y.Years)
                     .PlusMonths(y.Months)
                     .PlusWeeks(y.Weeks)

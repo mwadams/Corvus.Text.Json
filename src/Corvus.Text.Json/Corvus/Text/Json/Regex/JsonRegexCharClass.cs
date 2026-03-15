@@ -33,7 +33,7 @@ internal static class JsonRegexCharClass
         1 << (int)UnicodeCategory.DecimalDigitNumber |
         1 << (int)UnicodeCategory.ConnectorPunctuation;
 
-    private static readonly Dictionary<string, string> s_definedCategories = new Dictionary<string, string>(DefinedCategoriesCapacity)
+    private static readonly Dictionary<string, string> s_definedCategories = new(DefinedCategoriesCapacity)
     {
         // Others
         { "Cc", "\u000F" }, // UnicodeCategory.Control + 1

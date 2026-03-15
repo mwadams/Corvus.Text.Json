@@ -400,6 +400,76 @@ dotnet_diagnostic.SA1519.severity = None
 # SA1520: Use braces consistently
 dotnet_diagnostic.SA1520.severity = None
 
+# IDE rules - suppress for runtime-derived code
+# IDE1006: Naming rule violation (runtime naming conventions)
+dotnet_diagnostic.IDE1006.severity = None
+# IDE0032: Use auto-property (changes field layout in runtime structs)
+dotnet_diagnostic.IDE0032.severity = None
+# IDE0060: Remove unused parameter (API contracts, interface implementations)
+dotnet_diagnostic.IDE0060.severity = None
+# IDE0044: Make field readonly (runtime-derived field patterns)
+dotnet_diagnostic.IDE0044.severity = None
+# IDE0251: Make member readonly (can cause hidden copies in structs)
+dotnet_diagnostic.IDE0251.severity = None
+# IDE0059: Unnecessary value assignment (intentional patterns in runtime code)
+dotnet_diagnostic.IDE0059.severity = None
+# IDE0300/IDE0301: Use collection expression (not available on netstandard2.0)
+dotnet_diagnostic.IDE0300.severity = None
+dotnet_diagnostic.IDE0301.severity = None
+# IDE0066: Use switch expression (readability preference)
+dotnet_diagnostic.IDE0066.severity = None
+# IDE0017: Use object initializer (readability preference)
+dotnet_diagnostic.IDE0017.severity = None
+# IDE0220: Add explicit cast in foreach (runtime pattern)
+dotnet_diagnostic.IDE0220.severity = None
+# IDE0064: Make struct fields writable (deliberate design)
+dotnet_diagnostic.IDE0064.severity = None
+# IDE0018: Inline variable declaration (can't inline across #if/#else blocks)
+dotnet_diagnostic.IDE0018.severity = None
+# IDE0071: Simplify interpolation (ReadOnlySpan needs .ToString() on netstandard2.0)
+dotnet_diagnostic.IDE0071.severity = None
+
+# Roslynator rules - suppress for runtime-derived code
+dotnet_diagnostic.RCS1036.severity = None
+dotnet_diagnostic.RCS1089.severity = None
+dotnet_diagnostic.RCS1123.severity = None
+dotnet_diagnostic.RCS1268.severity = None
+dotnet_diagnostic.RCS1163.severity = None
+dotnet_diagnostic.RCS1226.severity = None
+dotnet_diagnostic.RCS1073.severity = None
+dotnet_diagnostic.RCS1032.severity = None
+dotnet_diagnostic.RCS1118.severity = None
+dotnet_diagnostic.RCS1003.severity = None
+dotnet_diagnostic.RCS1191.severity = None
+dotnet_diagnostic.RCS1085.severity = None
+dotnet_diagnostic.RCS1169.severity = None
+dotnet_diagnostic.RCS1154.severity = None
+dotnet_diagnostic.RCS1146.severity = None
+dotnet_diagnostic.RCS1243.severity = None
+dotnet_diagnostic.RCS1239.severity = None
+dotnet_diagnostic.RCS1234.severity = None
+dotnet_diagnostic.RCS1104.severity = None
+dotnet_diagnostic.RCS1212.severity = None
+dotnet_diagnostic.RCS1218.severity = None
+dotnet_diagnostic.RCS1205.severity = None
+dotnet_diagnostic.RCS1233.severity = None
+dotnet_diagnostic.RCS1257.severity = None
+dotnet_diagnostic.RCS1135.severity = None
+dotnet_diagnostic.RCS1213.severity = None
+dotnet_diagnostic.RCS1001.severity = None
+dotnet_diagnostic.RCS1206.severity = None
+dotnet_diagnostic.RCS1187.severity = None
+dotnet_diagnostic.RCS1179.severity = None
+dotnet_diagnostic.RCS1232.severity = None
+dotnet_diagnostic.RCS1235.severity = None
+dotnet_diagnostic.RCS1158.severity = None
+dotnet_diagnostic.RCS1251.severity = None
+
+# CA rules - suppress for runtime-derived code
+dotnet_diagnostic.CA1069.severity = None
+dotnet_diagnostic.CA1822.severity = None
+dotnet_diagnostic.CA2231.severity = None
+
 # C++ Files
 [*.{cpp,h,in}]
 curly_bracket_next_line = true

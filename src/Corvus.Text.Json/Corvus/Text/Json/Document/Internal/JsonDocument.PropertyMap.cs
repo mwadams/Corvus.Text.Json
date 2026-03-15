@@ -185,12 +185,12 @@ public abstract partial class JsonDocument
             /// <summary>
             /// Gets a value indicating whether this entry has a dynamic unescaped key.
             /// </summary>
-            public readonly bool HasDynamicUnescapedKey => this.keyOffsetForDynamicUnescapedKey >= 0;
+            public readonly bool HasDynamicUnescapedKey => keyOffsetForDynamicUnescapedKey >= 0;
 
             /// <summary>
             /// Gets the key offset for this entry.
             /// </summary>
-            public readonly int KeyOffset => this.keyOffsetForDynamicUnescapedKey & int.MaxValue;
+            public readonly int KeyOffset => keyOffsetForDynamicUnescapedKey & int.MaxValue;
 
             /// <summary>
             /// This write is used when the entry does not require unescaping

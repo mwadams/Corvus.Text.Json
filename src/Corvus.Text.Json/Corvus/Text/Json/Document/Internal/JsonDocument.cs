@@ -363,7 +363,7 @@ public abstract partial class JsonDocument
 
             if (!row.IsSimpleValue)
             {
-                objectOffset = objectOffset + GetDbSizeUnsafe(objectOffset, includeEndElement: false);
+                objectOffset += GetDbSizeUnsafe(objectOffset, includeEndElement: false);
             }
 
             elementCount++;
@@ -1053,10 +1053,10 @@ public abstract partial class JsonDocument
     {
         int offset = _valueOffset;
         int result = offset;
-        int length;
 
         offset += 4;
 
+        int length;
 #if NET
         if (!value.TryGetMinimumFormatBufferLength(out int enlarge))
         {
@@ -1093,9 +1093,10 @@ public abstract partial class JsonDocument
     {
         int offset = _valueOffset;
         int result = offset;
-        int length;
 
         offset += 4;
+
+        int length;
 #if NET
         if (!value.TryGetMinimumFormatBufferLength(out int enlarge))
         {

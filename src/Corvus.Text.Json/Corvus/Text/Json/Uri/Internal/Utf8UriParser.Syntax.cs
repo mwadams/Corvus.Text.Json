@@ -260,7 +260,7 @@ internal partial class Utf8UriParser
                                     Utf8UriSyntaxFlags.AllowIdn |
                                     Utf8UriSyntaxFlags.AllowIriParsing;
 
-    private static readonly Hashtable s_table = new Hashtable(16) // Hashtable used instead of Dictionary<> for lock-free reads
+    private static readonly Hashtable s_table = new(16) // Hashtable used instead of Dictionary<> for lock-free reads
     {
         { HttpUri.SchemeName, HttpUri }, // HTTP
         { HttpsUri.SchemeName, HttpsUri }, // HTTPS cloned from HTTP
@@ -280,7 +280,7 @@ internal partial class Utf8UriParser
         { VsMacrosUri.SchemeName, VsMacrosUri }, // VSMACROS
     };
 
-    private static Hashtable s_tempTable = new Hashtable(c_InitialTableSize); // Hashtable used instead of Dictionary<> for lock-free reads
+    private static Hashtable s_tempTable = new(c_InitialTableSize); // Hashtable used instead of Dictionary<> for lock-free reads
 
     private Utf8UriSyntaxFlags _flags;
 

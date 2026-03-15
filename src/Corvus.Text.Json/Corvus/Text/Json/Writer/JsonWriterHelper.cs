@@ -258,7 +258,7 @@ internal static partial class JsonWriterHelper
     }
 
 #if !NET8_0_OR_GREATER
-    private static readonly UTF8Encoding s_utf8Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+    private static readonly UTF8Encoding s_utf8Encoding = new(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
 #endif
 
     public static bool IsValidUtf8String(ReadOnlySpan<byte> bytes)

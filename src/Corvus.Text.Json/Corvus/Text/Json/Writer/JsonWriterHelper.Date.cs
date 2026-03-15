@@ -14,7 +14,7 @@ namespace Corvus.Text.Json;
 
 internal static partial class JsonWriterHelper
 {
-    private static readonly StandardFormat s_dateTimeStandardFormat = new StandardFormat('O');
+    private static readonly StandardFormat s_dateTimeStandardFormat = new('O');
 
     // Trims roundtrippable DateTime(Offset) input.
     // If the milliseconds part of the date is zero, we omit the fraction part of the date,

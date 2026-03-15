@@ -51,7 +51,7 @@ internal static partial class JsonWriterHelper
     private const string HexFormatString = "X4";
 #endif
 
-    private static readonly StandardFormat s_hexStandardFormat = new StandardFormat('X', 4);
+    private static readonly StandardFormat s_hexStandardFormat = new('X', 4);
 
     private static bool NeedsEscaping(byte value) => AllowList[value] == 0;
 

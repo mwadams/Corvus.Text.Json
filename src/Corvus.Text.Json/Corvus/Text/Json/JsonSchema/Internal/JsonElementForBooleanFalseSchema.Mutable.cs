@@ -330,7 +330,7 @@ public readonly partial struct JsonElementForBooleanFalseSchema
 
 #if NET
 
-        static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new Mutable(parentDocument, parentDocumentIndex);
+        static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 
 #endif
 
