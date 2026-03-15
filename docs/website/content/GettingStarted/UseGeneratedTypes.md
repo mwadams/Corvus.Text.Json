@@ -306,14 +306,49 @@ When you attempt to cast an undefined or null value to a .NET type, it throws an
 ## Serialization
 
 ```csharp
-// To a JSON string
+// To a JSON string (allocates)
 string json = person.ToString();
-
-// To a Corvus.Text.Json.Utf8JsonWriter (not System.Text.Json!)
-using var stream = new MemoryStream();
-using var writer = new Utf8JsonWriter(stream);
-person.WriteTo(writer);
 ```
+
+For high-throughput scenarios, rent a `Utf8JsonWriter` and buffer from the workspace to avoid allocations and share common writer options:
+
+```csharp
+using JsonWorkspace workspace = JsonWorkspace.Create();
+
+Utf8JsonWriter writer = workspace.RentWriterAndBuffer(
+    defaultBufferSize: 1024,
+    out IByteBufferWriter bufferWriter);
+try
+{
+    person.WriteTo(writer);
+    writer.Flush();
+
+    // bufferWriter.WrittenSpan contains the UTF-8 JSON bytes
+    ReadOnlySpan<byte> utf8Json = bufferWriter.WrittenSpan;
+}
+finally
+{
+    workspace.ReturnWriterAndBuffer(writer, bufferWriter);
+}
+```
+
+If you already have your own `IBufferWriter<byte>`, you can rent just the writer:
+
+```csharp
+var buffer = new ArrayBufferWriter<byte>();
+Utf8JsonWriter writer = workspace.RentWriter(buffer);
+try
+{
+    person.WriteTo(writer);
+    writer.Flush();
+}
+finally
+{
+    workspace.ReturnWriter(writer);
+}
+```
+
+The workspace caches writers on the current thread, so repeated rent/return cycles are allocation-free. Writer options (e.g. indentation) are configured once on the workspace and applied to every rented writer automatically.
 
 ## Equality and comparison
 
