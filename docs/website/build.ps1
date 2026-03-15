@@ -380,6 +380,9 @@ foreach ($docFile in $docsToInclude) {
     # Strip the # heading line
     $docBody = ($raw -replace '^#[^\n]+\n\s*', '').TrimStart()
 
+    # Strip markdown "## Table of Contents" section (the TOC through the next --- or ## heading)
+    $docBody = $docBody -replace '(?ms)^## Table of Contents\s*\n(- \[.*?\]\(#.*?\)\s*\n)+\s*---\s*\n?', ''
+
     # Extract first sentence as description
     if ($docBody -match '^(.+?\.)\s') {
         $docDescription = $Matches[1] -replace '"', '\"'

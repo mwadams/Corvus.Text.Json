@@ -61,4 +61,51 @@ document.addEventListener('DOMContentLoaded', () => {
       link.classList.add('is-active');
     }
   });
+
+  // ── On-page TOC in sidebar ──────────────────────────────────────────────
+  // For doc pages: extract h2 headings, insert as a sub-list under the
+  // active sidebar link, and highlight the current section on scroll.
+  const activeLink = document.querySelector('.sidebar__link.is-active');
+  const docContent = document.querySelector('.doc__content');
+
+  if (activeLink && docContent) {
+    const headings = docContent.querySelectorAll('h2[id]');
+    if (headings.length > 1) {
+      const subList = document.createElement('ul');
+      subList.className = 'sidebar__sublist';
+
+      headings.forEach((h) => {
+        const li = document.createElement('li');
+        li.className = 'sidebar__item sidebar__item--toc';
+        const a = document.createElement('a');
+        a.className = 'sidebar__link sidebar__link--toc';
+        a.href = '#' + h.id;
+        a.textContent = h.textContent;
+        li.appendChild(a);
+        subList.appendChild(li);
+      });
+
+      // Insert sub-list after the active link's parent <li>
+      activeLink.closest('.sidebar__item').appendChild(subList);
+
+      // Scroll-spy: highlight the heading currently in view
+      const tocLinks = subList.querySelectorAll('.sidebar__link--toc');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tocLinks.forEach((l) => l.classList.remove('is-current'));
+              const match = subList.querySelector(
+                `a[href="#${entry.target.id}"]`
+              );
+              if (match) match.classList.add('is-current');
+            }
+          });
+        },
+        { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
+      );
+
+      headings.forEach((h) => observer.observe(h));
+    }
+  }
 });
