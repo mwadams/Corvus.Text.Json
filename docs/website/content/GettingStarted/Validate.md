@@ -4,11 +4,13 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Schema Validation"
 ---
-## Why validate?
+## Schema validation and error reporting
 
 JSON Schema uses a duck-typing model rather than a rigid type system. It describes the *shape* of valid data with constraints like "it must have these properties", "it must match one of these shapes", or "this value must be between 0 and 150". When you construct a generated type from JSON data, you can safely use it through that type **if and only if** the data is valid according to the schema.
 
 Constructing a generated type from invalid JSON does **not** throw — the type is permissive. You can still access the parts of the data that *are* present. This is valuable for error reporting, diagnostics, and self-healing systems where you need to inspect malformed data.
+
+This permissive model is also what makes composition types work. As we saw in the [Composition types and pattern matching](#composition-types-and-pattern-matching) section, a `oneOf` type like `OtherNames` can hold data matching *any* of its variants. The `Match()` method uses schema validation internally to determine which variant the data conforms to, and dispatches accordingly. Without permissive parsing, you wouldn't be able to hold the data in the first place before determining its shape.
 
 ## Basic validation
 
