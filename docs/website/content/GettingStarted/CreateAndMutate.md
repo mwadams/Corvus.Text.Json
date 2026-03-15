@@ -117,6 +117,37 @@ Optional properties can be removed from mutable instances:
 root.RemoveEmail();
 ```
 
+## Copying values between documents
+
+When the source and target properties share the same generated type, you can assign the value directly:
+
+```csharp
+using ParsedJsonDocument<Person> sourceDoc =
+    ParsedJsonDocument<Person>.Parse(sourceJson);
+using var targetBuilder = targetDoc.RootElement.CreateBuilder(workspace);
+
+Person.Mutable target = targetBuilder.RootElement;
+
+// Both documents use the same PersonNameEntity type — direct assignment
+target.SetName(sourceDoc.RootElement.Name);
+```
+
+When the source and target types are structurally compatible but different generated types (e.g. from different schemas), use `TTarget.From()` to coerce the value:
+
+```csharp
+using ParsedJsonDocument<Employee> employeeDoc =
+    ParsedJsonDocument<Employee>.Parse(employeeJson);
+using var contactBuilder = contactDoc.RootElement.CreateBuilder(workspace);
+
+Contact.Mutable contact = contactBuilder.RootElement;
+
+// Employee.EmailEntity and Contact.EmailEntity are different types
+// but both wrap a "type": "string", "format": "email"
+contact.SetEmail(Contact.EmailEntity.From(employeeDoc.RootElement.Email));
+```
+
+`From()` performs a zero-copy reinterpretation of the underlying JSON — no parsing or allocation occurs.
+
 ## Mutating arrays
 
 Array properties on a `Mutable` element support in-place modification:
