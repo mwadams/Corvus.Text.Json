@@ -13,18 +13,20 @@
   top: calc(var(--header-height) + var(--space-md));
   left: 0;
   z-index: 101; // above sidebar (100)
-  width: 2rem;
+  width: 2.25rem;
   height: 2.5rem;
   border: 1px solid var(--color-border);
   border-left: none;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: var(--color-bg);
-  color: var(--color-white);
+  background: var(--color-bg-code); // darker raised surface for contrast
+  color: var(--color-brand);
   cursor: pointer;
+  box-shadow: 2px 0 6px rgb(0 0 0 / 0.4);
   transition: left 0.25s ease, background var(--transition-fast);
 
   &:hover {
     background: var(--color-bg-raised);
+    color: var(--color-white);
   }
 
   // Slide with the sidebar when open
@@ -35,7 +37,8 @@
   // Chevron: › when closed, ‹ when open
   &::after {
     content: '›';
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: bold;
     line-height: 1;
     transition: transform 0.2s;
   }
