@@ -1169,10 +1169,20 @@ System.Text.Json.JsonElement element = doc.RootElement.FromSTJsonElement();
 - Making occasional modifications
 - Integrating with APIs that expect JsonNode
 
+**Choose POCO objects with `System.Text.Json` serialization when**:
+- You have small, pre-existing .NET object hierarchies that already model your domain
+- Computational speed is the priority (the serializer's code-gen path is heavily optimised)
+- You do not need JSON Schema validation
+- The shape of your JSON is fixed and well-known at compile time
+- You are already using `JsonSerializer` throughout your codebase and want consistency
+
+> **Tip**: POCO serialization is the fastest way to produce JSON when you already have .NET objects in hand. The `System.Text.Json` source generator (`JsonSerializerContext`) eliminates reflection at runtime and can outperform any DOM-based approach for simple serialize/deserialize cycles. Reach for `JsonDocumentBuilder` or `JsonNode` when you need to *construct* or *transform* JSON dynamically, or when you need schema validation.
+
 **Choose JsonDocumentBuilder when**:
 - High-throughput scenarios (web services, message processing)
 - Memory efficiency is critical
 - Building or transforming JSON from external APIs
 - Performing repeated operations where allocation costs matter
 - Processing large JSON documents in memory
-- You are going to go on to validate the document against JSON Schema.
+- You are going to go on to validate the document against JSON Schema
+- You need to construct JSON dynamically from heterogeneous sources (databases, APIs, config) rather than serializing a single object graph
