@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Mapping Input and Output Values — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to efficiently convert between different schema representations of similar entities - a common pattern in layered architectures where data transforms between API, domain, and persistence layers."
-  Keywords: ["recipe", "JSON Schema", "C#", "Q: Does From() copy the underlying JSON data?", "Q: Can I map between types in different assemblies?", "Q: When should I use From() vs TryGetValue()?", "Q: How does this compare to AutoMapper?"]
+  Keywords: ["recipe", "JSON Schema", "C#", "mapping", "input", "output", "values", "type", "required", "properties", "minimum", "minLength", "maxLength", "From", "CreateBuilder", "TryGetValue"]
 OpenGraph:
   Title: "Mapping Input and Output Values — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to efficiently convert between different schema representations of similar entities - a common pattern in layered architectures where data transforms between API, domain, and persistence layers."

@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Extending a Base Type — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `$ref` to extend an open base type with additional properties, creating a derived schema that includes all base properties plus its own — similar to inheritance in object-oriented languages."
-  Keywords: ["recipe", "JSON Schema", "C#", "How is $ref like inheritance in OOP?", "Can I access base-type properties on the extended type?", "When should I use TryGetProperty instead of a strongly-typed property?", "Does the base type need to be open for extension to work?", "What about draft 6/7 where $ref ignores adjacent keywords?"]
+  Keywords: ["recipe", "JSON Schema", "C#", "extending", "base", "type", "$ref", "required", "properties", "format", "maximum", "$defs", "minLength", "maxLength", "allOf", "TryGetProperty", "CreateBuilder", "From"]
 OpenGraph:
   Title: "Extending a Base Type — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `$ref` to extend an open base type with additional properties, creating a derived schema that includes all base properties plus its own — similar to inheritance in object-oriented languages."

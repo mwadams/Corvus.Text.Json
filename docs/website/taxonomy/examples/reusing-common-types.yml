@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Reusing Common Types — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema's `$ref` and `$defs` keywords to share type definitions across properties, reducing generated code size and enabling zero-allocation conversions between compatible property types."
-  Keywords: ["recipe", "JSON Schema", "C#", "What is the difference between using $ref and defining properties inline?", "Can I share types across multiple schema files?", "Are properties with the same $ref target truly type-compatible?", "How does From() work for converting between compatible entity types?"]
+  Keywords: ["recipe", "JSON Schema", "C#", "reusing", "common", "types", "type", "required", "properties", "$ref", "format", "maximum", "$defs", "minLength", "maxLength", "CreateBuilder", "From"]
 OpenGraph:
   Title: "Reusing Common Types — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema's `$ref` and `$defs` keywords to share type definitions across properties, reducing generated code size and enabling zero-allocation conversions between compatible property types."

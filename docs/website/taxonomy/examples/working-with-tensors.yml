@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Working with Tensors — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to construct and manipulate fixed-size numeric arrays as tensors in .NET, including span-based construction, `TryGetNumericValues()` extraction, and integration with APIs like `System.Numerics.Tensors`."
-  Keywords: ["recipe", "JSON Schema", "C#", "How does the tensor API integrate with System.Numerics.Tensors?", "Is the span from TryGetNumericValues() safe to use after the document is disposed?", "What's the difference between variable-length and fixed-length numeric arrays?", "What happens if I pass the wrong number of elements to Build(span)?", "Why can't I use collection expressions to create tensors in V5?"]
+  Keywords: ["recipe", "JSON Schema", "C#", "working", "tensors", "type", "items", "$ref", "minItems", "maxItems", "$defs", "format", "TryGetNumericValues", "Build", "CreateBuilder"]
 OpenGraph:
   Title: "Working with Tensors — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to construct and manipulate fixed-size numeric arrays as tensors in .NET, including span-based construction, `TryGetNumericValues()` extraction, and integration with APIs like `System.Numerics.Tensors`."

@@ -182,9 +182,21 @@ foreach ($dir in $recipeDirs) {
         }
     }
 
-    # Build Keywords array: base keywords + FAQ question text
-    $keywordItems = @('recipe', 'JSON Schema', 'C#')
-    $keywordItems += $faqQuestions
+    # Build Keywords array: title words + JSON Schema keywords + Corvus API terms
+    # Start with the recipe title split into words (skip short ones)
+    $titleWords = $title -split '\s+' | Where-Object { $_.Length -ge 3 } |
+        ForEach-Object { $_.ToLower() -replace '[^a-z0-9]', '' } | Where-Object { $_ -and $_ -notin @('and', 'the', 'for', 'with', 'from') }
+
+    # Extract JSON Schema keywords used in the content
+    $schemaKeywords = [regex]::Matches($raw, '"(type|properties|required|additionalProperties|unevaluatedProperties|format|enum|const|oneOf|anyOf|allOf|if|then|else|prefixItems|items|unevaluatedItems|patternProperties|\$ref|\$defs|minimum|maximum|minLength|maxLength|pattern|not|contains|minItems|maxItems|uniqueItems)"') |
+        ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
+
+    # Extract Corvus API method/type names from backtick spans
+    $apiMethods = [regex]::Matches($raw, '`(IsUndefined|IsNull|IsValid|TryGetValue|ValueEquals|EvaluateSchema|GetRawText|ToString|Parse|From|Match|SetProperty|RemoveProperty|TryGetProperty|AddProperty|CreateBuilder|BuildDocument|Build|Clone|AsArray|AsObject|RootElement|TryGetNumericValues|CreateTuple|ConstInstance)\b') |
+        ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
+
+    $keywordItems = @('recipe', 'JSON Schema', 'C#') + $titleWords + $schemaKeywords + $apiMethods |
+        Select-Object -Unique
     $keywordsYaml = ($keywordItems | ForEach-Object { "`"$($_ -replace '"', '\"')`"" }) -join ', '
 
     # Build FAQPage JSON-LD structured data

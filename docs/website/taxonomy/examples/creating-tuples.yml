@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Creating Tuples — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `prefixItems` and `unevaluatedItems` to create strongly-typed tuple representations in .NET."
-  Keywords: ["recipe", "JSON Schema", "C#", "Q: What's the difference between a tuple and a fixed-size array?", "Q: Can I create open tuples that allow additional items?", "Q: Why doesn't V5 support implicit conversion to/from ValueTuple?", "Q: Can tuple items be complex types (objects, arrays)?"]
+  Keywords: ["recipe", "JSON Schema", "C#", "creating", "tuples", "type", "prefixItems", "format", "unevaluatedItems", "CreateTuple", "CreateBuilder", "Build"]
 OpenGraph:
   Title: "Creating Tuples — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `prefixItems` and `unevaluatedItems` to create strongly-typed tuple representations in .NET."

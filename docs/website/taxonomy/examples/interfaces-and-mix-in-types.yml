@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Interfaces and Mix-In Types — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to compose multiple JSON Schema definitions using `allOf`, creating types that behave like .NET interfaces or mix-ins."
-  Keywords: ["recipe", "JSON Schema", "C#", "Q: Is allOf composition the same as multiple inheritance?", "Q: What happens if two composed schemas define the same property?", "Q: Can I add constraints when composing schemas?", "Q: How does allOf differ from $ref for type extension?"]
+  Keywords: ["recipe", "JSON Schema", "C#", "interfaces", "mixin", "types", "type", "allOf", "$ref", "required", "properties", "$defs", "format", "IsUndefined", "CreateBuilder"]
 OpenGraph:
   Title: "Interfaces and Mix-In Types — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to compose multiple JSON Schema definitions using `allOf`, creating types that behave like .NET interfaces or mix-ins."

@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "String Enumerations and Pattern Matching — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with string values to create type-safe enumerations with pattern matching support."
-  Keywords: ["recipe", "JSON Schema", "C#", "Q: What happens if I parse a value not in the enum?", "Q: Can I use enum with mixed types (strings and numbers)?", "Q: When should I use enum vs oneOf + const?", "Q: Is pattern matching over enums exhaustive at compile time?"]
+  Keywords: ["recipe", "JSON Schema", "C#", "string", "enumerations", "pattern", "matching", "enum", "Match", "EvaluateSchema"]
 OpenGraph:
   Title: "String Enumerations and Pattern Matching — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with string values to create type-safe enumerations with pattern matching support."
