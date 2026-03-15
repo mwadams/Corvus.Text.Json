@@ -20,7 +20,11 @@ internal static class SidebarBuilder
         string? currentNsSlug,
         string? currentTypeFileBase)
     {
+        // Mobile toggle button and backdrop — matches the docs page structure
+        sb.AppendLine("    <button class=\"sidebar-toggle\" aria-label=\"Toggle navigation\" aria-expanded=\"false\"></button>");
+        sb.AppendLine("    <div class=\"sidebar-backdrop\"></div>");
         sb.AppendLine("    <aside class=\"sidebar\">");
+        sb.AppendLine("        <div class=\"sidebar__inner\">");
 
         foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
         {
@@ -28,14 +32,14 @@ internal static class SidebarBuilder
             string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
             bool isCurrentNs = nsSlug == currentNsSlug;
 
-            sb.AppendLine("        <div class=\"sidebar__section\">");
-            sb.AppendLine($"            <button class=\"sidebar__heading{(isCurrentNs ? "" : " is-collapsed")}\">{HtmlEncode(ns)}</button>");
-            sb.AppendLine($"            <div class=\"sidebar__body{(isCurrentNs ? "" : " is-collapsed")}\">");
-            sb.AppendLine("                <ul class=\"sidebar__list\">");
+            sb.AppendLine("            <div class=\"sidebar__section\">");
+            sb.AppendLine($"                <button class=\"sidebar__heading{(isCurrentNs ? "" : " is-collapsed")}\">{HtmlEncode(ns)}</button>");
+            sb.AppendLine($"                <div class=\"sidebar__body{(isCurrentNs ? "" : " is-collapsed")}\">");
+            sb.AppendLine("                    <ul class=\"sidebar__list\">");
 
             // Namespace link
             string nsActive = (isCurrentNs && currentTypeFileBase is null) ? " is-active" : "";
-            sb.AppendLine($"                    <li class=\"sidebar__item\"><a class=\"sidebar__link{nsActive}\" href=\"/api/{nsSlug}.html\"><strong>Overview</strong></a></li>");
+            sb.AppendLine($"                        <li class=\"sidebar__item\"><a class=\"sidebar__link{nsActive}\" href=\"/api/{nsSlug}.html\"><strong>Overview</strong></a></li>");
 
             // Type links
             foreach (TypeInfo type in kvp.Value.Types.OrderBy(t => t.Name))
@@ -43,14 +47,15 @@ internal static class SidebarBuilder
                 string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
                 string fileBase = $"{nsSlug}-{typeSlug}";
                 string typeActive = fileBase == currentTypeFileBase ? " is-active" : "";
-                sb.AppendLine($"                    <li class=\"sidebar__item\"><a class=\"sidebar__link sidebar__link--toc{typeActive}\" href=\"/api/{fileBase}.html\">{HtmlEncode(type.Name)}</a></li>");
+                sb.AppendLine($"                        <li class=\"sidebar__item\"><a class=\"sidebar__link sidebar__link--toc{typeActive}\" href=\"/api/{fileBase}.html\">{HtmlEncode(type.Name)}</a></li>");
             }
 
-            sb.AppendLine("                </ul>");
+            sb.AppendLine("                    </ul>");
+            sb.AppendLine("                </div>");
             sb.AppendLine("            </div>");
-            sb.AppendLine("        </div>");
         }
 
+        sb.AppendLine("        </div>");
         sb.AppendLine("    </aside>");
     }
 

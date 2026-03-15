@@ -97,6 +97,7 @@ if (apiViewsDir is not null)
     Console.WriteLine($"Generating API views to: {apiViewsDir}");
     Directory.CreateDirectory(apiViewsDir);
     ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces);
+    ApiViewGenerator.GenerateNamespaceViews(apiViewsDir, namespaces);
 }
 
 if (htmlOutputPath is not null)

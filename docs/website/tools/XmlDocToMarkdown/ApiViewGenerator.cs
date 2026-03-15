@@ -55,6 +55,44 @@ internal static class ApiViewGenerator
         Console.WriteLine($"  Written: {outputPath}");
     }
 
+    /// <summary>
+    /// Writes one <c>{ns-slug}.cshtml</c> per namespace — the namespace overview pages
+    /// with the hierarchical sidebar (current namespace expanded, "Overview" highlighted).
+    /// </summary>
+    public static void GenerateNamespaceViews(string viewsDir, Dictionary<string, NamespaceInfo> namespaces)
+    {
+        foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
+        {
+            string ns = kvp.Key;
+            string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
+
+            StringBuilder sb = new();
+            sb.AppendLine("@model SiteViewModel");
+            sb.AppendLine("@{");
+            sb.AppendLine("    Layout = \"../Shared/_Layout.cshtml\";");
+            sb.AppendLine("}");
+            sb.AppendLine("<div class=\"layout-docs container\">");
+
+            // Hierarchical sidebar — current namespace expanded, "Overview" link active
+            SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug: nsSlug, currentTypeFileBase: null);
+
+            sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
+            sb.AppendLine("        <div class=\"doc__content\">");
+            sb.AppendLine("            <h1>@Model.PageContext.Title</h1>");
+            sb.AppendLine("            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())");
+            sb.AppendLine("            {");
+            sb.AppendLine("                @Html.Raw(contentFragment.Body)");
+            sb.AppendLine("            }");
+            sb.AppendLine("        </div>");
+            sb.AppendLine("    </main>");
+            sb.AppendLine("</div>");
+
+            string outputPath = Path.Combine(viewsDir, nsSlug + ".cshtml");
+            File.WriteAllText(outputPath, sb.ToString());
+            Console.WriteLine($"  Written: {outputPath}");
+        }
+    }
+
     private static string GetNamespaceDescription(string ns) => ns switch
     {
         "Corvus.Text.Json" => "Core public API \u2014 JsonElement, ParsedJsonDocument, JsonDocumentBuilder, JsonWorkspace, and more",
