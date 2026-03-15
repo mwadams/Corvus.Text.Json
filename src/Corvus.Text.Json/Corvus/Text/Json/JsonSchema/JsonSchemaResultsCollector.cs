@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="JsonSchemaResultsCollector.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Buffers.Text;
@@ -1987,4 +1993,4 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     internal string SchemaLocation => JsonReaderHelper.GetTextFromUtf8(_schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.Start, _currentSchemaEvaluationPathRange.Length));
     internal string DocumentLocation => JsonReaderHelper.GetTextFromUtf8(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.Length));
     internal string EvaluationLocation => JsonReaderHelper.GetTextFromUtf8(_evaluationPath.AsSpan(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.Length));
-}
+}

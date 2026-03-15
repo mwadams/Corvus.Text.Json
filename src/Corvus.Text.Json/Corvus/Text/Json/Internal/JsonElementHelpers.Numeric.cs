@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="JsonElementHelpers.Numeric.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Buffers.Text;
@@ -151,8 +157,8 @@ public static partial class JsonElementHelpers
     /// Determines if a JSON number is an integer.
     /// </summary>
     /// <param name="exponent">The exponent.</param>
-    /// 
-    /// 
+    ///
+    ///
     /// <returns>True if the normalized JSON number represents an integer.</returns>
     public static bool IsIntegerNormalizedJsonNumber(
         int exponent)
@@ -442,10 +448,10 @@ public static partial class JsonElementHelpers
     {
         // Percent format multiplies by 100 (shift exponent by +2), uses group separators, and adds % symbol
         int adjustedExponent = exponent + 2;
-        
+
         // Use PercentDecimalDigits as the default precision
         int effectivePrecision = precision >= 0 ? precision : formatInfo.PercentDecimalDigits;
-        
+
         // Create a temporary NumberFormatInfo for formatting the number part using percent settings
         var tempFormatInfo = new NumberFormatInfo
         {
@@ -454,17 +460,17 @@ public static partial class JsonElementHelpers
             NumberGroupSizes = formatInfo.PercentGroupSizes,
             NegativeSign = formatInfo.NegativeSign
         };
-        
+
         int pos = 0;
         int numberChars;
-        
+
         if (isNegative)
         {
             // Handle negative patterns
             int pattern = formatInfo.PercentNegativePattern;
             string negSign = formatInfo.NegativeSign;
             string percentSym = formatInfo.PercentSymbol;
-            
+
             switch (pattern)
             {
                 case 0: // -n %
@@ -485,7 +491,7 @@ public static partial class JsonElementHelpers
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     break;
-                    
+
                 case 1: // -n%
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
@@ -503,7 +509,7 @@ public static partial class JsonElementHelpers
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     break;
-                    
+
                 case 2: // -%n
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
@@ -516,7 +522,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars;
                     break;
-                    
+
                 case 3: // %-n
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -529,7 +535,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars;
                     break;
-                    
+
                 case 4: // %n-
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -547,7 +553,7 @@ public static partial class JsonElementHelpers
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
                     break;
-                    
+
                 case 5: // n-%
                     if (!TryFormatNumber(false, integral, fractional, adjustedExponent, destination.Slice(pos), out numberChars, effectivePrecision, tempFormatInfo))
                     {
@@ -565,7 +571,7 @@ public static partial class JsonElementHelpers
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     break;
-                    
+
                 case 6: // n%-
                     if (!TryFormatNumber(false, integral, fractional, adjustedExponent, destination.Slice(pos), out numberChars, effectivePrecision, tempFormatInfo))
                     {
@@ -583,7 +589,7 @@ public static partial class JsonElementHelpers
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
                     break;
-                    
+
                 case 7: // -% n
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
@@ -602,7 +608,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars;
                     break;
-                    
+
                 case 8: // n %-
                     if (!TryFormatNumber(false, integral, fractional, adjustedExponent, destination.Slice(pos), out numberChars, effectivePrecision, tempFormatInfo))
                     {
@@ -621,7 +627,7 @@ public static partial class JsonElementHelpers
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
                     break;
-                    
+
                 case 9: // % n-
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -645,7 +651,7 @@ public static partial class JsonElementHelpers
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
                     break;
-                    
+
                 case 10: // % -n
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -664,7 +670,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars;
                     break;
-                    
+
                 case 11: // n- %
                     if (!TryFormatNumber(false, integral, fractional, adjustedExponent, destination.Slice(pos), out numberChars, effectivePrecision, tempFormatInfo))
                     {
@@ -683,7 +689,7 @@ public static partial class JsonElementHelpers
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     break;
-                    
+
                 default:
                     charsWritten = 0;
                     return false;
@@ -694,7 +700,7 @@ public static partial class JsonElementHelpers
             // Handle positive patterns
             int pattern = formatInfo.PercentPositivePattern;
             string percentSym = formatInfo.PercentSymbol;
-            
+
             switch (pattern)
             {
                 case 0: // n %
@@ -713,7 +719,7 @@ public static partial class JsonElementHelpers
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     break;
-                    
+
                 case 1: // n%
                     if (!TryFormatNumber(false, integral, fractional, adjustedExponent, destination.Slice(pos), out numberChars, effectivePrecision, tempFormatInfo))
                     {
@@ -729,7 +735,7 @@ public static partial class JsonElementHelpers
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     break;
-                    
+
                 case 2: // %n
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -740,7 +746,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars;
                     break;
-                    
+
                 case 3: // % n
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -757,13 +763,13 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars;
                     break;
-                    
+
                 default:
                     charsWritten = 0;
                     return false;
             }
         }
-        
+
         charsWritten = pos;
         return true;
     }
@@ -822,7 +828,7 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
-            
+
             destination[0] = '0';
             for (int i = 1; i < requiredLength; i++)
             {
@@ -836,14 +842,14 @@ public static partial class JsonElementHelpers
         // Each trailing zero represents a factor of 10, which needs processing
         int significandLength = integral.Length + fractional.Length;
         int trailingZeros = exponent > 0 ? exponent : 0;
-        
+
         // Working buffer needed for repeated division algorithm - stores intermediate quotients
         // that shrink with each division step. Only allocate for the significand digits.
         byte[]? rentedWorkingBuffer = null;
         Span<byte> workingDigits = significandLength <= JsonConstants.StackallocByteThreshold
             ? stackalloc byte[significandLength]
             : (rentedWorkingBuffer = ArrayPool<byte>.Shared.Rent(significandLength)).AsSpan(0, significandLength);
-        
+
         try
         {
             // Initialize working buffer from significand only (skip virtual trailing zeros)
@@ -871,22 +877,22 @@ public static partial class JsonElementHelpers
                 {
                     break;
                 }
-                
+
                 int remainder = 0;
                 int newDigitCount = 0;
-                
+
                 for (int i = 0; i < digitCount; i++)
                 {
                     int current = remainder * 10 + workingDigits[i];
                     int quotient = current / 16;
                     remainder = current % 16;
-                    
+
                     if (quotient > 0 || newDigitCount > 0)
                     {
                         workingDigits[newDigitCount++] = (byte)quotient;
                     }
                 }
-                
+
                 // Process trailing zeros
                 if (remainingTrailingZeros > 0)
                 {
@@ -898,19 +904,19 @@ public static partial class JsonElementHelpers
                     }
                     remainingTrailingZeros--;
                 }
-                
+
                 // Convert remainder to hex digit and write directly at end of buffer
                 remainder = remainder % 16;
-                char hexDigit = remainder < 10 
+                char hexDigit = remainder < 10
                     ? (char)('0' + remainder)
                     : (lowercase ? (char)('a' + (remainder - 10)) : (char)('A' + (remainder - 10)));
-                    
+
                 if (writePos < 0)
                 {
                     charsWritten = 0;
                     return false;
                 }
-                    
+
                 destination[writePos--] = hexDigit;
                 hexDigitsGenerated++;
                 digitCount = newDigitCount;
@@ -927,7 +933,7 @@ public static partial class JsonElementHelpers
             // Shift generated hex digits to the beginning and add leading zeros
             int sourceStart = destination.Length - hexDigitsGenerated;
             int leadingZeros = outputLength - hexDigitsGenerated;
-            
+
             // Move generated digits to their final position
             if (leadingZeros > 0)
             {
@@ -968,7 +974,7 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
-            
+
             destination[0] = '0';
             for (int i = 1; i < requiredLength; i++)
             {
@@ -981,14 +987,14 @@ public static partial class JsonElementHelpers
         // Optimize: trailing zeros from positive exponent can be handled separately
         int significandLength = integral.Length + fractional.Length;
         int trailingZeros = exponent > 0 ? exponent : 0;
-        
+
         // Working buffer needed for repeated division algorithm - stores intermediate quotients
         // that shrink with each division step. Only allocate for the significand digits.
         byte[]? rentedWorkingBuffer = null;
         Span<byte> workingDigits = significandLength <= JsonConstants.StackallocByteThreshold
             ? stackalloc byte[significandLength]
             : (rentedWorkingBuffer = ArrayPool<byte>.Shared.Rent(significandLength)).AsSpan(0, significandLength);
-        
+
         try
         {
             // Initialize working buffer from significand only (skip virtual trailing zeros)
@@ -1016,22 +1022,22 @@ public static partial class JsonElementHelpers
                 {
                     break;
                 }
-                
+
                 int remainder = 0;
                 int newDigitCount = 0;
-                
+
                 for (int i = 0; i < digitCount; i++)
                 {
                     int current = remainder * 10 + workingDigits[i];
                     int quotient = current / 2;
                     remainder = current % 2;
-                    
+
                     if (quotient > 0 || newDigitCount > 0)
                     {
                         workingDigits[newDigitCount++] = (byte)quotient;
                     }
                 }
-                
+
                 // Process trailing zeros
                 if (remainingTrailingZeros > 0)
                 {
@@ -1051,7 +1057,7 @@ public static partial class JsonElementHelpers
                 {
                     remainder = remainder % 2;
                 }
-                
+
                 // Write binary digit directly at end of buffer
                 if (writePos < 0)
                 {
@@ -1074,7 +1080,7 @@ public static partial class JsonElementHelpers
             // Shift generated binary digits to the beginning and add leading zeros
             int sourceStart = destination.Length - binaryDigitsGenerated;
             int leadingZeros = outputLength - binaryDigitsGenerated;
-            
+
             // Move generated digits to their final position
             if (leadingZeros > 0)
             {
@@ -1115,7 +1121,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
-            
+
             destination[0] = (byte)'0';
             for (int i = 1; i < requiredLength; i++)
             {
@@ -1128,13 +1134,13 @@ public static partial class JsonElementHelpers
         // Optimize: trailing zeros from positive exponent can be handled separately
         int significandLength = integral.Length + fractional.Length;
         int trailingZeros = exponent > 0 ? exponent : 0;
-        
+
         // Working buffer needed for repeated division algorithm - stores intermediate quotients
         byte[]? rentedWorkingBuffer = null;
         Span<byte> workingDigits = significandLength <= JsonConstants.StackallocByteThreshold
             ? stackalloc byte[significandLength]
             : (rentedWorkingBuffer = ArrayPool<byte>.Shared.Rent(significandLength)).AsSpan(0, significandLength);
-        
+
         try
         {
             // Initialize working buffer from significand only
@@ -1160,22 +1166,22 @@ public static partial class JsonElementHelpers
                 {
                     break;
                 }
-                
+
                 int remainder = 0;
                 int newDigitCount = 0;
-                
+
                 for (int i = 0; i < digitCount; i++)
                 {
                     int current = remainder * 10 + workingDigits[i];
                     int quotient = current / 16;
                     remainder = current % 16;
-                    
+
                     if (quotient > 0 || newDigitCount > 0)
                     {
                         workingDigits[newDigitCount++] = (byte)quotient;
                     }
                 }
-                
+
                 // Process trailing zeros
                 if (remainingTrailingZeros > 0)
                 {
@@ -1187,19 +1193,19 @@ public static partial class JsonElementHelpers
                     }
                     remainingTrailingZeros--;
                 }
-                
+
                 // Convert remainder to hex digit
                 remainder = remainder % 16;
-                byte hexDigit = remainder < 10 
+                byte hexDigit = remainder < 10
                     ? (byte)('0' + remainder)
                     : (lowercase ? (byte)('a' + (remainder - 10)) : (byte)('A' + (remainder - 10)));
-                    
+
                 if (writePos < 0)
                 {
                     bytesWritten = 0;
                     return false;
                 }
-                    
+
                 destination[writePos--] = hexDigit;
                 hexDigitsGenerated++;
                 digitCount = newDigitCount;
@@ -1216,7 +1222,7 @@ public static partial class JsonElementHelpers
             // Shift generated hex digits to the beginning and add leading zeros
             int sourceStart = destination.Length - hexDigitsGenerated;
             int leadingZeros = outputLength - hexDigitsGenerated;
-            
+
             // Move generated digits to their final position
             if (leadingZeros > 0)
             {
@@ -1254,7 +1260,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
-            
+
             destination[0] = (byte)'0';
             for (int i = 1; i < requiredLength; i++)
             {
@@ -1267,13 +1273,13 @@ public static partial class JsonElementHelpers
         // Optimize: trailing zeros from positive exponent can be handled separately
         int significandLength = integral.Length + fractional.Length;
         int trailingZeros = exponent > 0 ? exponent : 0;
-        
+
         // Working buffer needed for repeated division algorithm
         byte[]? rentedWorkingBuffer = null;
         Span<byte> workingDigits = significandLength <= JsonConstants.StackallocByteThreshold
             ? stackalloc byte[significandLength]
             : (rentedWorkingBuffer = ArrayPool<byte>.Shared.Rent(significandLength)).AsSpan(0, significandLength);
-        
+
         try
         {
             // Initialize working buffer from significand only
@@ -1299,22 +1305,22 @@ public static partial class JsonElementHelpers
                 {
                     break;
                 }
-                
+
                 int remainder = 0;
                 int newDigitCount = 0;
-                
+
                 for (int i = 0; i < digitCount; i++)
                 {
                     int current = remainder * 10 + workingDigits[i];
                     int quotient = current / 2;
                     remainder = current % 2;
-                    
+
                     if (quotient > 0 || newDigitCount > 0)
                     {
                         workingDigits[newDigitCount++] = (byte)quotient;
                     }
                 }
-                
+
                 // Process trailing zeros
                 if (remainingTrailingZeros > 0)
                 {
@@ -1334,7 +1340,7 @@ public static partial class JsonElementHelpers
                 {
                     remainder = remainder % 2;
                 }
-                
+
                 // Write binary digit
                 if (writePos < 0)
                 {
@@ -1357,7 +1363,7 @@ public static partial class JsonElementHelpers
             // Shift generated binary digits to the beginning and add leading zeros
             int sourceStart = destination.Length - binaryDigitsGenerated;
             int leadingZeros = outputLength - binaryDigitsGenerated;
-            
+
             // Move generated digits to their final position
             if (leadingZeros > 0)
             {
@@ -1396,12 +1402,12 @@ public static partial class JsonElementHelpers
     {
         // Use CurrencyDecimalDigits as the default precision
         int effectivePrecision = precision >= 0 ? precision : formatInfo.CurrencyDecimalDigits;
-        
+
         int pos = 0;
         int pattern = isNegative ? formatInfo.CurrencyNegativePattern : formatInfo.CurrencyPositivePattern;
         ReadOnlySpan<char> currencySymbol = formatInfo.CurrencySymbol.AsSpan();
         ReadOnlySpan<char> negativeSign = formatInfo.NegativeSign.AsSpan();
-        
+
         if (isNegative)
         {
             // Negative patterns: 0: ($n), 1: -$n, 2: $-n, 3: $n-, 4: (n$), 5: -n$, 6: n-$, 7: n$-, 8: -n $, 9: -$ n, 10: n $-, 11: $ n-, 12: $ -n, 13: n- $, 14: ($ n), 15: (n $)
@@ -1429,7 +1435,7 @@ public static partial class JsonElementHelpers
                     }
                     destination[pos++] = ')';
                     break;
-                    
+
                 case 1: // -$n
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1442,7 +1448,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars1;
                     break;
-                    
+
                 case 2: // $-n
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1455,7 +1461,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars2;
                     break;
-                    
+
                 case 3: // $n-
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1468,7 +1474,7 @@ public static partial class JsonElementHelpers
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
                     break;
-                    
+
                 case 4: // (n$)
                     if (pos + 1 > destination.Length)
                     {
@@ -1491,7 +1497,7 @@ public static partial class JsonElementHelpers
                     }
                     destination[pos++] = ')';
                     break;
-                    
+
                 case 5: // -n$
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1504,7 +1510,7 @@ public static partial class JsonElementHelpers
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
                     break;
-                    
+
                 case 6: // n-$
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars6, effectivePrecision, formatInfo))
                     {
@@ -1517,7 +1523,7 @@ public static partial class JsonElementHelpers
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
                     break;
-                    
+
                 case 7: // n$-
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars7, effectivePrecision, formatInfo))
                     {
@@ -1530,7 +1536,7 @@ public static partial class JsonElementHelpers
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
                     break;
-                    
+
                 case 8: // -n $
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1549,7 +1555,7 @@ public static partial class JsonElementHelpers
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
                     break;
-                    
+
                 case 9: // -$ n
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1568,7 +1574,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars9;
                     break;
-                    
+
                 case 10: // n $-
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars10, effectivePrecision, formatInfo))
                     {
@@ -1587,7 +1593,7 @@ public static partial class JsonElementHelpers
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
                     break;
-                    
+
                 case 11: // $ n-
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1606,7 +1612,7 @@ public static partial class JsonElementHelpers
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
                     break;
-                    
+
                 case 12: // $ -n
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1625,7 +1631,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars12;
                     break;
-                    
+
                 case 13: // n- $
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars13, effectivePrecision, formatInfo))
                     {
@@ -1644,7 +1650,7 @@ public static partial class JsonElementHelpers
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
                     break;
-                    
+
                 case 14: // ($ n)
                     if (pos + 1 > destination.Length)
                     {
@@ -1673,7 +1679,7 @@ public static partial class JsonElementHelpers
                     }
                     destination[pos++] = ')';
                     break;
-                    
+
                 case 15: // (n $)
                     if (pos + 1 > destination.Length)
                     {
@@ -1702,7 +1708,7 @@ public static partial class JsonElementHelpers
                     }
                     destination[pos++] = ')';
                     break;
-                    
+
                 default:
                     charsWritten = 0;
                     return false;
@@ -1723,7 +1729,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars0;
                     break;
-                    
+
                 case 1: // n$
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars1, effectivePrecision, formatInfo))
                     {
@@ -1734,7 +1740,7 @@ public static partial class JsonElementHelpers
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
                     break;
-                    
+
                 case 2: // $ n
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1751,7 +1757,7 @@ public static partial class JsonElementHelpers
                     }
                     pos += numberChars2;
                     break;
-                    
+
                 case 3: // n $
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars3, effectivePrecision, formatInfo))
                     {
@@ -1768,17 +1774,17 @@ public static partial class JsonElementHelpers
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
                     break;
-                    
+
                 default:
                     charsWritten = 0;
                     return false;
             }
         }
-        
+
         charsWritten = pos;
         return true;
     }
-    
+
     private static bool FormatCurrencyNumber(
         ReadOnlySpan<byte> integral,
         ReadOnlySpan<byte> fractional,
@@ -1790,7 +1796,7 @@ public static partial class JsonElementHelpers
     {
         int totalLength = integral.Length + fractional.Length;
         int decimalPosition = totalLength + exponent;
-        
+
         // Handle small numbers (< 1)
         if (decimalPosition <= 0)
         {
@@ -1875,7 +1881,7 @@ public static partial class JsonElementHelpers
         int[] groupSizes = formatInfo.CurrencyGroupSizes;
         int groupSeparatorCount = CalculateGroupSeparatorCount(integralDigits, groupSizes);
         int totalGroupSeparatorLength = groupSeparatorCount * formatInfo.CurrencyGroupSeparator.Length;
-        
+
         int requiredSize = integralDigits + totalGroupSeparatorLength + (precision > 0 ? formatInfo.CurrencyDecimalSeparator.Length + precision : 0);
         if (requiredSize > destination.Length)
         {
@@ -1887,13 +1893,13 @@ public static partial class JsonElementHelpers
 
         // Write integral part with group separators (using the rounded digits)
         int newDecimalPosition = hasCarry ? decimalPosition + 1 : decimalPosition;
-        WriteIntegralWithGroupSeparatorsFromBytes(roundedDigits.Slice(0, roundedLength), integralDigits, trailingZeros, 
+        WriteIntegralWithGroupSeparatorsFromBytes(roundedDigits.Slice(0, roundedLength), integralDigits, trailingZeros,
             destination, ref pos, formatInfo.CurrencyGroupSeparator, groupSizes);
 
         // Write fractional part
         if (precision > 0)
         {
-            WriteFractionalPartFromBytes(roundedDigits.Slice(0, roundedLength), newDecimalPosition, precision, 
+            WriteFractionalPartFromBytes(roundedDigits.Slice(0, roundedLength), newDecimalPosition, precision,
                 destination, ref pos, formatInfo.CurrencyDecimalSeparator);
         }
 
@@ -1918,7 +1924,7 @@ public static partial class JsonElementHelpers
             charsWritten = 0;
             return false;
         }
-        
+
         int pos = 0;
 
         destination[pos++] = '0';
@@ -1929,7 +1935,7 @@ public static partial class JsonElementHelpers
             pos += formatInfo.CurrencyDecimalSeparator.Length;
 
             int leadingZeros = -decimalPosition;
-            
+
             if (leadingZeros >= precision)
             {
                 for (int i = 0; i < precision; i++)
@@ -1946,7 +1952,7 @@ public static partial class JsonElementHelpers
 
                 int remainingPrecision = precision - leadingZeros;
                 int roundingPosition = remainingPrecision;
-                
+
                 if (roundingPosition < totalLength)
                 {
                     byte roundingDigit = GetDigitAtPosition(integral, fractional, roundingPosition);
@@ -2008,7 +2014,7 @@ public static partial class JsonElementHelpers
         int nextSeparatorAt = integralDigits;
         int separatorsPlaced = 0;
         int totalSeparators = 0;
-        
+
         if (groupSizes.Length > 0 && groupSeparator.Length > 0)
         {
             totalSeparators = CalculateGroupSeparatorCount(integralDigits, groupSizes);
@@ -2032,7 +2038,7 @@ public static partial class JsonElementHelpers
             {
                 groupSeparator.AsSpan().CopyTo(buffer.Slice(pos));
                 pos += groupSeparator.Length;
-                
+
                 // Calculate next separator position by moving forward by one group size
                 int groupIndex = Math.Min(totalSeparators - separatorsPlaced - 1, groupSizes.Length - 1);
                 int groupSize = groupSizes[groupIndex];
@@ -2046,7 +2052,7 @@ public static partial class JsonElementHelpers
                     nextSeparatorAt = integralDigits + 1; // No more separators
                 }
             }
-            
+
             buffer[pos++] = (char)digits[i];
             digitCount++;
         }
@@ -2057,7 +2063,7 @@ public static partial class JsonElementHelpers
             {
                 groupSeparator.AsSpan().CopyTo(buffer.Slice(pos));
                 pos += groupSeparator.Length;
-                
+
                 int remainingDigits = integralDigits - digitCount;
                 if (remainingDigits > 0)
                 {
@@ -2070,7 +2076,7 @@ public static partial class JsonElementHelpers
                     }
                 }
             }
-            
+
             buffer[pos++] = '0';
             digitCount++;
         }
@@ -2088,7 +2094,7 @@ public static partial class JsonElementHelpers
         pos += decimalSeparator.Length;
 
         int fractionalStart = decimalPosition;
-        
+
         for (int i = 0; i < precision && fractionalStart + i < digits.Length; i++)
         {
             buffer[pos++] = (char)digits[fractionalStart + i];
@@ -2145,7 +2151,7 @@ public static partial class JsonElementHelpers
                 pos += numberDecimalSeparator.Length;
 
                 int leadingZeros = -decimalPosition;
-                
+
                 if (leadingZeros >= precision)
                 {
                     for (int i = 0; i < precision; i++)
@@ -2162,7 +2168,7 @@ public static partial class JsonElementHelpers
 
                     int remainingPrecision = precision - leadingZeros;
                     int roundingPosition = remainingPrecision;
-                    
+
                     if (roundingPosition < totalLength)
                     {
                         byte roundingDigit = GetDigitAtPosition(integral, fractional, roundingPosition);
@@ -2235,7 +2241,7 @@ public static partial class JsonElementHelpers
             pos += numberDecimalSeparator.Length;
 
             int fractionalStart = decimalPosition;
-            
+
             if (fractionalStart >= totalLength)
             {
                 for (int i = 0; i < precision; i++)
@@ -2317,15 +2323,15 @@ public static partial class JsonElementHelpers
     internal static bool TryFormatGeneral(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, Span<char> destination, out int charsWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
         int totalLength = integral.Length + fractional.Length;
-        
+
         // Default precision for General format
         // When not specified, use a reasonable default (15 for double precision)
         int effectivePrecision = precision >= 0 ? precision : 15;
-        
+
         // Calculate what the exponent would be in scientific notation
         // (position of most significant digit relative to decimal point)
         int scientificExponent = totalLength - 1 + exponent;
-        
+
         // Check if rounding would cause a carry that increases the exponent
         if (effectivePrecision < totalLength)
         {
@@ -2349,11 +2355,11 @@ public static partial class JsonElementHelpers
                 }
             }
         }
-        
+
         // Decide between fixed-point and scientific notation
         // Use scientific if exponent < -1 or >= precision (after considering significant digits)
         bool useScientific = scientificExponent < -1 || scientificExponent >= effectivePrecision;
-        
+
         if (useScientific)
         {
             // Use scientific notation - format as "d.ddd...e±nn"
@@ -2387,7 +2393,7 @@ public static partial class JsonElementHelpers
 
         int totalLength = integral.Length + fractional.Length;
         int significandStart = pos;
-        
+
         // Calculate scientific exponent
         int scientificExponent = totalLength - 1 + exponent;
 
@@ -2456,13 +2462,13 @@ public static partial class JsonElementHelpers
             }
             destination[significandStart + 1] = formatInfo.NumberDecimalSeparator[0];
             pos++;
-            
+
             // Remove trailing zeros after decimal point
             while (pos > significandStart + 2 && destination[pos - 1] == '0')
             {
                 pos--;
             }
-            
+
             // Remove decimal point if no fractional digits remain
             if (destination[pos - 1] == formatInfo.NumberDecimalSeparator[0])
             {
@@ -2726,7 +2732,7 @@ public static partial class JsonElementHelpers
                 pos += formatInfo.NumberDecimalSeparator.Length;
 
                 int leadingZeros = -decimalPosition;
-                
+
                 if (leadingZeros >= precision)
                 {
                     for (int i = 0; i < precision; i++)
@@ -2743,7 +2749,7 @@ public static partial class JsonElementHelpers
 
                     int remainingPrecision = precision - leadingZeros;
                     int roundingPosition = remainingPrecision;
-                    
+
                     if (roundingPosition < totalLength)
                     {
                         byte roundingDigit = GetDigitAtPosition(integral, fractional, roundingPosition);
@@ -2932,7 +2938,7 @@ public static partial class JsonElementHelpers
         }
 
         int totalLength = integral.Length + fractional.Length;
-        
+
         if (totalLength == 0)
         {
             // Special case for zero
@@ -2941,9 +2947,9 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
-            
+
             destination[pos++] = '0';
-            
+
             if (precision > 0)
             {
                 destination[pos++] = formatInfo.NumberDecimalSeparator[0];
@@ -2952,13 +2958,13 @@ public static partial class JsonElementHelpers
                     destination[pos++] = '0';
                 }
             }
-            
+
             destination[pos++] = exponentChar;
             destination[pos++] = '+';
             destination[pos++] = '0';
             destination[pos++] = '0';
             destination[pos++] = '0';
-            
+
             charsWritten = pos;
             return true;
         }
@@ -2976,20 +2982,20 @@ public static partial class JsonElementHelpers
 
         // Write first digit
         byte firstDigit = GetDigitAtPosition(integral, fractional, 0);
-        
+
         // Handle rounding
         if (precision < totalLength - 1)
         {
             // Need to round
             int roundPos = precision + 1;
             byte roundingDigit = roundPos < totalLength ? GetDigitAtPosition(integral, fractional, roundPos) : (byte)'0';
-            
+
             int carry = roundingDigit >= (byte)'5' ? 1 : 0;
-            
+
             // Round the fractional digits
             Span<byte> roundedDigits = stackalloc byte[precision + 1];
             roundedDigits[0] = firstDigit;
-            
+
             for (int i = precision; i >= 1; i--)
             {
                 byte digit = i < totalLength ? GetDigitAtPosition(integral, fractional, i) : (byte)'0';
@@ -3005,7 +3011,7 @@ public static partial class JsonElementHelpers
                 }
                 roundedDigits[i] = digit;
             }
-            
+
             // Handle carry into first digit
             firstDigit += (byte)carry;
             if (firstDigit > (byte)'9')
@@ -3018,13 +3024,13 @@ public static partial class JsonElementHelpers
                 carry = 0;
             }
             roundedDigits[0] = firstDigit;
-            
+
             // If carry overflowed, adjust
             if (carry > 0)
             {
                 scientificExponent++;
                 destination[pos++] = '1';
-                
+
                 if (precision > 0)
                 {
                     destination[pos++] = formatInfo.NumberDecimalSeparator[0];
@@ -3037,7 +3043,7 @@ public static partial class JsonElementHelpers
             else
             {
                 destination[pos++] = (char)roundedDigits[0];
-                
+
                 if (precision > 0)
                 {
                     destination[pos++] = formatInfo.NumberDecimalSeparator[0];
@@ -3052,16 +3058,16 @@ public static partial class JsonElementHelpers
         {
             // No rounding needed
             destination[pos++] = (char)firstDigit;
-            
+
             if (precision > 0)
             {
                 destination[pos++] = formatInfo.NumberDecimalSeparator[0];
-                
+
                 for (int i = 1; i <= precision && i < totalLength; i++)
                 {
                     destination[pos++] = (char)GetDigitAtPosition(integral, fractional, i);
                 }
-                
+
                 // Pad with zeros if needed
                 for (int i = totalLength; i <= precision; i++)
                 {
@@ -3072,7 +3078,7 @@ public static partial class JsonElementHelpers
 
         // Write exponent
         destination[pos++] = exponentChar;
-        
+
         if (scientificExponent >= 0)
         {
             destination[pos++] = '+';
@@ -3220,12 +3226,12 @@ public static partial class JsonElementHelpers
             charsWritten = 0;
             return false;
         }
-        
+
         // Apply positive currency pattern (zero is not negative)
         int pattern = formatInfo.CurrencyPositivePattern;
         ReadOnlySpan<char> currencySymbol = formatInfo.CurrencySymbol.AsSpan();
         int pos = 0;
-        
+
         switch (pattern)
         {
             case 0: // $n
@@ -3239,7 +3245,7 @@ public static partial class JsonElementHelpers
                 tempDest.Slice(0, numberChars).CopyTo(destination.Slice(pos));
                 pos += numberChars;
                 break;
-                
+
             case 1: // n$
                 if (pos + numberChars + currencySymbol.Length > destination.Length)
                 {
@@ -3251,7 +3257,7 @@ public static partial class JsonElementHelpers
                 currencySymbol.CopyTo(destination.Slice(pos));
                 pos += currencySymbol.Length;
                 break;
-                
+
             case 2: // $ n
                 if (pos + currencySymbol.Length + 1 + numberChars > destination.Length)
                 {
@@ -3264,7 +3270,7 @@ public static partial class JsonElementHelpers
                 tempDest.Slice(0, numberChars).CopyTo(destination.Slice(pos));
                 pos += numberChars;
                 break;
-                
+
             case 3: // n $
                 if (pos + numberChars + 1 + currencySymbol.Length > destination.Length)
                 {
@@ -3277,12 +3283,12 @@ public static partial class JsonElementHelpers
                 currencySymbol.CopyTo(destination.Slice(pos));
                 pos += currencySymbol.Length;
                 break;
-                
+
             default:
                 charsWritten = 0;
                 return false;
         }
-        
+
         charsWritten = pos;
         return true;
     }
@@ -4834,7 +4840,7 @@ public static partial class JsonElementHelpers
     {
 
         // Format as 0.xxx
-        
+
         int requiredSize = 1 + (precision > 0 ? Encoding.UTF8.GetByteCount(formatInfo.CurrencyDecimalSeparator) + precision : 0);
         if (requiredSize > destination.Length)
         {
@@ -5042,7 +5048,7 @@ public static partial class JsonElementHelpers
         pos += decimalSeparatorLength;
 
         int fractionalStart = decimalPosition;
-        
+
         for (int i = 0; i < precision && fractionalStart + i < digits.Length; i++)
         {
             buffer[pos++] = digits[fractionalStart + i];
@@ -5425,9 +5431,9 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
-            
+
             byte decimalSep = formatInfo.NumberDecimalSeparator.Length > 0 ? (byte)formatInfo.NumberDecimalSeparator[0] : (byte)'.';
-            
+
             // Shift digits right to make room for decimal point
             for (int i = pos; i > significandStart + 1; i--)
             {
@@ -5435,13 +5441,13 @@ public static partial class JsonElementHelpers
             }
             destination[significandStart + 1] = decimalSep;
             pos++;
-            
+
             // Remove trailing zeros after decimal point
             while (pos > significandStart + 2 && destination[pos - 1] == '0')
             {
                 pos--;
             }
-            
+
             // Remove decimal point if no fractional digits remain
             if (destination[pos - 1] == decimalSep)
             {
@@ -6273,11 +6279,11 @@ public static partial class JsonElementHelpers
             bytesWritten = 0;
             return false;
         }
-        
+
         // Apply positive currency pattern (zero is not negative)
         int pattern = formatInfo.CurrencyPositivePattern;
         int pos = 0;
-        
+
         switch (pattern)
         {
             case 0: // $n
@@ -6295,7 +6301,7 @@ public static partial class JsonElementHelpers
                 tempDest.Slice(0, numberBytes).CopyTo(destination.Slice(pos));
                 pos += numberBytes;
                 break;
-                
+
             case 1: // n$
                 if (pos + numberBytes > destination.Length)
                 {
@@ -6311,7 +6317,7 @@ public static partial class JsonElementHelpers
                 }
                 pos += currencyLength1;
                 break;
-                
+
             case 2: // $ n
                 if (!JsonReaderHelper.TryGetUtf8FromText(formatInfo.CurrencySymbol, destination.Slice(pos), out int currencyLength2))
                 {
@@ -6328,7 +6334,7 @@ public static partial class JsonElementHelpers
                 tempDest.Slice(0, numberBytes).CopyTo(destination.Slice(pos));
                 pos += numberBytes;
                 break;
-                
+
             case 3: // n $
                 if (pos + numberBytes + 1 > destination.Length)
                 {
@@ -6345,12 +6351,12 @@ public static partial class JsonElementHelpers
                 }
                 pos += currencyLength3;
                 break;
-                
+
             default:
                 bytesWritten = 0;
                 return false;
         }
-        
+
         bytesWritten = pos;
         return true;
     }
@@ -6395,4 +6401,4 @@ public static partial class JsonElementHelpers
         return true;
     }
 
-}
+}

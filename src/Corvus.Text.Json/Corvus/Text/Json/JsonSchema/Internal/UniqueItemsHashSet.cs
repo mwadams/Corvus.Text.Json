@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="UniqueItemsHashSet.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Collections;
@@ -12,7 +18,7 @@ namespace Corvus.Text.Json.Internal;
 #pragma warning disable CS9191 // This is the warning about in/ref params; we disable it because we target netstandard2.0
 
 /// <summary>
-/// A map that can be built 
+/// A map that can be built
 /// </summary>
 /// <remarks>
 /// This class uses a hash-based approach to enable O(1) average-case lookups of property matchers based on property names, while minimizing memory usage through array pooling and efficient data layout. The implementation includes a custom hash function, separate chaining for collision resolution, and optimized key comparison strategies to ensure fast lookups even in the presence of hash collisions.
@@ -295,7 +301,7 @@ public ref struct UniqueItemsHashSet
     ReturnFound:
         return false;
     ReturnNotFound:
-        // Wasn't found, so add it and return 
+        // Wasn't found, so add it and return
         int entryIndex = _propertyIndex * JsonItemIndexHashSet.Entry.Size;
         JsonItemIndexHashSet.Entry.Write(_entries.Slice(entryIndex, JsonItemIndexHashSet.Entry.Size), hashCode, bucket - 1, parentDocumentIndex);
         _propertyIndex++;
@@ -328,4 +334,4 @@ public ref struct UniqueItemsHashSet
             ArrayPool<byte>.Shared.Return(eb);
         }
     }
-}
+}

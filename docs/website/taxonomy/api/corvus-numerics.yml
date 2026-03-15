@@ -1,0 +1,20 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Corvus.Numerics Namespace"
+Navigation:
+  Title: Corvus.Numerics
+  Description: "API reference for the Corvus.Numerics namespace"
+  Parent: /api
+  Url: /api/corvus-numerics.html
+  Rank: 2
+MetaData:
+  Title: "Corvus.Numerics Namespace — API Reference"
+  Description: "API documentation for the Corvus.Numerics namespace"
+  Keywords: [API, reference, Corvus.Numerics]
+OpenGraph:
+  Title: "Corvus.Numerics Namespace"
+  Description: "API reference for the Corvus.Numerics namespace"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-numerics.md

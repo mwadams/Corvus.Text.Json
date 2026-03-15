@@ -1,23 +1,29 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="IdnMapping.Ascii.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 // This file contains the IDN functions and implementation.
-//
+
 // This allows encoding of non-ASCII domain names in a "punycode" form,
 // for example:
-//
+
 //     \u5B89\u5BA4\u5948\u7F8E\u6075-with-SUPER-MONKEYS
-//
+
 // is encoded as:
-//
+
 //     xn---with-SUPER-MONKEYS-pc58ag80a8qai00g7n9n
-//
+
 // Additional options are provided to allow unassigned IDN characters and
 // to validate according to the Std3ASCII Rules (like DNS names).
-//
+
 // There are also rules regarding bidirectionality of text and the length
 // of segments.
-//
+
 // For additional rules see also:
 //  RFC 3490 - Internationalizing Domain Names in Applications (IDNA)
 //  RFC 3491 - Nameprep: A Stringprep Profile for Internationalized Domain Names (IDN)
@@ -114,9 +120,9 @@ public sealed partial class IdnMapping
     public override int GetHashCode() =>
         (_allowUnassigned ? 100 : 200) + (_useStd3AsciiRules ? 1000 : 2000);
 
-    //
+
     // Invariant implementation
-    //
+
 
     private const char c_delimiter = '-';
     private static ReadOnlySpan<char> c_strAcePrefix => "xn--";
@@ -720,4 +726,4 @@ public sealed partial class IdnMapping
         // 0-25 map to a-z or A-Z
         return (char)(d + 'a');
     }
-}
+}

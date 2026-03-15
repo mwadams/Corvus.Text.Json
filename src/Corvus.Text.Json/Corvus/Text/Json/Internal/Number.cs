@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="Number.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -92,4 +98,4 @@ internal static class Number
                             "70717273747576777879"u8 +
                             "80818283848586878889"u8 +
                             "90919293949596979899"u8;
-}
+}

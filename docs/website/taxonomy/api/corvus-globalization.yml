@@ -1,0 +1,20 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Corvus.Globalization Namespace"
+Navigation:
+  Title: Corvus.Globalization
+  Description: "API reference for the Corvus.Globalization namespace"
+  Parent: /api
+  Url: /api/corvus-globalization.html
+  Rank: 1
+MetaData:
+  Title: "Corvus.Globalization Namespace — API Reference"
+  Description: "API documentation for the Corvus.Globalization namespace"
+  Keywords: [API, reference, Corvus.Globalization]
+OpenGraph:
+  Title: "Corvus.Globalization Namespace"
+  Description: "API reference for the Corvus.Globalization namespace"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-globalization.md

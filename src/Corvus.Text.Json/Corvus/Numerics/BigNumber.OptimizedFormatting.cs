@@ -1,6 +1,11 @@
 // <copyright file="BigNumber.OptimizedFormatting.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Globalization;
@@ -27,26 +32,26 @@ public readonly partial struct BigNumber
     public bool TryFormatOptimized(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         BigNumber normalized = this.Normalize();
-        
+
         // Handle empty format - output raw JSON format (significand + 'E' + exponent)
         if (format.IsEmpty)
         {
             return TryFormatRaw(normalized, destination, out charsWritten, provider);
         }
-        
+
         bool isNegative = normalized.Significand.Sign < 0;
-        
+
         // Calculate max digits needed
         int maxDigits = normalized.Significand.IsZero ? 1 : (int)(BigInteger.Log10(BigInteger.Abs(normalized.Significand)) + 2);
-        
+
         // Use destination.Length as upper bound since we know bytes needed <= chars available
         int bufferSize = Math.Min(maxDigits, destination.Length);
-        
+
         byte[]? rentedBuffer = null;
         Span<byte> significandBuffer = bufferSize <= JsonConstants.StackallocByteThreshold
             ? stackalloc byte[JsonConstants.StackallocByteThreshold]
             : (rentedBuffer = ArrayPool<byte>.Shared.Rent(bufferSize)).AsSpan(0, bufferSize);
-        
+
         try
         {
             if (!TryFormatBigIntegerUtf8(BigInteger.Abs(normalized.Significand), significandBuffer, out int bytesWritten))
@@ -54,7 +59,7 @@ public readonly partial struct BigNumber
                 charsWritten = 0;
                 return false;
             }
-            
+
             return JsonElementHelpers.TryFormatNumber(
                 ReadOnlySpan<byte>.Empty,
                 destination,
@@ -135,26 +140,26 @@ public readonly partial struct BigNumber
     public bool TryFormatUtf8Optimized(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         BigNumber normalized = this.Normalize();
-        
+
         // Handle empty format - output raw JSON format (significand + 'E' + exponent)
         if (format.IsEmpty)
         {
             return TryFormatRawUtf8(normalized, utf8Destination, out bytesWritten, provider);
         }
-        
+
         bool isNegative = normalized.Significand.Sign < 0;
-        
+
         // Calculate max digits needed
         int maxDigits = normalized.Significand.IsZero ? 1 : (int)(BigInteger.Log10(BigInteger.Abs(normalized.Significand)) + 2);
-        
+
         // Use destination.Length as upper bound
         int bufferSize = Math.Min(maxDigits, utf8Destination.Length);
-        
+
         byte[]? rentedBuffer = null;
         Span<byte> significandBuffer = bufferSize <= JsonConstants.StackallocByteThreshold
             ? stackalloc byte[JsonConstants.StackallocByteThreshold]
             : (rentedBuffer = ArrayPool<byte>.Shared.Rent(bufferSize)).AsSpan(0, bufferSize);
-        
+
         try
         {
             if (!TryFormatBigIntegerUtf8(BigInteger.Abs(normalized.Significand), significandBuffer, out int signBytes))
@@ -162,7 +167,7 @@ public readonly partial struct BigNumber
                 bytesWritten = 0;
                 return false;
             }
-            
+
             return JsonElementHelpers.TryFormatNumber(
                 ReadOnlySpan<byte>.Empty,
                 utf8Destination,
@@ -268,8 +273,8 @@ public readonly partial struct BigNumber
         // Number of chars required is always <= number of bytes in destination
         // We can fail early if destination is too small for even a char buffer
         int bufferSize = destination.Length;
-        
-       
+
+
         char[]? rentedBuffer = null;
         try
         {
@@ -535,7 +540,7 @@ public readonly partial struct BigNumber
         bytesWritten = source.Length;
         return true;
     }
-    
+
     /// <summary>
     /// Estimates the number of digits needed for an int.
     /// </summary>
@@ -563,4 +568,4 @@ public readonly partial struct BigNumber
             _ => digits + 10
         };
     }
-}
+}

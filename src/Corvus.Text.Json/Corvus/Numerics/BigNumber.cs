@@ -1,6 +1,11 @@
 // <copyright file="BigNumber.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
@@ -1774,7 +1779,7 @@ public readonly partial struct BigNumber :
         // For left = s1 * 10^e1 and right = s2 * 10^e2:
         // If e1 >= e2: (s1 * 10^e1) % (s2 * 10^e2) = ((s1 * 10^(e1-e2)) % s2) * 10^e2
         // If e1 < e2: (s1 * 10^e1) % (s2 * 10^e2) = s1 * 10^e1 (since left < right in magnitude)
-        
+
         if (left.Exponent >= right.Exponent)
         {
             int exponentDiff = left.Exponent - right.Exponent;
@@ -2369,4 +2374,4 @@ public readonly partial struct BigNumber :
         var yAbs = BigInteger.Abs(y.Significand);
         return xAbs < yAbs ? x : y;
     }
-}
+}

@@ -1,5 +1,11 @@
+// <copyright file="JsonElement.Mutable.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System;
 using System.Buffers;
@@ -4262,7 +4268,7 @@ public readonly partial struct JsonElement
                 return;
             }
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);            
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 source.AddAsItem(ref cvb);
@@ -5883,4 +5889,4 @@ public readonly partial struct JsonElement
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
-}
+}

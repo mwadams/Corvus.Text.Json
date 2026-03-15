@@ -1,5 +1,11 @@
+// <copyright file="Utf8JsonReader.MultiSegment.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Diagnostics;
@@ -819,7 +825,7 @@ public ref partial struct Utf8JsonReader
                 return false;
             }
 
-            //Create local copy to avoid bounds checks.
+            // Create local copy to avoid bounds checks.
             ReadOnlySpan<byte> localBuffer = _buffer;
             int idx = localBuffer.IndexOfQuoteOrAnyControlOrBackSlash();
 
@@ -2635,4 +2641,4 @@ public ref partial struct Utf8JsonReader
             return new SequencePosition(_prevCurrentPosition.GetObject(), _prevCurrentPosition.GetInteger() + _prevConsumed + offset);
         }
     }
-}
+}

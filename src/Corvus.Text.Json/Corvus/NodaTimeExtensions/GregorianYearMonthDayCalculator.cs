@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="GregorianYearMonthDayCalculator.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 #pragma warning disable
 
@@ -84,4 +90,4 @@ internal static class GregorianYearMonthDayCalculator
     }
 
     private static bool IsGregorianLeapYear(int year) => ((year & 3) == 0) && ((year % 100) != 0 || (year % 400) == 0);
-}
+}

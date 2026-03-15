@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="JsonElementHelpers.DeepEquals.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 
@@ -297,7 +303,7 @@ public static partial class JsonElementHelpers
         // duplicate, out of order properties resolve the value in the second instance to the last value
         // in the first instance. This differs from the System.Text.Json.JsonElement implementation, which supports duplicate
         // property names, if they are in order.
-        //
+
         // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
         element1ParentDocument.EnsurePropertyMap(element1ParentDocumentIndex);
 
@@ -353,4 +359,4 @@ public static partial class JsonElementHelpers
 
         return true;
     }
-}
+}

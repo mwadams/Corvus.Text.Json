@@ -1,5 +1,11 @@
+// <copyright file="Utf8JsonWriter.WriteValues.StringSegment.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Buffers.Text;
@@ -501,7 +507,7 @@ public sealed partial class Utf8JsonWriter
         // Because we have validated above that partialStringDataBuffer will be the next consumed chars during Rune decoding
         // (even if this is because it is invalid), we should pass isFinalSegment = true to indicate to the decoder to
         // parse the code units without extra data.
-        //
+
         // This is relevant in the case of having ['\uD800', 'C'], where the validation above would have needed both code units
         // to determine that only the first unit should be consumed (as invalid). So this method will get only ['\uD800'].
         // Because we know more data will not be able to complete this code point, we need to pass isFinalSegment = true
@@ -558,7 +564,7 @@ public sealed partial class Utf8JsonWriter
         // Because we have validated above that partialStringDataBuffer will be the next consumed bytes during Rune decoding
         // (even if this is because it is invalid), we should pass isFinalSegment = true to indicate to the decoder to
         // parse the code units without extra data.
-        //
+
         // This is relevant in the case of having [<3-length prefix code unit>, <continuation>, <ascii>], where the validation
         // above would have needed all 3 code units to determine that only the first 2 units should be consumed (as invalid).
         // So this method will get only <3-size prefix code unit><continuation>. Because we know more data will not be able
@@ -570,4 +576,4 @@ public sealed partial class Utf8JsonWriter
 
         WriteStringSegmentEscape(utf8Value, isFinalSegment);
     }
-}
+}

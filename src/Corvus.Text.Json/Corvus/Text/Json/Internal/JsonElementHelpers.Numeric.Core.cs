@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="JsonElementHelpers.Numeric.Core.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers.Text;
 using System.Runtime.CompilerServices;
@@ -76,9 +82,9 @@ public static partial class JsonElementHelpers
     {
         // Parses a JSON number into its integral, fractional, and exponent parts.
         // The returned components use a normal-form decimal representation:
-        //
+
         //   Number := sign * <integral + fractional> * 10^exponent
-        //
+
         // where integral and fractional are sequences of digits whose concatenation
         // represents the significand of the number without leading or trailing zeros.
         // Two such normal-form numbers are treated as equal if and only if they have
@@ -389,19 +395,19 @@ public static partial class JsonElementHelpers
         int position)
     {
         int significandLength = integral.Length + fractional.Length;
-        
+
         // If position is within the significand, get it from integral/fractional
         if (position < significandLength)
         {
             return GetDigitAtPosition(integral, fractional, position);
         }
-        
+
         // If position is in the trailing zeros added by positive exponent
         if (exponent > 0 && position < significandLength + exponent)
         {
             return (byte)'0';
         }
-        
+
         // Beyond the decimal representation
         return (byte)'0';
     }
@@ -415,4 +421,4 @@ public static partial class JsonElementHelpers
         int significandLength = integral.Length + fractional.Length;
         return exponent >= 0 ? significandLength + exponent : significandLength;
     }
-}
+}

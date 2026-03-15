@@ -1,6 +1,11 @@
 // <copyright file="ParsingPolyfills.cs" company="endjin">
 // Copyright (c) endjin. All rights reserved.
 // </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 #if !NET
 
@@ -23,7 +28,7 @@ internal static class ParsingPolyfills
     public static bool TryParseInt32Invariant(ReadOnlySpan<char> span, out int value)
     {
         value = 0;
-        
+
         if (span.IsEmpty)
         {
             return false;
@@ -66,7 +71,7 @@ internal static class ParsingPolyfills
         while (index < span.Length)
         {
             char c = span[index];
-            
+
             if (c < '0' || c > '9')
             {
                 break;
@@ -103,7 +108,7 @@ internal static class ParsingPolyfills
         }
 
         value = (int)(result * sign);
-        
+
         // Check for negative overflow
         if (sign == -1 && result > -(long)int.MinValue)
         {
@@ -122,7 +127,7 @@ internal static class ParsingPolyfills
     public static bool TryParseInt64Invariant(ReadOnlySpan<char> span, out long value)
     {
         value = 0;
-        
+
         if (span.IsEmpty)
         {
             return false;
@@ -165,7 +170,7 @@ internal static class ParsingPolyfills
         while (index < span.Length)
         {
             char c = span[index];
-            
+
             if (c < '0' || c > '9')
             {
                 break;
@@ -282,4 +287,4 @@ internal static class ParsingPolyfills
     }
 }
 
-#endif
+#endif

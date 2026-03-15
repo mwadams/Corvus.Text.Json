@@ -1,5 +1,11 @@
+// <copyright file="ParsedJsonDocument.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System;
 using System.Buffers;
@@ -1689,10 +1695,10 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
                 // If the array item count is (e.g.) 12 and the number of rows is (e.g.) 13
                 // then the extra row is just this EndArray item, so the array was made up
                 // of simple values.
-                //
+
                 // If the off-by-one relationship does not hold, then one of the values was
                 // more than one row, making it a complex object.
-                //
+
                 // This check is similar to tracking the start array and painting it when
                 // StartObject or StartArray is encountered, but avoids the mixed state
                 // where "UnknownSize" implies "has complex children".
@@ -1874,4 +1880,4 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         db.AppendExternal(complexObjectRow.TokenType, index, entityLength, complexObjectRow.NumberOfRows);
         return count;
     }
-}
+}

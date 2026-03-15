@@ -1,5 +1,11 @@
+// <copyright file="ParsedJsonDocument.Parse.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Diagnostics;
@@ -61,7 +67,7 @@ public sealed partial class ParsedJsonDocument<T>
     /// <remarks>
     ///   <para>
     ///     The <see cref="ReadOnlyMemory{T}"/> value will be used for the entire lifetime of the
-    ///     ParsedJsonDocument<T> object, and the caller must ensure that the data therein does not change during
+    ///     ParsedJsonDocument{T} object, and the caller must ensure that the data therein does not change during
     ///     the object lifetime.
     ///   </para>
     ///
@@ -72,7 +78,7 @@ public sealed partial class ParsedJsonDocument<T>
     /// <param name="utf8Json">JSON text to parse.</param>
     /// <param name="options">Options to control the reader behavior during parsing.</param>
     /// <returns>
-    ///   A ParsedJsonDocument<T> representation of the JSON value.
+    ///   A ParsedJsonDocument{T} representation of the JSON value.
     /// </returns>
     /// <exception cref="JsonException">
     ///   <paramref name="utf8Json"/> does not represent a valid single JSON value.
@@ -91,7 +97,7 @@ public sealed partial class ParsedJsonDocument<T>
     /// <remarks>
     ///   <para>
     ///     The <see cref="ReadOnlySequence{T}"/> may be used for the entire lifetime of the
-    ///     ParsedJsonDocument<T> object, and the caller must ensure that the data therein does not change during
+    ///     ParsedJsonDocument{T} object, and the caller must ensure that the data therein does not change during
     ///     the object lifetime.
     ///   </para>
     ///
@@ -102,7 +108,7 @@ public sealed partial class ParsedJsonDocument<T>
     /// <param name="utf8Json">JSON text to parse.</param>
     /// <param name="options">Options to control the reader behavior during parsing.</param>
     /// <returns>
-    ///   A ParsedJsonDocument<T> representation of the JSON value.
+    ///   A ParsedJsonDocument{T} representation of the JSON value.
     /// </returns>
     /// <exception cref="JsonException">
     ///   <paramref name="utf8Json"/> does not represent a valid single JSON value.
@@ -143,7 +149,7 @@ public sealed partial class ParsedJsonDocument<T>
     /// <param name="utf8Json">JSON data to parse.</param>
     /// <param name="options">Options to control the reader behavior during parsing.</param>
     /// <returns>
-    ///   A ParsedJsonDocument<T> representation of the JSON value.
+    ///   A ParsedJsonDocument{T} representation of the JSON value.
     /// </returns>
     /// <exception cref="JsonException">
     ///   <paramref name="utf8Json"/> does not represent a valid single JSON value.
@@ -209,7 +215,7 @@ public sealed partial class ParsedJsonDocument<T>
     /// <param name="options">Options to control the reader behavior during parsing.</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>
-    ///   A Task to produce a ParsedJsonDocument<T> representation of the JSON value.
+    ///   A Task to produce a ParsedJsonDocument{T} representation of the JSON value.
     /// </returns>
     /// <exception cref="JsonException">
     ///   <paramref name="utf8Json"/> does not represent a valid single JSON value.
@@ -252,13 +258,13 @@ public sealed partial class ParsedJsonDocument<T>
     /// </summary>
     /// <remarks>
     ///   The <see cref="ReadOnlyMemory{T}"/> value may be used for the entire lifetime of the
-    ///   ParsedJsonDocument<T> object, and the caller must ensure that the data therein does not change during
+    ///   ParsedJsonDocument{T} object, and the caller must ensure that the data therein does not change during
     ///   the object lifetime.
     /// </remarks>
     /// <param name="json">JSON text to parse.</param>
     /// <param name="options">Options to control the reader behavior during parsing.</param>
     /// <returns>
-    ///   A ParsedJsonDocument<T> representation of the JSON value.
+    ///   A ParsedJsonDocument{T} representation of the JSON value.
     /// </returns>
     /// <exception cref="JsonException">
     ///   <paramref name="json"/> does not represent a valid single JSON value.
@@ -321,7 +327,7 @@ public sealed partial class ParsedJsonDocument<T>
     /// <param name="json">JSON text to parse.</param>
     /// <param name="options">Options to control the reader behavior during parsing.</param>
     /// <returns>
-    ///   A ParsedJsonDocument<T> representation of the JSON value.
+    ///   A ParsedJsonDocument{T} representation of the JSON value.
     /// </returns>
     /// <exception cref="JsonException">
     ///   <paramref name="json"/> does not represent a valid single JSON value.
@@ -384,7 +390,7 @@ public sealed partial class ParsedJsonDocument<T>
     /// </summary>
     /// <param name="reader">The reader to read.</param>
     /// <returns>
-    ///   A ParsedJsonDocument<T> representing the value (and nested values) read from the reader.
+    ///   A ParsedJsonDocument{T} representing the value (and nested values) read from the reader.
     /// </returns>
     /// <remarks>
     ///   <para>
@@ -969,4 +975,4 @@ public sealed partial class ParsedJsonDocument<T>
         }
     }
 
-}
+}

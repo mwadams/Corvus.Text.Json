@@ -1,5 +1,11 @@
+// <copyright file="JsonHelpers.Date.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -170,7 +176,7 @@ internal static partial class JsonHelpers
         //  [year]  = [YYYY] [0000 - 9999] (4.3.2)
         //  [month] = [MM] [01 - 12] (4.3.3)
         //  [day]   = [DD] [01 - 28, 29, 30, 31] (4.3.4)
-        //
+
         // Note: 5.2.2.2 "Representations with reduced precision" allows for
         // just [year]["-"][month] (a) and just [year] (b), but we currently
         // don't permit it.
@@ -206,31 +212,31 @@ internal static partial class JsonHelpers
 
         // Parse the time of day
         // ---------------------
-        //
+
         // ISO 8601-1:2019 5.3.1.2b "Local time of day complete extended format"
         //  [timeX]   = ["T"][hour][":"][min][":"][sec]
         //  [hour]    = [hh] [00 - 23] (4.3.8a)
         //  [minute]  = [mm] [00 - 59] (4.3.9a)
         //  [sec]     = [ss] [00 - 59, 60 with a leap second] (4.3.10a)
-        //
+
         // ISO 8601-1:2019 5.3.3 "UTC of day"
         //  [timeX]["Z"]
-        //
+
         // ISO 8601-1:2019 5.3.4.2 "Local time of day with the time shift between
         // local time scale and UTC" (Extended format)
-        //
+
         //  [shiftX] = ["+"|"-"][hour][":"][min]
-        //
+
         // Notes:
-        //
+
         // "T" is optional per spec, but _only_ when times are used alone. In our
         // case, we're reading out a complete date & time and as such require "T".
         // (5.4.2.1b).
-        //
+
         // For [timeX] We allow seconds to be omitted per 5.3.1.3a "Representations
         // with reduced precision". 5.3.1.3b allows just specifying the hour, but
         // we currently don't permit this.
-        //
+
         // Decimal fractions are allowed for hours, minutes and seconds (5.3.14).
         // We only allow fractions for seconds currently. Lower order components
         // can't follow, i.e. you can have T23.3, but not T23.3:04. There must be
@@ -577,4 +583,4 @@ internal static partial class JsonHelpers
 
     private static ReadOnlySpan<int> DaysToMonth365 => [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
     private static ReadOnlySpan<int> DaysToMonth366 => [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
-}
+}

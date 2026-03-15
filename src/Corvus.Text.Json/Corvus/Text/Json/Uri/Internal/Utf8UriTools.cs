@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="Utf8UriTools.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 
@@ -514,33 +520,33 @@ internal static class Utf8UriTools
         written = 0;
 
         // Check for authority-only reference (starts with "//")
-        bool targetIsAuthorityOnly = targetUri.Length >= 2 && 
-                                      targetUri[0] == (byte)'/' && 
+        bool targetIsAuthorityOnly = targetUri.Length >= 2 &&
+                                      targetUri[0] == (byte)'/' &&
                                       targetUri[1] == (byte)'/';
 
         // Extract target (reference) URI components
         int targetSchemeLen = targetUriOffsets.User - targetUriOffsets.Scheme;
         ReadOnlySpan<byte> targetScheme = targetSchemeLen > 0 ? targetUri.Slice(targetUriOffsets.Scheme, targetSchemeLen) : ReadOnlySpan<byte>.Empty;
-        
+
         int targetAuthorityLen = targetUriOffsets.Path - targetUriOffsets.User;
         ReadOnlySpan<byte> targetAuthority;
         ReadOnlySpan<byte> targetPath;
-        
+
         if (targetIsAuthorityOnly && targetAuthorityLen == 0)
         {
             // Authority-only reference but parser didn't recognize it
             // Extract authority manually (skip "//" and take until path delimiter)
             int authEnd = 2;
-            while (authEnd < targetUri.Length && 
-                   targetUri[authEnd] != (byte)'/' && 
-                   targetUri[authEnd] != (byte)'?' && 
+            while (authEnd < targetUri.Length &&
+                   targetUri[authEnd] != (byte)'/' &&
+                   targetUri[authEnd] != (byte)'?' &&
                    targetUri[authEnd] != (byte)'#')
             {
                 authEnd++;
             }
             targetAuthority = targetUri.Slice(2, authEnd - 2);
             targetAuthorityLen = targetAuthority.Length;
-            
+
             // Path starts after authority (if any)
             int targetPathLen = targetUriOffsets.Query - authEnd;
             targetPath = targetPathLen > 0 ? targetUri.Slice(authEnd, targetPathLen) : ReadOnlySpan<byte>.Empty;
@@ -548,27 +554,27 @@ internal static class Utf8UriTools
         else
         {
             targetAuthority = targetAuthorityLen > 0 ? targetUri.Slice(targetUriOffsets.User, targetAuthorityLen) : ReadOnlySpan<byte>.Empty;
-            
+
             int targetPathLen = targetUriOffsets.Query - targetUriOffsets.Path;
             targetPath = targetPathLen > 0 ? targetUri.Slice(targetUriOffsets.Path, targetPathLen) : ReadOnlySpan<byte>.Empty;
         }
-        
+
         int targetQueryLen = targetUriOffsets.Fragment - targetUriOffsets.Query;
         ReadOnlySpan<byte> targetQuery = targetQueryLen > 0 ? targetUri.Slice(targetUriOffsets.Query, targetQueryLen) : ReadOnlySpan<byte>.Empty;
-        
+
         int targetFragmentLen = targetUriOffsets.End - targetUriOffsets.Fragment;
         ReadOnlySpan<byte> targetFragment = targetFragmentLen > 0 ? targetUri.Slice(targetUriOffsets.Fragment, targetFragmentLen) : ReadOnlySpan<byte>.Empty;
 
         // Extract base URI components
         int baseSchemeLen = baseUriOffsets.User - baseUriOffsets.Scheme;
         ReadOnlySpan<byte> baseScheme = baseSchemeLen > 0 ? baseUri.Slice(baseUriOffsets.Scheme, baseSchemeLen) : ReadOnlySpan<byte>.Empty;
-        
+
         int baseAuthorityLen = baseUriOffsets.Path - baseUriOffsets.User;
         ReadOnlySpan<byte> baseAuthority = baseAuthorityLen > 0 ? baseUri.Slice(baseUriOffsets.User, baseAuthorityLen) : ReadOnlySpan<byte>.Empty;
-        
+
         int basePathLen = baseUriOffsets.Query - baseUriOffsets.Path;
         ReadOnlySpan<byte> basePath = basePathLen > 0 ? baseUri.Slice(baseUriOffsets.Path, basePathLen) : ReadOnlySpan<byte>.Empty;
-        
+
         int baseQueryLen = baseUriOffsets.Fragment - baseUriOffsets.Query;
         ReadOnlySpan<byte> baseQuery = baseQueryLen > 0 ? baseUri.Slice(baseUriOffsets.Query, baseQueryLen) : ReadOnlySpan<byte>.Empty;
 
@@ -597,7 +603,7 @@ internal static class Utf8UriTools
                 // Target has scheme - use target scheme/authority/query and normalize path
                 resultScheme = targetScheme;
                 resultAuthority = targetAuthority;
-                
+
                 // Copy target path to buffer and normalize
                 targetPath.CopyTo(pathBuffer);
                 int normalizedLen = RemoveDotSegments(pathBuffer, targetPath.Length);
@@ -611,7 +617,7 @@ internal static class Utf8UriTools
                 {
                     // Target has authority - use target authority/query and normalize path
                     resultAuthority = targetAuthority;
-                    
+
                     // Copy target path to buffer and normalize
                     targetPath.CopyTo(pathBuffer);
                     int normalizedLen = RemoveDotSegments(pathBuffer, targetPath.Length);
@@ -673,7 +679,7 @@ internal static class Utf8UriTools
             {
                 // Check if authority already includes "//" prefix and scheme ends with "://"
                 int authorityStart = 0;
-                if (resultScheme.Length >= 3 && 
+                if (resultScheme.Length >= 3 &&
                     resultScheme[resultScheme.Length - 3] == (byte)':' &&
                     resultScheme[resultScheme.Length - 2] == (byte)'/' &&
                     resultScheme[resultScheme.Length - 1] == (byte)'/' &&
@@ -684,7 +690,7 @@ internal static class Utf8UriTools
                     // Skip the "//" prefix from authority since scheme already has it
                     authorityStart = 2;
                 }
-                
+
                 int authorityLen = resultAuthority.Length - authorityStart;
                 if (pos + authorityLen > destination.Length)
                 {
@@ -770,7 +776,7 @@ internal static class Utf8UriTools
 
         // Always perform normalization - no fast path
         // (We normalize scheme, decode unreserved chars regardless of flags)
-        
+
         bool hostNeedsLowercase = HostType(resultFlags) == Flags.DnsHostType && NotAny(resultFlags, Flags.CanonicalDnsHost);
 
         int pos = 0;
@@ -944,7 +950,7 @@ internal static class Utf8UriTools
                     i += bytesConsumed - 1; // -1 because loop will increment
                     continue;
                 }
-                
+
                 // Try decoding as single ASCII byte (unreserved only for display)
                 char decoded = Utf8UriHelper.DecodeHexChars(source[i + 1], source[i + 2]);
                 if (decoded != c_DummyChar && IsAscii(decoded) && Contains(decoded, Utf8UriHelper.Unreserved))
@@ -1000,7 +1006,7 @@ internal static class Utf8UriTools
                         i += bytesConsumed - 1; // -1 because loop will increment
                         continue;
                     }
-                    
+
                     // Try decoding as single ASCII byte (unreserved only for display)
                     char decoded = Utf8UriHelper.DecodeHexChars(path[i + 1], path[i + 2]);
                     if (decoded != c_DummyChar && IsAscii(decoded) && Contains(decoded, Utf8UriHelper.Unreserved))
@@ -1053,7 +1059,7 @@ internal static class Utf8UriTools
                     i += bytesConsumed - 1; // -1 because loop will increment
                     continue;
                 }
-                
+
                 // Try decoding as single ASCII byte (unreserved only for display)
                 char decoded = Utf8UriHelper.DecodeHexChars(path[i + 1], path[i + 2]);
                 if (decoded != c_DummyChar && IsAscii(decoded) && Contains(decoded, Utf8UriHelper.Unreserved))
@@ -1110,7 +1116,7 @@ internal static class Utf8UriTools
 
         // Always perform normalization - no fast path
         // (We normalize scheme, decode unreserved chars, uppercase hex regardless of flags)
-        
+
         bool hostNeedsLowercase = HostType(resultFlags) == Flags.DnsHostType && NotAny(resultFlags, Flags.CanonicalDnsHost);
 
         int pos = 0;
@@ -1249,7 +1255,7 @@ internal static class Utf8UriTools
         for (int i = 0; i < source.Length; i++)
         {
             byte b = source[i];
-            
+
             // Handle percent-encoded sequences
             if (b == (byte)'%' && i + 2 < source.Length)
             {
@@ -1259,7 +1265,7 @@ internal static class Utf8UriTools
                     i += bytesConsumed - 1; // -1 because loop will increment
                     continue;
                 }
-                
+
                 // Try decoding as single ASCII byte
                 char decoded = Utf8UriHelper.DecodeHexChars(source[i + 1], source[i + 2]);
                 if (decoded != c_DummyChar && IsAscii(decoded))
@@ -1277,7 +1283,7 @@ internal static class Utf8UriTools
                         continue;
                     }
                 }
-                
+
                 // Normalize hex digits to uppercase (whether decoded or not)
                 if (pos + 3 > destination.Length)
                 {
@@ -1372,7 +1378,7 @@ internal static class Utf8UriTools
                         i += bytesConsumed - 1; // -1 because loop will increment
                         continue;
                     }
-                    
+
                     // Try decoding as single ASCII byte
                     char decoded = Utf8UriHelper.DecodeHexChars(path[i + 1], path[i + 2]);
                     if (decoded != c_DummyChar && IsAscii(decoded))
@@ -1390,7 +1396,7 @@ internal static class Utf8UriTools
                             continue;
                         }
                     }
-                    
+
                     // Normalize hex digits to uppercase (whether decoded or not)
                     if (pos + 3 > destination.Length)
                     {
@@ -1472,7 +1478,7 @@ internal static class Utf8UriTools
                         i += bytesConsumed - 1; // -1 because loop will increment
                         continue;
                     }
-                    
+
                     // Try decoding as single ASCII byte
                     char decoded = Utf8UriHelper.DecodeHexChars(path[i + 1], path[i + 2]);
                     if (decoded != c_DummyChar && IsAscii(decoded))
@@ -1484,7 +1490,7 @@ internal static class Utf8UriTools
                             continue;
                         }
                     }
-                    
+
                     // Normalize hex digits to uppercase (whether decoded or not)
                     tempBuffer[tempPos++] = (byte)'%';
                     tempBuffer[tempPos++] = ToUpperHex(path[i + 1]);
@@ -1555,41 +1561,41 @@ internal static class Utf8UriTools
     private static bool ShouldStayEncoded(Rune rune)
     {
         int value = rune.Value;
-        
+
         // C0 and C1 control characters (U+0000-U+001F, U+007F-U+009F)
         if (value <= 0x1F || (value >= 0x7F && value <= 0x9F))
         {
             return true;
         }
-        
+
         // Zero-width and invisible formatting characters
         if (value >= 0x200B && value <= 0x200F) // ZWSP, ZWNJ, ZWJ, LRM, RLM
         {
             return true;
         }
-        
+
         if (value >= 0x202A && value <= 0x202E) // Bidi embedding/override controls
         {
             return true;
         }
-        
+
         if (value == 0xFEFF) // ZERO WIDTH NO-BREAK SPACE (BOM)
         {
             return true;
         }
-        
+
         // Non-characters (U+FFFE, U+FFFF, and others ending in FFFE/FFFF)
         if ((value & 0xFFFE) == 0xFFFE) // Matches FFFE and FFFF in any plane
         {
             return true;
         }
-        
+
         // FDD0..FDEF are also non-characters
         if (value >= 0xFDD0 && value <= 0xFDEF)
         {
             return true;
         }
-        
+
         return false;
     }
 
@@ -1606,7 +1612,7 @@ internal static class Utf8UriTools
     private static bool TryDecodePercentEncodedUtf8(ReadOnlySpan<byte> source, int sourceIndex, Span<byte> destination, ref int destPos, out int bytesConsumed)
     {
         bytesConsumed = 0;
-        
+
         // First check if this looks like a multi-byte UTF-8 sequence
         // Multi-byte UTF-8 starts with a byte >= 0x80
         if (sourceIndex + 2 < source.Length && source[sourceIndex] == (byte)'%')
@@ -1622,15 +1628,15 @@ internal static class Utf8UriTools
         {
             return false;
         }
-        
+
         // Try to decode up to 4 bytes (max UTF-8 sequence length)
         Span<byte> utf8Bytes = stackalloc byte[4];
         int utf8ByteCount = 0;
         int currentIndex = sourceIndex;
-        
+
         // Collect consecutive percent-encoded bytes
-        while (utf8ByteCount < 4 && 
-               currentIndex + 2 < source.Length && 
+        while (utf8ByteCount < 4 &&
+               currentIndex + 2 < source.Length &&
                source[currentIndex] == (byte)'%')
         {
             char decoded = Utf8UriHelper.DecodeHexChars(source[currentIndex + 1], source[currentIndex + 2]);
@@ -1638,19 +1644,19 @@ internal static class Utf8UriTools
             {
                 break;
             }
-            
+
             utf8Bytes[utf8ByteCount++] = (byte)decoded;
             currentIndex += 3;
         }
-        
+
         if (utf8ByteCount == 0)
         {
             return false;
         }
-        
+
         // Validate as UTF-8 using Rune (polyfilled for all versions)
         ReadOnlySpan<byte> utf8Sequence = utf8Bytes.Slice(0, utf8ByteCount);
-        
+
         if (Rune.DecodeFromUtf8(utf8Sequence, out Rune rune, out int bytesRead) == System.Buffers.OperationStatus.Done)
         {
             // Check if this character should stay encoded (control chars, zero-width, etc.)
@@ -1658,19 +1664,19 @@ internal static class Utf8UriTools
             {
                 return false;
             }
-            
+
             // Valid UTF-8 sequence that's safe to decode - copy the UTF-8 bytes directly
             if (destPos + bytesRead > destination.Length)
             {
                 return false;
             }
-            
+
             utf8Sequence.Slice(0, bytesRead).CopyTo(destination.Slice(destPos));
             destPos += bytesRead;
             bytesConsumed = bytesRead * 3; // Each byte was %XX (3 chars)
             return true;
         }
-        
+
         return false;
     }
 
@@ -2131,10 +2137,10 @@ internal static class Utf8UriTools
                 return requireAbsolute ? false : true;
                 // Otherwise an absolute file Uri wins when it's of the form "\\something"
             }
-            //
+
             // V1 compat issue
             // We should support relative Uris of the form c:\bla or c:/bla
-            //
+
             else if (uriKind != Utf8UriKind.Absolute && InFact(flags, Flags.DosPath))
             {
                 flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
@@ -2259,10 +2265,10 @@ internal static class Utf8UriTools
                     return requireAbsolute ? false : true;
                     // Otherwise an absolute file Uri wins when it's of the form "\\something"
                 }
-                //
+
                 // V1 compat issue
                 // We should support relative Uris of the form c:\bla or c:/bla
-                //
+
                 else if (uriKind != Utf8UriKind.Absolute && InFact(flags, Flags.DosPath))
                 {
                     syntax = null!; //make it be relative Uri
@@ -2274,7 +2280,7 @@ internal static class Utf8UriTools
         }
         else if (err > Utf8UriParsingError.LastRelativeUriOkErrIndex)
         {
-            //This is a fatal error based solely on scheme name parsing
+            // This is a fatal error based solely on scheme name parsing
             return false;
         }
 
@@ -2343,12 +2349,12 @@ internal static class Utf8UriTools
         return CreateUriInfo(syntax, ref flags, uriString);
     }
 
-    //
-    //
+
+
     // The method is called when we have to access info members.
     // This will create the info based on the copied parser context.
     // If multi-threading, this method may do duplicated yet harmless work.
-    //
+
     private static unsafe Utf8UriOffset CreateUriInfo(Utf8UriParser syntax, ref Flags flags, ReadOnlySpan<byte> uriString)
     {
         Utf8UriOffset info = new Utf8UriOffset();
@@ -2377,7 +2383,7 @@ internal static class Utf8UriTools
             {
                 // For implicit file AND Unc only
                 idx += 2;
-                //skip any other slashes (compatibility with V1.0 parser)
+                // skip any other slashes (compatibility with V1.0 parser)
                 int end = (int)(flags & Flags.IndexMask);
                 while (idx < end && (uriString[idx] == (byte)'/' || uriString[idx] == (byte)'\\'))
                 {
@@ -2419,12 +2425,12 @@ internal static class Utf8UriTools
         if (syntax.DefaultPort != Utf8UriParser.NoDefaultPort)
             info.PortValue = (ushort)syntax.DefaultPort;
 
-        //Here we set the indexes for already parsed components
+        // Here we set the indexes for already parsed components
         if ((flags & Flags.HostTypeMask) == Flags.UnknownHostType
             || InFact(flags, Flags.DosPath)
             )
         {
-            //there is no Authority component defined
+            // there is no Authority component defined
             info.User = (ushort)(flags & Flags.IndexMask);
             info.Host = info.User;
             info.Path = info.User;
@@ -2439,7 +2445,7 @@ internal static class Utf8UriTools
 
         info.User = (ushort)idx;
 
-        //Basic Host Type does not have userinfo and port
+        // Basic Host Type does not have userinfo and port
         if (HostType(flags) == Flags.BasicHostType)
         {
             info.Host = (ushort)idx;
@@ -2463,12 +2469,12 @@ internal static class Utf8UriTools
             info.Host = (ushort)idx;
         }
 
-        //Now reload the end of the parsed host
+        // Now reload the end of the parsed host
 
         idx = (int)(flags & Flags.IndexMask);
 
-        //From now on we do not need IndexMask bits, and reuse the space for X_NotCanonical flags
-        //clear them now
+        // From now on we do not need IndexMask bits, and reuse the space for X_NotCanonical flags
+        // clear them now
         flags &= ~Flags.IndexMask;
 
         // If this is not canonical, don't count on user input to be good
@@ -2477,7 +2483,7 @@ internal static class Utf8UriTools
             flags |= Flags.SchemeNotCanonical;
         }
 
-        //Guessing this is a path start
+        // Guessing this is a path start
         info.Path = (ushort)idx;
 
         // parse Port if any. The new spec allows a port after ':' to be empty (assuming default?)
@@ -2492,7 +2498,7 @@ internal static class Utf8UriTools
                 {
                     int port = 0;
                     info.Port = (ushort)idx;
-                    //Check on some non-canonical cases http://host:0324/, http://host:03, http://host:0, etc
+                    // Check on some non-canonical cases http://host:0324/, http://host:03, http://host:0, etc
                     if (++idx < info.End)
                     {
                         port = userString[idx] - (byte)'0';
@@ -2521,8 +2527,8 @@ internal static class Utf8UriTools
                     }
                     else
                     {
-                        //This will tell that we do have a ':' but the port value does
-                        //not follow to canonical rules
+                        // This will tell that we do have a ':' but the port value does
+                        // not follow to canonical rules
                         flags |= (Flags.PortNotCanonical | Flags.E_PortNotCanonical);
                     }
                     info.Path = (ushort)idx;
@@ -2535,14 +2541,14 @@ internal static class Utf8UriTools
         return info;
     }
 
-    //
-    //This method does:
+
+    // This method does:
     //  - Creates info member
     //  - checks all components up to path on their canonical representation
     //  - continues parsing starting the path position
     //  - Sets the offsets of remaining components
     //  - Sets the Canonicalization flags if applied
-    //
+
     private static unsafe bool ValidateRemaining(Utf8UriParsingError err, ref Flags flags, Utf8UriParser syntax, Utf8UriKind uriKind, ReadOnlySpan<byte> uriString, out Utf8UriOffset uriInfo)
     {
         // ensure we parsed up to the path
@@ -2585,7 +2591,7 @@ internal static class Utf8UriTools
                 }
             }
 
-            //Check the form of the user info
+            // Check the form of the user info
             if ((flags & Flags.HasUserInfo) != 0)
             {
                 idx = info.User;
@@ -2606,12 +2612,12 @@ internal static class Utf8UriTools
                 }
             }
         }
-        //
+
         // We have already checked on the port in EnsureUriInfo() that calls CreateUriInfo
-        //
-        //
+
+
         // Parsing the Path if any
-        //
+
         // For iri parsing if we found unicode the idx has offset into _originalUnicodeString..
         // so restart parsing from there and make info.Path as uriString.Length
 
@@ -2634,11 +2640,11 @@ internal static class Utf8UriTools
             // (that has slashes) a path should start with "/"
             // This becomes more interesting knowing how a file uri is used in "file://c:/path"
             // It will be converted to file:///c:/path
-            //
+
             // However, even more interesting is that vsmacros://c:\path will not add the third slash in the _canonical_ case
-            //
+
             // We use special syntax flag to check if the path is rooted, i.e. has a first slash
-            //
+
             if (((flags & Flags.AuthorityFound) != 0) && ((syntaxFlags & Utf8UriSyntaxFlags.PathIsRooted) != 0)
                 && (info.Path == length || (str[info.Path] != '/' && str[info.Path] != (byte)'\\')))
             {
@@ -2696,7 +2702,7 @@ internal static class Utf8UriTools
             if (((flags & Flags.ImplicitFile) == 0) || ((flags & Flags.UserEscaped) != 0) ||
                 (result & Check.ReservedFound) != 0)
             {
-                //means it's found as escaped or has unescaped Reserved Characters
+                // means it's found as escaped or has unescaped Reserved Characters
                 cF |= Flags.PathNotCanonical;
                 nonCanonical = true;
             }
@@ -2710,7 +2716,7 @@ internal static class Utf8UriTools
 
         if ((result & Check.EscapedCanonical) == 0)
         {
-            //means it's found as not completely escaped
+            // means it's found as not completely escaped
             cF |= Flags.E_PathNotCanonical;
         }
 
@@ -2721,9 +2727,9 @@ internal static class Utf8UriTools
             cF |= Flags.PathIriCanonical;
         }
 
-        //
-        //Now we've got to parse the Query if any. Note that Query requires the presence of '?'
-        //
+
+        // Now we've got to parse the Query if any. Note that Query requires the presence of '?'
+
 
         info.Query = (ushort)idx;
 
@@ -2764,7 +2770,7 @@ internal static class Utf8UriTools
             if (idx < length && str[idx] == (byte)'#')
             {
                 ++idx; // This is to exclude first '#' character from checking
-                //We don't using c_DummyChar since want to allow '?' and '#' as unescaped
+                // We don't using c_DummyChar since want to allow '?' and '#' as unescaped
                 result = CheckCanonical(str, ref idx, length, c_EOL, syntax, ref flags);
                 if ((result & Check.DisplayCanonical) == 0)
                 {
@@ -2796,9 +2802,9 @@ internal static class Utf8UriTools
         return (IriParsing(syntax) && ((cF & Flags.IriCanonical) != 0)) || (cF & Flags.E_NonCanonical) == 0;
     }
 
-    //
+
     // Used by ParseRemaining
-    //
+
     private static unsafe Check CheckCanonical(byte* str, ref int idx, int end, byte delim, Utf8UriParser syntax, ref Flags flags)
     {
         Check res = Check.None;
@@ -2915,7 +2921,7 @@ internal static class Utf8UriTools
             else if (c == (byte)'%')
             {
                 foundEscaping = true;
-                //try unescape a byte hex escaping
+                // try unescape a byte hex escaping
                 if (i + 2 < end)
                 {
                     int unescaped = Utf8UriHelper.DecodeHexChars(str[i + 1], str[i + 2]);
@@ -3076,7 +3082,7 @@ internal static class Utf8UriTools
             else if (c == (byte)'%')
             {
                 if (!foundEscaping) foundEscaping = true;
-                //try unescape a byte hex escaping
+                // try unescape a byte hex escaping
                 if (i + 2 < end)
                 {
                     int unescaped = Utf8UriHelper.DecodeHexChars(str[i + 1], str[i + 2]);
@@ -3213,10 +3219,10 @@ internal static class Utf8UriTools
         return false;
     }
 
-    //
+
     //  This method is called first to figure out the scheme or a simple file path
     //  Is called only at the .ctor time
-    //
+
     private static Utf8UriParsingError ParseScheme(ReadOnlySpan<byte> uriString, ref Flags flags, ref Utf8UriParser? syntax)
     {
         int length = uriString.Length;
@@ -3446,17 +3452,17 @@ internal static class Utf8UriTools
         return Utf8UriParser.FindOrFetchAsUnknownV1Syntax(Utf8UriHelper.AsciiSchemeToLowerInvariantString(scheme));
     }
 
-    //
-    //
+
+
     //  This method tries to parse the minimal information needed to certify the validity
     //  of a uri string
-    //
+
     //      scheme://userinfo@host:Port/Path?Query#Fragment
-    //
+
     //  The method must be called only at the .ctor time
-    //
+
     //  Returns Utf8UriParsingError.None if the Uri syntax is valid, an error otherwise
-    //
+
     private static unsafe Utf8UriParsingError PrivateParseMinimal(ReadOnlySpan<byte> uriString, ref Flags flags, ref Utf8UriParser syntax)
     {
         Debug.Assert(syntax != null);
@@ -3467,7 +3473,7 @@ internal static class Utf8UriTools
         // Means a custom Utf8UriParser did call "base" InitializeAndValidate()
         flags &= ~(Flags.IndexMask | Flags.UserDrivenParsing);
 
-        //STEP2: Parse up to the port
+        // STEP2: Parse up to the port
 
         fixed (byte* pUriString = uriString)
         {
@@ -3492,10 +3498,10 @@ internal static class Utf8UriTools
 #endif
             // Old Uri parser tries to figure out on a DosPath in all cases.
             // Hence http://c:/ is treated as DosPath without the host while it should be a host "c", port 80
-            //
+
             // This block is compatible with Old Uri parser in terms it will look for the DosPath if the scheme
             // syntax allows both empty hostnames and DosPath
-            //
+
             if (syntax.IsAllSet(Utf8UriSyntaxFlags.AllowEmptyHost | Utf8UriSyntaxFlags.AllowDOSPath)
                 && NotAny(flags, Flags.ImplicitFile) && (idx + 1 < length))
             {
@@ -3539,7 +3545,7 @@ internal static class Utf8UriTools
                             }
                             if (i != idx && i - idx != 2)
                             {
-                                //This will remember that DosPath is rooted
+                                // This will remember that DosPath is rooted
                                 idx = i - 1;
                             }
                             else
@@ -3569,9 +3575,9 @@ internal static class Utf8UriTools
 #endif
                 }
             }
-            //
-            //STEP 1.5 decide on the Authority component
-            //
+
+            // STEP 1.5 decide on the Authority component
+
             if ((flags & (Flags.UncPath | Flags.DosPath | Flags.UnixPath)) != 0)
             {
             }
@@ -3641,8 +3647,8 @@ internal static class Utf8UriTools
                 return Utf8UriParsingError.None;
             }
 
-            //STEP 2: Check the syntax of authority expecting at least one character in it
-            //
+            // STEP 2: Check the syntax of authority expecting at least one character in it
+
             // Note here we do know that there is an authority in the string OR it's a DOS path
 
             // We may find a userInfo and the port when parsing an authority
@@ -3686,12 +3692,12 @@ internal static class Utf8UriTools
         return Utf8UriParsingError.None;
     }
 
-    //
+
     // Checks the syntax of an authority component. It may also get a userInfo if present
     // Returns an error if no/malformed authority found
     // Does not NOT touch info
     // Returns position of the Path component
-    //
+
     // Must be called in the ctor only
     private static unsafe int CheckAuthorityHelper(byte* pString, int idx, int length,
         ref Utf8UriParsingError err, ref Flags flags, Utf8UriParser syntax)
@@ -3705,7 +3711,7 @@ internal static class Utf8UriTools
 
         Debug.Assert((flags & Flags.HasUserInfo) == 0 && (flags & Flags.HostTypeMask) == 0);
 
-        //Special case is an empty authority
+        // Special case is an empty authority
         if (idx == length || ((ch = pString[idx]) == (byte)'/' || (ch == (byte)'\\' && IsFile(syntax)) || ch == (byte)'#' || ch == (byte)'?'))
         {
             if (syntax.InFact(Utf8UriSyntaxFlags.AllowEmptyHost))
@@ -3779,9 +3785,9 @@ internal static class Utf8UriTools
         }
         else if ((syntaxFlags & Utf8UriSyntaxFlags.AllowUncHost) != 0)
         {
-            //
+
             // This must remain as the last check before BasicHost type
-            //
+
             if (Utf8UriUncNameHelper.IsValid(pString, start, ref end, NotAny(flags, Flags.ImplicitFile)))
             {
                 if (end - start <= Utf8UriUncNameHelper.MaximumInternetNameLength)
@@ -3849,10 +3855,10 @@ internal static class Utf8UriTools
         // check on whether nothing has worked out
         if ((flags & Flags.HostTypeMask) == Flags.HostNotParsed)
         {
-            //No user info for a Basic hostname
+            // No user info for a Basic hostname
             flags &= ~Flags.HasUserInfo;
             // Some schemes do not allow HostType = Basic (plus V1 almost never understands this issue)
-            //
+
             if (syntax.InFact(Utf8UriSyntaxFlags.AllowAnyOtherHost))
             {
                 flags |= Flags.BasicHostType;
@@ -3866,9 +3872,9 @@ internal static class Utf8UriTools
             }
             else
             {
-                //
+
                 // ATTN V1 compat: V1 supports hostnames like ".." and ".", and so we do but only for unknown schemes.
-                //
+
                 if (syntax.InFact(Utf8UriSyntaxFlags.MustHaveAuthority) ||
                          (syntax.InFact(Utf8UriSyntaxFlags.MailToLikeUri)))
                 {
@@ -4044,4 +4050,4 @@ internal static class Utf8UriTools
         return true;
 #endif
     }
-}
+}

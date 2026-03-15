@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// <copyright file="Utf8UriParser.Syntax.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections;
 
@@ -36,20 +42,20 @@ internal partial class Utf8UriParser
 
     private const Utf8UriSyntaxFlags FileSyntaxFlags =
                                     Utf8UriSyntaxFlags.MustHaveAuthority |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowEmptyHost |
                                     Utf8UriSyntaxFlags.AllowUncHost |
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
                                     Utf8UriSyntaxFlags.MayHaveQuery |
-                                    //
+
                                     Utf8UriSyntaxFlags.FileLikeUri |
-                                    //
+
                                     Utf8UriSyntaxFlags.PathIsRooted |
                                     Utf8UriSyntaxFlags.AllowDOSPath |
-                                    //
+
                                     Utf8UriSyntaxFlags.ConvertPathSlashes |
                                     Utf8UriSyntaxFlags.CompressPath |
                                     Utf8UriSyntaxFlags.CanonicalizeAsFilePath |
@@ -59,17 +65,17 @@ internal partial class Utf8UriParser
 
     private const Utf8UriSyntaxFlags FtpSyntaxFlags =
                                     Utf8UriSyntaxFlags.MustHaveAuthority |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHaveUserInfo |
                                     Utf8UriSyntaxFlags.MayHavePort |
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowUncHost |       // V1 compat
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.PathIsRooted |
-                                    //
+
                                     Utf8UriSyntaxFlags.ConvertPathSlashes |
                                     Utf8UriSyntaxFlags.CompressPath |
                                     Utf8UriSyntaxFlags.CanonicalizeAsFilePath |
@@ -78,33 +84,33 @@ internal partial class Utf8UriParser
 
     private const Utf8UriSyntaxFlags GopherSyntaxFlags =
                                     Utf8UriSyntaxFlags.MustHaveAuthority |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHaveUserInfo |
                                     Utf8UriSyntaxFlags.MayHavePort |
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowUncHost |       // V1 compat
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.PathIsRooted |
                                     Utf8UriSyntaxFlags.AllowIdn |
                                     Utf8UriSyntaxFlags.AllowIriParsing;
 
     private const Utf8UriSyntaxFlags HttpSyntaxFlags =
                                     Utf8UriSyntaxFlags.MustHaveAuthority |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHaveUserInfo |
                                     Utf8UriSyntaxFlags.MayHavePort |
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveQuery |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowUncHost |       // V1 compat
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.PathIsRooted |
-                                    //
+
                                     Utf8UriSyntaxFlags.ConvertPathSlashes |
                                     Utf8UriSyntaxFlags.CompressPath |
                                     Utf8UriSyntaxFlags.CanonicalizeAsFilePath |
@@ -113,33 +119,33 @@ internal partial class Utf8UriParser
 
     private const Utf8UriSyntaxFlags LdapSyntaxFlags =
                                     Utf8UriSyntaxFlags.MustHaveAuthority |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowEmptyHost |
                                     Utf8UriSyntaxFlags.AllowUncHost |       // V1 compat
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHaveUserInfo |
                                     Utf8UriSyntaxFlags.MayHavePort |
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveQuery |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
-                                    //
+
                                     Utf8UriSyntaxFlags.PathIsRooted |
                                     Utf8UriSyntaxFlags.AllowIdn |
                                     Utf8UriSyntaxFlags.AllowIriParsing;
 
     private const Utf8UriSyntaxFlags MailtoSyntaxFlags =
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowEmptyHost |
                                     Utf8UriSyntaxFlags.AllowUncHost |       // V1 compat
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHaveUserInfo |
                                     Utf8UriSyntaxFlags.MayHavePort |
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
                                     Utf8UriSyntaxFlags.MayHaveQuery | //to maintain compat
-                                                                      //
+
                                     Utf8UriSyntaxFlags.MailToLikeUri |
                                     Utf8UriSyntaxFlags.AllowIdn |
                                     Utf8UriSyntaxFlags.AllowIriParsing;
@@ -160,7 +166,7 @@ internal partial class Utf8UriParser
 
     private const Utf8UriSyntaxFlags NetTcpSyntaxFlags = NetPipeSyntaxFlags | Utf8UriSyntaxFlags.MayHavePort;
 
-    //Note that NNTP and NEWS are quite different in syntax
+    // Note that NNTP and NEWS are quite different in syntax
     private const Utf8UriSyntaxFlags NewsSyntaxFlags =
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
@@ -168,30 +174,30 @@ internal partial class Utf8UriParser
 
     private const Utf8UriSyntaxFlags NntpSyntaxFlags =
                                     Utf8UriSyntaxFlags.MustHaveAuthority |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHaveUserInfo |
                                     Utf8UriSyntaxFlags.MayHavePort |
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowUncHost |       // V1 compat
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.PathIsRooted |
                                     Utf8UriSyntaxFlags.AllowIdn |
                                     Utf8UriSyntaxFlags.AllowIriParsing;
 
     private const Utf8UriSyntaxFlags TelnetSyntaxFlags =
                                     Utf8UriSyntaxFlags.MustHaveAuthority |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHaveUserInfo |
                                     Utf8UriSyntaxFlags.MayHavePort |
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowUncHost |       // V1 compat
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.PathIsRooted |
                                     Utf8UriSyntaxFlags.AllowIdn |
                                     Utf8UriSyntaxFlags.AllowIriParsing;
@@ -199,19 +205,19 @@ internal partial class Utf8UriParser
     private const Utf8UriSyntaxFlags UnixFileSyntaxFlags =
                                     FileSyntaxFlags & ~Utf8UriSyntaxFlags.ConvertPathSlashes;
 
-    //
+
     // Various Uri scheme syntax flags
-    //
+
     private const Utf8UriSyntaxFlags UnknownV1SyntaxFlags =
                                         Utf8UriSyntaxFlags.V1_UnknownUri | // This flag must be always set here
                                         Utf8UriSyntaxFlags.OptionalAuthority |
-                                        //
+
                                         Utf8UriSyntaxFlags.MayHaveUserInfo |
                                         Utf8UriSyntaxFlags.MayHavePort |
                                         Utf8UriSyntaxFlags.MayHavePath |
                                         Utf8UriSyntaxFlags.MayHaveQuery |
                                         Utf8UriSyntaxFlags.MayHaveFragment |
-                                        //
+
                                         Utf8UriSyntaxFlags.AllowEmptyHost |
                                         Utf8UriSyntaxFlags.AllowUncHost |       // V1 compat
                                         Utf8UriSyntaxFlags.AllowAnInternetHost |
@@ -224,16 +230,16 @@ internal partial class Utf8UriParser
 
     private const Utf8UriSyntaxFlags VsmacrosSyntaxFlags =
                                     Utf8UriSyntaxFlags.MustHaveAuthority |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowEmptyHost |
                                     Utf8UriSyntaxFlags.AllowUncHost |
                                     Utf8UriSyntaxFlags.AllowAnInternetHost |
-                                    //
+
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
-                                    //
+
                                     Utf8UriSyntaxFlags.FileLikeUri |
-                                    //
+
                                     Utf8UriSyntaxFlags.AllowDOSPath |
                                     Utf8UriSyntaxFlags.ConvertPathSlashes |
                                     Utf8UriSyntaxFlags.CompressPath |
@@ -269,9 +275,9 @@ internal partial class Utf8UriParser
     private int _port;
     private string _scheme;
 
-    //
+
     // Internal .ctor, any ctor eventually goes through this one
-    //
+
     internal Utf8UriParser(Utf8UriSyntaxFlags flags)
     {
         _flags = flags;
@@ -333,4 +339,4 @@ internal partial class Utf8UriParser
     {
         return (_flags & flags) == expected;
     }
-}
+}

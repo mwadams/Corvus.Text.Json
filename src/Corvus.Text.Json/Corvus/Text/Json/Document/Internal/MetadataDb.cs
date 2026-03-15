@@ -1,5 +1,11 @@
+// <copyright file="MetadataDb.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Diagnostics;
@@ -14,9 +20,9 @@ using System.Threading;
 namespace Corvus.Text.Json.Internal;
 
 // The database for the parsed structure of a JSON document.
-//
+
 // Every token from the document gets a row, which has one of the following forms:
-//
+
 // Number
 // * First int
 //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -28,7 +34,7 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 //   * 4 bits JsonTokenType
 //   * 28 bits for the index of the workspace document in the workspace for this row
-//
+
 // String, PropertyName
 // * First int
 //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -40,7 +46,7 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 //   * 4 bits JsonTokenType
 //   * 28 bits for the index of the workspace document in the workspace for this row
-//
+
 // Other value types (True, False, Null)
 // * First int
 //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -52,7 +58,7 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 //   * 4 bits JsonTokenType
 //   * 28 bits for the index of the workspace document in the workspace for this row
-//
+
 // EndObject
 // * First int
 //   * Top bit is unassigned / always clear
@@ -64,7 +70,7 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 //   * 4 bits JsonTokenType
 //   * 28 bits for the number of rows until the previous value (never 0)
-//
+
 // EndArray
 // * First int
 //   * Top bit is unassigned / always clear
@@ -75,7 +81,7 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 //   * 4 bits JsonTokenType
 //   * 28 bits for the number of rows until the previous value (never 0)
-//
+
 // StartObject
 // * First int
 //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -88,7 +94,7 @@ namespace Corvus.Text.Json.Internal;
 //   * 4 bits JsonTokenType
 //   * 28 bits for the number of rows until the next value (never 0) if this is a local value,
 //     or the index of the workspace document in the workspace for this row if this is an external value.
-//
+
 // StartArray
 // * First int
 //   * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -177,7 +183,7 @@ public struct MetadataDb : IDisposable
         // int estimatedTokens = payloadLength / 12
         // now acknowledge that the number of bytes we need per token is 12.
         // So that's just the payload length.
-        //
+
         // Add one row worth of data since we need at least one row for a primitive type.
         int initialSize = payloadLength + DbRow.Size;
 
@@ -553,7 +559,7 @@ public struct MetadataDb : IDisposable
             // If the array item count is (e.g.) 12 and the number of rows is (e.g.) 13
             // then the extra row is just the EndArray item, so the array was made up
             // of simple values.
-            //
+
             // If the off-by-one relationship does not hold, then one of the values was
             // more than one row, making it a complex object. This is indicated by setting
             // the top bit of currentLength (which, handily, is just negating the value).
@@ -882,4 +888,4 @@ public struct MetadataDb : IDisposable
         Debug.Assert(Length <= destination.Length - targetIndex);
         Buffer.BlockCopy(_data, 0, destination._data, targetIndex, Length);
     }
-}
+}
