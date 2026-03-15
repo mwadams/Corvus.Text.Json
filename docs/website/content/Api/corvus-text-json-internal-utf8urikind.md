@@ -1,0 +1,24 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "Utf8UriKind — Corvus.Text.Json.Internal"
+---
+```csharp
+public enum Utf8UriKind : IComparable, ISpanFormattable, IFormattable, IConvertible
+```
+
+Defines the kind of URI, controlling whether absolute or relative URIs are used.
+
+## Implements
+
+[`IComparable`](https://learn.microsoft.com/dotnet/api/system.icomparable), [`ISpanFormattable`](https://learn.microsoft.com/dotnet/api/system.ispanformattable), [`IFormattable`](https://learn.microsoft.com/dotnet/api/system.iformattable), [`IConvertible`](https://learn.microsoft.com/dotnet/api/system.iconvertible)
+
+## Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `RelativeOrAbsolute` `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The kind of URI is indeterminate. The URI can be either relative or absolute. |
+| `Absolute` `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The URI is an absolute URI. |
+| `Relative` `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The URI is a relative URI. |
+

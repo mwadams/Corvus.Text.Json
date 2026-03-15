@@ -14,7 +14,7 @@ Title: "Corvus.Text.Json.Internal Namespace"
 | [CodeGenDataType](/api/corvus-text-json-internal-codegendatatype.html) | enum | Specifies the data type used in code generation scenarios. |
 | [CodeGenNumericType](/api/corvus-text-json-internal-codegennumerictype.html) | enum | Specifies the numeric type used in code generation scenarios. |
 | [CodeGenThrowHelper](/api/corvus-text-json-internal-codegenthrowhelper.html) | class | Provides helper methods for throwing exceptions in code generation and runtime scenarios for Corvus.Text.Json. This class centralizes exception creation and throwing logic to ensure consistent erro... |
-| [ComplexValueBuilder](/api/corvus-text-json-internal-complexvaluebuilder.html) | struct | Provides a high-performance, low-allocation builder for constructing complex JSON values (objects and arrays) within an `IMutableJsonDocument`. |
+| [ComplexValueBuilder](/api/corvus-text-json-internal-complexvaluebuilder.html) | struct | Provides a high-performance, low-allocation builder for constructing complex JSON values (objects and arrays) within an [`IMutableJsonDocument`](/api/corvus-text-json-internal-imutablejsondocument.... |
 | [EnumeratorCreator](/api/corvus-text-json-internal-enumeratorcreator.html) | class |  |
 | [FixedStringJsonDocument<T>](/api/corvus-text-json-internal-fixedstringjsondocument-t.html) | class | Represents a JSON document based on a fixed string value. |
 | [IJsonDocument](/api/corvus-text-json-internal-ijsondocument.html) | interface | The interface explicitly implemented by JSON Document providers for internal use only. |
@@ -30,13 +30,13 @@ Title: "Corvus.Text.Json.Internal Namespace"
 | [JsonSchemaEvaluation](/api/corvus-text-json-internal-jsonschemaevaluation.html) | class | Support for JSON Schema matching implementations. |
 | [JsonSchemaMatcher](/api/corvus-text-json-internal-jsonschemamatcher.html) | delegate | A matcher for a JSON schema. |
 | [JsonSchemaMatcherWithRequiredBitBuffer](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.html) | delegate | A matcher for a JSON schema that requires a bit buffer for tracking required properties. |
-| [JsonTokenType](/api/corvus-text-json-internal-jsontokentype.html) | enum | This enum defines the various JSON tokens that make up a JSON text and is used by the `Utf8JsonReader` when moving from one token to the next. The `Utf8JsonReader` starts at 'None' by default. The ... |
+| [JsonTokenType](/api/corvus-text-json-internal-jsontokentype.html) | enum | This enum defines the various JSON tokens that make up a JSON text and is used by the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) when moving from one token to the next. The [`Utf... |
 | [MetadataDb](/api/corvus-text-json-internal-metadatadb.html) | struct | Database storing metadata for parsed JSON document structure, including token information and structural relationships between JSON elements. |
 | [NormalizedJsonNumber](/api/corvus-text-json-internal-normalizedjsonnumber.html) | struct | Represents a normalized JSON number. |
 | [ObjectEnumerator](/api/corvus-text-json-internal-objectenumerator.html) | struct | An enumerable and enumerator for the properties of a JSON object. |
 | [PropertySchemaMatchers<T>](/api/corvus-text-json-internal-propertyschemamatchers-t.html) | class | A dictionary lookup of matchers for properties in a JSON object, optimized for low allocations and high performance. |
-| [RentedBacking](/api/corvus-text-json-internal-rentedbacking.html) | struct | Provides a fixed-size, rented backing structure for storing longer string values that will not fit in a `SimpleTypesBacking`. |
-| [SimpleTypesBacking](/api/corvus-text-json-internal-simpletypesbacking.html) | struct | Provides a fixed-size backing structure for storing simple numeric, null and boolean values. for `IJsonElement` creation. |
+| [RentedBacking](/api/corvus-text-json-internal-rentedbacking.html) | struct | Provides a fixed-size, rented backing structure for storing longer string values that will not fit in a [`SimpleTypesBacking`](/api/corvus-text-json-internal-simpletypesbacking.html). |
+| [SimpleTypesBacking](/api/corvus-text-json-internal-simpletypesbacking.html) | struct | Provides a fixed-size backing structure for storing simple numeric, null and boolean values. for [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) creation. |
 | [UniqueItemsHashSet](/api/corvus-text-json-internal-uniqueitemshashset.html) | struct | A map that can be built |
 | [Utf8UriComponents](/api/corvus-text-json-internal-utf8uricomponents.html) | enum | Specifies the parts of a URI that should be included when retrieving URI components. |
 | [Utf8UriFormat](/api/corvus-text-json-internal-utf8uriformat.html) | enum | Specifies the format options for URI string representation. |

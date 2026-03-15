@@ -17,4 +17,4 @@ OpenGraph:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md
     Spec:
-      Path: ../../content/Api/corvus-text-json-compatibility.md
+      Path: ../../content/api/corvus-text-json-compatibility.md
